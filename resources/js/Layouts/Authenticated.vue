@@ -33,155 +33,23 @@ export default {
     <div class="min-h-screen bg-gray-50" x-data="{ sideBar: false }">
         <div class="flex">
             <nav
-                class="
-                fixed
-                top-0
-                left-0
-                z-20
-                h-full
-                pb-10
-                overflow-x-hidden overflow-y-auto
-                transition
-                origin-left
-                transform
-                bg-gray-900
-                w-60
-                sm:translate-x-0
-                "
+                class="fixed top-0 left-0 z-20 h-full pb-10 overflow-x-hidden overflow-y-auto transition origin-left transform bg-gray-900 w-60 sm:translate-x-0"
                 :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
             >
-            <a :href="route('dashboard')" class="flex items-center px-4 py-5">
-                <span class="text-white font-bold">ALFA and Friends</span>
-            </a>
-                <nav
-                    class="text-sm font-medium text-gray-500"
-                    aria-label="Main Navigation"
-                >
-                    <a
-                    class="
-                        flex
-                        items-center
-                        px-4
-                        py-3
-                        transition
-                        cursor-pointer
-                        group
-                        hover:bg-gray-800 hover:text-gray-200
-                    "
-                    :href="route('dashboard')" 
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                    </svg>
-                    <span>Dashboard</span>
-                    </a>
-                    <a
-                    class="
-                        flex
-                        items-center
-                        px-4
-                        py-3
-                        transition
-                        cursor-pointer
-                        group
-                        hover:bg-gray-800 hover:text-gray-200
-                    "
-                    href="#"
-                    >
-                    <svg
-                        class="
-                        shrink-0
-                        w-5
-                        h-5
-                        mr-2
-                        text-gray-400
-                        transition
-                        group-hover:text-gray-300
-                        "
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                        d="M5 3a1 1 0 000 2c5.523 0 10 4.477 10 10a1 1 0 102 0C17 8.373 11.627 3 5 3z"
-                        />
-                        <path
-                        d="M4 9a1 1 0 011-1 7 7 0 017 7 1 1 0 11-2 0 5 5 0 00-5-5 1 1 0 01-1-1zM3 15a2 2 0 114 0 2 2 0 01-4 0z"
-                        />
-                    </svg>
-                    <span>Articles</span>
-                    </a>
-                    <a
-                    class="
-                        flex
-                        items-center
-                        px-4
-                        py-3
-                        text-gray-200
-                        transition
-                        bg-gray-800
-                        cursor-pointer
-                        group
-                        hover:bg-gray-800 hover:text-gray-200
-                    "
-                    href="#"
-                    >
-                    <svg
-                        class="
-                        shrink-0
-                        w-5
-                        h-5
-                        mr-2
-                        text-gray-300
-                        transition
-                        group-hover:text-gray-300
-                        "
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                        d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
-                        />
-                    </svg>
-                    <span>Collections</span>
-                    </a>
-                    <a
-                    class="
-                        flex
-                        items-center
-                        px-4
-                        py-3
-                        transition
-                        cursor-pointer
-                        group
-                        hover:bg-gray-800 hover:text-gray-200
-                    "
-                    href="#"
-                    >
-                    <svg
-                        class="
-                        shrink-0
-                        w-5
-                        h-5
-                        mr-2
-                        text-gray-400
-                        transition
-                        group-hover:text-gray-300
-                        "
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                        <path
-                        fill-rule="evenodd"
-                        d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clip-rule="evenodd"
-                        />
-                    </svg>
-                    <span>Checklists</span>
-                    </a>
+                <span class="flex items-center px-4 py-5 text-white font-bold">ALFA and Friends</span>
+                <nav class="text-sm font-medium text-gray-500">
+                    <BreezeNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        Dashboard
+                    </BreezeNavLink>
+                    <BreezeNavLink :href="route('admin')" :active="route().current('admin')">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        Admin
+                    </BreezeNavLink>
                     <div x-data="collapse()">
                     <div
                         class="
@@ -353,6 +221,12 @@ export default {
                     </svg>
                     <span>Settings</span>
                     </a>
+                    <BreezeNavLink class="w-full" :href="route('logout')" method="post" as="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Log Out
+                    </BreezeNavLink>
                 </nav>
             </nav>
             <div class="ml-0 transition md:ml-60 bg-indigo-100">
@@ -370,22 +244,6 @@ export default {
                 <Link :href="route('dashboard')">
                   <BreezeApplicationLogo class="block h-9 w-auto" />
                 </Link>
-              </div>
-
-              <!-- Navigation Links -->
-              <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <BreezeNavLink
-                  :href="route('dashboard')"
-                  :active="route().current('dashboard')"
-                >
-                  Dashboard
-                </BreezeNavLink>
-                <BreezeNavLink
-                  :href="route('admin')"
-                  :active="route().current('admin')"
-                >
-                  Admin
-                </BreezeNavLink>
               </div>
             </div>
 
@@ -545,13 +403,6 @@ export default {
             </div>
 
             <div class="mt-3 space-y-1">
-              <BreezeResponsiveNavLink
-                :href="route('logout')"
-                method="post"
-                as="button"
-              >
-                Log Out
-              </BreezeResponsiveNavLink>
             </div>
           </div>
         </div>
