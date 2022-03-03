@@ -110,6 +110,9 @@ export default {
                                         </span>
                                     </template>
                                     <template #content>
+                                        <BreezeDropdownLink :href="route('logout')">
+                                            Profile
+                                        </BreezeDropdownLink>
                                         <BreezeDropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </BreezeDropdownLink>
