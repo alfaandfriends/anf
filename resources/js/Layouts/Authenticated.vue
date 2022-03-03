@@ -60,8 +60,8 @@ export default {
                             </div>
                             <div class="mb-4" x-spread="collapse">
                                 <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Users</span></BreezeNavSubLink>
-                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Roles</span></BreezeNavSubLink>
-                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Permissions</span></BreezeNavSubLink>
+                                <BreezeNavSubLink :href="route('roles')" :active="route().current('roles')"><span class="select-none">Roles</span></BreezeNavSubLink>
+                                <BreezeNavSubLink :href="route('permissions')" :active="route().current('permissions')"><span class="select-none">Permissions</span></BreezeNavSubLink>
                             </div>
                         </div>
                         <BreezeNavLink class="w-full sm:hidden" :href="route('logout')" method="post" as="button">

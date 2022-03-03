@@ -12,11 +12,11 @@ class UserController extends Controller
     public function index()
     {
         Auth::check();
-        $users = User::orderBy('id')->paginate(5);
+        $user_list = User::orderBy('id')->paginate(10);
         // dd($users);
             
         return Inertia::render('User/Index', [
-            'users' => $users
+            'user_list' => $user_list
         ]);
     }
 }
