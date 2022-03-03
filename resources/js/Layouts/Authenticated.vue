@@ -48,7 +48,7 @@ export default {
                     <nav class="text-sm font-medium text-gray-500">
                         <BreezeNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             <ViewGridIcon class="h-5 w-5 mr-2"></ViewGridIcon>
-                            Dashboard
+                            <span class="select-none">Dashboard</span> 
                         </BreezeNavLink>
                         <div x-data="collapse()">
                             <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" x-spread="trigger" @click="open = !open">
@@ -59,9 +59,9 @@ export default {
                                 <ChevronRightIcon :class="{ 'rotate-90': open }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                             </div>
                             <div class="mb-4" x-spread="collapse">
-                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')">Users</BreezeNavSubLink>
-                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')">Roles</BreezeNavSubLink>
-                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')">Permissions</BreezeNavSubLink>
+                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Users</span></BreezeNavSubLink>
+                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Roles</span></BreezeNavSubLink>
+                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Permissions</span></BreezeNavSubLink>
                             </div>
                         </div>
                         <BreezeNavLink class="w-full sm:hidden" :href="route('logout')" method="post" as="button">
