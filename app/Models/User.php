@@ -12,6 +12,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'wpvt_users';
     /**
      * The attributes that are mass assignable.
      *
