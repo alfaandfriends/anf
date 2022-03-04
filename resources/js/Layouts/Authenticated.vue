@@ -5,29 +5,20 @@ import BreezeDropdownLink from '@/Components/DropdownLink.vue'
 import BreezeNavLink from '@/Components/NavLink.vue'
 import BreezeNavSubLink from '@/Components/NavSubLink.vue'
 import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/inertia-vue3'
 import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } from '@heroicons/vue/solid'
 export default {
     components: {
-        BreezeApplicationLogo,
-        BreezeDropdown,
-        BreezeDropdownLink,
-        BreezeNavLink,
-        BreezeResponsiveNavLink,
-        BreezeNavSubLink,
-        Link,
-        CogIcon,
-        ChevronRightIcon,
-        LogoutIcon,
-        ViewGridIcon,
-        XIcon,
-        MenuIcon,
+        BreezeApplicationLogo, Link,
+        BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink,
+        CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon,
     },
     data() {
         return {
             showingNavigationDropdown: false,
             sideBar: false,
-            open: false
+            openControlPanel: false,
+            openSetting: false,
         }
     },
     methods(){
@@ -51,12 +42,26 @@ export default {
                             <span class="select-none">Dashboard</span> 
                         </BreezeNavLink>
                         <div x-data="collapse()">
-                            <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" x-spread="trigger" @click="open = !open">
+                            <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" x-spread="trigger" @click="openControlPanel = !openControlPanel">
                                 <div class="flex items-center">
                                     <CogIcon class="h-5 w-5 mr-2"></CogIcon>
                                     <span class="select-none">Control Panel</span>
                                 </div>
-                                <ChevronRightIcon :class="{ 'rotate-90': open }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
+                                <ChevronRightIcon :class="{ 'rotate-90': openControlPanel }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
+                            </div>
+                            <div class="mb-4" x-spread="collapse">
+                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Users</span></BreezeNavSubLink>
+                                <BreezeNavSubLink :href="route('roles')" :active="route().current('roles')"><span class="select-none">Roles</span></BreezeNavSubLink>
+                                <BreezeNavSubLink :href="route('permissions')" :active="route().current('permissions')"><span class="select-none">Permissions</span></BreezeNavSubLink>
+                            </div>
+                        </div>
+                        <div x-data="collapse()">
+                            <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" x-spread="trigger" @click="openSetting = !openSetting">
+                                <div class="flex items-center">
+                                    <CogIcon class="h-5 w-5 mr-2"></CogIcon>
+                                    <span class="select-none">Site Setting</span>
+                                </div>
+                                <ChevronRightIcon :class="{ 'rotate-90': openSetting }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                             </div>
                             <div class="mb-4" x-spread="collapse">
                                 <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Users</span></BreezeNavSubLink>
