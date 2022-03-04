@@ -30,5 +30,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('users');
+Route::get('/roles', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('roles');
+Route::get('/permissions', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('permissions');
 
 require __DIR__.'/auth.php';
