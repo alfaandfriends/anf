@@ -3,18 +3,14 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </script>
 <script>
 export default {
+    props: {
+        filter: Object,
+    },
     data(){
         return{
             params: {
-                search: null,
-                page: null,
+                search: this.filter.search,
             }
-        }
-    },
-    methods: {
-        selectPage(url){
-            const page_number   =   url.searchParams.get('page')
-            this.page           =   page_number;
         }
     },
     watch: {
@@ -65,7 +61,7 @@ export default {
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                             <div class="flex-shrink-0 h-10 w-10">
-                                                <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt="">
+                                                <img class="h-10 w-10 rounded-full" :src="user.avatar" alt="">
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900">{{ user.first_name }} {{ user.last_name }}</div>
@@ -108,32 +104,14 @@ export default {
                                         <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                                             <a  v-for="(link, key) in $page.props.user_list.links" 
                                                 :key="key" 
-                                                :href="link.url"
+                                                :href="link.url + '&search=' + this.params.search"
                                                 class="" 
                                                 :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium'
                                                                      : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
                                                                                                              : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
                                                 v-html="link.label"
-                                                @click="selectPage(link.url)"
                                             >
                                             </a>
-                                            <!-- <a href="" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                                <span class="sr-only">Previous</span>
-                                            </a>
-                                          
-                                            <a href="#" aria-current="page" class=""> 1 </a>
-                                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 2 </a>
-                                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium"> 3 </a>
-                                            <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"> ... </span>
-                                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium"> 8 </a>
-                                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 9 </a>
-                                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 10 </a>
-                                            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                                <span class="sr-only">Next</span>
-                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                                </svg>
-                                            </a> -->
                                         </nav>
                                     </div>
                                 </div>

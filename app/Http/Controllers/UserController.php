@@ -10,6 +10,7 @@ class UserController extends Controller
 {
     public function index()
     {
+        // dd(request()->al);
         $query  =   User::query();
         
         if(request('search')){
@@ -17,20 +18,9 @@ class UserController extends Controller
                     ->orWhere('display_name', 'LIKE', '%'.request('search').'%');
         }
 
-        if(request('page')){
-            $query  ->paginate(10, ['*'], request('page'));
-        }
-
         return Inertia::render('User/Index', [
-            'user_list' => $query->orderBy('id')->paginate(10)
+            'user_list' => $query->orderBy('id')->paginate(10),
+            'filter'=>request()->all('search')
         ]);
     }
-
-    // public function search_user(Request $request)
-    // {
-    //     dd($request->page, $request->term);
-    //     return Inertia::render('User/Index', [
-    //         'user_list' => 
-    //     ]);
-    // }
 }
