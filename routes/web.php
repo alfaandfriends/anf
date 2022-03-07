@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +31,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('users');
-Route::get('/roles', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('roles');
+Route::get('/roles', [RoleController::class, 'get_roles'])->middleware(['auth', 'verified'])->name('roles');
 Route::get('/permissions', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('permissions');
 
 require __DIR__.'/auth.php';
