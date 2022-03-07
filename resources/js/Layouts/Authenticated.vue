@@ -32,7 +32,7 @@ export default {
         <!-- Sidebar -->
         <div class="min-h-screen bg-gray-50" x-data="{ sideBar: false }">
             <div class="flex">
-                <nav class="fixed top-0 left-0 z-20 h-full pb-10 overflow-x-hidden overflow-y-auto transition origin-left transform bg-gray-900 w-60 sm:translate-x-0" 
+                <nav class="fixed top-0 left-0 z-30 h-full pb-10 overflow-x-hidden overflow-y-auto transition origin-left transform bg-gray-900 w-60 sm:translate-x-0" 
                      :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
                 >
                     <span class="flex items-center px-4 py-5 text-white font-bold">ALFA and Friends</span>
@@ -84,7 +84,7 @@ export default {
             </div>
         </div>
         <div class="min-h-screen bg-gray-100 w-full">
-            <nav class="bg-white border-b border-gray-100 sticky top-0">
+            <nav class="bg-white border-b border-gray-100 sticky top-0 z-20">
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
