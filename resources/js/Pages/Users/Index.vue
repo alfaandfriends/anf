@@ -1,37 +1,16 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
-import { SearchIcon } from '@heroicons/vue/solid'
-</script>
-<script>
-export default {
-    components: {
-        SearchIcon
-    },
-    props: {
-        filter: Object,
-    },
-    data(){
-        return{
-            params: {
-                search: this.filter.search ? this.filter.search : '',
-            }
-        }
-    },
-    watch: {
-        params: {
-            handler(){
-                this.$inertia.get(this.route('users'), this.params, { replace: true, preserveState: true});
-            },
-            deep: true
-        }
-    }
-}
 </script>
 
 <template>
     <Head title="Dashboard" />
 
     <BreezeAuthenticatedLayout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                User List
+            </h2>
+        </template>
         <div class="py-6">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="mx-auto sm:px-6">
@@ -74,7 +53,18 @@ export default {
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Admin</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                            <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                            <div class="flex justify-center">
+                                                <div class="flex pr-1">
+                                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded">
+                                                        <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
+                                                    </button>
+                                                </div>
+                                                <div class="flex">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="openModal()">
+                                                        <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -116,6 +106,44 @@ export default {
                     </div>
                 </div>
             </div>
+            <Modal v-show="modalOpen"></Modal>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
+
+<script>
+import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
+import { Head } from '@inertiajs/inertia-vue3';
+import Modal from '@/Components/Modal.vue'
+
+export default {
+    components: {
+        SearchIcon, TrashIcon, PencilIcon,
+        Modal, Head
+    },
+    props: {
+        filter: Object,
+    },
+    data(){
+        return{
+            modalOpen: false,
+            params: {
+                search: this.filter.search ? this.filter.search : '',
+            }
+        }
+    },
+    watch: {
+        params: {
+            handler(){
+                this.$inertia.get(this.route('users'), this.params, { replace: true, preserveState: true});
+            },
+            deep: true
+        }
+    },
+    methods: {
+        openModal() {
+            this.modalOpen = true;
+        }    
+    }
+}
+</script>

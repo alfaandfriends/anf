@@ -1,33 +1,16 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </script>
-<script>
-export default {
-    // props: {
-    //     filter: Object,
-    // },
-    // data(){
-    //     return{
-    //         params: {
-    //             search: this.filter.search,
-    //         }
-    //     }
-    // },
-    // watch: {
-    //     params: {
-    //         handler(){
-    //             this.$inertia.get(this.route('users'), this.params, { replace: true, preserveState: true});
-    //         },
-    //         deep: true
-    //     }
-    // }
-}
-</script>
 
 <template>
     <Head title="Dashboard" />
 
     <BreezeAuthenticatedLayout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Products
+            </h2>
+        </template>
         <div class="py-6">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="mx-auto sm:px-6">
@@ -109,3 +92,32 @@ export default {
         </div>
     </BreezeAuthenticatedLayout>
 </template>
+
+<script>
+import { Head } from '@inertiajs/inertia-vue3';
+
+export default {
+    components: {
+        BreezeAuthenticatedLayout,
+        Head,
+    },
+}
+// props: {
+//     filter: Object,
+// },
+// data(){
+//     return{
+//         params: {
+//             search: this.filter.search,
+//         }
+//     }
+// },
+// watch: {
+//     params: {
+//         handler(){
+//             this.$inertia.get(this.route('users'), this.params, { replace: true, preserveState: true});
+//         },
+//         deep: true
+//     }
+// }
+</script>

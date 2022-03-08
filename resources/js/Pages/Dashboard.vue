@@ -20,3 +20,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
         </div>
     </BreezeAuthenticatedLayout>
 </template>
+
+<script>
+import { Head } from '@inertiajs/inertia-vue3';
+export default {
+    components: {
+        BreezeAuthenticatedLayout,
+        Head,
+    },
+}
+</script>

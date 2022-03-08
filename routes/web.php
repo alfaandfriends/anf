@@ -30,8 +30,14 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+/* Users */
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('users');
-Route::get('/roles', [RoleController::class, 'get_roles'])->middleware(['auth', 'verified'])->name('roles');
+
+/* Roles */
+Route::get('/roles', [RoleController::class, 'getRoles'])->middleware(['auth', 'verified'])->name('roles');
+Route::get('/roles/{role_name}', [RoleController::class, 'getRolesByRoleName'])->middleware(['auth', 'verified'])->name('roles_by_role_name');
+
+/* Permissions */
 Route::get('/permissions', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('permissions');
 
 require __DIR__.'/auth.php';

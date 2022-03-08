@@ -20,9 +20,6 @@ export default {
             openControlPanel: false,
             openSetting: false,
         }
-    },
-    methods(){
-
     }
 }
 </script>
@@ -168,7 +165,7 @@ export default {
             </nav>
 
             <!-- Page Heading -->
-            <header class="bg-white shadow" v-if="$slots.header">
+            <header class="bg-blue-100 shadow" v-if="$slots.header">
                 <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>

@@ -14,9 +14,11 @@
         
         <!-- All components in one -->
         <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/kutty.min.js"></script>
+        
         <!-- Single component -->
         <!-- Include AlpineJS first -->
         <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/alpinejs.min.js"></script>
+
         <!-- And then the single component -->
         <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/dropdown.min.js"></script>
 
