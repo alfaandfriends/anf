@@ -106,7 +106,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                     </div>
                 </div>
             </div>
-            <Modal v-show="modalOpen"></Modal>
+            <Modal v-if="modalOpen"></Modal>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
