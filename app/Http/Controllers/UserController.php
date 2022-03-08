@@ -18,7 +18,7 @@ class UserController extends Controller
                     ->orWhere('display_name', 'LIKE', '%'.request('search').'%');
         }
 
-        return Inertia::render('User/Index', [
+        return Inertia::render('Users/Index', [
             'user_list' => $query->orderBy('id')->paginate(10),
             'filter'=>request()->all('search')
         ]);
