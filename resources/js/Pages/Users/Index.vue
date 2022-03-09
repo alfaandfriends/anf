@@ -32,6 +32,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr v-if="!$page.props.user_list.data.length">
+                                        <td class="text-center" colspan="10">
+                                            <div class="p-3">
+                                                No Record Found! 
+                                            </div>
+                                        </td>
+                                    </tr> 
                                     <tr v-for="user in $page.props.user_list.data" :key="user.ID">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
@@ -60,7 +67,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                     </button>
                                                 </div>
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="openModal()">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="openConfirmation">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </button>
                                                 </div>
@@ -69,44 +76,46 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-200">
-                                <div class="flex-1 flex justify-between sm:hidden">
-                                    <a :href="$page.props.user_list.prev_page_url" v-if="$page.props.user_list.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
-                                    <a :href="$page.props.user_list.next_page_url"  v-if="$page.props.user_list.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
-                                </div>
-                                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                                    <div>
-                                        <p class="text-sm text-gray-700">
-                                            Showing
-                                            <span class="font-medium">{{ $page.props.user_list.from }}</span>
-                                            to
-                                            <span class="font-medium">{{ $page.props.user_list.to }}</span>
-                                            of
-                                            <span class="font-medium">{{ $page.props.user_list.total }}</span>
-                                            results
-                                        </p>
+                            <template v-if="$page.props.user_list.data.length">
+                                <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-200">
+                                    <div class="flex-1 flex justify-between sm:hidden">
+                                        <a :href="$page.props.user_list.prev_page_url" v-if="$page.props.user_list.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
+                                        <a :href="$page.props.user_list.next_page_url"  v-if="$page.props.user_list.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
                                     </div>
-                                    <div>
-                                        <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                            <a  v-for="(link, key) in $page.props.user_list.links" 
-                                                :key="key" 
-                                                :href="link.url ? link.url + '&search=' + this.params.search : '#'"
-                                                class="" 
-                                                :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
-                                                                     : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
-                                                                                                             : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
-                                                v-html="link.label"
-                                            >
-                                            </a>
-                                        </nav>
+                                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                        <div>
+                                            <p class="text-sm text-gray-700">
+                                                Showing
+                                                <span class="font-medium">{{ $page.props.user_list.from }}</span>
+                                                to
+                                                <span class="font-medium">{{ $page.props.user_list.to }}</span>
+                                                of
+                                                <span class="font-medium">{{ $page.props.user_list.total }}</span>
+                                                results
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                                                <a  v-for="(link, key) in $page.props.user_list.links" 
+                                                    :key="key" 
+                                                    :href="link.url ? link.url + '&search=' + this.params.search : '#'"
+                                                    class="" 
+                                                    :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
+                                                                        : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
+                                                                                                                : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
+                                                    v-html="link.label"
+                                                >
+                                                </a>
+                                            </nav>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </template>
                         </div>
                     </div>
                 </div>
             </div>
-            <Modal v-if="modalOpen"></Modal>
+            <ConfirmationModal></ConfirmationModal>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
@@ -114,18 +123,19 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 <script>
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head } from '@inertiajs/inertia-vue3';
-import Modal from '@/Components/Modal.vue'
+import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        Modal, Head
+        ConfirmationModal, Head
     },
     props: {
         filter: Object,
     },
     data(){
         return{
+            id: '',
             modalOpen: false,
             params: {
                 search: this.filter.search ? this.filter.search : '',
@@ -141,9 +151,13 @@ export default {
         }
     },
     methods: {
-        openModal() {
-            this.modalOpen = true;
-        }    
+        openConfirmation() {
+            const show_modal = this.$emit('show', true)
+            this.modalOpen = show_modal
+        },
+        destroy(user_id){
+            this.$inertia.delete(this.route('users.destroy', user_id))
+        }
     }
 }
 </script>

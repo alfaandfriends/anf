@@ -32,10 +32,11 @@ Route::get('/dashboard', function () {
 
 /* Users */
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('users');
+Route::delete('/delete-users', [UserController::class, 'destroy'])->middleware(['auth', 'verified'])->name('users.destroy');
 
 /* Roles */
 Route::get('/roles', [RoleController::class, 'getRoles'])->middleware(['auth', 'verified'])->name('roles');
-Route::get('/roles/{role_name}', [RoleController::class, 'getRolesByRoleName'])->middleware(['auth', 'verified'])->name('roles_by_role_name');
+Route::get('/roles/{role-name}', [RoleController::class, 'getRolesByRoleName'])->middleware(['auth', 'verified'])->name('roles_by_role_name');
 
 /* Permissions */
 Route::get('/permissions', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('permissions');

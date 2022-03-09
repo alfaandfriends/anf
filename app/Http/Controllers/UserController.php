@@ -10,7 +10,6 @@ class UserController extends Controller
 {
     public function index()
     {
-        // dd(request()->al);
         $query  =   User::query();
         
         if(request('search')){
@@ -22,5 +21,9 @@ class UserController extends Controller
             'user_list' => $query->orderBy('id')->paginate(10),
             'filter'=>request()->all('search')
         ]);
+    }
+
+    public function destroy(){
+        return Inertia::render('Components/ConfirmationModal');
     }
 }
