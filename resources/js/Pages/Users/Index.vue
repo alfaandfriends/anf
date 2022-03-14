@@ -26,8 +26,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                         <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th> -->
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                     </tr>
                                 </thead>
@@ -55,10 +55,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             <div class="text-sm text-gray-900">Regional Paradigm Technician</div>
                                             <div class="text-sm text-gray-500">Optimization</div>
                                         </td> -->
+                                        <template v-for="meta, key in user.meta" :key="key">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" v-if="meta.meta_key == 'wpvt_capabilities'">{{ meta.meta_key == 'wpvt_capabilities' ? meta.meta_value : ''}}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" v-else>Not Assigned</td>
+                                        </template>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> Active </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Admin</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
@@ -115,7 +118,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                     </div>
                 </div>
             </div>
-            <ConfirmationModal></ConfirmationModal>
+            <ConfirmationModal :show="modalOpen"></ConfirmationModal>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
@@ -152,8 +155,8 @@ export default {
     },
     methods: {
         openConfirmation() {
-            const show_modal = this.$emit('show', true)
-            this.modalOpen = show_modal
+            // const show_modal = this.$emit('show', false)
+            // this.modalOpen = show_modal
         },
         destroy(user_id){
             this.$inertia.delete(this.route('users.destroy', user_id))

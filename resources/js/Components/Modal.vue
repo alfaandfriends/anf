@@ -1,5 +1,5 @@
 <template>
-  <TransitionRoot as="template" :show="modalOpen">
+  <TransitionRoot as="template">
     <Dialog as="div" class="fixed z-40 inset-0 overflow-y-auto" @close="closeModal">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
@@ -44,20 +44,20 @@ export default {
         Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot,
         ExclamationIcon,
     },
-    props:{
-        show: Boolean,
-        modalOpen: Boolean
-    },
+    // props:{
+    //     show: Boolean,
+    //     modalOpen: Boolean
+    // },
     // data(){
     //     return{
     //         openModal: true
     //     }
     // },
-    method:{
-        closeModal(){
-            console.log(modalOpen)
-            // this.openModal = false
-        }
-    }
+    // method:{
+    //     closeModal(){
+    //         console.log(modalOpen)
+    //         // this.openModal = false
+    //     }
+    // }
 }
 </script>

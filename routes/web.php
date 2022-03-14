@@ -35,10 +35,11 @@ Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'ver
 Route::delete('/delete-users', [UserController::class, 'destroy'])->middleware(['auth', 'verified'])->name('users.destroy');
 
 /* Roles */
-Route::get('/roles', [RoleController::class, 'getRoles'])->middleware(['auth', 'verified'])->name('roles');
-Route::get('/roles/{role-name}', [RoleController::class, 'getRolesByRoleName'])->middleware(['auth', 'verified'])->name('roles_by_role_name');
+Route::get('/roles', [RoleController::class, 'getAllRoles'])->middleware(['auth', 'verified'])->name('get_all_roles');
+Route::get('/roles/{role_name}', [RoleController::class, 'getRole'])->middleware(['auth', 'verified'])->name('get_role');
+Route::post('/roles/add-role', [RoleController::class, 'addRole'])->middleware(['auth', 'verified'])->name('add_role');
 
 /* Permissions */
-Route::get('/permissions', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('permissions');
+Route::get('/permissions', [RoleController::class, 'getAllRoles'])->middleware(['auth', 'verified'])->name('permissions');
 
 require __DIR__.'/auth.php';
