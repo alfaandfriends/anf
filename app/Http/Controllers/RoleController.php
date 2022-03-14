@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {   
-    public function getRoles(){
+    public function getAllRoles(){
         $url        =   env('APP_URL');
         $response   =   Http::get($url.'/wp-json/anf-custom-api/v1/roles');
         $roles      =   json_decode($response->getBody()->getContents());
@@ -17,11 +17,15 @@ class RoleController extends Controller
         ]);
     }
 
-    public function getRolesByRoleName($request)
+    public function getRole($request)
     {
         $url        =   env('APP_URL');
         $response   =   Http::get($url.'/wp-json/anf-custom-api/v1/roles/'.$request);
         $roles      =   json_decode($response->getBody()->getContents());
         dd($roles);
+    }
+
+    public function addRole(){
+        
     }
 }
