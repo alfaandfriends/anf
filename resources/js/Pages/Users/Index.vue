@@ -67,7 +67,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                     </button>
                                                 </div>
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="openConfirmation">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(user.ID)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </button>
                                                 </div>
@@ -115,12 +115,24 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                     </div>
                 </div>
             </div>
-            <ConfirmationModal></ConfirmationModal>
+            <ConfirmationModal 
+                :show="isOpen" 
+                @close="isOpen = !isOpen"
+                confirmationAlert="danger"
+                confirmationTitle="Deactivate User"
+                confirmationText="Are you sure want to Deactivate this user?"
+                confirmationButton="Deactivate"
+                confirmationMethod="delete"
+                confirmationRoute="users.destroy"
+                :confirmationData="userID"
+            >
+            </ConfirmationModal>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
+import { ref } from 'vue';
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
@@ -135,8 +147,14 @@ export default {
     },
     data(){
         return{
-            id: '',
-            modalOpen: false,
+            isOpen: false,
+            userID: '',
+            confirmationTitle: '',
+            confirmationText: '',
+            confirmationAlert: '',
+            confirmationButton: '',
+            confirmationMethod: '',
+            confirmationRoute: '',
             params: {
                 search: this.filter.search ? this.filter.search : '',
             }
@@ -151,12 +169,9 @@ export default {
         }
     },
     methods: {
-        openConfirmation() {
-            const show_modal = this.$emit('show', true)
-            this.modalOpen = show_modal
-        },
-        destroy(user_id){
-            this.$inertia.delete(this.route('users.destroy', user_id))
+        deleteUser(userID){
+            this.isOpen = true
+            this.userID =  userID
         }
     }
 }
