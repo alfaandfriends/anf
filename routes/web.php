@@ -35,9 +35,9 @@ Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'ver
 Route::delete('/delete-users', [UserController::class, 'destroy'])->middleware(['auth', 'verified'])->name('users.destroy');
 
 /* Roles */
-Route::get('/roles', [RoleController::class, 'getAllRoles'])->middleware(['auth', 'verified'])->name('get_all_roles');
-Route::get('/roles/{role_name}', [RoleController::class, 'getRole'])->middleware(['auth', 'verified'])->name('get_role');
-Route::post('/roles/add-role', [RoleController::class, 'addRole'])->middleware(['auth', 'verified'])->name('add_role');
+Route::get('/roles', [RoleController::class, 'index'])->middleware(['auth', 'verified'])->name('roles');
+Route::get('/roles/create', [RoleController::class, 'create'])->middleware(['auth', 'verified'])->name('roles.create');
+Route::post('/roles/store', [RoleController::class, 'store'])->middleware(['auth', 'verified'])->name('roles.store');
 
 /* Permissions */
 Route::get('/permissions', [RoleController::class, 'getAllRoles'])->middleware(['auth', 'verified'])->name('permissions');

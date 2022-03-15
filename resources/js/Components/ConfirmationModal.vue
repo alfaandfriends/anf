@@ -75,11 +75,9 @@ export default {
       if(this.confirmationAlert == 'danger'){
         this.confirmationClass = 'bg-red-600 hover:bg-red-700 focus:ring-red-500'
       }
-      console.log(this.confirmationClass)
     },
     methods:{
         submit(){
-          console.log(this.confirmationData)
           // if(this.confirmationMethod == 'delete'){
           //   this.$inertia.delete(this.route(this.confirmationRoute, user_id))
           // }

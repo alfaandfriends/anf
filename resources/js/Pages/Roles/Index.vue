@@ -1,5 +1,5 @@
 <script setup>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+    import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </script>
 
 <template>
@@ -11,15 +11,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                 Roles
             </h2>
         </template>
-        <div class="py-6">
-            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="mx-auto sm:px-6">
-                    <div class="align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <!-- <div class="flex pb-2 relative text-gray-400 focus-within:text-gray-600">
-                            <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
+        <div class="py-4 px-4">
+            <div class="overflow-x-auto">
+                <div class="mx-auto">
+                    <div class="align-middle inline-block w-full lg:w-1/4">
+                        <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
+                            <a :href="route('roles.create')" as="button" class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+                                Add Role
+                            </a>
+                            <!-- <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
                             <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
-                                    type="text" v-model="params.search" placeholder="Search">
-                        </div> -->
+                                    type="text" v-model="params.search" placeholder="Search"> -->
+                        </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-200">
@@ -39,7 +42,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr v-for="(role, key) in $page.props.roles" :key="key">
+                                    <tr class="hover:bg-gray-200" v-for="(role, key) in $page.props.roles" :key="key">
                                         <td class="px-2 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                             <div class="ml-4">
@@ -56,18 +59,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Admin</td> -->
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                            <div class="flex justify-center">
-                                                <div class="flex pr-1">
-                                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit">
-                                                        <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
-                                                    </button>
-                                                </div>
-                                                <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="openConfirmation" title="Delete">
-                                                        <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(key)" title="Delete">
+                                                <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -76,6 +70,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                     </div>
                 </div>
             </div>
+            <ConfirmationModal 
+                :show="isOpen" 
+                @close="isOpen = !isOpen"
+                confirmationAlert="danger"
+                confirmationTitle="Deactivate User"
+                confirmationText="Are you sure want to Deactivate this user?"
+                confirmationButton="Deactivate"
+                confirmationMethod="delete"
+                confirmationRoute="users.destroy"
+                :confirmationData="userID"
+            >
+            </ConfirmationModal>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
@@ -90,32 +96,23 @@ export default {
         SearchIcon, TrashIcon, PencilIcon,
         ConfirmationModal, Head
     },
-    props: {
-        filter: Object,
-    },
     data(){
         return{
-            // modalOpen: false,
-            // params: {
-            //     search: this.filter.search ? this.filter.search : '',
-            // }
+            roleID: '',
+            isOpen: false,
+            confirmationTitle: '',
+            confirmationText: '',
+            confirmationAlert: '',
+            confirmationButton: '',
+            confirmationMethod: '',
+            confirmationRoute: '',
         }
     },
-    // watch: {
-    //     params: {
-    //         handler(){
-    //             this.$inertia.get(this.route('users'), this.params, { replace: true, preserveState: true});
-    //         },
-    //         deep: true
-    //     }
-    // },
     methods: {
-        // openConfirmation() {
-        //     this.modalOpen = true
-        // },
-        // destroy(user_id){
-        //     this.$inertia.delete(this.route('users.destroy', user_id))
-        // }
+        deleteUser(roleID){
+            this.isOpen = true
+            this.roleID =  roleID
+        }
     }
 }
 </script>

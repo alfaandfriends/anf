@@ -52,7 +52,7 @@ export default {
                             </div>
                             <div class="mb-4" :style="this.showControlPanel == true ? 'display: block' : 'display: none'">
                                 <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Users</span></BreezeNavSubLink>
-                                <BreezeNavSubLink :href="route('get_all_roles')" :active="route().current('get_all_roles')"><span class="select-none">Roles</span></BreezeNavSubLink>
+                                <BreezeNavSubLink :href="route('roles')" :active="route().current('roles')"><span class="select-none">Roles</span></BreezeNavSubLink>
                                 <BreezeNavSubLink :href="route('permissions')" :active="route().current('permissions')"><span class="select-none">Permissions</span></BreezeNavSubLink>
                             </div>
                         </div>
@@ -124,39 +124,33 @@ export default {
                         </div>
                     </div>
                 </div>
-
-                <!-- Responsive Navigation Menu -->
-                <!-- <div class="sm:hidden" 
-                    :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown}"
-                >
-                    <div class="pt-2 pb-3 space-y-1">
-                        <BreezeResponsiveNavLink
-                        :href="route('dashboard')"
-                        :active="route().current('dashboard')"
-                        >
-                        Dashboard
-                        </BreezeResponsiveNavLink>
-                    </div> -->
-
-                <!-- Responsive Settings Options -->
-                    <!-- <div class="pt-4 pb-1 border-t border-gray-200">
-                        <div class="px-4">
-                            <div class="font-medium text-base text-gray-800">
-                                {{ $page.props.auth.user.name }}
-                            </div>
-                            <div class="font-medium text-sm text-gray-500">
-                                {{ $page.props.auth.user.email }}
-                            </div>
-                        </div>
-                        <div class="mt-3 space-y-1">
-                        </div>
-                    </div> -->
-                <!-- </div> -->
             </nav>
+            <!-- <nav class="flex lg:flex-row-reverse py-2 px-6 bg-blue-500" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="#" class="inline-flex items-center text-sm font-medium text-white hover:text-white-900">
+                            <svg class="mr-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white">Roles</a>
+                    </div>
+                    </li>
+                    <li aria-current="page">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        <span class="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500">Flowbite</span>
+                    </div>
+                    </li>
+                </ol>
+            </nav> -->
 
             <!-- Page Heading -->
             <header class="bg-blue-100 shadow" v-if="$slots.header">
-                <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto py-3 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
             </header>

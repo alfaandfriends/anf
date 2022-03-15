@@ -11,11 +11,11 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                 User List
             </h2>
         </template>
-        <div class="py-6">
-            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="mx-auto sm:px-6">
-                    <div class="align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <div class="flex pb-2 relative text-gray-400 focus-within:text-gray-600">
+        <div class="py-4 px-4">
+            <div class="overflow-x-auto">
+                <div class="mx-auto">
+                    <div class="align-middle inline-block min-w-full">
+                        <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
                             <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
                             <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                     type="text" v-model="params.search" placeholder="Search">
@@ -25,8 +25,6 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 <thead class="bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                        <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th> -->
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                     </tr>
@@ -39,7 +37,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr v-for="user in $page.props.user_list.data" :key="user.ID">
+                                    <tr class="hover:bg-gray-200" v-for="user in $page.props.user_list.data" :key="user.ID">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                             <div class="flex-shrink-0 h-10 w-10">
@@ -51,16 +49,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             </div>
                                             </div>
                                         </td>
-                                        <!-- <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Regional Paradigm Technician</div>
-                                            <div class="text-sm text-gray-500">Optimization</div>
-                                        </td> -->
-                                        <template v-for="meta, key in user.meta" :key="key">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" v-if="meta.meta_key == 'wpvt_capabilities'">{{ meta.meta_key == 'wpvt_capabilities' ? meta.meta_value : ''}}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" v-else>Not Assigned</td>
-                                        </template>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> Active </span>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> {{ user.user_status == 0 ? 'Active' : 'Not Active' }} </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
