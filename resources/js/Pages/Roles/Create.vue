@@ -31,16 +31,16 @@
                                 <div v-if="$page.props.errors.role_name"><span class="text-red-500">{{ $page.props.errors.role_name }}</span></div>
 
                                 <!-- submit -->
-                                <div class="flex items-center mt-4">
-                                    <div class="flex pr-3">
-                                        <a :href="route('roles')" class="px-6 py-2 text-white bg-gray-500 hover:bg-gray-600 outline outline-1 outline-offset-2 outline-gray-400 hover:outline-gray-500 rounded" as="button">
-                                            Cancel
-                                        </a>
-                                    </div>
+                                <div class="flex flex-row-reverse items-center mt-4">
                                     <div class="flex">
                                         <button :disabled="form.processing" class="px-6 py-2 text-white bg-green-500 hover:bg-green-600 outline outline-1 outline-offset-2 outline-green-500 hover:outline-green-400 rounded">
                                             Save
                                         </button>
+                                    </div>
+                                    <div class="flex pr-3">
+                                        <a :href="route('roles')" class="px-6 py-2 text-white bg-gray-500 hover:bg-gray-600 outline outline-1 outline-offset-2 outline-gray-400 hover:outline-gray-500 rounded" as="button">
+                                            Cancel
+                                        </a>
                                     </div>
                                 </div>
                                 <progress v-if="form.progress" :value="form.progress.percentage" max="100">

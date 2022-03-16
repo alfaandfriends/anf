@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot :show="open">
-    <Dialog as="div" class="fixed z-40 inset-0 overflow-y-auto" @close="$emit('close')">
+    <Dialog as="div" class="fixed z-40 inset-0 overflow-y-auto">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
           <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
@@ -30,8 +30,14 @@
               </div>
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-              <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" :class="confirmationClass" @click="submit">{{ confirmationButton }}</button>
-              <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-offset-2 focus:ring-0 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" @click="$emit('close')">Cancel</button>
+                <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed" :class="confirmationClass" :disabled="processing" @click="submit">
+                    <svg v-if="processing == true" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {{ processing == false ? confirmationButton : 'Processing'}}
+                </button>
+              <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-offset-2 focus:ring-0 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed" :disabled="processing" @click="$emit('close')">Cancel</button>
             </div>
           </div>
         </TransitionChild>
@@ -41,7 +47,7 @@
 </template>
 
 <script>
-import { ref, toRef } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationIcon, InformationCircleIcon, ExclamationCircleIcon } from '@heroicons/vue/outline'
 
@@ -58,11 +64,12 @@ export default {
         confirmationButton: String,
         confirmationMethod: String,
         confirmationRoute: String,
-        confirmationData: Object,
+        confirmationData: String,
     },
     data(){
       return{
-        confirmationClass: ''
+        confirmationClass: '',
+        processing: false
       }
     },
     created(){
@@ -78,12 +85,16 @@ export default {
     },
     methods:{
         submit(){
-          // if(this.confirmationMethod == 'delete'){
-          //   this.$inertia.delete(this.route(this.confirmationRoute, user_id))
-          // }
-          // if(this.confirmationMethod == 'post'){
-          //   this.$inertia.post(this.route(this.confirmationRoute, user_id))
-          // }
+            if(this.confirmationMethod == 'delete'){
+                this.$inertia.delete(this.route(this.confirmationRoute, this.confirmationData), {
+                    preserveScroll: true,
+                    onStart: () => this.processing = true,
+                    onSuccess: ()  =>  {
+                        this.$emit('close'),
+                        this.processing = false
+                    },
+                })
+            }
         }
     }
 }

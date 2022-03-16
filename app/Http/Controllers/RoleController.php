@@ -39,7 +39,12 @@ class RoleController extends Controller
         return Redirect::route('roles');
     }
 
-    public function destroy(Request $request){
-        dd($request);
+    public function destroy($id){
+        $url        =   env('APP_URL');
+        $response    =   Http::post($url.'/wp-json/anf-custom-api/v1/roles/remove_role', [
+            'role'          =>  $id
+        ]);
+        
+        return Redirect::route('roles')->with(['type'=>'success', 'message'=>'Role deleted successfully!']);
     }
 }

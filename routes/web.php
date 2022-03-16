@@ -38,6 +38,7 @@ Route::delete('/delete-users', [UserController::class, 'destroy'])->middleware([
 Route::get('/roles', [RoleController::class, 'index'])->middleware(['auth', 'verified'])->name('roles');
 Route::get('/roles/create', [RoleController::class, 'create'])->middleware(['auth', 'verified'])->name('roles.create');
 Route::post('/roles/store', [RoleController::class, 'store'])->middleware(['auth', 'verified'])->name('roles.store');
+Route::delete('/roles/destroy/{role}', [RoleController::class, 'destroy'])->middleware(['auth', 'verified'])->name('roles.destroy');
 
 /* Permissions */
 Route::get('/permissions', [RoleController::class, 'getAllRoles'])->middleware(['auth', 'verified'])->name('permissions');

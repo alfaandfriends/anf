@@ -7,9 +7,10 @@ import BreezeNavSubLink from '@/Components/NavSubLink.vue'
 import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
 import { Link } from '@inertiajs/inertia-vue3'
 import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } from '@heroicons/vue/solid'
+import Toast from '@/Components/Toast.vue'
 export default {
     components: {
-        BreezeApplicationLogo, Link,
+        BreezeApplicationLogo, Link, Toast,
         BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink,
         CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon,
     },
@@ -21,9 +22,8 @@ export default {
             showSiteSetting: false,
         }
     },
-
     created(){
-        route().current('users') || route().current('get_all_roles') || route().current('permissions') ? this.showControlPanel = true : this.showControlPanel = false
+        route().current('users') || route().current('roles') || route().current('permissions')|| route().current('roles.create') ? this.showControlPanel = true : this.showControlPanel = false
     }
 }
 </script>
@@ -71,6 +71,9 @@ export default {
             </div>
         </div>
         <div class="min-h-screen bg-gray-100 w-full">
+            <div v-if="$page.props.flash.type" class=" top-10 fixed right-10 z-40">
+                <Toast :type="$page.props.flash.type" :message="$page.props.flash.message"></Toast>
+            </div>
             <nav class="bg-white border-b border-gray-100 sticky top-0 z-20">
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto px-4 sm:px-6 lg:px-8">

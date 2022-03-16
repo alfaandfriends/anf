@@ -14,7 +14,7 @@
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
                 <div class="mx-auto">
-                    <div class="align-middle inline-block w-full lg:w-1/4">
+                    <div class="align-middle inline-block w-full lg:w-1/2">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
                             <a :href="route('roles.create')" as="button" class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
                                 Add Role
@@ -34,7 +34,7 @@
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
+                                <tbody class="bg-white divide-y divide-gray-200 overflow-y-scroll">
                                     <tr v-if="$page.props.roles.length">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
@@ -42,7 +42,7 @@
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr class="hover:bg-gray-200" v-for="(role, key) in $page.props.roles" :key="key">
+                                    <tr class="hover:bg-gray-200" v-for="(role, roleID) in $page.props.roles" :key="roleID">
                                         <td class="px-2 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                             <div class="ml-4">
@@ -59,7 +59,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Admin</td> -->
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(key)" title="Delete">
+                                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(roleID)" title="Delete">
                                                 <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                             </button>
                                         </td>
@@ -74,12 +74,12 @@
                 :show="isOpen" 
                 @close="isOpen = !isOpen"
                 confirmationAlert="danger"
-                confirmationTitle="Deactivate User"
-                confirmationText="Are you sure want to Deactivate this user?"
-                confirmationButton="Deactivate"
+                confirmationTitle="Delete Role"
+                confirmationText="Are you sure want to delete this role?"
+                confirmationButton="Delete"
                 confirmationMethod="delete"
-                confirmationRoute="users.destroy"
-                :confirmationData="userID"
+                confirmationRoute="roles.destroy"
+                :confirmationData="confirmationData"
             >
             </ConfirmationModal>
         </div>
@@ -98,7 +98,6 @@ export default {
     },
     data(){
         return{
-            roleID: '',
             isOpen: false,
             confirmationTitle: '',
             confirmationText: '',
@@ -106,12 +105,14 @@ export default {
             confirmationButton: '',
             confirmationMethod: '',
             confirmationRoute: '',
+            confirmationData: '',
         }
     },
     methods: {
         deleteUser(roleID){
+            // console.log(this.$toast)
             this.isOpen = true
-            this.roleID =  roleID
+            this.confirmationData = roleID
         }
     }
 }
