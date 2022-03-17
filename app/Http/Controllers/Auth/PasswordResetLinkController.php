@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
-use Corcel\Laravel\Auth\ResetsPasswords as CorcelResetsPasswords;
 
 class PasswordResetLinkController extends Controller
 {
-    use CorcelResetsPasswords;
+    // use Password, CorcelResetsPasswords {
+    //     CorcelResetsPasswords::resetPassword insteadof Password;
+    // }
     /**
      * Display the password reset link request view.
      *
@@ -35,29 +35,26 @@ class PasswordResetLinkController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
-    {
+    {   
         $request->validate([
-            'email' => 'required',
+            'user_email' => 'required|email',
         ]);
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
 
-        $hashed_random_password = Hash::make(Str::random(12));
-
-        $status = CorcelResetsPasswords::resetPassword(
-            $request->email,
-            $hashed_random_password
+        // $hashed_random_password = Hash::make(Str::random(12));
+        $status = Password::sendResetLink(
+            $request->only('user_email')
         );
-        dd($status);
 
         if ($status == Password::RESET_LINK_SENT) {
             return back()->with('status', __($status));
         }
 
         throw ValidationException::withMessages([
-            'email' => [trans($status)],
+            'user_email' => [trans($status)],
         ]);
     }
 }
