@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -10,9 +11,10 @@ use Illuminate\Support\Facades\Redirect;
 class RoleController extends Controller
 {   
     public function index(){
-        $url        =   env('APP_URL');
-        $response   =   Http::get($url.'/wp-json/anf-custom-api/v1/roles');
-        $roles      =   json_decode($response->getBody()->getContents());
+        // $url        =   env('APP_URL');
+        // $response   =   Http::get($url.'/wp-json/anf-custom-api/v1/roles');
+        // $roles      =   json_decode($response->getBody()->getContents());
+        $roles  =   $this->getRole();
 
         return Inertia::render('Roles/Index', [
             'roles' => $roles
@@ -46,5 +48,13 @@ class RoleController extends Controller
         ]);
         
         return Redirect::route('roles')->with(['type'=>'success', 'message'=>'Role deleted successfully!']);
+    }
+    
+    public function getRole(){
+        
+        $serialized_data    =   Role::where('option_name', 'wpvt_user_roles')->pluck('option_value')->first();
+        $roles              =   unserialize($serialized_data);
+
+        return $roles;
     }
 }

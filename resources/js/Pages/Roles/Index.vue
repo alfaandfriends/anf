@@ -46,7 +46,7 @@
                                         <td class="px-2 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                             <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">{{ role }}</div>
+                                                <div class="text-sm font-medium text-gray-900">{{ role.name }}</div>
                                             </div>
                                             </div>
                                         </td>

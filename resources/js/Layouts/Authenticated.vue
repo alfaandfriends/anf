@@ -24,7 +24,8 @@ export default {
     },
     created(){
         route().current('users') || route().current('roles') || route().current('permissions')|| route().current('roles.create') ? this.showControlPanel = true : this.showControlPanel = false
-    }
+        this.showToast = true;
+    },
 }
 </script>
 
@@ -71,9 +72,7 @@ export default {
             </div>
         </div>
         <div class="min-h-screen bg-gray-100 w-full">
-            <div v-if="$page.props.flash.type" class=" top-10 fixed right-10 z-40">
-                <Toast :type="$page.props.flash.type" :message="$page.props.flash.message"></Toast>
-            </div>
+            <Toast :toastData="$page.props.flash"></Toast>
             <nav class="bg-white border-b border-gray-100 sticky top-0 z-20">
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto px-4 sm:px-6 lg:px-8">
