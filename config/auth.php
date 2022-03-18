@@ -88,9 +88,7 @@ return [
 
     'passwords' => [
         'users' => [
-            // 'provider' => 'users',
-            'driver' => 'corcel',
-            'model' => Corcel\Model\User::class,
+            'provider' => 'users',
             'table' => 'wpvt_users',
             'expire' => 60,
             'throttle' => 60,
