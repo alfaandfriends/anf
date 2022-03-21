@@ -46,21 +46,27 @@ const submit = () => {
                 <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" />
             </div>
 
-            <div class="block mt-4">
-                <label class="flex items-center">
+            <div class="mt-4 flex justify-between place-items-end">
+                <label class="">
                     <BreezeCheckbox name="remember" v-model:checked="form.remember" />
                     <span class="ml-2 text-sm text-gray-600">Remember me</span>
                 </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-red-500 hover:text-red-400 font-bold">
                     Forgot your password?
                 </Link>
-
-                <BreezeButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </BreezeButton>
+            </div>
+            <div class="border-b-2 mt-4"></div>
+            <div class="mt-4">
+                <div class="flex justify-center">
+                    <BreezeButton class="" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Log in
+                    </BreezeButton>
+                </div>
+                <div class="text-center text-gray-400 pt-2">or</div>
+                <div class="text-center">
+                    <span class="text-sm ">Don't have an account? | </span>
+                    <Link :href="route('register')" class="text-sm font-bold underline text-indigo-700 hover:text-indigo-900">Register new account</Link>
+                </div>
             </div>
         </form>
     </BreezeGuestLayout>

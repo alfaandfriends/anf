@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Redirect;
 class RoleController extends Controller
 {   
     public function index(){
-        // $url        =   env('APP_URL');
-        // $response   =   Http::get($url.'/wp-json/anf-custom-api/v1/roles');
-        // $roles      =   json_decode($response->getBody()->getContents());
         $roles  =   $this->getRole();
 
         return Inertia::render('Roles/Index', [
@@ -32,7 +29,7 @@ class RoleController extends Controller
             'role_name' => 'required|max:50',
         ]);
 
-        $url        =   env('APP_URL');
+        $url        =   env('API_URL');
         $response    =   Http::post($url.'/wp-json/anf-custom-api/v1/roles/add_role', [
             'role'          =>  $request->role,
             'role_name'     =>  $request->role_name,
@@ -42,7 +39,7 @@ class RoleController extends Controller
     }
 
     public function destroy($id){
-        $url        =   env('APP_URL');
+        $url        =   env('API_URL');
         $response    =   Http::post($url.'/wp-json/anf-custom-api/v1/roles/remove_role', [
             'role'          =>  $id
         ]);
