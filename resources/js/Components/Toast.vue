@@ -102,6 +102,7 @@ export default {
         toastData:{
             deep: true,
             handler(){
+                console.log(this.toastData)
                 this.visible = true
                 if(this.timeout){
                     clearTimeout(this.timeout);

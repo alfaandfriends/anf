@@ -110,7 +110,6 @@ export default {
     },
     methods: {
         deleteUser(roleID){
-            // console.log(this.$toast)
             this.isOpen = true
             this.confirmationData = roleID
         }

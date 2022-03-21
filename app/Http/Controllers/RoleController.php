@@ -29,13 +29,15 @@ class RoleController extends Controller
             'role_name' => 'required|max:50',
         ]);
 
-        $url        =   env('API_URL');
+        $url         =   env('API_URL');
         $response    =   Http::post($url.'/wp-json/anf-custom-api/v1/roles/add_role', [
             'role'          =>  $request->role,
             'role_name'     =>  $request->role_name,
         ]);
+
+        $result     =   json_decode($response->body());
         
-        return Redirect::route('roles');
+        return redirect('roles')->with(['type'=>'success', 'message'=>'Role added successfully!']);
     }
 
     public function destroy($id){
@@ -44,7 +46,9 @@ class RoleController extends Controller
             'role'          =>  $id
         ]);
         
-        return Redirect::route('roles')->with(['type'=>'success', 'message'=>'Role deleted successfully!']);
+        $result     =   json_decode($response->body());
+        
+        return redirect('roles')->with(['type'=>'success', 'message'=>'Role deleted successfully!']);
     }
     
     public function getRole(){
