@@ -38,6 +38,7 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
@@ -51,7 +52,7 @@ class NewPasswordController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
                 $user->forceFill([
-                    'password' => Hash::make($request->password),
+                    'user_pass' => Hash::make($request->password),
                     'remember_token' => Str::random(60),
                 ])->save();
 

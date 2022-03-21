@@ -4,7 +4,7 @@ import BreezeGuestLayout from '@/Layouts/Guest.vue';
 import BreezeInput from '@/Components/Input.vue';
 import BreezeLabel from '@/Components/Label.vue';
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
-import { Head, useForm } from '@inertiajs/inertia-vue3';
+import { Head, useForm, Link } from '@inertiajs/inertia-vue3';
 
 defineProps({
     status: String,
@@ -39,7 +39,15 @@ const submit = () => {
                 <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.user_email" required autofocus autocomplete="username" />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex justify-between mt-4">
+                <Link class="place-self-center text-gray-900 text-sm underline" :href="route('login')">
+                    <span>
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg> -->
+                        Back to Login
+                    </span>
+                </Link>
                 <BreezeButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Email Password Reset Link
                 </BreezeButton>

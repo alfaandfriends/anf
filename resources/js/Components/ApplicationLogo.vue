@@ -1,3 +1,3 @@
 <template>
-    <img :href="route('dashboard')" src="/images/anf-logo-main.png" class="h-14 w-auto block" alt="">
+    <img :href="route('dashboard')" src="/images/anf-logo-main-2x.png" class="w-35 h-35 block" alt="">
 </template>
