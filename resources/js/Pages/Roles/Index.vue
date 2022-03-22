@@ -43,7 +43,7 @@
                                         </td>
                                     </tr> 
                                     <tr class="hover:bg-gray-200" v-for="(role, roleID) in $page.props.roles" :key="roleID">
-                                        <td class="px-2 py-4 whitespace-nowrap">
+                                        <td class="px-2 py-2">
                                             <div class="flex items-center">
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900">{{ role.name }}</div>
@@ -58,7 +58,7 @@
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> Active </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Admin</td> -->
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                        <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
                                             <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(roleID)" title="Delete">
                                                 <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                             </button>

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\Menu;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -41,6 +42,10 @@ class HandleInertiaRequests extends Middleware
                 'type' => fn () => $request->session()->get('type'),
                 'message' => fn () => $request->session()->get('message')
             ],
+            'menu' => [
+                'parent_menus' => Menu::where('menu_parent', null)->where('status', 'Y')->get(),
+                'child_menus'  => Menu::whereNotNull('menu_parent')->where('status', 'Y')->get(),
+            ]
         ]);
     }
 }

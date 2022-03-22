@@ -26,6 +26,11 @@ export default {
         route().current('users') || route().current('roles') || route().current('permissions')|| route().current('roles.create') ? this.showControlPanel = true : this.showControlPanel = false
         this.showToast = true;
     },
+    methods: {
+        openSub(){
+
+        }
+    }
 }
 </script>
 
@@ -39,24 +44,30 @@ export default {
                 >
                     <span class="flex items-center px-4 py-5 text-white font-bold">ALFA and Friends</span>
                     <nav class="text-sm font-medium text-gray-500">
-                        <BreezeNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            <ViewGridIcon class="h-5 w-5 mr-2"></ViewGridIcon>
-                            <span class="select-none">Dashboard</span> 
-                        </BreezeNavLink>
-                        <div>
-                            <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="showControlPanel = !showControlPanel">
-                                <div class="flex items-center">
-                                    <CogIcon class="h-5 w-5 mr-2"></CogIcon>
-                                    <span class="select-none">Control Panel</span>
+                        <template v-for="(parent_menu, key) in $page.props.menu.parent_menus" :key="key">
+                            <BreezeNavLink v-if="parent_menu.route" :href="route(parent_menu.route)" :active="route().current(parent_menu.route)">
+                                <span class="mr-2" v-html="parent_menu.menu_icon"></span>
+                                <span class="select-none">{{ parent_menu.menu_label }}</span> 
+                            </BreezeNavLink>
+                            
+                            <div v-else>
+                                <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="showControlPanel = !showControlPanel">
+                                    <div class="flex items-center">
+                                        <span class="mr-2" v-html="parent_menu.menu_icon"></span>
+                                        <span class="select-none">{{ parent_menu.menu_label }}</span> 
+                                    </div>
+                                    <ChevronRightIcon :class="{ 'rotate-90': showControlPanel }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                 </div>
-                                <ChevronRightIcon :class="{ 'rotate-90': showControlPanel }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
+                                <div class="mb-4" :style="this.showControlPanel == true ? 'display: block' : 'display: none'">
+                                    <template v-for="(child_menu, key) in $page.props.menu.child_menus" :key="key">
+                                        <BreezeNavSubLink :href="route(child_menu.route)" :active="route().current(child_menu.route)"><span class="select-none">{{ child_menu.menu_label }}</span></BreezeNavSubLink>
+                                    </template>
+                                    <!-- <BreezeNavSubLink :href="route('roles')" :active="route().current('roles')"><span class="select-none">Roles</span></BreezeNavSubLink>
+                                    <BreezeNavSubLink :href="route('menus')" :active="route().current('menus')"><span class="select-none">Menus</span></BreezeNavSubLink>
+                                    <BreezeNavSubLink :href="route('permissions')" :active="route().current('permissions')"><span class="select-none">Permissions</span></BreezeNavSubLink> -->
+                                </div>
                             </div>
-                            <div class="mb-4" :style="this.showControlPanel == true ? 'display: block' : 'display: none'">
-                                <BreezeNavSubLink :href="route('users')" :active="route().current('users')"><span class="select-none">Users</span></BreezeNavSubLink>
-                                <BreezeNavSubLink :href="route('roles')" :active="route().current('roles')"><span class="select-none">Roles</span></BreezeNavSubLink>
-                                <BreezeNavSubLink :href="route('permissions')" :active="route().current('permissions')"><span class="select-none">Permissions</span></BreezeNavSubLink>
-                            </div>
-                        </div>
+                        </template>
                         <BreezeNavLink class="w-full sm:hidden" :href="route('logout')" method="post" as="button">
                             <LogoutIcon class="h-5 w-5 mr-2"></LogoutIcon>
                             Log Out

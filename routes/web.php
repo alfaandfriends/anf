@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MenuController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,6 +40,10 @@ Route::get('/roles', [RoleController::class, 'index'])->middleware(['auth', 'ver
 Route::get('/roles/create', [RoleController::class, 'create'])->middleware(['auth', 'verified'])->name('roles.create');
 Route::post('/roles/store', [RoleController::class, 'store'])->middleware(['auth', 'verified'])->name('roles.store');
 Route::delete('/roles/destroy/{role}', [RoleController::class, 'destroy'])->middleware(['auth', 'verified'])->name('roles.destroy');
+
+Route::get('/menus', [MenuController::class, 'index'])->middleware(['auth', 'verified'])->name('menus');
+Route::get('/menus/add', [MenuController::class, 'addMenu'])->middleware(['auth', 'verified'])->name('menus.add_menu');
+Route::get('/menus/add-sub-menu', [MenuController::class, 'addSubMenu'])->middleware(['auth', 'verified'])->name('menus.add_sub_menu');
 
 /* Permissions */
 Route::get('/permissions', [RoleController::class, 'getAllRoles'])->middleware(['auth', 'verified'])->name('permissions');
