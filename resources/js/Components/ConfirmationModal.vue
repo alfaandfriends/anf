@@ -64,7 +64,7 @@ export default {
         confirmationButton: String,
         confirmationMethod: String,
         confirmationRoute: String,
-        confirmationData: String,
+        confirmationData: [String, Number],
     },
     data(){
       return{

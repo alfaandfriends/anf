@@ -98,11 +98,17 @@ export default {
             timeout: null
         }
     },
+    mounted(){
+        if(this.timeout){
+            clearTimeout(this.timeout);
+        }
+        this.timeout = setTimeout(() => this.visible = false, 5000);
+    },
     watch:{
         toastData:{
+            immediate: true,
             deep: true,
             handler(){
-                console.log(this.toastData)
                 this.visible = true
                 if(this.timeout){
                     clearTimeout(this.timeout);

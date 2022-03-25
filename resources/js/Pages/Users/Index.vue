@@ -54,11 +54,6 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
-                                                <div class="flex pr-1">
-                                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded">
-                                                        <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
-                                                    </button>
-                                                </div>
                                                 <div class="flex">
                                                     <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(user.ID)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>

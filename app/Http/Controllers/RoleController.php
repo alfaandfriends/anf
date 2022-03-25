@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 
 class RoleController extends Controller
 {   
     public function index(){
-        $roles  =   $this->getRole();
-
+        $roles  =  Role::get();
+        
         return Inertia::render('Roles/Index', [
             'roles' => $roles
         ]);
@@ -29,33 +30,38 @@ class RoleController extends Controller
             'role_name' => 'required|max:50',
         ]);
 
-        $url         =   env('API_URL');
-        $response    =   Http::post($url.'/wp-json/anf-custom-api/v1/roles/add_role', [
-            'role'          =>  $request->role,
-            'role_name'     =>  $request->role_name,
+        DB::table('roles')->insert([
+            'role' => $request->role,
+            'name' => $request->role_name,
+            'status' => $request->status
+        ]);
+        
+        return redirect('roles')->with(['type'=>'success', 'message'=>'Role added successfully !']);
+    }
+
+    public function edit(Request $request){
+        $roles      =   Role::where('role', $request->role)->first();
+
+        return Inertia::render('Roles/Edit', [
+            'roles' => $roles
+        ]);
+    }
+
+    public function update(Request $request){
+        $request->validate([
+            'name' => 'required|max:50',
         ]);
 
-        $result     =   json_decode($response->body());
-        
-        return redirect('roles')->with(['type'=>'success', 'message'=>'Role added successfully!']);
+        DB::table('roles')
+            ->where('role', $request->role)
+            ->update(['name' => $request->name, 'status' => $request->status]);
+
+        return redirect('roles')->with(['type'=>'success', 'message'=>'Role updated successfully !']);
     }
 
     public function destroy($id){
-        $url        =   env('API_URL');
-        $response    =   Http::post($url.'/wp-json/anf-custom-api/v1/roles/remove_role', [
-            'role'          =>  $id
-        ]);
+        DB::table('roles')->where('role', $id)->delete();
         
-        $result     =   json_decode($response->body());
-        
-        return redirect('roles')->with(['type'=>'success', 'message'=>'Role deleted successfully!']);
-    }
-    
-    public function getRole(){
-        
-        $serialized_data    =   Role::where('option_name', 'wpvt_user_roles')->pluck('option_value')->first();
-        $roles              =   unserialize($serialized_data);
-
-        return $roles;
+        return redirect('roles')->with(['type'=>'success', 'message'=>'Role deleted successfully !']);
     }
 }

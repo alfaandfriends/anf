@@ -21,7 +21,7 @@
 
         <!-- And then the single component -->
         <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/dropdown.min.js"></script>
-
+        
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>

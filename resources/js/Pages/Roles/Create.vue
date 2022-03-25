@@ -15,32 +15,43 @@
             <div class="overflow-x-auto">
                 <div class="mx-auto">
                     <div class="align-middle inline-block lg:w-1/3">
-                        <div class="p-6 bg-white border-b border-gray-200">
+                        <div class="p-6 bg-indigo-100 rounded-md border-b border-gray-200">
                             <form @submit.prevent="submit">
                                 <div>
                                     <label for="role">Role</label>
-                                    <input type="text" class="w-full px-4 py-2 mt-2 border rounded-md" v-model="form.role" 
+                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.role" 
                                            :class="$page.props.errors.role ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
                                 </div>
                                 <div v-if="$page.props.errors.role"><span class="text-red-500">{{ $page.props.errors.role }}</span></div>
                                 <div class="mt-4">
                                     <label for="role_name">Display Name</label>
-                                    <input type="text" class="w-full px-4 py-2 mt-2 border rounded-md" v-model="form.role_name" 
+                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.role_name" 
                                            :class="$page.props.errors.role_name ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
                                 </div>
                                 <div v-if="$page.props.errors.role_name"><span class="text-red-500">{{ $page.props.errors.role_name }}</span></div>
 
+                                <div class="flex mt-4">
+                                    <label for="" class="font-sm pr-3">Status</label>
+                                    <Toggle v-model="form.status" 
+                                            :classes="{
+                                                container: 'inline-block',
+                                                toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
+                                                toggleOn: 'bg-green-500 border-green-500 justify-start text-white',
+                                                toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
+                                            }
+                                    "/>
+                                </div>
                                 <!-- submit -->
                                 <div class="flex flex-row-reverse items-center mt-4">
                                     <div class="flex">
-                                        <button :disabled="form.processing" class="px-6 py-2 text-white bg-green-500 hover:bg-green-600 outline outline-1 outline-offset-2 outline-green-500 hover:outline-green-400 rounded">
+                                        <button :disabled="form.processing" class="px-6 py-1 text-white bg-green-500 hover:bg-green-600 outline outline-1 outline-offset-2 outline-green-500 hover:outline-green-400 rounded">
                                             Save
                                         </button>
                                     </div>
                                     <div class="flex pr-3">
-                                        <a :href="route('roles')" class="px-6 py-2 text-white bg-gray-500 hover:bg-gray-600 outline outline-1 outline-offset-2 outline-gray-400 hover:outline-gray-500 rounded" as="button">
+                                        <Link :href="route('roles')" class="px-6 py-1 text-white bg-gray-500 hover:bg-gray-600 outline outline-1 outline-offset-2 outline-gray-400 hover:outline-gray-500 rounded" as="button">
                                             Cancel
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                                 <progress v-if="form.progress" :value="form.progress.percentage" max="100">
@@ -56,12 +67,17 @@
 </template>
 
 <script>
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/inertia-vue3';
+import Toggle from '@vueform/toggle'
 
 export default {
+    components: {
+        Link, Toggle
+    },
     data() {
         return {
             form: {
+                status: true,
                 role: null,
                 role_name: null,
             },
@@ -69,7 +85,7 @@ export default {
     },
     methods: {
         submit() {
-            this.$inertia.post('/roles/store', this.form)
+            this.$inertia.post(route('roles.store'), this.form)
         },
     },
 }

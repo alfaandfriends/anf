@@ -8,6 +8,7 @@ import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
 import { Link } from '@inertiajs/inertia-vue3'
 import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } from '@heroicons/vue/solid'
 import Toast from '@/Components/Toast.vue'
+
 export default {
     components: {
         BreezeApplicationLogo, Link, Toast,
@@ -23,53 +24,56 @@ export default {
         }
     },
     created(){
-        route().current('users') || route().current('roles') || route().current('permissions')|| route().current('roles.create') ? this.showControlPanel = true : this.showControlPanel = false
-        this.showToast = true;
+        // route().current('users') || route().current('roles') || route().current('permissions')|| route().current('roles.create') ? this.showControlPanel = true : this.showControlPanel = false
     },
     methods: {
-        openSub(){
-
-        }
     }
 }
 </script>
+
+<style src="@vueform/toggle/themes/default.css"></style>
 
 <template>
     <div class="flex">
         <!-- Sidebar -->
         <div class="min-h-screen bg-gray-50" x-data="{ sideBar: false }">
             <div class="flex">
-                <nav class="fixed top-0 left-0 z-30 h-full pb-10 overflow-x-hidden overflow-y-auto transition origin-left transform bg-gray-900 w-60 sm:translate-x-0" 
+                <nav class="fixed top-0 left-0 z-30 h-full pb-10 overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-60 sm:translate-x-0" 
                      :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
                 >
                     <span class="flex items-center px-4 py-5 text-white font-bold">ALFA and Friends</span>
                     <nav class="text-sm font-medium text-gray-500">
-                        <template v-for="(parent_menu, key) in $page.props.menu.parent_menus" :key="key">
-                            <BreezeNavLink v-if="parent_menu.route" :href="route(parent_menu.route)" :active="route().current(parent_menu.route)">
-                                <span class="mr-2" v-html="parent_menu.menu_icon"></span>
-                                <span class="select-none">{{ parent_menu.menu_label }}</span> 
-                            </BreezeNavLink>
-                            
-                            <div v-else>
-                                <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="showControlPanel = !showControlPanel">
-                                    <div class="flex items-center">
-                                        <span class="mr-2" v-html="parent_menu.menu_icon"></span>
-                                        <span class="select-none">{{ parent_menu.menu_label }}</span> 
+                        <template v-for="menu_data, key in $page.props.menu" :key="key">
+                            <template v-if="menu_data.menu_route">
+                                <BreezeNavLink :href="route(menu_data.menu_route)" :active="route().current(menu_data.menu_route)">
+                                    <span class="mr-2" v-html="menu_data.menu_icon"></span>
+                                    <span class="select-none">{{ menu_data.menu_label }}</span> 
+                                </BreezeNavLink>
+                            </template>
+                            <template v-else>
+                                <div>
+                                    <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="showControlPanel = !showControlPanel">
+                                        <div class="flex items-center">
+                                            <span class="mr-2" v-html="menu_data.menu_icon"></span>
+                                            <span class="select-none">{{ menu_data.menu_label }}</span> 
+                                        </div>
+                                        <ChevronRightIcon :class="{ 'rotate-90': showControlPanel }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                     </div>
-                                    <ChevronRightIcon :class="{ 'rotate-90': showControlPanel }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
+                                    <div class="mb-3 panel_" :class="menu_data.id" :style="this.showControlPanel == true ? 'display: block' : 'display: none'">
+                                        <template v-for="(sub_menu_data, key) in menu_data.sub_menu" :key="key">
+                                            <BreezeNavSubLink :href="sub_menu_data.sub_menu_route ? route(sub_menu_data.sub_menu_route) : ''" 
+                                                            :active="sub_menu_data.sub_menu_route ? route().current(sub_menu_data.sub_menu_route) : ''"
+                                            >
+                                                <span class="select-none">{{ sub_menu_data.sub_menu_label }}</span>
+                                            </BreezeNavSubLink>
+                                        </template>
+                                    </div>
                                 </div>
-                                <div class="mb-4" :style="this.showControlPanel == true ? 'display: block' : 'display: none'">
-                                    <template v-for="(child_menu, key) in $page.props.menu.child_menus" :key="key">
-                                        <BreezeNavSubLink :href="route(child_menu.route)" :active="route().current(child_menu.route)"><span class="select-none">{{ child_menu.menu_label }}</span></BreezeNavSubLink>
-                                    </template>
-                                    <!-- <BreezeNavSubLink :href="route('roles')" :active="route().current('roles')"><span class="select-none">Roles</span></BreezeNavSubLink>
-                                    <BreezeNavSubLink :href="route('menus')" :active="route().current('menus')"><span class="select-none">Menus</span></BreezeNavSubLink>
-                                    <BreezeNavSubLink :href="route('permissions')" :active="route().current('permissions')"><span class="select-none">Permissions</span></BreezeNavSubLink> -->
-                                </div>
-                            </div>
+                            </template>
+                            
                         </template>
                         <BreezeNavLink class="w-full sm:hidden" :href="route('logout')" method="post" as="button">
-                            <LogoutIcon class="h-5 w-5 mr-2"></LogoutIcon>
+                            <LogoutIcon class="h-6 w-6 mr-2"></LogoutIcon>
                             Log Out
                         </BreezeNavLink>
                     </nav>
@@ -138,31 +142,9 @@ export default {
                     </div>
                 </div>
             </nav>
-            <!-- <nav class="flex lg:flex-row-reverse py-2 px-6 bg-blue-500" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                    <li class="inline-flex items-center">
-                        <a href="#" class="inline-flex items-center text-sm font-medium text-white hover:text-white-900">
-                            <svg class="mr-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li>
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                        <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white">Roles</a>
-                    </div>
-                    </li>
-                    <li aria-current="page">
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                        <span class="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500">Flowbite</span>
-                    </div>
-                    </li>
-                </ol>
-            </nav> -->
 
             <!-- Page Heading -->
-            <header class="bg-blue-100 shadow" v-if="$slots.header">
+            <header class="bg-indigo-200 shadow" v-if="$slots.header">
                 <div class="mx-auto py-3 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>

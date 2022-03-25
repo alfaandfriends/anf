@@ -8,7 +8,7 @@
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Add Sub Menu
+                Edit Sub Menu
             </h2>
         </template>
         <div class="py-4 px-4">
@@ -75,23 +75,23 @@ export default {
         Toggle, Link
     },
     props: {
-        menu_id: String,
+        sub_menus: Object,
         url_redirect: String
     },
     data() {
         return {
             form: {
                 url_redirect: this.url_redirect,
-                menu_id: this.menu_id,
-                menu_sub_label: null,
-                menu_sub_route: null,
-                menu_sub_status: false,
+                menu_id: this.sub_menus.id,
+                menu_sub_label: this.sub_menus.menu_sub_label,
+                menu_sub_route: this.sub_menus.menu_sub_route,
+                menu_sub_status: this.sub_menus.menu_sub_status,
             },
         }
     },
     methods: {
         submit() {
-            this.$inertia.post(route('menus.store_sub_menu'), this.form)
+            this.$inertia.post(route('menus.update_sub_menu'), this.form)
         },
     },
 }
