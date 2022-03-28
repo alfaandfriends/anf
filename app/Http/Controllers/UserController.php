@@ -19,32 +19,15 @@ class UserController extends Controller
 
         $results    =   $query->orderBy('id')->paginate(10);
 
-        
-        // $url        =   env('APP_URL');
-        // $response   =   Http::get($url.'/wp-json/anf-custom-api/v1/roles');
-        // $role_list      =   (array)json_decode($response->getBody()->getContents());
-
-        /* get user role */
-        // $user_role  =   array();
-        // foreach($results as $result){
-        //     foreach($result->meta as $meta){
-        //         if($meta->meta_key == 'wpvt_capabilities'){
-        //             $roles   =    unserialize($meta->meta_value);
-        //             foreach($roles as $role_id=>$role){
-        //                 if(isset($role_list[$role_id])){
-        //                     $role_name[$role_id]      =   $role_list[$role_id];
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     $user_role[$result->ID]     =   $role_name;
-        // }
-
         return Inertia::render('Users/Index', [
             'filter'=>request()->all('search'),
             'user_list' => $results,
-            // 'user_role' => $user_role,
-            // 'role_list' => $role_list,
         ]);
+    }
+
+    public function destroy($user_id){
+        User::where('ID', $user_id)->delete();
+
+        return redirect()->back()->with(['type'=>'success', 'message'=>'User deleted successfully !']);
     }
 }

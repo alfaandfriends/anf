@@ -15,6 +15,9 @@ export default {
         BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink,
         CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon,
     },
+    props: {
+
+    },
     data() {
         return {
             showingNavigationDropdown: false,
@@ -24,9 +27,11 @@ export default {
         }
     },
     created(){
+        console.log(this.$attrs['auth'])
         // route().current('users') || route().current('roles') || route().current('permissions')|| route().current('roles.create') ? this.showControlPanel = true : this.showControlPanel = false
     },
     methods: {
+
     }
 }
 </script>

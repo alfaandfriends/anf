@@ -33,7 +33,7 @@ Route::get('/dashboard', function () {
 
 /* Users */
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('users');
-Route::delete('/delete-users', [UserController::class, 'destroy'])->middleware(['auth', 'verified'])->name('users.destroy');
+Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->middleware(['auth', 'verified'])->name('users.destroy');
 
 /* Roles */
 Route::get('/roles', [RoleController::class, 'index'])->middleware(['auth', 'verified'])->name('roles');

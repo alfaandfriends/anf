@@ -107,12 +107,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                 :show="isOpen" 
                 @close="isOpen = !isOpen"
                 confirmationAlert="danger"
-                confirmationTitle="Deactivate User"
-                confirmationText="Are you sure want to Deactivate this user?"
-                confirmationButton="Deactivate"
+                confirmationTitle="Delete User"
+                confirmationText="Are you sure want to delete this user?"
+                confirmationButton="Delete"
                 confirmationMethod="delete"
-                confirmationRoute="users.destroy"
-                :confirmationData="userID"
+                :confirmationRoute="confirmationRoute"
+                :confirmationData="confirmationData"
             >
             </ConfirmationModal>
         </div>
@@ -142,6 +142,7 @@ export default {
             confirmationAlert: '',
             confirmationButton: '',
             confirmationMethod: '',
+            confirmationData: '',
             confirmationRoute: '',
             params: {
                 search: this.filter.search ? this.filter.search : '',
@@ -158,8 +159,9 @@ export default {
     },
     methods: {
         deleteUser(userID){
+            this.confirmationRoute = 'users.destroy'
+            this.confirmationData = userID
             this.isOpen = true
-            this.userID =  userID
         }
     }
 }
