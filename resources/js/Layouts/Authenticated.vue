@@ -15,24 +15,24 @@ export default {
         BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink,
         CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon,
     },
-    props: {
-
-    },
     data() {
         return {
             showingNavigationDropdown: false,
             sideBar: false,
-            showControlPanel: false,
             showSiteSetting: false,
+            isOpen: false,
+            selected: '',
         }
     },
     created(){
-        console.log(this.$attrs['auth'])
         // route().current('users') || route().current('roles') || route().current('permissions')|| route().current('roles.create') ? this.showControlPanel = true : this.showControlPanel = false
     },
     methods: {
-
-    }
+        toggleMenu (item) {
+            item == this.selected ? this.isOpen = !this.isOpen : this.isOpen = true
+            this.selected = item
+        }
+    },
 }
 </script>
 
@@ -57,14 +57,14 @@ export default {
                             </template>
                             <template v-else>
                                 <div>
-                                    <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="showControlPanel = !showControlPanel">
+                                    <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="toggleMenu(key)">
                                         <div class="flex items-center">
                                             <span class="mr-2" v-html="menu_data.menu_icon"></span>
                                             <span class="select-none">{{ menu_data.menu_label }}</span> 
                                         </div>
-                                        <ChevronRightIcon :class="{ 'rotate-90': showControlPanel }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
+                                        <ChevronRightIcon :class="{ 'rotate-90': isOpen && key === selected }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                     </div>
-                                    <div class="mb-3 panel_" :class="menu_data.id" :style="this.showControlPanel == true ? 'display: block' : 'display: none'">
+                                    <div class="mb-3" v-if="isOpen && key === selected">
                                         <template v-for="(sub_menu_data, key) in menu_data.sub_menu" :key="key">
                                             <BreezeNavSubLink :href="sub_menu_data.sub_menu_route ? route(sub_menu_data.sub_menu_route) : ''" 
                                                             :active="sub_menu_data.sub_menu_route ? route().current(sub_menu_data.sub_menu_route) : ''"
@@ -124,7 +124,7 @@ export default {
                                         </span>
                                     </template>
                                     <template #content>
-                                        <BreezeDropdownLink :href="route('logout')">
+                                        <BreezeDropdownLink :href="route('profile')">
                                             Profile
                                         </BreezeDropdownLink>
                                         <BreezeDropdownLink :href="route('logout')" method="post" as="button">

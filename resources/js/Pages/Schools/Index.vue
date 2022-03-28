@@ -3,59 +3,85 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Schools" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                User List
+                School List
             </h2>
         </template>
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
                 <div class="mx-auto">
                     <div class="align-middle inline-block min-w-full">
-                        <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
-                            <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
-                            <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
-                                    type="text" v-model="params.search" placeholder="Search">
+                        <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600">
+                            <div class="flex">
+                                <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
+                                <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
+                                        type="text" v-model="params.search" placeholder="Search">
+                            </div>
+                            <div class="flex">
+                                <button class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded">Add School</button>
+                            </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-if="!$page.props.user_list.data.length">
+                                    <tr v-if="!$page.props.schools.data.length">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
                                                 No Record Found! 
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr class="hover:bg-gray-200" v-for="user in $page.props.user_list.data" :key="user.ID">
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                    <tr class="hover:bg-gray-200" v-for="school in $page.props.schools.data" :key="school.ID">
+                                        <td class="px-2 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10">
-                                                <img class="h-10 w-10 rounded-full" :src="user.avatar" alt="">
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-bold font-medium text-indigo-900 uppercase mb-1">{{ school.label }}</div>
+                                                    <div class="flex items-center text-sm text-black-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                        </svg>
+                                                        <span class="pl-2">{{ school.email }}</span>
+                                                    </div>
+                                                    <div class="flex items-center text-sm text-black-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                                        </svg>
+                                                        <span class="pl-2">{{ school.phone ? school.phone : '-' }}</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">{{ user.display_name }}</div>
-                                                <div class="text-sm text-gray-500">{{ user.email }}</div>
-                                            </div>
+                                        </td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            <div class="flex">
+                                                <div class="ml-4">
+                                                    <div class="flex text-sm text-black-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                                        </svg>
+                                                        <span class="pl-2 capitalize">{{ school.address ? school.address : 'Not Available'}}</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> {{ user.user_status == 0 ? 'Active' : 'Not Active' }} </span>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> {{ school.is_active == true ? 'Active' : 'Not Active' }} </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(user.ID)">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(school.ID)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </button>
                                                 </div>
@@ -64,27 +90,27 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <template v-if="$page.props.user_list.data.length">
+                            <template v-if="$page.props.schools.data.length">
                                 <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-200">
                                     <div class="flex-1 flex justify-between sm:hidden">
-                                        <a :href="$page.props.user_list.prev_page_url" v-if="$page.props.user_list.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
-                                        <a :href="$page.props.user_list.next_page_url"  v-if="$page.props.user_list.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
+                                        <a :href="$page.props.schools.prev_page_url" v-if="$page.props.schools.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
+                                        <a :href="$page.props.schools.next_page_url"  v-if="$page.props.schools.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
                                     </div>
                                     <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                                         <div>
                                             <p class="text-sm text-gray-700">
                                                 Showing
-                                                <span class="font-medium">{{ $page.props.user_list.from }}</span>
+                                                <span class="font-medium">{{ $page.props.schools.from }}</span>
                                                 to
-                                                <span class="font-medium">{{ $page.props.user_list.to }}</span>
+                                                <span class="font-medium">{{ $page.props.schools.to }}</span>
                                                 of
-                                                <span class="font-medium">{{ $page.props.user_list.total }}</span>
+                                                <span class="font-medium">{{ $page.props.schools.total }}</span>
                                                 results
                                             </p>
                                         </div>
                                         <div>
                                             <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                                <Link  v-for="(link, key) in $page.props.user_list.links" 
+                                                <Link  v-for="(link, key) in $page.props.schools.links" 
                                                     :key="key" 
                                                     :href="link.url ? link.url + '&search=' + this.params.search : '#'"
                                                     class="" 
@@ -152,7 +178,7 @@ export default {
     watch: {
         params: {
             handler(){
-                this.$inertia.get(this.route('users'), this.params, { replace: true, preserveState: true});
+                this.$inertia.get(this.route('schools'), this.params, { replace: true, preserveState: true});
             },
             deep: true
         }

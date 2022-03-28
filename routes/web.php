@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SchoolController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +32,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+/* Profile */
+Route::get('/profile', [ProfileController::class, 'create'])->middleware(['auth', 'verified'])->name('profile');
 
 /* Users */
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('users');
@@ -58,5 +63,8 @@ Route::delete('/menus/destroy-sub-menu/{id}', [MenuController::class, 'destroySu
 
 /* Permissions */
 Route::get('/permissions', [RoleController::class, 'getAllRoles'])->middleware(['auth', 'verified'])->name('permissions');
+
+/* Schools */
+Route::get('/schools', [SchoolController::class, 'index'])->middleware(['auth', 'verified'])->name('schools');
 
 require __DIR__.'/auth.php';
