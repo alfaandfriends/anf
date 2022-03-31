@@ -22,17 +22,17 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         type="text" v-model="params.search" placeholder="Search">
                             </div>
                             <div class="flex">
-                                <button class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded">Add School</button>
+                                <Link :href="route('schools.create')" class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded">Add School</Link>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-200">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="3%">Address</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="3%">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="3%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -47,15 +47,17 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         <td class="px-2 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="ml-4">
-                                                    <div class="text-sm font-bold font-medium text-indigo-900 uppercase mb-1">{{ school.label }}</div>
+                                                    <div class="text-md font-bold font-medium text-indigo-900 uppercase mb-1">{{ school.label }}</div>
                                                     <div class="flex items-center text-sm text-black-500">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                        </svg>
+                                                        <span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                            </svg>
+                                                        </span>
                                                         <span class="pl-2">{{ school.email }}</span>
                                                     </div>
-                                                    <div class="flex items-center text-sm text-black-500">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <div class="flex text-sm text-black-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                                         </svg>
                                                         <span class="pl-2">{{ school.phone ? school.phone : '-' }}</span>
@@ -65,14 +67,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </td>
                                         <td class="px-2 py-4 whitespace-nowrap">
                                             <div class="flex">
-                                                <div class="ml-4">
-                                                    <div class="flex text-sm text-black-500">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                                        </svg>
-                                                        <span class="pl-2 capitalize">{{ school.address ? school.address : 'Not Available'}}</span>
-                                                    </div>
-                                                </div>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                                </svg>
+                                                <span class="pl-2 capitalize text-md break-all">{{ school.address ? school.address : 'Not Available'}}</span>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -80,8 +78,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
+                                                <div class="flex mr-1">
+                                                    <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-1 border border-yellow-600 rounded" title="Edit School" @click="deleteUser(school.ID)">
+                                                        <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
+                                                    </button>
+                                                </div>
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(school.ID)">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete School" @click="deleteUser(school.ID)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </button>
                                                 </div>
@@ -133,8 +136,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                 :show="isOpen" 
                 @close="isOpen = !isOpen"
                 confirmationAlert="danger"
-                confirmationTitle="Delete User"
-                confirmationText="Are you sure want to delete this user?"
+                confirmationTitle="Delete School"
+                confirmationText="Are you sure want to delete this school?"
                 confirmationButton="Delete"
                 confirmationMethod="delete"
                 :confirmationRoute="confirmationRoute"

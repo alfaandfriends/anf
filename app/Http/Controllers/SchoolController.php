@@ -27,7 +27,7 @@ class SchoolController extends Controller
 
     public function create()
     {
-
+        return Inertia::render('Schools/Create');
     }
 
     public function store()

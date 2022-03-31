@@ -38,6 +38,7 @@ export default {
 
 <style src="@vueform/toggle/themes/default.css"></style>
 
+
 <template>
     <div class="flex">
         <!-- Sidebar -->
@@ -156,9 +157,14 @@ export default {
             </header>
 
             <!-- Page Content -->
-            <main>
-                <slot />
+            <main class="min-h-screen">
+                <slot/>
             </main>
+            <footer>
+                <div class="py-5 px-6 bg-gray-200 bottom-0 w-full">
+                    <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{new Date().getFullYear()}} ALFA And Friends </span>
+                </div>
+            </footer>
         </div>
     </div>
 </template>
