@@ -30,9 +30,9 @@ class SchoolController extends Controller
         return Inertia::render('Schools/Create');
     }
 
-    public function store()
+    public function store(Request $request)
     {
-
+        dd($request);
     }
 
     public function edit()

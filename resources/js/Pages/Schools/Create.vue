@@ -26,224 +26,212 @@
         </template>
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
-                <form action="#" method="POST">
+                <form @submit.prevent="submit">
                     <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                        <div class="grid grid-cols-2 gap-6">
-                            <div class="col-span-3 sm:col-span-1">
-                                <label for="company-website" class="block text-sm font-medium text-gray-700"> Centre Name <span class="text-red-500">*</span> </label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> ANFC </span>
-                                    <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" />
+                        <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
+                            <div class="sm:row-span-3">
+                                <div class="mb-5">
+                                    <h1 class="font-semibold text-indigo-800 font-bold">Centre Information</h1>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-4 gap-6">
-                            <div class="col-span-4 sm:col-span-1">
-                                <label for="company-website" class="block text-sm font-medium text-gray-700"> Phone <span class="text-red-500">*</span></label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" />
-                                </div>
-                            </div>  
-                            <div class="col-span-4 sm:col-span-1">
-                                <label for="company-website" class="block text-sm font-medium text-gray-700"> Email </label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" />
-                                </div>
-                            </div>  
-                        </div>
-                        <div class="grid grid-cols-2 gap-6">
-                            <div class="col-span-3 sm:col-span-1">
-                                <label for="about" class="block text-sm font-medium text-gray-700"> Address <span class="text-red-500">*</span></label>
-                                <div class="mt-1">
-                                    <textarea id="about" name="about" rows="3" class="shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-4 gap-6">
-                            <div class="col-span-4 sm:col-span-1" v-show="show_front_upload">
-                                <label class="block text-sm font-medium text-gray-700"> Centre Front View <span class="text-red-500">*</span> (Maximum: 1)</label>
-                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
-                                    @change="change_front"
-                                    @dragover="dragover_front"
-                                    @drop="drop_front"
-                                >
-                                    <div class="space-y-1 text-center">
-                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                        <div class="flex text-sm text-gray-600">
-                                            <label class="browse text-indigo-400 hover:text-indigo-700 cursor-pointer">Click here
-                                                <input
-                                                id="file"
-                                                class="sr-only"
-                                                type="file"
-                                                accept="image/*"
-                                                >
-                                            </label>
-                                            <p class="pl-1">or drag and drop an image</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="mb-4">
+                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Centre Name <span class="text-red-500">*</span> </label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> ANFC </span>
+                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" v-model="form.centre_name"/>
                                         </div>
-                                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-span-4 sm:col-span-1" v-show="show_inside_upload">
-                                <label class="block text-sm font-medium text-gray-700"> Centre Inside View <span class="text-red-500">*</span> (Maximum: 5)</label>
-                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
-                                    @change="change_inside"
-                                    @dragover="dragover_inside"
-                                    @drop="drop_inside"
-                                >
-                                    <div class="space-y-1 text-center">
-                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                        <div class="flex text-sm text-gray-600">
-                                            <label class="browse text-indigo-400 hover:text-indigo-700 cursor-pointer">Click here
-                                                <input
-                                                id="file"
-                                                class="sr-only"
-                                                type="file"
-                                                accept="image/*"
-                                                >
-                                            </label>
-                                            <p class="pl-1">or drag and drop an image</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Centre Contact Number <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.centre_contact_number"/>
                                         </div>
-                                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Centre Email </label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.centre_email"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 gap-4">
+                                    <div class="mb-4">
+                                        <label for="about" class="block text-sm font-medium text-gray-700 font-bold"> Centre Address <span class="text-red-500">*</span></label>
+                                        <div class="mt-1">
+                                            <textarea id="about" name="about" rows="3" class="shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md" v-model="form.centre_address"/>
+                                        </div>  
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-span-4 sm:col-span-1" v-show="show_image">
-                                <label class="block text-sm font-medium text-gray-700"> Crop Image</label>
-                                <div class="w-96 h-60 mt-2">
-                                    <img class="image" ref="image" :src="this.image">
+                            <div class="sm:row-span-3">
+                                <div class="mb-5">
+                                    <h1 class="font-semibold text-indigo-800 font-bold">Principal's Information</h1>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="mb-4">
+                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> First Name <span class="text-red-500">*</span> </label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_first_name"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_last_name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_contact_number"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="about" class="block text-sm font-medium text-gray-700 font-bold"> Email <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_email"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-span-4 sm:col-span-1" v-show="show_image">
-                                <div class="flex flex-row justify-end">
-                                    <div class="flex-column text-center">
-                                        <label class="block text-sm font-medium text-gray-700"> Image Preview </label>
-                                        <div class="preview h-52 w-96 mt-2"></div>
-                                    </div>
-                                    <div class="flex-column pl-1 pt-7">
-                                        <div class="flex-row pb-1">
-                                            <button type="button" class="py-1 px-2 bg-green-500 hover:bg-green-600 rounded text-white shadow" @click="select_cropped_front_image()" title="Select cropped image">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </div>
+                        <div class="grid grid-rows-2 grid-cols-1 grid-flow-col gap-4">
+                            <div class="sm:row-span-3">
+                                <div class="mb-5">
+                                    <h1 class="font-semibold text-indigo-800 font-bold">Centre View</h1>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                                    <div class="mb-4" v-show="show_front_upload">
+                                        <label class="block text-sm font-medium text-gray-700 font-bold"> Centre Front View <span class="text-red-500">*</span> (Maximum: 1)</label>
+                                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+                                            @change="change_front"
+                                            @dragover="dragover_front"
+                                            @drop="drop_front"
+                                        >
+                                            <div class="space-y-1 text-center">
+                                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                                 </svg>
-                                            </button>
+                                                <div class="flex text-sm text-gray-600">
+                                                    <label class="browse text-indigo-400 hover:text-indigo-800 cursor-pointer font-bold">Click here
+                                                        <input ref="front_image" id="file" class="sr-only" type="file" accept="image/*">
+                                                    </label>
+                                                    <p class="pl-1">or drag and drop an image</p>
+                                                </div>
+                                                <p class="text-xs text-gray-500">Image Format : PNG, JPG</p>
+                                            </div>
                                         </div>
-                                        <div class="flex-row">
-                                            <button type="button" class="py-1 px-2 bg-blue-500 hover:bg-blue-600 rounded text-white shadow" @click="reselect_front_image()" title="Reselect an image">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </div>
+                                    <div class="mb-4" v-show="show_inside_upload">
+                                        <label class="block text-sm font-medium text-gray-700 font-bold"> Centre Inside View <span class="text-red-500">*</span> (Maximum: 5)</label>
+                                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+                                            @change="change_inside"
+                                            @dragover="dragover_inside"
+                                            @drop="drop_inside"
+                                        >
+                                            <div class="space-y-1 text-center">
+                                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                                 </svg>
-                                            </button>
+                                                <div class="flex text-sm text-gray-600">
+                                                    <label class="browse text-indigo-400 hover:text-indigo-800 cursor-pointer font-bold">Click here
+                                                        <input ref="inside_image" id="file" class="sr-only" type="file" accept="image/*">
+                                                    </label>
+                                                    <p class="pl-1">or drag and drop an image</p>
+                                                </div>
+                                                <p class="text-xs text-gray-500">Image Format : PNG, JPG</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4" v-show="show_image">
+                                        <label class="block text-sm font-medium text-gray-900 font-bold"> Crop Image</label>
+                                        <div class="w-96 h-60 mt-1">
+                                            <img class="image" ref="image" :src="this.image">
+                                        </div>
+                                    </div>
+                                    <div class="mb-4" v-show="show_image">
+                                        <div class="flex flex-row justify-end">
+                                            <div class="flex-column text-center">
+                                                <label class="block text-sm font-medium text-gray-900 font-bold"> Image Preview </label>
+                                                <div class="preview h-52 w-96 mt-1"></div>
+                                            </div>
+                                            <div class="flex-column pl-1 pt-6">
+                                                <div class="flex-row pb-1">
+                                                    <button type="button" class="py-1 px-2 bg-green-500 hover:bg-green-600 rounded text-white shadow" @click="select_cropped_image()" title="Select cropped image">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="flex-row">
+                                                    <button type="button" class="py-1 px-2 bg-blue-500 hover:bg-blue-600 rounded text-white shadow" @click="reselect_image()" title="Reselect an image">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4 sm:col-span-2" v-show="image_list.length">
+                                        <div class="overflow-auto hover:no-scroll sm:pt-6">
+                                            <div class="rounded">
+                                                <table class="w-full">
+                                                    <thead>
+                                                        <tr class="text-sm text-gray-800 p-2 bg-indigo-200">
+                                                            <th class="py-1 px-2 text-left" width="10%">#</th>
+                                                            <th class="py-1 px-2 text-left">View Type</th>
+                                                            <th class="py-1 px-2 text-left">File Name</th>
+                                                            <th class="py-1 px-2 text-center"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody v-for="(image_data, index) in image_list" :key="index">
+                                                        <tr class="text-sm p-2 bg-white">
+                                                            <td class="py-1 px-2 text-left">{{ (index + 1) }}</td>
+                                                            <td class="py-1 px-2 text-left">{{ image_data.type == 'front' ? 'Front' : 'Inside'}}</td>
+                                                            <td class="py-1 px-2 text-left">{{ image_data.name }}</td>
+                                                            <td class="py-1 px-2">
+                                                                <button type="button" class="py-1 px-1 rounded bg-red-500 hover:bg-red-600 text-white shadow" title="Delete photo" @click="delete_cropped_image(index)">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                    </svg></button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="grid grid-cols-4 gap-6">
-                            <div class="col-span-4 sm:col-span-1">
-                                <label class="block text-sm font-medium text-gray-700"> Centre Inside View <span class="text-red-500">*</span> (Maximum: 5)</label>
-                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
-                                    @change="change_inside"
-                                    @dragover="dragover_inside"
-                                    @drop="drop_inside"
-                                    v-show="show_inside_upload">
-                                    <div class="space-y-1 text-center">
-                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                        <div class="flex text-sm text-gray-600">
-                                            <label class="browse text-indigo-400 hover:text-indigo-700 cursor-pointer">Click here
-                                                <input
-                                                id="file"
-                                                class="sr-only"
-                                                type="file"
-                                                accept="image/*"
-                                                >
-                                            </label>
-                                            <p class="pl-1">or drag and drop an image</p>
-                                        </div>
-                                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                                    </div>
-                                </div>
-                                <div class="w-96 h-60 mt-2" v-show="show_inside_img">
-                                    <img class="img" ref="inside_view" :src="this.inside_image">
-                                </div>
-                            </div>
-                            <div class="col-span-4 sm:col-span-1" v-show="show_inside_img">
-                                <div class="flex flex-row justify-end">
-                                    <div class="flex-column text-center">
-                                        <label class="block text-sm font-medium text-gray-700"><span class="text-blue-500 font-bold">Preview</span>  </label>
-                                        <div class="inside_preview h-52 w-96 mt-2"></div>
-                                    </div>
-                                    <div class="flex-column pl-1 pt-7">
-                                        <div class="flex-row pb-1">
-                                            <button type="button" class="py-1 px-2 bg-green-500 hover:bg-green-600 rounded text-white shadow" @click="select_cropped_inside_image()" title="Select cropped image">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <div class="flex-row">
-                                            <button type="button" class="py-1 px-2 bg-blue-500 hover:bg-blue-600 rounded text-white shadow" @click="reselect_inside_image()" title="Reselect an image">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="grid grid-cols-2 gap-6" v-if="image_list.length">
-                            <div class="col-span-2 sm:col-span-1">
-                                <div class="overflow-auto hover:no-scroll">
-                                    <div class="rounded">
-                                        <table class="w-full">
-                                            <thead>
-                                                <tr class="text-sm text-gray-800 p-2 bg-indigo-200">
-                                                    <th class="py-1 px-2 text-left" width="10%">#</th>
-                                                    <th class="py-1 px-2 text-left">View Type</th>
-                                                    <th class="py-1 px-2 text-left">File Name</th>
-                                                    <th class="py-1 px-2 text-center"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody v-for="(image_data, index) in image_list" :key="index">
-                                                <tr class="text-sm p-2 bg-white">
-                                                    <td class="py-1 px-2 text-left">{{ (index + 1) }}</td>
-                                                    <td class="py-1 px-2 text-left">{{ image_data.type == 'front' ? 'Front' : 'Inside'}}</td>
-                                                    <td class="py-1 px-2 text-left">{{ image_data.name }}</td>
-                                                    <td class="py-1 px-2">
-                                                        <button type="button" class="py-1 px-1 rounded bg-red-500 hover:bg-red-600 text-white shadow" title="Delete photo" @click="delete_cropped_front_image(index)">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                            </svg></button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="py-4">
+                            <div class="w-full border-t border-gray-300"></div>
                         </div>
-                        <div class="grid grid-cols-2 gap-6">
-                            <div class="">
+                        <div class="flex justify-between">
+                            <div class="flex-column">
                                 <label for="" class="block text-sm font-medium text-gray-700">Active</label>
                                 <Toggle v-model="form.menu_status" 
-                                        :classes="{
-                                            container: 'inline-block',
-                                            toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
-                                            toggleOn: 'bg-green-500 border-green-500 justify-start text-white',
-                                            toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
-                                        }
+                                    :classes="{
+                                        container: 'inline-block',
+                                        toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
+                                        toggleOn: 'bg-green-500 border-green-500 justify-start text-white',
+                                        toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
+                                    }
                                 "/>
                             </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-6">
-                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                            <div class="flex-column self-end">
+                                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add Centre</button>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -278,9 +266,10 @@ export default {
             show_image: false,
             image: '',
             form: {
-                status: true,
-                role: null,
-                role_name: null,
+                centre_name: '',
+                centre_contact: '',
+                centre_email: '',
+                centre_address: '',
             },
         }
     },
@@ -308,9 +297,9 @@ export default {
         }
     },
     methods: {
-        // submit() {
-        //     this.$inertia.post(route('roles.store'), this.form)
-        // },
+        submit() {
+            this.$inertia.post(route('schools.store'), {'centre_info': this.form, 'centre_image': this.image_list})
+        },
         read(file, event) {
             return new Promise((resolve, reject) => {
                 if (!file) {
@@ -329,7 +318,8 @@ export default {
                         reject(new Error('Your browser is not supported.'));
                     }
                 } else {
-                    reject(new Error(`Please ${event ? event.type : 'choose'} an image file.`));
+                    reject(new Error(`Please select a valid image file.`));
+                    // reject(new Error(`Please ${event ? event.type : 'choose'} an image file.`));
                 }
             });
         },
@@ -338,6 +328,7 @@ export default {
             if (files && files.length > 0) {
                 this.read(files[0], target)
                 .then((data) => {
+                    console.log(data)
                     this.image    =   data.url
                     this.show_front_upload = false;
                     this.show_inside_upload = false;
@@ -402,58 +393,49 @@ export default {
             Object.assign(this.data, data);
             Object.assign(this.data, {'view_type': view_type});
         },
-        reselect_front_image(){
+        reselect_image(){
             this.show_front_upload = true
             this.show_inside_upload = true
             this.show_image = false
+            this.$refs.front_image.value=null;
+            this.$refs.inside_image.value=null;
         },
-        select_cropped_front_image(){
+        select_cropped_image(){
             const max_front_image = this.image_list.filter((value) => {
                 if (value.type == 'front') return true;
             });
             const max_inside_image = this.image_list.filter((value) => {
                 if (value.type == 'inside') return true;
             });
-            console.log(max_front_image.length <= 1)
 
-        //    var heroes = [
-        //         {name: 'Batman', franchise: 'DC'},
-        //         {name: 'Ironman', franchise: 'Marvel'},
-        //         {name: 'Thor', franchise: 'Marvel'},
-        //         {name: 'Superman', franchise: 'DC'}
-        //     ];
-
-        // //     var marvelHeroes =  heroes.filter(function(hero) {
-        // //         return hero.franchise == 'Marvel';
-        // //     });
-        //     console.log(heroes)
-        //     console.log(this.image_list)
-
-            if(this.data.view_type == 'front' && max_front_image.length <= 1){
-                // const maximum = this.image_list.filter(function(image, key) {
-            // console.log(notifications)
-            // console.log(key)
-                //     return image;
-                // });
-                // console.log(maximum)
-                const cropped_image =   cropper.getCroppedCanvas().toDataURL("image/png");
-                this.image_list.push({'name': this.data.name, 'image': cropped_image, 'type': this.data.view_type})
-                this.show_front_upload = true
-                this.show_inside_upload = true
-                this.show_image = false
+            if(this.data.view_type == 'front'){
+                if(max_front_image.length < 1){
+                    const cropped_image =   cropper.getCroppedCanvas().toDataURL("image/jpeg", (20 / 100));
+                    console.log(cropped_image)
+                    this.image_list.push({'name': this.data.name, 'image': cropped_image, 'type': this.data.view_type})
+                    this.show_front_upload = true
+                    this.show_inside_upload = true
+                    this.show_image = false
+                }
+                else{
+                    alert('Only 1 front view image is allowed!')
+                }
             }
-            else if(this.data.view_type == 'inside' && max_inside_image.length <= 5){
-                const cropped_image =   cropper.getCroppedCanvas().toDataURL("image/png");
-                this.image_list.push({'name': this.data.name, 'image': cropped_image, 'type': this.data.view_type})
-                this.show_front_upload = true
-                this.show_inside_upload = true
-                this.show_image = false
+            else if(this.data.view_type == 'inside'){
+                if(max_inside_image.length < 5){
+                    const cropped_image =   cropper.getCroppedCanvas().toDataURL("image/jpeg");
+                    this.image_list.push({'name': this.data.name, 'image': cropped_image, 'type': this.data.view_type})
+                    this.show_front_upload = true
+                    this.show_inside_upload = true
+                    this.show_image = false
+                }
+                else{
+                    alert('Only 5 inside view image is allowed!')
+                }
             }
-            else{
-                alert('Only 1 image is allowed!')
-            }
+            console.log(this.image_list)
         },
-        delete_cropped_front_image(index){
+        delete_cropped_image(index){
             this.image_list.splice(index, 1)
         },
     },

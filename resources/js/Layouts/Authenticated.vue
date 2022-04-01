@@ -157,7 +157,7 @@ export default {
             </header>
 
             <!-- Page Content -->
-            <main class="min-h-screen">
+            <main class="">
                 <slot/>
             </main>
             <footer>

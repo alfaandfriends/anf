@@ -67,5 +67,6 @@ Route::get('/permissions', [RoleController::class, 'getAllRoles'])->middleware([
 /* Schools */
 Route::get('/schools', [SchoolController::class, 'index'])->middleware(['auth', 'verified'])->name('schools');
 Route::get('/schools/create', [SchoolController::class, 'create'])->middleware(['auth', 'verified'])->name('schools.create');
+Route::post('/schools/store', [SchoolController::class, 'store'])->middleware(['auth', 'verified'])->name('schools.store');
 
 require __DIR__.'/auth.php';
