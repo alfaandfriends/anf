@@ -150,21 +150,23 @@ export default {
             </nav>
 
             <!-- Page Heading -->
-            <header class="bg-indigo-200 shadow" v-if="$slots.header">
-                <div class="mx-auto py-3 px-4 sm:px-6 lg:px-8">
-                    <slot name="header" />
-                </div>
-            </header>
+            <div class="flex-column">
+                <header class="bg-indigo-200 shadow" v-if="$slots.header">
+                    <div class="mx-auto py-3 px-4 sm:px-6 lg:px-8">
+                        <slot name="header" />
+                    </div>
+                </header>
 
-            <!-- Page Content -->
-            <main class="">
-                <slot/>
-            </main>
-            <footer>
-                <div class="py-5 px-6 bg-gray-200 bottom-0 w-full">
-                    <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{new Date().getFullYear()}} ALFA And Friends </span>
-                </div>
-            </footer>
+                <!-- Page Content -->
+                <main class="min">
+                    <slot/>
+                </main>
+                <footer>
+                    <div class="py-5 px-6 bg-gray-200">
+                        <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{new Date().getFullYear()}} ALFA And Friends </span>
+                    </div>
+                </footer>
+            </div>
         </div>
     </div>
 </template>
