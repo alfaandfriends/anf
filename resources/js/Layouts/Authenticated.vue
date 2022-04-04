@@ -15,28 +15,29 @@ export default {
         BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink,
         CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon,
     },
-    props: {
-
-    },
     data() {
         return {
             showingNavigationDropdown: false,
             sideBar: false,
-            showControlPanel: false,
             showSiteSetting: false,
+            isOpen: false,
+            selected: '',
         }
     },
     created(){
-        console.log(this.$attrs['auth'])
         // route().current('users') || route().current('roles') || route().current('permissions')|| route().current('roles.create') ? this.showControlPanel = true : this.showControlPanel = false
     },
     methods: {
-
-    }
+        toggleMenu (item) {
+            item == this.selected ? this.isOpen = !this.isOpen : this.isOpen = true
+            this.selected = item
+        }
+    },
 }
 </script>
 
 <style src="@vueform/toggle/themes/default.css"></style>
+
 
 <template>
     <div class="flex">
@@ -57,14 +58,14 @@ export default {
                             </template>
                             <template v-else>
                                 <div>
-                                    <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="showControlPanel = !showControlPanel">
+                                    <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="toggleMenu(key)">
                                         <div class="flex items-center">
                                             <span class="mr-2" v-html="menu_data.menu_icon"></span>
                                             <span class="select-none">{{ menu_data.menu_label }}</span> 
                                         </div>
-                                        <ChevronRightIcon :class="{ 'rotate-90': showControlPanel }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
+                                        <ChevronRightIcon :class="{ 'rotate-90': isOpen && key === selected }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                     </div>
-                                    <div class="mb-3 panel_" :class="menu_data.id" :style="this.showControlPanel == true ? 'display: block' : 'display: none'">
+                                    <div class="mb-3" v-if="isOpen && key === selected">
                                         <template v-for="(sub_menu_data, key) in menu_data.sub_menu" :key="key">
                                             <BreezeNavSubLink :href="sub_menu_data.sub_menu_route ? route(sub_menu_data.sub_menu_route) : ''" 
                                                             :active="sub_menu_data.sub_menu_route ? route().current(sub_menu_data.sub_menu_route) : ''"
@@ -124,7 +125,7 @@ export default {
                                         </span>
                                     </template>
                                     <template #content>
-                                        <BreezeDropdownLink :href="route('logout')">
+                                        <BreezeDropdownLink :href="route('profile')">
                                             Profile
                                         </BreezeDropdownLink>
                                         <BreezeDropdownLink :href="route('logout')" method="post" as="button">
@@ -149,16 +150,23 @@ export default {
             </nav>
 
             <!-- Page Heading -->
-            <header class="bg-indigo-200 shadow" v-if="$slots.header">
-                <div class="mx-auto py-3 px-4 sm:px-6 lg:px-8">
-                    <slot name="header" />
-                </div>
-            </header>
+            <div class="flex-column">
+                <header class="bg-indigo-200 shadow" v-if="$slots.header">
+                    <div class="mx-auto py-3 px-4 sm:px-6 lg:px-8">
+                        <slot name="header" />
+                    </div>
+                </header>
 
-            <!-- Page Content -->
-            <main>
-                <slot />
-            </main>
+                <!-- Page Content -->
+                <main class="min">
+                    <slot/>
+                </main>
+                <footer>
+                    <div class="py-5 px-6 bg-gray-200">
+                        <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{new Date().getFullYear()}} ALFA And Friends </span>
+                    </div>
+                </footer>
+            </div>
         </div>
     </div>
 </template>

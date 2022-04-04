@@ -56,7 +56,7 @@
                                             <div class="flex justify-center">
                                                 <div class="pr-1">
                                                     <button class="text-white font-bold py-1 px-1 border rounded" 
-                                                            @click="editRole(role.role)" 
+                                                            @click="role.role != 'administrator' && role.role != 'editor' && role.role != 'author' && role.role != 'contributor' ? editRole(role.role) : ''" 
                                                             title="Edit Role"
                                                             :class="role.role != 'administrator' && role.role != 'editor' && role.role != 'author' && role.role != 'contributor' ?
                                                                     'bg-yellow-500 hover:bg-yellow-600 border-yellow-600' : 'bg-yellow-500/40 hover:bg-yellow-400/40 border-yellow-400/40 cursor-not-allowed'"
@@ -66,7 +66,7 @@
                                                 </div>
                                                 <div class="">
                                                     <button class="text-white font-bold py-1 px-1 border rounded" 
-                                                            @click="deleteRole(role.role)" title="Delete"
+                                                            @click="role.role != 'administrator' && role.role != 'editor' && role.role != 'author' && role.role != 'contributor' ? deleteRole(role.role) : ''" title="Delete"
                                                             :class="role.role != 'administrator' && role.role != 'editor' && role.role != 'author' && role.role != 'contributor' ?
                                                                     'bg-red-500 hover:bg-red-600 border-red-600' : 'bg-red-500/40 hover:bg-red-400/40 border-red-400/40 cursor-not-allowed'"
                                                     >

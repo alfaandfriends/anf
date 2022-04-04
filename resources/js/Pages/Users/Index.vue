@@ -84,7 +84,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </div>
                                         <div>
                                             <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                                <a  v-for="(link, key) in $page.props.user_list.links" 
+                                                <Link  v-for="(link, key) in $page.props.user_list.links" 
                                                     :key="key" 
                                                     :href="link.url ? link.url + '&search=' + this.params.search : '#'"
                                                     class="" 
@@ -93,7 +93,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                                                                                 : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
                                                     v-html="link.label"
                                                 >
-                                                </a>
+                                                </Link>
                                             </nav>
                                         </div>
                                     </div>
@@ -122,13 +122,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 <script>
 import { ref } from 'vue';
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head
+        ConfirmationModal, Head, Link
     },
     props: {
         filter: Object,
