@@ -39,7 +39,7 @@
                                         <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Centre Name <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> ANFC </span>
-                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" v-model="form.centre_name"/>
+                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm"  v-model="form.centre_name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -71,6 +71,14 @@
                                     <h1 class="font-semibold text-indigo-800 font-bold">Principal's Information</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="about" class="block text-sm font-medium text-gray-700 font-bold"> Email <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_email"/>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div class="mb-4">
                                         <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> First Name <span class="text-red-500">*</span> </label>
@@ -90,14 +98,6 @@
                                         <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_contact_number"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="about" class="block text-sm font-medium text-gray-700 font-bold"> Email <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_email"/>
                                         </div>
                                     </div>
                                 </div>
@@ -182,33 +182,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mb-4 sm:col-span-2" v-show="image_list.length">
-                                        <div class="overflow-auto hover:no-scroll sm:pt-6">
-                                            <div class="rounded">
-                                                <table class="w-full">
-                                                    <thead>
-                                                        <tr class="text-sm text-gray-800 p-2 bg-indigo-200">
-                                                            <th class="py-1 px-2 text-left" width="10%">#</th>
-                                                            <th class="py-1 px-2 text-left">View Type</th>
-                                                            <th class="py-1 px-2 text-left">File Name</th>
-                                                            <th class="py-1 px-2 text-center"></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody v-for="(image_data, index) in image_list" :key="index">
-                                                        <tr class="text-sm p-2 bg-white">
-                                                            <td class="py-1 px-2 text-left">{{ (index + 1) }}</td>
-                                                            <td class="py-1 px-2 text-left">{{ image_data.type == 'front' ? 'Front' : 'Inside'}}</td>
-                                                            <td class="py-1 px-2 text-left">{{ image_data.name }}</td>
-                                                            <td class="py-1 px-2">
-                                                                <button type="button" class="py-1 px-1 rounded bg-red-500 hover:bg-red-600 text-white shadow" title="Delete photo" @click="delete_cropped_image(index)">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                                    </svg></button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                    <div class="sm:col-span-2 self-center flex flex-wrap" v-show="image_list.length">
+                                        <div class="relative h-32 w-32 rounded mr-3 mt-3" v-for="(image_data, index) in image_list" :key="index">
+                                            <div class="absolute bg-red-500 p-2 rounded-full text-white z-30 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
                                             </div>
+                                            <img :src="image_data.image" class="rounded-lg" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -411,7 +392,6 @@ export default {
             if(this.data.view_type == 'front'){
                 if(max_front_image.length < 1){
                     const cropped_image =   cropper.getCroppedCanvas().toDataURL("image/jpeg", (20 / 100));
-                    console.log(cropped_image)
                     this.image_list.push({'name': this.data.name, 'image': cropped_image, 'type': this.data.view_type})
                     this.show_front_upload = true
                     this.show_inside_upload = true
@@ -433,7 +413,6 @@ export default {
                     alert('Only 5 inside view image is allowed!')
                 }
             }
-            console.log(this.image_list)
         },
         delete_cropped_image(index){
             this.image_list.splice(index, 1)

@@ -32,7 +32,14 @@ class SchoolController extends Controller
 
     public function store(Request $request)
     {
-        dd($request);
+        dd($request->validate([
+            'centre_name'       => 'required|max:20',
+            'centre_contact'    => 'required|max:50',
+            'centre_email'      => 'required|max:50',
+            'centre_address'    => 'required|max:50',
+            'menu_status'       => 'required|max:50',
+        ]));
+        return redirect('schools')->with(['type'=>'success', 'message'=>'School added successfully !']);
     }
 
     public function edit()
