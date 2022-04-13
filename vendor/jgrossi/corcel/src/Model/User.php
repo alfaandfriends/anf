@@ -2,6 +2,7 @@
 
 namespace Corcel\Model;
 
+use App\Models\UserHasRoles;
 use Corcel\Concerns\AdvancedCustomFields;
 use Corcel\Concerns\Aliases;
 use Corcel\Concerns\MetaFields;
@@ -220,5 +221,10 @@ class User extends Model implements Authenticatable, CanResetPassword
     public function setUpdatedAt($value)
     {
         //
+    }
+
+    public function user_has_role()
+    {
+        return $this->hasMany(UserHasRoles::class, 'user_id');
     }
 }
