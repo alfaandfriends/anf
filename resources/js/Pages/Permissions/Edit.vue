@@ -3,12 +3,12 @@
 </script>
 
 <template>
-    <Head title="Roles" />
+    <Head title="Permissions" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Add Role
+                Edit Permission
             </h2>
         </template>
         <div class="py-4 px-4">
@@ -17,18 +17,12 @@
                     <div class="align-middle inline-block lg:w-1/3">
                         <div class="p-6 bg-indigo-100 rounded-md border-b border-gray-200">
                             <form @submit.prevent="submit">
-                                <div>
-                                    <label for="role">Role</label>
-                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.role" 
-                                           :class="$page.props.errors.role ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
-                                </div>
-                                <div v-if="$page.props.errors.role"><span class="text-red-500">{{ $page.props.errors.role }}</span></div>
                                 <div class="mt-4">
-                                    <label for="display_name">Display Name</label>
-                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.display_name" 
-                                           :class="$page.props.errors.display_name ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
+                                    <label for="permission">Permission</label>
+                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.permission" 
+                                           :class="$page.props.errors.permission ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
                                 </div>
-                                <div v-if="$page.props.errors.display_name"><span class="text-red-500">{{ $page.props.errors.display_name }}</span></div>
+                                <div v-if="$page.props.errors.permission"><span class="text-red-500">{{ $page.props.errors.permission }}</span></div>
 
                                 <div class="flex mt-4">
                                     <label for="" class="font-sm pr-3">Status</label>
@@ -49,7 +43,7 @@
                                         </button>
                                     </div>
                                     <div class="flex pr-3">
-                                        <Link :href="route('roles')" class="px-6 py-1 text-white bg-gray-500 hover:bg-gray-600 outline outline-1 outline-offset-2 outline-gray-400 hover:outline-gray-500 rounded" as="button">
+                                        <Link :href="route('permissions')" class="px-6 py-1 text-white bg-gray-500 hover:bg-gray-600 outline outline-1 outline-offset-2 outline-gray-400 hover:outline-gray-500 rounded" as="button">
                                             Cancel
                                         </Link>
                                     </div>
@@ -74,18 +68,22 @@ export default {
     components: {
         Link, Toggle
     },
+    props: {
+        permission: Object,
+        permission_id: String
+    },
     data() {
         return {
             form: {
                 status: true,
-                role: null,
-                display_name: null,
+                permission_id: this.permission_id,
+                permission: this.permission.name,
             },
         }
     },
     methods: {
         submit() {
-            this.$inertia.post(route('roles.store'), this.form)
+            this.$inertia.post(route('permissions.update'), this.form)
         },
     },
 }

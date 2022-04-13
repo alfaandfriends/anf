@@ -3,12 +3,12 @@
 </script>
 
 <template>
-    <Head title="Roles" />
+    <Head title="Permissions" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Roles
+                Permissions
             </h2>
         </template>
         <div class="py-4 px-4">
@@ -16,8 +16,8 @@
                 <div class="mx-auto">
                     <div class="align-middle inline-block w-full lg:w-1/2">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
-                            <button class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded" @click="addRole()"> 
-                                Add Role
+                            <button class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded" @click="addPermission()"> 
+                                Add Permission
                             </button>
                             <!-- <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
                             <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
@@ -33,54 +33,41 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200 overflow-y-scroll">
-                                    <tr v-if="!$page.props.roles.length">
+                                    <tr v-if="!$page.props.permissions.length">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
                                                 No Record Found! 
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr class="hover:bg-gray-200" v-for="(role, roleID) in $page.props.roles" :key="roleID">
+                                    <tr class="hover:bg-gray-200" v-for="(permission, roleID) in $page.props.permissions" :key="roleID">
                                         <td class="px-3 py-3">
                                             <div class="flex items-center">
                                                 <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">{{ role.display_name }}</div>
+                                                    <div class="text-sm font-medium text-gray-900">{{ permission.name }}</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-3 py-3 text-center">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
-                                                  :class="role.status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ role.status == 1 ? 'Active' : 'Not Active' }} </span>
+                                                  :class="permission.status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ permission.status == 1 ? 'Active' : 'Not Active' }} </span>
                                         </td>
                                         <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="pr-1">
-                                                    <button class="text-white font-bold py-1 px-1 border rounded" 
-                                                            @click="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ? editRole(role.name) : ''" 
+                                                    <button class="text-white font-bold py-1 px-1 border rounded bg-yellow-500 hover:bg-yellow-600 border-yellow-600" 
+                                                            @click="editRole(permission.id)" 
                                                             title="Edit Role"
-                                                            :class="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ?
-                                                                    'bg-yellow-500 hover:bg-yellow-600 border-yellow-600' : 'bg-yellow-500/40 hover:bg-yellow-400/40 border-yellow-400/40 cursor-not-allowed'"
                                                     >
                                                         <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
                                                     </button>
                                                 </div>
-                                                <div class="pr-1">
-                                                    <button class="text-white font-bold py-1 px-1 border rounded" 
-                                                            @click="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ? deleteRole(role.id) : ''" title="Delete"
-                                                            :class="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ?
-                                                                    'bg-red-500 hover:bg-red-600 border-red-600' : 'bg-red-500/40 hover:bg-red-400/40 border-red-400/40 cursor-not-allowed'"
+                                                <div class="">
+                                                    <button class="text-white font-bold py-1 px-1 border rounded bg-red-500 hover:bg-red-600 border-red-600" 
+                                                            @click="deleteRole(permission.id)" 
+                                                            title="Delete Permission"
                                                     >
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                    </button>
-                                                </div>
-                                                <div class="">
-                                                    <button class="text-white font-bold py-1 px-1 border rounded bg-blue-500 hover:bg-blue-600 border-blue-600" 
-                                                            title="Assign Permissions"
-                                                            @click="assignPermissions(role.id)"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current" viewBox="0 0 20 20" fill="currentColor">
-                                                            <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd" />
-                                                        </svg>
                                                     </button>
                                                 </div>
                                             </div>
@@ -97,10 +84,10 @@
                 @close="isOpen = !isOpen"
                 confirmationAlert="danger"
                 confirmationTitle="Delete Role"
-                confirmationText="Are you sure want to delete this role?"
+                confirmationText="Are you sure want to delete this permission?"
                 confirmationButton="Delete"
                 confirmationMethod="delete"
-                confirmationRoute="roles.destroy"
+                confirmationRoute="permissions.destroy"
                 :confirmationData="confirmationData"
             >
             </ConfirmationModal>
@@ -109,13 +96,13 @@
 </template>
 
 <script>
-import { SearchIcon, TrashIcon, PencilIcon, ChevronRightIcon } from '@heroicons/vue/solid'
+import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon, ChevronRightIcon,
+        SearchIcon, TrashIcon, PencilIcon,
         ConfirmationModal, Head
     },
     data(){
@@ -131,18 +118,15 @@ export default {
         }
     },
     methods: {
-        addRole(){
-            this.$inertia.get(route('roles.create'));
+        addPermission(){
+            this.$inertia.get(route('permissions.create'));
         },
         deleteRole(roleID){
             this.isOpen = true
             this.confirmationData = roleID
         },
         editRole(roleID){
-            this.$inertia.get(route('roles.edit'), {role: roleID});
-        },
-        assignPermissions(role_id){
-            this.$inertia.get(route('roles.assign_pemissions'), {'role_id': role_id});
+            this.$inertia.get(route('permissions.edit'), {permission: roleID});
         }
     }
 }

@@ -36,32 +36,32 @@
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div class="mb-4">
-                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Centre Name <span class="text-red-500">*</span> </label>
+                                        <label for="centre_name" class="block text-sm font-medium text-gray-700 font-bold"> Centre Name <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"> ANFC </span>
-                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm"  v-model="form.centre_name"/>
+                                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-500 text-sm"> ANFC </span>
+                                            <input type="text" name="centre_name" id="centre_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm" :class="$page.props.errors.centre_name ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_name" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Centre Contact Number <span class="text-red-500">*</span></label>
+                                        <label for="centre_contact" class="block text-sm font-medium text-gray-700 font-bold"> Centre Contact Number <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.centre_contact_number"/>
+                                            <input type="text" name="centre_contact" id="centre_contact" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_contact_number" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Centre Email </label>
+                                        <label for="centre_email" class="block text-sm font-medium text-gray-700 font-bold"> Centre Email </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.centre_email"/>
+                                            <input type="email" name="centre_email" id="centre_email" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_email ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_email" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 gap-4">
                                     <div class="mb-4">
-                                        <label for="about" class="block text-sm font-medium text-gray-700 font-bold"> Centre Address <span class="text-red-500">*</span></label>
+                                        <label for="centre_address" class="block text-sm font-medium text-gray-700 font-bold"> Centre Address <span class="text-red-500">*</span></label>
                                         <div class="mt-1">
-                                            <textarea id="about" name="about" rows="3" class="shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md" v-model="form.centre_address"/>
+                                            <textarea id="centre_address" name="centre_address" rows="3" class="shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.centre_address ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_address" autocomplete="off"/>
                                         </div>  
                                     </div>
                                 </div>
@@ -73,31 +73,34 @@
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="about" class="block text-sm font-medium text-gray-700 font-bold"> Email <span class="text-red-500">*</span></label>
+                                        <div class="flex justify-between">
+                                            <label for="about" class="block text-sm font-medium text-gray-700 font-bold"> Email <span class="text-red-500">*</span></label>
+                                            <label for="about" class="font-medium text-sm" v-if="form.principal_email" :class="$page.props.email_exist != null ? 'text-green-700' : 'text-red-700'"> {{ $page.props.email_exist != null ? 'Email found!' : 'Email not found!'}} </label>
+                                        </div>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_email"/>
+                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" :class="[($page.props.errors.principal_email ? 'border-red-300' : 'border-gray-300'), (($page.props.email_exist == null && form.principal_email) ? 'border-red-300' : 'border-gray-300'), (($page.props.email_exist != null && form.principal_email) ? 'border-green-500' : 'border-gray-300')]" v-model="form.principal_email" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div class="mb-4">
-                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> First Name <span class="text-red-500">*</span> </label>
+                                        <label for="principal_first_name" class="block text-sm font-medium text-gray-700 font-bold"> First Name <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_first_name"/>
+                                            <input type="text" name="principal_first_name" id="principal_first_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.first_name : ''" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span></label>
+                                        <label for="pricipal_last_name" class="block text-sm font-medium text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_last_name"/>
+                                            <input type="text" name="pricipal_last_name" id="pricipal_last_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.last_name : ''" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="company-website" class="block text-sm font-medium text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span></label>
+                                        <label for="principal_contact" class="block text-sm font-medium text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="form.principal_contact_number"/>
+                                            <input type="text" name="principal_contact" id="principal_contact" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" :class="$page.props.errors.principal_contact ? 'border-red-300' : 'border-gray-300'" v-model="form.principal_contact" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
@@ -182,14 +185,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="sm:col-span-2 self-center flex flex-wrap" v-show="image_list.length">
-                                        <div class="relative h-32 w-32 rounded mr-3 mt-3" v-for="(image_data, index) in image_list" :key="index">
+                                    <div class="sm:col-span-2 self-center flex flex-wrap" v-show="form.image_list.length">
+                                        <div class="relative h-32 w-32 rounded mr-3 mt-3" v-for="(image_data, index) in form.image_list" :key="index">
                                             <div class="absolute bg-red-500 p-2 rounded-full text-white z-30 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
                                             </div>
-                                            <img :src="image_data.image" class="rounded-lg" alt="">
+                                            <img :src="image_data.image_src" class="rounded-lg" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -201,7 +204,7 @@
                         <div class="flex justify-between">
                             <div class="flex-column">
                                 <label for="" class="block text-sm font-medium text-gray-700">Active</label>
-                                <Toggle v-model="form.menu_status" 
+                                <Toggle v-model="form.school_active" 
                                     :classes="{
                                         container: 'inline-block',
                                         toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
@@ -235,22 +238,27 @@ export default {
     components: {
         Link, Toggle, Cropper
     },
+    props:{
+        email_exist: Object,
+    },
     data() {
         return {
             data:  {
                 type: Object,
                 default: () => ({}),
             },
-            image_list: [],
             show_front_upload: true,
             show_inside_upload: true,
             show_image: false,
             image: '',
             form: {
                 centre_name: '',
-                centre_contact: '',
+                centre_contact_number: '',
                 centre_email: '',
                 centre_address: '',
+                principal_email: '',
+                principal_contact: '',
+                image_list: [],
             },
         }
     },
@@ -275,11 +283,18 @@ export default {
                 cropper.replace(value)
             },
             deep: true
+        },
+        'form.principal_email': {
+            handler(){
+                this.$inertia.get(this.route('centres.create'), {'principal_email': this.form.principal_email}, { preserveState: true});    
+            },
+            immediate: true
         }
     },
     methods: {
         submit() {
-            this.$inertia.post(route('schools.store'), {'centre_info': this.form, 'centre_image': this.image_list})
+            console.log(this.form)
+            this.$inertia.post(route('centres.store'), this.form, { preserveState: true})
         },
         read(file, event) {
             return new Promise((resolve, reject) => {
@@ -309,7 +324,6 @@ export default {
             if (files && files.length > 0) {
                 this.read(files[0], target)
                 .then((data) => {
-                    console.log(data)
                     this.image    =   data.url
                     this.show_front_upload = false;
                     this.show_inside_upload = false;
@@ -382,17 +396,21 @@ export default {
             this.$refs.inside_image.value=null;
         },
         select_cropped_image(){
-            const max_front_image = this.image_list.filter((value) => {
+            const max_front_image = this.form.image_list.filter((value) => {
                 if (value.type == 'front') return true;
             });
-            const max_inside_image = this.image_list.filter((value) => {
+            const max_inside_image = this.form.image_list.filter((value) => {
                 if (value.type == 'inside') return true;
             });
 
             if(this.data.view_type == 'front'){
                 if(max_front_image.length < 1){
-                    const cropped_image =   cropper.getCroppedCanvas().toDataURL("image/jpeg", (20 / 100));
-                    this.image_list.push({'name': this.data.name, 'image': cropped_image, 'type': this.data.view_type})
+                    cropper.getCroppedCanvas().toBlob((blob) => {
+                        var link = URL.createObjectURL(blob);   
+                        var image_file = this.blobToFile(blob, this.data.name)
+                        this.form.image_list.push({'image_src': link, 'image_file': image_file, 'type': this.data.view_type})
+                    }, 'image/jpeg', 0.1 );
+                    console.log(this.form.image_list)
                     this.show_front_upload = true
                     this.show_inside_upload = true
                     this.show_image = false
@@ -403,8 +421,10 @@ export default {
             }
             else if(this.data.view_type == 'inside'){
                 if(max_inside_image.length < 5){
-                    const cropped_image =   cropper.getCroppedCanvas().toDataURL("image/jpeg");
-                    this.image_list.push({'name': this.data.name, 'image': cropped_image, 'type': this.data.view_type})
+                    cropper.getCroppedCanvas().toBlob((blob) => {
+                        var link = URL.createObjectURL(blob);
+                        this.form.image_list.push({'name': this.data.name, 'image_src': link, 'image_file': blob, 'type': this.data.view_type})
+                    }, 'image/jpeg', 0.1 );
                     this.show_front_upload = true
                     this.show_inside_upload = true
                     this.show_image = false
@@ -415,8 +435,13 @@ export default {
             }
         },
         delete_cropped_image(index){
-            this.image_list.splice(index, 1)
+            this.form.image_list.splice(index, 1)
         },
+        blobToFile(blob, fileName){
+            blob.lastModifiedDate = new Date();
+            blob.name = fileName;
+            return blob;
+        }
     },
 }
 </script>

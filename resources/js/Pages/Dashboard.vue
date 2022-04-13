@@ -35,7 +35,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                         </div>
                         <div class="px-4 text-gray-700">
                             <h3 class="text-sm tracking-wider">Total Member</h3>
-                            <p class="text-3xl">12,768</p>
+                            <p class="text-3xl">{{ total_user }}</p>
                         </div>
                         </div>
 
@@ -57,8 +57,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             </svg>
                         </div>
                         <div class="px-4 text-gray-700">
-                            <h3 class="text-sm tracking-wider">Total Post</h3>
-                            <p class="text-3xl">39,265</p>
+                            <h3 class="text-sm tracking-wider">Total Centre</h3>
+                            <p class="text-3xl">{{ total_school }}</p>
                         </div>
                         </div>
 
@@ -123,5 +123,9 @@ export default {
         BreezeAuthenticatedLayout,
         Head,
     },
+    props: {
+        total_user: Number,
+        total_school: Number,
+    }
 }
 </script>

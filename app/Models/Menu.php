@@ -18,6 +18,7 @@ class Menu extends Model
             $menu_info['menu_label']     =   $menu->menu_label;
             $menu_info['menu_route']     =   $menu->menu_route;
             $menu_info['menu_status']    =   $menu->menu_status;
+            $menu_info['permission_name']   =   $menu->permission_name;
             $menus[$menu->id]            =   $menu_info;
 
             if(!empty($sub_menus_result)){

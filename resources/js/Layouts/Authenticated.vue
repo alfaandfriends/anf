@@ -51,13 +51,13 @@ export default {
                     <nav class="text-sm font-medium text-gray-500">
                         <template v-for="menu_data, key in $page.props.menu" :key="key">
                             <template v-if="menu_data.menu_route">
-                                <BreezeNavLink :href="route(menu_data.menu_route)" :active="route().current(menu_data.menu_route)">
+                                <BreezeNavLink v-if="$page.props.can[menu_data.permission_name]" :href="route(menu_data.menu_route)" :active="route().current(menu_data.menu_route)">
                                     <span class="mr-2" v-html="menu_data.menu_icon"></span>
                                     <span class="select-none">{{ menu_data.menu_label }}</span> 
                                 </BreezeNavLink>
                             </template>
                             <template v-else>
-                                <div>
+                                <div v-if="$page.props.can[menu_data.permission_name]">
                                     <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="toggleMenu(key)">
                                         <div class="flex items-center">
                                             <span class="mr-2" v-html="menu_data.menu_icon"></span>
@@ -70,7 +70,7 @@ export default {
                                             <BreezeNavSubLink :href="sub_menu_data.sub_menu_route ? route(sub_menu_data.sub_menu_route) : ''" 
                                                             :active="sub_menu_data.sub_menu_route ? route().current(sub_menu_data.sub_menu_route) : ''"
                                             >
-                                                <span class="select-none">{{ sub_menu_data.sub_menu_label }}</span>
+                                            <span class="select-none">{{ sub_menu_data.sub_menu_label }}</span>
                                             </BreezeNavSubLink>
                                         </template>
                                     </div>
@@ -115,9 +115,9 @@ export default {
                                         <span class="inline-flex rounded-md">
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                                 <div class=" w-10 h-10 rounded-full overflow-hidden border-2 dark:border-white border-gray-900 mr-2">
-                                                    <img :src="$page.props.auth.user.avatar" alt="" class="w-full h-full object-cover"/>
+                                                    <img :src="$page.props.auth.user.avatar" alt="" class="w-full h-full object-cover select-none"/>
                                                 </div>
-                                                <span class="">{{$page.props.auth.user.display_name}}</span>
+                                                <span class="select-none">{{$page.props.auth.user.display_name}}</span>
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                                                 </svg>

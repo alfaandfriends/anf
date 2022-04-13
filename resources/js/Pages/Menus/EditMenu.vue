@@ -24,6 +24,15 @@
                                 </div>
                                 <div v-if="$page.props.errors.menu_label"><span class="text-red-500">{{ $page.props.errors.menu_label }}</span></div>
                                 <div class="mt-3">
+                                    <label for="role_name">Role Allowed</label>
+                                    <div class="">
+                                        <select class="rounded w-full" v-model="form.role_allowed">
+                                            <option value="">Please Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div v-if="$page.props.errors.menu_label"><span class="text-red-500">{{ $page.props.errors.menu_label }}</span></div>
+                                <div class="mt-3">
                                     <label for="role_name">Route</label>
                                     <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.menu_route" 
                                            :class="$page.props.errors.menu_route ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>

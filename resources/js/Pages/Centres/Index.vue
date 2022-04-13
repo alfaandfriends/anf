@@ -3,12 +3,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </script>
 
 <template>
-    <Head title="Schools" />
+    <Head title="Centres" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                School List
+                Centre List
             </h2>
         </template>
         <div class="py-4 px-4">
@@ -22,7 +22,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         type="text" v-model="params.search" placeholder="Search">
                             </div>
                             <div class="flex">
-                                <Link :href="route('schools.create')" class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded">Add School</Link>
+                                <Link :href="route('centres.create')" class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded">Add Centre</Link>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -36,31 +36,31 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-if="!$page.props.schools.data.length">
+                                    <tr v-if="!$page.props.centres.data.length">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
                                                 No Record Found! 
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr class="hover:bg-gray-200" v-for="school in $page.props.schools.data" :key="school.ID">
-                                        <td class="px-2 py-4 whitespace-nowrap">
+                                    <tr class="hover:bg-gray-200" v-for="centre in $page.props.centres.data" :key="centre.ID">
+                                        <td class="px-2 py-3 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="ml-4">
-                                                    <div class="text-md font-bold font-medium text-indigo-900 uppercase mb-1">{{ school.label }}</div>
+                                                    <div class="text-md font-bold font-medium text-indigo-900 uppercase mb-1">{{ centre.label }}</div>
                                                     <div class="flex items-center text-sm text-black-500">
                                                         <span>
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                                             </svg>
                                                         </span>
-                                                        <span class="pl-2">{{ school.email }}</span>
+                                                        <span class="pl-2">{{ centre.email }}</span>
                                                     </div>
                                                     <div class="flex text-sm text-black-500">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                                         </svg>
-                                                        <span class="pl-2">{{ school.phone ? school.phone : '-' }}</span>
+                                                        <span class="pl-2">{{ centre.phone ? centre.phone : '-' }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -70,21 +70,21 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                                 </svg>
-                                                <span class="pl-2 capitalize text-md break-all">{{ school.address ? school.address : 'Not Available'}}</span>
+                                                <span class="pl-2 capitalize text-sm break-all">{{ centre.address ? centre.address : 'Not Available'}}</span>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> {{ school.is_active == true ? 'Active' : 'Not Active' }} </span>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> {{ centre.is_active == true ? 'Active' : 'Not Active' }} </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex mr-1">
-                                                    <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-1 border border-yellow-600 rounded" title="Edit School" @click="deleteUser(school.ID)">
+                                                    <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-1 border border-yellow-600 rounded" title="Edit School" @click="deleteUser(centre.ID)">
                                                         <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
                                                     </button>
                                                 </div>
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete School" @click="deleteUser(school.ID)">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete School" @click="deleteUser(centre.ID)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </button>
                                                 </div>
@@ -93,27 +93,27 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <template v-if="$page.props.schools.data.length">
+                            <template v-if="$page.props.centres.data.length">
                                 <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-200">
                                     <div class="flex-1 flex justify-between sm:hidden">
-                                        <a :href="$page.props.schools.prev_page_url" v-if="$page.props.schools.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
-                                        <a :href="$page.props.schools.next_page_url"  v-if="$page.props.schools.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
+                                        <a :href="$page.props.centres.prev_page_url" v-if="$page.props.centres.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
+                                        <a :href="$page.props.centres.next_page_url"  v-if="$page.props.centres.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
                                     </div>
                                     <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                                         <div>
                                             <p class="text-sm text-gray-700">
                                                 Showing
-                                                <span class="font-medium">{{ $page.props.schools.from }}</span>
+                                                <span class="font-medium">{{ $page.props.centres.from }}</span>
                                                 to
-                                                <span class="font-medium">{{ $page.props.schools.to }}</span>
+                                                <span class="font-medium">{{ $page.props.centres.to }}</span>
                                                 of
-                                                <span class="font-medium">{{ $page.props.schools.total }}</span>
+                                                <span class="font-medium">{{ $page.props.centres.total }}</span>
                                                 results
                                             </p>
                                         </div>
                                         <div>
                                             <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                                <Link  v-for="(link, key) in $page.props.schools.links" 
+                                                <Link  v-for="(link, key) in $page.props.centres.links" 
                                                     :key="key" 
                                                     :href="link.url ? link.url + '&search=' + this.params.search : '#'"
                                                     class="" 
@@ -137,7 +137,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                 @close="isOpen = !isOpen"
                 confirmationAlert="danger"
                 confirmationTitle="Delete School"
-                confirmationText="Are you sure want to delete this school?"
+                confirmationText="Are you sure want to delete this centre?"
                 confirmationButton="Delete"
                 confirmationMethod="delete"
                 :confirmationRoute="confirmationRoute"
@@ -181,7 +181,7 @@ export default {
     watch: {
         params: {
             handler(){
-                this.$inertia.get(this.route('schools'), this.params, { replace: true, preserveState: true});
+                this.$inertia.get(this.route('centres'), this.params, { replace: true, preserveState: true});
             },
             deep: true
         }

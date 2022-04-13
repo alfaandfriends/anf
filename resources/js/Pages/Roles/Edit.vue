@@ -19,16 +19,16 @@
                             <form @submit.prevent="submit">
                                 <div>
                                     <label for="role">Role</label>
-                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md bg-gray-200 cursor-not-allowed" v-model="roles.role" :disabled="true"/>
+                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md bg-gray-200 cursor-not-allowed" v-model="roles.name" :disabled="true"/>
                                 </div>
-                                <div v-if="$page.props.errors.role"><span class="text-red-500">{{ $page.props.errors.role }}</span></div>
+                                <div v-if="$page.props.errors.name"><span class="text-red-500">{{ $page.props.errors.name }}</span></div>
 
                                 <div class="mt-4">
                                     <label for="role_name">Display Name</label>
-                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="roles.name"
-                                           :class="$page.props.errors.name ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
+                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="roles.display_name"
+                                           :class="$page.props.errors.display_name ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
                                 </div>
-                                <div v-if="$page.props.errors.name"><span class="text-red-500">{{ $page.props.errors.name }}</span></div>
+                                <div v-if="$page.props.errors.display_name"><span class="text-red-500">{{ $page.props.errors.display_name }}</span></div>
                                 
                                 <div class="flex mt-4">
                                     <label for="" class="font-sm pr-3">Status</label>

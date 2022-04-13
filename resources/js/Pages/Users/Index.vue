@@ -3,7 +3,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Users" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
@@ -40,13 +40,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     <tr class="hover:bg-gray-200" v-for="user in $page.props.user_list.data" :key="user.ID">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10">
-                                                <img class="h-10 w-10 rounded-full" :src="user.avatar" alt="">
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">{{ user.display_name }}</div>
-                                                <div class="text-sm text-gray-500">{{ user.email }}</div>
-                                            </div>
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full" :src="user.avatar" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">{{ user.display_name }}</div>
+                                                    <div class="text-sm text-gray-500">{{ user.email }}</div>
+                                                    <div class="">
+                                                        <span v-for="(role, index) in user.user_has_role" :key="role.id">
+                                                            <span class="text-slate-500" v-if="index != 0"> / </span><span class="text-indigo-400 text-sm whitespace-nowrap mt-0.5">{{ role.role.display_name ? role.role.display_name : '' }}</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -54,8 +59,15 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
+                                                <div class="flex pr-1">
+                                                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-1 border border-blue-700 rounded" title="Assign Roles" @click="assignRoles(user.ID)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4 fill-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteUser(user.ID)">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete User" @click="deleteUser(user.ID)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </button>
                                                 </div>
@@ -158,6 +170,9 @@ export default {
         }
     },
     methods: {
+        assignRoles(userID){
+            this.$inertia.get(this.route('users.assign_roles'), {'user_id': userID});
+        },
         deleteUser(userID){
             this.confirmationRoute = 'users.destroy'
             this.confirmationData = userID
