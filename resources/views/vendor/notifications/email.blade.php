@@ -10,9 +10,16 @@
 @endif
 @endif
 
+{{-- Header --}}
+@if (! empty($header))
+{{ $header }}
+@endif
+
+<div class="newline"></div>
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
-{{ $line }}
+<span class="text-sm">{{ $line }}</span>
+
 
 @endforeach
 

@@ -51,15 +51,15 @@ const submit = () => {
                     <BreezeCheckbox name="remember" v-model:checked="form.remember" />
                     <span class="ml-2 text-sm text-gray-600">Remember me</span>
                 </label>
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-red-500 hover:text-red-700 font-bold">
+                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-500 hover:text-gray-700">
                     Forgot your password?
                 </Link>
             </div>
             <div class="border-b-2 mt-4"></div>
             <div class="mt-4">
                 <div class="flex justify-end">
-                    <BreezeButton class="bg-indigo-700 hover:indigo-800 select-none" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Log in
+                    <BreezeButton class="bg-indigo-600 font-bold hover:bg-indigo-800 select-none" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Sign in
                     </BreezeButton>
                 </div>
                 <!-- <div class="text-center text-gray-400 pt-2">or</div>

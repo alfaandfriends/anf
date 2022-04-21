@@ -227,4 +227,10 @@ class User extends Model implements Authenticatable, CanResetPassword
     {
         return $this->hasMany(UserHasRoles::class, 'user_id');
     }
+    
+    public function routeNotificationForMail($notification)
+    {
+        // Return email address only...
+        return $this->user_email;
+    }
 }

@@ -11,4 +11,9 @@ class ProfileController extends Controller
     {
         return Inertia::render('Profile/Create');
     }
+
+    public function store(Request $request)
+    {
+        dd($request);
+    }
 }

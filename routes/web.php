@@ -1,7 +1,5 @@
 <?php
 
-use Inertia\Inertia;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MenuController;
@@ -10,7 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CentreController;
-
+use Illuminate\Http\Request;
 
 /* Authorized Only */
 Route::middleware(['auth', 'check_role'])->group(function(){
@@ -31,12 +29,16 @@ Route::middleware(['auth', 'check_role'])->group(function(){
 
     /* Profile */
     Route::get('/profile', [ProfileController::class, 'create'])->name('profile');
+    Route::get('/profile/store', [ProfileController::class, 'store'])->name('profile.store');
 
     /* Users */
     Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/assign-roles', [UserController::class, 'assignRoles'])->name('users.assign_roles');
     Route::post('/users/assign-roles/store', [UserController::class, 'assignRolesStore'])->name('users.assign_roles.store');
     Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/completed-tour', [UserController::class, 'completedTour'])->name('users.completed_tour');
 
     /* Roles */
     Route::get('/roles', [RoleController::class, 'index'])->name('roles');
@@ -72,7 +74,7 @@ Route::middleware(['auth', 'check_role'])->group(function(){
     /* Centres */
     Route::get('/centres', [CentreController::class, 'index'])->name('centres');
     Route::get('/centres/create', [CentreController::class, 'create'])->name('centres.create');
-    Route::post('/centres/store', [CentreController::class, 'store'])->name('centres.store');
-
+    Route::post('/centres/store', [CentreController::class, 'store'])->name('centres.store');  
+    
 });
 require __DIR__.'/auth.php';

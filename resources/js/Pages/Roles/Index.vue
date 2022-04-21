@@ -14,7 +14,7 @@
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
                 <div class="mx-auto">
-                    <div class="align-middle inline-block w-full lg:w-1/2">
+                    <div class="align-middle inline-block w-full lg:w-1/2 px-2">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
                             <button class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded" @click="addRole()"> 
                                 Add Role

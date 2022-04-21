@@ -14,11 +14,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
                 <div class="mx-auto">
-                    <div class="align-middle inline-block min-w-full">
-                        <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
+                    <div class="align-middle inline-block min-w-full px-2">
+                        <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600 justify-between">
                             <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
                             <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                     type="text" v-model="params.search" placeholder="Search">
+                            <Link :href="route('users.create')" class="py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold">User Registration</Link>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">

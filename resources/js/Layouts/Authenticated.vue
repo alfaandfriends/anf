@@ -8,10 +8,11 @@ import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
 import { Link } from '@inertiajs/inertia-vue3'
 import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } from '@heroicons/vue/solid'
 import Toast from '@/Components/Toast.vue'
+import VueGuidedTour from "@abdulraof628/vue-guided-tour/src/components/vueGuidedTour.vue";
 
 export default {
     components: {
-        BreezeApplicationLogo, Link, Toast,
+        BreezeApplicationLogo, Link, Toast, VueGuidedTour,
         BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink,
         CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon,
     },
@@ -22,6 +23,16 @@ export default {
             showSiteSetting: false,
             isOpen: false,
             selected: '',
+            steps: [
+                {
+                    target: '.step-1',
+                    content: 'This is the menus',
+                },
+                {
+                    target: '.step-2',
+                    content: 'This is your profile',
+                }
+            ]
         }
     },
     created(){
@@ -31,7 +42,20 @@ export default {
         toggleMenu (item) {
             item == this.selected ? this.isOpen = !this.isOpen : this.isOpen = true
             this.selected = item
+        },
+        completedTour(status){
+            if(status){
+                this.$inertia.post(route('users.completed_tour'), {user_id: this.$inertia.page.props.auth.user.ID})
+            }
         }
+    },
+    mounted() {
+        if(this.$inertia.page.props.auth.first_time_login){
+            this.$vgt.start(0);
+        }
+        // if(!this.$inertia.page.props.auth.profile_updated && !route().current('profile')){
+        //     this.$inertia.get(route('profile'))
+        // }
     },
 }
 </script>
@@ -42,7 +66,7 @@ export default {
 <template>
     <div class="flex">
         <!-- Sidebar -->
-        <div class="min-h-screen bg-gray-50" x-data="{ sideBar: false }">
+        <div class="min-h-screen bg-gray-50 step-1" x-data="{ sideBar: false }">
             <div class="flex">
                 <nav class="fixed top-0 left-0 z-30 h-full pb-10 overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-60 sm:translate-x-0" 
                      :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
@@ -93,6 +117,7 @@ export default {
             </div>
         </div>
         <div class="min-h-screen bg-gray-100 w-full">
+            <VueGuidedTour :steps="steps" @afterEnd="completedTour"></VueGuidedTour>
             <Toast :toastData="$page.props.flash"></Toast>
             <nav class="bg-white border-b border-gray-100 sticky top-0 z-20">
                 <!-- Primary Navigation Menu -->
@@ -112,7 +137,7 @@ export default {
                             <div class="ml-3 relative">
                                 <BreezeDropdown align="right" width="48">
                                     <template #trigger>
-                                        <span class="inline-flex rounded-md">
+                                        <span class="inline-flex rounded-md step-2">
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                                 <div class=" w-10 h-10 rounded-full overflow-hidden border-2 dark:border-white border-gray-900 mr-2">
                                                     <img :src="$page.props.auth.user.avatar" alt="" class="w-full h-full object-cover select-none"/>
@@ -152,13 +177,13 @@ export default {
             <!-- Page Heading -->
             <div class="flex-column">
                 <header class="bg-indigo-200 shadow" v-if="$slots.header">
-                    <div class="mx-auto py-3 px-4 sm:px-6 lg:px-8">
+                    <div class="mx-auto py-3 px-4 sm:px-6 lg:px-6">
                         <slot name="header" />
                     </div>
                 </header>
 
                 <!-- Page Content -->
-                <main class="min-h-screen">
+                <main class="min-h-screen bg-white">
                     <slot/>
                 </main>
                 <footer>
