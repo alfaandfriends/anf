@@ -7,6 +7,7 @@ use Inertia\Middleware;
 use App\Models\Menu;
 use App\Models\RoleHasPermissions;
 use App\Models\UserHasRoles;
+use Illuminate\Support\Facades\DB;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -49,6 +50,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
+                'profile_photo' => $request->user() ? DB::table('user_basic_information')->where('user_id', $request->user()->ID)->pluck('user_photo')->first() : '',
                 'first_time_login' => $request->user()->first_time_login ?? '',
                 'profile_updated' => $request->user()->profile_updated ?? ''
             ],

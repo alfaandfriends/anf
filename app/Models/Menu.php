@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Menu extends Model
 {
     public static function getAllMenu(){
-        $menu_result        =   DB::table('menus')->where('menu_status', 1)->get();
+        $menu_result        =   DB::table('menus')->where('menu_status', 1)->orderBy('menu_rank', 'desc')->get();
         $sub_menus_result   =   DB::table('menus_sub')->where('menu_sub_status', 1)->get();
 
         foreach($menu_result as $key=>$menu){

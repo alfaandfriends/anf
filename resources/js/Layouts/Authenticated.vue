@@ -140,7 +140,10 @@ export default {
                                         <span class="inline-flex rounded-md step-2">
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                                 <div class=" w-10 h-10 rounded-full overflow-hidden border-2 dark:border-white border-gray-900 mr-2">
-                                                    <img :src="$page.props.auth.user.avatar" alt="" class="w-full h-full object-cover select-none"/>
+                                                    <img v-if="$page.props.auth.profile_photo" :src="'/storage/'+$page.props.auth.profile_photo" alt="" class="w-full h-full object-cover select-none"/>
+                                                    <svg v-else class="h-full w-full text-gray-300 border rounded-full" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                    </svg>
                                                 </div>
                                                 <span class="select-none">{{$page.props.auth.user.display_name}}</span>
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
