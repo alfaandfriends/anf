@@ -29,7 +29,7 @@ Route::middleware(['auth', 'check_role'])->group(function(){
 
     /* Profile */
     Route::get('/profile', [ProfileController::class, 'create'])->name('profile');
-    Route::get('/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+    Route::post('/profile/store', [ProfileController::class, 'store'])->name('profile.store');
 
     /* Users */
     Route::get('/users', [UserController::class, 'index'])->name('users');
