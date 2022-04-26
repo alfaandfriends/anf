@@ -27,12 +27,15 @@
     },
     "dependencies": {
         "@abdulraof628/vue-guided-tour": "^0.2.2",
+        "@fortawesome/free-regular-svg-icons": "^6.1.1",
+        "@fortawesome/free-solid-svg-icons": "^6.1.1",
         "@headlessui/vue": "^1.5.0",
         "@heroicons/vue": "^1.0.5",
         "@vueform/multiselect": "^2.3.3",
         "@vueform/toggle": "^2.0.1",
         "cropperjs": "^1.5.12",
         "dotenv-webpack": "^7.1.0",
-        "laravel-permission-to-vuejs": "^3.0.0"
+        "laravel-permission-to-vuejs": "^3.0.0",
+        "vue3-icon": "^2.0.0"
     }
 }

@@ -25,6 +25,7 @@
                                 <thead class="bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">#</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">Order</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/6">Menu Name</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/6">Route Name</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Status</th>
@@ -43,9 +44,19 @@
                                         <td class="px-6 py-2 whitespace-nowrap text-sm">{{ ++menuID }}</td>
                                         <td class="px-2 py-2 whitespace-nowrap">
                                             <div class="flex items-center">
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">{{ menu.menu_label }}</div>
+                                                <div class="px-0.5 text-blue-500 hover:text-blue-800 cursor-pointer" title="Sort">
+                                                    <svg-icon :fa-icon="faCaretSquareUp" :size="25" flip="horizontal" @click="moveUp(menu.id)"></svg-icon>
+                                                </div>
+                                                <div class="px-0.5 text-blue-500 hover:text-blue-800 cursor-pointer" title="Sort">
+                                                    <svg-icon :fa-icon="faCaretSquareDown" :size="25" flip="horizontal" @click="moveDown(menu.id)"></svg-icon>
+                                                </div>
                                             </div>
+                                        </td>
+                                        <td class="px-2 py-2 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">{{ menu.menu_label }}</div>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-2 py-2 whitespace-nowrap">
@@ -172,11 +183,14 @@
 import { SearchIcon, TrashIcon, PencilIcon, ChevronRightIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import { faCaretSquareUp, faCaretSquareDown } from "@fortawesome/free-regular-svg-icons";
+import SvgIcon from "vue3-icon";
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon, ChevronRightIcon,
-        ConfirmationModal, Head, Link
+        ConfirmationModal, Head, Link, SvgIcon, 
+        faCaretSquareUp, faCaretSquareDown
     },
     props: {
         show_sub_menu: Boolean,
@@ -217,6 +231,12 @@ export default {
             this.confirmationData = menu_id
             this.isOpen = true
         },
+        moveUp(menu_id){
+
+        },
+        moveDown(menu_id){
+
+        }
     },
 }
 </script>

@@ -8,7 +8,6 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 
         /* This rule is very important, please don't ignore this */
         max-width: 100%;
-        max-height: 20px;
     }
     .preview {
         overflow: hidden;
@@ -300,7 +299,7 @@ export default {
             aspectRatio: 1,
             cropBoxResizable: false,
             cropBoxMovable: true,
-            viewMode: 3,
+            viewMode: 1,
             dragMode: 'none',
             movable: true,
             rotatable: true,
@@ -353,7 +352,6 @@ export default {
     },
     methods: {
         submit() {
-            console.log(this.form)
             this.$inertia.post(route('profile.store'), this.form)
         },
         setCallingCode(country_code){
@@ -433,6 +431,7 @@ export default {
             this.show_profile_photo = true
             this.show_image = false
             this.$refs.upload_photo.value=null;
+            this.image_file_name = ''
         },
         select_cropped_image(){
             cropper.getCroppedCanvas().toBlob((blob) => {
@@ -442,6 +441,7 @@ export default {
             this.show_profile_photo = true
             this.show_image = false
             this.$refs.upload_photo.value=null;
+            this.image_file_name = ''
         },
         blobToFile(blob, fileName){
             blob.lastModifiedDate = new Date();
