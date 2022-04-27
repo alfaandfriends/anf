@@ -86,13 +86,13 @@
                                     <div class="mb-4">
                                         <label for="principal_first_name" class="block text-sm font-medium text-gray-700 font-bold"> First Name <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="principal_first_name" id="principal_first_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.first_name : ''" autocomplete="off"/>
+                                            <input type="text" name="principal_first_name" id="principal_first_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? form.principal_first_name = email_exist.user_first_name : ''" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
                                         <label for="pricipal_last_name" class="block text-sm font-medium text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="pricipal_last_name" id="pricipal_last_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.last_name : ''" autocomplete="off"/>
+                                            <input type="text" name="pricipal_last_name" id="pricipal_last_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? form.principal_last_name = email_exist.user_last_name : ''" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                                     <div class="mb-4" v-show="show_front_upload">
-                                        <label class="block text-sm font-medium text-gray-700 font-bold"> Centre Front View <span class="text-red-500">*</span> (Maximum: 1)</label>
+                                        <label class="block text-sm font-medium text-gray-700 font-bold"> Centre Front View <span class="text-red-500">*</span> (1 Image)</label>
                                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                                             @change="change_front"
                                             @dragover="dragover_front"
@@ -135,7 +135,7 @@
                                         </div>
                                     </div>
                                     <div class="mb-4" v-show="show_inside_upload">
-                                        <label class="block text-sm font-medium text-gray-700 font-bold"> Centre Inside View <span class="text-red-500">*</span> (Maximum: 5)</label>
+                                        <label class="block text-sm font-medium text-gray-700 font-bold"> Centre Inside View <span class="text-red-500">*</span> (5 Images)</label>
                                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                                             @change="change_inside"
                                             @dragover="dragover_inside"
@@ -185,14 +185,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="sm:col-span-2 self-center flex flex-wrap" v-show="form.image_list.length">
-                                        <div class="relative h-32 w-32 rounded mr-3 mt-3" v-for="(image_data, index) in form.image_list" :key="index">
+                                    <div class="sm:col-span-2 self-center flex flex-wrap gap-4" v-show="form.image_list.length">
+                                        <div class="relative h-32 w-32 rounded mr-3 mt-3 text-center" v-for="(image_data, index) in form.image_list" :key="index">
                                             <div class="absolute bg-red-500 p-2 rounded-full text-white z-30 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
                                             </div>
                                             <img :src="image_data.image_src" class="rounded-lg" alt="">
+                                            <label for="" class="text-sm capitalize text-slate-500">{{ image_data.type }}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -201,8 +202,8 @@
                         <div class="py-4">
                             <div class="w-full border-t border-gray-300"></div>
                         </div>
-                        <div class="flex justify-between">
-                            <div class="flex-column">
+                        <div class="flex items-end justify-end">
+                            <div class="pr-3">
                                 <label for="" class="block text-sm font-medium text-gray-700">Active</label>
                                 <Toggle v-model="form.school_active" 
                                     :classes="{
@@ -213,9 +214,7 @@
                                     }
                                 "/>
                             </div>
-                            <div class="flex-column self-end">
-                                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add Centre</button>
-                            </div>
+                            <button type="submit" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 select-none">Add Centre</button>
                         </div>
                     </div>
                 </form>
@@ -256,6 +255,8 @@ export default {
                 centre_contact_number: '',
                 centre_email: '',
                 centre_address: '',
+                principal_first_name: '',
+                principal_last_name: '',
                 principal_email: '',
                 principal_contact: '',
                 image_list: [],
@@ -414,6 +415,7 @@ export default {
                     this.show_front_upload = true
                     this.show_inside_upload = true
                     this.show_image = false
+                    this.$refs.front_image.value=null;
                 }
                 else{
                     alert('Only 1 front view image is allowed!')
@@ -428,6 +430,7 @@ export default {
                     this.show_front_upload = true
                     this.show_inside_upload = true
                     this.show_image = false
+                    this.$refs.inside_image.value=null;
                 }
                 else{
                     alert('Only 5 inside view image is allowed!')

@@ -68,7 +68,7 @@ export default {
         <!-- Sidebar -->
         <div class="min-h-screen bg-gray-50 step-1" x-data="{ sideBar: false }">
             <div class="flex">
-                <nav class="fixed top-0 left-0 z-30 h-full pb-10 overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-60 sm:translate-x-0" 
+                <nav class="fixed top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-60 sm:translate-x-0" 
                      :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
                 >
                     <span class="flex items-center px-4 py-5 text-white font-bold">ALFA and Friends</span>
@@ -105,6 +105,15 @@ export default {
                         <BreezeNavLink class="w-full sm:hidden" :href="route('logout')" method="post" as="button">
                             <LogoutIcon class="h-6 w-6 mr-2"></LogoutIcon>
                             Log Out
+                        </BreezeNavLink>
+                        <BreezeNavLink class="w-full sticky sm:hidden bg-blue-900 text-white" :href="route('profile')">
+                            <div class="w-8 h-8 rounded-full overflow-hidden border-2 dark:border-white border-gray-900 mr-2">
+                                <img v-if="$page.props.auth.profile_photo" :src="'/storage/'+$page.props.auth.profile_photo" alt="" class="w-full h-full object-cover select-none"/>
+                                <svg v-else class="h-full w-full text-gray-300 border rounded-full" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </div>
+                            My Account
                         </BreezeNavLink>
                     </nav>
                 </nav>

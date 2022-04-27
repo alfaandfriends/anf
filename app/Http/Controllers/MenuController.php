@@ -39,14 +39,19 @@ class MenuController extends Controller
     public function storeMenu(Request $request)
     {
         $request->validate([
-            'menu_label' => 'required',
-            'menu_icon' => 'required'
+            'menu_label'    => 'required',
+            'menu_icon'     => 'required'
         ]);
+
+        $current_rank   =   Menu::orderBy('menu_rank', 'desc')->pluck('menu_rank')->first();
+        $next_rank      =   $current_rank + 1;
+        dd($next_rank);
 
         DB::table('menus')->insert([
             'menu_label' => $request->menu_label,
             'menu_route' => $request->menu_route,
             'menu_icon' => $request->menu_icon,
+            'menu_rank' => $next_rank,
             'menu_status' => $request->menu_status
         ]);
         
@@ -148,5 +153,55 @@ class MenuController extends Controller
         Menu::deleteSubMenu($sub_menu_id);
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'Sub Menu deleted successfully !']);
+    }
+
+    public function swapMenuUp(Request $request){
+        $current_rank   =   Menu::where('id', $request->menu_id)->pluck('menu_rank')->first();
+        $next_rank      =   $current_rank - 1;
+
+        DB::table('menus')->where('menu_rank', $next_rank)->update(['menu_rank'=> $current_rank]);
+        DB::table('menus')->where('id', $request->menu_id)->update(['menu_rank'=> $next_rank]);
+
+        return redirect()->back()->with(['type'=>'success', 'message'=>'Menu order changed successfully !']);
+    }
+
+    public function swapMenuDown(Request $request){
+        $current_rank   =   Menu::where('id', $request->menu_id)->pluck('menu_rank')->first();
+        $next_rank      =   $current_rank + 1;
+
+        DB::table('menus')->where('menu_rank', $next_rank)->update(['menu_rank'=> $current_rank]);
+        DB::table('menus')->where('id', $request->menu_id)->update(['menu_rank'=> $next_rank]);
+
+        return redirect()->back()->with(['type'=>'success', 'message'=>'Menu order changed successfully !']);
+    }
+
+    public function swapSubMenuUp(Request $request){
+        $current_rank   =   DB::table('menus_sub')->where('menu_id', $request->menu_id)
+                                    ->where('id', $request->sub_menu_id)
+                                    ->pluck('menu_sub_rank')
+                                    ->first();
+        $next_rank      =   (int)$current_rank - 1;
+
+        DB::table('menus_sub')->where('menu_sub_rank', $next_rank)
+                        ->where('menu_id', $request->menu_id)
+                        ->update(['menu_sub_rank'=> $current_rank]);
+        DB::table('menus_sub')->where('id', $request->sub_menu_id)->update(['menu_sub_rank'=> $next_rank]);
+
+        return redirect()->back()->with(['type'=>'success', 'message'=>'Menu order changed successfully !']);
+    }
+
+    public function swapSubMenuDown(Request $request){
+        $current_rank   =   DB::table('menus_sub')->where('menu_id', $request->menu_id)
+                                    ->where('id', $request->sub_menu_id)
+                                    ->pluck('menu_sub_rank')
+                                    ->first();
+        $next_rank      =   (int)$current_rank + 1;
+
+        DB::table('menus_sub')->where('menu_sub_rank', $next_rank)
+                        ->where('menu_id', $request->menu_id)
+                        ->update(['menu_sub_rank'=> $current_rank]);
+        DB::table('menus_sub')->where('id', $request->sub_menu_id)->update(['menu_sub_rank'=> $next_rank]);
+
+        return redirect()->back()->with(['type'=>'success', 'message'=>'Menu order changed successfully !']);
     }
 }

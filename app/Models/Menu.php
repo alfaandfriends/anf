@@ -10,7 +10,7 @@ class Menu extends Model
 {
     public static function getAllMenu(){
         $menu_result        =   DB::table('menus')->where('menu_status', 1)->orderBy('menu_rank', 'asc')->get();
-        $sub_menus_result   =   DB::table('menus_sub')->where('menu_sub_status', 1)->get();
+        $sub_menus_result   =   DB::table('menus_sub')->where('menu_sub_status', 1)->orderBy('menu_sub_rank', 'asc')->get();
         
         foreach($menu_result as $key=>$menu){
             $menu_info['menu_icon']         =   $menu->menu_icon;
@@ -52,7 +52,7 @@ class Menu extends Model
     public static function getSubMenu($menu_id, $by_parent_menu_id = true){
 
         if($by_parent_menu_id){
-            $sub_menu   =   DB::table('menus_sub')->where('menu_id', $menu_id)->get();
+            $sub_menu   =   DB::table('menus_sub')->where('menu_id', $menu_id)->orderBy('menu_sub_rank', 'asc')->get();
         }
         else{
             $sub_menu   =   DB::table('menus_sub')->where('id', $menu_id)->first();

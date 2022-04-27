@@ -43,12 +43,12 @@
                                     <tr class="hover:bg-gray-200" v-for="(menu, menuID) in $page.props.menus" :key="menuID">
                                         <td class="px-6 py-2 whitespace-nowrap text-sm">{{ ++menuID }}</td>
                                         <td class="px-2 py-2 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="px-0.5 text-blue-500 hover:text-blue-800 cursor-pointer" title="Sort">
-                                                    <svg-icon :fa-icon="faCaretSquareUp" :size="25" flip="horizontal" @click="moveUp(menu.id)"></svg-icon>
+                                            <div class="flex justify-center">
+                                                <div class="px-0.5" :class="menuID > 1 ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-blue-200 cursor-not-allowed'" title="Sort">
+                                                    <svg-icon :fa-icon="faCaretSquareUp" :size="25" flip="horizontal" @click="menuID > 1 ? swapMenuUp(menu.id) : ''"></svg-icon>
                                                 </div>
-                                                <div class="px-0.5 text-blue-500 hover:text-blue-800 cursor-pointer" title="Sort">
-                                                    <svg-icon :fa-icon="faCaretSquareDown" :size="25" flip="horizontal" @click="moveDown(menu.id)"></svg-icon>
+                                                <div class="px-0.5≈" :class="menuID < $page.props.menus.length ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-blue-200 cursor-not-allowed'" title="Sort">
+                                                    <svg-icon :fa-icon="faCaretSquareDown" :size="25" flip="horizontal" @click="menuID < $page.props.menus.length ? swapMenuDown(menu.id) : ''"></svg-icon>
                                                 </div>
                                             </div>
                                         </td>
@@ -108,6 +108,7 @@
                                 <thead class="bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">#</th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Order</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/6">Sub Menu Name</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/6">Route Name</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/6">Status</th>
@@ -124,6 +125,16 @@
                                     </tr> 
                                     <tr class="hover:bg-gray-200" v-for="(sub_menu, menuID) in $page.props.sub_menus" :key="menuID">
                                         <td class="px-6 py-2 whitespace-nowrap text-sm">{{ ++menuID }}</td>
+                                        <td class="px-2 py-2 whitespace-nowrap">
+                                            <div class="flex justify-center">
+                                                <div class="px-0.5" :class="menuID > 1 ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-blue-200 cursor-not-allowed'" title="Sort">
+                                                    <svg-icon :fa-icon="faCaretSquareUp" :size="25" flip="horizontal" @click="menuID > 1 ? swapSubMenuUp(menu_id, sub_menu.id) : ''"></svg-icon>
+                                                </div>
+                                                <div class="px-0.5≈" :class="menuID < $page.props.sub_menus.length ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-blue-200 cursor-not-allowed'" title="Sort">
+                                                    <svg-icon :fa-icon="faCaretSquareDown" :size="25" flip="horizontal" @click="menuID < $page.props.sub_menus.length ? swapSubMenuDown(menu_id, sub_menu.id) : ''"></svg-icon>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td class="px-2 py-2 whitespace-nowrap">
                                             <div class="flex items-center">
                                             <div class="ml-4">
@@ -231,11 +242,17 @@ export default {
             this.confirmationData = menu_id
             this.isOpen = true
         },
-        moveUp(menu_id){
-
+        swapMenuUp(menu_id){
+            this.$inertia.post(route('menus.swap_menu_up'), {menu_id: menu_id})
         },
-        moveDown(menu_id){
-
+        swapMenuDown(menu_id){
+            this.$inertia.post(route('menus.swap_menu_down'), {menu_id: menu_id})
+        },
+        swapSubMenuUp(menu_id, sub_menu_id){
+            this.$inertia.post(route('menus.swap_sub_menu_up'), {menu_id: menu_id, sub_menu_id: sub_menu_id})
+        },
+        swapSubMenuDown(menu_id, sub_menu_id){
+            this.$inertia.post(route('menus.swap_sub_menu_down'), {menu_id: menu_id, sub_menu_id: sub_menu_id})
         }
     },
 }
