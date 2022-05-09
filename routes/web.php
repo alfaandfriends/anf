@@ -79,6 +79,7 @@ Route::middleware(['auth', 'check_role'])->group(function(){
     Route::get('/centres', [CentreController::class, 'index'])->name('centres');
     Route::get('/centres/create', [CentreController::class, 'create'])->name('centres.create');
     Route::post('/centres/store', [CentreController::class, 'store'])->name('centres.store');  
+    Route::get('/centres/edit', [CentreController::class, 'edit'])->name('centres.edit');  
     
 });
 require __DIR__.'/auth.php';

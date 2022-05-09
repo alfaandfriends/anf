@@ -24,14 +24,11 @@
                                 </div>
                                 <div v-if="$page.props.errors.menu_label"><span class="text-red-500">{{ $page.props.errors.menu_label }}</span></div>
                                 <div class="mt-3">
-                                    <label for="role_name">Role Allowed</label>
-                                    <div class="">
-                                        <select class="rounded w-full" v-model="form.role_allowed">
-                                            <option value="">Please Select</option>
-                                        </select>
-                                    </div>
+                                    <label for="role_name">Permission</label>
+                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.menu_permission" 
+                                           :class="$page.props.errors.menu_permission ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
                                 </div>
-                                <div v-if="$page.props.errors.menu_label"><span class="text-red-500">{{ $page.props.errors.menu_label }}</span></div>
+                                <div v-if="$page.props.errors.menu_permission"><span class="text-red-500">{{ $page.props.errors.menu_permission }}</span></div>
                                 <div class="mt-3">
                                     <label for="role_name">Route</label>
                                     <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.menu_route" 
@@ -95,6 +92,7 @@ export default {
                 menu_label: this.menus.menu_label,
                 menu_route: this.menus.menu_route,
                 menu_icon: this.menus.menu_icon,
+                menu_permission: this.menus.permission_name,
                 menu_status: this.menus.menu_status,
             },
         }

@@ -24,6 +24,12 @@
                                 </div>
                                 <div v-if="$page.props.errors.menu_label"><span class="text-red-500">{{ $page.props.errors.menu_label }}</span></div>
                                 <div class="mt-3">
+                                    <label for="role">Permission<span class="text-red-500">*</span></label>
+                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.menu_permission" 
+                                           :class="$page.props.errors.menu_permission ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
+                                </div>
+                                <div v-if="$page.props.errors.menu_permission"><span class="text-red-500">{{ $page.props.errors.menu_permission }}</span></div>
+                                <div class="mt-3">
                                     <label for="role_name">Route <span class="text-red-500">(required if no sub menu)</span></label>
                                     <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.menu_route" 
                                            :class="$page.props.errors.menu_route ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
@@ -85,6 +91,7 @@ export default {
                 menu_label: null,
                 menu_route: null,
                 menu_icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
+                menu_permission: null,
                 menu_status: false,
             },
         }

@@ -105,9 +105,12 @@ class CentreController extends Controller
         return redirect('centres')->with(['type'=>'success', 'message'=>'School added successfully !']);
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
-
+        $images = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->first();
+        $images = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->first();
+        $images = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->first();
+        dd($images);
     }
 
     public function update()

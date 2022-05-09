@@ -44,7 +44,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </td>
                                     </tr> 
                                     <tr class="hover:bg-gray-200" v-for="centre in $page.props.centres.data" :key="centre.ID">
-                                        <td class="px-2 py-3 whitespace-nowrap">
+                                        <td class="px-2 py-3">
                                             <div class="flex items-center">
                                                 <div class="ml-4">
                                                     <div class="text-md font-bold font-medium text-indigo-900 uppercase mb-1">{{ centre.label }}</div>
@@ -79,12 +79,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex mr-1">
-                                                    <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-1 border border-yellow-600 rounded" title="Edit School" @click="deleteUser(centre.ID)">
+                                                    <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-1 border border-yellow-600 rounded" title="Edit School" @click="editCentre(centre.ID)">
                                                         <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
                                                     </button>
                                                 </div>
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete School" @click="deleteUser(centre.ID)">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete School" @click="deleteCentre(centre.ID)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </button>
                                                 </div>
@@ -187,10 +187,13 @@ export default {
         }
     },
     methods: {
-        deleteUser(userID){
+        deleteCentre(userID){
             this.confirmationRoute = 'users.destroy'
             this.confirmationData = userID
             this.isOpen = true
+        },
+        editCentre(centre_id){
+            this.$inertia.get(route('centres.edit'), {centre_id: centre_id}, { preserveState: true})
         }
     }
 }

@@ -294,7 +294,6 @@ export default {
     },
     methods: {
         submit() {
-            console.log(this.form)
             this.$inertia.post(route('centres.store'), this.form, { preserveState: true})
         },
         read(file, event) {

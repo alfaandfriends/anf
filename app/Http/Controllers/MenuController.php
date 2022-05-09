@@ -45,7 +45,6 @@ class MenuController extends Controller
 
         $current_rank   =   Menu::orderBy('menu_rank', 'desc')->pluck('menu_rank')->first();
         $next_rank      =   $current_rank + 1;
-        dd($next_rank);
 
         DB::table('menus')->insert([
             'menu_label' => $request->menu_label,
@@ -75,10 +74,14 @@ class MenuController extends Controller
             'menu_sub_label.required' => 'The sub menu label is required.'
         ]);
         
+        $current_rank   =   DB::table('menus_sub')->where('menu_id', $request->menu_id)->orderBy('menu_sub_rank', 'desc')->pluck('menu_sub_rank')->first();
+        $next_rank      =   $current_rank + 1;
+
         DB::table('menus_sub')->insert([
             'menu_id'           => $request->menu_id,
             'menu_sub_label'    => $request->menu_sub_label,
             'menu_sub_route'    => $request->menu_sub_route,
+            'menu_sub_rank'     => $next_rank,
             'menu_sub_status'   => $request->menu_sub_status
         ]);
         
