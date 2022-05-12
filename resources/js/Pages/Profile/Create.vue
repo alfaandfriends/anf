@@ -34,7 +34,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 <div class="grid grid-cols-1 sm:grid-cols-0 gap-0">
                                     <div class="mb-4 flex items-center" v-show="show_profile_photo">
                                         <span class="inline-block h-20 w-20 rounded-full border overflow-hidden bg-gray-100">
-                                            <img v-if="info" :src="'/storage/'+info.user_photo" alt="">
+                                            <img v-if="info" :src="user_image" alt="">
                                             <svg v-else class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                                             </svg>
@@ -49,7 +49,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         <div v-show="show_image">
                                             <label class="block text-sm font-medium text-gray-900 font-bold"> Crop Image</label>
                                             <div class="w-96 h-60 my-3">
-                                                <img class="image" ref="image" :src="this.image">
+                                                <img class="image" ref="input" :src="selected_image">
                                             </div>
                                         </div>
                                         <div v-show="show_image">
@@ -294,8 +294,9 @@ export default {
         info: Object
     },
     mounted(){
-        const image = this.$refs['image'] 
-        cropper = new Cropper(image, {
+        // console.log(this.info)
+        const selected_image = this.$refs.input 
+        cropper = new Cropper(selected_image, {
             aspectRatio: 1,
             cropBoxResizable: false,
             cropBoxMovable: true,
@@ -316,7 +317,8 @@ export default {
             state_list: [],
             show_profile_photo: true,
             show_image: false,
-            image: '',
+            selected_image: '',
+            user_image: this.info.user_photo != '' ? '/storage/'+this.info.user_photo : '',
             image_file_name: '',
             form: {
                 profile_photo: '',
@@ -332,7 +334,7 @@ export default {
         }
     },
     watch: {
-        image: {
+        selected_image: {
             handler(value){ 
                 cropper.replace(value)
             },
@@ -416,7 +418,7 @@ export default {
                 this.read(files[0], target)
                 .then((data) => {
                     this.image_file_name = data.name
-                    this.image    =   data.url
+                    this.selected_image    =   data.url
                     this.show_profile_photo = false
                     this.show_image = true
                     this.update(data)
@@ -437,6 +439,7 @@ export default {
             cropper.getCroppedCanvas().toBlob((blob) => {
                 var image_file = this.blobToFile(blob, this.data.name)
                 this.form.profile_photo = image_file;
+                this.user_image = URL.createObjectURL(blob)
             }, 'image/jpeg', 0.1 );
             this.show_profile_photo = true
             this.show_image = false

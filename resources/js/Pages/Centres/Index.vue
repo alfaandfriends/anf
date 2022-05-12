@@ -115,7 +115,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                                                 <Link  v-for="(link, key) in $page.props.centres.links" 
                                                     :key="key" 
-                                                    :href="link.url ? link.url + '&search=' + this.params.search : '#'"
+                                                    :href="link.url ? link.url + '&search=' + params.search : '#'"
                                                     class="" 
                                                     :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
                                                                         : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
@@ -181,7 +181,9 @@ export default {
     watch: {
         params: {
             handler(){
+                if(this.params){
                 this.$inertia.get(this.route('centres'), this.params, { replace: true, preserveState: true});
+                }
             },
             deep: true
         }

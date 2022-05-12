@@ -42,8 +42,12 @@ class HandleInertiaRequests extends Middleware
             $user_roles =   collect(UserHasRoles::where('user_id', $request->user()->ID)->get('role_id'));
             $roles      =   RoleHasPermissions::with('permission')->whereIn('role_id', $user_roles)->get();
     
-            foreach($roles as $key=>$role){
-                $can[$role->permission->name] = true;
+            if(!empty($roles)){
+                foreach($roles as $key=>$role){
+                    if($role->permission != ''){
+                        $can[$role->permission->name] = true;
+                    }
+                }
             }
         }
         

@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 Route::middleware(['auth', 'check_role'])->group(function(){
 
     /* Default Landing Page */
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index']);
     // Route::get('/', function () {
     //     return Inertia::render('Welcome', [
     //         'canLogin' => Route::has('login'),

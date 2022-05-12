@@ -158,7 +158,7 @@
                                     <div class="mb-4" v-show="show_image">
                                         <label class="block text-sm font-medium text-gray-900 font-bold"> Crop Image</label>
                                         <div class="w-96 h-60 mt-1">
-                                            <img class="image" ref="image" :src="this.image">
+                                            <img class="image" ref="input" :src="image">
                                         </div>
                                     </div>
                                     <div class="mb-4" v-show="show_image">
@@ -264,24 +264,30 @@ export default {
         }
     },
     mounted(){
-        const image = this.$refs['image'] 
-        cropper = new Cropper(image, {
-            aspectRatio: 1,
-            cropBoxResizable: false,
-            cropBoxMovable: false,
-            viewMode: 1,
-            dragMode: 'move',
-            movable: true,
-            rotatable: true,
-            preview: '.preview',
-            minCropBoxWidth: 500,
-            minCropBoxHeight: 500,
-        });
+        const temp_image = this.$refs.input
+        if(temp_image){
+            cropper = new Cropper(temp_image, {
+                aspectRatio: 1,
+                cropBoxResizable: false,
+                cropBoxMovable: false,
+                viewMode: 1,
+                dragMode: 'move',
+                movable: true,
+                rotatable: true,
+                preview: '.preview',
+                minCropBoxWidth: 500,
+                minCropBoxHeight: 500,
+                modal: true,
+                background: false
+            });
+        }
     },
     watch: {
         image: {
             handler(value){ 
-                cropper.replace(value)
+                if(value){
+                    cropper.replace(value)
+                }
             },
             deep: true
         },
@@ -410,7 +416,6 @@ export default {
                         var image_file = this.blobToFile(blob, this.data.name)
                         this.form.image_list.push({'image_src': link, 'image_file': image_file, 'type': this.data.view_type})
                     }, 'image/jpeg', 0.1 );
-                    console.log(this.form.image_list)
                     this.show_front_upload = true
                     this.show_inside_upload = true
                     this.show_image = false
