@@ -135,7 +135,7 @@
                                         </div>
                                     </div>
                                     <div class="mb-4" v-show="show_inside_upload">
-                                        <label class="block text-sm font-medium text-gray-700 font-bold"> Centre Inside View <span class="text-red-500">*</span> (5 Images)</label>
+                                        <label class="block text-sm font-medium text-gray-700 font-bold"> Centre Inside View <span class="text-red-500">*</span> (Max: 5 Images)</label>
                                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                                             @change="change_inside"
                                             @dragover="dragover_inside"
@@ -205,7 +205,7 @@
                         <div class="flex items-end justify-end">
                             <div class="pr-3">
                                 <label for="" class="block text-sm font-medium text-gray-700">Active</label>
-                                <Toggle v-model="form.school_active" 
+                                <Toggle v-model="form.centre_active" 
                                     :classes="{
                                         container: 'inline-block',
                                         toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
@@ -255,6 +255,7 @@ export default {
                 centre_contact_number: '',
                 centre_email: '',
                 centre_address: '',
+                centre_active: true,
                 principal_first_name: '',
                 principal_last_name: '',
                 principal_email: '',
@@ -293,7 +294,9 @@ export default {
         },
         'form.principal_email': {
             handler(){
-                this.$inertia.get(this.route('centres.create'), {'principal_email': this.form.principal_email}, { preserveState: true});    
+                if(this.form.principal_email){
+                    this.$inertia.get(this.route('centres.create'), {'principal_email': this.form.principal_email}, { preserveState: true});    
+                }
             },
             immediate: true
         }

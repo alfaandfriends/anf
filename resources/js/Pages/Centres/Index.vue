@@ -74,7 +74,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> {{ centre.is_active == true ? 'Active' : 'Not Active' }} </span>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="centre.is_active == true ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.is_active == true ? 'Active' : 'Not Active' }} </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
@@ -190,7 +190,7 @@ export default {
     },
     methods: {
         deleteCentre(userID){
-            this.confirmationRoute = 'users.destroy'
+            this.confirmationRoute = 'centres.destroy'
             this.confirmationData = userID
             this.isOpen = true
         },

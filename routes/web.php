@@ -80,6 +80,9 @@ Route::middleware(['auth', 'check_role'])->group(function(){
     Route::get('/centres/create', [CentreController::class, 'create'])->name('centres.create');
     Route::post('/centres/store', [CentreController::class, 'store'])->name('centres.store');  
     Route::get('/centres/edit', [CentreController::class, 'edit'])->name('centres.edit');  
+    Route::post('/centres/update', [CentreController::class, 'update'])->name('centres.update');  
+    Route::delete('/centres/destroy/{id}', [CentreController::class, 'destroy'])->name('centres.destroy');
+    Route::delete('/centres/image/destroy/{id}', [CentreController::class, 'destroyImage'])->name('centres.destroy_image');
     
 });
 require __DIR__.'/auth.php';

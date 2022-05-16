@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class CentreController extends Controller
 {
@@ -72,7 +73,7 @@ class CentreController extends Controller
                                 'phone' => $request->centre_contact_number,
                                 'email' => $request->centre_email,
                                 'address' => $request->centre_address,
-                                'is_active' => $request->school_active,
+                                'is_active' => $request->centre_active,
                                 'last_enrollment_count' => 0,
                                 'last_invoice_count' => 0,
                                 'last_payment_count' => 0,
@@ -107,19 +108,139 @@ class CentreController extends Controller
 
     public function edit(Request $request)
     {
-        $images = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->first();
-        $images = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->first();
-        $images = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->first();
-        dd($images);
+        if($request->principal_email){
+            $email_exist    =   User::where('user_email', $request->principal_email)->first();
+            if(!empty($email_exist)){
+                $email_exist      =   DB::table('user_basic_information')->where('user_id', $email_exist->ID)->first();
+            }
+        }
+        else{
+            $email_exist    =   null;
+        }
+
+        $centre_info        =   DB::table('wpvt_10_wlsm_schools')->where('ID', $request->centre_id)->first();
+        $centre_images      =   DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->get();
+        $centre_principal   =   DB::table('wpvt_10_wlsm_schools_principals')->where('centre_id', $request->centre_id)->first();
+
+        return Inertia::render('Centres/Edit', [
+            'email_exist'=>$email_exist,
+            'centre_info' => $centre_info,
+            'centre_images' => $centre_images,
+            'centre_principal' => $centre_principal,
+        ]);
     }
 
-    public function update()
+    public function update(Request $request)
     {
+        $request->validate([
+            'centre_name'               => 'required|max:20',
+            'centre_contact_number'     => 'required|max:50',
+            'centre_email'              => 'required|max:50',
+            'centre_address'            => 'required|max:100',
+            'principal_email'           => 'required|max:50',
+            'principal_contact'         => 'required|max:50',
+        ]);
+        
+        /* Check principal details */
+        $email_exist  =   User::where('user_email', $request->principal_email)->count();
 
+        if($email_exist < 1){
+            return redirect()->back()->with(['type'=>'error', 'message'=>'Please enter a valid principal email address !']);
+        }
+        /* Check principal details */
+
+        /* Check images */
+        $images_count           = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->count();
+
+        if( (empty($request->image_list) && $images_count < 1) || 
+            count(collect($request->image_list)->where('image_type', 'front')) < 1 || 
+            count(collect($request->image_list)->where('image_type', 'inside')) < 5){   
+            return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload required image !']);
+        }
+        /* Check images */
+
+        /* Update centre info */
+        DB::table('wpvt_10_wlsm_schools')->where('ID', $request->centre_id)->update([
+                    'label' => 'ANFC '.$request->centre_name,
+                    'phone' => $request->centre_contact_number,
+                    'email' => $request->centre_email,
+                    'address' => $request->centre_address,
+                    'is_active' => $request->centre_active,
+                ]);
+        /* Update centre info */
+            
+        /* Update principal info */
+        $principal_exist    =   DB::table('wpvt_10_wlsm_schools_principals')->where('centre_id', $request->centre_id)->exists();
+
+        if($principal_exist){
+            DB::table('wpvt_10_wlsm_schools_principals')->where('centre_id', $request->centre_id)->update([
+                'first_name'        => $request->principal_first_name,
+                'last_name'         => $request->principal_last_name,
+                'email'             => $request->principal_email,
+                'contact_number'    => $request->principal_contact,
+            ]);
+        }
+        else{
+            DB::table('wpvt_10_wlsm_schools_principals')->insert([
+                'centre_id'         => $request->centre_id,
+                'first_name'        => $request->principal_first_name,
+                'last_name'         => $request->principal_last_name,
+                'email'             => $request->principal_email,
+                'contact_number'    => $request->principal_contact,
+            ]);
+        }
+        /* Update principal info */
+
+        /* Delete selected images */
+        if(!empty($request->images_to_delete)){
+            foreach($request->images_to_delete as $key=>$image_to_delete){
+                $this->destroyImage($image_to_delete['image_id']);
+            }
+        }
+        /* Delete selected images */
+        
+        /* Upload new images */
+        $images =   $request->file('image_list');
+        if(!empty($images)){
+            foreach($images as $key=>$image){
+                $image_path     =   Storage::putFile('centre_photo', $image['image_file']);
+                $image_size     =   Storage::size($image_path);
+                $image_type     =   $request->image_list[$key]['image_type'];
+    
+                DB::table('wpvt_10_wlsm_schools_images')->insert([
+                    'centre_id'     => $request->centre_id,
+                    'image_path'    => '/storage/'.$image_path,
+                    'image_size'    => $image_size,
+                    'image_type'    => $image_type,
+                ]);
+            }
+        }
+        /* Upload new images */
+
+        return redirect('centres')->with(['type'=>'success', 'message'=>'Centre updated successfully !']);
     }
 
-    public function destroy()
+    public function destroy($id)
     {
+        DB::table('wpvt_10_wlsm_schools')->where('ID', $id)->delete();
+        DB::table('wpvt_10_wlsm_schools_principals')->where('centre_id', $id)->delete();
 
+        $images  =   DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $id)->get();
+        foreach($images as $key=>$image){
+            $image_path =   Str::replace('/storage/', '', $image->image_path);
+            Storage::delete($image_path);
+        }
+        DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $id)->delete();
+
+        return redirect('centres')->with(['type'=>'success', 'message'=>'Centre deleted successfully !']);
+    }
+
+    public function destroyImage($id){
+        $image      =   DB::table('wpvt_10_wlsm_schools_images')->where('ID', $id)->first();
+        $image_path =   Str::replace('/storage/', '', $image->image_path);
+        Storage::delete($image_path);
+        DB::table('wpvt_10_wlsm_schools_images')->where('ID', $id)->delete();
+
+        return back()->with(['type'=>'success', 'message'=>'Image deleted !']);
     }
 }
