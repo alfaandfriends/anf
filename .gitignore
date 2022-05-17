@@ -23,3 +23,8 @@ yarn-error.log
 # !vendor/jgrossi
 # vendor/*
 # !vendor/jgrossi/corcel/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
