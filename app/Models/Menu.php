@@ -11,6 +11,7 @@ class Menu extends Model
     public static function getAllMenu(){
         $menu_result        =   DB::table('menus')->where('menu_status', 1)->orderBy('menu_rank', 'asc')->get();
         $sub_menus_result   =   DB::table('menus_sub')->where('menu_sub_status', 1)->orderBy('menu_sub_rank', 'asc')->get();
+        $menus              =   array();
         
         foreach($menu_result as $key=>$menu){
             $menu_info['menu_icon']         =   $menu->menu_icon;
