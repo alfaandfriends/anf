@@ -166,7 +166,7 @@ class UserController extends Controller
     public function completedTour(Request $request){
         User::where('ID', $request->user_id)->update(['first_time_login' => false]);
 
-        return redirect('profile');
+        // return redirect('profile');
     }
 
     public function emailExist($email){
