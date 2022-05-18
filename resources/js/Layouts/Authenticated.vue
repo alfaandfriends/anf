@@ -46,16 +46,13 @@ export default {
         completedTour(status){
             if(status){
                 this.$inertia.post(route('users.completed_tour'), {user_id: this.$inertia.page.props.auth.user.ID})
-            }
+            }``
         }
     },
     mounted() {
         if(this.$inertia.page.props.auth.first_time_login == 1){
             this.$vgt.start(0);
         }
-        // if(!this.$inertia.page.props.auth.profile_updated && !route().current('profile')){
-        //     this.$inertia.get(route('profile'))
-        // }
     },
 }
 </script>
