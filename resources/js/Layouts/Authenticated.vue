@@ -50,7 +50,7 @@ export default {
         }
     },
     mounted() {
-        if(this.$inertia.page.props.auth.first_time_login){
+        if(this.$inertia.page.props.auth.first_time_login == 1){
             this.$vgt.start(0);
         }
         // if(!this.$inertia.page.props.auth.profile_updated && !route().current('profile')){
