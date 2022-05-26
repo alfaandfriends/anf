@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -21,11 +22,10 @@ class CentreController extends Controller
             $query  ->where('label', 'LIKE', '%'.request('search').'%')
                     ->orWhere('email', 'LIKE', '%'.request('search').'%');
         }
-
         $results    =   $query->orderBy('id')->paginate(10);
 
         return Inertia::render('Centres/Index', [
-            'filter'=>request()->all('search'),
+            'filter'=>request()->all('search', 'centre_id'),
             'centres' => $results,
         ]);
     }
@@ -242,5 +242,28 @@ class CentreController extends Controller
         DB::table('wpvt_10_wlsm_schools_images')->where('ID', $id)->delete();
 
         return back()->with(['type'=>'success', 'message'=>'Image deleted !']);
+    }
+
+    public function getCentreImages(Request $request){
+
+        $images = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->get();
+
+        $centre_images =   array();
+        if($images->isNotEmpty()){
+            foreach($images as $key => $image){
+                $data['thumb']      =   File::exists(public_path($image->image_path)) ? $image->image_path : 'https://media.istockphoto.com/vectors/no-image-available-sign-vector-id1138179183?k=20&m=1138179183&s=612x612&w=0&h=iJ9y-snV_RmXArY4bA-S4QSab0gxfAMXmXwn5Edko1M=';
+                $data['src']        =   File::exists(public_path($image->image_path)) ? $image->image_path : 'https://media.istockphoto.com/vectors/no-image-available-sign-vector-id1138179183?k=20&m=1138179183&s=612x612&w=0&h=iJ9y-snV_RmXArY4bA-S4QSab0gxfAMXmXwn5Edko1M=';
+                $data['caption']    =   Str::ucfirst($image->image_type) . ' View';
+                $centre_images[]    =   $data;
+            }
+        }
+        else{
+            $data['thumb']      =   'https://media.istockphoto.com/vectors/no-image-available-sign-vector-id1138179183?k=20&m=1138179183&s=612x612&w=0&h=iJ9y-snV_RmXArY4bA-S4QSab0gxfAMXmXwn5Edko1M=';
+            $data['src']        =   'https://media.istockphoto.com/vectors/no-image-available-sign-vector-id1138179183?k=20&m=1138179183&s=612x612&w=0&h=iJ9y-snV_RmXArY4bA-S4QSab0gxfAMXmXwn5Edko1M=';
+            $data['caption']    =   'Not Available';
+            $centre_images[]    =   $data;
+        }
+        
+        return $centre_images;
     }
 }

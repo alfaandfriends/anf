@@ -79,6 +79,11 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex mr-1">
+                                                    <button class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-1 px-1 border border-blue-600 rounded" title="View Images" @click="viewImages(centre.ID)">
+                                                        <PhotographIcon class="text-white-600 h-4 w-4 fill-current"></PhotographIcon>
+                                                    </button>
+                                                </div>
+                                                <div class="flex mr-1">
                                                     <button class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-1 border border-yellow-600 rounded" title="Edit School" @click="editCentre(centre.ID)">
                                                         <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
                                                     </button>
@@ -144,27 +149,42 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                 :confirmationData="confirmationData"
             >
             </ConfirmationModal>
+            <ImageBox
+                @closeImagebox="closeImage"
+                :images="images"
+                :openLightbox="isOpenImagebox"
+            ></ImageBox>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
 import { ref } from 'vue';
-import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
+import { SearchIcon, TrashIcon, PencilIcon, PhotographIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import ImageBox from "@abdulraof628/image-light-box";
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link
+        SearchIcon, TrashIcon, PencilIcon, PhotographIcon, ImageBox,
+        ConfirmationModal, Head, Link,
     },
     props: {
         filter: Object,
+        centre_images: Object
+    },
+    created(){
+        this.images.push({
+            thumb: "https://media.istockphoto.com/vectors/no-image-available-sign-vector-id1138179183?k=20&m=1138179183&s=612x612&w=0&h=iJ9y-snV_RmXArY4bA-S4QSab0gxfAMXmXwn5Edko1M=",
+            src: "https://media.istockphoto.com/vectors/no-image-available-sign-vector-id1138179183?k=20&m=1138179183&s=612x612&w=0&h=iJ9y-snV_RmXArY4bA-S4QSab0gxfAMXmXwn5Edko1M=",
+            caption: "Not Available",
+        })
     },
     data(){
         return{
             isOpen: false,
+            isOpenImagebox: false,
             userID: '',
             confirmationTitle: '',
             confirmationText: '',
@@ -175,14 +195,15 @@ export default {
             confirmationRoute: '',
             params: {
                 search: this.filter.search ? this.filter.search : '',
-            }
+            },
+            images: [],
         }
     },
     watch: {
         params: {
             handler(){
                 if(this.params){
-                this.$inertia.get(this.route('centres'), this.params, { replace: true, preserveState: true});
+                    this.$inertia.get(this.route('centres'), this.params, { replace: true, preserveState: true});
                 }
             },
             deep: true
@@ -196,6 +217,23 @@ export default {
         },
         editCentre(centre_id){
             this.$inertia.get(route('centres.edit'), {centre_id: centre_id}, { preserveState: true})
+        },
+        viewImages(centre_id){
+            axios.get(this.route('centres.get_images'), {
+                params: {
+                    'centre_id': centre_id
+                }})
+                .then((response)=>{
+                    this.images = ''
+                    this.images = []
+                    this.images = response.data
+                    this.isOpenImagebox = true
+                    document.body.classList.add('overflow-hidden')
+                })
+        },
+        closeImage(){
+            this.isOpenImagebox = false
+            document.body.classList.remove('overflow-hidden')
         }
     }
 }

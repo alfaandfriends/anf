@@ -83,6 +83,7 @@ Route::middleware(['auth', 'check_role'])->group(function(){
     Route::post('/centres/update', [CentreController::class, 'update'])->name('centres.update');  
     Route::delete('/centres/destroy/{id}', [CentreController::class, 'destroy'])->name('centres.destroy');
     Route::delete('/centres/image/destroy/{id}', [CentreController::class, 'destroyImage'])->name('centres.destroy_image');
+    Route::get('/centres/images', [CentreController::class, 'getCentreImages'])->name('centres.get_images');
     
 });
 require __DIR__.'/auth.php';
