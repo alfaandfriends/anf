@@ -3,7 +3,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </script>
 
 <template>
-    <Head title="Role" />
+    <Head title="Roles" />
 
     <BreezeAuthenticatedLayout>
         <template #header>

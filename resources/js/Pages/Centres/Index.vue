@@ -141,7 +141,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                 :show="isOpen" 
                 @close="isOpen = !isOpen"
                 confirmationAlert="danger"
-                confirmationTitle="Delete School"
+                confirmationTitle="Delete Centre"
                 confirmationText="Are you sure want to delete this centre?"
                 confirmationButton="Delete"
                 confirmationMethod="delete"

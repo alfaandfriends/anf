@@ -8,7 +8,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CentreController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ClassController;
+use App\Http\Controllers\FeeController;
+use App\Http\Controllers\SessionController;
 
 /* Authorized Only */
 Route::middleware(['auth', 'check_role'])->group(function(){
@@ -78,12 +80,36 @@ Route::middleware(['auth', 'check_role'])->group(function(){
     /* Centres */
     Route::get('/centres', [CentreController::class, 'index'])->name('centres');
     Route::get('/centres/create', [CentreController::class, 'create'])->name('centres.create');
-    Route::post('/centres/store', [CentreController::class, 'store'])->name('centres.store');  
-    Route::get('/centres/edit', [CentreController::class, 'edit'])->name('centres.edit');  
+    Route::post('/centres/store', [CentreController::class, 'store'])->name('centres.store');
+    Route::get('/centres/edit', [CentreController::class, 'edit'])->name('centres.edit');
     Route::post('/centres/update', [CentreController::class, 'update'])->name('centres.update');  
     Route::delete('/centres/destroy/{id}', [CentreController::class, 'destroy'])->name('centres.destroy');
     Route::delete('/centres/image/destroy/{id}', [CentreController::class, 'destroyImage'])->name('centres.destroy_image');
     Route::get('/centres/images', [CentreController::class, 'getCentreImages'])->name('centres.get_images');
+
+    /* Classes */
+    Route::get('/classes', [ClassController::class, 'index'])->name('classes');
+    Route::get('/classes/create', [ClassController::class, 'create'])->name('classes.create');
+    Route::post('/classes/store', [ClassController::class, 'store'])->name('classes.store');
+    Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit');
+    Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update');  
+    Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy');
+
+    /* Session */
+    Route::get('/sessions', [SessionController::class, 'index'])->name('sessions');
+    Route::get('/sessions/create', [SessionController::class, 'create'])->name('sessions.create');
+    Route::post('/sessions/store', [SessionController::class, 'store'])->name('sessions.store');
+    Route::get('/sessions/edit', [SessionController::class, 'edit'])->name('sessions.edit');
+    Route::post('/sessions/update', [SessionController::class, 'update'])->name('sessions.update');  
+    Route::delete('/sessions/destroy/{id}', [SessionController::class, 'destroy'])->name('sessions.destroy');
+
+    /* Fees */
+    Route::get('/fees', [FeeController::class, 'index'])->name('fees');
+    Route::get('/fees/create', [FeeController::class, 'create'])->name('fees.create');
+    Route::post('/fees/store', [FeeController::class, 'store'])->name('fees.store');
+    Route::get('/fees/edit', [FeeController::class, 'edit'])->name('fees.edit');
+    Route::post('/fees/update', [FeeController::class, 'update'])->name('fees.update');  
+    Route::delete('/fees/destroy/{id}', [FeeController::class, 'destroy'])->name('fees.destroy');
     
 });
 require __DIR__.'/auth.php';

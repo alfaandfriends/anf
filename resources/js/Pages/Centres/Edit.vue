@@ -16,12 +16,12 @@
     }
 </style>
 <template>
-    <Head title="Schools" />
+    <Head title="Centres" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Add School
+                Edit Centre
             </h2>
         </template>
         <div class="md:grid md:grid-cols-2">

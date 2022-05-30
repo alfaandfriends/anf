@@ -16,7 +16,7 @@
     }
 </style>
 <template>
-    <Head title="Schools" />
+    <Head title="Centres" />
 
     <BreezeAuthenticatedLayout>
         <template #header>

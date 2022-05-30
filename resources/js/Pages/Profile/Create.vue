@@ -17,7 +17,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </style>
 
 <template>
-    <Head title="Schools" />
+    <Head title="Profile" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
