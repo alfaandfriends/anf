@@ -10,81 +10,123 @@ class FeeController extends Controller
 {
     public function index()
     {
-        $centre_options    =   DB::table('wpvt_10_wlsm_schools')->get(['ID', 'label']);
-        $query      =   DB::table('wpvt_10_wlsm_fees');
+        $query      =   DB::table('fees')
+                            ->join('fee_types', 'fees.fee_type', '=', 'fee_types.id')
+                            ->join('fee_periods', 'fees.fee_period', '=', 'fee_periods.id')
+                            ->select(   'fees.*', 
+                                        'fee_types.id as fee_type_id', 
+                                        'fee_types.label as fee_type_label', 
+                                        'fee_periods.id as fee_period_id', 
+                                        'fee_periods.label as fee_period_label');
 
         if(request('search')){
             $query->where('label', 'LIKE', '%'.request('search').'%');
         }
 
-        if(request('centre')){
-            $query->where('school_id', request('centre'));
-        }
-
         $fees    =   $query->paginate(10);
         
         return Inertia::render('Fees/Index', [
-            'filter' => request()->all('search', 'centre'),
+            'filter' => request()->all('search'),
             'fees' => $fees,
-            'centre_options' => $centre_options
         ]);
     }
 
     public function create()
     {
-        // return Inertia::render('Sessions/Create');
+        $fee_types  =   $this->getFeeTypes();
+        $fee_periods  =   $this->getFeePeriods();
+
+        return Inertia::render('Fees/Create',[
+            'fee_types'  => $fee_types,
+            'fee_periods'  => $fee_periods,
+        ]);
     }
 
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'session'               => 'required|max:100',
-        //     'start_date'            => 'required',
-        //     'end_date'              => 'required',
-        // ]);
+        $request->validate([
+            'fee_type'                  => 'required',
+            'period'                    => 'required',
+            'class_per_week'            => 'required',
+            'class_duration_hours'      => 'required',
+            'class_duration_minutes'    => 'required',
+            'fee_amount'                => 'required',
+        ]);
 
-        // DB::table('wpvt_10_wlsm_sessions')->insert([
-        //     'label'         =>  $request->session,
-        //     'start_date'    =>  Carbon::parse($request->start_date)->toDateString(),
-        //     'end_date'      =>  Carbon::parse($request->end_date)->toDateString(),
-        //     'created_at'    =>  Carbon::now(),
-        //     'updated_at'    =>  Carbon::now(),
-        // ]);
+        DB::table('fees')->insert([
+            'fee_type'                  =>  $request->fee_type,
+            'fee_period'                =>  $request->period,
+            'class_duration_hours'      =>  $request->class_duration_hours,
+            'class_duration_minutes'    =>  $request->class_duration_minutes,
+            'class_per_week'            =>  $request->class_per_week,
+            'amount'                    =>  $request->fee_amount,
+        ]);
 
-        // return redirect('sessions')->with(['type'=>'success', 'message'=>'Session added successfully !']);
+        return redirect('fees')->with(['type'=>'success', 'message'=>'New Fee added successfully !']);
     }
 
     public function edit(Request $request)
     {
-        // $session_info =   DB::table('wpvt_10_wlsm_sessions')->where('ID', $request->session_id)->first();
+        $fee_types  =   $this->getFeeTypes();
+        $fee_periods  =   $this->getFeePeriods();
+        $fee_info =   DB::table('fees')
+                                ->join('fee_types', 'fees.fee_type', '=', 'fee_types.id')
+                                ->join('fee_periods', 'fees.fee_period', '=', 'fee_periods.id')
+                                ->select(   'fees.*', 
+                                            'fee_types.id as fee_type_id', 
+                                            'fee_types.label as fee_type_label', 
+                                            'fee_periods.id as fee_period_id', 
+                                            'fee_periods.label as fee_period_label')
+                                ->where('fees.id', $request->fee_id)->first();
         
-        // return Inertia::render('Sessions/Edit', [
-        //     'session_info'    => $session_info
-        // ]);
+        return Inertia::render('Fees/Edit', [
+            'fee_info'    => $fee_info,
+            'fee_types'  => $fee_types,
+            'fee_periods'  => $fee_periods,
+        ]);
     }
 
     public function update(Request $request)
     {
-        // $request->validate([
-        //     'session'               => 'required|max:100',
-        //     'start_date'            => 'required',
-        //     'end_date'              => 'required',
-        // ]);
+        $request->validate([
+            'fee_type'                  => 'required',
+            'period'                    => 'required',
+            'class_per_week'            => 'required',
+            'class_duration_hours'      => 'required',
+            'class_duration_minutes'    => 'required',
+            'fee_amount'                => 'required',
+        ]);
         
-        // DB::table('wpvt_10_wlsm_sessions')->where('ID', $request->session_id)->update([
-        //     'label'         =>  $request->session,
-        //     'start_date'    =>  Carbon::parse($request->start_date)->toDateString(),
-        //     'end_date'      =>  Carbon::parse($request->end_date)->toDateString(),
-        //     'updated_at'    =>  Carbon::now(),
-        // ]);
+        DB::table('fees')->where('id', $request->fee_id)->update([
+            'fee_type'                  =>  $request->fee_type,
+            'fee_period'                =>  $request->period,
+            'class_duration_hours'      =>  $request->class_duration_hours,
+            'class_duration_minutes'    =>  $request->class_duration_minutes,
+            'class_per_week'            =>  $request->class_per_week,
+            'amount'                    =>  $request->fee_amount,
+        ]);
 
-        // return redirect('sessions')->with(['type'=>'success', 'message'=>'Session updated successfully !']);
+        return redirect('fees')->with(['type'=>'success', 'message'=>'Fee updated successfully !']);
     }
 
     public function destroy($id)
     {
-        // DB::table('wpvt_10_wlsm_sessions')->where('ID', $id)->delete();
+        DB::table('fees')->where('id', $id)->delete();
 
-        // return redirect('sessions')->with(['type'=>'success', 'message'=>'Session deleted successfully !']);
+        return redirect('fees')->with(['type'=>'success', 'message'=>'Fee deleted successfully !']);
+    }
+
+    public function getFeeTypes()
+    {
+        $fee_types  =   DB::table('fee_types')->get();
+
+        return $fee_types;
+    }
+
+    public function getFeePeriods()
+    {
+        $fee_periods  =   DB::table('fee_periods')->get();
+
+        return $fee_periods;
     }
 }

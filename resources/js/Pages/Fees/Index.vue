@@ -3,7 +3,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </script>
 
 <template>
-    <Head title="Sessions" />
+    <Head title="Fees" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
@@ -20,14 +20,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
                                 <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                         type="text" v-model="params.search" placeholder="Search">
-                                <div class="pl-2">
-                                    <select  v-model="params.centre" class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none block" name="" id="">
-                                        <option :value="centre.ID" v-for="centre in centre_options" :key="centre.ID" :checked="params.centre == centre.ID">{{ centre.label }}</option>
-                                    </select>
-                                </div>
                             </div>
                             <div class="flex justify-end">
-                                <Link :href="route('fees.create')" class="py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold">Add New Class</Link>
+                                <Link :href="route('fees.create')" class="py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold">Add New Fee</Link>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -35,9 +30,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 <thead class="bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="3">#</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fee</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Start Date</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">End Date</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Fee Type</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Period</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Amount</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                     </tr>
                                 </thead>
@@ -54,36 +49,51 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             <div class="text-sm text-gray-700">{{ ++index }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900 font-bold">{{ fees.label }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                                            <div class="text-sm font-medium text-gray-900 flex justify-center items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                                <span class="pl-2">{{ moment(fees.start_date).format('DD/MM/YYYY') }}</span>
+                                            <div class="text-sm font-medium text-gray-900 font-bold">{{ fees.fee_type_label }}</div>
+                                            <div class="flex">
+                                                <div class="mt-1 pr-2" v-if="fees.class_per_week != 0">
+                                                    <svg  xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                                    </svg>
+                                                </div>
+                                                <div :class="fees.class_duration_minutes != 0 || fees.class_duration_hours != 0 ? 'border-r-2 border-solid border-gray-400 pr-2' : ''" v-if="fees.class_per_week != 0">
+                                                    <span class="text-sm">{{ fees.class_per_week }} Class / Week</span>
+                                                </div>
+                                                <div class="mt-1 px-2" v-if="fees.class_duration_minutes != 0 || fees.class_duration_hours != 0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="" v-if="fees.class_duration_minutes != 0 || fees.class_duration_hours != 0">
+                                                    <span class="text-sm">
+                                                        <span v-if="fees.class_duration_hours != 0">{{ fees.class_duration_hours }} {{ fees.class_duration_hours > 1 ? 'Hours ' : 'Hour '}} </span> 
+                                                        <span v-if="fees.class_duration_minutes != 0">{{ fees.class_duration_minutes }} {{ fees.class_duration_minutes > 1 ? 'Minutes ' : 'Minute '}}</span>
+                                                        <span> / Class</span>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
                                             <div class="text-sm font-medium text-gray-900 flex justify-center items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                                <span class="pl-2">{{ moment(fees.end_date).format('DD/MM/YYYY') }}</span>
-                                                
+                                                <span class="capitalize">{{ fees.fee_period_label }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                            <div class="text-sm font-medium text-gray-900 flex justify-center items-center">
+                                                <span>{{ fees.amount }}</span>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit Class" @click="editSession(fees.ID)">
+                                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit Class" @click="editSession(fees.id)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                         </svg>
                                                     </button>
                                                 </div>
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete Class" @click="deleteSession(fees.ID)">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete Class" @click="deleteFee(fees.id)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </button>
                                                 </div>
@@ -114,6 +124,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                                                 <Link v-for="(link, key) in $page.props.fees.links"
                                                     :key="key"
+                                                    :href="link.url ? link.url + '&search=' + params.search : '#'"
                                                     :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
                                                                         : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
                                                                                                                 : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
@@ -131,7 +142,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
             </div>
             <ConfirmationModal 
                 :show="isOpen" 
-                @close="isOpen = !isOpen"
+                @close="isOpen = false"
                 confirmationAlert="danger"
                 confirmationTitle="Delete Fee"
                 confirmationText="Are you sure want to delete this session?"
@@ -158,9 +169,7 @@ export default {
     },
     props: {
         filter: Object,
-        centre_options: Object,
     },
-
     data(){
         return{
             isOpen: false,
@@ -174,7 +183,6 @@ export default {
             confirmationRoute: '',
             params: {
                 search: this.filter.search ? this.filter.search : '',
-                centre: this.filter.centre ? this.filter.centre : ''
             }
         }
     },
@@ -189,12 +197,12 @@ export default {
         }
     },
     methods: {
-        editSession(sessionID){
-            this.$inertia.get(this.route('fees.edit'), {'session_id': sessionID});
+        editSession(feeID){
+            this.$inertia.get(this.route('fees.edit'), {'fee_id': feeID});
         },
-        deleteSession(sessionID){
+        deleteFee(feeID){
             this.confirmationRoute = 'fees.destroy'
-            this.confirmationData = sessionID
+            this.confirmationData = feeID
             this.isOpen = true
         }
     }

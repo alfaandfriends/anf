@@ -176,7 +176,7 @@
             </div>
             <ConfirmationModal 
                 :show="isOpen" 
-                @close="isOpen = !isOpen"
+                @close="isOpen = false"
                 confirmationAlert="danger"
                 confirmationTitle="Delete Menu"
                 confirmationText="Are you sure want to delete this menu?"

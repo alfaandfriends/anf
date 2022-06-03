@@ -3,12 +3,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </script>
 
 <template>
-    <Head title="Sessions" />
+    <Head title="Fees" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Add Session
+                Add Fee
             </h2>
         </template>
         <div class="md:grid md:grid-cols-2">
@@ -18,31 +18,62 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                         <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
                             <div class="sm:row-span-3">
                                 <div class="mb-5">
-                                    <h1 class="font-semibold text-indigo-800 font-bold">Session Information</h1>
+                                    <h1 class="font-semibold text-indigo-800 font-bold">Fee Information</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="session_name" class="block text-sm font-medium text-gray-700 font-bold"> Session <span class="text-red-500">*</span></label>
+                                        <label for="fee_type" class="block text-sm font-medium text-gray-700 font-bold">Fee Type<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="session_name" id="session_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.session ? 'border-red-300' : 'border-gray-300'" v-model="form.session" autocomplete="none"/>
+                                            <select class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.fee_type ? 'border-red-300' : 'border-gray-300'" name="" id="" v-model="form.fee_type">
+                                                <option value="">Please select</option>
+                                                <option :value="fee_type.id" v-for="fee_type in fee_types" :key="fee_type.id">{{ fee_type.label }}</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="class_name" class="block text-sm font-medium text-gray-700 font-bold"> Start Date <span class="text-red-500">*</span></label>
-                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.start_date ? '--dp-border-color: #fa9e9e' : ''" :format="'dd/MM/yyyy'" autoApply :enableTimePicker="false" v-model="form.start_date" />
+                                        <label for="period" class="block text-sm font-medium text-gray-700 font-bold">Period<span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <select class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.period ? 'border-red-300' : 'border-gray-300'" name="" id="" v-model="form.period">
+                                                <option value="">Please select</option>
+                                                <option :value="fee_period.id" v-for="fee_period in fee_periods" :key="fee_period.id">{{ fee_period.label }}</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="class_name" class="block text-sm font-medium text-gray-700 font-bold"> End Date <span class="text-red-500">*</span></label>
-                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.end_date ? '--dp-border-color: #fa9e9e' : ''" :format="'dd/MM/yyyy'" autoApply :enableTimePicker="false" v-model="form.end_date" />
+                                        <label for="class_per_week" class="block text-sm font-medium text-gray-700 font-bold">Class Per Week<span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="number" name="class_per_week" id="class_per_week" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_per_week ? 'border-red-300' : 'border-gray-300'" v-model="form.class_per_week" autocomplete="none"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="class_duration" class="block text-sm font-medium text-gray-700 font-bold">Class Duration (Hours / Minutes)<span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <div class="pr-2">
+                                                <!-- <label for="class_duration_hours" class="text-sm">Hour</label> -->
+                                                <input type="number" max="23" name="class_duration_hours" id="class_duration_hours" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_duration_hours ? 'border-red-300' : 'border-gray-300'" v-model="form.class_duration_hours" autocomplete="none" placeholder="Hours"/>
+                                            </div>
+                                            <div class="pr-2">
+                                                <!-- <label for="class_duration_minutes" class="text-sm">Minutes</label> -->
+                                                <input type="number" max="59" name="class_duration_minutes" id="class_duration_minutes" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_duration_minutes ? 'border-red-300' : 'border-gray-300'" v-model="form.class_duration_minutes" autocomplete="none" placeholder="Minutes"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="fee_amount" class="block text-sm font-medium text-gray-700 font-bold">Fee Amount<span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="number" step="any" name="fee_amount" id="fee_amount" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.fee_amount ? 'border-red-300' : 'border-gray-300'" v-model="form.fee_amount" autocomplete="none"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="flex items-end justify-start">
-                            <button type="submit" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 select-none">Add Session</button>
+                            <button type="submit" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 select-none">Add Fee</button>
                         </div>
                     </div>
                 </form>
@@ -53,25 +84,30 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
     components: {
-        Head, Link, Datepicker, 
+        Head, Link, 
+    },
+    props: {
+        fee_types: Object,
+        fee_periods: Object
     },
     data(){
         return{
             form: {
-                session: '',
-                start_date: '',
-                end_date: ''
+                fee_type: '',
+                period: '',
+                class_per_week: 0,
+                class_duration_hours: 0,
+                class_duration_minutes: 0,
+                fee_amount: 0.0,
             }
         }
     },
     methods: {
         submit() {
-            this.$inertia.post(route('sessions.store'), this.form, { preserveState: true})
+            this.$inertia.post(route('fees.store'), this.form, { preserveState: true})
         },
     }
 

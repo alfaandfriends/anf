@@ -42,7 +42,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full" :src="user.avatar" alt="">
+                                                    <img class="h-10 w-10 rounded-full" :src="'/storage/' + user.avatar" alt="">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">{{ user.display_name }}</div>
@@ -118,7 +118,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
             </div>
             <ConfirmationModal 
                 :show="isOpen" 
-                @close="isOpen = !isOpen"
+                @close="isOpen = false"
                 confirmationAlert="danger"
                 confirmationTitle="Delete User"
                 confirmationText="Are you sure want to delete this user?"

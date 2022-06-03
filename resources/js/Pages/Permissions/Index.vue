@@ -81,7 +81,7 @@
             </div>
             <ConfirmationModal 
                 :show="isOpen" 
-                @close="isOpen = !isOpen"
+                @close="isOpen = false"
                 confirmationAlert="danger"
                 confirmationTitle="Delete Role"
                 confirmationText="Are you sure want to delete this permission?"

@@ -139,7 +139,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
             </div>
             <ConfirmationModal 
                 :show="isOpen" 
-                @close="isOpen = !isOpen"
+                @close="isOpen = false"
                 confirmationAlert="danger"
                 confirmationTitle="Delete Centre"
                 confirmationText="Are you sure want to delete this centre?"

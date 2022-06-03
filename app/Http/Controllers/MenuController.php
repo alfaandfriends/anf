@@ -40,7 +40,8 @@ class MenuController extends Controller
     {
         $request->validate([
             'menu_label'    => 'required',
-            'menu_icon'     => 'required'
+            'menu_icon'     => 'required',
+            'menu_permission' => 'required',
         ]);
 
         $current_rank   =   Menu::orderBy('menu_rank', 'desc')->pluck('menu_rank')->first();
@@ -50,6 +51,7 @@ class MenuController extends Controller
             'menu_label' => $request->menu_label,
             'menu_route' => $request->menu_route,
             'menu_icon' => $request->menu_icon,
+            'permission_name' => $request->menu_permission,
             'menu_rank' => $next_rank,
             'menu_status' => $request->menu_status
         ]);
@@ -101,13 +103,15 @@ class MenuController extends Controller
     {
         $request->validate([
             'menu_label' => 'required',
-            'menu_icon' => 'required'
+            'menu_icon' => 'required',
+            'menu_permission' => 'required'
         ]);
 
         DB::table('menus')
             ->where('id', $request->menu_id)
             ->update([
                 'menu_icon' => $request->menu_icon,
+                'permission_name' => $request->menu_permission,
                 'menu_label' => $request->menu_label,
                 'menu_route' => $request->menu_route,
                 'menu_status' => $request->menu_status

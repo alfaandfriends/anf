@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class User
@@ -209,9 +210,18 @@ class User extends Model implements Authenticatable, CanResetPassword
      */
     public function getAvatarAttribute()
     {
-        $hash = !empty($this->email) ? md5(strtolower(trim($this->email))) : '';
+        // $hash = !empty($this->email) ? md5(strtolower(trim($this->email))) : '';
 
-        return sprintf('//secure.gravatar.com/avatar/%s?d=mm', $hash);
+        // return sprintf('//secure.gravatar.com/avatar/%s?d=mm', $hash);
+
+        $user_id    =   $this->ID;
+        $user_photo =   DB::table('user_basic_information')->where('user_id', $user_id)->pluck('user_photo')->first();
+
+        if(!$user_photo){
+            $user_photo = 'profile_photo/default-profile-photo.png';
+        }
+
+        return $user_photo;
     }
 
     /**
