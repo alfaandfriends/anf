@@ -43,7 +43,7 @@ class ClassController extends Controller
             'status'        =>  $request->class_active,
         ]);
 
-        return redirect('classes')->with(['type'=>'success', 'message'=>'Class added successfully !']);
+        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class added successfully !']);
     }
 
     public function edit(Request $request)
@@ -67,13 +67,13 @@ class ClassController extends Controller
             'status'        =>  $request->class_active,
         ]);
 
-        return redirect('classes')->with(['type'=>'success', 'message'=>'Class updated successfully !']);
+        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class updated successfully !']);
     }
 
     public function destroy($id)
     {
         DB::table('wpvt_10_wlsm_classes')->where('ID', $id)->delete();
 
-        return redirect('classes')->with(['type'=>'success', 'message'=>'Class deleted successfully !']);
+        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class deleted successfully !']);
     }
 }

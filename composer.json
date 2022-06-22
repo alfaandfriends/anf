@@ -7,12 +7,14 @@
     "require": {
         "php": "^8.1",
         "ahmedsaoud31/laravel-permission-to-vuejs": "dev-master",
-        "guzzlehttp/guzzle": "^7.2",
+        "diglactic/laravel-breadcrumbs": "^7.2",
+        "guzzlehttp/guzzle": "^7.4.3",
         "inertiajs/inertia-laravel": "^0.5.4",
         "jgrossi/corcel": "^6.0.0",
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.7",
+        "robertboes/inertia-breadcrumbs": "^0.1.0",
         "spatie/laravel-permission": "^5.5",
         "tightenco/ziggy": "^1.0"
     },

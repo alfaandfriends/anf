@@ -103,7 +103,7 @@ class CentreController extends Controller
                 'image_type'    => $image_type,
             ]);
         }
-        return redirect('centres')->with(['type'=>'success', 'message'=>'School added successfully !']);
+        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'School added successfully !']);
     }
 
     public function edit(Request $request)
@@ -217,7 +217,7 @@ class CentreController extends Controller
         }
         /* Upload new images */
 
-        return redirect('centres')->with(['type'=>'success', 'message'=>'Centre updated successfully !']);
+        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre updated successfully !']);
     }
 
     public function destroy($id)
@@ -232,7 +232,7 @@ class CentreController extends Controller
         }
         DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $id)->delete();
 
-        return redirect('centres')->with(['type'=>'success', 'message'=>'Centre deleted successfully !']);
+        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre deleted successfully !']);
     }
 
     public function destroyImage($id){

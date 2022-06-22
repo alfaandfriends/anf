@@ -14,9 +14,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 
         <div class="py-6">
             <div class="mx-auto px-6">
-                <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="grid gap-4 sm:grid-cols-4 sm:px-6">
-                        <div class="flex items-center bg-white border rounded-sm overflow-hidden shadow">
+                <!-- <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8"> -->
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex grow items-center bg-white border rounded-sm overflow-hidden shadow">
                             <div class="p-4 bg-green-400">
                                 <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             </div>
                         </div>
 
-                        <div class="flex items-center bg-white border rounded-sm overflow-hidden shadow">
+                        <div class="flex grow items-center bg-white border rounded-sm overflow-hidden shadow">
                             <div class="p-4 bg-blue-400">
                                 <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +62,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             </div>
                         </div>
 
-                        <div class="flex items-center bg-white border rounded-sm overflow-hidden shadow">
+                        <div class="flex grow items-center bg-white border rounded-sm overflow-hidden shadow">
                             <div class="p-4 bg-indigo-400">
                                 <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +85,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             </div>
                         </div>
 
-                        <div class="flex items-center bg-white border rounded-sm overflow-hidden shadow">
+                        <div class="flex grow items-center bg-white border rounded-sm overflow-hidden shadow">
                             <div class="p-4 bg-red-400">
                                 <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +108,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             </div>
                         </div>
                     </div>
-                </div>
+                <!-- </div> -->
             </div>
         </div>
 

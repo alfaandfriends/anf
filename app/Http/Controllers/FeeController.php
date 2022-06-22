@@ -62,7 +62,7 @@ class FeeController extends Controller
             'amount'                    =>  $request->fee_amount,
         ]);
 
-        return redirect('fees')->with(['type'=>'success', 'message'=>'New Fee added successfully !']);
+        return redirect(route('fees'))->with(['type'=>'success', 'message'=>'New Fee added successfully !']);
     }
 
     public function edit(Request $request)
@@ -106,14 +106,14 @@ class FeeController extends Controller
             'amount'                    =>  $request->fee_amount,
         ]);
 
-        return redirect('fees')->with(['type'=>'success', 'message'=>'Fee updated successfully !']);
+        return redirect(route('fees'))->with(['type'=>'success', 'message'=>'Fee updated successfully !']);
     }
 
     public function destroy($id)
     {
         DB::table('fees')->where('id', $id)->delete();
 
-        return redirect('fees')->with(['type'=>'success', 'message'=>'Fee deleted successfully !']);
+        return redirect(route('fees'))->with(['type'=>'success', 'message'=>'Fee deleted successfully !']);
     }
 
     public function getFeeTypes()

@@ -35,7 +35,7 @@ class RoleController extends Controller
 
         Role::create(['name' => $request->role, 'display_name' => $request->display_name, 'status' => $request->status]);
         
-        return redirect('roles')->with(['type'=>'success', 'message'=>'Role added successfully !']);
+        return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Role added successfully !']);
     }
 
     public function edit(Request $request){
@@ -56,7 +56,7 @@ class RoleController extends Controller
             ->where('name', $request->name)
             ->update(['display_name' => $request->display_name, 'status' => $request->status]);
 
-        return redirect('roles')->with(['type'=>'success', 'message'=>'Role updated successfully !']);
+        return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Role updated successfully !']);
     }
 
     public function destroy($id){
@@ -64,7 +64,7 @@ class RoleController extends Controller
         DB::table('roles')->where('id', $id)->delete();
         UserHasRoles::where('role_id', $id)->delete();
         
-        return redirect('roles')->with(['type'=>'success', 'message'=>'Role deleted successfully !']);
+        return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Role deleted successfully !']);
     }
 
     public function assignPermissions(Request $request)
@@ -90,7 +90,7 @@ class RoleController extends Controller
             ]);
         }
 
-        return redirect('roles')->with(['type'=>'success', 'message'=>'Permissions assigned successfully !']);
+        return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Permissions assigned successfully !']);
 
     }
 }

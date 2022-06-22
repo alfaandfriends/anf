@@ -30,7 +30,7 @@ class PermissionController extends Controller
 
         Permission::create(['name' => $request->permission, 'status' => $request->status]);
         
-        return redirect('permissions')->with(['type'=>'success', 'message'=>'Permission added successfully !']);
+        return redirect(route('permissions'))->with(['type'=>'success', 'message'=>'Permission added successfully !']);
     }
 
     public function edit(Request $request){
@@ -52,7 +52,7 @@ class PermissionController extends Controller
             ->where('id', $request->permission_id)
             ->update(['name' => $request->permission, 'status' => $request->status]);
 
-        return redirect('permissions')->with(['type'=>'success', 'message'=>'Permission updated successfully !']);
+        return redirect(route('permissions'))->with(['type'=>'success', 'message'=>'Permission updated successfully !']);
     }
 
     public function destroy($id){
@@ -60,6 +60,6 @@ class PermissionController extends Controller
         DB::table('permissions')->where('id', $id)->delete();
         RoleHasPermissions::where('permission_id', $id)->delete();
         
-        return redirect('permissions')->with(['type'=>'success', 'message'=>'Permission deleted successfully !']);
+        return redirect(route('permissions'))->with(['type'=>'success', 'message'=>'Permission deleted successfully !']);
     }
 }

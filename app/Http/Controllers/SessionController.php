@@ -46,7 +46,7 @@ class SessionController extends Controller
             'updated_at'    =>  Carbon::now(),
         ]);
 
-        return redirect('sessions')->with(['type'=>'success', 'message'=>'Session added successfully !']);
+        return redirect(route('sessions'))->with(['type'=>'success', 'message'=>'Session added successfully !']);
     }
 
     public function edit(Request $request)
@@ -73,13 +73,13 @@ class SessionController extends Controller
             'updated_at'    =>  Carbon::now(),
         ]);
 
-        return redirect('sessions')->with(['type'=>'success', 'message'=>'Session updated successfully !']);
+        return redirect(route('sessions'))->with(['type'=>'success', 'message'=>'Session updated successfully !']);
     }
 
     public function destroy($id)
     {
         DB::table('wpvt_10_wlsm_sessions')->where('ID', $id)->delete();
 
-        return redirect('sessions')->with(['type'=>'success', 'message'=>'Session deleted successfully !']);
+        return redirect(route('sessions'))->with(['type'=>'success', 'message'=>'Session deleted successfully !']);
     }
 }

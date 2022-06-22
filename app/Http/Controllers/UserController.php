@@ -122,7 +122,7 @@ class UserController extends Controller
 
             Notification::sendNow($user, new UserRegistrationCredentials($credentials));
 
-            return redirect('users')->with(['type'=>'success', 'message'=>'Credentials has been sent to the registered email !']);
+            return redirect(route('users'))->with(['type'=>'success', 'message'=>'Credentials has been sent to the registered email !']);
         }
         catch(Exception $e){
             DB::rollback();
@@ -153,7 +153,7 @@ class UserController extends Controller
             ]);
         }
 
-        return redirect('users')->with(['type'=>'success', 'message'=>'Roles assigned successfully !']);
+        return redirect(route('users'))->with(['type'=>'success', 'message'=>'Roles assigned successfully !']);
 
     }
 

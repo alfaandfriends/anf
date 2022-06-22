@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
@@ -44,6 +45,10 @@ class MenuController extends Controller
             'menu_permission' => 'required',
         ]);
 
+        if($request->menu_route && !Route::has($request->menu_route)){
+            return back()->with(['type'=>'error', 'message'=>'Route does not exist !']);
+        }
+
         $current_rank   =   Menu::orderBy('menu_rank', 'desc')->pluck('menu_rank')->first();
         $next_rank      =   $current_rank + 1;
 
@@ -56,7 +61,7 @@ class MenuController extends Controller
             'menu_status' => $request->menu_status
         ]);
         
-        return redirect('menus')->with(['type'=>'success', 'message'=>'Menu added successfully !']);
+        return redirect(route('menus'))->with(['type'=>'success', 'message'=>'Menu added successfully !']);
     }
 
     public function addSubMenu()
@@ -107,6 +112,10 @@ class MenuController extends Controller
             'menu_permission' => 'required'
         ]);
 
+        if($request->menu_route && !Route::has($request->menu_route)){
+            return back()->with(['type'=>'error', 'message'=>'Route does not exist !']);
+        }
+
         DB::table('menus')
             ->where('id', $request->menu_id)
             ->update([
@@ -117,7 +126,7 @@ class MenuController extends Controller
                 'menu_status' => $request->menu_status
             ]);
 
-        return redirect('menus')->with(['type'=>'success', 'message'=>'Menu updated successfully !']);
+        return redirect(route('menus'))->with(['type'=>'success', 'message'=>'Menu updated successfully !']);
     }
 
     public function editSubMenu()
@@ -152,7 +161,7 @@ class MenuController extends Controller
     {
         Menu::deleteMenu($menu_id);
 
-        return redirect('menus')->with(['type'=>'success', 'message'=>'Menu deleted successfully !']);
+        return redirect(route('menus'))->with(['type'=>'success', 'message'=>'Menu deleted successfully !']);
     }
 
     public function destroySubMenu($sub_menu_id)
