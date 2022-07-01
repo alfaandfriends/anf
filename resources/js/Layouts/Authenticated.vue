@@ -188,23 +188,19 @@ export default {
             </nav>
 
             <!-- Page Heading -->
-            <div class="flex-column">
-                <header class="bg-indigo-200 shadow" v-if="$slots.header">
-                    <div class="flex mx-auto py-3 px-4 sm:px-6 lg:px-6 justify-between">
-                        <!-- <slot name="header" /> -->
-                        <Breadcrumbs :breadcrumbs="$page.props.breadcrumbs"/>
-                    </div>
-                </header>
+            <header class="bg-indigo-200 shadow" v-if="$slots.header">
+                <div class="flex mx-auto py-3 px-4 sm:px-6 lg:px-6 justify-between">
+                    <!-- <slot name="header" /> -->
+                    <Breadcrumbs :breadcrumbs="$page.props.breadcrumbs"/>
+                </div>
+            </header>
 
-                <!-- Page Content -->
-                <main class="min-h-screen bg-gray-100">
-                    <slot/>
-                </main>
-                <footer>
-                    <div class="py-5 px-6 bg-slate-700 text-white">
-                        <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{new Date().getFullYear()}} ALFA And Friends </span>
-                    </div>
-                </footer>
+            <!-- Page Content -->
+            <main class="min-h-screen bg-gray-100">
+                <slot/>
+            </main>
+            <div class="py-5 px-6 bg-slate-700 text-white">
+                <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{new Date().getFullYear()}} ALFA And Friends </span>
             </div>
         </div>
     </div>

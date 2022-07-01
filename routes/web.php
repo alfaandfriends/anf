@@ -120,10 +120,6 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::delete('/fees/destroy/{id}', [FeeController::class, 'destroy'])->name('fees.destroy');
     });
 
-    /* Run Diagnostic Test */
-    Route::get('/diagnostic-test', [SettingController::class, 'dtStart'])->name('diagnostic_test');
-    
-
     /* Settings */    
     Route::get('/centre-management/settings', [SettingController::class, 'index'])->name('settings');
         /* Fee Types */
@@ -150,9 +146,22 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::delete('/control-panel/general/countries/destroy/{id}', [SettingController::class, 'destroyCountry'])->name('settings.countries.destroy');
     /* Settings */    
 
+
+    /* Run Diagnostic Test */
+    Route::get('/diagnostic-test', [SettingController::class, 'dtStartList'])->name('diagnostic_test');
+    Route::get('/diagnostic-test/start', [SettingController::class, 'dtStart'])->name('diagnostic_test.run');
+
     /* Diagnostic Test Setup*/
     Route::prefix('control-panel')->group(function () {
+        /* Diagnostic Test List */
         Route::get('/general/diagnostic-test', [SettingController::class, 'dtList'])->name('settings.diagnostic_test');
+        Route::get('/general/diagnostic-test/create', [SettingController::class, 'dtCreate'])->name('settings.diagnostic_test.create');
+        Route::post('/general/diagnostic-test/store', [SettingController::class, 'dtStore'])->name('settings.diagnostic_test.store');
+        Route::get('/general/diagnostic-test/edit', [SettingController::class, 'dtEdit'])->name('settings.diagnostic_test.edit');
+        Route::post('/general/diagnostic-test/update', [SettingController::class, 'dtUpdate'])->name('settings.diagnostic_test.update');
+        Route::delete('/general/diagnostic-test/destroy/{id}', [SettingController::class, 'dtDestroy'])->name('settings.diagnostic_test.destroy');
+
+        /* Diagnostic Test Detail List */
         Route::get('/general/diagnostic-test/details', [SettingController::class, 'dtDetailsList'])->name('settings.diagnostic_test.details');
         Route::get('/general/diagnostic-test/details/create', [SettingController::class, 'dtDetailsCreate'])->name('settings.diagnostic_test.details.create');
         Route::post('/general/diagnostic-test/details/store', [SettingController::class, 'dtDetailsStore'])->name('settings.diagnostic_test.details.store');

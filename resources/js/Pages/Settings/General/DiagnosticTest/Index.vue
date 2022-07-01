@@ -18,7 +18,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                         <TabPage/>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg px-1">
                             <div class="flex py-2 justify-end">
-                                <Link :href="route('settings.countries.create')" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Add Diagnostic Test</Link>
+                                <Link :href="route('settings.diagnostic_test.create')" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Add Diagnostic Test</Link>
                             </div>
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-200">
@@ -54,14 +54,14 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                     </button>
                                                 </div>
                                                 <div class="flex pr-1">
-                                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit Diagnostic Test" @click="editCountry(diagnostic_test_list.id)">
+                                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit Diagnostic Test" @click="editDiagnosticTest(diagnostic_test_list.id)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                         </svg>
                                                     </button>
                                                 </div>
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete Diagnostic Test" @click="deleteCountry(diagnostic_test_list.id)">
+                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete Diagnostic Test" @click="deleteDiagnosticTest(diagnostic_test_list.id)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </button>
                                                 </div>
@@ -154,8 +154,8 @@ export default {
         viewDiagnosticTest(dt_id){
             this.$inertia.get(route('settings.diagnostic_test.details'), {'dt_id': dt_id})
         },
-        editDiagnosticTest(country_id){
-            this.$inertia.get(route('settings.countries.edit'), {'country_id': country_id})
+        editDiagnosticTest(dt_id){
+            this.$inertia.get(route('settings.diagnostic_test.edit'), {'dt_id': dt_id})
         },
         deleteDiagnosticTest(country_id){
             this.confirmationTitle="Delete Diagnostic Test"

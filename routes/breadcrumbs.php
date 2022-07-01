@@ -174,5 +174,15 @@ Breadcrumbs::for('settings.fee_period_list.edit', function (BreadcrumbTrail $tra
 
 Breadcrumbs::for('settings.countries', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('General Settings', route('settings.countries'));
+    $trail->push('Countries', route('settings.countries'));
+});
+
+Breadcrumbs::for('settings.diagnostic_test', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Diagnostic Test', route('settings.diagnostic_test'));
+});
+
+Breadcrumbs::for('settings.diagnostic_test.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('settings.diagnostic_test');
+    $trail->push('Add Diagnostic Test', route('settings.diagnostic_test'));
 });

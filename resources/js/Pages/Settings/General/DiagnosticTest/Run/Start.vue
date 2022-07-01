@@ -60,7 +60,7 @@ export default defineComponent({
     watch: {
         final_score: {
             handler(){
-                this.$inertia.get(route('diagnostic_test'), {'final_score': this.final_score})
+                this.$inertia.get(route('diagnostic_test.run'), {'final_score': this.final_score, 'dt_id': this.$page.props.dt_id})
             }
         }
     },
