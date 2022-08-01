@@ -131,7 +131,7 @@ export default {
             <Toast :toastData="$page.props.flash"></Toast>
             <nav class="bg-white border-b border-gray-100 sticky top-0 z-20">
                 <!-- Primary Navigation Menu -->
-                <div class="mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto px-4 sm:px-6 lg:px-8 shadow-md">
                     <div class="flex justify-between h-16">
                         <div class="flex">
                         <!-- Logo -->

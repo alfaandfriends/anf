@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CentreController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\DiagnosticTestController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingController;
@@ -148,8 +149,8 @@ Route::middleware(['auth', 'check_role'])->group(function(){
 
 
     /* Run Diagnostic Test */
-    Route::get('/diagnostic-test', [SettingController::class, 'dtStartList'])->name('diagnostic_test');
-    Route::get('/diagnostic-test/start', [SettingController::class, 'dtStart'])->name('diagnostic_test.run');
+    Route::get('/diagnostic-test', [DiagnosticTestController::class, 'dtStartList'])->name('diagnostic_test');
+    Route::get('/diagnostic-test/start', [DiagnosticTestController::class, 'dtStart'])->name('diagnostic_test.run');
 
     /* Diagnostic Test Setup*/
     Route::prefix('control-panel')->group(function () {
@@ -169,6 +170,14 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::post('/general/diagnostic-test/details/update', [SettingController::class, 'dtDetailsUpdate'])->name('settings.diagnostic_test.details.update');
         Route::delete('/general/diagnostic-test/details/destroy/{id}', [SettingController::class, 'dtDetailsDestroy'])->name('settings.diagnostic_test.details.destroy');
         Route::post('/general/diagnostic-test/details/sort', [SettingController::class, 'dtDetailsSort'])->name('settings.diagnostic_test.details.sort');
+
+        /* Diagnostic Test Detail Conditions */
+        Route::get('/general/diagnostic-test/conditions/create', [SettingController::class, 'dtConditionsCreate'])->name('settings.diagnostic_test.conditions.create');
+        Route::post('/general/diagnostic-test/conditions/store', [SettingController::class, 'dtConditionsStore'])->name('settings.diagnostic_test.conditions.store');
+        Route::get('/general/diagnostic-test/conditions/edit', [SettingController::class, 'dtConditionsEdit'])->name('settings.diagnostic_test.conditions.edit');
+        Route::post('/general/diagnostic-test/conditions/update', [SettingController::class, 'dtConditionsUpdate'])->name('settings.diagnostic_test.conditions.update');
+        Route::delete('/general/diagnostic-test/conditions/destroy/{id}', [SettingController::class, 'dtConditionsDestroy'])->name('settings.diagnostic_test.conditions.destroy');
+        Route::post('/general/diagnostic-test/conditions/sort', [SettingController::class, 'dtConditionsSort'])->name('settings.diagnostic_test.conditions.sort');
     });
     
 });

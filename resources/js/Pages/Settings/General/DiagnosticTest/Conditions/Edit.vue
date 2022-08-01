@@ -124,7 +124,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
                                     <h1 class="font-semibold text-indigo-800 font-bold">Conditions</h1>
                                     <div class="flex justify-start">
-                                        <Link :href="route('settings.diagnostic_test.conditions.create', {'dt_id': $page.props.dt_id})" class="py-2 px-6 bg-blue-500 text-white  mb-2 rounded shadow">
+                                        <Link :href="route('settings.diagnostic_test.details.create')" class="py-2 px-6 bg-blue-500 text-white  mb-2 rounded shadow">
                                             <div class="flex">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -135,7 +135,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </div>
                                 </div>
                                 <div class="space-y-6 pb-6">
-                                    <template v-if="$page.props.diagnostic_test_conditions.length > 0">
+                                    <template v-if="$page.props.diagnostic_test_conditions > 0">
                                         <div class="flex items-center px-3" v-for="(condition, index) in $page.props.diagnostic_test_conditions" :key="condition.id">
                                             <span>{{ index + 1 }}. </span>
                                             <div class="pl-5">
