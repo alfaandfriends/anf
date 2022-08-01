@@ -47,7 +47,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         <td class="px-2 py-3">
                                             <div class="flex items-center">
                                                 <div class="ml-4">
-                                                    <div class="text-md font-bold font-medium text-indigo-900 uppercase mb-1">{{ centre.label }}</div>
+                                                    <div class="text-md font-bold text-indigo-900 uppercase mb-1">{{ centre.label }}</div>
                                                     <div class="flex items-center text-sm text-black-500">
                                                         <span>
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

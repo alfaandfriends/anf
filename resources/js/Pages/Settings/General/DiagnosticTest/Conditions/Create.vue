@@ -24,23 +24,23 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     <form @submit.prevent="submit">
                                         <div class="bg-white px-3 py-2">
                                             <div class="mb-5">
-                                                <h1 class="font-semibold text-indigo-800 font-bold">Diagnostic Test Condition</h1>
+                                                <h1 class="text-indigo-800 font-bold">Diagnostic Test Condition</h1>
                                                 <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="score" class="block text-sm font-medium text-gray-700 font-bold">Score less than<span class="text-red-500">*</span></label>
+                                                <label for="score" class="block text-sm text-gray-700 font-bold">Score less than<span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <input type="text" name="score" id="score" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.score ? 'border-red-300' : 'border-gray-300'" v-model="form.score" autocomplete="none"/>
                                                 </div>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="message" class="block text-sm font-medium text-gray-700 font-bold">Message<span class="text-red-500">*</span></label>
+                                                <label for="message" class="block text-sm text-gray-700 font-bold">Message<span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <textarea type="text" name="message" id="message" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.message ? 'border-red-300' : 'border-gray-300'" v-model="form.message" autocomplete="none"/>
                                                 </div>
                                             </div>
                                             <div class="flex items-end justify-end space-x-2">
-                                                <button type="submit" class="py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 select-none">Save </button>
+                                                <button type="submit" class="py-2 px-6 border border-transparent shadow-sm text-sm rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 select-none">Save </button>
                                                 <Link :href="route('settings.diagnostic_test.details', {'dt_id': this.diagnostic_test_id})" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 select-none">Cancel</Link>
                                             </div>
                                         </div>

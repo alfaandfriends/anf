@@ -21,7 +21,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                         <div class="flex mt-4 bg-white px-1 rounded">
                             <div class="overflow-hidden w-1/2 p-4">
                                 <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
-                                    <h1 class="font-semibold text-indigo-800 font-bold">Questions</h1>
+                                    <h1 class="text-indigo-800 font-bold">Questions</h1>
                                     <div class="flex justify-start">
                                         <Link :href="route('settings.diagnostic_test.details.create', {'dt_id': diagnostic_test_info.dt_id})" class="py-2 px-6 bg-blue-500 text-white  mb-2 rounded shadow">
                                             <div class="flex">
@@ -49,17 +49,17 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             <form @submit.prevent="submit">
                                                 <div class="bg-gry-100 px-3 py-2">
                                                     <div class="mb-5">
-                                                        <h1 class="font-semibold text-indigo-800 font-bold">Diagnostic Test Information</h1>
+                                                        <h1 class="text-indigo-800 font-bold">Diagnostic Test Information</h1>
                                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="name" class="block text-sm font-medium text-gray-700 font-bold">Title<span class="text-red-500">*</span></label>
+                                                        <label for="name" class="block text-sm text-gray-700 font-bold">Title<span class="text-red-500">*</span></label>
                                                         <div class="mt-1 flex rounded-md shadow-sm">
                                                             <input type="text" name="name" id="name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="form.name" autocomplete="none"/>
                                                         </div>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="name" class="block text-sm font-medium text-gray-700 font-bold">Answer Redirection (Default: No Redirection)</label>
+                                                        <label for="name" class="block text-sm text-gray-700 font-bold">Answer Redirection (Default: No Redirection)</label>
                                                         <div class="mt-1 flex rounded-md shadow-sm space-x-2">
                                                             <select class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.redirect_yes" :class="$page.props.errors.redirect_yes ? 'border-red-300' : 'border-gray-300'" name="" id="">
                                                                 <option :value="null">If Yes, redirect to</option>
@@ -72,7 +72,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                         </div>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="name" class="block text-sm font-medium text-gray-700 font-bold">Image<span class="text-red-500">*</span></label>
+                                                        <label for="name" class="block text-sm text-gray-700 font-bold">Image<span class="text-red-500">*</span></label>
                                                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                                                             @change="change"
                                                             @dragover="dragover"
@@ -122,7 +122,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             </div>
                             <div class="overflow-hidden w-1/2 p-4">
                                 <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
-                                    <h1 class="font-semibold text-indigo-800 font-bold">Conditions</h1>
+                                    <h1 class="text-indigo-800 font-bold">Conditions</h1>
                                     <div class="flex justify-start">
                                         <Link :href="route('settings.diagnostic_test.details.create')" class="py-2 px-6 bg-blue-500 text-white  mb-2 rounded shadow">
                                             <div class="flex">
