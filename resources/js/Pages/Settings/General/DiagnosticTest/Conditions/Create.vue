@@ -24,7 +24,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     <form @submit.prevent="submit">
                                         <div class="bg-white px-3 py-2">
                                             <div class="mb-5">
-                                                <h1 class="text-indigo-800 font-bold">Diagnostic Test Condition</h1>
+                                                <h1 class="text-indigo-800 font-bold">Conditions</h1>
                                                 <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                             </div>
                                             <div class="mb-3">

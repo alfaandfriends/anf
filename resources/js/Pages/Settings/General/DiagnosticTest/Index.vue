@@ -41,7 +41,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             <div class="text-sm text-gray-700">{{ ++index }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900 font-bold">{{ diagnostic_test_list.name }}</div>
+                                            <div class="text-sm text-gray-900 font-bold">{{ diagnostic_test_list.name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
@@ -157,13 +157,13 @@ export default {
         editDiagnosticTest(dt_id){
             this.$inertia.get(route('settings.diagnostic_test.edit'), {'dt_id': dt_id})
         },
-        deleteDiagnosticTest(country_id){
-            this.confirmationTitle="Delete Diagnostic Test"
-            this.confirmationText="Are you sure want to delete this diagnostic test?"
+        deleteDiagnosticTest(dt_id){
+            this.confirmationTitle="Are you sure want to delete this diagnostic test?"
+            this.confirmationText="All data for this diagnostic test will be erased permanently."
             this.confirmationButton="Delete"
             this.confirmationMethod="delete"
-            this.confirmationRoute = 'settings.countries.destroy'
-            this.confirmationData = country_id
+            this.confirmationRoute = 'settings.diagnostic_test.destroy'
+            this.confirmationData = dt_id
             this.isOpen = true
         },
     }

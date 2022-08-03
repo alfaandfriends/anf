@@ -177,7 +177,13 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::get('/general/diagnostic-test/conditions/edit', [SettingController::class, 'dtConditionsEdit'])->name('settings.diagnostic_test.conditions.edit');
         Route::post('/general/diagnostic-test/conditions/update', [SettingController::class, 'dtConditionsUpdate'])->name('settings.diagnostic_test.conditions.update');
         Route::delete('/general/diagnostic-test/conditions/destroy/{id}', [SettingController::class, 'dtConditionsDestroy'])->name('settings.diagnostic_test.conditions.destroy');
-        Route::post('/general/diagnostic-test/conditions/sort', [SettingController::class, 'dtConditionsSort'])->name('settings.diagnostic_test.conditions.sort');
+
+        /* Diagnostic Test Detail Categories */
+        Route::get('/general/diagnostic-test/categories/create', [SettingController::class, 'dtCategoriesCreate'])->name('settings.diagnostic_test.categories.create');
+        Route::post('/general/diagnostic-test/categories/store', [SettingController::class, 'dtCategoriesStore'])->name('settings.diagnostic_test.categories.store');
+        Route::get('/general/diagnostic-test/categories/edit', [SettingController::class, 'dtCategoriesEdit'])->name('settings.diagnostic_test.categories.edit');
+        Route::post('/general/diagnostic-test/categories/update', [SettingController::class, 'dtCategoriesUpdate'])->name('settings.diagnostic_test.categories.update');
+        Route::delete('/general/diagnostic-test/categories/destroy/{id}', [SettingController::class, 'dtCategoriesDestroy'])->name('settings.diagnostic_test.categories.destroy');
     });
     
 });

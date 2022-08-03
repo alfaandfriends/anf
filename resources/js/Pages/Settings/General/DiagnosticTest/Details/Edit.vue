@@ -59,6 +59,21 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                         </div>
                                                     </div>
                                                     <div class="mb-3">
+                                                        <label for="remarks" class="block text-sm text-gray-700 font-bold">Remarks</label>
+                                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                                            <input type="text" name="remarks" id="remarks" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.remarks ? 'border-red-300' : 'border-gray-300'" v-model="form.remarks" autocomplete="none"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="category_id" class="block text-sm text-gray-700 font-bold">Category<span class="text-red-500">*</span></label>
+                                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                                            <select name="category_id" id="category_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.category_id ? 'border-red-300' : 'border-gray-300'" v-model="form.category_id" autocomplete="none">
+                                                                <option value="" hidden selected>Please select question's category</option>
+                                                                <option :value="category.id" v-for="(category, index) in $page.props.diagnostic_test_categories" :key="index">{{ category.name }}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
                                                         <label for="name" class="block text-sm text-gray-700 font-bold">Answer Redirection (Default: No Redirection)</label>
                                                         <div class="mt-1 flex rounded-md shadow-sm space-x-2">
                                                             <select class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.redirect_yes" :class="$page.props.errors.redirect_yes ? 'border-red-300' : 'border-gray-300'" name="" id="">
@@ -121,6 +136,50 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                             </div>
                             <div class="overflow-hidden w-1/2 p-4">
+                                <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
+                                    <h1 class="text-indigo-800 font-bold">Categories</h1>
+                                    <div class="flex justify-start">
+                                        <Link :href="route('settings.diagnostic_test.categories.create', {'dt_id': $page.props.dt_id})" class="py-2 px-6 bg-blue-500 text-white  mb-2 rounded shadow">
+                                            <div class="flex">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span class="pl-2">Add</span> 
+                                            </div>
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div class="space-y-6 pb-8">
+                                    <template v-if="$page.props.diagnostic_test_categories.length > 0">
+                                        <div class="flex flex-col">
+                                            <ul class="bg-white rounded-lg text-gray-900 w-full">
+                                                <li class="flex justify-between py-2 border-b border-gray-200 w-full rounded-t-lg items-center" v-for="(category, index) in $page.props.diagnostic_test_categories" :key="category.id">
+                                                    <span>{{ index + 1 }}. {{ category.name }}</span>
+                                                    <div class="flex space-x-1">
+                                                        <div class="rounded bg-yellow-500 hover:bg-yellow-700 p-1 text-white cursor-pointer shadow-md">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" @click="categoriesEdit(category.id)">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                            </svg>
+                                                        </div>
+                                                        <div class="rounded bg-red-500 hover:bg-red-700 p-1 text-white cursor-pointer shadow-md" @click="categoriesDelete(category.id)">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div class="flex text-center p-6 border-2 rounded text-red-500 border-red-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span class="pl-2">No categories found for diagnostic test.</span>
+                                        </div>
+                                    </template>
+                                </div>
                                 <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
                                     <h1 class="text-indigo-800 font-bold">Conditions</h1>
                                     <div class="flex justify-start">
@@ -234,6 +293,8 @@ export default defineComponent({
                 dt_id: this.dt_id ? this.dt_id : '',
                 id: this.diagnostic_test_info ? this.diagnostic_test_info.id : '',
                 name: this.diagnostic_test_info ? this.diagnostic_test_info.name : '',
+                remarks: this.diagnostic_test_info ? this.diagnostic_test_info.remarks : '',
+                category_id: this.diagnostic_test_info ? this.diagnostic_test_info.category_id : '',
                 image_url: '',
                 image_file: '',
                 redirect_yes: this.diagnostic_test_info ? this.diagnostic_test_info.redirect_yes_id : '',
@@ -341,7 +402,7 @@ export default defineComponent({
             this.$inertia.post(route('settings.diagnostic_test.details.sort'), {'sorted_list': this.dtList}, {preserveScroll: true})
         },
         conditionEdit(condition_id){
-
+            this.$inertia.get(route('settings.diagnostic_test.conditions.edit'), {'condition_id': condition_id}, {preserveScroll: true})
         },
         conditionDelete(condition_id){
             this.confirmationTitle="Delete Diagnostic Test Condition"
@@ -350,6 +411,18 @@ export default defineComponent({
             this.confirmationMethod="delete"
             this.confirmationRoute = 'settings.diagnostic_test.conditions.destroy'
             this.confirmationData = condition_id
+            this.isOpen = true
+        },
+        categoriesEdit(category_id){
+            this.$inertia.get(route('settings.diagnostic_test.categories.edit'), {'category_id': category_id}, {preserveScroll: true})
+        },
+        categoriesDelete(category_id){
+            this.confirmationTitle="Delete Diagnostic Test Category"
+            this.confirmationText="Are you sure want to delete this category?"
+            this.confirmationButton="Delete"
+            this.confirmationMethod="delete"
+            this.confirmationRoute = 'settings.diagnostic_test.categories.destroy'
+            this.confirmationData = category_id
             this.isOpen = true
         }
     }

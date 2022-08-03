@@ -18,12 +18,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                         <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
                             <div class="sm:row-span-3">
                                 <div class="mb-5">
-                                    <h1 class="font-semibold text-indigo-800 font-bold">Diagnostic Test Information</h1>
+                                    <h1 class="text-indigo-800 font-bold">Diagnostic Test Information</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="name" class="block text-sm font-medium text-gray-700 font-bold">Title<span class="text-red-500">*</span></label>
+                                        <label for="name" class="block text-sm text-gray-700 font-bold">Title<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input type="text" name="title" id="title" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.title ? 'border-red-300' : 'border-gray-300'" v-model="form.title" autocomplete="none"/>
                                         </div>

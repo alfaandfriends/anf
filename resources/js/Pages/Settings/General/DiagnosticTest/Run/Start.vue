@@ -21,7 +21,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                 </div>
                 <div class="inline-block min-w-full p-12 shadow-md bg-white rounded text-center" v-else>
                     <div class="px-6 pb-8">
-                        <span class="text-2xl font-bold uppercase">Question {{ count }}</span>
+                        <span class="text-3xl font-bold uppercase">Question {{ count }}</span>
+                    </div>
+                    <div class="px-6 pb-8" v-if="diagnostic_test_list[index].remarks">
+                        <span class="font-bold uppercase italic text-red-500">* {{ diagnostic_test_list[index].remarks }} *</span>
                     </div>
                     <div class="flex justify-center">
                         <img :src="'/storage/' + diagnostic_test_list[index].image_location" class="select-none w-1/2 h-1/3 bg-green-200 rounded-lg" alt="">

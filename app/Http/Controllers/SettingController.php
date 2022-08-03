@@ -212,29 +212,49 @@ class SettingController extends Controller
             return redirect(route('settings.diagnostic_test'))->with(['type' => 'success', 'message' => 'Diagnostic test updated successfully !']);
         }
 
-        public function dtDestroy(){
-            # code...
+        public function dtDestroy($id){
+            DB::table('diagnostic_test')->where('id', $id)->delete();
+            DB::table('diagnostic_test_categories')->where('dt_id', $id)->delete();
+            DB::table('diagnostic_test_conditions')->where('dt_id', $id)->delete();
+
+            $diagnostic_test_info    =   DB::table('diagnostic_test_details')->where('dt_id', $id)->get();
+            if(!empty($diagnostic_test_info)){
+                foreach($diagnostic_test_info as $key=>$info){
+                    if($info->image_location != ''){
+                        if(Storage::exists($info->image_location)){
+                            Storage::delete($info->image_location);
+                        }
+                    }
+                }
+            }
+            DB::table('diagnostic_test_details')->where('dt_id', $id)->delete();
+
+            return redirect(route('settings.diagnostic_test'))->with(['type' => 'success', 'message' => 'Diagnostic deleted successfully !']);
         }
 
         /* Diagnostic Test Detail List */
         public function dtDetailsList(Request $request){
             $diagnostic_test_list           =   DB::table('diagnostic_test_details')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
             $diagnostic_test_conditions     =   DB::table('diagnostic_test_conditions')->where('dt_id', $request->dt_id)->orderBy('score_capped', 'asc')->get();
+            $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
 
             return Inertia::render('Settings/General/DiagnosticTest/Details/Index', [
                 'diagnostic_test_id' => $request->dt_id,
                 'diagnostic_test_list' => $diagnostic_test_list,
-                'diagnostic_test_conditions' => $diagnostic_test_conditions
+                'diagnostic_test_conditions' => $diagnostic_test_conditions,
+                'diagnostic_test_categories' => $diagnostic_test_categories
             ]);
         }
 
         public function dtDetailsCreate(Request $request){
             $redirect_url                   =   url()->previous();
             $diagnostic_test_list           =   DB::table('diagnostic_test_details')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
+            $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
 
             return Inertia::render('Settings/General/DiagnosticTest/Details/Create', [
                 'diagnostic_test_id' => $request->dt_id,
                 'diagnostic_test_list' => $diagnostic_test_list,
+                'diagnostic_test_categories' => $diagnostic_test_categories,
                 'redirect_url' => $redirect_url,
             ]);
         }
@@ -242,6 +262,7 @@ class SettingController extends Controller
         public function dtDetailsStore(Request $request){
             $request->validate([
                 'name'          => 'required',
+                'category_id'          => 'required',
             ]);
 
             if(empty($request->file())){
@@ -253,6 +274,8 @@ class SettingController extends Controller
             $latest_id  =   DB::table('diagnostic_test_details')->insertGetId([
                 'dt_id' => $request->dt_id,
                 'name' => $request->name,
+                'remarks' => $request->remarks,
+                'category_id' => $request->category_id,
                 'redirect_yes_id' => $request->redirect_yes,
                 'redirect_no_id' => $request->redirect_no,
                 'ordering' => $last_inserted_row ? $last_inserted_row->ordering + 1 : 1,
@@ -273,6 +296,7 @@ class SettingController extends Controller
             $diagnostic_test_list           =   DB::table('diagnostic_test_details')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
             $diagnostic_test_info           =   DB::table('diagnostic_test_details')->where('id', $request->test_id)->first();
             $diagnostic_test_conditions     =   DB::table('diagnostic_test_conditions')->where('dt_id', $request->dt_id)->orderBy('score_capped', 'asc')->get();
+            $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
             
             return Inertia::render('Settings/General/DiagnosticTest/Details/Edit', [
                 'test_id' => $test_id,
@@ -280,6 +304,7 @@ class SettingController extends Controller
                 'diagnostic_test_list' => $diagnostic_test_list,
                 'diagnostic_test_info' => $diagnostic_test_info,
                 'diagnostic_test_conditions' => $diagnostic_test_conditions,
+                'diagnostic_test_categories' => $diagnostic_test_categories,
             ]);
         }
 
@@ -297,6 +322,8 @@ class SettingController extends Controller
             
             DB::table('diagnostic_test_details')->where('id', $request->id)->update([
                 'name' => $request->name,
+                'remarks' => $request->remarks,
+                'category_id' => $request->category_id,
                 'redirect_yes_id' => $request->redirect_yes,
                 'redirect_no_id' => $request->redirect_no,
             ]);
@@ -363,10 +390,79 @@ class SettingController extends Controller
             return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Condition added successfully !']);
         }
 
+        public function dtConditionsEdit(Request $request){
+            $condition_info = DB::table('diagnostic_test_conditions')->where('id', $request->condition_id)->first();
+
+            return Inertia::render('Settings/General/DiagnosticTest/Conditions/Edit', [
+                'condition_info' => $condition_info
+            ]);
+        }
+
+        public function dtConditionsUpdate(Request $request){
+            $request->validate([
+                'score'          => 'required',
+                'message'        => 'required',
+            ]);
+
+            DB::table('diagnostic_test_conditions')->where('id', $request->condition_id)->update([
+                'score_capped' =>      $request->score,
+                'message' =>    $request->message
+            ]); 
+
+            return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Condition updated successfully !']);
+        }
+
         public function dtConditionsDestroy($id){
             $dtInfo = DB::table('diagnostic_test_conditions')->where('id', $id)->first();
             DB::table('diagnostic_test_conditions')->where('id', $id)->delete();
 
             return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$dtInfo->dt_id])->with(['type' => 'success', 'message' => 'Condition added successfully !']);
+        }
+
+        /* Diagnostic Test Conditions */
+        public function dtCategoriesCreate(Request $request){
+            return Inertia::render('Settings/General/DiagnosticTest/Categories/Create', [
+                'diagnostic_test_id' => $request->dt_id
+            ]);
+        }
+
+        public function dtCategoriesStore(Request $request){
+            $request->validate([
+                'category_name'          => 'required',
+            ]);
+
+            DB::table('diagnostic_test_categories')->insert([
+                'dt_id' =>  $request->dt_id,
+                'name' =>  $request->category_name,
+            ]);
+
+            return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Categories added successfully !']);
+        }
+
+        public function dtCategoriesEdit(Request $request){
+            $category_info = DB::table('diagnostic_test_categories')->where('id', $request->category_id)->first();
+            
+            return Inertia::render('Settings/General/DiagnosticTest/Categories/Edit', [
+                'category_info' => $category_info
+            ]);
+        }
+
+        public function dtCategoriesUpdate(Request $request){
+            $request->validate([
+                'category_name'          => 'required',
+            ]);
+
+            DB::table('diagnostic_test_categories')->where('id', $request->category_id)->update([
+                'name' =>      $request->category_name,
+            ]); 
+
+            return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Category updated successfully !']);
+        }
+
+        public function dtCategoriesDestroy($id){
+            $dtInfo = DB::table('diagnostic_test_categories')->where('id', $id)->first();
+            DB::table('diagnostic_test_categories')->where('id', $id)->delete();
+
+            return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$dtInfo->dt_id])->with(['type' => 'success', 'message' => 'Category deleted successfully !']);
         }
 }

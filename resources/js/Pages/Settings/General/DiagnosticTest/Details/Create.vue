@@ -24,17 +24,32 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     <form @submit.prevent="submit">
                                         <div class="bg-white px-3 py-2">
                                             <div class="mb-5">
-                                                <h1 class="font-semibold text-indigo-800 font-bold">Diagnostic Test Information</h1>
+                                                <h1 class="text-indigo-800 font-bold">Diagnostic Test Information</h1>
                                                 <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="name" class="block text-sm font-medium text-gray-700 font-bold">Label<span class="text-red-500">*</span></label>
+                                                <label for="name" class="block text-sm text-gray-700 font-bold">Label<span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <input type="text" name="name" id="name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="form.name" autocomplete="none"/>
                                                 </div>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="name" class="block text-sm font-medium text-gray-700 font-bold">Answer Redirection (Default: No Redirection)</label>
+                                                <label for="remarks" class="block text-sm text-gray-700 font-bold">Remarks</label>
+                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                    <input type="text" name="remarks" id="remarks" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.remarks ? 'border-red-300' : 'border-gray-300'" v-model="form.remarks" autocomplete="none"/>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="category_id" class="block text-sm text-gray-700 font-bold">Category<span class="text-red-500">*</span></label>
+                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                    <select name="category_id" id="category_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.category_id ? 'border-red-300' : 'border-gray-300'" v-model="form.category_id" autocomplete="none">
+                                                        <option value="" hidden selected>Please select question's category</option>
+                                                        <option :value="category.id" v-for="(category, index) in $page.props.diagnostic_test_categories" :key="index">{{ category.name }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="name" class="block text-sm text-gray-700 font-bold">Answer Redirection (Default: No Redirection)</label>
                                                 <div class="mt-1 flex rounded-md shadow-sm space-x-2">
                                                     <select class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.redirect_yes" :class="$page.props.errors.redirect_yes ? 'border-red-300' : 'border-gray-300'" name="" id="">
                                                         <option value="">If Yes, redirect to</option>
@@ -47,7 +62,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                 </div>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="name" class="block text-sm font-medium text-gray-700 font-bold">Image<span class="text-red-500">*</span></label>
+                                                <label for="name" class="block text-sm text-gray-700 font-bold">Image<span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                                                     @change="change"
                                                     @dragover="dragover"
@@ -137,6 +152,8 @@ export default defineComponent({
             form: {
                 dt_id: this.diagnostic_test_id ? this.diagnostic_test_id : '',
                 name: '',
+                remarks: '',
+                category_id: '',
                 image_url: '',
                 image_file: '',
                 redirect_yes: '',
