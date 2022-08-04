@@ -83,7 +83,18 @@ class AuthUserProvider implements UserProvider
         $query = $this->createModel()->newQuery();
 
         if ($username = Arr::get($credentials, 'username')) {
-            return $query->where('user_login', $username)->orWhere('user_email', $username)
+            return $query->where('user_login', $username)
+                ->orWhere('user_email', $username)
+                ->first();
+        }
+
+        if ($email = Arr::get($credentials, 'email')) {
+            return $query->where('user_email', $email)
+                ->first();
+        }
+
+        if ($email = Arr::get($credentials, 'user_email')) {
+            return $query->where('user_email', $email)
                 ->first();
         }
 
