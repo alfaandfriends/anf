@@ -2,6 +2,7 @@
 
 namespace Corcel\Model;
 
+use App\Models\UserHasRoles;
 use Corcel\Concerns\AdvancedCustomFields;
 use Corcel\Concerns\Aliases;
 use Corcel\Concerns\MetaFields;
@@ -199,6 +200,10 @@ class User extends Model implements Authenticatable, CanResetPassword
         $hash = !empty($this->email) ? md5(strtolower(trim($this->email))) : '';
 
         return sprintf('//secure.gravatar.com/avatar/%s?d=mm', $hash);
+    }
+
+    public function user_has_role(){
+        return $this->hasMany(UserHasRoles::class, 'user_id');
     }
 
     /**
