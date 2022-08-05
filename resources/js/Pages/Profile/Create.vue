@@ -294,7 +294,6 @@ export default {
         info: Object
     },
     mounted(){
-        // console.log(this.info)
         const selected_image = this.$refs.input 
         cropper = new Cropper(selected_image, {
             aspectRatio: 1,
@@ -364,7 +363,6 @@ export default {
                     this.form.calling_code  =   response.data[0].idd.root + response.data[0].idd.suffixes[0]
                 })
                 .catch(error => {
-                    console.log(error)
                     this.errored = true
                 })
         },

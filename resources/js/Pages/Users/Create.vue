@@ -365,7 +365,6 @@ export default {
                     }
                 })
                 .catch(error => {
-                    console.log(error)
                     this.errored = true
                 })
         },
@@ -381,7 +380,6 @@ export default {
                     }
                 })
                 .catch(error => {
-                    console.log(error)
                     this.errored = true
                 })
         },
@@ -389,12 +387,10 @@ export default {
             axios
                 .get('https://restcountries.com/v3.1/alpha/' + country_code)
                 .then(response => {
-                    console.log(response.data[0].name.official)
                     this.form.country       =   response.data[0].name.official
                     this.form.calling_code  =   response.data[0].idd.root + response.data[0].idd.suffixes[0]
                 })
                 .catch(error => {
-                    console.log(error)
                     this.errored = true
                 })
         },
