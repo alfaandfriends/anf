@@ -79,7 +79,7 @@ export default defineComponent({
                 datasets: [ { 
                     label: 'Score',
                     backgroundColor: '#f87979', 
-                    data: this.final_data ? [4, 5] : [],
+                    data: this.final_data ? this.final_data : [],
                     barThickness: 100,
                     yAxisID: 'y',
                 } ]

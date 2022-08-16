@@ -219,6 +219,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import { TrashIcon } from '@heroicons/vue/solid'
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import axios from 'axios';
 
 export default {
     components: {

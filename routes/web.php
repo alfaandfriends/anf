@@ -13,6 +13,7 @@ use App\Http\Controllers\DiagnosticTestController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ShopController;
 
 /* Authorized Only */
 Route::middleware(['auth', 'check_role'])->group(function(){
@@ -130,6 +131,7 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::get('/centre-management/settings/fee_type_list/edit', [SettingController::class, 'editFeeType'])->name('settings.fee_type_list.edit');
         Route::post('/centre-management/settings/fee_type_list/update', [SettingController::class, 'updateFeeType'])->name('settings.fee_type_list.update');
         Route::delete('/centre-management/settings/fee_type_list/destroy/{id}', [SettingController::class, 'destroyFeeType'])->name('settings.fee_type_list.destroy');
+
         /* Fee Periods */
         Route::get('/centre-management/settings/fee_period_list', [SettingController::class, 'feePeriodList'])->name('settings.fee_period_list');
         Route::get('/centre-management/settings/fee_period_list/create', [SettingController::class, 'addfeePeriod'])->name('settings.fee_period_list.create');
@@ -186,5 +188,11 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::delete('/general/diagnostic-test/categories/destroy/{id}', [SettingController::class, 'dtCategoriesDestroy'])->name('settings.diagnostic_test.categories.destroy');
     });
     
+    /* Shop */
+    Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+    Route::get('/shop/cart', [ShopController::class, 'shopCart'])->name('shop.cart');
+    Route::get('/shop/checkout', [ShopController::class, 'shopCheckout'])->name('shop.checkout');
+    Route::post('/shop/payment', [ShopController::class, 'shopPayment'])->name('shop.payment');
+    Route::get('/shop/payment/status', [ShopController::class, 'shopPaymentStatus'])->name('shop.payment.status');
 });
 require __DIR__.'/auth.php';
