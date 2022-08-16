@@ -163,7 +163,7 @@ import { ref } from 'vue';
 import { SearchIcon, TrashIcon, PencilIcon, PhotographIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
-import ImageBox from "@abdulraof628/image-light-box";
+import ImageBox from "@alfaandfriends/image-light-box";
 
 export default {
     components: {

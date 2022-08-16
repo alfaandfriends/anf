@@ -8,7 +8,7 @@ import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
 import { Link } from '@inertiajs/inertia-vue3'
 import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } from '@heroicons/vue/solid'
 import Toast from '@/Components/Toast.vue'
-import VueGuidedTour from "@abdulraof628/vue-guided-tour/src/components/vueGuidedTour.vue";
+import VueGuidedTour from "@alfaandfriends/vue-guided-tour/src/components/vueGuidedTour.vue";
 import Breadcrumbs from '@/Components/Breadcrumbs.vue'
 
 export default {

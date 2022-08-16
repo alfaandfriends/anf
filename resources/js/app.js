@@ -3,7 +3,7 @@ require('./bootstrap');
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';  
-import VueGuidedTour from "@abdulraof628/vue-guided-tour";
+import VueGuidedTour from "@alfaandfriends/vue-guided-tour";
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'ALFA and Friends';
 
