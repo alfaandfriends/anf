@@ -67,6 +67,7 @@ class User extends Model implements Authenticatable, CanResetPassword
         'last_name' => ['meta' => 'last_name'],
         'description' => ['meta' => 'description'],
         'created_at' => 'user_registered',
+        'first_time_login' => 'first_time_login',
     ];
 
     /**
