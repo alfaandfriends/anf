@@ -44,8 +44,8 @@ class UserRegistrationCredentials extends Notification
     {
         return (new MailMessage)
                     ->level('success')
-                    ->greeting('Thank you for registering with us!')
-                    ->header('Please find below credentials to login to your account.')
+                    ->subject('Account Registration Successful')
+                    ->greeting('Thank you for registering with us! Please find below credentials to login to your account.')
                     ->with('Email: '.$this->credentials['email'])
                     ->line('Username: '.$this->credentials['username'])
                     ->line('Password: '.$this->credentials['password'])

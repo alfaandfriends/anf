@@ -24,8 +24,9 @@ class UserController extends Controller
             $query  ->where('user_email', 'LIKE', '%'.request('search').'%')
                     ->orWhere('display_name', 'LIKE', '%'.request('search').'%');
         }
-        $results    =   $query->with('user_has_role.role')->orderBy('id')->paginate(10);
+        $results    =   $query->orderBy('ID')->paginate(10);
         // dd($results);
+        // $results    =   $query->with('user_has_role.role')->orderBy('id')->paginate(10);
 
         $user_has_role  =   UserHasRoles::get()->keyBy('user_id');
         $role_list      =   Role::get()->keyBy('id');
@@ -86,19 +87,20 @@ class UserController extends Controller
                                     'spam'                  => 0,
                                     'deleted'               => 0,
                                     'remember_token'        => '',
-                                ]);
-    
-            if($new_user_id){
-                DB::table('user_basic_information')->insertGetId([
-                    'user_id'           => $new_user_id,
-                    'user_first_name'   => $first_name,
-                    'user_last_name'    => $last_name,
-                    'user_address'      => $address,
-                    'user_country'      => $request->country,
-                    'user_contact'      => $request->contact_number,
-                    'user_state'        => $request->state,
-                ]);
-            }
+                                ]);       
+            // if($new_user_id){ 
+            //     DB::table('user_basic_information')->insert([
+            //         'user_id'               => $new_user_id,
+            //         'user_first_name'       => $first_name,
+            //         'user_last_name'        => $last_name,
+            //         'user_address'          => $address,
+            //         'user_country'          => $request->country,
+            //         'user_country_code'     => $request->country_code,
+            //         'user_contact'          => $request->contact_number,
+            //         'user_state'            => $request->state,
+            //         'user_calling_code'     => $request->calling_code,
+            //     ]);
+            // }
     
             // DB::table('wpvt_usermeta')->insert([
             //     ['user_id' => $new_user_id, 'meta_key' => 'first_name', 'meta_value' => $first_name],
