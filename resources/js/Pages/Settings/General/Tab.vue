@@ -28,7 +28,7 @@ export default {
         }
     },
     mounted(){
-        this.active_dt = window.location.href.startsWith('http://127.0.0.1:8000/control-panel/general/diagnostic-test') ? true : false
+        this.active_dt = window.location.href.startsWith(window.location.origin + '/control-panel/general/diagnostic-test') ? true : false
     }
 }
 </script>
