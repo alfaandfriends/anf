@@ -50,7 +50,7 @@ export default {
         completedTour(status){
             if(status){
                 this.$inertia.post(route('users.completed_tour'), {user_id: this.$inertia.page.props.auth.user.ID})
-            }``
+            }
         }
     },
     mounted() {

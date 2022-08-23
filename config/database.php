@@ -64,11 +64,11 @@ return [
         ],
         
         'wordpress' => [
-            'driver'    => 'mysql',
-            'host'      => '220.158.201.41',
-            'database'  => 'alfaandf_wp325',
-            'username'  => 'alfaandf_wp325',
-            'password'  => 'pmSd6-1(h0',
+            'driver'    => env('DB_CONNECTION', 'mysql'),
+            'host'      => env('DB_HOST', '220.158.201.41'),
+            'database'  => env('DB_DATABASE', 'alfaandf_dev'),
+            'username'  => env('DB_USERNAME', 'alfaandf_dev'),
+            'password'  => env('DB_PASSWORD', 'alfaandf_dev'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => 'wpvt_',
