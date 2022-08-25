@@ -39,6 +39,7 @@ Route::middleware(['auth', 'check_role'])->group(function(){
     /* Profile */
     Route::get('/profile', [ProfileController::class, 'create'])->name('profile');
     Route::post('/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+    Route::post('/profile/security/store', [ProfileController::class, 'storeSecurity'])->name('profile.security.store');
 
     /* Users */
     Route::prefix('control-panel')->group(function () {
@@ -120,6 +121,8 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::get('/fees/edit', [FeeController::class, 'edit'])->name('fees.edit');
         Route::post('/fees/update', [FeeController::class, 'update'])->name('fees.update');  
         Route::delete('/fees/destroy/{id}', [FeeController::class, 'destroy'])->name('fees.destroy');
+
+        /* Admissions */
     });
 
     /* Settings */    

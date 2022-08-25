@@ -17,7 +17,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 </style>
 
 <template>
-    <Head title="Profile" />
+    <Head title="Profile"></Head>
 
     <BreezeAuthenticatedLayout>
         <template #header>
@@ -28,11 +28,15 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
-                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6 h-full">
                         <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
                             <div class="sm:row-span-3">
+                                <!-- component -->
+                                <div class="mb-5 border-b-indigo-500 border-b border-dashed">
+                                    <h2 class="font-display font-bold text-indigo-600">Profile Picture</h2>
+                                </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-0 gap-0">
-                                    <div class="mb-4 flex items-center" v-show="show_profile_photo">
+                                    <div class="mb-5 flex items-center" v-show="show_profile_photo">
                                         <span class="inline-block h-20 w-20 rounded-full border overflow-hidden bg-gray-100">
                                             <img v-if="info" :src="user_image" alt="">
                                             <svg v-else class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
@@ -47,7 +51,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </div>
                                     <div class="flex justify-between">
                                         <div v-show="show_image">
-                                            <label class="block text-sm font-medium text-gray-900 font-bold"> Crop Image</label>
+                                            <label class="block text-sm text-gray-900 font-bold"> Crop Image</label>
                                             <div class="w-96 h-60 my-3">
                                                 <img class="image" ref="input" :src="selected_image">
                                             </div>
@@ -55,7 +59,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         <div v-show="show_image">
                                             <div class="flex flex-row justify-end">
                                                 <div class="flex-column text-center">
-                                                    <label class="block text-sm font-medium text-gray-900 font-bold"> Image Preview </label>
+                                                    <label class="block text-sm text-gray-900 font-bold"> Image Preview </label>
                                                     <div class="preview h-52 w-96 mt-3 rounded-full"></div>
                                                 </div>
                                                 <div class="flex-column pl-1 pt-6">
@@ -81,15 +85,47 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         <span class="text-red-500 text-sm">Please upload an image</span>
                                     </div>
                                 </div>
+                                <div class="mb-5 border-b border-dashed border-b-indigo-500">
+                                    <h2 class="font-display font-bold text-indigo-600">Security</h2>
+                                </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="first_name" class="block text-sm font-medium text-gray-700 font-bold"> First Name <span class="text-red-500">*</span></label>
+                                        <label for="current_password" class="block text-sm text-gray-700 font-bold"> Current Password <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="password" name="current_password" id="current_password" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.current_password ? 'border-red-300' : 'border-gray-300'" v-model="security_form.current_password" autocomplete="none"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="new_password" class="block text-sm text-gray-700 font-bold"> New password <span class="text-red-500">*</span> </label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="password" name="new_password" id="new_password" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.new_password ? 'border-red-300' : 'border-gray-300'" v-model="security_form.new_password" autocomplete="none"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="confirm_new_password" class="block text-sm text-gray-700 font-bold"> Confirm New password <span class="text-red-500">*</span> </label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="password" name="confirm_new_password" id="confirm_new_password" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.confirm_new_password ? 'border-red-300' : 'border-gray-300'" v-model="security_form.confirm_new_password" autocomplete="none"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button method="post" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click="savePassword">Save Setting</button>
+                            </div>
+                            <div class="sm:row-span-3">
+                                <!-- component -->
+                                <div class="mb-5 border-b-indigo-500 border-b border-dashed">
+                                    <h2 class="font-display font-bold text-indigo-600">Profile Information</h2>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="first_name" class="block text-sm text-gray-700 font-bold"> First Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input type="text" name="first_name" id="first_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.first_name ? 'border-red-300' : 'border-gray-300'" v-model="form.first_name" autocomplete="none"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="last_name" class="block text-sm font-medium text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span> </label>
+                                        <label for="last_name" class="block text-sm text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input type="text" name="last_name" id="last_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.last_name ? 'border-red-300' : 'border-gray-300'" v-model="form.last_name" autocomplete="none"/>
                                         </div>
@@ -97,7 +133,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="country" class="block text-sm font-medium text-gray-700 font-bold"> Country <span class="text-red-500">*</span> </label>
+                                        <label for="country" class="block text-sm text-gray-700 font-bold"> Country <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <Multiselect 
                                                 autocomplete="none"
@@ -169,7 +205,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="contact_number" class="block text-sm font-medium text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span> </label>
+                                        <label for="contact_number" class="block text-sm text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input class="text-center inline-flex items-center px-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-500 text-sm" v-model="form.calling_code" size="5" disabled>
                                             <input type="number" name="contact_number" id="contact_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm" :class="$page.props.errors.contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.contact_number" autocomplete="none"/>
@@ -178,7 +214,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="state" class="block text-sm font-medium text-gray-700 font-bold"> State <span class="text-red-500">*</span></label>
+                                        <label for="state" class="block text-sm text-gray-700 font-bold"> State <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm"><Multiselect
                                             v-model="form.country_state"
                                             :placeholder="form.country_state"
@@ -243,13 +279,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="grid grid-cols-1 gap-4">
                                     <div class="mb-4">
-                                        <label for="address" class="block text-sm font-medium text-gray-700 font-bold"> Address <span class="text-red-500">*</span></label>
+                                        <label for="address" class="block text-sm text-gray-700 font-bold"> Address <span class="text-red-500">*</span></label>
                                         <div class="mt-1">
                                             <textarea id="address" name="address" rows="3" class="capitalize shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.address ? 'border-red-300' : 'border-gray-300'" v-model="form.address" autocomplete="none"/>
                                         </div>  
                                     </div>
                                 </div>
-                                <button type="submit" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                                <button class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click="saveProfile">Save Profile</button>
                             </div>
                         </div>
                     </div>
@@ -329,6 +365,11 @@ export default {
                 country: this.info ? this.info.user_country : '',
                 country_state: this.info ? this.info.user_state : '',
                 country_code: this.info ? this.info.user_country_code : '',
+            },
+            security_form: {
+                current_password: '',
+                new_password: '',
+                confirm_new_password: '',
             }
         }
     },
@@ -352,8 +393,11 @@ export default {
         }
     },
     methods: {
-        submit() {
+        saveProfile() {
             this.$inertia.post(route('profile.store'), this.form)
+        },
+        savePassword(){
+            this.$inertia.post(route('profile.security.store'), this.security_form)
         },
         setCallingCode(country_code){
             axios

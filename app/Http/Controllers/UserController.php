@@ -87,32 +87,33 @@ class UserController extends Controller
                                     'spam'                  => 0,
                                     'deleted'               => 0,
                                     'remember_token'        => '',
-                                ]);       
-            // if($new_user_id){ 
-            //     DB::table('user_basic_information')->insert([
-            //         'user_id'               => $new_user_id,
-            //         'user_first_name'       => $first_name,
-            //         'user_last_name'        => $last_name,
-            //         'user_address'          => $address,
-            //         'user_country'          => $request->country,
-            //         'user_country_code'     => $request->country_code,
-            //         'user_contact'          => $request->contact_number,
-            //         'user_state'            => $request->state,
-            //         'user_calling_code'     => $request->calling_code,
-            //     ]);
-            // }
+                                ]);   
+
+            if($new_user_id){ 
+                DB::table('user_basic_information')->insert([
+                    'user_id'               => $new_user_id,
+                    'user_first_name'       => $first_name,
+                    'user_last_name'        => $last_name,
+                    'user_address'          => $address,
+                    'user_country'          => $request->country,
+                    'user_country_code'     => $request->country_code,
+                    'user_contact'          => $request->contact_number,
+                    'user_state'            => $request->state,
+                    'user_calling_code'     => $request->calling_code,
+                ]);
+            }
     
             // DB::table('wpvt_usermeta')->insert([
             //     ['user_id' => $new_user_id, 'meta_key' => 'first_name', 'meta_value' => $first_name],
             //     ['user_id' => $new_user_id, 'meta_key' => 'last_name', 'meta_value' => $last_name],
             // ]);
             
-            // foreach($request->selected_roles as $key=>$role){
-            //     DB::table('user_has_roles')->insert([
-            //         'user_id' => $new_user_id, 
-            //         'role_id' => $role, 
-            //     ]);
-            // }
+            foreach($request->selected_roles as $key=>$role){
+                DB::table('user_has_roles')->insert([
+                    'user_id' => $new_user_id, 
+                    'role_id' => $role, 
+                ]);
+            }
             DB::commit();
 
             $user           =   User::where('ID', $new_user_id)->first();
@@ -161,6 +162,8 @@ class UserController extends Controller
 
     public function destroy($user_id){
         User::where('ID', $user_id)->delete();
+        DB::table('user_basic_information')->where('user_id', $user_id)->delete();
+        DB::table('user_has_roles')->where('user_id', $user_id)->delete();
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'User deleted successfully !']);
     }

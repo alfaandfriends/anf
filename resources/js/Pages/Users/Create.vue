@@ -18,13 +18,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                         <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
                             <div class="sm:row-span-3">
                                 <div class="mb-5">
-                                    <h1 class="font-semibold text-indigo-800 font-bold">User Information</h1>
+                                    <h1 class="text-indigo-800 font-bold">User Information</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <div class="flex justify-between">
-                                            <label for="email" class="block text-sm font-medium text-gray-700 font-bold"> Email <span class="text-red-500">*</span> </label>
+                                            <label for="email" class="block text-sm text-gray-700 font-bold"> Email <span class="text-red-500">*</span> </label>
                                             <label for="" class="font-medium text-sm" v-if="form.email" :class="email_exist ? 'text-red-700' : 'text-green-700'"> {{ email_exist ? 'Email address has been used.' : 'Email address available.'}} </label>
                                         </div>
                                         <div class="mt-1 flex rounded-md shadow-sm">
@@ -35,7 +35,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <div class="flex justify-between">
-                                            <label for="username" class="block text-sm font-medium text-gray-700 font-bold"> Username <span class="text-red-500">*</span> </label>
+                                            <label for="username" class="block text-sm text-gray-700 font-bold"> Username <span class="text-red-500">*</span> </label>
                                             <label for="" class="font-medium text-sm" v-if="form.username" :class="username_exist ? 'text-red-700' : 'text-green-700'"> {{ username_exist ? 'Username has been taken.' : 'Username available.'}} </label>
                                         </div>
                                         <div class="mt-1 flex rounded-md shadow-sm">
@@ -45,13 +45,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="first_name" class="block text-sm font-medium text-gray-700 font-bold"> First Name <span class="text-red-500">*</span></label>
+                                        <label for="first_name" class="block text-sm text-gray-700 font-bold"> First Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input type="text" name="first_name" id="first_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.first_name ? 'border-red-300' : 'border-gray-300'" v-model="form.first_name" autocomplete="none"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="last_name" class="block text-sm font-medium text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span> </label>
+                                        <label for="last_name" class="block text-sm text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input type="text" name="last_name" id="last_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.last_name ? 'border-red-300' : 'border-gray-300'" v-model="form.last_name" autocomplete="none"/>
                                         </div>
@@ -59,7 +59,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="country" class="block text-sm font-medium text-gray-700 font-bold"> Country <span class="text-red-500">*</span> </label>
+                                        <label for="country" class="block text-sm text-gray-700 font-bold"> Country <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <Multiselect 
                                                 autocomplete="none"
@@ -129,7 +129,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="contact_number" class="block text-sm font-medium text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span> </label>
+                                        <label for="contact_number" class="block text-sm text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input class="text-center inline-flex items-center px-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-500 text-sm" v-model="form.calling_code" size="5" disabled>
                                             <input type="number" name="contact_number" id="contact_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm" :class="$page.props.errors.contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.contact_number" autocomplete="none"/>
@@ -138,7 +138,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="state" class="block text-sm font-medium text-gray-700 font-bold"> State <span class="text-red-500">*</span></label>
+                                        <label for="state" class="block text-sm text-gray-700 font-bold"> State <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm"><Multiselect
                                             v-model="form.state"
                                             placeholder="Please select a state"
@@ -202,7 +202,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="grid grid-cols-1 gap-4">
                                     <div class="mb-4">
-                                        <label for="address" class="block text-sm font-medium text-gray-700 font-bold"> Address <span class="text-red-500">*</span></label>
+                                        <label for="address" class="block text-sm text-gray-700 font-bold"> Address <span class="text-red-500">*</span></label>
                                         <div class="mt-1">
                                             <textarea id="address" name="address" rows="3" class="capitalize shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.address ? 'border-red-300' : 'border-gray-300'" v-model="form.address" autocomplete="none"/>
                                         </div>  
@@ -211,7 +211,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             </div>
                             <div class="sm:row-span-3">
                                 <div class="mb-5">
-                                    <h1 class="font-semibold text-indigo-800 font-bold">User Roles</h1>
+                                    <h1 class="text-indigo-800 font-bold">User Roles</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">

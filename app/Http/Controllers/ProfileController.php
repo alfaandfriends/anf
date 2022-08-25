@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Corcel\Services\PasswordService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
@@ -81,5 +83,38 @@ class ProfileController extends Controller
             ]);
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'Profile has been saved !']);
+    }
+
+    public function storeSecurity(Request $request)
+    {
+        $request->validate([
+            'current_password'     => 'required',
+            'new_password'         => 'required',
+            'confirm_new_password' => 'required',
+        ]);
+
+        $password_service           =   new PasswordService();
+        $current_password_match     =   $password_service->check($request->current_password, auth()->user()->user_pass);
+
+        if(!$current_password_match){
+            throw ValidationException::withMessages([
+                'current_password' => 'Current password does not match!'
+            ]);
+        }
+
+        if($request->new_password != $request->confirm_new_password){
+            throw ValidationException::withMessages([
+                'new_password'=> 'New password does not match.',
+                'confirm_new_password'=> 'New password does not match.'
+            ]);
+        }
+
+        $request->user()->fill([
+            'user_pass' => $password_service->makeHash($request->new_password)
+        ])->save();
+
+
+        return redirect(route('profile'))->with(['type'=>'success', 'message'=>'New Password changed successfully !']);
+
     }
 }

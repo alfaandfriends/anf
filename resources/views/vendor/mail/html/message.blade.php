@@ -3,7 +3,7 @@
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
 <!-- {{ config('app.name') }} -->
-<img src="{{asset('images/anf-logo-main-2x.png')}}" alt="{{config('app.name')}}">
+<img src="https://www.alfaandfriends.com/wp-content/uploads/2020/01/anf-logo-alternate.png" alt="{{config('app.name')}}">
 @endcomponent
 @endslot
 

@@ -63,7 +63,7 @@ class HandleInertiaRequests extends Middleware
                 'message' => fn () => $request->session()->get('message')
             ],
             'menu' => Menu::getAllMenu(),
-            'can' => $can ?? ''
+            'can' => $can ?? '',
         ]);
     }
 }
