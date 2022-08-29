@@ -139,12 +139,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <label for="state" class="block text-sm text-gray-700 font-bold"> State <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm"><Multiselect
-                                            v-model="form.state"
-                                            placeholder="Please select a state"
-                                            :noOptionsText="'Please select a state'"
-                                            :options="state_list"
-                                            :classes="{
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <Multiselect
+                                                v-model="form.state"
+                                                placeholder="Please select a state"
+                                                :noOptionsText="'Please select a state'"
+                                                :options="state_list"
+                                                :classes="{
                                                 container:
                                                     $page.props.errors.country ? 
                                                     'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded bg-white text-base leading-snug outline-none':

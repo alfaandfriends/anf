@@ -6,6 +6,10 @@ import { InertiaProgress } from '@inertiajs/progress';
 import VueGuidedTour from "@alfaandfriends/vue-guided-tour";
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'ALFA and Friends';
+const cleanApp = () => {
+    document.getElementById('app').removeAttribute('data-page')
+}
+document.addEventListener('inertia:finish', cleanApp)
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -17,7 +21,7 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .mount(el);
     },
-});
+}).then(cleanApp);
 
 InertiaProgress.init(
     {   color: '#9E7BFF',

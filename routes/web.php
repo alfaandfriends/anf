@@ -8,7 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CentreController;
-use App\Http\Controllers\ClassController;
+use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\DiagnosticTestController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\SessionController;
@@ -98,13 +98,13 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::delete('/centres/image/destroy/{id}', [CentreController::class, 'destroyImage'])->name('centres.destroy_image');
         Route::get('/centres/images', [CentreController::class, 'getCentreImages'])->name('centres.get_images');
 
-        /* Classes */
-        Route::get('/classes', [ClassController::class, 'index'])->name('classes');
-        Route::get('/classes/create', [ClassController::class, 'create'])->name('classes.create');
-        Route::post('/classes/store', [ClassController::class, 'store'])->name('classes.store');
-        Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit');
-        Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update');  
-        Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy');
+        /* Programmes */
+        Route::get('/programmes', [ProgrammeController::class, 'index'])->name('programmes');
+        Route::get('/programmes/create', [ProgrammeController::class, 'create'])->name('programmes.create');
+        Route::post('/programmes/store', [ProgrammeController::class, 'store'])->name('programmes.store');
+        Route::get('/programmes/edit', [ProgrammeController::class, 'edit'])->name('programmes.edit');
+        Route::post('/programmes/update', [ProgrammeController::class, 'update'])->name('programmes.update');  
+        Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroy'])->name('programmes.destroy');
 
         /* Session */
         Route::get('/sessions', [SessionController::class, 'index'])->name('sessions');
@@ -123,6 +123,12 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::delete('/fees/destroy/{id}', [FeeController::class, 'destroy'])->name('fees.destroy');
 
         /* Admissions */
+        Route::get('/admissions', [AdmissionController::class, 'index'])->name('admissions');
+        Route::get('/admissions/create', [AdmissionController::class, 'create'])->name('admissions.create');
+        Route::post('/admissions/store', [AdmissionController::class, 'store'])->name('admissions.store');
+        Route::get('/admissions/edit', [AdmissionController::class, 'edit'])->name('admissions.edit');
+        Route::post('/admissions/update', [AdmissionController::class, 'update'])->name('admissions.update');  
+        Route::delete('/admissions/destroy/{id}', [AdmissionController::class, 'destroy'])->name('admissions.destroy');
     });
 
     /* Settings */    
