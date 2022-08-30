@@ -20,7 +20,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             <div class="flex space-x-2">
                                 <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none block pl-10"
                                         type="text" v-model="params.search" placeholder="Search">
-                                <Multiselect
+                                <!-- <Multiselect
                                     v-model="params.centre"
                                     :searchable="true"
                                     :valueProp="ID"
@@ -75,7 +75,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                                         spacer: 'h-9 py-px box-content',
                                     }"
-                                />
+                                /> -->
                             </div>
                             <Link :href="route('programmes.create')" class="py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold">New Programme</Link>
                         </div>

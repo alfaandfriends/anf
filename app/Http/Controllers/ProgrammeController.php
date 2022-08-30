@@ -11,26 +11,17 @@ class ProgrammeController extends Controller
 {
     public function index()
     {
-        $centres    =   DB::table('wpvt_10_wlsm_schools')->orderBy('ID')->get(['ID as value','label']);
-
-        $query      =   DB::table('programmes')
-                            ->join('wpvt_10_wlsm_class_school', 'programmes.id', '=', 'wpvt_10_wlsm_class_school.programme_id')
-                            ->join('wpvt_10_wlsm_schools', 'wpvt_10_wlsm_class_school.school_id', '=', 'wpvt_10_wlsm_schools.ID');
+        $query      =   DB::table('programmes');
 
         if(request('search')){
             $query->where('name', 'LIKE', '%'.request('search').'%');
         }
 
-        if(request('centre')){
-            $query->where('wpvt_10_wlsm_schools.ID', request('centre'));
-        }
-
-        $programmes    =   $query->select('programmes.*')->distinct()->paginate(10);
+        $programmes    =   $query->paginate(10);
         
         return Inertia::render('Programmes/Index', [
-            'filter' => request()->all('search', 'centre'),
+            'filter' => request()->all('search'),
             'programmes' => $programmes,
-            'centres' => $centres
         ]);
     }
 
@@ -58,9 +49,13 @@ class ProgrammeController extends Controller
     public function edit(Request $request)
     {
         $programme_info =   DB::table('programmes')->where('id', $request->programme_id)->first();
+        $programme_fees =   DB::table('programmes_fees')->where('programme_id', $request->programme_id)->get()->groupBy('fee_type');
+        $fee_types      =   DB::table('fee_types')->orderBy('id')->get();
         
         return Inertia::render('Programmes/Edit', [
-            'programme_info'    => $programme_info
+            'programme_info'    => $programme_info,
+            'programme_fees'    => $programme_fees,
+            'fee_types'         => $fee_types,
         ]);
     }
 
