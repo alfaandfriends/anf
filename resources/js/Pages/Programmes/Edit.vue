@@ -66,7 +66,7 @@
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                     <div class="mb-4 space-y-1">
-                                        <div class="flex flex-row border-2 p-2 border-indigo-300 space-x-3" v-for="(fee_types, index) in fee_types" :key="index">
+                                        <div class="flex flex-row border-2 p-2 border-indigo-300 space-x-3" v-for="(fee_types, fee_types_index) in fee_types" :key="fee_types_index">
                                             <div class="flex">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill mt-1 text-indigo-600" viewBox="0 0 16 16">
                                                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
@@ -74,81 +74,14 @@
                                             </div>
                                             <div class="flex flex-col">
                                                 <label for="" class="block text-md text-gray-700 font-bold underline"> {{ fee_types.label }} </label>
-                                                <div class="mb-3">
-                                                    <div class="flex space-x-3" v-for="(programme_fee, index) in programme_fees[fee_types.id]" :key="programme_fee">
-                                                        <label for="" class="block text-gray-700 font-semibold">{{ programme_fee.label }} - <span class="text-indigo-700 font-bold">RM {{ programme_fee.amount }}</span></label>
-                                                        <button type="button" class="hover:underline" @click="removeFee(fee_types.id, index)">
-                                                            <span class="text-red-500 font-semibold">Delete</span>
-                                                        </button>
+                                                <div class="my-3 space-y-2">
+                                                    <div class="flex space-x-3 items-center" v-for="(fee_details) in fee_types_detail[fee_types.id]" :key="fee_details">
+                                                        <label for="" class="block text-gray-700 font-semibold">{{ fee_details.label }}</label>
+                                                        <input type="number" class="py-1 rounded ring-0 border-gray-400 focus:ring-0 focus:border-indigo-500" placeholder="0" v-model="form.programme_fees[fee_details.id]" >
                                                     </div>
-                                                </div>
-                                                <div class="flex space-x-1 self-center">
-                                                    <input type="text" class="py-1 rounded ring-0 border-gray-400 focus:ring-0 focus:border-indigo-500" placeholder="Label" v-model="label[fee_types.id]">
-                                                    <input type="number" class="py-1 rounded ring-0 border-gray-400 focus:ring-0 focus:border-indigo-500" placeholder="Fee's Amount" v-model="amount[fee_types.id]">
-                                                    <button type="button" class="rounded bg-green-500 py-1 px-2" @click="addNewFee(fee_types.id)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg text-white" viewBox="0 0 16 16">
-                                                            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-                                                        </svg>
-                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <div class="flex flex-row border-2 p-2 border-indigo-300 space-x-3">
-                                            <div class="flex">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill mt-1 text-indigo-600" viewBox="0 0 16 16">
-                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                                                </svg>
-                                            </div>
-                                            <div class="flex flex-col">
-                                                <label for="" class="block text-md text-gray-700 font-bold underline"> Normal Class </label>
-                                                <div class="mb-3">
-                                                    <div class="flex space-x-3" v-for="(normal, index) in form.normal" :key="normal">
-                                                        <label for="" class="block text-gray-700 font-semibold">{{ normal.label }} - <span class="text-indigo-700 font-bold">RM {{ normal.amount }}</span></label>
-                                                        <button type="button" class="hover:underline" @click="removeNormal(index)">
-                                                            <span class="text-red-500 font-semibold">Delete</span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div class="flex space-x-1 self-center">
-                                                    <input type="text" class="py-1 rounded ring-0 border-gray-400 focus:ring-0 focus:border-indigo-500" placeholder="Label" v-model="normal_input.label">
-                                                    <input type="number" class="py-1 rounded ring-0 border-gray-400 focus:ring-0 focus:border-indigo-500" placeholder="Fee's Amount" v-model="normal_input.amount">
-                                                    <button type="button" class="rounded bg-green-500 py-1 px-2" @click="saveNormal">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg text-white" viewBox="0 0 16 16">
-                                                            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-row border-2 p-2 border-indigo-300 justify-between">
-                                            <div class="flex flex-row space-x-3">
-                                                <div class="flex">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill mt-1 text-indigo-600" viewBox="0 0 16 16">
-                                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                                                    </svg>
-                                                </div>
-                                                <div class="flex flex-col">
-                                                    <label for="" class="block text-md text-gray-700 font-bold underline"> Plus Class </label>
-                                                    <div class="mb-3">
-                                                        <div class="flex space-x-5" v-for="(plus, index) in form.plus" :key="plus">
-                                                            <label for="" class="block text-gray-700 font-semibold">{{ plus.label }} - <span class="text-indigo-700 font-bold">RM {{ plus.amount }}</span></label>
-                                                            <button type="button" class="hover:underline" @click="removePlus(index)">
-                                                                <span class="text-red-500 font-semibold">Delete</span>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex space-x-1 self-center">
-                                                        <input type="text" class="py-1 rounded ring-0 border-gray-400 focus:ring-0 focus:border-indigo-500" placeholder="Label" v-model="plus_input.label">
-                                                        <input type="text" class="py-1 rounded ring-0 border-gray-400 focus:ring-0 focus:border-indigo-500" placeholder="Fee's Amount" v-model="plus_input.amount">
-                                                        <button type="button" class="rounded bg-green-500 py-1 px-2" @click="savePlus">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg text-white" viewBox="0 0 16 16">
-                                                                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
                                     </div>
                                 </div>
                                 <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
@@ -184,21 +117,27 @@ export default {
         Link, Toggle
     },
     props:{
-        programme_info: Array,
-        programme_fees: Array,
-        fee_types: Array,
+        programme_info: Object,
+        programme_fees: Object,
+        fee_types: Object,
+        fee_types_detail: Object,
     },
     data() {
         return {
-            label: [],
-            amount: [],
+            fee_input: [],
             form: {
                 programme_id: this.programme_info ? this.programme_info.id : '',
                 programme_level: this.programme_info.level ? this.programme_info.level : 1,
                 programme_name: this.programme_info ? this.programme_info.name : '',
                 programme_active: this.programme_info ? this.programme_info.status : '',
+                programme_fees: [],
             },
         }
+    },
+    mounted(){
+        this.programme_fees.forEach(element => {
+            this.form.programme_fees[element.fee_type_detail_id] =  element.amount
+        });
     },
     watch: {
         material_input: {
@@ -209,22 +148,6 @@ export default {
             },
             deep: true
         },
-        normal_input: {
-            handler(){
-                if(this.normal_input.amount < 1 || this.material_input.amount == '-'){
-                    this.normal_input.amount = ''
-                }
-            },
-            deep: true
-        },
-        plus_input: {
-            handler(){
-                if(this.plus_input.amount < 1 || this.material_input.amount == '-'){
-                    this.plus_input.amount = ''
-                }
-            },
-            deep: true
-        }
     },
     methods: {
         submit() {
@@ -239,17 +162,7 @@ export default {
             if(this.form.programme_level > 1){
                 this.form.programme_level -= 1;
             }
-        },
-        addNewFee(fee_type_index){
-            console.log(fee_type_index)
-            this.programme_fees[fee_type_index].push({
-                'label': this.label[fee_type_index],
-                'amount': this.amount[fee_type_index]
-            })
-        },
-        removeFee(fee_type, fee){
-            this.programme_fees[fee_type].splice(fee, 1)
-        },
+        }
     },
 }
 </script>

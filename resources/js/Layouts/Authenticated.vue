@@ -54,7 +54,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$inertia.page.props)
         if(this.$inertia.page.props.auth.first_time_login == 1){
             this.$vgt.start(0);
         }

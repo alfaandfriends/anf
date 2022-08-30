@@ -48,14 +48,17 @@ class ProgrammeController extends Controller
 
     public function edit(Request $request)
     {
-        $programme_info =   DB::table('programmes')->where('id', $request->programme_id)->first();
-        $programme_fees =   DB::table('programmes_fees')->where('programme_id', $request->programme_id)->get()->groupBy('fee_type');
-        $fee_types      =   DB::table('fee_types')->orderBy('id')->get();
+        $programme_info     =   DB::table('programmes')->where('id', $request->programme_id)->first();
+        $fee_types          =   DB::table('fee_types')->orderBy('id')->get();
+        $fee_types_detail   =   DB::table('fee_types_detail')->get()->groupBy('fee_type_id');
+        $programme_fees     =   DB::table('programmes_fees')->select('fee_type_detail_id','amount')->where('programme_id', $request->programme_id)->get();
+        // dd($programme_fees);
         
         return Inertia::render('Programmes/Edit', [
             'programme_info'    => $programme_info,
-            'programme_fees'    => $programme_fees,
             'fee_types'         => $fee_types,
+            'fee_types_detail'  => $fee_types_detail,
+            'programme_fees'    => $programme_fees,
         ]);
     }
 
@@ -66,10 +69,23 @@ class ProgrammeController extends Controller
         ]);
 
         DB::table('programmes')->where('id', $request->programme_id)->update([
-            'name'         =>  $request->programme_name,
-            'updated_at'    =>  Carbon::now(),
-            'status'        =>  $request->programme_active,
+            'name'              =>  $request->programme_name,
+            'level'             =>  $request->programme_level,
+            'updated_at'        =>  Carbon::now(),
+            'status'            =>  $request->programme_active,
         ]);
+
+        DB::table('programmes_fees')->where('programme_id', $request->programme_id)->delete();
+
+        foreach($request->programme_fees as $fee_detail_id=>$amount){
+            if($amount){
+                DB::table('programmes_fees')->insert([
+                    'programme_id'          =>  $request->programme_id,
+                    'fee_type_detail_id'    =>  $fee_detail_id,
+                    'amount'                =>  $amount,
+                ]);
+            }
+        }
 
         return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme updated successfully !']);
     }
