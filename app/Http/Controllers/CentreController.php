@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Centre;
-use Carbon\Carbon;
 use Corcel\Model\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -178,6 +178,7 @@ class CentreController extends Controller
                 'last_name'         => $request->principal_last_name,
                 'email'             => $request->principal_email,
                 'contact_number'    => $request->principal_contact,
+                'updated_at'        => Carbon::now(),
             ]);
         }
         else{
@@ -212,6 +213,7 @@ class CentreController extends Controller
                     'image_path'    => '/storage/'.$image_path,
                     'image_size'    => $image_size,
                     'image_type'    => $image_type,
+                    'updated_at'    => Carbon::now(),
                 ]);
             }
         }

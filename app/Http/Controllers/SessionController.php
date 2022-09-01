@@ -42,8 +42,6 @@ class SessionController extends Controller
             'label'         =>  $request->session,
             'start_date'    =>  Carbon::parse($request->start_date)->toDateString(),
             'end_date'      =>  Carbon::parse($request->end_date)->toDateString(),
-            'created_at'    =>  Carbon::now(),
-            'updated_at'    =>  Carbon::now(),
         ]);
 
         return redirect(route('sessions'))->with(['type'=>'success', 'message'=>'Session added successfully !']);

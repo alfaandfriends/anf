@@ -29,7 +29,6 @@ class ShopController extends Controller
     public function shopPaymentStatus(Request $request){
         if($request->billplz['transaction_status'] == 'completed'){
             return Inertia::render('Shop/PaymentStatus');
-            // dd('Payment Success!');
         }
         else{
             dd($request->billplz);

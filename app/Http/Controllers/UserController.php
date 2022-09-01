@@ -25,8 +25,6 @@ class UserController extends Controller
                     ->orWhere('display_name', 'LIKE', '%'.request('search').'%');
         }
         $results    =   $query->orderBy('ID')->paginate(10);
-        // dd($results);
-        // $results    =   $query->with('user_has_role.role')->orderBy('id')->paginate(10);
 
         $user_has_role  =   UserHasRoles::get()->keyBy('user_id');
         $role_list      =   Role::get()->keyBy('id');

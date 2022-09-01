@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Corcel\Services\PasswordService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -62,12 +63,16 @@ class ProfileController extends Controller
                 ->where('user_id', auth()->user()->ID)
                 ->update([
                     'user_photo'        => $path,
+                    'updated_at'        => Carbon::now(),
                 ]);
         }
         
         DB::table('wpvt_users')
             ->where('ID', auth()->user()->ID)
-            ->update(['display_name' => $request->first_name.' '.$request->last_name]);
+            ->update([
+                'display_name' => $request->first_name.' '.$request->last_name,
+                'updated_at'        => Carbon::now(),
+            ]);
 
         DB::table('user_basic_information')
             ->where('user_id', auth()->user()->ID)
@@ -80,6 +85,7 @@ class ProfileController extends Controller
                 'user_country'      => $request->country,
                 'user_state'        => $request->country_state,
                 'user_country_code' => $request->country_code,
+                'updated_at'        => Carbon::now(),
             ]);
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'Profile has been saved !']);

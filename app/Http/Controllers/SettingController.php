@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -52,7 +53,8 @@ class SettingController extends Controller
             ]);
 
             DB::table('fee_types')->where('id', $request->fee_type_id)->update([
-                'label' =>  $request->fee_type
+                'label' =>  $request->fee_type,
+                'updated_at'        => Carbon::now(),
             ]);
 
             return redirect(route('settings.fee_type_list'))->with(['type'=>'success', 'message'=>'Fee type updated successfully !']);
@@ -103,7 +105,8 @@ class SettingController extends Controller
             ]);
 
             DB::table('fee_periods')->where('id', $request->fee_period_id)->update([
-                'label' =>  $request->fee_period
+                'label' =>  $request->fee_period,
+                'updated_at'        => Carbon::now(),
             ]);
 
             return redirect(route('settings.fee_period_list'))->with(['type'=>'success', 'message'=>'Fee period updated successfully !']);
@@ -150,7 +153,8 @@ class SettingController extends Controller
 
         public function updateCountry(Request $request){
             $request->validate([
-                'fee_period'  => 'required'
+                'fee_period'  => 'required',
+                'updated_at'  => Carbon::now(),
             ]);
 
             DB::table('fee_periods')->where('id', $request->fee_period_id)->update([
@@ -206,7 +210,8 @@ class SettingController extends Controller
             ]);
 
             DB::table('diagnostic_test')->where('id', $request->dt_id)->update([
-                'name'  =>  $request->title,
+                'name'          =>  $request->title,
+                'updated_at'    => Carbon::now(),
             ]);
             
             return redirect(route('settings.diagnostic_test'))->with(['type' => 'success', 'message' => 'Diagnostic test updated successfully !']);
@@ -284,7 +289,8 @@ class SettingController extends Controller
             $file_path = Storage::putFile('diagnostic_test_photo', $request->file('image_file')[0]);
 
             DB::table('diagnostic_test_details')->where('id', $latest_id)->update([
-                'image_location' => $file_path
+                'image_location'    => $file_path,
+                'updated_at'        => Carbon::now(),
             ]);
 
             return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'New Item added successfully !']);
@@ -326,6 +332,7 @@ class SettingController extends Controller
                 'category_id' => $request->category_id,
                 'redirect_yes_id' => $request->redirect_yes,
                 'redirect_no_id' => $request->redirect_no,
+                'updated_at'        => Carbon::now(),
             ]);
 
             if(!empty($request->file('image_file'))){
@@ -337,7 +344,8 @@ class SettingController extends Controller
                 $file_path = Storage::putFile('diagnostic_test_photo', $request->file('image_file')[0]);
 
                 DB::table('diagnostic_test_details')->where('id', $request->id)->update([
-                    'image_location' => $file_path
+                    'image_location'    => $file_path,
+                    'updated_at'        => Carbon::now(),
                 ]);
             }
 
@@ -405,8 +413,9 @@ class SettingController extends Controller
             ]);
 
             DB::table('diagnostic_test_conditions')->where('id', $request->condition_id)->update([
-                'score_capped' =>      $request->score,
-                'message' =>    $request->message
+                'score_capped'  =>  $request->score,
+                'message'       =>  $request->message,
+                'updated_at'    =>  Carbon::now(),
             ]); 
 
             return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Condition updated successfully !']);
@@ -453,7 +462,8 @@ class SettingController extends Controller
             ]);
 
             DB::table('diagnostic_test_categories')->where('id', $request->category_id)->update([
-                'name' =>      $request->category_name,
+                'name'          =>  $request->category_name,
+                'updated_at'    =>  Carbon::now(),
             ]); 
 
             return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Category updated successfully !']);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -53,12 +54,12 @@ class MenuController extends Controller
         $next_rank      =   $current_rank + 1;
 
         DB::table('menus')->insert([
-            'menu_label' => $request->menu_label,
-            'menu_route' => $request->menu_route,
-            'menu_icon' => $request->menu_icon,
-            'permission_name' => $request->menu_permission,
-            'menu_rank' => $next_rank,
-            'menu_status' => $request->menu_status
+            'menu_label'        => $request->menu_label,
+            'menu_route'        => $request->menu_route,
+            'menu_icon'         => $request->menu_icon,
+            'permission_name'   => $request->menu_permission,
+            'menu_rank'         => $next_rank,
+            'menu_status'       => $request->menu_status,
         ]);
         
         return redirect(route('menus'))->with(['type'=>'success', 'message'=>'Menu added successfully !']);
@@ -89,7 +90,7 @@ class MenuController extends Controller
             'menu_sub_label'    => $request->menu_sub_label,
             'menu_sub_route'    => $request->menu_sub_route,
             'menu_sub_rank'     => $next_rank,
-            'menu_sub_status'   => $request->menu_sub_status
+            'menu_sub_status'   => $request->menu_sub_status,
         ]);
         
         return redirect($request->url_redirect)->with(['type'=>'success', 'message'=>'Sub menu added successfully !']);
@@ -123,7 +124,8 @@ class MenuController extends Controller
                 'permission_name' => $request->menu_permission,
                 'menu_label' => $request->menu_label,
                 'menu_route' => $request->menu_route,
-                'menu_status' => $request->menu_status
+                'menu_status' => $request->menu_status,
+                'updated_at'        => Carbon::now(),
             ]);
 
         return redirect(route('menus'))->with(['type'=>'success', 'message'=>'Menu updated successfully !']);
@@ -151,7 +153,8 @@ class MenuController extends Controller
             ->update([
                 'menu_sub_label' => $request->menu_sub_label,
                 'menu_sub_route' => $request->menu_sub_route,
-                'menu_sub_status' => $request->menu_sub_status
+                'menu_sub_status' => $request->menu_sub_status,
+                'updated_at'        => Carbon::now(),
             ]);
 
         return redirect($request->url_redirect)->with(['type'=>'success', 'message'=>'Menu updated successfully !']);

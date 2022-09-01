@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserHasRoles;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -54,7 +55,11 @@ class RoleController extends Controller
 
         DB::table('roles')
             ->where('name', $request->name)
-            ->update(['display_name' => $request->display_name, 'status' => $request->status]);
+            ->update([
+                'display_name'  => $request->display_name, 
+                'status'        => $request->status, 
+                'updated_at'    => Carbon::now()
+            ]);
 
         return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Role updated successfully !']);
     }

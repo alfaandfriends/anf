@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RoleHasPermissions;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 
@@ -50,7 +51,7 @@ class PermissionController extends Controller
         
         DB::table('permissions')
             ->where('id', $request->permission_id)
-            ->update(['name' => $request->permission, 'status' => $request->status]);
+            ->update(['name' => $request->permission, 'status' => $request->status, 'updated_at' => Carbon::now()]);
 
         return redirect(route('permissions'))->with(['type'=>'success', 'message'=>'Permission updated successfully !']);
     }
