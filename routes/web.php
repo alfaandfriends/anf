@@ -100,8 +100,10 @@ Route::middleware(['auth', 'check_role'])->group(function(){
 
         /* Programmes */
         Route::get('/programmes', [ProgrammeController::class, 'index'])->name('programmes');
+        Route::get('/programmes/create', [ProgrammeController::class, 'create'])->name('programmes.create');
+        Route::post('/programmes/store', [ProgrammeController::class, 'store'])->name('programmes.store');
         Route::get('/programmes/edit', [ProgrammeController::class, 'edit'])->name('programmes.edit');
-        Route::post('/programmes/update', [ProgrammeController::class, 'createOrUpdate'])->name('programmes.update');  
+        Route::post('/programmes/update', [ProgrammeController::class, 'update'])->name('programmes.update');  
         Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroy'])->name('programmes.destroy');
 
         /* Session */

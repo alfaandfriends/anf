@@ -25,6 +25,27 @@ class ProgrammeController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return Inertia::render('Programmes/Create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'programme_name'               => 'required|max:100',
+        ]);
+
+        DB::table('programmes')->insert([
+            'name'         =>  $request->programme_name,
+            'created_at'    =>  Carbon::now(),
+            'updated_at'    =>  Carbon::now(),
+            'status'        =>  $request->programme_active,
+        ]);
+
+        return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme added successfully !']);
+    }
+
     public function edit(Request $request)
     {
         $programme_info     =   DB::table('programmes')->where('id', $request->programme_id)->first();
@@ -40,7 +61,7 @@ class ProgrammeController extends Controller
         ]);
     }
 
-    public function createOrUpdate(Request $request)
+    public function update(Request $request)
     {
         $request->validate([
             'programme_name'               => 'required|max:100',
