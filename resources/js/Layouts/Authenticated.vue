@@ -10,15 +10,18 @@ import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } 
 import Toast from '@/Components/Toast.vue'
 import VueGuidedTour from "@alfaandfriends/vue-guided-tour/src/components/vueGuidedTour.vue";
 import Breadcrumbs from '@/Components/Breadcrumbs.vue'
+import { fortawesome } from '@fortawesome/free-regular-svg-icons'
+import Pusher from 'pusher-js';
 
 export default {
     components: {
-        BreezeApplicationLogo, Link, Toast, VueGuidedTour,
+        BreezeApplicationLogo, Link, Toast, VueGuidedTour, Pusher,
         BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink, Breadcrumbs,
-        CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon,
+        CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon
     },
     data() {
         return {
+            notificationOpen: false,
             showingNavigationDropdown: false,
             sideBar: false,
             showSiteSetting: false,
@@ -33,14 +36,21 @@ export default {
                     target: '.step-2',
                     content: 'This is your profile',
                 }
-            ]
+            ],
+            notifications: []
         }
     },
-    props: {
-        breadcrumbs: Object
-    },
     created(){
-        // route().current('users') || route().current('roles') || route().current('permissions')|| route().current('roles.create') ? this.showControlPanel = true : this.showControlPanel = false
+        var pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+            cluster: process.env.PUSHER_APP_CLUSTER
+        })
+
+        var channel = pusher.subscribe('notifications')
+        channel.bind('Notifications', (data) => {
+            this.$page.props.notifications.unshift({
+                'content': 'Needs your approval for centre deletion.'
+            })
+        });
     },
     methods: {
         toggleMenu (item) {
@@ -50,6 +60,11 @@ export default {
         completedTour(status){
             if(status){
                 this.$inertia.post(route('users.completed_tour'), {user_id: this.$inertia.page.props.auth.user.ID})
+            }
+        },
+        closeNotification(status){
+            if(status){
+                this.notificationOpen = false
             }
         }
     },
@@ -145,6 +160,44 @@ export default {
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
+                                <BreezeDropdown align="right" width="72" @close-notification="closeNotification">
+                                    <template #trigger>
+                                        <span class="inline-flex rounded-md" @click="notificationOpen = true">
+                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                                <div class=" w-10 h-10 rounded-full overflow-hidden border-2 dark:border-white border-gray-900 mr-2">
+                                                </div>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" v-if="notificationOpen">
+                                                    <path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z"/>
+                                                </svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="text-indigo-500" v-else>
+                                                    <path d="M256 32V49.88C328.5 61.39 384 124.2 384 200V233.4C384 278.8 399.5 322.9 427.8 358.4L442.7 377C448.5 384.2 449.6 394.1 445.6 402.4C441.6 410.7 433.2 416 424 416H24C14.77 416 6.365 410.7 2.369 402.4C-1.628 394.1-.504 384.2 5.26 377L20.17 358.4C48.54 322.9 64 278.8 64 233.4V200C64 124.2 119.5 61.39 192 49.88V32C192 14.33 206.3 0 224 0C241.7 0 256 14.33 256 32V32zM216 96C158.6 96 112 142.6 112 200V233.4C112 281.3 98.12 328 72.31 368H375.7C349.9 328 336 281.3 336 233.4V200C336 142.6 289.4 96 232 96H216zM288 448C288 464.1 281.3 481.3 269.3 493.3C257.3 505.3 240.1 512 224 512C207 512 190.7 505.3 178.7 493.3C166.7 481.3 160 464.1 160 448H288z"/>
+                                                </svg>
+                                            </button>
+                                        </span>
+                                    </template>
+                                    <template #content>
+                                        <div class="overflow-y-auto max-h-60 no-scrollbar divide-y divide-dashed" v-if="$page.props.notifications.length">
+                                            <div class="flex justify-center" v-for="notification in $page.props.notifications" :key="notification.id">
+                                                <BreezeDropdownLink :href="notification.action" :class="notification.seen != 1 ? 'bg-blue-200 hover:bg-blue-300' : 'bg-white hover:bg-gray-100'">
+                                                    <div class="flex space-x-3 items-center">
+                                                        <span class="text-2xl" v-html="notification.icon"></span>
+                                                        <span class="text-black">{{ notification.content }}</span>
+                                                    </div>
+                                                </BreezeDropdownLink>
+                                            </div>
+                                        </div>
+                                        <div class="rounded-md overflow-y-auto" v-else>
+                                            <div class="bg-white-100 text-center py-6 text-blue-400">
+                                                <span>No notifications available!</span>
+                                            </div>
+                                        </div>
+                                        <BreezeDropdownLink :class="'bg-gray-200 hover:bg-gray-300 rounded-b-md'">
+                                            <p class="text-center text-blue-500 font-bold">See all notifications</p>
+                                        </BreezeDropdownLink>
+                                    </template>
+                                </BreezeDropdown>
+                            </div>
+                            <div class="ml-3 relative">
                                 <BreezeDropdown align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md step-2">
@@ -163,12 +216,14 @@ export default {
                                         </span>
                                     </template>
                                     <template #content>
-                                        <BreezeDropdownLink :href="route('profile')">
-                                            Profile
-                                        </BreezeDropdownLink>
-                                        <BreezeDropdownLink :href="route('logout')" method="post" as="button">
-                                            Log Out
-                                        </BreezeDropdownLink>
+                                        <div class="py-1">
+                                            <BreezeDropdownLink :href="route('profile')">
+                                                Profile
+                                            </BreezeDropdownLink>
+                                            <BreezeDropdownLink :href="route('logout')" method="post" as="button">
+                                                Log Out
+                                            </BreezeDropdownLink>
+                                        </div>
                                     </template>
                                 </BreezeDropdown>
                             </div>

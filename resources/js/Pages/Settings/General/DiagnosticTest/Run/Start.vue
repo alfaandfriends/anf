@@ -116,7 +116,6 @@ export default defineComponent({
 
                 this.diagnostic_test_categories_label.filter(function(elem, index){
                     if(elem == category_text){
-                        final_data[index] = 0
                         final_data[index] += 1
                     }
                     else if(!final_data[index]){
@@ -175,6 +174,16 @@ export default defineComponent({
         restartDT(){
             final_data = []
             this.$inertia.get(route('diagnostic_test'))
+        },
+        chartInit(){
+            this.diagnostic_test_categories_label.filter(function(elem, index){
+                final_data[index] = 0
+            })
+        }
+    },
+    mounted(){
+        if(this.result_score == ''){
+            this.chartInit()
         }
     }
 })

@@ -22,7 +22,7 @@ class DiagnosticTestController extends Controller
         $diagnostic_test_list               =   DB::table('diagnostic_test_details')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
         $diagnostic_test_categories_label   =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get()->pluck('name');
         $diagnostic_test_categories         =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get()->keyBy('id')->pluck('name', 'id');
-        // dd($diagnostic_test_categories);
+        
         $result                             =   array();
         $result_score                       =   '';
         

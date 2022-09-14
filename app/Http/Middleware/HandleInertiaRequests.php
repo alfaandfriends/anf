@@ -64,6 +64,11 @@ class HandleInertiaRequests extends Middleware
             ],
             'menu' => Menu::getAllMenu(),
             'can' => $can ?? '',
+            'notifications' => $request->user() ? DB::table('notifications')->where('user_to_notify', $request->user()->ID)->limit(5)->orderByDesc('id')->get() : '',
+            'notification_counts' => $request->user() ? DB::table('notifications')
+                                                            ->where('user_to_notify', $request->user()->ID)
+                                                            ->where('seen', false)
+                                                            ->count() : ''
         ]);
     }
 }

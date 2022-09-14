@@ -8,7 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CentreController;
-use App\Http\Controllers\ProgrammeController;
+use App\Http\Controllers\ClassController;
 use App\Http\Controllers\DiagnosticTestController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\SessionController;
@@ -30,9 +30,6 @@ Route::middleware(['auth', 'check_role'])->group(function(){
     // });
 
     /* Dashboard */
-        /* Admin */
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
         /* User */
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -85,6 +82,14 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::get('/permissions/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
         Route::post('/permissions/update', [PermissionController::class, 'update'])->name('permissions.update');
         Route::delete('/permissions/destroy/{id}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+
+        /* Countries */
+        Route::get('/control-panel/general/countries', [SettingController::class, 'countryList'])->name('settings.countries');
+        Route::get('/control-panel/general/countries/create', [SettingController::class, 'addCountry'])->name('settings.countries.create');
+        Route::post('/control-panel/general/countries/store', [SettingController::class, 'storeCountry'])->name('settings.countries.store');
+        Route::get('/control-panel/general/countries/edit', [SettingController::class, 'editCountry'])->name('settings.countries.edit');
+        Route::post('/control-panel/general/countries/update', [SettingController::class, 'updateCountry'])->name('settings.countries.update');
+        Route::delete('/control-panel/general/countries/destroy/{id}', [SettingController::class, 'destroyCountry'])->name('settings.countries.destroy');
     });
 
     /* Centres */
@@ -98,15 +103,15 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::delete('/centres/image/destroy/{id}', [CentreController::class, 'destroyImage'])->name('centres.destroy_image');
         Route::get('/centres/images', [CentreController::class, 'getCentreImages'])->name('centres.get_images');
 
-        /* Programmes */
-        Route::get('/programmes', [ProgrammeController::class, 'index'])->name('programmes');
-        Route::get('/programmes/create', [ProgrammeController::class, 'create'])->name('programmes.create');
-        Route::post('/programmes/store', [ProgrammeController::class, 'store'])->name('programmes.store');
-        Route::get('/programmes/edit', [ProgrammeController::class, 'edit'])->name('programmes.edit');
-        Route::post('/programmes/update', [ProgrammeController::class, 'update'])->name('programmes.update');  
-        Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroy'])->name('programmes.destroy');
+        /* Classes */
+        Route::get('/classes', [ClassController::class, 'index'])->name('classes');
+        Route::get('/classes/create', [ClassController::class, 'create'])->name('classes.create');
+        Route::post('/classes/store', [ClassController::class, 'store'])->name('classes.store');
+        Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit');
+        Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update');  
+        Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy');
 
-        /* Session */
+        /* Sessions */
         Route::get('/sessions', [SessionController::class, 'index'])->name('sessions');
         Route::get('/sessions/create', [SessionController::class, 'create'])->name('sessions.create');
         Route::post('/sessions/store', [SessionController::class, 'store'])->name('sessions.store');
@@ -122,41 +127,33 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::post('/fees/update', [FeeController::class, 'update'])->name('fees.update');  
         Route::delete('/fees/destroy/{id}', [FeeController::class, 'destroy'])->name('fees.destroy');
 
-        /* Admissions */
-        Route::get('/admissions', [AdmissionController::class, 'index'])->name('admissions');
-        Route::get('/admissions/create', [AdmissionController::class, 'create'])->name('admissions.create');
-        Route::post('/admissions/store', [AdmissionController::class, 'store'])->name('admissions.store');
-        Route::get('/admissions/edit', [AdmissionController::class, 'edit'])->name('admissions.edit');
-        Route::post('/admissions/update', [AdmissionController::class, 'update'])->name('admissions.update');  
-        Route::delete('/admissions/destroy/{id}', [AdmissionController::class, 'destroy'])->name('admissions.destroy');
+        /* Settings */    
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings');
+            /* Fee Types */
+            Route::get('/settings/fee_type_list', [SettingController::class, 'feeTypeList'])->name('settings.fee_type_list');
+            Route::get('/settings/fee_type_list/create', [SettingController::class, 'addFeeType'])->name('settings.fee_type_list.create');
+            Route::post('/settings/fee_type_list/store', [SettingController::class, 'storeFeeType'])->name('settings.fee_type_list.store');
+            Route::get('/settings/fee_type_list/edit', [SettingController::class, 'editFeeType'])->name('settings.fee_type_list.edit');
+            Route::post('/settings/fee_type_list/update', [SettingController::class, 'updateFeeType'])->name('settings.fee_type_list.update');
+            Route::delete('/settings/fee_type_list/destroy/{id}', [SettingController::class, 'destroyFeeType'])->name('settings.fee_type_list.destroy');
+
+            /* Fee Periods */
+            Route::get('/settings/fee_period_list', [SettingController::class, 'feePeriodList'])->name('settings.fee_period_list');
+            Route::get('/settings/fee_period_list/create', [SettingController::class, 'addfeePeriod'])->name('settings.fee_period_list.create');
+            Route::post('/settings/fee_period_list/store', [SettingController::class, 'storefeePeriod'])->name('settings.fee_period_list.store');
+            Route::get('/settings/fee_period_list/edit', [SettingController::class, 'editfeePeriod'])->name('settings.fee_period_list.edit');
+            Route::post('/settings/fee_period_list/update', [SettingController::class, 'updatefeePeriod'])->name('settings.fee_period_list.update');
+            Route::delete('/settings/fee_period_list/destroy/{id}', [SettingController::class, 'destroyfeePeriod'])->name('settings.fee_period_list.destroy');
+
+            /* Programmes*/
+            Route::get('/settings/programmes', [SettingController::class, 'programmeList'])->name('settings.programmes');
+            Route::get('/settings/programmes/create', [SettingController::class, 'addProgramme'])->name('settings.programmes.create');
+            Route::post('/settings/programmes/store', [SettingController::class, 'storeProgramme'])->name('settings.programmes.store');
+            Route::get('/settings/programmes/edit', [SettingController::class, 'editProgramme'])->name('settings.programmes.edit');
+            Route::post('/settings/programmes/update', [SettingController::class, 'updateProgramme'])->name('settings.programmes.update');  
+            Route::delete('/settings/programmes/destroy/{id}', [SettingController::class, 'destroyProgramme'])->name('settings.programmes.destroy');
     });
 
-    /* Settings */    
-    Route::get('/centre-management/settings', [SettingController::class, 'index'])->name('settings');
-        /* Fee Types */
-        Route::get('/centre-management/settings/fee_type_list', [SettingController::class, 'feeTypeList'])->name('settings.fee_type_list');
-        Route::get('/centre-management/settings/fee_type_list/create', [SettingController::class, 'addFeeType'])->name('settings.fee_type_list.create');
-        Route::post('/centre-management/settings/fee_type_list/store', [SettingController::class, 'storeFeeType'])->name('settings.fee_type_list.store');
-        Route::get('/centre-management/settings/fee_type_list/edit', [SettingController::class, 'editFeeType'])->name('settings.fee_type_list.edit');
-        Route::post('/centre-management/settings/fee_type_list/update', [SettingController::class, 'updateFeeType'])->name('settings.fee_type_list.update');
-        Route::delete('/centre-management/settings/fee_type_list/destroy/{id}', [SettingController::class, 'destroyFeeType'])->name('settings.fee_type_list.destroy');
-
-        /* Fee Periods */
-        Route::get('/centre-management/settings/fee_period_list', [SettingController::class, 'feePeriodList'])->name('settings.fee_period_list');
-        Route::get('/centre-management/settings/fee_period_list/create', [SettingController::class, 'addfeePeriod'])->name('settings.fee_period_list.create');
-        Route::post('/centre-management/settings/fee_period_list/store', [SettingController::class, 'storefeePeriod'])->name('settings.fee_period_list.store');
-        Route::get('/centre-management/settings/fee_period_list/edit', [SettingController::class, 'editfeePeriod'])->name('settings.fee_period_list.edit');
-        Route::post('/centre-management/settings/fee_period_list/update', [SettingController::class, 'updatefeePeriod'])->name('settings.fee_period_list.update');
-        Route::delete('/centre-management/settings/fee_period_list/destroy/{id}', [SettingController::class, 'destroyfeePeriod'])->name('settings.fee_period_list.destroy');
-
-        /* Countries */
-        Route::get('/control-panel/general/countries', [SettingController::class, 'countryList'])->name('settings.countries');
-        Route::get('/control-panel/general/countries/create', [SettingController::class, 'addCountry'])->name('settings.countries.create');
-        Route::post('/control-panel/general/countries/store', [SettingController::class, 'storeCountry'])->name('settings.countries.store');
-        Route::get('/control-panel/general/countries/edit', [SettingController::class, 'editCountry'])->name('settings.countries.edit');
-        Route::post('/control-panel/general/countries/update', [SettingController::class, 'updateCountry'])->name('settings.countries.update');
-        Route::delete('/control-panel/general/countries/destroy/{id}', [SettingController::class, 'destroyCountry'])->name('settings.countries.destroy');
-    /* Settings */    
 
 
     /* Run Diagnostic Test */
