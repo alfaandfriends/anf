@@ -42,7 +42,7 @@ class UserController extends Controller
         $roles      =   Role::get();
 
         return Inertia::render('Users/Create',[
-            'roles' => $roles,
+            'roles'     => $roles,
         ]);
     }
 
@@ -134,11 +134,13 @@ class UserController extends Controller
     public function assignRoles(Request $request)
     {
         $roles      =   Role::get();
+        $centres    =   DB::table('wpvt_10_wlsm_schools')->select(['ID', 'label as name'])->get();
         $user_roles =   UserHasRoles::where('user_id', $request->user_id)->get('role_id')->keyBy('role_id');
 
         return Inertia::render('Users/AssignRoles', [
             'user_id' => $request->user_id,
             'roles' => $roles,
+            'centres'   => $centres,
             'user_roles' => $user_roles,
         ]);
     }

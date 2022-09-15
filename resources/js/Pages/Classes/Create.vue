@@ -33,47 +33,57 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     <div class="mb-4">
                                         <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="form.programme" autocomplete="none">
+                                            <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_id" autocomplete="none">
+                                                <option value="">-- Select Programme --</option>
                                                 <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="mb-4">
-                                        <label for="class_level" class="block text-sm font-bold text-gray-700"> Class Level <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="class_level" id="class_level" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_level ? 'border-red-300' : 'border-gray-300'" v-model="form.class_level" autocomplete="none"/>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="class_level" class="block text-sm font-bold text-gray-700"> Class Level <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select name="class_level" id="class_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_level ? 'border-red-300' : 'border-gray-300'" v-model="form.class_level" autocomplete="none">
+                                                    <option value="">-- Select Level --</option>
+                                                    <option :value="i" v-for="i in class_levels" :key="i">{{ i }}</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="class_day" class="block text-sm font-bold text-gray-700"> Class Day <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="class_day" id="class_day" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_day ? 'border-red-300' : 'border-gray-300'" v-model="form.class_day" autocomplete="none"/>
+                                        <div class="mb-4">
+                                            <label for="class_day" class="block text-sm font-bold text-gray-700"> Class Day <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select name="class_day" id="class_day" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_day ? 'border-red-300' : 'border-gray-300'" v-model="form.class_day" autocomplete="none">
+                                                    <option value="">-- Select Day --</option>
+                                                    <option :value="day.id" v-for="day in day_list" :key="day">{{ day.name }}</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="start_date" class="block text-sm font-bold text-gray-700"> Start Date <span class="text-red-500">*</span></label>
-                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.start_date ? '--dp-border-color: #fa9e9e' : ''" :format="'dd/MM/yyyy'" autoApply :enableTimePicker="false" v-model="form.start_date" />
+                                        <label for="start_time" class="block text-sm font-bold text-gray-700"> Start Date <span class="text-red-500">*</span></label>
+                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.start_time ? '--dp-border-color: #fa9e9e' : ''" v-model="form.start_time" :timePicker="true" :is24="false" />
                                     </div>
                                     <div class="mb-4">
-                                        <label for="end_date" class="block text-sm font-bold text-gray-700"> End Date <span class="text-red-500">*</span></label>
-                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.end_date ? '--dp-border-color: #fa9e9e' : ''" :format="'dd/MM/yyyy'" autoApply :enableTimePicker="false" v-model="form.end_date" />
+                                        <label for="end_time" class="block text-sm font-bold text-gray-700"> End Date <span class="text-red-500">*</span></label>
+                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.end_time ? '--dp-border-color: #fa9e9e' : ''" v-model="form.end_time" :timePicker="true" :is24="false" />
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <label for="class_capacity" class="block text-sm font-bold text-gray-700"> Class Capacity <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="class_capacity" id="class_capacity" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_capacity ? 'border-red-300' : 'border-gray-300'" v-model="form.class_capacity" autocomplete="none"/>
+                                            <input type="number" name="class_capacity" id="class_capacity" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_capacity ? 'border-red-300' : 'border-gray-300'" v-model="form.class_capacity" autocomplete="none" @keypress="numberOnly"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
                                         <label for="class_type" class="block text-sm font-bold text-gray-700"> Class Type <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="class_type" id="class_type" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="form.class_type" autocomplete="none"/>
+                                            <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="form.class_type" autocomplete="none">
+                                                <option value="">-- Select Type --</option>
+                                                <option :value="class_type.id" v-for="class_type in type_list" :key="class_type">{{ class_type.name }}</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -112,17 +122,19 @@ export default {
     },
     props: {
         programme_list: Object,
+        day_list: Object,
+        type_list: Object,
     },
     data(){
         return{
-            levels: [],
+            class_levels: [],
             form: {
                 class_name: '',
-                programme: '',
+                programme_id: '',
                 class_level: '',
                 class_day: '',
-                start_date: '',
-                end_date: '',
+                start_time: '',
+                end_time: '',
                 class_capacity: '',
                 class_type: '',
                 class_status: '',
@@ -130,19 +142,37 @@ export default {
         }
     },
     watch: {
-        form: {
+        'form.programme_id': {
             handler(){
-                if(this.form.programme){
-                    console.log(this.form.programme)
-                }
+                this.form.class_level = ""
+                this.resetProgrammeSelection(this.form.programme_id)
             },
             deep: true
-        }
+        },
     },
     methods: {
         submit() {
-            this.$inertia.post(route('sessions.store'), this.form, { preserveState: true})
+            this.$inertia.post(route('classes.store'), this.form, { preserveState: true})
         },
+        resetProgrammeSelection(programme_id){
+            this.class_levels = []
+            this.programme_list.forEach((programme)=>{
+                if(programme.id == programme_id){
+                    for(var i=1; i<=programme.level; i++){
+                        this.class_levels.push(i)
+                    }
+                }
+            })
+        },
+        numberOnly (evt){
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                evt.preventDefault();;
+            } else {
+                return true;
+            }
+        }
     }
 
 }
