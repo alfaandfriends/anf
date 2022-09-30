@@ -21,11 +21,69 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     <h1 class="font-bold text-indigo-800">Class Information</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <label for="class_name" class="block text-sm font-bold text-gray-700"> Class Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input type="text" name="class_name" id="class_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_name ? 'border-red-300' : 'border-gray-300'" v-model="form.class_name" autocomplete="none"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Centre <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md.shadow-sm">
+                                            <Multiselect 
+                                                v-model="form.centre_id"
+                                                valueProp="ID"
+                                                :searchable="true"
+                                                :options="$page.props.allowed_centres"
+                                                :clearOnSelect="false"
+                                                :canClear="false"
+                                                :canDeselect="false"
+                                                trackBy="label"
+                                                label="label"
+                                                :classes="{
+                                                    container: 
+                                                        $page.props.errors.centre_id ? 
+                                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded bg-white text-base leading-snug outline-none':
+                                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-[38px]',
+                                                    containerDisabled: 'cursor-default bg-gray-100',
+                                                    containerOpen: 'rounded-b-none',
+                                                    containerOpenTop: 'rounded-t-none',
+                                                    containerActive: 'border border-indigo-300',
+                                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
+                                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                                    multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
+                                                    search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded pl-3.5',
+                                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-400',
+                                                    caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none',
+                                                    caretOpen: 'rotate-180 pointer-events-auto',
+                                                    clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
+                                                    clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                                    spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                                    dropdownHidden: 'hidden',
+                                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                                    optionsTop: 'flex-col-reverse',
+                                                    group: 'p-0 m-0',
+                                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                                    groupLabelPointable: 'cursor-pointer',
+                                                    groupLabelPointed: 'bg-gray-300 text-black-700',
+                                                    groupLabelSelected: 'bg-gray-100 text-black',
+                                                    groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                                    groupOptions: 'p-0 m-0',
+                                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
+                                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                                    optionSelected: 'text-white bg-indigo-500',
+                                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                                    spacer: 'h-9 py-px box-content',
+                                                }"
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -115,10 +173,11 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Toggle from '@vueform/toggle';
+import Multiselect from '@vueform/multiselect'
 
 export default {
     components: {
-        Head, Link, Datepicker, Toggle
+        Head, Link, Datepicker, Toggle, Multiselect
     },
     props: {
         programme_list: Object,
@@ -130,6 +189,7 @@ export default {
             class_levels: [],
             form: {
                 class_name: '',
+                centre_id: '',
                 programme_id: '',
                 class_level: '',
                 class_day: '',
@@ -174,6 +234,5 @@ export default {
             }
         }
     }
-
 }
 </script>

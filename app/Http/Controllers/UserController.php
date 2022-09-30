@@ -131,23 +131,26 @@ class UserController extends Controller
         }
     }
 
-    public function assignRoles(Request $request)
+    public function assignCentresRoles(Request $request)
     {
-        $roles      =   Role::get();
-        $centres    =   DB::table('wpvt_10_wlsm_schools')->select(['ID', 'label as name'])->get();
-        $user_roles =   UserHasRoles::where('user_id', $request->user_id)->get('role_id')->keyBy('role_id');
+        $roles          =   Role::get();
+        $centres        =   DB::table('wpvt_10_wlsm_schools')->select(['ID', 'label as name'])->get();
+        $user_roles     =   UserHasRoles::where('user_id', $request->user_id)->get('role_id')->keyBy('role_id');
+        $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
 
         return Inertia::render('Users/AssignRoles', [
             'user_id' => $request->user_id,
             'roles' => $roles,
             'centres'   => $centres,
             'user_roles' => $user_roles,
+            'user_centres' => $user_centres,
         ]);
     }
 
-    public function assignRolesStore(Request $request)
+    public function assignCentresRolesStore(Request $request)
     {
         UserHasRoles::where('user_id', $request->user_id)->delete();
+        DB::table('user_has_centres')->where('user_id', $request->user_id)->delete();
 
         foreach($request->selected_roles as $key=>$role_id){
             DB::table('user_has_roles')->insert([
@@ -156,7 +159,14 @@ class UserController extends Controller
             ]);
         }
 
-        return redirect(route('users'))->with(['type'=>'success', 'message'=>'Roles assigned successfully !']);
+        foreach($request->selected_centres as $key=>$centre_id){
+            DB::table('user_has_centres')->insert([
+                'user_id'   =>  $request->user_id,
+                'centre_id'   =>  $centre_id
+            ]);
+        }
+
+        return redirect(route('users'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
 
     }
 

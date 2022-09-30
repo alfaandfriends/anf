@@ -68,7 +68,12 @@ class HandleInertiaRequests extends Middleware
             'notification_counts' => $request->user() ? DB::table('notifications')
                                                             ->where('user_to_notify', $request->user()->ID)
                                                             ->where('seen', false)
-                                                            ->count() : ''
+                                                            ->count() : '',
+            'allowed_centres' => $request->user() ? DB::table('user_has_centres')
+                                                        ->join('wpvt_10_wlsm_schools', 'user_has_centres.centre_id', '=', 'wpvt_10_wlsm_schools.ID')
+                                                        ->where('user_id', $request->user()->ID)
+                                                        ->get(['wpvt_10_wlsm_schools.ID', 'wpvt_10_wlsm_schools.label']) : ''
+
         ]);
     }
 }

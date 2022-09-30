@@ -43,8 +43,8 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
-        Route::get('/users/assign-roles', [UserController::class, 'assignRoles'])->name('users.assign_roles');
-        Route::post('/users/assign-roles/store', [UserController::class, 'assignRolesStore'])->name('users.assign_roles.store');
+        Route::get('/users/assign-centre-roles', [UserController::class, 'assignCentresRoles'])->name('users.assign_centres_roles');
+        Route::post('/users/assign-centre-roles/store', [UserController::class, 'assignCentresRolesStore'])->name('users.assign_centres_roles.store');
         Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::post('/users/completed-tour', [UserController::class, 'completedTour'])->name('users.completed_tour');
 
