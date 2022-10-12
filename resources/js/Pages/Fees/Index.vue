@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -22,7 +23,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         type="text" v-model="params.search" placeholder="Search">
                             </div>
                             <div class="flex justify-end">
-                                <Link :href="route('fees.create')" class="py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold">Add New Fee</Link>
+                                <BreezeButton :route="route('fees.create')">Add New Fee</BreezeButton>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -85,17 +86,15 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
-                                                <div class="flex pr-1">
-                                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit Class" @click="editSession(fees.id)">
+                                                <div class="flex flex-row space-x-3">
+                                                    <BreezeButton title="Edit Fee Priod" @click="editFeePeriod(fees.id)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                         </svg>
-                                                    </button>
-                                                </div>
-                                                <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete Class" @click="deleteFee(fees.id)">
+                                                    </BreezeButton>
+                                                    <BreezeButton title="Delete Fee Priod" @click="deleteFee(fees.id)">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                    </button>
+                                                    </BreezeButton>
                                                 </div>
                                             </div>
                                         </td>
@@ -197,7 +196,7 @@ export default {
         }
     },
     methods: {
-        editSession(feeID){
+        editFeePeriod(feeID){
             this.$inertia.get(this.route('fees.edit'), {'fee_id': feeID});
         },
         deleteFee(feeID){

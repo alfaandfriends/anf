@@ -1,7 +1,6 @@
-
-
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -22,24 +21,19 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             <div class="overflow-hidden w-1/2 p-4">
                                 <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
                                     <h1 class="text-indigo-800 font-bold">Questions</h1>
-                                    <div class="flex justify-start">
-                                        <Link :href="route('settings.diagnostic_test.details.create', {'dt_id': $page.props.diagnostic_test_id})" class="py-2 px-6 bg-blue-500 text-white  mb-2 rounded shadow">
-                                            <div class="flex">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span class="pl-2">Add</span> 
-                                            </div>
-                                        </Link>
+                                    <div class="flex justify-start mb-2">
+                                        <BreezeButton :route="route('settings.diagnostic_test.details.create', {'dt_id': $page.props.diagnostic_test_id})">
+                                            New Question
+                                        </BreezeButton>
                                     </div>
                                 </div>
                                 <draggable class="w-full" v-model="dtList" v-if="dtList.length > 0" @change="updateSorting">
                                     <div class="mb-1" v-for="(element, index) in dtList" :key="index">
                                         <div class="flex">
-                                            <div class="cursor-pointer w-full flex justify-between list-group-item bg-indigo-200 py-2 px-5 text-left" :class="showdtDetails ? 'rounded-tl' : 'rounded-l'" @click="dtEdit(element.id, element.dt_id)">
+                                            <div class="cursor-pointer w-full flex justify-between list-group-item bg-indigo-200 py-1 px-5 text-left" :class="showdtDetails ? 'rounded-tl' : 'rounded-l'" @click="dtEdit(element.id, element.dt_id)">
                                                 {{ (index+1) + '. ' + element.name }}
                                             </div>
-                                            <div class="cursor-pointer p-2 bg-red-500 hover:bg-red-700" :class="showdtDetails ? 'rounded-tr' : 'rounded-r'" @click="dtDelete(element.id)">
+                                            <div class="cursor-pointer p-1 bg-red-500 hover:bg-red-700" :class="showdtDetails ? 'rounded-tr' : 'rounded-r'" @click="dtDelete(element.id)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
@@ -57,15 +51,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             <div class="overflow-hidden w-1/2 p-4">
                                 <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
                                     <h1 class="text-indigo-800 font-bold">Categories</h1>
-                                    <div class="flex justify-start">
-                                        <Link :href="route('settings.diagnostic_test.categories.create', {'dt_id': $page.props.diagnostic_test_id})" class="py-2 px-6 bg-blue-500 text-white  mb-2 rounded shadow">
-                                            <div class="flex">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span class="pl-2">Add</span> 
-                                            </div>
-                                        </Link>
+                                    <div class="flex justify-start mb-2">
+                                        <BreezeButton :route="route('settings.diagnostic_test.categories.create', {'dt_id': $page.props.diagnostic_test_id})">
+                                            New Category
+                                        </BreezeButton>
                                     </div>
                                 </div>
                                 <div class="space-y-6 pb-8">
@@ -101,15 +90,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
                                     <h1 class="text-indigo-800 font-bold">Conditions</h1>
-                                    <div class="flex justify-start">
-                                        <Link :href="route('settings.diagnostic_test.conditions.create', {'dt_id': $page.props.diagnostic_test_id})" class="py-2 px-6 bg-blue-500 text-white  mb-2 rounded shadow">
-                                            <div class="flex">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span class="pl-2">Add</span> 
-                                            </div>
-                                        </Link>
+                                    <div class="flex justify-start mb-2">
+                                        <BreezeButton :route="route('settings.diagnostic_test.conditions.create', {'dt_id': $page.props.diagnostic_test_id})">
+                                            New Condition
+                                        </BreezeButton>
                                     </div>
                                 </div>
                                 <div class="space-y-6 pb-6">

@@ -9,47 +9,61 @@ use Inertia\Inertia;
 
 class ClassController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $allowed_centres    =   (object)Inertia::getShared('allowed_centres');
+        $can_access_centre = $allowed_centres->search(function ($value) { 
+            return $value->ID == request('centre_id');
+        });
+
         $query          =   DB::table('classes')
                                 ->join('class_types', 'classes.class_type_id', '=', 'class_types.id')
-                                ->join('wpvt_10_wlsm_schools', 'classes.centre_id', '=', 'wpvt_10_wlsm_schools.id')
+                                ->join('centres', 'classes.centre_id', '=', 'centres.id')
                                 ->join('programmes', 'classes.programme_id', '=', 'programmes.id')
                                 ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')
-                                ->select(['wpvt_10_wlsm_schools.label as centre_name', 
-                                            'programmes.name as programme_name', 
-                                            'programmes.name as class_type', 
+                                ->select([  'programmes.name as programme_name', 
                                             'class_days.name as class_day', 
-                                            'classes.level as class_level', 
                                             'classes.id', 
-                                            'classes.name', 
-                                            'capacity', 
-                                            'class_types.name as type', 
-                                            'start_time', 
+                                            'classes.centre_id', 
+                                            'classes.level as class_level', 
+                                            'capacity',
+                                            'class_types.name as type',
+                                            'start_time',
                                             'end_time']);
 
-        if(request('search')){
-            $query->where('name', 'LIKE', '%'.request('search').'%');
+        if($request->search){
+            $query->where('programmes.name', 'LIKE', '%'.$request->search.'%');
         }
 
-        $classes        =   $query->paginate(10);
-        
-        return Inertia::render('Classes/Index', [
-            'filter'        => request()->all('search'),
-            'classes'       => $classes,
+        if($request->centre_id){
+            $request->merge([
+                'centre_id' => !$can_access_centre ? $allowed_centres[0]->ID : $request->centre_id,
+            ]);
+        }
+        else{
+            $request->merge([
+                'centre_id' => $allowed_centres[0]->ID
+            ]);
+        }
+        $query->where('classes.centre_id', '=', $request->centre_id);
+
+        return Inertia::render('CentreManagement/Classes/Index', [
+            'filter'        => request()->all('search', 'centre_id'),
+            'classes'       => $query->paginate(10),
         ]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $programme_list     =   DB::table('programmes')->get();
         $day_list           =   DB::table('class_days')->get();
         $type_list           =   DB::table('class_types')->get();
-        
-        return Inertia::render('Classes/Create', [
+
+        return Inertia::render('CentreManagement/Classes/Create', [
             'programme_list'    => $programme_list,
             'day_list'          => $day_list,
             'type_list'         => $type_list,
+            'centre_id'         => $request->centre_id
         ]);
     }
 
@@ -94,7 +108,7 @@ class ClassController extends Controller
             $class_level[] = $i;
         }
         
-        return Inertia::render('Classes/Edit', [
+        return Inertia::render('CentreManagement/Classes/Edit', [
             'class_info'        => $class_info,
             'programme_list'    => $programme_list,
             'day_list'          => $day_list,

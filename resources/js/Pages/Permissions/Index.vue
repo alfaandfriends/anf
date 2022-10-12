@@ -1,5 +1,6 @@
 <script setup>
     import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+    import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -16,9 +17,9 @@
                 <div class="mx-auto">
                     <div class="align-middle inline-block w-full lg:w-1/2 px-2">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
-                            <button class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded" @click="addPermission()"> 
+                            <BreezeButton @click="addPermission()"> 
                                 Add Permission
-                            </button>
+                            </BreezeButton>
                             <!-- <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
                             <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                     type="text" v-model="params.search" placeholder="Search"> -->
@@ -53,23 +54,15 @@
                                                   :class="permission.status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ permission.status == 1 ? 'Active' : 'Not Active' }} </span>
                                         </td>
                                         <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
-                                            <div class="flex justify-center">
-                                                <div class="pr-1">
-                                                    <button class="text-white font-bold py-1 px-1 border rounded bg-yellow-500 hover:bg-yellow-600 border-yellow-600" 
-                                                            @click="editRole(permission.id)" 
-                                                            title="Edit Role"
-                                                    >
-                                                        <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
-                                                    </button>
-                                                </div>
-                                                <div class="">
-                                                    <button class="text-white font-bold py-1 px-1 border rounded bg-red-500 hover:bg-red-600 border-red-600" 
-                                                            @click="deleteRole(permission.id)" 
-                                                            title="Delete Permission"
-                                                    >
-                                                        <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                    </button>
-                                                </div>
+                                            <div class="flex justify-center space-x-2">
+                                                <BreezeButton buttonType="warning" @click="editRole(permission.id)" title="Edit Role">
+                                                    <!-- <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon> -->
+                                                    Edit
+                                                </BreezeButton>
+                                                <BreezeButton buttonType="danger" @click="deleteRole(permission.id)" title="Delete Permission">
+                                                    <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
+                                                    Delete
+                                                </BreezeButton>
                                             </div>
                                         </td>
                                     </tr>

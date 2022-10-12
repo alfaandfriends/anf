@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -24,7 +25,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                         />
                     </div>
                     <div class="pt-6">
-                        <button class="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 rounded text-white shadow-md" @click="restartDT">Re-run Diagnostic Test</button>
+                        <BreezeButton class="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 rounded text-white shadow-md" @click="restartDT">Re-run Diagnostic Test</BreezeButton>
                     </div>
                 </div>
                 <div class="inline-block min-w-full p-12 shadow-md bg-white rounded text-center" v-else>

@@ -71,7 +71,6 @@ class ProfileController extends Controller
             ->where('ID', auth()->user()->ID)
             ->update([
                 'display_name' => $request->first_name.' '.$request->last_name,
-                'updated_at'        => Carbon::now(),
             ]);
 
         DB::table('user_basic_information')

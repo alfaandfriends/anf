@@ -337,10 +337,13 @@ class SettingController extends Controller
 
         /* Diagnostic Test Detail List */
             public function dtDetailsList(Request $request){
+                if(!DB::table('diagnostic_test')->find($request->dt_id)){
+                    return abort(404);
+                }
                 $diagnostic_test_list           =   DB::table('diagnostic_test_details')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
                 $diagnostic_test_conditions     =   DB::table('diagnostic_test_conditions')->where('dt_id', $request->dt_id)->orderBy('score_capped', 'asc')->get();
                 $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
-
+                
                 return Inertia::render('Settings/General/DiagnosticTest/Details/Index', [
                     'diagnostic_test_id' => $request->dt_id,
                     'diagnostic_test_list' => $diagnostic_test_list,
@@ -526,7 +529,7 @@ class SettingController extends Controller
                 return redirect()->route('settings.diagnostic_test.details', ['dt_id'=>$dtInfo->dt_id])->with(['type' => 'success', 'message' => 'Condition added successfully !']);
             }
 
-        /* Diagnostic Test Conditions */
+        /* Diagnostic Test Categories */
             public function dtCategoriesCreate(Request $request){
                 return Inertia::render('Settings/General/DiagnosticTest/Categories/Create', [
                     'diagnostic_test_id' => $request->dt_id

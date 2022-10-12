@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -32,12 +33,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                            'bg-indigo-500 text-white border-indigo-500 border-t-2 hover:bg-indigo-700 hover:border-indigo-700'">Programmes</button>
                             </li>
                         </ul>
-                        <div class="mt-4 bg-white">
+                        <div class="mt-4">
                             <div v-if="route().current('settings.fee_type_list')">
+                                <div class="flex pb-2 justify-end">
+                                    <BreezeButton class="py-3" :route="route('settings.fee_type_list.create')">New Fee Type</BreezeButton>
+                                </div>
                                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                    <div class="flex py-2 justify-end">
-                                        <Link :href="route('settings.fee_type_list.create')" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">New Fee Type</Link>
-                                    </div>
                                     <table class="min-w-full divide-y divide-gray-200">
                                         <thead class="bg-gray-200">
                                             <tr>
@@ -64,16 +65,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                     <div class="flex justify-center">
                                                         <div class="flex pr-1">
-                                                            <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit Fee Type" @click="editFeeType(fee_type_list.id)">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <BreezeButton buttonType="warning" @click="editFeeType(fee_type_list.id)">
+                                                                <!-- <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                                                </svg>
-                                                            </button>
+                                                                </svg> -->
+                                                                Edit
+                                                            </BreezeButton>
                                                         </div>
                                                         <div class="flex">
-                                                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete Fee Type" @click="deleteFeeType(fee_type_list.id)">
-                                                                <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                            </button>
+                                                            <BreezeButton buttonType="danger" @click="deleteFeeType(fee_type_list.id)">
+                                                                <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
+                                                                Delete
+                                                            </BreezeButton>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -117,10 +120,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                             </div>
                             <div v-if="route().current('settings.fee_period_list')">
+                                <div class="flex pb-2 justify-end">
+                                    <BreezeButton :route="route('settings.fee_period_list.create')" class="py-3">New Fee Period</BreezeButton>
+                                </div>
                                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                    <div class="flex py-2 justify-end">
-                                        <Link :href="route('settings.fee_period_list.create')" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">New Fee Period</Link>
-                                    </div>
                                     <table class="min-w-full divide-y divide-gray-200">
                                         <thead class="bg-gray-200">
                                             <tr>
@@ -147,16 +150,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                     <div class="flex justify-center">
                                                         <div class="flex pr-1">
-                                                            <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit Class" @click="editFeePeriod(fee_period_list.id)">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <BreezeButton buttonType="warning" @click="editFeePeriod(fee_period_list.id)">
+                                                                <!-- <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                                                </svg>
-                                                            </button>
+                                                                </svg> -->
+                                                                Edit
+                                                            </BreezeButton>
                                                         </div>
                                                         <div class="flex">
-                                                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete Class" @click="deleteFeePeriod(fee_period_list.id)">
-                                                                <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                            </button>
+                                                            <BreezeButton buttonType="danger" @click="deleteFeePeriod(fee_period_list.id)">
+                                                                <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
+                                                                Delete
+                                                            </BreezeButton>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -200,10 +205,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                             </div>
                             <div v-if="route().current('settings.programmes')">
+                                <div class="flex pb-2 justify-end">
+                                    <BreezeButton :route="route('settings.programmes.create')" class="py-3">New Programme</BreezeButton>
+                                </div>
                                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                    <div class="flex py-2 justify-end">
-                                        <Link :href="route('settings.programmes.create')" class="py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold">New Programme</Link>
-                                    </div>
                                     <table class="min-w-full divide-y divide-gray-200">
                                         <thead class="bg-gray-200">
                                             <tr>
@@ -234,16 +239,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                     <div class="flex justify-center">
                                                         <div class="flex pr-1">
-                                                            <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit Programme" @click="editProgramme(programme.id)">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <BreezeButton  buttonType="warning" @click="editProgramme(programme.id)">
+                                                                <!-- <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                                                </svg>
-                                                            </button>
+                                                                </svg> -->
+                                                                Edit
+                                                            </BreezeButton>
                                                         </div>
                                                         <div class="flex">
-                                                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete Programme" @click="deleteProgramme(programme.id)">
-                                                                <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                            </button>
+                                                            <BreezeButton buttonType="danger" @click="deleteProgramme(programme.id)">
+                                                                <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
+                                                                Delete
+                                                            </BreezeButton>
                                                         </div>
                                                     </div>
                                                 </td>

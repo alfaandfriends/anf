@@ -24,7 +24,7 @@ class CentreController extends Controller
         }
         $results    =   $query->orderBy('id')->paginate(10);
 
-        return Inertia::render('Centres/Index', [
+        return Inertia::render('CentreManagement/Centres/Index', [
             'filter'=>request()->all('search', 'centre_id'),
             'centres' => $results,
         ]);
@@ -42,7 +42,7 @@ class CentreController extends Controller
             $email_exist    =   null;
         }
         
-        return Inertia::render('Centres/Create', [
+        return Inertia::render('CentreManagement/Centres/Create', [
             'email_exist'=>$email_exist,
         ]);
     }
@@ -68,7 +68,7 @@ class CentreController extends Controller
             return redirect()->back()->with(['type'=>'error', 'message'=>'Please select required image !']);
         }
 
-        $new_centre_id   =   DB::table('wpvt_10_wlsm_schools')->insertGetId([
+        $new_centre_id   =   DB::table('centres')->insertGetId([
                                 'label' => 'ANFC_'.$request->centre_name,
                                 'phone' => $request->centre_contact_number,
                                 'email' => $request->centre_email,
@@ -81,7 +81,7 @@ class CentreController extends Controller
                                 'last_certificate_count' => 0,
                             ]);
 
-        DB::table('wpvt_10_wlsm_schools_principals')->insert([
+        DB::table('centre_principals')->insert([
             'centre_id'         => $new_centre_id,
             'first_name'        => $request->principal_first_name,
             'last_name'         => $request->principal_last_name,
@@ -96,7 +96,7 @@ class CentreController extends Controller
             $image_size     =   Storage::size($image_path);
             $image_type     =   $request->image_list[$key]['type'];
 
-            DB::table('wpvt_10_wlsm_schools_images')->insert([
+            DB::table('centre_images')->insert([
                 'centre_id'     => $new_centre_id,
                 'image_path'    => $image_path,
                 'image_size'    => $image_size,
@@ -118,11 +118,11 @@ class CentreController extends Controller
             $email_exist    =   null;
         }
 
-        $centre_info        =   DB::table('wpvt_10_wlsm_schools')->where('ID', $request->centre_id)->first();
-        $centre_images      =   DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->get();
-        $centre_principal   =   DB::table('wpvt_10_wlsm_schools_principals')->where('centre_id', $request->centre_id)->first();
+        $centre_info        =   DB::table('centres')->where('ID', $request->centre_id)->first();
+        $centre_images      =   DB::table('centre_images')->where('centre_id', $request->centre_id)->get();
+        $centre_principal   =   DB::table('centre_principals')->where('centre_id', $request->centre_id)->first();
 
-        return Inertia::render('Centres/Edit', [
+        return Inertia::render('CentreManagement/Centres/Edit', [
             'email_exist'=>$email_exist,
             'centre_info' => $centre_info,
             'centre_images' => $centre_images,
@@ -150,7 +150,7 @@ class CentreController extends Controller
         /* Check principal details */
 
         /* Check images */
-        $images_count           = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->count();
+        $images_count           = DB::table('centre_images')->where('centre_id', $request->centre_id)->count();
 
         if( (empty($request->image_list) && $images_count < 1) || 
             count(collect($request->image_list)->where('image_type', 'front')) < 1 || 
@@ -160,7 +160,7 @@ class CentreController extends Controller
         /* Check images */
 
         /* Update centre info */
-        DB::table('wpvt_10_wlsm_schools')->where('ID', $request->centre_id)->update([
+        DB::table('centres')->where('ID', $request->centre_id)->update([
                     'label' => 'ANFC '.$request->centre_name,
                     'phone' => $request->centre_contact_number,
                     'email' => $request->centre_email,
@@ -170,10 +170,10 @@ class CentreController extends Controller
         /* Update centre info */
             
         /* Update principal info */
-        $principal_exist    =   DB::table('wpvt_10_wlsm_schools_principals')->where('centre_id', $request->centre_id)->exists();
+        $principal_exist    =   DB::table('centre_principals')->where('centre_id', $request->centre_id)->exists();
 
         if($principal_exist){
-            DB::table('wpvt_10_wlsm_schools_principals')->where('centre_id', $request->centre_id)->update([
+            DB::table('centre_principals')->where('centre_id', $request->centre_id)->update([
                 'first_name'        => $request->principal_first_name,
                 'last_name'         => $request->principal_last_name,
                 'email'             => $request->principal_email,
@@ -182,7 +182,7 @@ class CentreController extends Controller
             ]);
         }
         else{
-            DB::table('wpvt_10_wlsm_schools_principals')->insert([
+            DB::table('centre_principals')->insert([
                 'centre_id'         => $request->centre_id,
                 'first_name'        => $request->principal_first_name,
                 'last_name'         => $request->principal_last_name,
@@ -208,7 +208,7 @@ class CentreController extends Controller
                 $image_size     =   Storage::size($image_path);
                 $image_type     =   $request->image_list[$key]['image_type'];
     
-                DB::table('wpvt_10_wlsm_schools_images')->insert([
+                DB::table('centre_images')->insert([
                     'centre_id'     => $request->centre_id,
                     'image_path'    => '/storage/'.$image_path,
                     'image_size'    => $image_size,
@@ -224,31 +224,31 @@ class CentreController extends Controller
 
     public function destroy($id)
     {
-        DB::table('wpvt_10_wlsm_schools')->where('ID', $id)->delete();
-        DB::table('wpvt_10_wlsm_schools_principals')->where('centre_id', $id)->delete();
+        DB::table('centres')->where('ID', $id)->delete();
+        DB::table('centre_principals')->where('centre_id', $id)->delete();
 
-        $images  =   DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $id)->get();
+        $images  =   DB::table('centre_images')->where('centre_id', $id)->get();
         foreach($images as $key=>$image){
             $image_path =   Str::replace('/storage/', '', $image->image_path);
             Storage::delete($image_path);
         }
-        DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $id)->delete();
+        DB::table('centre_images')->where('centre_id', $id)->delete();
 
         return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre deleted successfully !']);
     }
 
     public function destroyImage($id){
-        $image      =   DB::table('wpvt_10_wlsm_schools_images')->where('ID', $id)->first();
+        $image      =   DB::table('centre_images')->where('ID', $id)->first();
         $image_path =   Str::replace('/storage/', '', $image->image_path);
         Storage::delete($image_path);
-        DB::table('wpvt_10_wlsm_schools_images')->where('ID', $id)->delete();
+        DB::table('centre_images')->where('ID', $id)->delete();
 
         return back()->with(['type'=>'success', 'message'=>'Image deleted !']);
     }
 
     public function getCentreImages(Request $request){
 
-        $images = DB::table('wpvt_10_wlsm_schools_images')->where('centre_id', $request->centre_id)->get();
+        $images = DB::table('centre_images')->where('centre_id', $request->centre_id)->get();
 
         $centre_images =   array();
         if($images->isNotEmpty()){

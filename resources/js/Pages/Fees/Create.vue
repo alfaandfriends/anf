@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -73,7 +74,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             </div>
                         </div>
                         <div class="flex items-end justify-start">
-                            <button type="submit" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 select-none">Add Fee</button>
+                            <BreezeButton type="submit">Save</BreezeButton>
                         </div>
                     </div>
                 </form>

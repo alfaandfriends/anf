@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -15,8 +16,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
             <div class="space-y-3">
                 <div v-for="dt in $page.props.diagnostic_test_list" :key="dt.id" class="p-6 rounded-lg shadow-lg bg-white max-w-sm">
                     <i class="fa-solid fa-notes"></i>
-                    <h5 class="font-bold text-blue-900 text-xl leading-tight font-medium mb-2 text-left">{{ dt.name }}</h5>
-                    <button type="button" class="text-right inline-block px-6 py-2.5 bg-indigo-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-indigo-700 hover:shadow-lg focus:bg-indigo-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-indigo-800 active:shadow-lg transition duration-150 ease-in-out" @click="runTest(dt.id)">Start Test</button>
+                    <h5 class="font-bold text-blue-900 text-xl leading-tight mb-2 text-left">{{ dt.name }}</h5>
+                    <BreezeButton @click="runTest(dt.id)">Start Test</BreezeButton>
                 </div>
             </div>
         </div>

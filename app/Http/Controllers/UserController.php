@@ -134,7 +134,7 @@ class UserController extends Controller
     public function assignCentresRoles(Request $request)
     {
         $roles          =   Role::get();
-        $centres        =   DB::table('wpvt_10_wlsm_schools')->select(['ID', 'label as name'])->get();
+        $centres        =   DB::table('centres')->select(['ID', 'label as name'])->get();
         $user_roles     =   UserHasRoles::where('user_id', $request->user_id)->get('role_id')->keyBy('role_id');
         $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
 

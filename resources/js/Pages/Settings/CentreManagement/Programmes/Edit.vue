@@ -1,5 +1,6 @@
 <script setup>
-    import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 <style>
   input[type='number']::-webkit-inner-spin-button,
@@ -84,8 +85,8 @@
                                     </div>
                                 </div>
                                 <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
-                                <div class="flex items-end justify-between">
-                                    <div class="pr-3">
+                                <div class="flex items-end justify-between items-center">
+                                    <div class="flex space-x-2">
                                         <label for="" class="block font-bold text-gray-700">Active</label>
                                         <Toggle v-model="form.programme_active" 
                                             :classes="{
@@ -96,7 +97,10 @@
                                             }
                                         "/>
                                     </div>
-                                    <button type="submit" class="py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 select-none">Update Programme</button>
+                                    <div class="flex space-x-2">
+                                        <BreezeButton buttonType="gray" :route="route('settings.programmes')">Cancel</BreezeButton>
+                                        <BreezeButton type="submit" >Save</BreezeButton>
+                                    </div>
                                 </div>
                             </div>
                         </div>

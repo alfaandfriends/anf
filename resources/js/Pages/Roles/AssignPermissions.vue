@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -21,7 +22,6 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     <div class="form-check" v-for="permission in permissions" :key="permission.id">
                                         <input :id="permission.id" class="h-4 w-4 border border-gray-300 rounded-sm bg-white focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
                                                 type="checkbox" 
-                                                :checked="role_permissions[permission.id]"
                                                 :value="permission.id"
                                                 v-model="selected_permissions"
                                         >
@@ -31,13 +31,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex p-3">
-                                <div class="pr-1">
-                                    <button class="py-1 px-4 bg-green-500 rounded text-white text-md font-bold border border-green-600 hover:bg-green-600">Save</button>
-                                </div>
-                                <div class="">
-                                    <Link :href="route('roles')" class="py-1 px-4 bg-gray-400 rounded text-white text-md font-bold border border-gray-500 hover:bg-gray-500" as="button">Cancel</Link>
-                                </div>
+                            <div class="flex space-x-2 p-3">
+                                <BreezeButton buttonType="gray" :route="route('roles')">Cancel</BreezeButton>
+                                <BreezeButton type="submit">Save</BreezeButton>
                             </div>
                         </form>
                     </div>

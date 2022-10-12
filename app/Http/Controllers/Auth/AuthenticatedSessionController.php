@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
+use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -55,5 +56,25 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function impersonate($user_name){
+        $user   =   User::where('user_login', $user_name)->first();
+        if($user){
+            if(Auth::user()->ID == $user->ID && Auth::user()->getImpersonatorID() == '' || Auth::user()->getImpersonatorID() == $user->ID){
+                $this->leaveImpersonate();
+            }
+            else{
+                $this->leaveImpersonate();
+                Auth::user()->impersonate($user);
+            }
+            return back();
+        }
+        return back()->with(['type'=>'error', 'message'=>'User not found !']);
+    }
+
+    public function leaveImpersonate(){
+        Auth::user()->leaveImpersonation();
+        return back();
     }
 }

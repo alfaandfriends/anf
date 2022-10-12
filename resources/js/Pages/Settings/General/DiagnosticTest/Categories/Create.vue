@@ -1,7 +1,6 @@
-
-
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -33,8 +32,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                             </div>
                                         </div>
                                         <div class="flex items-end justify-end space-x-2">
-                                            <button type="submit" class="py-2 px-6 border border-transparent shadow-sm text-sm rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 select-none">Save </button>
-                                            <Link :href="route('settings.diagnostic_test.details', {'dt_id': this.diagnostic_test_id})" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 select-none">Cancel</Link>
+                                            <BreezeButton buttonType="gray" :route="route('settings.diagnostic_test.details', {'dt_id': this.diagnostic_test_id})">Cancel</BreezeButton>
+                                            <BreezeButton type="submit">Save </BreezeButton>
                                         </div>
                                     </div>
                                 </form>

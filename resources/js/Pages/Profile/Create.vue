@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <style>
@@ -64,18 +65,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                                 </div>
                                                 <div class="flex-column pl-1 pt-6">
                                                     <div class="flex-row pb-1">
-                                                        <button type="button" class="py-1 px-2 bg-green-500 hover:bg-green-600 rounded text-white shadow" @click="select_cropped_image()" title="Select cropped image">
+                                                        <BreezeButton type="button" class="py-1 px-2 bg-green-500 hover:bg-green-600 rounded text-white shadow" @click="select_cropped_image()" title="Select cropped image">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                                                             </svg>
-                                                        </button>
+                                                        </BreezeButton>
                                                     </div>
                                                     <div class="flex-row">
-                                                        <button type="button" class="py-1 px-2 bg-blue-500 hover:bg-blue-600 rounded text-white shadow" @click="reselect_image()" title="Reselect an image">
+                                                        <BreezeButton type="button" class="py-1 px-2 bg-blue-500 hover:bg-blue-600 rounded text-white shadow" @click="reselect_image()" title="Reselect an image">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                             </svg>
-                                                        </button>
+                                                        </BreezeButton>
                                                     </div>
                                                 </div>
                                             </div>
@@ -110,7 +111,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </div>
                                     </div>
                                 </div>
-                                <button method="post" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click="savePassword">Save Setting</button>
+                                <BreezeButton @click="savePassword">Save Setting</BreezeButton>
                             </div>
                             <div class="sm:row-span-3">
                                 <!-- component -->
@@ -285,7 +286,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </div>  
                                     </div>
                                 </div>
-                                <button class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click="saveProfile">Save Profile</button>
+                                <BreezeButton @click="saveProfile">Save Profile</BreezeButton>
                             </div>
                         </div>
                     </div>

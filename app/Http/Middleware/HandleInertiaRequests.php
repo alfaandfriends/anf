@@ -7,6 +7,7 @@ use Inertia\Middleware;
 use App\Models\Menu;
 use App\Models\RoleHasPermissions;
 use App\Models\UserHasRoles;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HandleInertiaRequests extends Middleware
@@ -49,9 +50,12 @@ class HandleInertiaRequests extends Middleware
                     }
                 }
             }
+
+            $can['is_impersonated'] = Auth::user()->isImpersonated();
         }
         
         return array_merge(parent::share($request), [
+            'app_name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
                 'profile_photo' => $request->user() ? DB::table('user_basic_information')->where('user_id', $request->user()->ID)->pluck('user_photo')->first() : '',

@@ -14,10 +14,11 @@ use App\Http\Controllers\FeeController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\StudentController;
 
 /* Authorized Only */
 Route::middleware(['auth', 'check_role'])->group(function(){
-
     /* Default Landing Page */
     Route::get('/', [DashboardController::class, 'index']);
     // Route::get('/', function () {
@@ -28,6 +29,9 @@ Route::middleware(['auth', 'check_role'])->group(function(){
     //         'phpVersion' => PHP_VERSION,
     //     ]);
     // });
+    /* User Impersonation */
+    Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate');
+    Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate');
 
     /* Dashboard */
         /* User */
@@ -111,13 +115,13 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update');  
         Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy');
 
-        /* Sessions */
-        Route::get('/sessions', [SessionController::class, 'index'])->name('sessions');
-        Route::get('/sessions/create', [SessionController::class, 'create'])->name('sessions.create');
-        Route::post('/sessions/store', [SessionController::class, 'store'])->name('sessions.store');
-        Route::get('/sessions/edit', [SessionController::class, 'edit'])->name('sessions.edit');
-        Route::post('/sessions/update', [SessionController::class, 'update'])->name('sessions.update');  
-        Route::delete('/sessions/destroy/{id}', [SessionController::class, 'destroy'])->name('sessions.destroy');
+        /* Students */
+        Route::get('/students', [StudentController::class, 'index'])->name('students');
+        Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+        Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
+        Route::get('/students/edit', [StudentController::class, 'edit'])->name('students.edit');
+        Route::post('/students/update', [StudentController::class, 'update'])->name('students.update');  
+        Route::delete('/students/destroy/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
 
         /* Fees */
         Route::get('/fees', [FeeController::class, 'index'])->name('fees');

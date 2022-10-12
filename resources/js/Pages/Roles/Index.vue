@@ -1,5 +1,6 @@
 <script setup>
     import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+    import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -16,9 +17,9 @@
                 <div class="mx-auto">
                     <div class="align-middle inline-block w-full lg:w-1/2 px-2">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
-                            <button class="bg-indigo-700 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded" @click="addRole()"> 
+                            <BreezeButton @click="addRole()"> 
                                 Add Role
-                            </button>
+                            </BreezeButton>
                             <!-- <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
                             <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                     type="text" v-model="params.search" placeholder="Search"> -->
@@ -55,33 +56,36 @@
                                         <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="pr-1">
-                                                    <button class="text-white font-bold py-1 px-1 border rounded" 
+                                                    <BreezeButton buttonType="warning"
                                                             @click="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ? editRole(role.name) : ''" 
                                                             title="Edit Role"
                                                             :class="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ?
-                                                                    'bg-yellow-500 hover:bg-yellow-600 border-yellow-600' : 'bg-yellow-500/40 hover:bg-yellow-400/40 border-yellow-400/40 cursor-not-allowed'"
+                                                                    '' : 'bg-yellow-500/40 hover:bg-yellow-400/40 cursor-not-allowed'"
                                                     >
-                                                        <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
-                                                    </button>
+                                                        <!-- <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon> -->
+                                                        Edit
+                                                    </BreezeButton>
                                                 </div>
                                                 <div class="pr-1">
-                                                    <button class="text-white font-bold py-1 px-1 border rounded" 
+                                                    <BreezeButton buttonType="danger"
                                                             @click="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ? deleteRole(role.id) : ''" title="Delete"
                                                             :class="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ?
-                                                                    'bg-red-500 hover:bg-red-600 border-red-600' : 'bg-red-500/40 hover:bg-red-400/40 border-red-400/40 cursor-not-allowed'"
+                                                                    '' : 'bg-red-500/40 hover:bg-red-400/40 cursor-not-allowed'"
                                                     >
-                                                        <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                    </button>
+                                                        <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
+                                                        Delete
+                                                    </BreezeButton>
                                                 </div>
                                                 <div class="">
-                                                    <button class="text-white font-bold py-1 px-1 border rounded bg-blue-500 hover:bg-blue-600 border-blue-600" 
+                                                    <BreezeButton buttonType="blue" 
                                                             title="Assign Permissions"
                                                             @click="assignPermissions(role.id)"
                                                     >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current" viewBox="0 0 20 20" fill="currentColor">
+                                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current" viewBox="0 0 20 20" fill="currentColor">
                                                             <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd" />
-                                                        </svg>
-                                                    </button>
+                                                        </svg> -->
+                                                        Permissions
+                                                    </BreezeButton>
                                                 </div>
                                             </div>
                                         </td>

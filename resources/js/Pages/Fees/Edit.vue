@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -18,12 +19,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                         <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
                             <div class="sm:row-span-3">
                                 <div class="mb-5">
-                                    <h1 class="font-semibold text-indigo-800 font-bold">Fee Information</h1>
+                                    <h1 class="text-indigo-800 font-bold">Fee Information</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="fee_type" class="block text-sm font-medium text-gray-700 font-bold">Fee Type<span class="text-red-500">*</span></label>
+                                        <label for="fee_type" class="block text-sm text-gray-700 font-bold">Fee Type<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <select class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.fee_type ? 'border-red-300' : 'border-gray-300'" name="" id="" v-model="form.fee_type">
                                                 <option value="">Please select</option>
@@ -34,7 +35,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="period" class="block text-sm font-medium text-gray-700 font-bold">Period<span class="text-red-500">*</span></label>
+                                        <label for="period" class="block text-sm text-gray-700 font-bold">Period<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <select class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.period ? 'border-red-300' : 'border-gray-300'" name="" id="" v-model="form.period">
                                                 <option value="">Please select</option>
@@ -43,7 +44,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="class_per_week" class="block text-sm font-medium text-gray-700 font-bold">Class Per Week<span class="text-red-500">*</span></label>
+                                        <label for="class_per_week" class="block text-sm text-gray-700 font-bold">Class Per Week<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input type="number" name="class_per_week" id="class_per_week" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_per_week ? 'border-red-300' : 'border-gray-300'" v-model="form.class_per_week" autocomplete="none"/>
                                         </div>
@@ -51,7 +52,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="class_duration" class="block text-sm font-medium text-gray-700 font-bold">Class Duration<span class="text-red-500">*</span></label>
+                                        <label for="class_duration" class="block text-sm text-gray-700 font-bold">Class Duration<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <div class="pr-2">
                                                 <input type="number" max="23" name="class_duration_hours" id="class_duration_hours" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_duration_hours ? 'border-red-300' : 'border-gray-300'" v-model="form.class_duration_hours" autocomplete="none" placeholder="Hours"/>
@@ -62,7 +63,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="fee_amount" class="block text-sm font-medium text-gray-700 font-bold">Fee Amount<span class="text-red-500">*</span></label>
+                                        <label for="fee_amount" class="block text-sm text-gray-700 font-bold">Fee Amount<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input type="number" step="any" name="fee_amount" id="fee_amount" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.fee_amount ? 'border-red-300' : 'border-gray-300'" v-model="form.fee_amount" autocomplete="none"/>
                                         </div>
@@ -71,7 +72,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                             </div>
                         </div>
                         <div class="flex items-end justify-start">
-                            <button type="submit" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 select-none">Update Fee</button>
+                            <BreezeButton type="submit">Save</BreezeButton>
                         </div>
                     </div>
                 </form>

@@ -1,5 +1,6 @@
 <script>
 import BreezeApplicationLogo from '@/Components/ApplicationLogo.vue'
+import BreezeButton from '@/Components/Button.vue';
 import BreezeDropdown from '@/Components/Dropdown.vue'
 import BreezeDropdownLink from '@/Components/DropdownLink.vue'
 import BreezeNavLink from '@/Components/NavLink.vue'
@@ -15,7 +16,7 @@ import Pusher from 'pusher-js';
 
 export default {
     components: {
-        BreezeApplicationLogo, Link, Toast, VueGuidedTour, Pusher,
+        BreezeApplicationLogo, Link, Toast, VueGuidedTour, Pusher, BreezeButton,
         BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink, Breadcrumbs,
         CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon
     },
@@ -37,7 +38,8 @@ export default {
                     content: 'This is your profile',
                 }
             ],
-            notifications: []
+            notifications: [],
+            username: ''
         }
     },
     created(){
@@ -66,6 +68,11 @@ export default {
             if(status){
                 this.notificationOpen = false
             }
+        },
+        impersonate(){
+            if(this.username){
+                this.$inertia.get(route('impersonate', this.username))
+            }
         }
     },
     mounted() {
@@ -87,7 +94,7 @@ export default {
                 <nav class="fixed top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-60 sm:translate-x-0" 
                      :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
                 >
-                    <span class="flex items-center px-4 py-5 text-white font-bold">ALFA and Friends</span>
+                    <span class="flex justify-center items-center px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
                     <nav class="text-sm font-medium text-gray-500">
                         <template v-for="menu_data, key in $page.props.menu" :key="key">
                             <template v-if="menu_data.menu_route">
@@ -260,6 +267,13 @@ export default {
 
             <!-- Page Content -->
             <main class="min-h-screen bg-gray-100">
+                <form @submit.prevent="impersonate">
+                    <div class="flex px-6 py-3 bg-blue space-x-2 items-center bg-orange-400 justify-end" v-if="$page.props.can.user_impersonation || $page.props.can.is_impersonated">
+                        <label for="" class="text-white font-bold">Username</label>
+                        <input type="text" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username">
+                        <BreezeButton @click="impersonate" class="bg-blue-600 hover:bg-blue-700">Change User</BreezeButton>
+                    </div>
+                </form>
                 <slot/>
             </main>
             <div class="py-5 px-6 bg-slate-700 text-white">

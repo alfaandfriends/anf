@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -18,7 +19,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                         <TabPage/>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg px-1">
                             <div class="flex py-2 justify-end">
-                                <Link :href="route('settings.countries.create')" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">New Country</Link>
+                                <BreezeButton :route="route('settings.countries.create')" class="py-3">New Country</BreezeButton>
                             </div>
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-200">
@@ -54,16 +55,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" title="Edit Country" @click="editCountry(country_list.id)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <BreezeButton buttonType="warning" @click="editCountry(country_list.id)">
+                                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                                        </svg>
-                                                    </button>
+                                                        </svg> -->
+                                                        Edit
+                                                    </BreezeButton>
                                                 </div>
                                                 <div class="flex">
-                                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" title="Delete Country" @click="deleteCountry(country_list.id)">
-                                                        <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                    </button>
+                                                    <BreezeButton buttonType="danger" @click="deleteCountry(country_list.id)">
+                                                        <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
+                                                        Delete
+                                                    </BreezeButton>
                                                 </div>
                                             </div>
                                         </td>
