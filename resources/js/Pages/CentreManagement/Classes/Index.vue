@@ -7,11 +7,7 @@ import BreezeButton from '@/Components/Button.vue';
     <Head title="Classes" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Class List
-            </h2>
-        </template>
+        <template #header></template>
         <div class="py-4 px-4">
             <!-- <div class="overflow-x-auto"> -->
                 <div class="mx-auto">
@@ -79,9 +75,6 @@ import BreezeButton from '@/Components/Button.vue';
                                         }"
                                     />
                                 </div>
-                                <!-- <select name="" id="" class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block">
-                                    <option v-for="centre in $page.props.allowed_centres" :key="centre.id">{{ centre.label }}</option>
-                                </select> -->
                             </div>
                             <BreezeButton @click="addClass(params.centre_id)">Add New Class</BreezeButton>
                         </div>
@@ -96,6 +89,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Time</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Capacity</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Type</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
                                     </tr>
                                 </thead>
@@ -115,7 +109,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="text-sm font-medium text-gray-900">{{ classes.programme_name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ classes.class_level }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ classes.level }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">{{ classes.class_day }}</div>
@@ -136,21 +130,16 @@ import BreezeButton from '@/Components/Button.vue';
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">{{ classes.type }}</div>
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="classes.status == 1 ? ' bg-green-100 text-green-800' : ' bg-red-100 text-red-800'"> {{ classes.status == 1 ? 'Active' : 'Not Active' }} </span>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <BreezeButton buttonType="warning" title="Edit Class" @click="editClass(classes.id)">
-                                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                                        </svg> -->
-                                                        Edit
-                                                    </BreezeButton>
+                                                    <BreezeButton buttonType="warning" title="Edit Class" @click="editClass(classes.id)">Edit</BreezeButton>
                                                 </div>
                                                 <div class="flex">
-                                                    <BreezeButton buttonType="danger" title="Delete Class" @click="deleteClass(classes.id)">
-                                                        <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
-                                                        Delete
-                                                    </BreezeButton>
+                                                    <BreezeButton buttonType="danger" title="Delete Class" @click="deleteClass(classes.id)">Delete</BreezeButton>
                                                 </div>
                                             </div>
                                         </td>

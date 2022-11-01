@@ -7,11 +7,7 @@ import BreezeButton from '@/Components/Button.vue';
     <Head title="General Setting" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                General Setting
-            </h2>
-        </template>
+        <template #header></template>
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">

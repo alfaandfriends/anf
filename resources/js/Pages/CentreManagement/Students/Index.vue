@@ -4,14 +4,10 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Classes" />
+    <Head title="Students" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Class List
-            </h2>
-        </template>
+        <template #header></template>
         <div class="py-4 px-4">
             <!-- <div class="overflow-x-auto"> -->
                 <div class="mx-auto">
@@ -79,67 +75,45 @@ import BreezeButton from '@/Components/Button.vue';
                                         }"
                                     />
                                 </div>
-                                <!-- <select name="" id="" class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block">
-                                    <option v-for="centre in $page.props.allowed_centres" :key="centre.id">{{ centre.label }}</option>
-                                </select> -->
                             </div>
-                            <BreezeButton @click="addClass(params.centre_id)">Add New Class</BreezeButton>
+                            <BreezeButton @click="newAdmission(params.centre_id)">New Admission</BreezeButton>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-200">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Programme</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Level</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Day</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Time</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Capacity</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Type</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Programme</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Parent</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-if="!$page.props.classes.data.length">
+                                    <tr v-if="!$page.props.students.data.length">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
                                                 No Record Found! 
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr class="hover:bg-gray-200" v-for="(classes, index) in $page.props.classes.data" :key="classes.ID">
+                                    <tr class="hover:bg-gray-200" v-for="(students, index) in $page.props.students.data" :key="students.ID">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-700">{{ ++index }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ classes.programme_name }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ students.name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ classes.class_level }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ students.programme_name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ classes.class_day }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900 flex items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                                <span class="pl-2">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <BreezeButton buttonType="blue" @click="viewStudents(classes.id)">
-                                                <div class="text-sm font-medium text-white">{{ classes.capacity }}</div>
-                                            </BreezeButton>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ classes.type }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ students.parent_name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <BreezeButton buttonType="warning" title="Edit Class" @click="editClass(classes.id)">
+                                                    <BreezeButton buttonType="warning" title="Edit Class" @click="editStudent(students.id)">
                                                         <!-- <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                         </svg> -->
@@ -147,7 +121,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="flex">
-                                                    <BreezeButton buttonType="danger" title="Delete Class" @click="deleteClass(classes.id)">
+                                                    <BreezeButton buttonType="danger" title="Delete Class" @click="deleteStudent(students.id)">
                                                         <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
                                                         Delete
                                                     </BreezeButton>
@@ -157,27 +131,27 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <template v-if="$page.props.classes.data.length">
+                            <template v-if="$page.props.students.data.length">
                                 <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-200">
                                     <div class="flex-1 flex justify-between sm:hidden">
-                                        <a :href="$page.props.classes.prev_page_url" v-if="$page.props.classes.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
-                                        <a :href="$page.props.classes.next_page_url" v-if="$page.props.classes.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
+                                        <a :href="$page.props.students.prev_page_url" v-if="$page.props.students.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
+                                        <a :href="$page.props.students.next_page_url" v-if="$page.props.students.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
                                     </div>
                                     <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                                         <div>
                                             <p class="text-sm text-gray-700">
                                                 Showing
-                                                <span class="font-medium">{{ $page.props.classes.from }}</span>
+                                                <span class="font-medium">{{ $page.props.students.from }}</span>
                                                 to
-                                                <span class="font-medium">{{ $page.props.classes.to }}</span>
+                                                <span class="font-medium">{{ $page.props.students.to }}</span>
                                                 of
-                                                <span class="font-medium">{{ $page.props.classes.total }}</span>
+                                                <span class="font-medium">{{ $page.props.students.total }}</span>
                                                 results
                                             </p>
                                         </div>
                                         <div>
                                             <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                                <Link v-for="(link, key) in $page.props.classes.links"
+                                                <Link v-for="(link, key) in $page.props.students.links"
                                                     :key="key"
                                                     :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
                                                                         : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
@@ -272,7 +246,8 @@ export default {
     //     this.params.centre_id = this.$page.props.allowed_centres[0] ? this.$page.props.allowed_centres[0].ID : ''
     // },
     data(){
-        return{showModal: false,
+        return{
+            showModal: false,
             isOpen: false,
             userID: '',
             confirmationTitle: '',
@@ -292,22 +267,22 @@ export default {
         params: {
             handler(){
                 if(this.params){
-                    this.$inertia.get(this.route('classes'), this.params, { replace: true, preserveState: true});
+                    this.$inertia.get(this.route('students'), this.params, { replace: true, preserveState: true});
                 }
             },
             deep: true
         }
     },
     methods: {
-        addClass(centreID){
-            this.$inertia.get(this.route('classes.create'), {'centre_id': centreID});
+        newAdmission(centreID){
+            this.$inertia.get(this.route('students.create'), {'centre_id': centreID});
         },
-        editClass(classID){
-            this.$inertia.get(this.route('classes.edit'), {'class_id': classID});
+        editStudent(studentID){
+            this.$inertia.get(this.route('students.edit'), {'student_id': studentID});
         },
-        deleteClass(classID){
-            this.confirmationRoute = 'classes.destroy'
-            this.confirmationData = classID
+        deleteStudent(studentID){
+            this.confirmationRoute = 'students.destroy'
+            this.confirmationData = studentID
             this.isOpen = true
         },
         viewStudents(classID){

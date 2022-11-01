@@ -7,11 +7,7 @@ import BreezeButton from '@/Components/Button.vue';
     <Head title="Diagnostic Test" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Diagnostic Test
-            </h2>
-        </template>
+        <template #header></template>
         <div class="py-6 px-6">
             <div class="overflow-x-auto">
                 <div class="inline-block min-w-full py-12 px-36 shadow-md bg-white rounded text-center" v-if="result_score != ''">

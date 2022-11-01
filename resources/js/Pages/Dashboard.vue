@@ -6,11 +6,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
     <Head title="Dashboard" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
-            </h2>
-        </template>
+        <template #header></template>
 
         <div class="py-6">
             <div class="mx-auto px-6">

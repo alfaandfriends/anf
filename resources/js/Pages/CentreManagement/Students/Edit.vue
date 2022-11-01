@@ -4,36 +4,183 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Classes" />
+    <Head title="Students" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Edit Class
-            </h2>
-        </template>
+        <template #header></template>
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
                     <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                        <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
                             <div class="sm:row-span-3">
                                 <div class="mb-5">
-                                    <h1 class="font-bold text-indigo-800">Class Information</h1>
+                                    <h1 class="font-bold text-indigo-800">Basic Information</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="class_name" class="block text-sm font-bold text-gray-700"> Class Name <span class="text-red-500">*</span></label>
+                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="class_name" id="class_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_name ? 'border-red-300' : 'border-gray-300'" v-model="form.class_name" autocomplete="none"/>
+                                            <input type="text" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="form.basic_info.name" autocomplete="none">
                                         </div>
                                     </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="gender" class="block text-sm font-bold text-gray-700"> Gender <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select name="gender" id="gender" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.gender ? 'border-red-300' : 'border-gray-300'" v-model="form.basic_info.gender" autocomplete="none">
+                                                    <option value="">-- Select Gender --</option>
+                                                    <option :value="gender.id" v-for="(gender, index) in $page.props.gender_list" :key="index">{{ gender.name }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="end_time" class="block text-sm font-bold text-gray-700"> Date of Birth <span class="text-red-500">*</span></label>
+                                            <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.dob ? '--dp-border-color: #fa9e9e' : ''" v-model="form.basic_info.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" :format="dateFormat"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                            <div class="sm:row-span-3">
+                                <div class="mb-5">
+                                    <h1 class="font-bold text-indigo-800">Parent's Information</h1>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Name <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.name" autocomplete="none" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Email <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.email" autocomplete="none" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Phone <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.phone" autocomplete="none" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Address <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.address" autocomplete="none" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-4">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                            <div class="sm:row-span-3">
+                                <div class="mb-5">
+                                    <div class="flex items-center justify-between">
+                                        <h1 class="font-bold text-indigo-800">Academic Information</h1>
+                                        <div class="flex space-x-2 mb-1">
+                                            <BreezeButton @click="show_admission_modal = true">Add New Class</BreezeButton>
+                                        </div>
+                                    </div>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <div class="shadow overflow-hidden border-b border-gray-200 rounded-t-sm rounded-b-none">
+                                            <table class="min-w-full divide-y divide-gray-200">
+                                                <thead class="bg-blue-200">
+                                                    <tr class="px-2">
+                                                        <th class="px-2 py-1 text-left border border-gray-400">#</th>
+                                                        <th class="px-2 py-1 text-left border border-gray-400">Programme</th>
+                                                        <th class="px-2 py-1 text-left border border-gray-400">Centre</th>
+                                                        <th class="px-2 py-1 text-left border border-gray-400">Level</th>
+                                                        <th class="px-2 py-1 text-left border border-gray-400">Type</th>
+                                                        <th class="px-2 py-1 text-left border border-gray-400">Day</th>
+                                                        <th class="px-2 py-1 text-left border border-gray-400">Time</th>
+                                                        <th class="px-2 py-1 text-center border border-gray-400">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-if="!$page.props.student_academics.length">
+                                                        <td colspan="10" class="py-2 text-center">
+                                                            <span>No classes available</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr v-else class="hover:bg-gray-200" v-for="academic, index in $page.props.student_academics">
+                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ index + 1 }}</td>
+                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.programme_name}}</td>
+                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.centre_name}}</td>
+                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.level}}</td>
+                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.type}}</td>
+                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.day}}</td>
+                                                        <td class="px-2 py-2 text-left border border-gray-400">
+                                                            <div class="text-sm font-medium text-gray-900 flex items-center">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                </svg>
+                                                                <span class="pl-2">{{ moment(academic.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(academic.end_time, "HH:mm:ss").format('h:mm A') }}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-2 py-2 text-center border border-gray-400">
+                                                            <BreezeButton buttonType="danger" @click="remove_class.isOpen = true">Delete</BreezeButton>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <ConfirmationModal 
+            :show="remove_class.isOpen" 
+            @close="remove_class.isOpen = false"
+            confirmationAlert="danger"
+            confirmationTitle="Are you sure want to delete this class? "
+            confirmationText="Other classes that related to this class will be deleted and this action is irreversible!"
+            confirmationButton="Delete"
+            confirmationMethod="delete"
+            :confirmationRoute="remove_class.confirmationRoute"
+            :confirmationData="remove_class.confirmationData"
+        >
+        </ConfirmationModal>
+        <vue-final-modal v-model="show_admission_modal" :lock-scroll="true" :click-to-close="false">
+        <div id="default-modal" data-modal-show="true" aria-hidden="true" class="overflow-x-hidden overflow-y-auto h-modal md:h-full top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center">
+            <div class="absolute top-[10%] inset-x-[10%]">
+                <div class="bg-white rounded-lg shadow relative">
+                    <div class="flex items-center justify-between py-3 px-6 border-b rounded-t">
+                        <span class="text-lg font-semibold text-gray-700">Add Student Class</span>
+                        <button @click="show_admission_modal = false" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+                        </button>
+                    </div>
+                    <div class="p-6 space-y-6 overflow-y-auto" style="max-height: calc(100vh - 350px)">
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                            <div class="sm:row-span-3">
+                                <div class="mb-5">
+                                    <h1 class="font-bold text-indigo-800">Academic Information</h1>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <label for="centre" class="block text-sm font-bold text-gray-700"> Centre <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md.shadow-sm">
                                             <Multiselect 
-                                                v-model="form.centre_id"
+                                                v-model="search_form.centre_id"
                                                 valueProp="ID"
                                                 :searchable="true"
                                                 :options="$page.props.allowed_centres"
@@ -92,83 +239,142 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-4">
                                         <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_id" autocomplete="none">
+                                            <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="none">
                                                 <option value="">-- Select Programme --</option>
                                                 <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="class_type" class="block text-sm font-bold text-gray-700"> Class Type <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_type" autocomplete="none" :disabled="disable_input.class_type">
+                                                    <option value="">-- Select Type --</option>
+                                                    <option :value="class_type.id" v-for="(class_type, index) in class_types" :key="index">{{ class_type.name }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="mb-4">
                                             <label for="class_level" class="block text-sm font-bold text-gray-700"> Class Level <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="class_level" id="class_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_level ? 'border-red-300' : 'border-gray-300'" v-model="form.class_level" autocomplete="none">
+                                                <select name="class_level" id="class_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_level ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_level" autocomplete="none" :disabled="disable_input.class_levels">
                                                     <option value="">-- Select Level --</option>
-                                                    <option :value="i" v-for="i in class_levels" :key="i">{{ i }}</option>
+                                                    <option :value="i.level" v-for="i, index in class_levels" :key="i">{{ i.level }}</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="mb-4">
-                                            <label for="class_day" class="block text-sm font-bold text-gray-700"> Class Day <span class="text-red-500">*</span></label>
+                                            <label for="class_method" class="block text-sm font-bold text-gray-700"> Class Method <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="class_day" id="class_day" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_day ? 'border-red-300' : 'border-gray-300'" v-model="form.class_day" autocomplete="none">
-                                                    <option value="">-- Select Day --</option>
-                                                    <option :value="day.id" v-for="day in day_list" :key="day">{{ day.name }}</option>
+                                                <select name="class_method" id="class_method" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_method ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_method" autocomplete="none">
+                                                    <option value="">-- Select Method --</option>
+                                                    <option :value="method.id" v-for="(method, index) in method_list" :key="index">{{ method.name }}</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="start_time" class="block text-sm font-bold text-gray-700"> Start Date <span class="text-red-500">*</span></label>
-                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.start_time ? '--dp-border-color: #fa9e9e' : ''" v-model="form.start_time" :timePicker="true" :is24="false" />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="end_time" class="block text-sm font-bold text-gray-700"> End Date <span class="text-red-500">*</span></label>
-                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.end_time ? '--dp-border-color: #fa9e9e' : ''" v-model="form.end_time" :timePicker="true" :is24="false" />
+                                <div class="flex items-center justify-end">
+                                    <div class="flex space-x-2">
+                                        <BreezeButton @click="findClasses">Search Classes</BreezeButton>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                            </div>
+                        </div>
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="available_classes">
+                            <div class="sm:row-span-3" v-if="enable_container.available_classes">
+                                <div class="mb-5">
+                                    <h1 class="font-bold text-indigo-800">Classes Available</h1>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="class_capacity" class="block text-sm font-bold text-gray-700"> Class Capacity <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="number" name="class_capacity" id="class_capacity" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_capacity ? 'border-red-300' : 'border-gray-300'" v-model="form.class_capacity" autocomplete="none" @keypress="numberOnly"/>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="class_type" class="block text-sm font-bold text-gray-700"> Class Type <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="form.class_type" autocomplete="none">
-                                                <option value="">-- Select Type --</option>
-                                                <option :value="class_type.id" v-for="class_type in type_list" :key="class_type">{{ class_type.name }}</option>
-                                            </select>
+                                        <div class="shadow overflow-hidden border-b border-gray-200 rounded-t-sm rounded-b-none">
+                                            <table class="min-w-full divide-y divide-gray-200">
+                                                <thead class="bg-blue-200">
+                                                    <tr class="px-2">
+                                                        <th class="px-2 py-1 text-left">#</th>
+                                                        <th class="px-2 py-1 text-left">Day</th>
+                                                        <th class="px-2 py-1 text-left">Time</th>
+                                                        <th class="px-2 py-1 text-left">Capacity</th>
+                                                        <th class="px-2 py-1 text-center">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-if="!list.available_classes.data || list.available_classes.total == 0">
+                                                        <td colspan="10" class="py-2 text-center">
+                                                            <div class="flex justify-center py-4 items-center space-x-2" v-if="searching_classes">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat animate-spin" viewBox="0 0 16 16">
+                                                                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                                                                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                                                                    </svg>
+                                                                    <span>Searching classes...</span>
+                                                            </div>
+                                                            <span v-if="list.available_classes.total == 0">No classes available</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr v-else class="hover:bg-gray-200" v-for="classes, index in list.available_classes.data">
+                                                        <td class="px-2 py-2 text-left">{{ index + 1 }}</td>
+                                                        <td class="px-2 py-2 text-left">{{ classes.class_day}}</td>
+                                                        <td class="px-2 py-2 text-left">
+                                                            <div class="text-sm font-medium text-gray-900 flex items-center">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                </svg>
+                                                                <span class="pl-2">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-2 py-2 text-left">{{ classes.capacity}}</td>
+                                                        <td class="px-2 py-2 text-center">
+                                                            <div class="flex justify-center">
+                                                                <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, index)">Choose</BreezeButton>
+                                                                <input v-else class="h-5 w-5 border border-indigo-300 rounded-sm bg-white focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
+                                                                        type="checkbox" 
+                                                                        @click="getPlusFee($event, classes.class_id, index)">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex space-x-2">
-                                        <label for="" class="block font-bold text-gray-700">Active</label>
-                                        <Toggle v-model="form.class_status" 
-                                            :classes="{
-                                                container: 'inline-block',
-                                                toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
-                                                toggleOn: 'bg-green-500 border-green-500 justify-start text-white',
-                                                toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
-                                            }
-                                        "/>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <BreezeButton buttonType="gray" :route="route('classes')">Cancel</BreezeButton>
-                                        <BreezeButton type="submit">Save</BreezeButton>
+                            </div>
+                        </div>
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee">
+                            <div class="sm:row-span-3" v-if="enable_container.show_fee">
+                                <div class="mb-5">
+                                    <h1 class="font-bold text-indigo-800">Fee Information</h1>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <div class="flex p-4 justify-between bg-indigo-100 shadow rounded-md">
+                                            <div class="flex flex-row items-center border-b sm:border-b-0 w-full sm:w-auto pb-4 sm:pb-0 space-x-4">
+                                                <div class="text-green-500">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                        </svg>
+                                                </div>
+                                                <span class="text-gray-700">{{ form.fee.label }} - {{ form.fee.fee_amount }}</span>
+                                            </div>
+                                            <BreezeButton buttonType="info" @click="addStudent">Admit Student</BreezeButton>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                    <div class="flex space-x-2 items-center p-6 border-t border-gray-200 rounded-b justify-end" v-if="enable_container.show_fee">
+                        <BreezeButton buttonType="gray">Cancel</BreezeButton>
+                        <BreezeButton>Save</BreezeButton>
+                    </div>
+                </div>
             </div>
         </div>
+        </vue-final-modal>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -179,76 +385,212 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import Toggle from '@vueform/toggle';
 import Multiselect from '@vueform/multiselect'
 import moment from 'moment';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'
 
 export default {
     components: {
-        Head, Link, Datepicker, Toggle, Multiselect
+        Head, Link, Datepicker, Toggle, Multiselect, ConfirmationModal, VueFinalModal
     },
     props: {
-        class_info: Object,
+        student_info: Object,
+        student_academics: Object,
         programme_list: Object,
-        day_list: Object,
-        type_list: Object,
-        class_level: Object,
+        method_list: Object,
+        centre_id: String,
     },
     data(){
         return{
-            class_levels: this.class_level ? this.class_level : [],
+            show_admission_modal: false,
+            remove_class: {
+                isOpen: false,
+                confirmationData: '',
+                confirmationRoute: '',
+            },
+            class_types: [],
+            class_levels: [],
+            students: [],
+            fee_info: {
+            },
+            selected_class_count: 0,
+            searching_students: false,
+            searching_classes: false,
+            disable_input: {
+                class_type: true,
+                class_levels: true,
+            },
+            enable_container:{
+                available_classes: false,
+                show_fee: false,
+            },
+            list: {
+                available_classes: [],
+            },
+            search_form:{
+                centre_id: this.centre_id ? this.centre_id : '',
+                programme_id: '',
+                class_type: '',
+                class_level: '',
+                class_method: '',
+            },
             form: {
-                class_id: this.class_info ? this.class_info.id : '',
-                class_name: this.class_info ? this.class_info.name : '',
-                centre_id: this.class_info ? this.class_info.centre_id : '',
-                programme_id: this.class_info ? this.class_info.programme_id : '',
-                class_level: this.class_info ? this.class_info.level : '',
-                class_day: this.class_info ? this.class_info.class_day_id : '',
-                start_time: {
-                    'hours': new Date(new moment(this.class_info.start_time, 'HH:mm:ss')).getHours(),
-                    'minutes' : new Date(new moment(this.class_info.start_time, 'HH:mm:ss')).getMinutes(),
-                    'seconds' : new Date(new moment(this.class_info.start_time, 'HH:mm:ss')).getSeconds(),
+                basic_info: {
+                    name: this.student_info ? this.student_info.name : '',
+                    gender: this.student_info ? this.student_info.gender : '',
+                    dob: this.student_info ? this.student_info.dob : '',
                 },
-                end_time: {
-                    'hours' : new Date(new moment(this.class_info.end_time, 'HH:mm:ss')).getHours(),
-                    'minutes' : new Date(new moment(this.class_info.end_time, 'HH:mm:ss')).getMinutes(),
-                    'seconds' : new Date(new moment(this.class_info.end_time, 'HH:mm:ss')).getSeconds(),
+                parent_info: {
+                    name: this.student_info ? this.student_info.parent_first_name + ' ' + this.student_info.parent_last_name  : '',
+                    email: this.student_info ? this.student_info.parent_email : '',
+                    phone: this.student_info ? this.student_info.parent_calling_code + this.student_info.parent_contact: '',
+                    address: this.student_info ? this.student_info.parent_address : '',
                 },
-                class_capacity: this.class_info ? this.class_info.capacity : '',
-                class_type: this.class_info ? this.class_info.class_type_id : '',
-                class_status: this.class_info ? this.class_info.status: '',
+                student_id: '',
+                fee: [],
+                classes: [],
             }
         }
     },
     watch: {
-        'form.programme_id': {
+        'search_form.programme_id': {
             handler(){
-                this.form.class_level = ""
-                this.resetProgrammeSelection(this.form.programme_id)
+                if(this.search_form.programme_id){
+                    this.disable_input.class_type = true
+                    this.disable_input.class_levels = true
+                    this.search_form.class_type = ''
+                    this.search_form.class_level = ''
+                    axios.get(route('classes.get_class_types'), {
+                        params: {
+                            'programme_id': this.search_form.programme_id,
+                        }
+                    })
+                    .then((response) => {
+                        this.class_types = response.data
+                        this.disable_input.class_type = false
+                    })
+                }
+            },
+            deep: true
+        },
+        'search_form.class_type': {
+            handler(){
+                if(this.search_form.programme_id && this.search_form.class_type){
+                    this.disable_input.class_levels = true
+                    this.search_form.class_level = ''
+                    axios.get(route('classes.get_class_levels'), {
+                        params: {
+                            'programme_id': this.search_form.programme_id,
+                            'class_type': this.search_form.class_type
+                        }
+                    })
+                    .then((response) => {
+                        this.class_levels = response.data
+                        this.disable_input.class_levels = false
+                    })
+                }
             },
             deep: true
         },
     },
     methods: {
         submit() {
-            this.$inertia.post(route('classes.update'), this.form, { preserveState: true})
+            this.$inertia.post(route('classes.store'), this.form, { preserveState: true})
         },
-        resetProgrammeSelection(programme_id){
-            this.class_levels = []
-            this.programme_list.forEach((programme)=>{
-                if(programme.id == programme_id){
-                    for(var i=1; i<=programme.level; i++){
-                        this.class_levels.push(i)
+        findStudents(query){
+            if(query){
+                this.searching_students = true
+                axios.get(route('students.find'), {
+                    'params': {
+                        'keyword': query
                     }
-                }
-            })
-        },
-        numberOnly (evt){
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-                evt.preventDefault();;
-            } else {
-                return true;
+                })
+                .then((res) => {
+                    this.students = res.data
+                    this.searching_students = false
+                });
             }
+        },
+        findClasses(){
+            if(this.search_form.centre_id && this.search_form.programme_id && this.search_form.class_level && this.search_form.class_type && this.search_form.class_method){
+                this.searching_classes = true   
+                this.enable_container.show_fee = false
+                this.list.available_classes = []
+                this.selected_class_count = 0
+                axios.get(route('classes.find'), {
+                    'params': {
+                        'centre_id': this.search_form.centre_id,
+                        'programme_id':  this.search_form.programme_id,
+                        'class_method':  this.search_form.class_method,
+                        'class_level':  this.search_form.class_level,
+                        'class_type':  this.search_form.class_type,
+                    }
+                })
+                .then((res) => {
+                    this.list.available_classes = res.data
+                    this.enable_container.available_classes = true,
+                    this.searching_classes = false
+                    this.form.classes = []
+                    this.scrollToElement('available_classes')
+                });
+            }
+        },
+        getNormalFee(class_id, index){
+            this.selected_class_count = 1
+            this.getFee(class_id, index)
+            this.form.classes.push(class_id)
+        },
+        getPlusFee(event, class_id, index){
+            if(event.target.checked){
+                this.selected_class_count += 1
+                this.getFee(class_id, index, true)
+                this.form.classes.splice(index, 0, class_id)
+            }
+            else{
+                this.selected_class_count -= 1
+                this.getFee(class_id, index, true)
+                this.form.classes.splice(index, 1)
+            }
+        },
+        getFee(class_id, index, byClassCount = false){
+            axios.get(route('settings.get_fee'), {
+                    'params': {
+                        'class_id' : !byClassCount ? class_id : '',
+                        'class_type' : this.search_form.class_type,
+                        'class_count':this.selected_class_count
+                    }
+                })
+                .then((res) => {
+                    this.form.fee = []
+                    this.form.fee = res.data
+                    if(res.data.id){
+                        this.enable_container.show_fee = true
+                        this.scrollToElement('class_fee')
+                    }
+                    else{
+                        this.enable_container.show_fee = false
+                    }
+                });
+        },
+        clearStudents(){
+            this.students = []
+        },
+        scrollToElement(element) {
+            const el = this.$refs[element];
+            if (el) {
+                el.scrollIntoView({behavior: 'smooth'});
+            }
+        },
+        addStudent(){
+            this.$inertia.post(route('students.store'), this.form)
+        },
+        dateFormat(date){
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+
+            return `${day}/${month}/${year}`;
         }
     }
 }
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>

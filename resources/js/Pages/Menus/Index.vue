@@ -7,11 +7,7 @@
     <Head title="Menus" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Menus
-            </h2>
-        </template>
+        <template #header></template>
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
                 <div class="mx-auto">
@@ -63,7 +59,7 @@
                                         <td class="px-2 py-2 whitespace-nowrap">
                                             <div class="flex items-center">
                                             <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900" :class="menu.menu_route ? '' : 'font-extrabold font-black'">{{ menu.menu_route ? menu.menu_route : 'None' }}</div>
+                                                <div class="text-sm font-medium text-gray-900" :class="menu.menu_route ? '' : 'font-black'">{{ menu.menu_route ? menu.menu_route : 'None' }}</div>
                                             </div>
                                             </div>
                                         </td>

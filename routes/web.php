@@ -114,6 +114,9 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit');
         Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update');  
         Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy');
+        Route::get('/classes/get-class-types', [ClassController::class, 'getClassTypes'])->name('classes.get_class_types');
+        Route::get('/classes/get-class-levels', [ClassController::class, 'getClassLevels'])->name('classes.get_class_levels');
+        Route::get('/classes/find', [ClassController::class, 'findClasses'])->name('classes.find');
 
         /* Students */
         Route::get('/students', [StudentController::class, 'index'])->name('students');
@@ -122,32 +125,17 @@ Route::middleware(['auth', 'check_role'])->group(function(){
         Route::get('/students/edit', [StudentController::class, 'edit'])->name('students.edit');
         Route::post('/students/update', [StudentController::class, 'update'])->name('students.update');  
         Route::delete('/students/destroy/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
-
-        /* Fees */
-        Route::get('/fees', [FeeController::class, 'index'])->name('fees');
-        Route::get('/fees/create', [FeeController::class, 'create'])->name('fees.create');
-        Route::post('/fees/store', [FeeController::class, 'store'])->name('fees.store');
-        Route::get('/fees/edit', [FeeController::class, 'edit'])->name('fees.edit');
-        Route::post('/fees/update', [FeeController::class, 'update'])->name('fees.update');  
-        Route::delete('/fees/destroy/{id}', [FeeController::class, 'destroy'])->name('fees.destroy');
+        Route::get('/students/find', [StudentController::class, 'findStudents'])->name('students.find');
 
         /* Settings */    
-        Route::get('/settings', [SettingController::class, 'index'])->name('settings');
-            /* Fee Types */
-            Route::get('/settings/fee_type_list', [SettingController::class, 'feeTypeList'])->name('settings.fee_type_list');
-            Route::get('/settings/fee_type_list/create', [SettingController::class, 'addFeeType'])->name('settings.fee_type_list.create');
-            Route::post('/settings/fee_type_list/store', [SettingController::class, 'storeFeeType'])->name('settings.fee_type_list.store');
-            Route::get('/settings/fee_type_list/edit', [SettingController::class, 'editFeeType'])->name('settings.fee_type_list.edit');
-            Route::post('/settings/fee_type_list/update', [SettingController::class, 'updateFeeType'])->name('settings.fee_type_list.update');
-            Route::delete('/settings/fee_type_list/destroy/{id}', [SettingController::class, 'destroyFeeType'])->name('settings.fee_type_list.destroy');
-
-            /* Fee Periods */
-            Route::get('/settings/fee_period_list', [SettingController::class, 'feePeriodList'])->name('settings.fee_period_list');
-            Route::get('/settings/fee_period_list/create', [SettingController::class, 'addfeePeriod'])->name('settings.fee_period_list.create');
-            Route::post('/settings/fee_period_list/store', [SettingController::class, 'storefeePeriod'])->name('settings.fee_period_list.store');
-            Route::get('/settings/fee_period_list/edit', [SettingController::class, 'editfeePeriod'])->name('settings.fee_period_list.edit');
-            Route::post('/settings/fee_period_list/update', [SettingController::class, 'updatefeePeriod'])->name('settings.fee_period_list.update');
-            Route::delete('/settings/fee_period_list/destroy/{id}', [SettingController::class, 'destroyfeePeriod'])->name('settings.fee_period_list.destroy');
+        Route::get('/settings', [SettingController::class, 'programmeList'])->name('settings');
+            /* Class Types */
+            Route::get('/settings/class_types', [SettingController::class, 'classTypeList'])->name('settings.class_types');
+            Route::get('/settings/class_types/create', [SettingController::class, 'addClassType'])->name('settings.class_types.create');
+            Route::post('/settings/class_types/store', [SettingController::class, 'storeClassType'])->name('settings.class_types.store');
+            Route::get('/settings/class_types/edit', [SettingController::class, 'editClassType'])->name('settings.class_types.edit');
+            Route::post('/settings/class_types/update', [SettingController::class, 'updateClassType'])->name('settings.class_types.update');
+            Route::delete('/settings/class_types/destroy/{id}', [SettingController::class, 'destroyClassType'])->name('settings.class_types.destroy');
 
             /* Programmes*/
             Route::get('/settings/programmes', [SettingController::class, 'programmeList'])->name('settings.programmes');
@@ -156,6 +144,7 @@ Route::middleware(['auth', 'check_role'])->group(function(){
             Route::get('/settings/programmes/edit', [SettingController::class, 'editProgramme'])->name('settings.programmes.edit');
             Route::post('/settings/programmes/update', [SettingController::class, 'updateProgramme'])->name('settings.programmes.update');  
             Route::delete('/settings/programmes/destroy/{id}', [SettingController::class, 'destroyProgramme'])->name('settings.programmes.destroy');
+            Route::get('/settings/programmes/get-fee', [SettingController::class, 'getFee'])->name('settings.get_fee');
     });
 
 

@@ -7,11 +7,7 @@ import BreezeButton from '@/Components/Button.vue';
     <Head title="General Setting" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                General Setting
-            </h2>
-        </template>
+        <template #header></template>
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
                 <div class="mx-auto">
@@ -44,13 +40,13 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="text-sm text-gray-700">{{ ++index }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900 font-bold">{{ country_list.name }}</div>
+                                            <div class="text-sm text-gray-900 font-bold">{{ country_list.name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900 font-bold">{{ country_list.code }}</div>
+                                            <div class="text-sm text-gray-900 font-bold">{{ country_list.code }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900 font-bold">{{ country_list.currency }}</div>
+                                            <div class="text-sm text-gray-900 font-bold">{{ country_list.currency }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">

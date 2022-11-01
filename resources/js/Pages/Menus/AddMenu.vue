@@ -7,11 +7,7 @@ import BreezeButton from '@/Components/Button.vue';
     <Head title="Menus" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Add Menu
-            </h2>
-        </template>
+        <template #header></template>
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
                 <div class="mx-auto">

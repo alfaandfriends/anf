@@ -8,114 +8,60 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
+use function GuzzleHttp\Promise\all;
+
 class SettingController extends Controller
 {
-    public function index(){
-        return Inertia::render('Settings/CentreManagement/Index');
-    }
-
-    /* Fee Type */
-        public function feeTypeList(){
-            $fee_type_list  =   DB::table('fee_types')->paginate(10);
+    /* Class Type */
+        public function classTypeList(){
+            $class_types  =   DB::table('class_types')->paginate(10);
 
             return Inertia::render('Settings/CentreManagement/Index',[
-                'fee_type_list' => $fee_type_list,
+                'class_types' => $class_types,
             ]);
         }
 
-        public function addFeeType(){
-            return Inertia::render('Settings/CentreManagement/FeeType/Create');
+        public function addClassType(){
+            return Inertia::render('Settings/CentreManagement/ClassTypes/Create');
         }
 
-        public function storeFeeType(Request $request){
+        public function storeClassType(Request $request){
             $request->validate([
-                'fee_type'  => 'required'
+                'class_type'  => 'required'
             ]);
 
-            DB::table('fee_types')->insert([
-                'label' =>  $request->fee_type
+            DB::table('class_types')->insert([
+                'name' =>  $request->class_type
             ]);
 
-            return redirect(route('settings.fee_type_list'))->with(['type'=>'success', 'message'=>'Fee type added successfully !']);
+            return redirect(route('settings.class_types'))->with(['type'=>'success', 'message'=>'Class type added successfully !']);
         }
 
-        public function editFeeType(Request $request){
-            $fee_type_info  =   DB::table('fee_types')->where('id', $request->fee_type_id)->first();
+        public function editClassType(Request $request){
+            $class_type_info  =   DB::table('class_types')->where('id', $request->class_type_id)->first();
             
-            return Inertia::render('Settings/CentreManagement/FeeType/Edit', [
-                'fee_type_info' =>  $fee_type_info
+            return Inertia::render('Settings/CentreManagement/ClassTypes/Edit', [
+                'class_type_info' =>  $class_type_info
             ]);
         }
 
-        public function updateFeeType(Request $request){
+        public function updateClassType(Request $request){
             $request->validate([
-                'fee_type'  => 'required'
+                'class_type'  => 'required'
             ]);
 
-            DB::table('fee_types')->where('id', $request->fee_type_id)->update([
-                'label' =>  $request->fee_type,
+            DB::table('class_types')->where('id', $request->class_type_id)->update([
+                'name' =>  $request->class_type,
                 'updated_at'        => Carbon::now(),
             ]);
 
-            return redirect(route('settings.fee_type_list'))->with(['type'=>'success', 'message'=>'Fee type updated successfully !']);
+            return redirect(route('settings.class_types'))->with(['type'=>'success', 'message'=>'Class type updated successfully !']);
         }
 
-        public function destroyFeeType($id){   
-            DB::table('fee_types')->where('id', $id)->delete();
+        public function destroyClassType($id){   
+            DB::table('class_types')->where('id', $id)->delete();
 
-            return back()->with(['type'=>'success', 'message'=>'Fee type deleted successfully ! ']);
-        }
-
-    /* Fee Period */
-        public function feePeriodList(){
-            $fee_period_list  =   DB::table('fee_periods')->paginate(10);
-
-            return Inertia::render('Settings/CentreManagement/Index',[
-                'fee_period_list' => $fee_period_list,
-            ]);
-        }
-
-        public function addFeePeriod(){
-            return Inertia::render('Settings/CentreManagement/FeePeriod/Create');
-        }
-
-        public function storeFeePeriod(Request $request){
-            $request->validate([
-                'fee_period'  => 'required'
-            ]);
-
-            DB::table('fee_periods')->insert([
-                'label' =>  $request->fee_period
-            ]);
-
-            return redirect(route('settings.fee_period_list'))->with(['type'=>'success', 'message'=>'Fee Period added successfully !']);
-        }
-
-        public function editFeePeriod(Request $request){
-            $fee_period_info  =   DB::table('fee_periods')->where('id', $request->fee_period_id)->first();
-            
-            return Inertia::render('Settings/CentreManagement/FeePeriod/Edit', [
-                'fee_period_info' =>  $fee_period_info
-            ]);
-        }
-
-        public function updateFeePeriod(Request $request){
-            $request->validate([
-                'fee_period'  => 'required'
-            ]);
-
-            DB::table('fee_periods')->where('id', $request->fee_period_id)->update([
-                'label' =>  $request->fee_period,
-                'updated_at'        => Carbon::now(),
-            ]);
-
-            return redirect(route('settings.fee_period_list'))->with(['type'=>'success', 'message'=>'Fee period updated successfully !']);
-        }
-
-        public function destroyFeePeriod($id){
-            DB::table('fee_periods')->where('id', $id)->delete();
-
-            return back()->with(['type'=>'success', 'message'=>'Fee period deleted successfully ! ']);
+            return back()->with(['type'=>'success', 'message'=>'Class type deleted successfully ! ']);
         }
 
     /* Programmes */
@@ -129,17 +75,18 @@ class SettingController extends Controller
             $programmes    =   $query->paginate(10);
             
             return Inertia::render('Settings/CentreManagement/Index', [
-                'filter' => request()->all('search'),
-                'programme_list' => $programmes,
+                'filter'            => request()->all('search'),
+                'programme_list'    => $programmes,
             ]);
         }
 
         public function addProgramme(){
-            $fee_types          =   DB::table('fee_types')->orderBy('id')->get();
-            $fee_types_detail   =   DB::table('fee_types_detail')->get()->groupBy('fee_type_id');
-            return Inertia::render('Settings/CentreManagement/Programmes/Create', [
-                'fee_types'         => $fee_types,
-                'fee_types_detail'  => $fee_types_detail,
+            $class_types        =   DB::table('class_types')->get()->keyBy('id');
+            $class_types_detail =   DB::table('class_types_detail')->get();
+
+            return Inertia::render('Settings/CentreManagement/Programmes/Create',[
+                'class_types'           =>  $class_types,
+                'class_types_detail'    =>  $class_types_detail,
             ]);
         }
 
@@ -148,20 +95,31 @@ class SettingController extends Controller
                 'programme_name'               => 'required|max:255',
             ]);
 
-            $programme_id = DB::table('programmes')->insertGetId([
+            if(empty($request->programme_info)){
+                return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level !']);
+            }
+
+            $programme_id    =   DB::table('programmes')->insertGetId([
                 'name'              =>  $request->programme_name,
-                'level'             =>  $request->programme_level,
-                'updated_at'        =>  Carbon::now(),
                 'status'            =>  $request->programme_active,
             ]);
 
-            foreach($request->programme_fees as $fee_detail_id=>$amount){
-                if($amount != 0 && $amount != ''){
-                    DB::table('programmes_fees')->insert([
-                        'programme_id'          =>  $programme_id,
-                        'fee_type_detail_id'    =>  $fee_detail_id,
-                        'amount'                =>  $amount,
-                    ]);
+            foreach($request->programme_info as $key=>$info){
+                $programme_level_id =   DB::table('programme_levels')->insertGetId([
+                    'programme_id'      =>  $programme_id,
+                    'class_type_id'     =>  $info['class_type'],
+                    'level'             =>  $info['level'],
+                    'material_fee'      =>  $info['material_fee'],
+                ]);
+                foreach($info['fee'] as $class_type_detail_id=>$fee){
+                    if($fee != null || $fee != 0){
+                        DB::table('programme_level_fees')->insert([
+                            'programme_level_id'    =>  $programme_level_id,
+                            'class_type_detail_id'  =>  $class_type_detail_id,
+                            'fee_amount'            =>  $fee,
+                        ]);
+                        
+                    }
                 }
             }
 
@@ -169,16 +127,44 @@ class SettingController extends Controller
         }
 
         public function editProgramme(Request $request){
-            $programme_info     =   DB::table('programmes')->where('id', $request->programme_id)->first();
-            $fee_types          =   DB::table('fee_types')->orderBy('id')->get();
-            $fee_types_detail   =   DB::table('fee_types_detail')->get()->groupBy('fee_type_id');
-            $programme_fees     =   DB::table('programmes_fees')->select('fee_type_detail_id','amount')->where('programme_id', $request->programme_id)->get();
+
+            $programme_name     =   DB::table('programmes')->where('id', $request->programme_id)->pluck('name')->first();
+            $programme_fees     =   DB::table('programme_levels')
+                                            ->join('programme_level_fees', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                            ->where('programme_levels.programme_id', $request->programme_id)
+                                            ->select([
+                                                'programme_levels.level', 
+                                                'programme_levels.material_fee', 
+                                                'programme_levels.class_type_id', 
+                                                'programme_level_fees.programme_level_id', 
+                                                'programme_level_fees.class_type_detail_id', 
+                                                'programme_level_fees.fee_amount'])->get();
+
+            $programme_info     =   array();  
+            $class_types        =   array();  
+            foreach($programme_fees as $fee_info){
+                if(!in_array($fee_info->class_type_id, $class_types)){
+                    $class_types[]   =   $fee_info->class_type_id;
+                }
+            }
+
+            foreach($class_types as $class_type){
+                $data['level']              =   $programme_fees->where('class_type_id', $class_type)->pluck('level')->first();
+                $data['material_fee']       =   $programme_fees->where('class_type_id', $class_type)->pluck('material_fee')->first();
+                $data['class_type']         =   $programme_fees->where('class_type_id', $class_type)->pluck('class_type_id')->first();
+                $data['fee']                =   $programme_fees->where('class_type_id', $class_type)->pluck('fee_amount', 'class_type_detail_id')->all();
+                $programme_info[]           =   $data;
+            }
             
+            $class_types        =   DB::table('class_types')->get()->keyBy('id');
+            $class_types_detail =   DB::table('class_types_detail')->get();
+                                        
             return Inertia::render('Settings/CentreManagement/Programmes/Edit', [
-                'programme_info'    => $programme_info,
-                'fee_types'         => $fee_types,
-                'fee_types_detail'  => $fee_types_detail,
-                'programme_fees'    => $programme_fees,
+                'programme_id'          => $request->programme_id,
+                'programme_name'        => $programme_name,
+                'programme_info'        => $programme_info,
+                'class_types'           => $class_types,
+                'class_types_detail'    => $class_types_detail,
             ]);
         }
 
@@ -187,22 +173,33 @@ class SettingController extends Controller
                 'programme_name'               => 'required|max:255',
             ]);
 
+            if(empty($request->programme_info)){
+                return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level !']);
+            }
+
             DB::table('programmes')->where('id', $request->programme_id)->update([
                 'name'              =>  $request->programme_name,
-                'level'             =>  $request->programme_level,
-                'updated_at'        =>  Carbon::now(),
                 'status'            =>  $request->programme_active,
+                'updated_at'        =>  Carbon::now(),
             ]);
 
-            DB::table('programmes_fees')->where('programme_id', $request->programme_id)->delete();
-
-            foreach($request->programme_fees as $fee_detail_id=>$amount){
-                if($amount != 0 && $amount != ''){
-                    DB::table('programmes_fees')->insert([
-                        'programme_id'          =>  $request->programme_id,
-                        'fee_type_detail_id'    =>  $fee_detail_id,
-                        'amount'                =>  $amount,
-                    ]);
+            DB::table('programme_levels')->where('programme_id', $request->programme_id)->delete();
+            foreach($request->programme_info as $key=>$info){
+                $programme_level_id =   DB::table('programme_levels')->insertGetId([
+                    'programme_id'      =>  $request->programme_id,
+                    'class_type_id'     =>  $info['class_type'],
+                    'level'             =>  $info['level'],
+                    'material_fee'      =>  $info['material_fee'],
+                ]);
+                foreach($info['fee'] as $class_type_detail_id=>$fee){
+                    if($fee != null || $fee != 0){
+                        DB::table('programme_level_fees')->insert([
+                            'programme_level_id'    =>  $programme_level_id,
+                            'class_type_detail_id'  =>  $class_type_detail_id,
+                            'fee_amount'            =>  $fee,
+                        ]);
+                        
+                    }
                 }
             }
 
@@ -211,9 +208,27 @@ class SettingController extends Controller
 
         public function destroyProgramme($id){
             DB::table('programmes')->where('id', $id)->delete();
-            DB::table('programmes_fees')->where('programme_id', $id)->delete();
+            DB::table('programme_levels')->where('programme_id', $id)->delete();
 
             return redirect(route('settings.programmes'))->with(['type'=>'success', 'message'=>'Programme deleted successfully !']);
+        }
+
+        public function getFee(Request $request){
+            $query  =   DB::table('classes')
+                            ->join('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
+                            ->join('programme_level_fees', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                            ->join('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id');
+                            
+            if($request->class_id){
+                $query->where('classes.id', $request->class_id);
+            }
+            else{
+                $query->where('programme_levels.class_type_id', $request->class_type)->where('class_types_detail.class_count', $request->class_count);
+            }
+
+            $result =   $query->select(['programme_level_fees.id', 'class_types_detail.label', 'programme_level_fees.fee_amount'])->first();
+
+            return $result;
         }
 
     /* Countries */

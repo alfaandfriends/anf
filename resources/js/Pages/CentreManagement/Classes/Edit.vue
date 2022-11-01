@@ -7,11 +7,7 @@ import BreezeButton from '@/Components/Button.vue';
     <Head title="Classes" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Edit Class
-            </h2>
-        </template>
+        <template #header></template>
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
@@ -24,12 +20,6 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="class_name" class="block text-sm font-bold text-gray-700"> Class Name <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="class_name" id="class_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_name ? 'border-red-300' : 'border-gray-300'" v-model="form.class_name" autocomplete="none"/>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
                                         <label for="centre" class="block text-sm font-bold text-gray-700"> Centre <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md.shadow-sm">
                                             <Multiselect 
@@ -37,7 +27,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 valueProp="ID"
                                                 :searchable="true"
                                                 :options="$page.props.allowed_centres"
-                                                :clearOnSelect="false"
+                                                :clearOnSelect="true"
                                                 :canClear="false"
                                                 :canDeselect="false"
                                                 trackBy="label"
@@ -87,27 +77,38 @@ import BreezeButton from '@/Components/Button.vue';
                                             />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_id" autocomplete="none">
+                                            <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_id ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_id" autocomplete="none">
                                                 <option value="">-- Select Programme --</option>
                                                 <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <label for="class_level" class="block text-sm font-bold text-gray-700"> Class Level <span class="text-red-500">*</span></label>
+                                            <label for="class_type" class="block text-sm font-bold text-gray-700"> Class Type <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="class_level" id="class_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_level ? 'border-red-300' : 'border-gray-300'" v-model="form.class_level" autocomplete="none">
-                                                    <option value="">-- Select Level --</option>
-                                                    <option :value="i" v-for="i in class_levels" :key="i">{{ i }}</option>
+                                                <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="form.class_type" autocomplete="none" :disabled="disable_class_types">
+                                                    <option value="">-- Select Type --</option>
+                                                    <option :value="class_type.id" v-for="(class_type, index) in class_types" :key="index">{{ class_type.name }}</option>
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="mb-4">
+                                            <label for="programme_level_id" class="block text-sm font-bold text-gray-700"> Class Level <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select name="programme_level_id" id="programme_level_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_level_id ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_level_id" autocomplete="none" :disabled="disable_class_levels">
+                                                    <option value="">-- Select Level --</option>
+                                                    <option :value="i.id" v-for="i, index in class_levels" :key="i">{{ i.level }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                         <div class="mb-4">
                                             <label for="class_day" class="block text-sm font-bold text-gray-700"> Class Day <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
@@ -117,15 +118,24 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="mb-4">
+                                            <label for="class_method" class="block text-sm font-bold text-gray-700"> Class Methods <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select name="class_method" id="class_method" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_method ? 'border-red-300' : 'border-gray-300'" v-model="form.class_method" autocomplete="none">
+                                                    <option value="">-- Select Method --</option>
+                                                    <option :value="class_method.id" v-for="class_method in method_list" :key="class_method">{{ class_method.name }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="start_time" class="block text-sm font-bold text-gray-700"> Start Date <span class="text-red-500">*</span></label>
+                                        <label for="start_time" class="block text-sm font-bold text-gray-700"> Start Time <span class="text-red-500">*</span></label>
                                         <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.start_time ? '--dp-border-color: #fa9e9e' : ''" v-model="form.start_time" :timePicker="true" :is24="false" />
                                     </div>
                                     <div class="mb-4">
-                                        <label for="end_time" class="block text-sm font-bold text-gray-700"> End Date <span class="text-red-500">*</span></label>
+                                        <label for="end_time" class="block text-sm font-bold text-gray-700"> End Time <span class="text-red-500">*</span></label>
                                         <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.end_time ? '--dp-border-color: #fa9e9e' : ''" v-model="form.end_time" :timePicker="true" :is24="false" />
                                     </div>
                                 </div>
@@ -136,16 +146,8 @@ import BreezeButton from '@/Components/Button.vue';
                                             <input type="number" name="class_capacity" id="class_capacity" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_capacity ? 'border-red-300' : 'border-gray-300'" v-model="form.class_capacity" autocomplete="none" @keypress="numberOnly"/>
                                         </div>
                                     </div>
-                                    <div class="mb-4">
-                                        <label for="class_type" class="block text-sm font-bold text-gray-700"> Class Type <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="form.class_type" autocomplete="none">
-                                                <option value="">-- Select Type --</option>
-                                                <option :value="class_type.id" v-for="class_type in type_list" :key="class_type">{{ class_type.name }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
+                                <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
                                 <div class="flex items-center justify-between">
                                     <div class="flex space-x-2">
                                         <label for="" class="block font-bold text-gray-700">Active</label>
@@ -186,20 +188,24 @@ export default {
     },
     props: {
         class_info: Object,
+        class_types: Object,
+        class_levels: Object,
         programme_list: Object,
         day_list: Object,
         type_list: Object,
-        class_level: Object,
+        method_list: Object,
     },
     data(){
         return{
-            class_levels: this.class_level ? this.class_level : [],
+            disable_class_types: false,
+            disable_class_levels: false,
+            class_types: this.class_types ? this.class_types : [],
+            class_levels: this.class_levels ? this.class_levels : [],
             form: {
-                class_id: this.class_info ? this.class_info.id : '',
-                class_name: this.class_info ? this.class_info.name : '',
+                class_id: this.class_info ? this.class_info.class_id : '',
                 centre_id: this.class_info ? this.class_info.centre_id : '',
                 programme_id: this.class_info ? this.class_info.programme_id : '',
-                class_level: this.class_info ? this.class_info.level : '',
+                programme_level_id: this.class_info ? this.class_info.programme_level_id : '',
                 class_day: this.class_info ? this.class_info.class_day_id : '',
                 start_time: {
                     'hours': new Date(new moment(this.class_info.start_time, 'HH:mm:ss')).getHours(),
@@ -213,15 +219,48 @@ export default {
                 },
                 class_capacity: this.class_info ? this.class_info.capacity : '',
                 class_type: this.class_info ? this.class_info.class_type_id : '',
-                class_status: this.class_info ? this.class_info.status: '',
+                class_method: this.class_info ? this.class_info.class_method_id : '',
+                class_status: this.class_info ? this.class_info.status: false,
             }
         }
     },
     watch: {
         'form.programme_id': {
             handler(){
-                this.form.class_level = ""
-                this.resetProgrammeSelection(this.form.programme_id)
+                if(this.form.programme_id){
+                    this.disable_class_types = true
+                    this.disable_class_levels = true
+                    this.form.class_type = ''
+                    this.form.programme_level_id = ''
+                    axios.get(route('classes.get_class_types'), {
+                        params: {
+                            'programme_id': this.form.programme_id,
+                        }
+                    })
+                    .then((response) => {
+                        this.class_types = response.data
+                        this.disable_class_types = false
+                    })
+                }
+            },
+            deep: true
+        },
+        'form.class_type': {
+            handler(){
+                if(this.form.programme_id && this.form.class_type){
+                    this.disable_class_levels = true
+                    this.form.programme_level_id = ''
+                    axios.get(route('classes.get_class_levels'), {
+                        params: {
+                            'programme_id': this.form.programme_id,
+                            'class_type': this.form.class_type
+                        }
+                    })
+                    .then((response) => {
+                        this.class_levels = response.data
+                        this.disable_class_levels = false
+                    })
+                }
             },
             deep: true
         },
@@ -229,16 +268,6 @@ export default {
     methods: {
         submit() {
             this.$inertia.post(route('classes.update'), this.form, { preserveState: true})
-        },
-        resetProgrammeSelection(programme_id){
-            this.class_levels = []
-            this.programme_list.forEach((programme)=>{
-                if(programme.id == programme_id){
-                    for(var i=1; i<=programme.level; i++){
-                        this.class_levels.push(i)
-                    }
-                }
-            })
         },
         numberOnly (evt){
             evt = (evt) ? evt : window.event;

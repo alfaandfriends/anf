@@ -7,11 +7,7 @@ import BreezeButton from '@/Components/Button.vue';
     <Head title="Diagnostic Test" />
 
     <BreezeAuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Diagnostic Test
-            </h2>
-        </template>
+        <template #header></template>
         <div class="p-3">
             <div class="space-y-3">
                 <div v-for="dt in $page.props.diagnostic_test_list" :key="dt.id" class="p-6 rounded-lg shadow-lg bg-white max-w-sm">

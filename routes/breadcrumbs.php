@@ -139,37 +139,22 @@ Breadcrumbs::for('fees.edit', function (BreadcrumbTrail $trail) {
 /* Settings */
 Breadcrumbs::for('settings', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('Fee Type Setting', route('settings.fee_type_list'));
+    $trail->push('Class Types Settings', route('settings.class_types'));
 });
 
-Breadcrumbs::for('settings.fee_type_list', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('settings.class_types', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('Fee Type Setting', route('settings.fee_type_list'));
+    $trail->push('Class Types Settings', route('settings.class_types'));
 });
 
-Breadcrumbs::for('settings.fee_type_list.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('settings.fee_type_list');
-    $trail->push('Add Fee Type', route('settings.fee_type_list'));
+Breadcrumbs::for('settings.class_types.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('settings.class_types');
+    $trail->push('Add Class Type', route('settings.class_types'));
 });
 
-Breadcrumbs::for('settings.fee_type_list.edit', function (BreadcrumbTrail $trail) {
-    $trail->parent('settings.fee_type_list');
-    $trail->push('Edit Fee Type', route('settings.fee_type_list'));
-});
-
-Breadcrumbs::for('settings.fee_period_list', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Fee Period Setting', route('settings.fee_period_list'));
-});
-
-Breadcrumbs::for('settings.fee_period_list.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('settings.fee_period_list');
-    $trail->push('Add Fee Period', route('settings.fee_period_list'));
-});
-
-Breadcrumbs::for('settings.fee_period_list.edit', function (BreadcrumbTrail $trail) {
-    $trail->parent('settings.fee_period_list');
-    $trail->push('Edit Fee Period', route('settings.fee_period_list'));
+Breadcrumbs::for('settings.class_types.edit', function (BreadcrumbTrail $trail) {
+    $trail->parent('settings.class_types');
+    $trail->push('Edit Class Type', route('settings.class_types'));
 });
 
 Breadcrumbs::for('settings.countries', function (BreadcrumbTrail $trail) {

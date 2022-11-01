@@ -266,7 +266,7 @@ export default {
             </header>
 
             <!-- Page Content -->
-            <main class="min-h-screen bg-gray-100">
+            <main class="min-h-screen bg-white">
                 <form @submit.prevent="impersonate">
                     <div class="flex px-6 py-3 bg-blue space-x-2 items-center bg-orange-400 justify-end" v-if="$page.props.can.user_impersonation || $page.props.can.is_impersonated">
                         <label for="" class="text-white font-bold">Username</label>
@@ -277,7 +277,7 @@ export default {
                 <slot/>
             </main>
             <div class="py-5 px-6 bg-slate-700 text-white">
-                <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{new Date().getFullYear()}} ALFA And Friends </span>
+                <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{ new Date().getFullYear() + ' ' + $page.props.app_name }}</span>
             </div>
         </div>
     </div>
