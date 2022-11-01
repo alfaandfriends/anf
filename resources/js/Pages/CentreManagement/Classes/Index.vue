@@ -94,7 +94,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-if="!$page.props.classes.data.length">
+                                    <tr v-if="!$page.props.classes.data">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
                                                 No Record Found! 
