@@ -3,6 +3,7 @@
     import BreezeButton from '@/Components/Button.vue';
 </script>
 
+<style src="@vueform/toggle/themes/default.css"></style>
 <template>
     <Head title="Permissions" />
 
@@ -16,55 +17,45 @@
                             <BreezeButton @click="addPermission()"> 
                                 Add Permission
                             </BreezeButton>
-                            <!-- <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
-                            <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
-                                    type="text" v-model="params.search" placeholder="Search"> -->
                         </div>
-                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-200">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/6">Name</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200 overflow-y-scroll">
-                                    <tr v-if="!$page.props.permissions.length">
-                                        <td class="text-center" colspan="10">
-                                            <div class="p-3">
-                                                No Record Found! 
+                        
+                        <nav class="text-sm font-medium text-gray-700">
+                            <div class="flex items-center border border-red-500 py-3 px-4" v-if="!$page.props.permissions">
+                                <span class="mr-2">No permission added.</span>
+                            </div>
+                            <div v-else v-for="permission, index in $page.props.permissions">
+                                <div class="flex" :class="expandAccordion && index === selected ? 'bg-indigo-400 text-gray-200' : 'bg-indigo-300 hover:bg-indigo-400 text-gray-800 hover:text-gray-200'">
+                                    <div class="flex flex-1 justify-between items-center px-4 py-1 transition cursor-pointer group border border-indigo-200 border-r-0 relative" role="button" @click="toggleMenu(index)">
+                                        <div class="flex items-center">
+                                            <span class="select-none">{{ permission.name }}</span> 
+                                        </div>
+                                        <ChevronRightIcon :class="{ 'rotate-90': expandAccordion && index === selected }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
+                                    </div>
+                                    <div class="flex flex-none items-center px-4 py-1 transition cursor-pointer group border border-indigo-200 border-l-0 text-gray-800" role="button">
+                                        <div class="flex items-center">
+                                            <div class="space-x-2">
+                                                <BreezeButton buttonType="warning" @click="editPermission(permission.id)">Edit</BreezeButton>
+                                                <BreezeButton buttonType="danger" @click="deletePermission(permission.id)">Delete</BreezeButton>
                                             </div>
-                                        </td>
-                                    </tr> 
-                                    <tr class="hover:bg-gray-200" v-for="(permission, roleID) in $page.props.permissions" :key="roleID">
-                                        <td class="px-3 py-3">
-                                            <div class="flex items-center">
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">{{ permission.name }}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-3 py-3 text-center">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
-                                                  :class="permission.status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ permission.status == 1 ? 'Active' : 'Not Active' }} </span>
-                                        </td>
-                                        <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
-                                            <div class="flex justify-center space-x-2">
-                                                <BreezeButton buttonType="warning" @click="editRole(permission.id)" title="Edit Role">
-                                                    <!-- <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon> -->
-                                                    Edit
-                                                </BreezeButton>
-                                                <BreezeButton buttonType="danger" @click="deleteRole(permission.id)" title="Delete Permission">
-                                                    <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
-                                                    Delete
-                                                </BreezeButton>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col py-2 px-4 border-x border-indigo-200" v-if="expandAccordion && index === selected">
+                                    <div v-if="permission.permission_sub.length < 1">
+                                        <span>No sub permissions.</span>
+                                    </div>
+                                    <div v-else class="flex flex-col">
+                                        <ul class="list-disc items-center translate-x-4">
+                                            <li class="mb-1" v-for="sub_permission, index in permission.permission_sub">
+                                                <span>{{ sub_permission.name }}</span>
+                                            </li>
+                                        </ul>
+                                        <div class="flex space-x-6">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -72,7 +63,7 @@
                 :show="isOpen" 
                 @close="isOpen = false"
                 confirmationAlert="danger"
-                confirmationTitle="Delete Role"
+                confirmationTitle="Delete Permission"
                 confirmationText="Are you sure want to delete this permission?"
                 confirmationButton="Delete"
                 confirmationMethod="delete"
@@ -88,14 +79,16 @@
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } from '@heroicons/vue/solid'
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon,
+        SearchIcon, TrashIcon, PencilIcon, ChevronRightIcon,
         ConfirmationModal, Head
     },
     data(){
         return{
+            expandAccordion: false,
             isOpen: false,
             confirmationTitle: '',
             confirmationText: '',
@@ -104,18 +97,23 @@ export default {
             confirmationMethod: '',
             confirmationRoute: '',
             confirmationData: '',
+            selected: '',
         }
     },
     methods: {
+        toggleMenu (item) {
+            item == this.selected ? this.expandAccordion = !this.expandAccordion : this.expandAccordion = true
+            this.selected = item
+        },
         addPermission(){
             this.$inertia.get(route('permissions.create'));
         },
-        deleteRole(roleID){
+        deletePermission(permission_id){
             this.isOpen = true
-            this.confirmationData = roleID
+            this.confirmationData = permission_id
         },
-        editRole(roleID){
-            this.$inertia.get(route('permissions.edit'), {permission: roleID});
+        editPermission(permission_id){
+            this.$inertia.get(route('permissions.edit'), {permission_id: permission_id});
         }
     }
 }

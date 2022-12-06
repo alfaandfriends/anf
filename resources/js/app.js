@@ -4,6 +4,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';  
 import VueGuidedTour from "@alfaandfriends/vue-guided-tour";
+import { vue3Debounce } from 'vue-debounce';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'ALFA and Friends Centre';
 const cleanApp = () => {
@@ -18,6 +19,9 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(VueGuidedTour)
+            .directive('debounce', vue3Debounce({ 
+                lock: true,
+            }))
             .mixin({ methods: { route } })
             .mount(el);
     },

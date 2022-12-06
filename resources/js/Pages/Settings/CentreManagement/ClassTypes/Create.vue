@@ -22,7 +22,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-4">
                                         <label for="class_type" class="block text-sm text-gray-700 font-bold">Class Type<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="class_type" id="class_type" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="form.class_type" autocomplete="none"/>
+                                            <input type="text" name="class_type" id="class_type" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="form.class_type" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>

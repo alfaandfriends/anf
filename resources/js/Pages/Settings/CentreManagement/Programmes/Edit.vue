@@ -36,7 +36,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-4">
                                         <label for="programme_name" class="block text-gray-700 font-bold"> Programme Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="programme_name" id="programme_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.programme_name ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_name" autocomplete="none"/>
+                                            <input type="text" name="programme_name" id="programme_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.programme_name ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_name" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
@@ -51,19 +51,19 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="grow">
                                     <label for="programme_level" class="block text-gray-700 font-bold"> Level <span class="text-red-500">*</span></label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="text" name="programme_level" id="programme_level" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.programme_level ? 'border-red-300' : 'border-gray-300'" v-model="level" autocomplete="none" @keypress="numbersOnly"/>
+                                        <input type="text" name="programme_level" id="programme_level" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.programme_level ? 'border-red-300' : 'border-gray-300'" v-model="level" autocomplete="off" @keypress="numbersOnly"/>
                                     </div>
                                 </div>
                                 <div class="grow">
                                     <label for="programme_material_fee" class="block text-gray-700 font-bold"> Material Fee <span class="text-red-500">*</span></label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="text" name="programme_material_fee" id="programme_material_fee" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.programme_material_fee ? 'border-red-300' : 'border-gray-300'" v-model="material_fee" autocomplete="none" @keypress="numbersOnly"/>
+                                        <input type="text" name="programme_material_fee" id="programme_material_fee" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.programme_material_fee ? 'border-red-300' : 'border-gray-300'" v-model="material_fee" autocomplete="off" @keypress="numbersOnly"/>
                                     </div>
                                 </div>
                                 <div class="grow">
                                     <label for="class_type" class="block text-gray-700 font-bold"> Class Type <span class="text-red-500">*</span></label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                        <select name="class_type" id="class_type" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="class_type" autocomplete="none">
+                                        <select name="class_type" id="class_type" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="class_type" autocomplete="off">
                                             <option value="">-- Select Type --</option>
                                             <option :value="class_type.id" v-for="(class_type, index) in $page.props.class_types" :key="index">{{ class_type.name }}</option>
                                         </select>
@@ -72,7 +72,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="grow" v-for="class_type in class_types_detail">
                                     <label for="class_type_detail" class="block text-gray-700 font-bold"> {{ class_type.label }} <span class="text-red-500">*</span></label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="text" name="class_type_detail" id="class_type_detail" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.class_type_detail ? 'border-red-300' : 'border-gray-300'" v-model="fee[class_type.id]" autocomplete="none" @keypress="numbersOnly"/>
+                                        <input type="text" name="class_type_detail" id="class_type_detail" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.class_type_detail ? 'border-red-300' : 'border-gray-300'" v-model="fee[class_type.id]" autocomplete="off" @keypress="numbersOnly"/>
                                     </div>
                                 </div>
                                 <div class="grow" v-if="class_types_detail.length">

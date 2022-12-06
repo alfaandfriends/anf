@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Permission;
 use App\Models\RoleHasPermissions;
 use App\Models\User;
 use App\Models\UserHasRoles;
@@ -10,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 
@@ -74,7 +74,20 @@ class RoleController extends Controller
 
     public function assignPermissions(Request $request)
     {
-        $permissions        =   Permission::get();
+        $permissions_arr            =   Permission::where('status', true)->where('parent_id', null)->get();
+        $sub_permissions_arr        =   Permission::where('status', true)->where('parent_id', '!=', null)->get();
+
+        foreach($permissions_arr as $permission_key=>$permission){
+            $permissions[$permission_key]   =   $permission;
+            $permission_sub                 =   array();
+            foreach($sub_permissions_arr as $sub_permission_key=>$sub_permission){
+                if($sub_permission->parent_id == $permission->id){
+                    $permission_sub[] =   $sub_permission;
+                }
+            }
+            $permissions[$permission_key]['permission_sub']     = [];
+            $permissions[$permission_key]['permission_sub']     = $permission_sub;
+        }
         $role_permissions   =   RoleHasPermissions::where('role_id', $request->role_id)->get('permission_id')->keyBy('permission_id');
 
         return Inertia::render('Roles/AssignPermissions', [
@@ -90,8 +103,8 @@ class RoleController extends Controller
 
         foreach($request->selected_permissions as $key=>$permission_id){
             DB::table('role_has_permissions')->insert([
-                'role_id'   =>  $request->role_id,
-                'permission_id'   =>  $permission_id
+                'role_id'       =>  $request->role_id,
+                'permission_id' =>  $permission_id,
             ]);
         }
 

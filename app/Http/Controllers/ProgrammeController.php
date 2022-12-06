@@ -11,13 +11,13 @@ use Inertia\Inertia;
 class ProgrammeController extends Controller
 {
 
-    // public function testWebsocket()
-    // {
-    //     $data['user_id'] = auth()->id();
-    //     $data['messages'] = 'Hi';
+    public function send_web_notifications()
+    {
+        $data['user_id'] = auth()->id();
+        $data['messages'] = 'Hi';
 
-    //     $pusher = new PusherHelpers();
-    //     $pusher->trigger('notifications', 'Notifications', $data);
+        $pusher = new PusherHelpers();
+        $pusher->trigger('notifications', 'Notifications', $data);
 
-    // }
+    }
 }

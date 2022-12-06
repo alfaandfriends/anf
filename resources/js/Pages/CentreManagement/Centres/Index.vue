@@ -18,13 +18,13 @@ import BreezeButton from '@/Components/Button.vue';
                                 <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                         type="text" v-model="params.search" placeholder="Search">
                             </div>
-                            <div class="flex">
+                            <div class="flex" v-if="$page.props.can.centre_create_access">
                                 <BreezeButton :route="route('centres.create')">Add Centre</BreezeButton>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-200">
+                                <thead class="bg-gray-300">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Name</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="3%">Address</th>
@@ -99,7 +99,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </tbody>
                             </table>
                             <template v-if="$page.props.centres.data.length">
-                                <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-200">
+                                <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-300">
                                     <div class="flex-1 flex justify-between sm:hidden">
                                         <a :href="$page.props.centres.prev_page_url" v-if="$page.props.centres.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
                                         <a :href="$page.props.centres.next_page_url"  v-if="$page.props.centres.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>

@@ -76,13 +76,12 @@ class MenuController extends Controller
     public function storeSubmenu(Request $request)
     {
         $request->validate([
-            'menu_sub_label' => 'required',
-        ],
-        [
-            'menu_sub_label.required' => 'The sub menu label is required.'
+            'menu_sub_label'            => 'required',
+            'menu_sub_route'            => 'required',
+            'menu_sub_permission_name'  => 'required',
         ]);
         
-        $current_rank   =   DB::table('menus_sub')->where('menu_id', $request->menu_id)->orderBy('menu_sub_rank', 'desc')->pluck('menu_sub_rank')->first();
+        $current_rank   =   (array)DB::table('menus_sub')->where('menu_id', $request->menu_id)->orderBy('menu_sub_rank', 'desc')->pluck('menu_sub_rank')->first();
         $next_rank      =   $current_rank + 1;
 
         DB::table('menus_sub')->insert([
@@ -91,6 +90,7 @@ class MenuController extends Controller
             'menu_sub_route'    => $request->menu_sub_route,
             'menu_sub_rank'     => $next_rank,
             'menu_sub_status'   => $request->menu_sub_status,
+            'permission_name' => $request->menu_sub_permission_name,
         ]);
         
         return redirect($request->url_redirect)->with(['type'=>'success', 'message'=>'Sub menu added successfully !']);
@@ -137,15 +137,17 @@ class MenuController extends Controller
         $url_redirect       =   url()->previous();
 
         return Inertia::render('Menus/EditSubMenu',[
-            'sub_menus'    =>  $sub_menus,
-            'url_redirect'    =>  $url_redirect
+            'sub_menus'     =>  $sub_menus,
+            'url_redirect'  =>  $url_redirect
         ]);
     }
 
     public function updateSubMenu(Request $request)
     {
         $request->validate([
-            'menu_sub_label' => 'required',
+            'menu_sub_label'            => 'required',
+            'menu_sub_route'            => 'required',
+            'menu_sub_permission_name'  => 'required',
         ]);
 
         DB::table('menus_sub')
@@ -154,6 +156,7 @@ class MenuController extends Controller
                 'menu_sub_label' => $request->menu_sub_label,
                 'menu_sub_route' => $request->menu_sub_route,
                 'menu_sub_status' => $request->menu_sub_status,
+                'permission_name' => $request->menu_sub_permission_name,
                 'updated_at'        => Carbon::now(),
             ]);
 

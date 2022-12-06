@@ -32,18 +32,8 @@ class CentreController extends Controller
 
     public function create(Request $request)
     {
-        if($request->principal_email){
-            $email_exist    =   User::where('user_email', $request->principal_email)->first();
-            if(!empty($email_exist)){
-                $email_exist      =   DB::table('user_basic_information')->where('user_id', $email_exist->ID)->first();
-            }
-        }
-        else{
-            $email_exist    =   null;
-        }
-        
         return Inertia::render('CentreManagement/Centres/Create', [
-            'email_exist'=>$email_exist,
+            // 'email_exist'=>$email_exist,
         ]);
     }
 
@@ -61,7 +51,7 @@ class CentreController extends Controller
         $email_exist  =   User::where('user_email', $request->principal_email)->count();
 
         if($email_exist < 1){
-            return redirect()->back()->with(['type'=>'error', 'message'=>'Please enter a valid principal email address !']);
+            return redirect()->back()->with(['type'=>'error', 'message'=>'Please enter a valid principal email address!']);
         }
 
         if(empty($request->image_list) || count(collect($request->image_list)->where('type', 'front')) < 1 || count(collect($request->image_list)->where('type', 'inside')) < 1){
@@ -267,5 +257,20 @@ class CentreController extends Controller
         }
         
         return $centre_images;
+    }
+
+    public function findUser(Request $request)
+    {
+        if($request->principal_email){
+            $email_exist    =   User::where('user_email', $request->principal_email)->first();
+            if(!empty($email_exist)){
+                $email_exist      =   DB::table('user_basic_information')->where('user_id', $email_exist->ID)->first();
+            }
+        }
+        else{
+            $email_exist    =   null;
+        }
+
+        return $email_exist;
     }
 }

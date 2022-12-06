@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Centre extends Model
 {
-    protected $table = 'wpvt_10_wlsm_schools';
+    protected $table = 'centres';
 }

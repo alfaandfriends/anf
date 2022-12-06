@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use App\Models\Menu;
+use App\Models\Permission;
 use App\Models\RoleHasPermissions;
 use App\Models\UserHasRoles;
 use Illuminate\Support\Facades\Auth;
@@ -39,15 +40,16 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         if($request->user()){
-            /* get user permissions */
-            $user_roles =   collect(UserHasRoles::where('user_id', $request->user()->ID)->get('role_id'));
-            $roles      =   RoleHasPermissions::with('permission')->whereIn('role_id', $user_roles)->get();
     
+            $user_roles =   collect(UserHasRoles::where('user_id', $request->user()->ID)->get('role_id'));
+            $roles      =   Permission::with('role_has_permissions')->whereHas('role_has_permissions', function ($q) use ($user_roles) {
+                $q->whereIn('role_id', $user_roles);
+            })->get();
+
+            $can    =   array();
             if(!empty($roles)){
                 foreach($roles as $key=>$role){
-                    if($role->permission != ''){
-                        $can[$role->permission->name] = true;
-                    }
+                    $can[$role->name] = true;
                 }
             }
 

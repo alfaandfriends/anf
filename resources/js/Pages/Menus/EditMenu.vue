@@ -8,62 +8,73 @@
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="py-4 px-4">
-            <div class="overflow-x-auto">
-                <div class="mx-auto">
-                    <div class="align-middle inline-block lg:w-1/3">
-                        <div class="p-6 bg-indigo-100 rounded-md border-b border-gray-200">
-                            <form @submit.prevent="submit">
-                                <div>
-                                    <label for="role">Menu Label<span class="text-red-500">*</span></label>
-                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.menu_label" 
-                                           :class="$page.props.errors.menu_label ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
-                                </div>
-                                <div v-if="$page.props.errors.menu_label"><span class="text-red-500">{{ $page.props.errors.menu_label }}</span></div>
-                                <div class="mt-3">
-                                    <label for="role_name">Permission</label>
-                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.menu_permission" 
-                                           :class="$page.props.errors.menu_permission ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
-                                </div>
-                                <div v-if="$page.props.errors.menu_permission"><span class="text-red-500">{{ $page.props.errors.menu_permission }}</span></div>
-                                <div class="mt-3">
-                                    <label for="role_name">Route</label>
-                                    <input type="text" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.menu_route" 
-                                           :class="$page.props.errors.menu_route ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"/>
-                                </div>
-                                <div class="mt-3">
-                                    <label for="role_name">Heroicons Icon (SVG Format)<span class="text-red-500">*</span></label>
-                                    <textarea rows="5" class="w-full px-4 py-1 mt-2 border rounded-md" v-model="form.menu_icon" 
-                                           :class="$page.props.errors.menu_icon ? 'border-1 border-rose-500 focus:outline-none focus:ring-0 focus:border-rose-500' : 'focus:ring-0 focus:border-gray-500'"></textarea>
-                                </div>
-                                <div v-if="$page.props.errors.menu_icon"><span class="text-red-500">{{ $page.props.errors.menu_icon }}</span></div>
-                                <div class="flex justify-between items-center mt-3">
-                                    <div class="">
-                                        <label for="" class="font-sm pr-3">Status</label>
-                                        <Toggle v-model="form.menu_status" 
+        <div class="md:grid md:grid-cols-2">
+            <div class="md:mt-0 md:col-span-2">
+                <form @submit.prevent="submit">
+                    <input type="hidden" v-model="menu_id">
+                    <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
+                        <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
+                            <div class="sm:row-span-3">
+                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                                    <div class="mb-5">
+                                        <h1 class="text-indigo-800 font-bold">Menu Information</h1>
+                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="menu_label" class="block text-sm font-bold text-gray-700"> Label <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" name="menu_label" id="menu_label" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.menu_label ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_label" autocomplete="off"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="menu_route" class="block text-sm font-bold text-gray-700"> Route <span class="text-red-500">(required if don't have sub menu)</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" name="menu_route" id="menu_route" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.menu_route ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_route" autocomplete="off"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="menu_permission" class="block text-sm font-bold text-gray-700"> Permission <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" name="menu_permission" id="menu_permission" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.menu_permission ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_permission" autocomplete="off"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="menu_icon" class="block text-sm font-bold text-gray-700"> Permission <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <textarea name="menu_icon" rows="5" id="menu_icon" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.menu_icon ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_icon" autocomplete="off"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex space-x-2">
+                                            <label for="" class="block font-bold text-gray-700">Active</label>
+                                            <Toggle v-model="form.menu_status" 
                                                 :classes="{
                                                     container: 'inline-block',
                                                     toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
                                                     toggleOn: 'bg-green-500 border-green-500 justify-start text-white',
                                                     toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
                                                 }
-                                        "/>
-                                    </div>
-                                    <div class="flex flex-row-reverse items-center">
+                                            "/>
+                                        </div>
                                         <div class="flex space-x-2">
-                                            <BreezeButton buttonType="gray" :route="route('menus')">
-                                                Cancel
-                                            </BreezeButton>
-                                            <BreezeButton type="submit" :disabled="form.processing">
-                                                Save
-                                            </BreezeButton>
+                                            <BreezeButton buttonType="gray" :route="route('menus')">Cancel</BreezeButton>
+                                            <BreezeButton type="submit" :disabled="form.processing">Save</BreezeButton>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </BreezeAuthenticatedLayout>

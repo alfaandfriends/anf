@@ -22,7 +22,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-4">
                                         <label for="name" class="block text-sm text-gray-700 font-bold">Country Name<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="name" id="name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="form.name" autocomplete="none"/>
+                                            <input type="text" name="name" id="name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="form.name" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
@@ -30,13 +30,13 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-4">
                                         <label for="code" class="block text-sm text-gray-700 font-bold">Country Code<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="code" id="code" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.code ? 'border-red-300' : 'border-gray-300'" v-model="form.code" autocomplete="none"/>
+                                            <input type="text" name="code" id="code" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.code ? 'border-red-300' : 'border-gray-300'" v-model="form.code" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
                                         <label for="currency" class="block text-sm text-gray-700 font-bold">Currency<span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="currency" id="currency" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.currency ? 'border-red-300' : 'border-gray-300'" v-model="form.currency" autocomplete="none"/>
+                                            <input type="text" name="currency" id="currency" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.currency ? 'border-red-300' : 'border-gray-300'" v-model="form.currency" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>

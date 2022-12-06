@@ -80,12 +80,13 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-200">
+                                <thead class="bg-gray-300">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Name</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Programme</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Parent</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Status</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
                                     </tr>
                                 </thead>
@@ -110,6 +111,9 @@ import BreezeButton from '@/Components/Button.vue';
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">{{ students.parent_name }}</div>
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="students.status == true ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ students.status == true ? 'Active' : 'Not Active' }} </span>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
@@ -117,22 +121,21 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <!-- <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                         </svg> -->
-                                                        Edit
+                                                        Edit Student
                                                     </BreezeButton>
                                                 </div>
-                                                <div class="flex">
+                                                <!-- <div class="flex">
                                                     <BreezeButton buttonType="danger" title="Delete Class" @click="deleteStudent(students.id)">
-                                                        <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
                                                         Delete
                                                     </BreezeButton>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <template v-if="$page.props.students.data.length">
-                                <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-200">
+                                <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-300">
                                     <div class="flex-1 flex justify-between sm:hidden">
                                         <a :href="$page.props.students.prev_page_url" v-if="$page.props.students.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
                                         <a :href="$page.props.students.next_page_url" v-if="$page.props.students.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
@@ -199,7 +202,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="p-6 space-y-6">
                                     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                                         <table class="min-w-full divide-y divide-gray-200">
-                                            <thead class="bg-gray-200">
+                                            <thead class="bg-gray-300">
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Name</th>

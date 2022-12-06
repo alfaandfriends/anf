@@ -72,10 +72,10 @@
                                     <div class="mb-4">
                                         <div class="flex justify-between">
                                             <label for="about" class="block text-sm text-gray-700 font-bold"> Email <span class="text-red-500">*</span></label>
-                                            <label for="about" class="font-medium text-sm" v-if="form.principal_email" :class="$page.props.email_exist != null ? 'text-green-700' : 'text-red-700'"> {{ $page.props.email_exist != null ? 'Email found!' : 'Email not found!'}} </label>
+                                            <label for="about" class="font-medium text-sm" v-if="form.principal_email" :class="email_exist ? 'text-green-700' : 'text-red-700'"> {{ email_exist ? 'Email found!' : 'Email not found!'}} </label>
                                         </div>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="email" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" :class="[($page.props.errors.principal_email ? 'border-red-300' : 'border-gray-300'), (($page.props.email_exist == null && form.principal_email) ? 'border-red-300' : 'border-gray-300'), (($page.props.email_exist != null && form.principal_email) ? 'border-green-500' : 'border-gray-300')]" v-model="form.principal_email" autocomplete="off"/>
+                                            <input type="email" v-debounce="findUser" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" :class="[($page.props.errors.principal_email ? 'border-red-300' : 'border-gray-300'), ((email_exist == null && form.principal_email) ? 'border-red-300' : 'border-gray-300'), ((email_exist != null && form.principal_email) ? 'border-green-500' : 'border-gray-300')]" v-model="form.principal_email" autocomplete="none"/>
                                         </div>
                                     </div>
                                 </div>
@@ -83,13 +83,13 @@
                                     <div class="mb-4">
                                         <label for="principal_first_name" class="block text-sm text-gray-700 font-bold"> First Name <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="principal_first_name" id="principal_first_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? form.principal_first_name = email_exist.user_first_name : ''" autocomplete="off"/>
+                                            <input type="text" name="principal_first_name" id="principal_first_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="centre_principal ? form.principal_first_name = centre_principal.first_name : ''" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
                                         <label for="pricipal_last_name" class="block text-sm text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="pricipal_last_name" id="pricipal_last_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? form.principal_last_name = email_exist.user_last_name : ''" autocomplete="off"/>
+                                            <input type="text" name="pricipal_last_name" id="pricipal_last_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="centre_principal ? form.principal_last_name = centre_principal.last_name : ''" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
@@ -225,6 +225,7 @@
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Toggle from '@vueform/toggle';
 import Cropper from 'cropperjs';    
+import { debounce } from 'vue-debounce'
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
@@ -236,7 +237,6 @@ export default {
         Link, Toggle, Cropper
     },
     props:{
-        email_exist: Object,
         centre_info: Object,
         centre_images: Object,
         centre_principal: Object,
@@ -251,6 +251,7 @@ export default {
             show_inside_upload: true,
             show_image: false,
             image: '',
+            email_exist: [],
             form: {
                 centre_id: this.centre_info.ID,
                 centre_name: this.centre_info ? this.centre_info.label.replace('ANFC ', '').replace('ANF ', '') : '',
@@ -295,14 +296,14 @@ export default {
             },
             deep: true
         },
-        'form.principal_email': {
-            handler(){
-                if(this.form.principal_email){
-                    this.$inertia.get(this.route('centres.edit'), {'centre_id': this.centre_info.ID, 'principal_email': this.form.principal_email}, { preserveState: true});  
-                }  
-            },
-            immediate: true
-        }
+        // 'form.principal_email': {
+        //     handler(){
+        //         if(this.form.principal_email){
+        //             this.$inertia.get(this.route('centres.edit'), {'centre_id': this.centre_info.ID, 'principal_email': this.form.principal_email}, { preserveState: true});  
+        //         }  
+        //     },
+        //     immediate: true
+        // }
     },
     methods: {
         submit() {
@@ -456,8 +457,8 @@ export default {
             }
         },
         delete_cropped_image(index){
-            if(this.form.image_list[index].ID){
-                this.form.images_to_delete.push({'image_id' : this.form.image_list[index].ID})
+            if(this.form.image_list[index].id){
+                this.form.images_to_delete.push({'image_id' : this.form.image_list[index].id})
                 // this.$inertia.delete('/centres/image/destroy/' + this.form.image_list[index].ID, { preserveState: true, preserveScroll: true,})
             }
             this.form.image_list.splice(index, 1)
@@ -466,7 +467,21 @@ export default {
             blob.lastModifiedDate = new Date();
             blob.name = fileName;
             return blob;
-        }
+        },
+        findUser(query){
+            debounce(val => console.log('normal format', val), '400ms')(10)
+            if(query){
+                this.searching_students = true
+                axios.get(route('centres.find_user'), {
+                    params: {
+                        'principal_email': query
+                    }
+                })
+                .then((res) => {
+                    this.email_exist = res.data
+                });
+            }
+        },
     },
 }
 </script>

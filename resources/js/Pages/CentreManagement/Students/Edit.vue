@@ -11,132 +11,160 @@ import BreezeButton from '@/Components/Button.vue';
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
-                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="mb-5">
-                                    <h1 class="font-bold text-indigo-800">Basic Information</h1>
-                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                    <div class="px-4 py-5 bg-indigo-100 space-y-6 sm:p-6">
+                        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                            <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                                <div class="sm:row-span-3">
+                                    <div class="mb-5">
+                                        <h1 class="font-bold text-indigo-800">Basic Information</h1>
+                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="centre" class="block text-sm font-bold text-gray-700"> Name <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="form.basic_info.name" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                            <div class="mb-4">
+                                                <label for="gender" class="block text-sm font-bold text-gray-700"> Gender <span class="text-red-500">*</span></label>
+                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                    <select name="gender" id="gender" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.gender ? 'border-red-300' : 'border-gray-300'" v-model="form.basic_info.gender" autocomplete="off">
+                                                        <option value="">-- Select Gender --</option>
+                                                        <option :value="gender.id" v-for="(gender, index) in $page.props.gender_list" :key="index">{{ gender.name }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label for="end_time" class="block text-sm font-bold text-gray-700"> Date of Birth <span class="text-red-500">*</span></label>
+                                                <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.dob ? '--dp-border-color: #fa9e9e' : ''" v-model="form.basic_info.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" :format="dateFormat"/>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Name <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="form.basic_info.name" autocomplete="none">
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                            <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                                <div class="sm:row-span-3">
+                                    <div class="mb-5">
+                                        <h1 class="font-bold text-indigo-800">Parent's Information</h1>
+                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="centre" class="block text-sm font-bold text-gray-700"> Name <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.name" autocomplete="off" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="centre" class="block text-sm font-bold text-gray-700"> Email <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.email" autocomplete="off" readonly>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <label for="gender" class="block text-sm font-bold text-gray-700"> Gender <span class="text-red-500">*</span></label>
+                                            <label for="centre" class="block text-sm font-bold text-gray-700"> Phone <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="gender" id="gender" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.gender ? 'border-red-300' : 'border-gray-300'" v-model="form.basic_info.gender" autocomplete="none">
-                                                    <option value="">-- Select Gender --</option>
-                                                    <option :value="gender.id" v-for="(gender, index) in $page.props.gender_list" :key="index">{{ gender.name }}</option>
-                                                </select>
+                                                <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.phone" autocomplete="off" readonly>
                                             </div>
                                         </div>
                                         <div class="mb-4">
-                                            <label for="end_time" class="block text-sm font-bold text-gray-700"> Date of Birth <span class="text-red-500">*</span></label>
-                                            <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.dob ? '--dp-border-color: #fa9e9e' : ''" v-model="form.basic_info.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" :format="dateFormat"/>
+                                            <label for="centre" class="block text-sm font-bold text-gray-700"> Address <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.address" autocomplete="off" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-4">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="mb-5">
-                                    <h1 class="font-bold text-indigo-800">Parent's Information</h1>
-                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Name <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.name" autocomplete="none" readonly>
+                        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                            <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                                <div class="sm:row-span-3">
+                                    <div class="mb-5">
+                                        <div class="flex items-center justify-between">
+                                            <h1 class="font-bold text-indigo-800">Academic Information</h1>
+                                            <div class="flex space-x-2 mb-1">
+                                                <BreezeButton @click="openAdmissionModal(true)">Add New Class</BreezeButton>
+                                            </div>
                                         </div>
+                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
-                                    <div class="mb-4">
-                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Email <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.email" autocomplete="none" readonly>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <div class="shadow overflow-hidden border-b border-gray-200 rounded-t-sm rounded-b-none">
+                                                <table class="min-w-full divide-y divide-gray-200">
+                                                    <thead class="bg-blue-200">
+                                                        <tr class="px-2">
+                                                            <th class="px-2 py-1 text-left border border-gray-400">#</th>
+                                                            <th class="px-2 py-1 text-left border border-gray-400">Programme</th>
+                                                            <th class="px-2 py-1 text-left border border-gray-400">Centre</th>
+                                                            <th class="px-2 py-1 text-left border border-gray-400">Level</th>
+                                                            <th class="px-2 py-1 text-left border border-gray-400">Type</th>
+                                                            <th class="px-2 py-1 text-left border border-gray-400">Day</th>
+                                                            <th class="px-2 py-1 text-left border border-gray-400">Time</th>
+                                                            <th class="px-2 py-1 text-center border border-gray-400">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-if="!$page.props.student_academics.length">
+                                                            <td colspan="10" class="py-2 text-center">
+                                                                <span>No classes available</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr v-else class="hover:bg-gray-200" v-for="academic, index in $page.props.student_academics">
+                                                            <td class="px-2 py-2 text-left border border-gray-400">{{ index + 1 }}</td>
+                                                            <td class="px-2 py-2 text-left border border-gray-400">{{ academic.programme_name}}</td>
+                                                            <td class="px-2 py-2 text-left border border-gray-400">{{ academic.centre_name}}</td>
+                                                            <td class="px-2 py-2 text-left border border-gray-400">{{ academic.level}}</td>
+                                                            <td class="px-2 py-2 text-left border border-gray-400">{{ academic.type}}</td>
+                                                            <td class="px-2 py-2 text-left border border-gray-400">{{ academic.day}}</td>
+                                                            <td class="px-2 py-2 text-left border border-gray-400">
+                                                                <div class="text-sm font-medium text-gray-900 flex items-center">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                    </svg>
+                                                                    <span class="pl-2">{{ moment(academic.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(academic.end_time, "HH:mm:ss").format('h:mm A') }}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td class="px-2 py-2 text-center border border-gray-400">
+                                                                <BreezeButton buttonType="danger" @click="deleteClass(academic.fee_id)">Delete</BreezeButton>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Phone <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.phone" autocomplete="none" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="centre" class="block text-sm font-bold text-gray-700"> Address <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" class="focus:ring-0 focus:border-gray-300 border-gray-300 flex-1 block w-full rounded-md sm:text-sm bg-gray-100" v-model="form.parent_info.address" autocomplete="none" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-4">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="mb-5">
-                                    <div class="flex items-center justify-between">
-                                        <h1 class="font-bold text-indigo-800">Academic Information</h1>
-                                        <div class="flex space-x-2 mb-1">
-                                            <BreezeButton @click="show_admission_modal = true">Add New Class</BreezeButton>
-                                        </div>
-                                    </div>
-                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <div class="shadow overflow-hidden border-b border-gray-200 rounded-t-sm rounded-b-none">
-                                            <table class="min-w-full divide-y divide-gray-200">
-                                                <thead class="bg-blue-200">
-                                                    <tr class="px-2">
-                                                        <th class="px-2 py-1 text-left border border-gray-400">#</th>
-                                                        <th class="px-2 py-1 text-left border border-gray-400">Programme</th>
-                                                        <th class="px-2 py-1 text-left border border-gray-400">Centre</th>
-                                                        <th class="px-2 py-1 text-left border border-gray-400">Level</th>
-                                                        <th class="px-2 py-1 text-left border border-gray-400">Type</th>
-                                                        <th class="px-2 py-1 text-left border border-gray-400">Day</th>
-                                                        <th class="px-2 py-1 text-left border border-gray-400">Time</th>
-                                                        <th class="px-2 py-1 text-center border border-gray-400">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-if="!$page.props.student_academics.length">
-                                                        <td colspan="10" class="py-2 text-center">
-                                                            <span>No classes available</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr v-else class="hover:bg-gray-200" v-for="academic, index in $page.props.student_academics">
-                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ index + 1 }}</td>
-                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.programme_name}}</td>
-                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.centre_name}}</td>
-                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.level}}</td>
-                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.type}}</td>
-                                                        <td class="px-2 py-2 text-left border border-gray-400">{{ academic.day}}</td>
-                                                        <td class="px-2 py-2 text-left border border-gray-400">
-                                                            <div class="text-sm font-medium text-gray-900 flex items-center">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                                </svg>
-                                                                <span class="pl-2">{{ moment(academic.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(academic.end_time, "HH:mm:ss").format('h:mm A') }}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-2 py-2 text-center border border-gray-400">
-                                                            <BreezeButton buttonType="danger" @click="remove_class.isOpen = true">Delete</BreezeButton>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                            <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                                <div class="sm:row-span-3">
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                        <div class="flex justify-between items-center">
+                                            <div class="flex space-x-2">
+                                                <label for="" class="block font-bold text-gray-700">Active</label>
+                                                <Toggle v-model="form.student_status" 
+                                                    :classes="{
+                                                        container: 'inline-block',
+                                                        toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
+                                                        toggleOn: 'bg-green-500 border-green-500 justify-start text-white',
+                                                        toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
+                                                    }
+                                                "/>
+                                            </div>
+                                            <BreezeButton buttonType="info" @click="saveStudentDetails">Save</BreezeButton>
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +192,7 @@ import BreezeButton from '@/Components/Button.vue';
                 <div class="bg-white rounded-lg shadow relative">
                     <div class="flex items-center justify-between py-3 px-6 border-b rounded-t">
                         <span class="text-lg font-semibold text-gray-700">Add Student Class</span>
-                        <button @click="show_admission_modal = false" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
+                        <button @click="openAdmissionModal(false)" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
                         </button>
                     </div>
@@ -239,7 +267,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-4">
                                         <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="none">
+                                            <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
                                                 <option value="">-- Select Programme --</option>
                                                 <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
                                             </select>
@@ -249,7 +277,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mb-4">
                                             <label for="class_type" class="block text-sm font-bold text-gray-700"> Class Type <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_type" autocomplete="none" :disabled="disable_input.class_type">
+                                                <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_type" autocomplete="off" :disabled="disable_input.class_type">
                                                     <option value="">-- Select Type --</option>
                                                     <option :value="class_type.id" v-for="(class_type, index) in class_types" :key="index">{{ class_type.name }}</option>
                                                 </select>
@@ -258,7 +286,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mb-4">
                                             <label for="class_level" class="block text-sm font-bold text-gray-700"> Class Level <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="class_level" id="class_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_level ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_level" autocomplete="none" :disabled="disable_input.class_levels">
+                                                <select name="class_level" id="class_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_level ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_level" autocomplete="off" :disabled="disable_input.class_levels">
                                                     <option value="">-- Select Level --</option>
                                                     <option :value="i.level" v-for="i, index in class_levels" :key="i">{{ i.level }}</option>
                                                 </select>
@@ -267,7 +295,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mb-4">
                                             <label for="class_method" class="block text-sm font-bold text-gray-700"> Class Method <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="class_method" id="class_method" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_method ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_method" autocomplete="none">
+                                                <select name="class_method" id="class_method" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_method ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_method" autocomplete="off">
                                                     <option value="">-- Select Method --</option>
                                                     <option :value="method.id" v-for="(method, index) in method_list" :key="index">{{ method.name }}</option>
                                                 </select>
@@ -360,7 +388,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </div>
                                                 <span class="text-gray-700">{{ form.fee.label }} - {{ form.fee.fee_amount }}</span>
                                             </div>
-                                            <BreezeButton buttonType="info" @click="addStudent">Admit Student</BreezeButton>
                                         </div>
                                     </div>
                                 </div>
@@ -369,7 +396,7 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                     <div class="flex space-x-2 items-center p-6 border-t border-gray-200 rounded-b justify-end" v-if="enable_container.show_fee">
                         <BreezeButton buttonType="gray">Cancel</BreezeButton>
-                        <BreezeButton>Save</BreezeButton>
+                        <BreezeButton @click="addClass">Save</BreezeButton>
                     </div>
                 </div>
             </div>
@@ -445,9 +472,10 @@ export default {
                     phone: this.student_info ? this.student_info.parent_calling_code + this.student_info.parent_contact: '',
                     address: this.student_info ? this.student_info.parent_address : '',
                 },
-                student_id: '',
+                student_id: this.student_info ? this.student_info.id  : '',
                 fee: [],
                 classes: [],
+                student_status: this.student_info ? this.student_info.status : '',
             }
         }
     },
@@ -493,8 +521,8 @@ export default {
         },
     },
     methods: {
-        submit() {
-            this.$inertia.post(route('classes.store'), this.form, { preserveState: true})
+        saveStudentDetails(){
+            this.$inertia.post(route('students.update'), this.form, { preserveState: true})
         },
         findStudents(query){
             if(query){
@@ -580,8 +608,12 @@ export default {
                 el.scrollIntoView({behavior: 'smooth'});
             }
         },
-        addStudent(){
-            this.$inertia.post(route('students.store'), this.form)
+        addClass(){
+            this.$inertia.post(route('students.add_student_class'), this.form, {
+                onSuccess: ()=>{
+                    this.show_admission_modal = false
+                }
+            })
         },
         dateFormat(date){
             const day = date.getDate();
@@ -589,6 +621,23 @@ export default {
             const year = date.getFullYear();
 
             return `${day}/${month}/${year}`;
+        },
+        deleteClass(feeID){
+            this.remove_class.confirmationRoute = 'students.destroy'
+            this.remove_class.confirmationData = {'student_id' : this.student_info.id, 'fee_id' : feeID}
+            this.remove_class.isOpen = true
+        },
+        openAdmissionModal(status){
+            if(status == true){
+                this.search_form.centre_id = ''
+                this.search_form.class_level = ''
+                this.search_form.class_method = ''
+                this.search_form.class_type = ''
+                this.search_form.programme_id = ''
+                this.enable_container.available_classes = false
+                this.enable_container.show_fee = false
+            }
+            this.show_admission_modal = status
         }
     }
 }

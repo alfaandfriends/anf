@@ -27,7 +27,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="mb-3">
                                                 <label for="category_name" class="block text-sm text-gray-700 font-bold">Category name<span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <input type="text" name="category_name" id="category_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.category_name ? 'border-red-300' : 'border-gray-300'" v-model="form.category_name" autocomplete="none"/>
+                                                    <input type="text" name="category_name" id="category_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.category_name ? 'border-red-300' : 'border-gray-300'" v-model="form.category_name" autocomplete="off"/>
                                                 </div>
                                             </div>
                                             <div class="flex items-end justify-end space-x-2">

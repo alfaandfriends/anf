@@ -28,6 +28,7 @@ class Menu extends Model
                         $sub_menu_info['sub_menu_label']    =   $sub_menu->menu_sub_label;
                         $sub_menu_info['sub_menu_route']    =   $sub_menu->menu_sub_route;
                         $sub_menu_info['sub_menu_status']   =   $sub_menu->menu_sub_status;
+                        $sub_menu_info['permission_name']   =   $sub_menu->permission_name;
                         $sub_menus[$sub_key]               =   $sub_menu_info;
                     }
                     $menus[$key]['sub_menu']       =   (object)$sub_menus;
