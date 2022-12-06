@@ -408,7 +408,13 @@ export default {
             this.$inertia.post(route('profile.store'), this.form)
         },
         savePassword(){
-            this.$inertia.post(route('profile.security.store'), this.security_form)
+            this.$inertia.post(route('profile.security.store'), this.security_form, {
+                onSuccess: () => {
+                    this.security_form.confirm_new_password = ''
+                    this.security_form.current_password = ''
+                    this.security_form.new_password = ''
+                }
+            })
         },
         setCallingCode(country_code){
             axios

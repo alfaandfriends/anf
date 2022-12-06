@@ -10,8 +10,6 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CentreController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\DiagnosticTestController;
-use App\Http\Controllers\FeeController;
-use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;

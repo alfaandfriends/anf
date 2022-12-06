@@ -275,13 +275,18 @@ export default {
                             <Breadcrumbs :breadcrumbs="$page.props.breadcrumbs"/>
                         </div>
                     </header>
-                    <form @submit.prevent="impersonate">
-                        <div class="flex px-6 py-3 bg-blue space-x-2 items-center bg-orange-400 justify-end" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
-                            <label for="" class="text-white font-bold">Username</label>
-                            <input type="text" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username">
-                            <BreezeButton @click="impersonate" class="bg-blue-600 hover:bg-blue-700">Change User</BreezeButton>
+                        <div class="px-6 py-3 bg-blue bg-orange-400 justify-end" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
+                            <form @submit.prevent="impersonate" class="flex space-x-2 items-center">
+                                <label for="" class="text-white lg:text-sm sm:text-md font-bold">Username</label>
+                                <input type="text" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username">
+                                <BreezeButton @click="impersonate" class="hidden sm:block bg-blue-600 hover:bg-blue-700">Change User</BreezeButton>
+                                <BreezeButton @click="impersonate" class="sm:hidden bg-blue-600 hover:bg-blue-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                    </svg>
+                                </BreezeButton>
+                            </form>
                         </div>
-                    </form>
                     <slot/>
                 </div>
                 <div class="py-5 px-6 bg-slate-700 text-white bottom-0">
