@@ -24,8 +24,9 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-300">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/6">Name</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Group</th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                     </tr>
                                 </thead>
@@ -38,51 +39,29 @@
                                         </td>
                                     </tr> 
                                     <tr class="hover:bg-gray-200" v-for="(role, roleID) in $page.props.roles" :key="roleID">
-                                        <td class="px-3 py-3">
+                                        <td class="px-2 py-3">
                                             <div class="flex items-center">
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">{{ role.display_name }}</div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-3 py-3 text-center">
+                                        <td class="px-2 py-3">
+                                            <div class="flex items-center">
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">{{ role.role_group_name }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-2 py-3 text-center">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
                                                   :class="role.status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ role.status == 1 ? 'Active' : 'Not Active' }} </span>
                                         </td>
                                         <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
-                                            <div class="flex justify-center">
-                                                <div class="pr-1">
-                                                    <BreezeButton buttonType="warning"
-                                                            @click="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ? editRole(role.name) : ''" 
-                                                            title="Edit Role"
-                                                            :class="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ?
-                                                                    '' : 'bg-yellow-500/40 hover:bg-yellow-400/40 cursor-not-allowed'"
-                                                    >
-                                                        <!-- <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon> -->
-                                                        Edit
-                                                    </BreezeButton>
-                                                </div>
-                                                <div class="pr-1">
-                                                    <BreezeButton buttonType="danger"
-                                                            @click="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ? deleteRole(role.id) : ''" title="Delete"
-                                                            :class="role.name != 'administrator' && role.name != 'editor' && role.name != 'author' && role.name != 'contributor' ?
-                                                                    '' : 'bg-red-500/40 hover:bg-red-400/40 cursor-not-allowed'"
-                                                    >
-                                                        <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
-                                                        Delete
-                                                    </BreezeButton>
-                                                </div>
-                                                <div class="">
-                                                    <BreezeButton buttonType="blue" 
-                                                            title="Assign Permissions"
-                                                            @click="assignPermissions(role.id)"
-                                                    >
-                                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current" viewBox="0 0 20 20" fill="currentColor">
-                                                            <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd" />
-                                                        </svg> -->
-                                                        Permissions
-                                                    </BreezeButton>
-                                                </div>
+                                            <div class="flex justify-center space-x-2">
+                                                <BreezeButton buttonType="warning" @click="editRole(role.id)" title="Edit Role" > Edit </BreezeButton>
+                                                <BreezeButton buttonType="danger" @click="deleteRole(role.id)" title="Delete"> Delete </BreezeButton>
+                                                <BreezeButton buttonType="blue" title="Assign Permissions" @click="assignPermissions(role.id)"> Permissions </BreezeButton>
                                             </div>
                                         </td>
                                     </tr>
@@ -139,7 +118,7 @@ export default {
             this.confirmationData = roleID
         },
         editRole(roleID){
-            this.$inertia.get(route('roles.edit'), {role: roleID});
+            this.$inertia.get(route('roles.edit'), {'role_id': roleID});
         },
         assignPermissions(role_id){
             this.$inertia.get(route('roles.assign_pemissions'), {'role_id': role_id});

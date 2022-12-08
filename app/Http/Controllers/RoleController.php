@@ -16,41 +16,70 @@ class RoleController extends Controller
 
 {   
     public function index(){
-        $roles  =  Role::get();
+        $roles          =   DB::table('roles')
+                            ->join('role_groups', 'roles.role_group_id', '=', 'role_groups.id')
+                            ->select([
+                                'roles.id',
+                                'roles.name',
+                                'roles.display_name',
+                                'roles.status',
+                                'role_groups.id as role_group_id',
+                                'role_groups.name as role_group_name',
+                            ])->get();
         
         return Inertia::render('Roles/Index', [
-            'roles' => $roles
+            'roles'         => $roles,
         ]);
     }
 
     public function create(){
-        return Inertia::render('Roles/Create');
+        $role_groups    =   DB::table('role_groups')->get();
+        return Inertia::render('Roles/Create', [
+            'role_groups'   => $role_groups
+        ]);
     }
 
     public function store(Request $request){
         
         $request->validate([
-            'role'          => 'required|max:20',
             'display_name'  => 'required|max:50',
+            'role_group'    => 'required',
         ]);
 
-        Role::create(['name' => $request->role, 'display_name' => $request->display_name, 'status' => $request->status]);
+        DB::table('roles')->insert([
+            'display_name' => $request->display_name, 
+            'role_group_id' => $request->role_group, 
+            'status' => $request->status
+        ]);
         
         return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Role added successfully !']);
     }
 
     public function edit(Request $request){
-        $roles      =   Role::where('name', $request->role)->first();
+        $roles          =   DB::table('roles')
+                            ->join('role_groups', 'roles.role_group_id', '=', 'role_groups.id')
+                            ->select([
+                                'roles.id',
+                                'roles.name',
+                                'roles.display_name',
+                                'roles.status',
+                                'role_groups.id as role_group_id',
+                                'role_groups.name as role_group_name',
+                            ])->where('roles.id', $request->role_id)->first();
+        $role_groups    =   DB::table('role_groups')->get();
 
         return Inertia::render('Roles/Edit', [
-            'roles' => $roles
+            'roles' => $roles,
+            'role_groups'   => $role_groups
         ]);
     }
 
     public function update(Request $request){
 
         $request->validate([
-            'display_name' => 'required|max:50',
+            'role'          => 'required|max:20',
+            'display_name'  => 'required|max:50',
+            'role_group'    => 'required',
         ]);
 
         DB::table('roles')

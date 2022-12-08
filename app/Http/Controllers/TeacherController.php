@@ -53,4 +53,20 @@ class TeacherController extends Controller
             'classes'       => $query->paginate(10),
         ]);
     }
+
+    public function create()
+    {
+        return Inertia::render('CentreManagement/Teachers/Create');
+    }
+
+    public function store(Request $request)
+    {
+        dd($request);
+    }
+
+    public function find(Request $request)
+    {
+        $students   =   DB::table('wpvt_users')->where('display_name', 'LIKE', '%'.$request->keyword.'%')->select(['ID', 'display_name'])->get();
+        return $students;
+    }
 }

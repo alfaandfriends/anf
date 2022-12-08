@@ -30,9 +30,20 @@
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <label for="menu_route" class="block text-sm font-bold text-gray-700"> Route <span class="text-red-500">(required if don't have sub menu)</span></label>
+                                            <label for="have_sub_menu" class="block text-sm font-bold text-gray-700"> Sub Menu </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="menu_route" id="menu_route" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.menu_route ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_route" autocomplete="off"/>
+                                                <select class="border-gray-300 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" name="" id="have_sub_menu" v-model="have_sub_menu" @change="resetRoute">
+                                                    <option :value="true">Yes</option>
+                                                    <option :value="false">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4" v-if="!have_sub_menu">
+                                        <div class="mb-4">
+                                            <label for="menu_route" class="block text-sm font-bold text-gray-700"> Route </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" name="menu_route" id="menu_route" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="menu_route_error ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_route" autocomplete="off"/>
                                             </div>
                                         </div>
                                     </div>
@@ -93,6 +104,8 @@ export default {
     },
     data() {
         return {
+            have_sub_menu: this.menus.menu_route ? false : true,
+            menu_route_error: false,
             form: {
                 menu_id: this.menus.id,
                 menu_label: this.menus.menu_label,
@@ -103,10 +116,27 @@ export default {
             },
         }
     },
+    watch:{
+        'form.menu_route': {
+            handler(){
+                if(this.form.menu_route != ''){
+                    this.menu_route_error = false
+                }
+            }
+        }
+    },
     methods: {
         submit() {
-            this.$inertia.post(route('menus.update_menu'), this.form)
+            if(this.have_sub_menu || !this.have_sub_menu && this.form.menu_route != ''){
+                this.$inertia.post(route('menus.update_menu'), this.form)
+            }
+            else{
+                this.menu_route_error = true
+            }
         },
+        resetRoute(){
+            this.form.menu_route = ''
+        }
     },
 }
 </script>

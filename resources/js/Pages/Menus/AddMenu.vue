@@ -30,9 +30,20 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <label for="menu_route" class="block text-sm font-bold text-gray-700"> Route <span class="text-red-500">(required if don't have sub menu)</span></label>
+                                            <label for="have_sub_menu" class="block text-sm font-bold text-gray-700"> Sub Menu </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="menu_route" id="menu_route" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.menu_route ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_route" autocomplete="off"/>
+                                                <select class="border-gray-300 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" name="" id="have_sub_menu" v-model="have_sub_menu" @change="resetRoute">
+                                                    <option :value="true">Yes</option>
+                                                    <option :value="false">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4" v-if="!have_sub_menu">
+                                        <div class="mb-4">
+                                            <label for="menu_route" class="block text-sm font-bold text-gray-700"> Route </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" name="menu_route" id="menu_route" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="menu_route_error ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_route" autocomplete="off"/>
                                             </div>
                                         </div>
                                     </div>
@@ -46,7 +57,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <label for="menu_icon" class="block text-sm font-bold text-gray-700"> Permission <span class="text-red-500">*</span></label>
+                                            <label for="menu_icon" class="block text-sm font-bold text-gray-700"> SVG Icon <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <textarea name="menu_icon" rows="5" id="menu_icon" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.menu_icon ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_icon" autocomplete="off"></textarea>
                                             </div>
@@ -90,19 +101,38 @@ export default {
     },
     data() {
         return {
+            have_sub_menu: true,
+            menu_route_error: false,
             form: {
-                menu_label: null,
-                menu_route: null,
+                menu_label: '',
+                menu_route: '',
                 menu_icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
-                menu_permission: null,
+                menu_permission: '',
                 menu_status: true,
             },
         }
     },
+    watch:{
+        'form.menu_route': {
+            handler(){
+                if(this.form.menu_route != ''){
+                    this.menu_route_error = false
+                }
+            }
+        }
+    },
     methods: {
         submit() {
-            this.$inertia.post(route('menus.store_menu'), this.form)
+            if(this.have_sub_menu || !this.have_sub_menu && this.form.menu_route != ''){
+                this.$inertia.post(route('menus.store_menu'), this.form)
+            }
+            else{
+                this.menu_route_error = true
+            }
         },
+        resetRoute(){
+            this.form.menu_route = ''
+        }
     },
 }
 </script>

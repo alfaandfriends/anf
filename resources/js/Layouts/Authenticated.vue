@@ -275,8 +275,8 @@ export default {
                             <Breadcrumbs :breadcrumbs="$page.props.breadcrumbs"/>
                         </div>
                     </header>
-                        <div class="px-6 py-3 bg-blue bg-orange-400 justify-end" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
-                            <form @submit.prevent="impersonate" class="flex space-x-2 items-center">
+                        <div class="px-6 py-3 bg-blue bg-orange-400" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
+                            <form @submit.prevent="impersonate" class="flex space-x-2 items-center sm:justify-end">
                                 <label for="" class="text-white lg:text-sm sm:text-md font-bold">Username</label>
                                 <input type="text" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username">
                                 <BreezeButton @click="impersonate" class="hidden sm:block bg-blue-600 hover:bg-blue-700">Change User</BreezeButton>

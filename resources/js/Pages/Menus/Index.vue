@@ -59,7 +59,7 @@
                                         <td class="px-2 py-2 whitespace-nowrap">
                                             <div class="flex items-center">
                                             <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900" :class="menu.menu_route ? '' : 'font-black'">{{ menu.menu_route ? menu.menu_route : 'None' }}</div>
+                                                <div class="text-sm font-medium text-gray-900" :class="menu.menu_route ? '' : 'font-black'">{{ menu.menu_route ? menu.menu_route : '' }}</div>
                                             </div>
                                             </div>
                                         </td>

@@ -21,7 +21,7 @@ use App\Http\Controllers\TeacherController;
 /* Authorized Only */
 Route::middleware(['auth'])->group(function(){
     /* Default Landing Page */
-    Route::get('/', [DashboardController::class, 'index'])->middleware('permission:dashboard_view_access');
+    Route::get('/', [DashboardController::class, 'index'])->middleware('permission:dashboard_access');
     // Route::get('/', function () {
     //     return Inertia::render('Welcome', [
     //         'canLogin' => Route::has('login'),
@@ -36,7 +36,7 @@ Route::middleware(['auth'])->group(function(){
 
     /* Dashboard */
     /* User */
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard_view_access');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard_access');
 
     /* Profile */
     Route::get('/profile', [ProfileController::class, 'create'])->name('profile');
@@ -172,6 +172,9 @@ Route::middleware(['auth'])->group(function(){
 
         /* Teachers */
         Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers');
+        Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
+        Route::post('/teachers/store', [TeacherController::class, 'store'])->name('teachers.store');
+        Route::get('/teachers/find', [TeacherController::class, 'find'])->name('teachers.find');
 
         /* Settings */    
         Route::get('/settings', [SettingController::class, 'programmeList'])->name('settings');
