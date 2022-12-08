@@ -10,7 +10,6 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 
@@ -20,7 +19,6 @@ class RoleController extends Controller
                             ->join('role_groups', 'roles.role_group_id', '=', 'role_groups.id')
                             ->select([
                                 'roles.id',
-                                'roles.name',
                                 'roles.display_name',
                                 'roles.status',
                                 'role_groups.id as role_group_id',
@@ -60,7 +58,6 @@ class RoleController extends Controller
                             ->join('role_groups', 'roles.role_group_id', '=', 'role_groups.id')
                             ->select([
                                 'roles.id',
-                                'roles.name',
                                 'roles.display_name',
                                 'roles.status',
                                 'role_groups.id as role_group_id',
@@ -77,7 +74,6 @@ class RoleController extends Controller
     public function update(Request $request){
 
         $request->validate([
-            'role'          => 'required|max:20',
             'display_name'  => 'required|max:50',
             'role_group'    => 'required',
         ]);
@@ -86,6 +82,7 @@ class RoleController extends Controller
             ->where('name', $request->name)
             ->update([
                 'display_name'  => $request->display_name, 
+                'role_group_id' => $request->role_group, 
                 'status'        => $request->status, 
                 'updated_at'    => Carbon::now()
             ]);
