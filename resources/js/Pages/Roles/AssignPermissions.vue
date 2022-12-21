@@ -32,7 +32,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col py-2 px-4 border-x border-indigo-200" v-if="expandAccordion && index === selected">
+                                    <div class="flex flex-col py-3 px-3 border-x border-indigo-200" v-if="expandAccordion && index === selected">
                                         <div v-if="permission.permission_sub.length < 1">
                                             <span>No sub permissions.</span>
                                         </div>

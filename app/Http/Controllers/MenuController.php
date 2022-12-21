@@ -81,8 +81,8 @@ class MenuController extends Controller
             'menu_sub_permission_name'  => 'required',
         ]);
         
-        $current_rank   =   (array)DB::table('menus_sub')->where('menu_id', $request->menu_id)->orderBy('menu_sub_rank', 'desc')->pluck('menu_sub_rank')->first();
-        $next_rank      =   $current_rank + 1;
+        $current_rank   =   DB::table('menus_sub')->where('menu_id', $request->menu_id)->orderBy('menu_sub_rank', 'desc')->pluck('menu_sub_rank')->first();
+        $next_rank      =   $current_rank ? $current_rank + 1 : 1;
 
         DB::table('menus_sub')->insert([
             'menu_id'           => $request->menu_id,

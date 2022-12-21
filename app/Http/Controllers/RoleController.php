@@ -72,14 +72,13 @@ class RoleController extends Controller
     }
 
     public function update(Request $request){
-
         $request->validate([
             'display_name'  => 'required|max:50',
             'role_group'    => 'required',
         ]);
 
         DB::table('roles')
-            ->where('name', $request->name)
+            ->where('id', $request->role_id)
             ->update([
                 'display_name'  => $request->display_name, 
                 'role_group_id' => $request->role_group, 
@@ -126,7 +125,6 @@ class RoleController extends Controller
     public function assignPermissionsStore(Request $request)
     {
         RoleHasPermissions::where('role_id', $request->role_id)->delete();
-
         foreach($request->selected_permissions as $key=>$permission_id){
             DB::table('role_has_permissions')->insert([
                 'role_id'       =>  $request->role_id,

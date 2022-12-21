@@ -120,7 +120,7 @@ export default {
         if(this.timeout){
             clearTimeout(this.timeout);
         }
-        this.timeout = setTimeout(() => this.visible = false, 5000);
+        this.timeout = setTimeout(() => this.visible = false, 10000);
     },
     watch:{
         toastData:{
@@ -131,7 +131,7 @@ export default {
                 if(this.timeout){
                     clearTimeout(this.timeout);
                 }
-                this.timeout = setTimeout(() => this.visible = false, 5000);
+                this.timeout = setTimeout(() => this.visible = false, 10000);
             }
         }
     },

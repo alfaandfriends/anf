@@ -16,26 +16,19 @@
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="mb-5">
-                                        <h1 class="text-indigo-800 font-bold">Permission Information</h1>
+                                        <h1 class="text-indigo-800 font-bold">Role Information</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <label for="display_name" class="block text-sm font-bold text-gray-700">Display Name</label>
+                                            <label for="display_name" class="block text-sm font-bold text-gray-700">Name</label>
                                             <input type="text" class="mt-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.display_name" 
                                                 :class="$page.props.errors.display_name ? 'border-red-300' : 'border-gray-300'"/>
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <label for="role" class="block text-sm font-bold text-gray-700">Role Indicator</label>
-                                            <input type="text" class="mt-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full bg-gray-200 rounded-md sm:text-sm" disabled v-model="form.role" 
-                                                :class="$page.props.errors.role ? 'border-red-300' : 'border-gray-300'"/>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
-                                        <div class="mb-4">
-                                            <label for="display_name" class="block text-sm font-bold text-gray-700">Role Group</label>
+                                            <label for="display_name" class="block text-sm font-bold text-gray-700">Group</label>
                                             <select name="" id="" class="mt-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.role_group ? 'border-red-300' : 'border-gray-300'" v-model="form.role_group">
                                                 <option :value="role_group.id" v-for="(role_group, index) in $page.props.role_groups" :key="role_group.id">{{ role_group.name }}</option>
                                             </select>
@@ -89,16 +82,16 @@ export default {
     data() {
         return {
             form: {
-                status: this.roles ? this.roles.status : '',
-                role: this.roles ? this.roles.name : '',
+                role_id: this.roles ? this.roles.id : '',
                 display_name: this.roles ? this.roles.display_name : '',
                 role_group: this.roles ? this.roles.role_group_id : 1,
+                status: this.roles ? this.roles.status : '',
             },
         }
     },
     methods: {
         submit() {
-            this.$inertia.post(route('roles.update'), this.roles)
+            this.$inertia.post(route('roles.update'), this.form)
         },
     },
 }

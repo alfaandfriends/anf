@@ -75,7 +75,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <input type="text" name="class_type_detail" id="class_type_detail" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm" :class="$page.props.errors.class_type_detail ? 'border-red-300' : 'border-gray-300'" v-model="fee[class_type.id]" autocomplete="off" @keypress="numbersOnly"/>
                                     </div>
                                 </div>
-                                <div class="grow" v-if="class_types_detail.length">
+                                <div class="grow">
                                     <BreezeButton buttonType="blue" :class="'px-6 py-3'" @click="addLevel">Add Level & Fee</BreezeButton>
                                 </div>  
                             </div>

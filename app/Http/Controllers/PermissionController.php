@@ -59,9 +59,9 @@ class PermissionController extends Controller
     }
 
     public function edit(Request $request){
-        $permission_info            =   Permission::where('id', $request->permission_id)->first();
-        $sub_permissions        =   array_column(collect(Permission::where('parent_id', $request->permission_id)->select(['name'])->get())->toArray(), 'name');
-
+        $permission_info        =   Permission::where('id', $request->permission_id)->first();
+        $sub_permissions        =   collect(Permission::where('parent_id', $request->permission_id)->select(['id', 'name'])->get())->toArray();
+        
         return Inertia::render('Permissions/Edit', [
             'permission_id'     => $request->permission_id,
             'permission_info'   => $permission_info,
@@ -79,13 +79,19 @@ class PermissionController extends Controller
             ->where('id', $request->permission_id)
             ->update(['name' => $request->permission, 'updated_at' => Carbon::now()]);
 
-        Permission::where('parent_id', $request->permission_id)->delete();
+        if(!empty($request->add_sub_permission)){
+            foreach($request->add_sub_permission as $key=>$data){
+                Permission::insert([
+                                'parent_id'     => $request->permission_id,
+                                'name'          => $data['name'],
+                            ]);
+            }
+        }
 
-        foreach($request->sub_permission as $key=>$data){
-            Permission::insert([
-                            'parent_id' => $request->permission_id,
-                            'name'          => $data,
-                        ]);
+        if(!empty($request->delete_sub_permission)){
+            foreach($request->delete_sub_permission as $key=>$id){
+                Permission::where('id', $id)->delete();
+            }
         }
 
         return redirect(route('permissions'))->with(['type'=>'success', 'message'=>'Permission updated successfully !']);

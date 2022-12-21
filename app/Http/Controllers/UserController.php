@@ -8,6 +8,7 @@ use App\Notifications\UserRegistrationCredentials;
 use Corcel\Model\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -131,39 +132,34 @@ class UserController extends Controller
         }
     }
 
-    public function assignCentresRoles(Request $request)
+    public function manageRoles(Request $request)
     {
         $roles          =   Role::get();
-        $centres        =   DB::table('centres')->select(['ID', 'label as name'])->get();
         $user_roles     =   UserHasRoles::where('user_id', $request->user_id)->get('role_id')->keyBy('role_id');
-        $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
 
         return Inertia::render('Users/AssignRoles', [
             'user_id' => $request->user_id,
             'roles' => $roles,
-            'centres'   => $centres,
             'user_roles' => $user_roles,
-            'user_centres' => $user_centres,
         ]);
     }
 
-    public function assignCentresRolesStore(Request $request)
+    public function manageRolesStore(Request $request)
     {
+        $user           =   User::find($request->user_id);
+        $admin_array    =   [1, 2, 3];
+
         UserHasRoles::where('user_id', $request->user_id)->delete();
-        DB::table('user_has_centres')->where('user_id', $request->user_id)->delete();
 
         foreach($request->selected_roles as $key=>$role_id){
             DB::table('user_has_roles')->insert([
                 'user_id'   =>  $request->user_id,
                 'role_id'   =>  $role_id
             ]);
-        }
 
-        foreach($request->selected_centres as $key=>$centre_id){
-            DB::table('user_has_centres')->insert([
-                'user_id'   =>  $request->user_id,
-                'centre_id'   =>  $centre_id
-            ]);
+            if(in_array($role_id, $admin_array)){
+                $user->update(['is_admin' => true]);
+            }
         }
 
         return redirect(route('users'))->with(['type'=>'success', 'message'=>'Operation successfull !']);

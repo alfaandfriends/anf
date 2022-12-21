@@ -415,6 +415,10 @@ export default {
                 }
                 else{
                     alert('Only 1 front view image is allowed!')
+                    this.show_front_upload = true
+                    this.show_inside_upload = true
+                    this.show_image = false
+                    this.$refs.front_image.value=null;
                 }
             }
             else if(this.data.view_type == 'inside'){
@@ -430,6 +434,10 @@ export default {
                 }
                 else{
                     alert('Only 5 inside view image is allowed!')
+                    this.show_front_upload = true
+                    this.show_inside_upload = true
+                    this.show_image = false
+                    this.$refs.inside_image.value=null;
                 }
             }
         },

@@ -1,6 +1,6 @@
 <script>
 import BreezeApplicationLogo from '@/Components/ApplicationLogo.vue'
-import BreezeButton from '@/Components/Button.vue';
+import BreezeButton from '@/Components/Button.vue'
 import BreezeDropdown from '@/Components/Dropdown.vue'
 import BreezeDropdownLink from '@/Components/DropdownLink.vue'
 import BreezeNavLink from '@/Components/NavLink.vue'
@@ -9,15 +9,16 @@ import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
 import { Link } from '@inertiajs/inertia-vue3'
 import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } from '@heroicons/vue/solid'
 import Toast from '@/Components/Toast.vue'
-import VueGuidedTour from "@alfaandfriends/vue-guided-tour/src/components/vueGuidedTour.vue";
+import VueGuidedTour from "@alfaandfriends/vue-guided-tour/src/components/vueGuidedTour.vue"
 import Breadcrumbs from '@/Components/Breadcrumbs.vue'
 import { fortawesome } from '@fortawesome/free-regular-svg-icons'
-import Pusher from 'pusher-js';
+import Pusher from 'pusher-js'
+import TimeAgo from '@/Components/TimeAgo.vue'
 
 export default {
     components: {
         BreezeApplicationLogo, Link, Toast, VueGuidedTour, Pusher, BreezeButton,
-        BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink, Breadcrumbs,
+        BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink, Breadcrumbs, TimeAgo,
         CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon
     },
     data() {
@@ -46,11 +47,21 @@ export default {
             cluster: process.env.PUSHER_APP_CLUSTER
         })
 
-        var channel = pusher.subscribe('notifications')
-        channel.bind('Notifications', (data) => {
-            console.log(data)
+        /* notifications */
+        var notifications = pusher.subscribe('notifications')
+        notifications.bind('Notifications', (data) => {
             this.$page.props.notifications.unshift({
-                'content': data.messages
+                'icon': data.icon,
+                'content': data.content
+            })
+        });
+
+        /* approvals */
+        var approval = pusher.subscribe('approval')
+        approval.bind('Approval', (data) => {
+            this.$page.props.notifications.unshift({
+                'icon': data.icon,
+                'content': data.content
             })
         });
     },
@@ -171,17 +182,31 @@ export default {
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                                 <!-- Settings Dropdown -->
                                     <div class="ml-3 relative">
-                                        <BreezeDropdown align="right" width="72" @close-notification="closeNotification">
+                                        <BreezeDropdown align="right" width="96" @close-notification="closeNotification">
                                             <template #trigger>
                                                 <span class="inline-flex rounded-md" @click="notificationOpen = true">
                                                     <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                        <div class=" w-5 h-5">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" v-if="notificationOpen">
-                                                                <path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z"/>
-                                                            </svg>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="text-indigo-500" v-else>
-                                                                <path d="M256 32V49.88C328.5 61.39 384 124.2 384 200V233.4C384 278.8 399.5 322.9 427.8 358.4L442.7 377C448.5 384.2 449.6 394.1 445.6 402.4C441.6 410.7 433.2 416 424 416H24C14.77 416 6.365 410.7 2.369 402.4C-1.628 394.1-.504 384.2 5.26 377L20.17 358.4C48.54 322.9 64 278.8 64 233.4V200C64 124.2 119.5 61.39 192 49.88V32C192 14.33 206.3 0 224 0C241.7 0 256 14.33 256 32V32zM216 96C158.6 96 112 142.6 112 200V233.4C112 281.3 98.12 328 72.31 368H375.7C349.9 328 336 281.3 336 233.4V200C336 142.6 289.4 96 232 96H216zM288 448C288 464.1 281.3 481.3 269.3 493.3C257.3 505.3 240.1 512 224 512C207 512 190.7 505.3 178.7 493.3C166.7 481.3 160 464.1 160 448H288z"/>
-                                                            </svg>
+                                                        <div class="w-5 h-5">
+                                                            <div class="relative" v-if="notificationOpen">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                                                    <path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z"/>
+                                                                </svg>
+                                                                <div class="absolute" style="top: 2px; left: 10px">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="text-red-500" viewBox="0 0 16 16">
+                                                                        <circle cx="8" cy="8" r="8"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                            <div class="" v-else>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                                                    <path d="M256 32V49.88C328.5 61.39 384 124.2 384 200V233.4C384 278.8 399.5 322.9 427.8 358.4L442.7 377C448.5 384.2 449.6 394.1 445.6 402.4C441.6 410.7 433.2 416 424 416H24C14.77 416 6.365 410.7 2.369 402.4C-1.628 394.1-.504 384.2 5.26 377L20.17 358.4C48.54 322.9 64 278.8 64 233.4V200C64 124.2 119.5 61.39 192 49.88V32C192 14.33 206.3 0 224 0C241.7 0 256 14.33 256 32V32zM216 96C158.6 96 112 142.6 112 200V233.4C112 281.3 98.12 328 72.31 368H375.7C349.9 328 336 281.3 336 233.4V200C336 142.6 289.4 96 232 96H216zM288 448C288 464.1 281.3 481.3 269.3 493.3C257.3 505.3 240.1 512 224 512C207 512 190.7 505.3 178.7 493.3C166.7 481.3 160 464.1 160 448H288z"/>
+                                                                </svg>
+                                                                <div class="absolute" style="top: 11px; right: 13px">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="text-red-500" viewBox="0 0 16 16">
+                                                                        <circle cx="8" cy="8" r="8"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </button>
                                                 </span>
@@ -190,9 +215,14 @@ export default {
                                                 <div class="overflow-y-auto max-h-60 no-scrollbar divide-y divide-dashed" v-if="$page.props.notifications.length">
                                                     <div class="flex justify-center" v-for="notification in $page.props.notifications" :key="notification.id">
                                                         <BreezeDropdownLink :href="notification.action" :class="notification.seen != 1 ? 'bg-blue-200 hover:bg-blue-300' : 'bg-white hover:bg-gray-100'">
-                                                            <div class="flex space-x-3 items-center">
-                                                                <span class="text-2xl" v-html="notification.icon"></span>
-                                                                <span class="text-black">{{ notification.content }}</span>
+                                                            <div class="flex justify-between items-center py-2">
+                                                                <div class="flex space-x-3 px-4">
+                                                                    <span class="text-2xl text-[30px]" v-html="notification.icon"></span>
+                                                                    <span class="text-black">{{ notification.content }}</span>
+                                                                </div>
+                                                                <div class="flex min-w-[65px]">
+                                                                    <TimeAgo class="text-indigo-500" :datetime="notification.created_at"></TimeAgo>
+                                                                </div>
                                                             </div>
                                                         </BreezeDropdownLink>
                                                     </div>
@@ -202,8 +232,8 @@ export default {
                                                         <span>No notifications available!</span>
                                                     </div>
                                                 </div>
-                                                <BreezeDropdownLink :class="'bg-gray-200 hover:bg-gray-300 rounded-b-md'">
-                                                    <p class="text-center text-blue-500 font-bold">See all notifications</p>
+                                                <BreezeDropdownLink :href="route('notifications')" class="text-center bg-gray-200 hover:bg-gray-300 rounded-b-md text-blue-500 font-bold">
+                                                    <a>See all notifications</a>
                                                 </BreezeDropdownLink>
                                             </template>
                                         </BreezeDropdown>

@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -68,7 +69,7 @@ class AuthenticatedSessionController extends Controller
                 $this->leaveImpersonate();
                 Auth::user()->impersonate($user);
             }
-            return back();
+            return Redirect('/');
         }
         return back()->with(['type'=>'error', 'message'=>'User not found !']);
     }

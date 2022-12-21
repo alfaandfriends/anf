@@ -81,7 +81,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         View Images
                                                     </BreezeButton>
                                                 </div>
-                                                <div class="flex mr-1">
+                                                <div class="flex mr-1" >
                                                     <BreezeButton :buttonType="'warning'" title="Edit School" @click="editCentre(centre.ID)">
                                                         <!-- <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon> -->
                                                         Edit

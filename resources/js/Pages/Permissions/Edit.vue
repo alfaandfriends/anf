@@ -60,10 +60,10 @@
                                             <tbody>
                                                 <tr class="bg-white border-b" v-if="!form.sub_permission.length < 1" v-for="sub_permission, index in form.sub_permission">
                                                     <th scope="row" class="py-2 px-6 font-medium text-gray-900 whitespace-nowrap">
-                                                        {{ sub_permission }}
+                                                        {{ sub_permission.name }}
                                                     </th>
                                                     <td class="py-2 px-6 text-center">
-                                                        <BreezeButton buttonType="danger" @click="deleteSub(index)">Delete</BreezeButton>
+                                                        <BreezeButton buttonType="danger" @click="deleteSub(index, sub_permission.id)">Delete</BreezeButton>
                                                     </td>
                                                 </tr>
                                                 <tr class="bg-white border-b text-center" v-else>
@@ -114,7 +114,9 @@ export default {
             form: {
                 permission_id: this.$page.props.permission_id,
                 permission: this.$page.props.permission_info.name,
-                sub_permission: this.$page.props.sub_permissions
+                sub_permission: this.$page.props.sub_permissions,
+                add_sub_permission: [],
+                delete_sub_permission: []
             },
         }
     },
@@ -124,11 +126,20 @@ export default {
         },
         addSub(){
             if(this.sub_permission){
-                this.form.sub_permission.push(this.sub_permission)
+                this.form.sub_permission.push({'id':'','name':this.sub_permission})
+                this.form.add_sub_permission.push({'id':this.form.permission_id,'name':this.sub_permission})
                 this.sub_permission = ''
             }
         },
-        deleteSub(index){
+        deleteSub(index, sub_id){
+            if(sub_id){
+                this.form.delete_sub_permission.push(sub_id)
+            }
+            this.form.add_sub_permission.forEach((data, data_index)=>{
+                if(data.name == this.form.sub_permission[index].name){
+                    this.form.add_sub_permission.splice(data_index, 1)
+                }
+            })
             this.form.sub_permission.splice(index, 1)
         }
     },

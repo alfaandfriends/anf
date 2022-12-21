@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApprovalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MenuController;
@@ -16,7 +17,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\ExternalUserManagementController;
+use App\Http\Controllers\NotificationController;
 
 /* Authorized Only */
 Route::middleware(['auth'])->group(function(){
@@ -31,8 +33,8 @@ Route::middleware(['auth'])->group(function(){
     //     ]);
     // });
     /* User Impersonation */
-    Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate')->middleware('permission:impersonate_access|is_impersonated');
-    Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate')->middleware('permission:impersonate_access|is_impersonated');;
+    Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate');
+    Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate');;
 
     /* Dashboard */
     /* User */
@@ -55,8 +57,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
-        Route::get('/users/assign-centre-roles', [UserController::class, 'assignCentresRoles'])->name('users.assign_centres_roles');
-        Route::post('/users/assign-centre-roles/store', [UserController::class, 'assignCentresRolesStore'])->name('users.assign_centres_roles.store');
+        Route::get('/users/manage-roles', [UserController::class, 'manageRoles'])->name('users.manage_roles');
+        Route::post('/users/manage-roles/store', [UserController::class, 'manageRolesStore'])->name('users.manage_roles.store');
         Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::post('/users/completed-tour', [UserController::class, 'completedTour'])->name('users.completed_tour');
 
@@ -170,12 +172,6 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/students/find', [StudentController::class, 'findStudents'])->name('students.find');
         Route::post('/students/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class');
 
-        /* Teachers */
-        Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers');
-        Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
-        Route::post('/teachers/store', [TeacherController::class, 'store'])->name('teachers.store');
-        Route::get('/teachers/find', [TeacherController::class, 'find'])->name('teachers.find');
-
         /* Settings */    
         Route::get('/settings', [SettingController::class, 'programmeList'])->name('settings');
             /* Class Types */
@@ -196,6 +192,17 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/settings/programmes/get-fee', [SettingController::class, 'getFee'])->name('settings.get_fee');
     });
 
+    /* External User Management */
+    Route::prefix('external-user-management')->group(function () {
+        Route::get('/division-manager', [ExternalUserManagementController::class, 'divisionManagerList'])->name('division_manager.users');
+        Route::get('/division-manager/manage', [ExternalUserManagementController::class, 'manageDivisionManager'])->name('division_manager.manage');
+        Route::post('/division-manager/manage/store', [ExternalUserManagementController::class, 'manageDivisionManagerStore'])->name('division_manager.store');
+
+        Route::get('/centre-manager', [ExternalUserManagementController::class, 'centreManagerList'])->name('centre_manager.users');
+        Route::get('/centre-manager/manage', [ExternalUserManagementController::class, 'manageCentreManager'])->name('centre_manager.manage');
+        Route::post('/centre-manager/manage/store', [ExternalUserManagementController::class, 'manageCentreManagerStore'])->name('centre_manager.store');
+    });
+
     /* Run Diagnostic Test */
     Route::get('/diagnostic-test', [DiagnosticTestController::class, 'dtStartList'])->name('diagnostic_test');
     Route::get('/diagnostic-test/start', [DiagnosticTestController::class, 'dtStart'])->name('diagnostic_test.run');
@@ -207,7 +214,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/shop/payment', [ShopController::class, 'shopPayment'])->name('shop.payment');
     Route::get('/shop/payment/status', [ShopController::class, 'shopPaymentStatus'])->name('shop.payment.status');
 
-    /* Web notifications */
-    Route::get('/send_web_notifications', [ProgrammeController::class, 'send_web_notifications'])->name('send_web_notifications');
+    /* Notifications */
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
 });
 require __DIR__.'/auth.php';
