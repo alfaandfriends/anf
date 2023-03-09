@@ -75,7 +75,7 @@ export default {
             dt_list: [],
             form:{
                 name: '',
-                age: this.$page.props.ages[0].id,
+                age: this.$page.props.ages ? this.$page.props.ages[0].id : '',
                 school: '',
                 language: '',
             },
