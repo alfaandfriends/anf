@@ -95,6 +95,16 @@ export default {
                     },
                 })
             }
+            if(this.confirmationMethod == 'post'){
+                this.$inertia.post(this.route(this.confirmationRoute), {data: this.confirmationData},{
+                    preserveScroll: true,
+                    onStart: () => this.processing = true,
+                    onSuccess: ()  =>  {
+                        this.$emit('close'),
+                        this.processing = false
+                    },
+                })
+            }
         }
     }
 }

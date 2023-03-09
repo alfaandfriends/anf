@@ -14,7 +14,7 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.7",
-        "pusher/pusher-php-server": "^7.0",
+        "pusher/pusher-php-server": "7.0",
         "robertboes/inertia-breadcrumbs": "^0.1.0",
         "tightenco/ziggy": "^1.0"
     },
@@ -30,7 +30,8 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "App\\Classes\\": "app/Classes"
         },
         "files": [
             "app/PusherHelpers.php"

@@ -33,9 +33,7 @@ class ProfileController extends Controller
             'address'           => 'required',
         ]);
 
-        $user_info    =   DB::table('user_basic_information')
-                            ->where('user_id', auth()->user()->ID)
-                            ->first();
+        $user_info    =   DB::table('user_basic_information')->where('user_id', auth()->user()->ID)->first();
 
         if(empty($user_info)){
             $path   = Storage::putFile('profile_photo', $request->file('profile_photo'));
@@ -71,6 +69,7 @@ class ProfileController extends Controller
             ->where('ID', auth()->user()->ID)
             ->update([
                 'display_name' => $request->first_name.' '.$request->last_name,
+                'profile_updated' => true,
             ]);
 
         DB::table('user_basic_information')

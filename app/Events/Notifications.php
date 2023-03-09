@@ -13,17 +13,16 @@ use Illuminate\Queue\SerializesModels;
 class Notifications
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $content;
+    
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($content)
-    {
-        $this->content = $content;
-    }
+    // public function __construct()
+    // {
+
+    // }
 
     /**
      * Get the channels the event should broadcast on.
@@ -32,6 +31,6 @@ class Notifications
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('notifications');
+        return new Channel('notifications');
     }
 }

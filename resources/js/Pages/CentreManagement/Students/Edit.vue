@@ -580,7 +580,7 @@ export default {
             }
         },
         getFee(class_id, index, byClassCount = false){
-            axios.get(route('settings.get_fee'), {
+            axios.get(route('programmes.get_fee'), {
                     'params': {
                         'class_id' : !byClassCount ? class_id : '',
                         'class_type' : this.search_form.class_type,

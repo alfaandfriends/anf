@@ -43,22 +43,19 @@ class HandleInertiaRequests extends Middleware
             $menus                  =   $this->userMenus();
             $profile_picture        =   $this->userProfilePicture();
             $allowed_centres        =   $this->userAllowedCentres();
+            $user_is_admin          =   $this->userIsAdmin();
             $user_has_notification  =   $this->userHasNotifications();
-            $notifications          =   $this->userNotifications();
+            $user_notifications     =   $this->userNotifications();
             $user_has_roles         =   $this->userHasRoles();
         }
-
-        // if(empty($permissions) && Auth::user()->getImpersonatorID() != Auth::id()){
-        //     return redirect('/');
-        // }
         
         return array_merge(parent::share($request), [
             'app_name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
                 'profile_photo' => $profile_picture ?? '',
-                'first_time_login' => $request->user()->first_time_login ?? '',
-                'profile_updated' => $request->user()->profile_updated ?? ''
+                'first_time_login' => $request->user()->first_time_login ?? false,
+                'profile_updated' => $request->user()->profile_updated ?? false
             ],
             'flash' => [
                 'type' => fn () => $request->session()->get('type'),
@@ -66,7 +63,8 @@ class HandleInertiaRequests extends Middleware
             ],
             'menu' => $menus ?? '',
             'can' => $permissions ?? '',
-            'notifications' => $notifications ?? '',
+            'user_is_admin' => $user_is_admin ?? false,
+            'user_notifications' => $user_notifications ?? '',
             'user_has_notifications' => $user_has_notification ?? '',
             'allowed_centres' => $allowed_centres ?? '',
             'user_has_roles' => $user_has_roles ?? '',
@@ -88,7 +86,7 @@ class HandleInertiaRequests extends Middleware
             }
         }
 
-        $permissions['is_impersonated'] = Auth::user()->isImpersonated();
+        $permissions['is_impersonated'] = auth()->user()->isImpersonated();
 
         return $permissions;
     }
@@ -109,15 +107,15 @@ class HandleInertiaRequests extends Middleware
 
     public function userAllowedCentres()
     {
-        if(Auth::user()->is_admin){
-            $allowed_centres    =   DB::table('centres')->orderBy('id')->get(['centres.ID', 'centres.label']);
+        if(auth()->user()->can_view_all_centres){
+            $allowed_centres    =   DB::table('wpvt_10_wlsm_schools')->orderBy('id')->get(['wpvt_10_wlsm_schools.ID', 'wpvt_10_wlsm_schools.label']);
         }
         else{
             $allowed_centres    =   DB::table('user_has_centres')
-                ->join('centres', 'user_has_centres.centre_id', '=', 'centres.ID')
+                ->join('wpvt_10_wlsm_schools', 'user_has_centres.centre_id', '=', 'wpvt_10_wlsm_schools.ID')
                 ->where('user_id', Auth::id())->orderBy('id')
                 ->orderBy('id')
-                ->get(['centres.ID', 'centres.label']);
+                ->get(['wpvt_10_wlsm_schools.ID', 'wpvt_10_wlsm_schools.label']);
         }
 
         return $allowed_centres;
@@ -125,29 +123,38 @@ class HandleInertiaRequests extends Middleware
 
     public function userHasNotifications()
     {
-        $user_has_roles =   $this->userHasRoles();
-        $user_has_notifications  =   DB::table('notifications')
-        ->whereIn('notifications.role_to_notify', $user_has_roles)
-        ->orWhere('notifications.user_to_notify', Auth::id())
-        ->where('seen', false)
-        ->exists();
-        // dd($user_has_notifications);
+        $user_has_roles     =   $this->userHasRoles();
+        $result             =   DB::table('notifications')
+                                    ->where(function($query) use ($user_has_roles){
+                                        $query->whereIn('notifications.role_to_notify', $user_has_roles);
+                                        $query->orWhere('notifications.user_to_notify', Auth::id());
+                                    })
+                                    ->where('seen', false)
+                                    ->count();
+                                    
+        $user_has_notifications =   $result > 0 ? true : false;
 
         return $user_has_notifications;
     }
 
     public function userNotifications()
     {
-        $user_has_roles =   $this->userHasRoles();
-        $notications    =   DB::table('notifications')
-                            ->join('notification_types', 'notifications.type', '=', 'notification_types.id')
-                            ->whereIn('notifications.role_to_notify', $user_has_roles)
-                            ->orWhere('notifications.user_to_notify', Auth::id())
-                            ->orderByDesc('notifications.id')
-                            ->select(['notifications.id', 'notifications.user_to_notify', 'notifications.created_by', 'notifications.created_at', 'notification_types.icon', 'notification_types.content', 'notifications.seen'])
-                            ->get(5);
-                            
-        return $notications;
+        $user_has_roles         =   $this->userHasRoles();
+        $user_notifications     =   DB::table('notifications')
+                                        ->join('notification_config_data', 'notifications.notification_config_data_id', '=', 'notification_config_data.id')
+                                        ->whereIn('notifications.role_to_notify', $user_has_roles)
+                                        ->orWhere('notifications.user_to_notify', Auth::id())
+                                        ->orderByDesc('notifications.id')
+                                        ->select([  'notifications.id', 
+                                                    'notifications.user_to_notify', 
+                                                    'notifications.created_by', 
+                                                    'notifications.created_at', 
+                                                    'notification_config_data.panel_icon', 
+                                                    'notification_config_data.panel_content', 
+                                                    'notifications.seen'])
+                                        ->limit(5)
+                                        ->get();                                    
+        return $user_notifications;
     }
 
     public function userHasRoles()
@@ -155,5 +162,12 @@ class HandleInertiaRequests extends Middleware
         $user_has_roles =   collect(UserHasRoles::where('user_id', Auth::id())->pluck('role_id'))->toArray();
 
         return $user_has_roles;
+    }
+
+    public function userIsAdmin()
+    {
+        $user_is_admin =   auth()->user()->is_admin;
+
+        return $user_is_admin;
     }
 }

@@ -19,7 +19,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         type="text" v-model="params.search" placeholder="Search">
                             </div>
                             <div class="flex" v-if="$page.props.can.centre_create_access">
-                                <BreezeButton :route="route('centres.create')">Add Centre</BreezeButton>
+                                <BreezeButton :route="route('centres.create')">New Centre</BreezeButton>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -76,19 +76,19 @@ import BreezeButton from '@/Components/Button.vue';
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex mr-1">
-                                                    <BreezeButton :buttonType="'blue'" title="View Images" @click="viewImages(centre.ID)">
+                                                    <BreezeButton :buttonType="'blue'" title="View Images" @click="viewImages(centre.ID)" v-if="$page.props.can.centre_view_access">
                                                         <!-- <PhotographIcon class="text-white-600 h-4 w-4 fill-current"></PhotographIcon> -->
                                                         View Images
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="flex mr-1" >
-                                                    <BreezeButton :buttonType="'warning'" title="Edit School" @click="editCentre(centre.ID)">
+                                                    <BreezeButton :buttonType="'warning'" title="Edit School" @click="editCentre(centre.ID)" v-if="$page.props.can.centre_edit_access">
                                                         <!-- <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon> -->
                                                         Edit
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="flex">
-                                                    <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.ID)">
+                                                    <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.ID)" v-if="$page.props.can.centre_delete_access">
                                                         <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
                                                         Delete
                                                     </BreezeButton>
@@ -98,41 +98,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <template v-if="$page.props.centres.data.length">
-                                <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-300">
-                                    <div class="flex-1 flex justify-between sm:hidden">
-                                        <a :href="$page.props.centres.prev_page_url" v-if="$page.props.centres.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
-                                        <a :href="$page.props.centres.next_page_url"  v-if="$page.props.centres.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
-                                    </div>
-                                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                                        <div>
-                                            <p class="text-sm text-gray-700">
-                                                Showing
-                                                <span class="font-medium">{{ $page.props.centres.from }}</span>
-                                                to
-                                                <span class="font-medium">{{ $page.props.centres.to }}</span>
-                                                of
-                                                <span class="font-medium">{{ $page.props.centres.total }}</span>
-                                                results
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                                <Link  v-for="(link, key) in $page.props.centres.links" 
-                                                    :key="key" 
-                                                    :href="link.url ? link.url + '&search=' + params.search : '#'"
-                                                    class="" 
-                                                    :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
-                                                                        : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
-                                                                                                                : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
-                                                    v-html="link.label"
-                                                >
-                                                </Link>
-                                            </nav>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
+                            <Pagination :page_data="$page.props.centres"></Pagination>
                         </div>
                     </div>
                 </div>
@@ -163,11 +129,12 @@ import { ref } from 'vue';
 import { SearchIcon, TrashIcon, PencilIcon, PhotographIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import Pagination from '@/Components/Pagination.vue'
 import ImageBox from "@alfaandfriends/image-light-box";
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon, PhotographIcon, ImageBox,
+        SearchIcon, TrashIcon, PencilIcon, PhotographIcon, ImageBox, Pagination,
         ConfirmationModal, Head, Link,
     },
     props: {

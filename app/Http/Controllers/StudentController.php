@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\NotificationHelper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class StudentController extends Controller
 {
+    public $update_student_config = 7;
+
     public function index(Request $request)
     {
         $allowed_centres    =   (object)Inertia::getShared('allowed_centres');
@@ -164,6 +168,12 @@ class StudentController extends Controller
             'status' => $request->student_status
         ]);
 
+        
+        if(auth()->user()->is_admin == false){
+            $data  =   array('approval_data' => $request->all());
+            NotificationHelper::sendApprovalNotifications($this->update_student_config, $data);
+        }
+
         return redirect(route('students'))->with(['type'=>'success', 'message'=>'Student details updated !']);
     }
 
@@ -185,7 +195,18 @@ class StudentController extends Controller
     }
 
     public function findStudents(Request $request){
-        $students   =   DB::table('children')->where('name', 'LIKE', '%'.$request->keyword.'%')->select(['id', 'name'])->get();
+        $students   =   DB::table('children')
+                            ->join('user_basic_information', 'user_basic_information.user_id', '=', 'children.parent_id')
+                            ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
+                            ->whereNotExists(function ($query) {
+                                $query->select(DB::raw(1))
+                                      ->from('students')
+                                      ->whereColumn('students.children_id', 'children.id');
+                            })
+                            ->select(['children.id', 
+                                        DB::Raw("CONCAT(children.name, ' - ( ', user_basic_information.user_first_name, ' ', user_basic_information.user_last_name, ' )') AS name")
+                                    ])->get();
+
         return $students;
     }
 

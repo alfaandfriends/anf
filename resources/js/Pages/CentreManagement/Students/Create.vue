@@ -29,13 +29,15 @@ import BreezeButton from '@/Components/Button.vue';
                                                     @close="clearStudents"
                                                     valueProp="id"
                                                     :loading="searching_students"
+                                                    placeholder="Please enter some keywords"
                                                     :options="students"
                                                     :searchable="true"
-                                                    :showNoResults="true"
+                                                    noOptionsText="Nothing found"
+                                                    noResultsText="Nothing found"
                                                     :clearOnSelect="true"
                                                     :canClear="false"
                                                     :canDeselect="false"
-                                                    noOptionsText="Please enter keyword"
+                                                    :internal-search="false"
                                                     trackBy="name"
                                                     label="name"
                                                     :classes="{
@@ -76,7 +78,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                         spacer: 'h-9 py-px box-content',
                                                     }"
                                                 >
-                                                <template v-slot:noOptions><span>Test</span></template>
                                                 </Multiselect>
                                             </div>
                                         </div>
@@ -376,7 +377,7 @@ export default {
             this.$inertia.post(route('classes.store'), this.form, { preserveState: true})
         },
         findStudents(query){
-            debounce(val => console.log('normal format', val), '400ms')(10)
+            debounce(val => '400ms')(10)
             if(query){
                 this.searching_students = true
                 axios.get(route('students.find'), {
@@ -432,7 +433,7 @@ export default {
             }
         },
         getFee(class_id, index, byClassCount = false){
-            axios.get(route('settings.get_fee'), {
+            axios.get(route('programmes.get_fee'), {
                     'params': {
                         'class_id' : !byClassCount ? class_id : '',
                         'class_type' : this.search_form.class_type,

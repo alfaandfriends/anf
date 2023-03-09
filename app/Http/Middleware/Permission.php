@@ -2,11 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Menu;
-use App\Models\Role;
-use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 class Permission
@@ -20,14 +18,19 @@ class Permission
      */
     public function handle(Request $request, Closure $next, $permissions)
     {   
-        $user_permissions = Inertia::getShared('can');
+        $profile_updated    = Inertia::getShared('auth.profile_updated');
+        if(!$profile_updated && !in_array(Route::currentRouteName(), ['profile', 'profile.store', 'profile.store.security.store'])){
+            return redirect('profile');
+        }
+
+        $user_permissions   = Inertia::getShared('can');
         $permissions =   explode('|', $permissions);
-        
         foreach($permissions as $key=>$permission){
             if(array_key_exists($permission, $user_permissions)){
                 return $next($request);
             }
         }
+
         return abort(401);
     }
 }

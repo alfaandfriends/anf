@@ -22,7 +22,6 @@ class PusherHelpers {
     }
 
     public function trigger($channel, $event, $data) {
-        
         $this->pusher->trigger($channel, $event, $data);
     }
 }

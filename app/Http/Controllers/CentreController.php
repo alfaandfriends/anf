@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\CentreHelper;
 use App\Http\Controllers\Approval\CentreApprovalController;
 use App\Models\Centre;
 use Corcel\Model\User;
@@ -16,11 +17,8 @@ use Illuminate\Support\Str;
 
 class CentreController extends Controller
 {
-    public function __construct()
-    {
-        $this->update_centre_wf_id    =   1;
-        $this->delete_centre_wf_id    =   2;
-    }
+    public $update_centre_config = 1;
+    public $delete_centre_config = 2;
 
     public function index()
     {
@@ -30,6 +28,7 @@ class CentreController extends Controller
             $query  ->where('label', 'LIKE', '%'.request('search').'%')
                     ->orWhere('email', 'LIKE', '%'.request('search').'%');
         }
+        
         $results    =   $query->whereIn('ID', $this->getAllowedCentres())->orderBy('id')->paginate(10);
 
         return Inertia::render('CentreManagement/Centres/Index', [
@@ -65,7 +64,7 @@ class CentreController extends Controller
         }
 
         $new_centre_id   =   DB::table('centres')->insertGetId([
-                                'label' => 'ANFC_'.$request->centre_name,
+                                'label' => $request->centre_name,
                                 'phone' => $request->centre_contact_number,
                                 'email' => $request->centre_email,
                                 'address' => $request->centre_address,
@@ -131,19 +130,6 @@ class CentreController extends Controller
 
     public function update(Request $request)
     {
-        if(Auth::user()->is_admin == false){
-            $approval_data      =   $request->all();
-            // dd($approval_data);
-            $approval           =   new CentreApprovalController($this->update_centre_wf_id);
-            $pending_approval   =   $approval->checkCentrePreviousApprovals($request->centre_id);
-            if($pending_approval){
-                return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
-            }
-            $approval->sendCentreUpdateRequest($approval_data);
-
-            return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
-
         $request->validate([
             'centre_name'               => 'required|max:20',
             'centre_contact_number'     => 'required|max:50',
@@ -152,14 +138,13 @@ class CentreController extends Controller
             'principal_email'           => 'required|max:50',
             'principal_contact'         => 'required|max:50',
         ]);
-        
+
         /* Check principal details */
         $email_exist  =   User::where('user_email', $request->principal_email)->count();
 
         if($email_exist < 1){
             return redirect()->back()->with(['type'=>'error', 'message'=>'Please enter a valid principal email address !']);
         }
-        /* Check principal details */
 
         /* Check images */
         $images_count           = DB::table('centre_images')->where('centre_id', $request->centre_id)->count();
@@ -169,17 +154,29 @@ class CentreController extends Controller
             count(collect($request->image_list)->where('image_type', 'inside')) < 1){   
             return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload required image !']);
         }
-        /* Check images */
 
+        if(auth()->user()->is_admin == false){
+            $approval_data      =   $request->all();
+            $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($request->centre_id, $this->update_centre_config);
+
+            if($pending_approval){
+                return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
+            }
+
+            $approval   =   new CentreApprovalController();
+            $approval->sendCentreUpdateRequest($approval_data);
+
+            return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        }
+        
         /* Update centre info */
         DB::table('centres')->where('ID', $request->centre_id)->update([
-                    'label' => 'ANFC '.$request->centre_name,
+                    'label' => $request->centre_name,
                     'phone' => $request->centre_contact_number,
                     'email' => $request->centre_email,
                     'address' => $request->centre_address,
                     'is_active' => $request->centre_active,
                 ]);
-        /* Update centre info */
             
         /* Update principal info */
         $principal_exist    =   DB::table('centre_principals')->where('centre_id', $request->centre_id)->exists();
@@ -202,7 +199,6 @@ class CentreController extends Controller
                 'contact_number'    => $request->principal_contact,
             ]);
         }
-        /* Update principal info */
 
         /* Delete selected images */
         if(!empty($request->images_to_delete)){
@@ -210,17 +206,30 @@ class CentreController extends Controller
                 $this->destroyImage($image_to_delete['image_id']);
             }
         }
-        /* Delete selected images */
         
         /* Upload new images */
         $this->uploadImages($request->centre_id, $request->image_list);
-        /* Upload new images */
 
         return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre updated successfully !']);
     }
 
     public function destroy($id)
     {
+
+        if(auth()->user()->is_admin == false){
+            $centre_to_delete   =   $id;
+            $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($id, $this->delete_centre_config);
+
+            if($pending_approval){
+                return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
+            }
+
+            $approval   =   new CentreApprovalController();
+            $approval->sendCentreDeleteRequest($centre_to_delete);
+
+            return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        }
+
         DB::table('centres')->where('ID', $id)->delete();
         DB::table('centre_principals')->where('centre_id', $id)->delete();
 
@@ -234,7 +243,8 @@ class CentreController extends Controller
         return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre deleted successfully !']);
     }
 
-    public function destroyImage($id){
+    public function destroyImage($id)
+    {
         $image      =   DB::table('centre_images')->where('ID', $id)->first();
         $image_path =   Str::replace('/storage/', '', $image->image_path);
         Storage::delete($image_path);
@@ -243,7 +253,8 @@ class CentreController extends Controller
         return back()->with(['type'=>'success', 'message'=>'Image deleted !']);
     }
 
-    public function getCentreImages(Request $request){
+    public function getCentreImages(Request $request)
+    {
 
         $images = DB::table('centre_images')->where('centre_id', $request->centre_id)->get();
 
@@ -281,26 +292,30 @@ class CentreController extends Controller
         return $email_exist;
     }
 
-    public function getAllowedCentres(){
-        $allowed_centres        =   collect(Inertia::getShared('allowed_centres'))->pluck('ID')->toArray();
+    public function getAllowedCentres()
+    {
+        $allowed_centres        =   CentreHelper::getUserAllowedCentres()->pluck('ID')->toArray();
 
         return $allowed_centres;
     }
 
-    public function uploadImages($centre_id, $images){
+    public function uploadImages($centre_id, $images)
+    {
         if(!empty($images)){
             foreach($images as $key=>$image){
-                $image_path     =   Storage::putFile('centre_photo', $image['image_file']);
-                $image_size     =   Storage::size($image_path);
-                $image_type     =   $images[$key]['image_type'];
-    
-                DB::table('centre_images')->insert([
-                    'centre_id'     => $centre_id,
-                    'image_path'    => '/storage/'.$image_path,
-                    'image_size'    => $image_size,
-                    'image_type'    => $image_type,
-                    'updated_at'    => Carbon::now(),
-                ]);
+                if(!empty($image['image_file'])){
+                    $image_path     =   Storage::putFile('centre_photo', $image['image_file']);
+                    $image_size     =   Storage::size($image_path);
+                    $image_type     =   $images[$key]['image_type'];
+        
+                    DB::table('centre_images')->insert([
+                        'centre_id'     => $centre_id,
+                        'image_path'    => '/storage/'.$image_path,
+                        'image_size'    => $image_size,
+                        'image_type'    => $image_type,
+                        'updated_at'    => Carbon::now(),
+                    ]);
+                }
             }
         }
     }

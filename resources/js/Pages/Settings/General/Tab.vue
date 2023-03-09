@@ -5,14 +5,6 @@
                     :class="route().current('settings.countries') ? 'bg-white text-indigo-800 border-indigo-500 border-t-2' :
                                         'bg-indigo-500 text-white border-indigo-500 border-t-2 hover:bg-indigo-700 hover:border-indigo-700'">Country List</Link>
         </li>
-        <li>
-            <Link :href="route('settings.diagnostic_test')" class="inline-block px-4 py-2"
-                    :class=" active_dt ? 
-                            'bg-white text-indigo-800 border-indigo-500 border-t-2' :
-                            'bg-indigo-500 text-white border-indigo-500 border-t-2 hover:bg-indigo-700 hover:border-indigo-700'">
-                Diagnostic Test
-            </Link>
-        </li>
     </ul>
 </template>
 
@@ -28,7 +20,7 @@ export default {
         }
     },
     mounted(){
-        this.active_dt = window.location.href.startsWith(window.location.origin + '/control-panel/general/diagnostic-test') ? true : false
+        this.active_dt = window.location.href.startsWith(window.location.origin + '/control-panel/general/countries') ? true : false
     }
 }
 </script>

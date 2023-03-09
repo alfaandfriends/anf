@@ -62,12 +62,12 @@ class AuthenticatedSessionController extends Controller
     public function impersonate($user_name){
         $user   =   User::where('user_login', $user_name)->first();
         if($user){
-            if(Auth::user()->ID == $user->ID && Auth::user()->getImpersonatorID() == '' || Auth::user()->getImpersonatorID() == $user->ID){
+            if(auth()->user()->ID == $user->ID && auth()->user()->getImpersonatorID() == '' || auth()->user()->getImpersonatorID() == $user->ID){
                 $this->leaveImpersonate();
             }
             else{
                 $this->leaveImpersonate();
-                Auth::user()->impersonate($user);
+                auth()->user()->impersonate($user);
             }
             return Redirect('/');
         }
@@ -75,7 +75,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     public function leaveImpersonate(){
-        Auth::user()->leaveImpersonation();
+        auth()->user()->leaveImpersonation();
         return back();
     }
 }

@@ -16,7 +16,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3" :style="'top:21%'"></SearchIcon>
                             <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                     type="text" v-model="params.search" placeholder="Search" v-debounce="search">
-                            <Link :href="route('users.create')" class="py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold">User Registration</Link>
+                            <Link :href="route('users.create')" class="py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold" v-if="$page.props.can.cp_users_create_access">User Registration</Link>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
@@ -57,48 +57,14 @@ import BreezeButton from '@/Components/Button.vue';
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center space-x-2">
-                                                <BreezeButton buttonType="blue" @click="manageRoles(user.ID)">Manage Role</BreezeButton>
-                                                <BreezeButton buttonType="danger" @click="deleteUser(user.ID)">Delete</BreezeButton>
+                                                <BreezeButton buttonType="blue" @click="manageUser(user.ID)" v-if="$page.props.can.cp_users_edit_access">Manage User</BreezeButton>
+                                                <BreezeButton buttonType="danger" @click="deleteUser(user.ID)" v-if="$page.props.can.cp_users_delete_access">Delete</BreezeButton>
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <template v-if="$page.props.user_list.data.length">
-                                <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-300">
-                                    <div class="flex-1 flex justify-between sm:hidden">
-                                        <a :href="$page.props.user_list.prev_page_url" v-if="$page.props.user_list.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
-                                        <a :href="$page.props.user_list.next_page_url"  v-if="$page.props.user_list.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
-                                    </div>
-                                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                                        <div>
-                                            <p class="text-sm text-gray-700">
-                                                Showing
-                                                <span class="font-medium">{{ $page.props.user_list.from }}</span>
-                                                to
-                                                <span class="font-medium">{{ $page.props.user_list.to }}</span>
-                                                of
-                                                <span class="font-medium">{{ $page.props.user_list.total }}</span>
-                                                results
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                                <Link  v-for="(link, key) in $page.props.user_list.links" 
-                                                    :key="key" 
-                                                    :href="link.url ? link.url + '&search=' + params.search : '#'"
-                                                    class="" 
-                                                    :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
-                                                                        : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
-                                                                                                                : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
-                                                    v-html="link.label"
-                                                >
-                                                </Link>
-                                            </nav>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
+                            <Pagination :page_data="$page.props.user_list"></Pagination>
                         </div>
                     </div>
                 </div>
@@ -122,14 +88,15 @@ import BreezeButton from '@/Components/Button.vue';
 <script>
 import { ref } from 'vue';
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/inertia-vue3'
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import Pagination from '@/Components/Pagination.vue'
 import { debounce } from 'vue-debounce'
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link
+        ConfirmationModal, Head, Link, Pagination
     },
     props: {
         filter: Object,
@@ -162,8 +129,8 @@ export default {
     //     }
     // },
     methods: {
-        manageRoles(userID){
-            this.$inertia.get(this.route('users.manage_roles'), {'user_id': userID});
+        manageUser(userID){
+            this.$inertia.get(this.route('users.edit'), {'user_id': userID});
         },
         deleteUser(userID){
             this.confirmationRoute = 'users.destroy'

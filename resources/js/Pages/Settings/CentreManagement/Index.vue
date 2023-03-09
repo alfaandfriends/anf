@@ -14,22 +14,14 @@ import BreezeButton from '@/Components/Button.vue';
                     <div class="align-middle inline-block min-w-full">
                         <ul class="flex justify-start space-x-1 text-white">
                             <li>
-                                <button @click="currentTab('settings.programmes')" class="inline-block px-4 py-2"
-                                        :class="route().current('settings') || route().current('settings.programmes') ? 'bg-white text-indigo-800 border-indigo-500 border-b-2' : 
-                                                           'bg-indigo-500 text-white border-indigo-500 border-t-2 hover:bg-indigo-700 hover:border-indigo-700'">Programmes</button>
-                            </li>
-                            <li>
-                                <button @click="currentTab('settings.class_types')" class="inline-block px-4 py-2"
+                                <button @click="currentTab('settings.class_types')" class="inline-block px-4 py-2" v-if="$page.props.can.setting_class_type_view_access"
                                         :class="route().current('settings.class_types') ? 'bg-white text-indigo-800 border-indigo-500 border-b-2' :
                                                            'bg-indigo-500 text-white border-indigo-500 border-t-2 hover:bg-indigo-700 hover:border-indigo-700'">Class Types</button>
                             </li>
                         </ul>
                         <div class="mt-4">
-                            <div v-if="route().current('settings') || route().current('settings.programmes')">
-                                <ProgrammesTable></ProgrammesTable>
-                            </div>
                             <div v-if="route().current('settings.class_types')">
-                                <FeeTypesTable></FeeTypesTable>
+                                <FeeTypesTable v-if="$page.props.can.setting_class_type_view_access"></FeeTypesTable>
                             </div>
                         </div>
                     </div>
@@ -43,7 +35,6 @@ import BreezeButton from '@/Components/Button.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import FeeTypesTable from '@/Pages/Settings/CentreManagement/ClassTypes/Table.vue'
-import ProgrammesTable from '@/Pages/Settings/CentreManagement/Programmes/Table.vue'
 
 export default {
     components: {
@@ -62,11 +53,6 @@ export default {
             confirmationRoute: '',
         };
     },
-    // created(){
-    //     if(route().current('settings')){
-    //         this.$inertia.get(route('settings.programmes'))
-    //     }
-    // },
     methods: {
         currentTab(routeName){
             this.$inertia.get(route(routeName))

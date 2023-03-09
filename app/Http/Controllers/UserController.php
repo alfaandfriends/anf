@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\NotificationHelper;
 use App\Models\Role;
 use App\Models\UserHasRoles;
+use App\Notifications\ResetUserPassword;
 use App\Notifications\UserRegistrationCredentials;
+use Carbon\Carbon;
 use Corcel\Model\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,6 +20,8 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+    public $update_user_config = 8;
+
     public function index()
     {
         $query  =   User::query();
@@ -132,22 +137,64 @@ class UserController extends Controller
         }
     }
 
-    public function manageRoles(Request $request)
+    public function edit(Request $request)
     {
+        $info = DB::table('user_basic_information')->where('user_id', $request->user_id)->first();
+        
         $roles          =   Role::get();
         $user_roles     =   UserHasRoles::where('user_id', $request->user_id)->get('role_id')->keyBy('role_id');
 
-        return Inertia::render('Users/AssignRoles', [
-            'user_id' => $request->user_id,
-            'roles' => $roles,
-            'user_roles' => $user_roles,
+        return Inertia::render('Users/Edit', [
+            'info'          => $info,
+            'user_id'       => $request->user_id,
+            'roles'         => $roles,
+            'user_roles'    => $user_roles,
         ]);
     }
 
     public function manageRolesStore(Request $request)
     {
-        $user           =   User::find($request->user_id);
-        $admin_array    =   [1, 2, 3];
+        $user_exist =   $this->checkUserExist($request->user_id);
+        
+        /* If user exists */
+        if(!$user_exist){
+            DB::table('user_basic_information')
+                ->insert([
+                    'user_id'           => $request->user_id,
+                    'user_first_name'   => $request->form['first_name'],
+                    'user_last_name'    => $request->form['last_name'],
+                    'user_calling_code' => $request->form['calling_code'],
+                    'user_contact'      => $request->form['contact_number'],
+                    'user_address'      => $request->form['address'],
+                    'user_country'      => $request->form['country'],
+                    'user_state'        => $request->form['country_state'],
+                    'user_country_code' => $request->form['country_code'],
+                ]);
+        }
+        /* If user not exists */
+        else{
+            DB::table('user_basic_information')
+            ->where('user_id', $request->user_id)
+            ->update([
+                'user_first_name'   => $request->form['first_name'],
+                'user_last_name'    => $request->form['last_name'],
+                'user_calling_code' => $request->form['calling_code'],
+                'user_contact'      => $request->form['contact_number'],
+                'user_address'      => $request->form['address'],
+                'user_country'      => $request->form['country'],
+                'user_state'        => $request->form['country_state'],
+                'user_country_code' => $request->form['country_code'],
+                'updated_at'        => Carbon::now(),
+            ]);
+        }
+
+        $user                           =   User::find($request->user_id);
+
+        $admin_role                     =   array(1, 2);
+        $can_view_all_centres_role      =   array(1, 2, 3);
+
+        $user_is_admin                  =   false;
+        $user_can_view_all_centres      =   false;
 
         UserHasRoles::where('user_id', $request->user_id)->delete();
 
@@ -156,10 +203,22 @@ class UserController extends Controller
                 'user_id'   =>  $request->user_id,
                 'role_id'   =>  $role_id
             ]);
-
-            if(in_array($role_id, $admin_array)){
-                $user->update(['is_admin' => true]);
+            if(in_array($role_id, $admin_role)){
+                $user_is_admin  =   true;
             }
+            
+            if(in_array($role_id, $can_view_all_centres_role)){
+                $user_can_view_all_centres  =   true;
+            }
+        }
+
+        $user_is_admin ? $user->update(['is_admin' => true]) : $user->update(['is_admin' => false]);
+        $user_can_view_all_centres ? $user->update(['can_view_all_centres' => true]) : $user->update(['can_view_all_centres' => false]);
+
+        /* Send notification on user update */
+        if(auth()->user()->is_admin == false){
+            $data  =   array('approval_data' => $request->all());
+            NotificationHelper::sendApprovalNotifications($this->update_user_config, $data);
         }
 
         return redirect(route('users'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
@@ -188,5 +247,38 @@ class UserController extends Controller
     public function usernameExist($username){
         $users = User::where('user_login', $username)->first();
         return collect($users);
+    }
+
+    public function resetUserPassword(Request $request){
+
+        $random_password        =   Str::random(20);
+        $hashed_random_password =   Hash::make($random_password);
+
+        DB::table('wpvt_users')->where('ID', $request->data['user_id'])->update(['user_pass' => $hashed_random_password]);   
+
+        $user           =   User::where('ID', $request->data['user_id'])->first();
+        $credentials    =   [
+            'new_password'  =>  $random_password,
+        ];
+
+        Notification::sendNow($user, new ResetUserPassword($credentials));
+
+        return redirect()->back()->with(['type'=>'success', 'message'=>"User's password has been reset successfully! New password will be sent to their email."]);
+    }
+
+    public function checkUserExist($user_id)
+    {
+        $user_exist    =   DB::table('user_basic_information')
+                            ->where('user_id', $user_id)
+                            ->exists();
+
+        return $user_exist;
+    }
+
+    public function getUserInfo($user_id)
+    {
+        $user_info  =   DB::table('user_basic_information')->where('user_id', $user_id)->first();
+
+        return $user_info;
     }
 }

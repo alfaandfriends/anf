@@ -11,7 +11,7 @@
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
-                    <input type="hidden" v-model="menu_id">
+                    <!-- <input type="hidden" v-model="menu_id"> -->
                     <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
                         <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
                             <div class="sm:row-span-3">

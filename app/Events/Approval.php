@@ -13,16 +13,16 @@ use Illuminate\Queue\SerializesModels;
 class Approval
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($approval_data)
-    {
-        $this->approval_data    =   $approval_data;
-    }
+    // public function __construct()
+    // {
+
+    // }
 
     /**
      * Get the channels the event should broadcast on.
@@ -31,6 +31,6 @@ class Approval
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('approval');
+        return new Channel('approval');
     }
 }

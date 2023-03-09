@@ -69,52 +69,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <template v-if="$page.props.country_list.data.length">
-                                <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-300">
-                                    <div class="flex-1 flex justify-between sm:hidden">
-                                        <a :href="$page.props.country_list.prev_page_url" v-if="$page.props.country_list.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
-                                        <a :href="$page.props.country_list.next_page_url"  v-if="$page.props.country_list.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
-                                    </div>
-                                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                                        <div>
-                                            <p class="text-sm text-gray-700">
-                                                Showing
-                                                <span class="font-medium">{{ $page.props.country_list.from }}</span>
-                                                to
-                                                <span class="font-medium">{{ $page.props.country_list.to }}</span>
-                                                of
-                                                <span class="font-medium">{{ $page.props.country_list.total }}</span>
-                                                results
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                                <Link v-for="(link, key) in $page.props.country_list.links"
-                                                    :key="key"
-                                                    :href="link.url ? link.url : '#'"
-                                                    :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
-                                                                        : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
-                                                                                                                : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
-                                                    v-html="link.label"
-                                                >
-                                                </Link>
-                                            </nav>
-                                        </div>
-                                    </div>
-                                </div>
-                                <ConfirmationModal 
-                                    :show="isOpen" 
-                                    @close="isOpen = false"
-                                    confirmationAlert="danger"
-                                    :confirmationTitle="confirmationTitle"
-                                    :confirmationText="confirmationText"
-                                    :confirmationButton="confirmationButton"
-                                    :confirmationMethod="confirmationMethod"
-                                    :confirmationRoute="confirmationRoute"
-                                    :confirmationData="confirmationData"
-                                >
-                                </ConfirmationModal>
-                            </template>
+                            <Pagination :page_data="$page.props.country_list"></Pagination>
                         </div>
                     </div>
                 </div>
@@ -128,11 +83,12 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import { TrashIcon } from '@heroicons/vue/solid'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import Pagination from '@/Components/Pagination.vue'
 import TabPage from '@/Pages/Settings/General/Tab.vue'
 
 export default {
     components: {
-        Head, ConfirmationModal, TrashIcon, Link, TabGroup, TabList, Tab, TabPanels, TabPanel, 
+        Head, ConfirmationModal, TrashIcon, Link, TabGroup, TabList, Tab, TabPanels, TabPanel, Pagination
     },
     data() {
         return {
