@@ -194,6 +194,8 @@ export default{
         return {
             can_go_higher: true,
             can_go_lower: true,
+            bar_chart: '',
+            scatter_chart: '',
             show_chart: false,
             show_bar_chart: false,
             show_scatter_chart: false,
@@ -210,7 +212,8 @@ export default{
                 remarks: '',
                 criterions: [],
                 answers: [],
-                score: 0
+                score: 0,
+                answer_records: []
             },
             question_types: {
                 1: {
@@ -250,10 +253,7 @@ export default{
                 parent_address: false,
                 parent_email: false,
             },
-            graph_data: {
-                numbers: 0,
-                operations: 0,
-            }
+            chart_data: [1, 2, 3]
         }
     },
     methods: {
@@ -394,6 +394,7 @@ export default{
             .then(response => {
                 this.dt_index = 0
                 this.current.score = 0
+                this.$page.props.diagnostic_test_categories_label = response.data.category_label
                 this.$page.props.dt_details = response.data.dt_details
                 this.$page.props.dt_list = response.data.dt_list
             })
@@ -410,6 +411,7 @@ export default{
             .then(response => {
                 this.dt_index = 0
                 this.current.score = 0
+                this.$page.props.diagnostic_test_categories_label = response.data.category_label
                 this.$page.props.dt_details = response.data.dt_details
                 this.$page.props.dt_list = response.data.dt_list
             })
@@ -433,7 +435,33 @@ export default{
             this.$inertia.get(route('public.diagnostic_test'))
         },
         processGraph(){
-            /* Filter all correct answers */
+            /* Get current level answer records and get each question's category*/
+            this.current.answer_records =   this.form.answer_record.filter(item => item.dt_id === this.form.eligible_level);
+            const combined = this.current.answer_records.map(q => {
+                const category = this.dt_list.find(c => c.id === q.question_id);
+                return { ...q, category_id: category ? category.category_id : null };
+            });
+
+            const correctAnswers    = combined.filter(answer => answer.correct);
+            const splittedAnswers   = correctAnswers.reduce((acc, item) => {
+                if (item.correct) {
+                    if (!acc[item.category_id]) {
+                        acc[item.category_id] = 1;
+                    } else {
+                    acc[item.category_id]++;
+                    }
+                }
+                return acc;
+            }, {})
+            const finalScores = [];
+            Object.keys(splittedAnswers).forEach((key, index) => {
+                finalScores[index] = splittedAnswers[key];
+            });
+            Object.values(finalScores)
+
+            this.chart_data = finalScores
+            this.initChart()
+
             if(this.dt_details.chart_id == 1){
                 this.show_bar_chart     = true
                 this.show_scatter_chart = false
@@ -442,13 +470,176 @@ export default{
                 this.show_scatter_chart = true
                 this.show_bar_chart     = false
             }
+        },
+        initChart(){
+            
+            this.bar_chart ? this.bar_chart.destroy() : ''
+            this.scatter_chart ? this.scatter_chart.destroy() : ''
 
-            const all_correct_answers = this.form.answer_record.filter(item => item.dt_id === this.dt_details.id && item.correct === true)
-            /* Get correct answer ids */
-            const question_ids = all_correct_answers.map(item => item.question_id)
-            /* Get correct answer ids data */
-            const dt_data = this.dt_list.filter(item => question_ids.includes(item.id))
+            /* Plugins */
+            const total_questions = this.dt_list.length
+            const scatterArbitraryLine = {
+                id: 'scatterArbitraryLine',
+                beforeDatasetDraw(chart, args, pluginOptions){
+                    const { ctx, 
+                            chartArea: {top, bottom, left, right, width, height },
+                            scales: {x, y}
+                    } = chart;
 
+                    lines(0,9,0,9)
+                    function lines(xS, xE, yS, yE){
+                        ctx.save()
+                        ctx.beginPath()
+                        ctx.strokeStyle = 'rgba(170, 170, 170, 1)'
+                        ctx.lineWidth = 3
+                        ctx.moveTo(x.getPixelForValue(0), y.getPixelForValue(0))
+                        ctx.lineTo(x.getPixelForValue(total_questions), y.getPixelForValue(total_questions))
+                        ctx.stroke()
+                        ctx.restore()
+                    }
+                }
+            }
+            
+            const scatterAnnotationLine = {
+                id: 'scatterAnnotationLine',
+                beforeDraw: chart=>{
+                    if(chart.tooltip._active && chart.tooltip._active.length){
+                        const ctx = chart.ctx
+                        ctx.save()
+                        const activePoint = chart.tooltip._active[0]
+
+                        ctx.beginPath()
+                        ctx.moveTo(activePoint.element.x, chart.chartArea.top)
+                        ctx.lineTo(activePoint.element.x, activePoint.element.y)
+                        ctx.lineWidth = 2
+                        ctx.strokeStyle = 'white'
+                        ctx.stroke()
+                        ctx.restore()
+
+                        ctx.beginPath()
+                        ctx.moveTo(activePoint.element.x, activePoint.element.y)
+                        ctx.lineTo(activePoint.element.x, chart.chartArea.bottom)
+                        ctx.lineWidth = 2
+                        ctx.strokeStyle = 'red'
+                        ctx.stroke()
+                        ctx.restore()
+
+                        ctx.beginPath()
+                        ctx.moveTo(chart.chartArea.left, activePoint.element.y)
+                        ctx.lineTo(activePoint.element.x, activePoint.element.y)
+                        ctx.lineWidth = 2
+                        ctx.strokeStyle = 'red'
+                        ctx.stroke()
+                        ctx.restore()
+
+                    }
+                }
+            }
+
+            /* Init scatter chart */
+            let scatter_chart_canvas    = document.getElementById('scatter-chart')
+            let scatter_plot_chart      = scatter_chart_canvas.getContext("2d");
+
+            const ScatterChart = new Chart(scatter_plot_chart, {
+                type: 'scatter',
+                data: {
+                    datasets: [{ 
+                        // data: [
+                        //     { x: this.chart_data[0], y: this.chart_data[1] }
+                        // ],
+                        label: "Test",
+                        borderColor: "rgba(255, 8, 0, 1)",
+                        pointStyle: 'crossRot',
+                        radius: 6,
+                        hoverRadius: 10,
+                        fill: false,
+                    }]
+                },
+                options: {
+                    animation: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                    },
+                    scales: {
+                        y:{
+                            min: 0,
+                            max: this.dt_list.length,
+                            stepSize: 1,
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            title: {
+                                display: true,
+                                text: 'Operations'
+                            }
+                        },
+                        x:{
+                            min: 0,
+                            max: this.dt_list.length,
+                            stepSize: 1,
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            title: {
+                                display: true,
+                                text: 'Numbers'
+                            }
+                        }
+                    },
+                    ticks: {
+                        precision:0
+                    }
+                },
+                plugins: [scatterArbitraryLine, scatterAnnotationLine]
+            })
+            this.scatter_chart = ScatterChart
+
+            /* Init bar chart */
+            let bar_chart_canvas    = document.getElementById('bar-chart')
+            let bar_chart      = bar_chart_canvas.getContext("2d");
+
+            const BarChart = new Chart(bar_chart, {
+                type: 'bar',
+                data: {
+                    labels: this.diagnostic_test_categories_label,
+                    datasets: [{
+                        data: this.chart_data,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    animation: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                    },
+                    scales: {
+                        y:{
+                            min: 0,
+                            max: this.dt_list.length,
+                            stepSize: 1,
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        },
+                        x:{
+                            min: 0,
+                            max: this.dt_list.length,
+                            stepSize: 1,
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }
+                    },
+                    ticks: {
+                        precision:0
+                    }
+                }
+            })
+            this.bar_chart = BarChart
         }
     },
     watch: {
@@ -537,9 +728,6 @@ export default{
                         }
                     }
                 }
-                // else{
-                //     this.$inertia.get(route('public.diagnostic_test'))
-                // }
             },
             immediate: true
         },
@@ -553,170 +741,6 @@ export default{
     },
     mounted(){
         window.addEventListener('beforeunload', this.handleBeforeUnload);
-
-        /* Plugins */
-        const total_questions = this.dt_list.length
-        const scatterArbitraryLine = {
-            id: 'scatterArbitraryLine',
-            beforeDatasetDraw(chart, args, pluginOptions){
-                const { ctx, 
-                        chartArea: {top, bottom, left, right, width, height },
-                        scales: {x, y}
-                } = chart;
-
-                lines(0,9,0,9)
-                function lines(xS, xE, yS, yE){
-                    ctx.save()
-                    ctx.beginPath()
-                    ctx.strokeStyle = 'rgba(170, 170, 170, 1)'
-                    ctx.lineWidth = 3
-                    ctx.moveTo(x.getPixelForValue(0), y.getPixelForValue(0))
-                    ctx.lineTo(x.getPixelForValue(total_questions), y.getPixelForValue(total_questions))
-                    ctx.stroke()
-                    ctx.restore()
-                }
-            }
-        }
-        
-        const scatterAnnotationLine = {
-            id: 'scatterAnnotationLine',
-            beforeDraw: chart=>{
-                if(chart.tooltip._active && chart.tooltip._active.length){
-                    const ctx = chart.ctx
-                    ctx.save()
-                    const activePoint = chart.tooltip._active[0]
-
-                    ctx.beginPath()
-                    ctx.moveTo(activePoint.element.x, chart.chartArea.top)
-                    ctx.lineTo(activePoint.element.x, activePoint.element.y)
-                    ctx.lineWidth = 2
-                    ctx.strokeStyle = 'white'
-                    ctx.stroke()
-                    ctx.restore()
-
-                    ctx.beginPath()
-                    ctx.moveTo(activePoint.element.x, activePoint.element.y)
-                    ctx.lineTo(activePoint.element.x, chart.chartArea.bottom)
-                    ctx.lineWidth = 2
-                    ctx.strokeStyle = 'red'
-                    ctx.stroke()
-                    ctx.restore()
-
-                    ctx.beginPath()
-                    ctx.moveTo(chart.chartArea.left, activePoint.element.y)
-                    ctx.lineTo(activePoint.element.x, activePoint.element.y)
-                    ctx.lineWidth = 2
-                    ctx.strokeStyle = 'red'
-                    ctx.stroke()
-                    ctx.restore()
-
-                }
-            }
-        }
-
-        /* Init scatter chart */
-        let scatter_chart_canvas    = document.getElementById('scatter-chart')
-        let scatter_plot_chart      = scatter_chart_canvas.getContext("2d");
-
-        const ScatterChart = new Chart(scatter_plot_chart, {
-            type: 'scatter',
-            data: {
-                labels: this.dt_list.length,
-                datasets: [{ 
-                    data: [
-                        { x: 1, y: 1 }
-                    ],
-                    label: "Test",
-                    borderColor: "rgba(255, 8, 0, 1)",
-                    pointStyle: 'crossRot',
-                    radius: 6,
-                    hoverRadius: 10,
-                    fill: false,
-                }]
-            },
-            options: {
-                animation: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                },
-                scales: {
-                    y:{
-                        min: 0,
-                        max: this.dt_list.length,
-                        stepSize: 1,
-                        ticks: {
-                            beginAtZero: true
-                        },
-                        title: {
-                            display: true,
-                            text: 'Operations'
-                        }
-                    },
-                    x:{
-                        min: 0,
-                        max: this.dt_list.length,
-                        stepSize: 1,
-                        ticks: {
-                            beginAtZero: true
-                        },
-                        title: {
-                            display: true,
-                            text: 'Numbers'
-                        }
-                    }
-                },
-                ticks: {
-                    precision:0
-                }
-            },
-            plugins: [scatterArbitraryLine, scatterAnnotationLine]
-        })
-
-        /* Init bar chart */
-        let bar_chart_canvas    = document.getElementById('bar-chart')
-        let bar_chart      = bar_chart_canvas.getContext("2d");
-
-        const BarChart = new Chart(bar_chart, {
-            type: 'bar',
-            data: {
-                labels: this.diagnostic_test_categories_label,
-                datasets: [{
-                    data: [1, 3, 2],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                animation: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                },
-                scales: {
-                    y:{
-                        min: 0,
-                        max: this.dt_list.length,
-                        stepSize: 1,
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    },
-                    x:{
-                        min: 0,
-                        max: this.dt_list.length,
-                        stepSize: 1,
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }
-                },
-                ticks: {
-                    precision:0
-                }
-            }
-        })
     }
 }
 </script>

@@ -463,9 +463,9 @@ export default defineComponent({
             const splittedAnswers   = correctAnswers.reduce((acc, item) => {
                 if (item.correct) {
                     if (!acc[item.category_id]) {
-                    acc[item.category_id] = 1;
+                        acc[item.category_id] = 1;
                     } else {
-                    acc[item.category_id]++;
+                        acc[item.category_id]++;
                     }
                 }
                 return acc;

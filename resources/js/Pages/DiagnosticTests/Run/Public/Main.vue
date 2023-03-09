@@ -40,10 +40,10 @@ import BreezeButton from '@/Components/Button.vue';
                     <input class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.school ? 'border-red-500' : 'border-gray-500'" v-model="form.school" autocomplete="off"/>
                 </div>
                 <button type="submit" class="mt-5 w-full border p-2 bg-gray-800 text-white rounded-[4px] hover:bg-gray-700" @click="nextPage()">Next</button>
-                <div class="flex justify-center mt-5 text-sm">
+                <!-- <div class="flex justify-center mt-5 text-sm">
                     <p class="text-gray-500">Have an account?</p>
                 </div>
-                <button class="mt-5 w-full border p-2 bg-blue-500 text-white rounded-[4px] hover:bg-blue-400" @click="login()">Sign in</button>
+                <button class="mt-5 w-full border p-2 bg-blue-500 text-white rounded-[4px] hover:bg-blue-400" @click="login()">Sign in</button> -->
             </div>
             <transition name="fade">
                 <div class="flex-col border bg-white px-6 py-14 shadow-md rounded-[4px] min-w-[25%] space-y-4" v-if="showSelectLanguage">
@@ -74,9 +74,9 @@ export default {
             canStartTest: false,
             dt_list: [],
             form:{
-                name: 'asd',
+                name: '',
                 age: this.$page.props.ages[0].id,
-                school: 'asd',
+                school: '',
                 language: '',
             },
             error:{

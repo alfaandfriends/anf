@@ -14,7 +14,7 @@ import BreezeButton from '@/Components/Button.vue';
                     <div class="align-middle inline-block min-w-full">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg px-1">
                             <div class="flex py-2 justify-end">
-                                <BreezeButton :route="route('dt.settings.create')" class="py-3">New Diagnostic Test</BreezeButton>
+                                <BreezeButton :route="route('dt.settings.create')" class="py-3 px-4">New Diagnostic Test</BreezeButton>
                             </div>
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-300">

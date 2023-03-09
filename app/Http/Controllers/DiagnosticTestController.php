@@ -36,11 +36,13 @@ class DiagnosticTestController extends Controller
 
         $template       =   auth()->check() ? 'User/Start' : 'Public/Start';
 
-        if(!$request->form_data['child_age'] || $request->form_data['child_age'] == 0){
-            return redirect(route('diagnostic_test'))->with(['type' => 'error', 'message' => 'Sorry, diagnostic test is not available for this age.']);
+        if(auth()->check()){
+            if(!$request->form_data['child_age'] || $request->form_data['child_age'] == 0){
+                return redirect(route('diagnostic_test'))->with(['type' => 'error', 'message' => 'Sorry, diagnostic test is not available for this age.']);
+            }
         }
 
-        $age            =   $request->form_data['child_age'] ? DB::table('diagnostic_test_ages')->where('age', $request->form_data['child_age'])->pluck('id')->first() : $request->form_data['age'];
+        $age            =   auth()->check() && $request->form_data['child_age'] ? DB::table('diagnostic_test_ages')->where('age', $request->form_data['child_age'])->pluck('id')->first() : $request->form_data['age'];
         $dt_id          =   DB::table('diagnostic_test')->where('age_id', $age)->where('language_id', $request->form_data['language'])->pluck('id')->first();
 
         if(!$dt_id){
