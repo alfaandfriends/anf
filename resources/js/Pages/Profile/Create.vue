@@ -231,15 +231,21 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                         <div class="mb-4">
                                             <label for="state" class="block text-sm text-gray-700 font-bold"> State <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm"><Multiselect
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <Multiselect
+                                                autocomplete="off"
+                                                @change="clearState"
+                                                :min-chars="1"
+                                                :delay="1"
+                                                :searchable="true"
                                                 v-model="form.country_state"
                                                 :placeholder="form.country_state"
                                                 :noOptionsText="'Please select a state'"
                                                 :options="state_list"
                                                 :canDeselect="false"
                                                 :classes="{
-                                                    container:
-                                                        $page.props.errors.country_state ? 
+                                                    container: 
+                                                        $page.props.errors.country ? 
                                                         'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded bg-white text-base leading-snug outline-none':
                                                         'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none',
                                                     containerDisabled: 'cursor-default bg-gray-100',

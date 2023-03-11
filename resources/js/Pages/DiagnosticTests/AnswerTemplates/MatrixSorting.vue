@@ -19,7 +19,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <textarea cols="1000" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="answers.criterion[index].value" @input="sendDataToParent">{{ answer }}</textarea>
                         <div class="flex">
                             <input type="file" :ref="'criterion_file_'+index" class="hidden" @change="(event) => handleCriterionFile(event, index)">
-                            <BreezeButton buttonType="info" @click="openCriterionFileModal('criterion_file_'+index)" class="py-1.5" v-if="!answers.criterion[index].image_file && !answers.criterion[index].image_name">Upload Image</BreezeButton>
+                            <BreezeButton buttonType="info" @click="openCriterionFileModal('criterion_file_'+index)" class="py-1.5 px-2" v-if="!answers.criterion[index].image_file && !answers.criterion[index].image_name">Upload Image</BreezeButton>
                         </div>
                         <div class="flex" v-if="answers.criterion[index].image_file || answers.criterion[index].image_name">
                             <div class="flex items-center px-3 py-1 rounded-md border border-gray-200 bg-indigo-100 drop-shadow-md">
@@ -45,7 +45,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <textarea cols="1000" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="answers.element[index].value" @input="sendDataToParent">{{ answer }}</textarea>
                         <div class="flex">
                             <input type="file" :ref="'element_file_'+index" class="hidden" @change="(event) => handleElementFile(event, index)">
-                            <BreezeButton buttonType="info" @click="openElementFileModal('element_file_'+index)" class="py-1.5" v-if="!answers.element[index].image_file && !answers.element[index].image_name">Upload Image</BreezeButton>
+                            <BreezeButton buttonType="info" @click="openElementFileModal('element_file_'+index)" class="py-1.5 px-2" v-if="!answers.element[index].image_file && !answers.element[index].image_name">Upload Image</BreezeButton>
                         </div>
                         <div class="flex" v-if="answers.element[index].image_file || answers.element[index].image_name">
                             <div class="flex items-center px-3 py-1 rounded-md border border-gray-200 bg-indigo-100 drop-shadow-md">
@@ -84,17 +84,7 @@ export default{
         return{
             images_to_delete: [],
             answers: [],
-        }
-    },
-    methods: {
-        init(){
-            if(this.action === 'edit'){
-                this.answers = this.prop_answers ? this.prop_answers.answers : []
-                // this.reconstructCriterionAnswers(this.prop_answers.answers.criterion)
-                // this.reconstructElementAnswers(this.prop_answers.answers.element)
-            }
-            else{
-                this.answers = {
+            default_answers: {
                     'criterion' : [{
                         'value': '',
                         'image_name' : '',
@@ -106,6 +96,15 @@ export default{
                         'image_file' : '',
                     }]
                 }
+        }
+    },
+    methods: {
+        init(){
+            if(this.prop_answers.answers){
+                this.answers =  Array.isArray(this.prop_answers.answers.criterion) && Array.isArray(this.prop_answers.answers.element) ? this.prop_answers.answers : this.default_answers
+            }
+            else{
+                this.answers = this.default_answers
             }
         },
         addAnswer(){

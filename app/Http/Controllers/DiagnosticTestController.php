@@ -22,7 +22,6 @@ class DiagnosticTestController extends Controller
         $languages              =   DB::table('languages')->get();
         $ages                   =   DB::table('diagnostic_test_ages')->get();
         $children               =   auth()->check() ?  DB::table('children')->where('parent_id', auth()->user()->ID)->get() : [];
-        // dd($children);
 
         return Inertia::render('DiagnosticTests/Run/'.$template, [
             'diagnostic_test_list'  => $diagnostic_test_list,
@@ -336,22 +335,33 @@ class DiagnosticTestController extends Controller
             return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Diagnostic test updated successfully !']);
         }
 
-        public function dtDestroy($id){
-            DB::table('diagnostic_test')->where('id', $id)->delete();
-            DB::table('diagnostic_test_categories')->where('dt_id', $id)->delete();
-            DB::table('diagnostic_test_conditions')->where('dt_id', $id)->delete();
+        public function dtDestroy($dt_id){
+            $dt_question_info   =   DB::table('diagnostic_test_questions')
+                                        ->join('diagnostic_test_answers', 'diagnostic_test_questions.id', '=', 'diagnostic_test_answers.question_id')
+                                        ->where('diagnostic_test_questions.dt_id', $dt_id)->get();
 
-            $diagnostic_test_info    =   DB::table('diagnostic_test_questions')->where('dt_id', $id)->get();
-            if(!empty($diagnostic_test_info)){
-                foreach($diagnostic_test_info as $key=>$info){
-                    if($info->image_location != ''){
-                        if(Storage::exists($info->image_location)){
-                            Storage::delete($info->image_location);
+            foreach($dt_question_info as $question_info){
+
+                if($question_info->question_image){
+                    if(Storage::exists($question_info->question_image)){
+                        Storage::delete($question_info->question_image);
+                    }
+                }
+
+                $data       =   unserialize($question_info->answer_data);
+                $images     =   $data['answers'];
+                foreach($images as $image){
+                    if($image['image_name']){
+                        if(Storage::exists('diagnostic_test_photo/'.$image['image_name'])){
+                            Storage::delete('diagnostic_test_photo/'.$image['image_name']);
                         }
                     }
                 }
             }
-            DB::table('diagnostic_test_questions')->where('dt_id', $id)->delete();
+            
+            DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->delete();
+            DB::table('diagnostic_test_questions')->where('diagnostic_test_questions.dt_id', $dt_id)->delete();
+            DB::table('diagnostic_test')->where('id', $dt_id)->delete();
 
             return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Diagnostic deleted successfully !']);
         }
@@ -362,13 +372,11 @@ class DiagnosticTestController extends Controller
                 return abort(404);
             }
             $diagnostic_test_list           =   DB::table('diagnostic_test_questions')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
-            $diagnostic_test_conditions     =   DB::table('diagnostic_test_conditions')->where('dt_id', $request->dt_id)->orderBy('score_capped', 'asc')->get();
             $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
             
             return Inertia::render('DiagnosticTests/Details/Index', [
                 'diagnostic_test_id'            => $request->dt_id,
                 'diagnostic_test_list'          => $diagnostic_test_list,
-                'diagnostic_test_conditions'    => $diagnostic_test_conditions,
                 'diagnostic_test_categories'    => $diagnostic_test_categories
             ]);
         }
@@ -462,7 +470,6 @@ class DiagnosticTestController extends Controller
             $diagnostic_test_list           =   DB::table('diagnostic_test_questions')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
             $diagnostic_test_info           =   DB::table('diagnostic_test_questions')->where('id', $request->test_id)->first();
             $diagnostic_test_answers        =   DB::table('diagnostic_test_answers')->where('question_id', $request->test_id)->first();
-            $diagnostic_test_conditions     =   DB::table('diagnostic_test_conditions')->where('dt_id', $request->dt_id)->orderBy('score_capped', 'asc')->get();
             $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
             
             return Inertia::render('DiagnosticTests/Details/Edit', [
@@ -472,7 +479,6 @@ class DiagnosticTestController extends Controller
                 'diagnostic_test_list'          => $diagnostic_test_list,
                 'diagnostic_test_info'          => $diagnostic_test_info,
                 'diagnostic_test_answers'       => unserialize($diagnostic_test_answers->answer_data),
-                'diagnostic_test_conditions'    => $diagnostic_test_conditions,
                 'diagnostic_test_categories'    => $diagnostic_test_categories,
             ]);
         }
@@ -599,14 +605,22 @@ class DiagnosticTestController extends Controller
         }
 
         public function dtDetailsDestroy($id){   
-            $diagnostic_test_info    =   DB::table('diagnostic_test_questions')->where('id', $id)->first();
             
-            if($diagnostic_test_info->image_location != ''){
-                if(Storage::exists($diagnostic_test_info->image_location)){
-                    Storage::delete($diagnostic_test_info->image_location);
+            $diagnostic_test_info    =   DB::table('diagnostic_test_questions')->where('id', $id)->first();
+
+            $dt_answers =   DB::table('diagnostic_test_answers')->where('question_id', $id)->first();
+            $data       =   unserialize($dt_answers->answer_data);
+            $images     =   $data['answers'];
+            
+            foreach($images as $image){
+                if($image['image_name']){
+                    if(Storage::exists('diagnostic_test_photo/'.$image['image_name'])){
+                        Storage::delete('diagnostic_test_photo/'.$image['image_name']);
+                    }
                 }
             }
-
+            
+            DB::table('diagnostic_test_answers')->where('question_id', $id)->delete();
             DB::table('diagnostic_test_questions')->where('id', $id)->delete();
 
             return redirect()->route('dt.settings.details', ['dt_id'=>$diagnostic_test_info->dt_id])->with(['type' => 'success', 'message' => 'Item deleted successfully !']);
@@ -620,58 +634,6 @@ class DiagnosticTestController extends Controller
             }
 
             return redirect()->back()->with(['type' => 'success', 'message' => 'Item sorted successfully !']);
-        }
-
-    /* Diagnostic Test Conditions */
-        public function dtConditionsCreate(Request $request){
-            return Inertia::render('DiagnosticTests/Conditions/Create', [
-                'diagnostic_test_id' => $request->dt_id
-            ]);
-        }
-
-        public function dtConditionsStore(Request $request){
-            $request->validate([
-                'score'          => 'required',
-                'message'        => 'required',
-            ]);
-
-            DB::table('diagnostic_test_conditions')->insert([
-                'dt_id' =>  $request->dt_id,
-                'score_capped' =>  $request->score,
-                'message' =>  $request->message,
-            ]);
-
-            return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Condition added successfully !']);
-        }
-
-        public function dtConditionsEdit(Request $request){
-            $condition_info = DB::table('diagnostic_test_conditions')->where('id', $request->condition_id)->first();
-
-            return Inertia::render('DiagnosticTests/Conditions/Edit', [
-                'condition_info' => $condition_info
-            ]);
-        }
-
-        public function dtConditionsUpdate(Request $request){
-            $request->validate([
-                'score'          => 'required',
-                'message'        => 'required',
-            ]);
-
-            DB::table('diagnostic_test_conditions')->where('id', $request->condition_id)->update([
-                'score_capped'  =>  $request->score,
-                'message'       =>  $request->message,
-                'updated_at'    =>  Carbon::now(),
-            ]); 
-
-            return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Condition updated successfully !']);
-        }
-
-        public function dtConditionsDestroy($id){
-            $dtInfo = DB::table('diagnostic_test_conditions')->where('id', $id)->first();
-            DB::table('diagnostic_test_conditions')->where('id', $id)->delete();
-
-            return redirect()->route('dt.settings.details', ['dt_id'=>$dtInfo->dt_id])->with(['type' => 'success', 'message' => 'Condition added successfully !']);
         }
 
     /* Diagnostic Test Categories */
@@ -716,6 +678,12 @@ class DiagnosticTestController extends Controller
         }
 
         public function dtCategoriesDestroy($id){
+            $has_record =   DB::table('diagnostic_test_questions')->where('category_id', $id)->exists();
+
+            if($has_record){
+                return redirect()->back()->with(['type' => 'error', 'message' => 'This category is being used !']);
+            }
+
             $dtInfo = DB::table('diagnostic_test_categories')->where('id', $id)->first();
             DB::table('diagnostic_test_categories')->where('id', $id)->delete();
 

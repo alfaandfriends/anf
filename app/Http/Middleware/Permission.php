@@ -18,10 +18,10 @@ class Permission
      */
     public function handle(Request $request, Closure $next, $permissions)
     {   
-        $profile_updated    = Inertia::getShared('auth.profile_updated');
-        if(!$profile_updated && !in_array(Route::currentRouteName(), ['profile', 'profile.store', 'profile.store.security.store'])){
-            return redirect('profile');
-        }
+        // $profile_updated    = Inertia::getShared('auth.profile_updated');
+        // if(!$profile_updated && !in_array(Route::currentRouteName(), ['profile', 'profile.store', 'profile.store.security.store'])){
+        //     return redirect('profile');
+        // }
 
         $user_permissions   = Inertia::getShared('can');
         $permissions =   explode('|', $permissions);

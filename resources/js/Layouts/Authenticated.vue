@@ -110,9 +110,9 @@ export default {
     mounted() {
         this.subscribeGlobalChannel()
         this.subscribeApprovalChannel()
-        if(this.$page.props.auth.first_time_login == 1 && this.$page.props.auth.profile_updated == 1){
-            this.$vgt.start(0);
-        }
+        // if(this.$page.props.auth.first_time_login == 1 && this.$page.props.auth.profile_updated == 1){
+        //     this.$vgt.start(0);
+        // }
     },
 }
 </script>

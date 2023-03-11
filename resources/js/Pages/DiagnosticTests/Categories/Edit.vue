@@ -1,5 +1,3 @@
-
-
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
@@ -10,34 +8,32 @@ import BreezeButton from '@/Components/Button.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="py-4 px-4">
-            <div class="overflow-x-auto">
-                <div class="mx-auto">
-                    <div class="align-middle inline-block min-w-full">
-                        <div class="mt-4 bg-white">
-                            <div class="flex space-x-2">
-                                <div class="overflow-hidden w-1/2">
-                                    <form @submit.prevent="submit">
-                                        <div class="bg-white px-3 py-2">
-                                            <div class="mb-5">
-                                                <h1 class="text-indigo-800 font-bold">Categories</h1>
-                                                <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="category_name" class="block text-sm text-gray-700 font-bold">Category name<span class="text-red-500">*</span></label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <input type="text" name="category_name" id="category_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.category_name ? 'border-red-300' : 'border-gray-300'" v-model="form.category_name" autocomplete="off"/>
-                                                </div>
-                                            </div>
-                                            <div class="flex items-end justify-end space-x-2">
-                                                <BreezeButton buttonType="gray" :route="route('dt.settings.details', {'dt_id': $page.props.category_info.dt_id})">Cancel</BreezeButton>
-                                                <BreezeButton type="submit">Save </BreezeButton>
-                                            </div>
+        <div class="md:grid md:grid-cols-2">
+            <div class="md:mt-0 md:col-span-2">
+                <div class="px-4 py-5 bg-indigo-100 space-y-6 sm:p-6 h-full">
+                    <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                        <form @submit.prevent="submit">
+                            <div class="sm:row-span-3 space-y-2">
+                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                                    <div class="mb-5">
+                                        <h1 class="text-indigo-800 font-bold">Categories</h1>
+                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="category_name" class="block text-sm text-gray-700 font-bold">Category name<span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" name="category_name" id="category_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.category_name ? 'border-red-300' : 'border-gray-300'" v-model="form.category_name" autocomplete="off"/>
                                         </div>
-                                    </form>
+                                    </div>
+                                </div>
+                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                                    <div class="flex items-end justify-end space-x-2">
+                                        <BreezeButton buttonType="gray" :route="route('dt.settings.details', {'dt_id': $page.props.category_info.dt_id})">Cancel</BreezeButton>
+                                        <BreezeButton type="submit">Save </BreezeButton>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>

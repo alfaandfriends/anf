@@ -22,7 +22,7 @@ import BreezeButton from '@/Components/Button.vue';
                     <textarea cols="1000" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="answers[index].answer" @input="sendDataToParent"></textarea>
                     <div class="flex">
                         <input type="file" :ref="'file_'+index" class="hidden" @change="(event) => handleFile(event, index)">
-                        <BreezeButton buttonType="info" @click="openFileModal('file_'+index)" class="py-1.5" v-if="!answer.image_file && !answer.image_name">Upload Image</BreezeButton>
+                        <BreezeButton buttonType="info" @click="openFileModal('file_'+index)" class="py-1.5 px-2" v-if="!answer.image_file && !answer.image_name">Upload Image</BreezeButton>
                     </div>
                     <div class="flex" v-if="answer.image_file || answer.image_name">
                         <div class="flex items-center px-3 py-1 rounded-md border border-gray-200 bg-indigo-100 drop-shadow-md">
@@ -41,7 +41,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                     </div>
                 </div>
-                <BreezeButton buttonType="danger" @click="deleteAnswer(index)" class="mt-4">Delete</BreezeButton>
+                <BreezeButton buttonType="danger" @click="deleteAnswer(index)" class="mt-4 py-1 px-2">Delete</BreezeButton>
             </div>
         </div>
     </div>
