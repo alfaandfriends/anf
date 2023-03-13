@@ -16,7 +16,8 @@ class DiagnosticTestController extends Controller
     /* Diagnostic Test Run */
     public function dtMain(){
         
-        $template               =   auth()->check() ? 'User/Main' : 'Public/Main';
+        // $template               =   auth()->check() ? 'User/Main' : 'Public/Main';
+        $template               =   'Public/Main';
         
         $diagnostic_test_list   =   DB::table('diagnostic_test')->get();
         $languages              =   DB::table('languages')->get();
