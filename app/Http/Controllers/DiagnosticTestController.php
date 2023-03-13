@@ -125,7 +125,7 @@ class DiagnosticTestController extends Controller
 
     }
 
-    public function savedDtResults(Request $request)
+    public function savedDtResult(Request $request)
     {
         $allowed_centres    =   (object)Inertia::getShared('allowed_centres');
         $allowed_centres->search(function ($value) {

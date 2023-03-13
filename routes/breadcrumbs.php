@@ -171,3 +171,14 @@ Breadcrumbs::for('settings.diagnostic_test.create', function (BreadcrumbTrail $t
     $trail->parent('settings.diagnostic_test');
     $trail->push('Add Diagnostic Test', route('settings.diagnostic_test'));
 });
+
+/* Diagnostic Test Settings */
+Breadcrumbs::for('diagnostic_test.saved_result', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Saved Result', route('diagnostic_test.saved_result'));
+});
+
+// Breadcrumbs::for('fees.create', function (BreadcrumbTrail $trail) {
+//     $trail->parent('fees');
+//     $trail->push('Add Fee', route('fees'));
+// });

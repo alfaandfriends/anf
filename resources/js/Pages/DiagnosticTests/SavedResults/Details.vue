@@ -173,7 +173,7 @@ export default {
         params: {
             handler(){
                 if(this.params){
-                    this.$inertia.get(this.route('diagnostic_test.saved_results.details'), this.params, { replace: true, preserveState: true});
+                    this.$inertia.get(this.route('diagnostic_test.saved_result.details'), this.params, { replace: true, preserveState: true});
                 }
             },
             deep: true

@@ -248,7 +248,7 @@ export default {
         params: {
             handler(){
                 if(this.params){
-                    this.$inertia.get(this.route('diagnostic_test.saved_results'), this.params, { replace: true, preserveState: true});
+                    this.$inertia.get(this.route('diagnostic_test.saved_result'), this.params, { replace: true, preserveState: true});
                 }
             },
             deep: true
@@ -256,7 +256,7 @@ export default {
     },
     methods: {
         viewDetails(result_id){
-            this.$inertia.get(this.route('diagnostic_test.saved_results.details'), {'result_id': result_id});
+            this.$inertia.get(this.route('diagnostic_test.saved_result.details'), {'result_id': result_id});
         },
         updateStatus(result_id, admitted, centre_id, notes){
             this.form.result_id     = result_id
@@ -266,7 +266,7 @@ export default {
             this.open_modal         = true
         },
         saveStatus(){
-            this.$inertia.post(this.route('diagnostic_test.saved_results.save_status'), this.form, { onSuccess: page => {            
+            this.$inertia.post(this.route('diagnostic_test.saved_result.save_status'), this.form, { onSuccess: page => {            
                 this.open_modal = false
             }});
         }
