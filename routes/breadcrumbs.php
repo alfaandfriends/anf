@@ -187,3 +187,33 @@ Breadcrumbs::for('dt.settings.create', function (BreadcrumbTrail $trail) {
     $trail->parent('dt.settings');
     $trail->push('Create', route('dt.settings.create'));
 });
+
+Breadcrumbs::for('dt.settings.edit', function (BreadcrumbTrail $trail) {
+    $trail->parent('dt.settings');
+    $trail->push('Edit', route('dt.settings.edit'));
+});
+
+Breadcrumbs::for('dt.settings.details', function (BreadcrumbTrail $trail) {
+    $trail->parent('dt.settings');
+    $trail->push('Details', route('dt.settings.details'));
+});
+
+Breadcrumbs::for('dt.settings.categories.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('dt.settings');
+    $trail->push('Create Category', route('dt.settings.categories.create'));
+});
+
+Breadcrumbs::for('dt.settings.categories.edit', function (BreadcrumbTrail $trail) {
+    $trail->parent('dt.settings');
+    $trail->push('Edit Category', route('dt.settings.categories.edit'));
+});
+
+Breadcrumbs::for('dt.settings.details.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('dt.settings');
+    $trail->push('Create Question', route('dt.settings.details.create'));
+});
+
+Breadcrumbs::for('dt.settings.details.edit', function (BreadcrumbTrail $trail) {
+    $trail->parent('dt.settings');
+    $trail->push('Edit Question', route('dt.settings.details.edit'));
+});
