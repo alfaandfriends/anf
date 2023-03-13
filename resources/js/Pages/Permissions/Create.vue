@@ -42,7 +42,7 @@
                                             </div>
                                         </div>
                                         <div class="flex flex-none mb-4">
-                                            <BreezeButton buttonType="info" class="py-2.5" @click="addSub()">Add</BreezeButton>
+                                            <BreezeButton buttonType="info" class="py-2.5 px-4" @click="addSub()">Add</BreezeButton>
                                         </div>
                                     </div>
                                     <div class="overflow-x-auto relative">

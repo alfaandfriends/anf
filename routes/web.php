@@ -178,35 +178,35 @@ Route::middleware(['auth'])->group(function(){
     Route::prefix('diagnostic-test')->group(function () {
 
         /* Diagnostic Test List */
-        Route::get('/settings', [DiagnosticTestController::class, 'dtList'])->name('dt.settings');
-        Route::get('/settings/create', [DiagnosticTestController::class, 'dtCreate'])->name('dt.settings.create');
-        Route::post('/settings/store', [DiagnosticTestController::class, 'dtStore'])->name('dt.settings.store');
-        Route::get('/settings/edit', [DiagnosticTestController::class, 'dtEdit'])->name('dt.settings.edit');
-        Route::post('/settings/update', [DiagnosticTestController::class, 'dtUpdate'])->name('dt.settings.update');
-        Route::delete('/settings/destroy/{id}', [DiagnosticTestController::class, 'dtDestroy'])->name('dt.settings.destroy');
+        Route::get('/settings', [DiagnosticTestController::class, 'dtList'])->name('dt.settings')->middleware('permission:view_dt_settings_access');
+        Route::get('/settings/create', [DiagnosticTestController::class, 'dtCreate'])->name('dt.settings.create')->middleware('permission:create_dt_settings_access');
+        Route::post('/settings/store', [DiagnosticTestController::class, 'dtStore'])->name('dt.settings.store')->middleware('permission:create_dt_settings_access');
+        Route::get('/settings/edit', [DiagnosticTestController::class, 'dtEdit'])->name('dt.settings.edit')->middleware('permission:edit_dt_settings_access');
+        Route::post('/settings/update', [DiagnosticTestController::class, 'dtUpdate'])->name('dt.settings.update')->middleware('permission:edit_dt_settings_access');
+        Route::delete('/settings/destroy/{id}', [DiagnosticTestController::class, 'dtDestroy'])->name('dt.settings.destroy')->middleware('permission:delete_dt_settings_access');
 
         /* Diagnostic Test Detail List */
-        Route::get('/settings/details', [DiagnosticTestController::class, 'dtDetailsList'])->name('dt.settings.details');
-        Route::get('/settings/details/create', [DiagnosticTestController::class, 'dtDetailsCreate'])->name('dt.settings.details.create');
-        Route::post('/settings/details/store', [DiagnosticTestController::class, 'dtDetailsStore'])->name('dt.settings.details.store');
-        Route::get('/settings/details/edit', [DiagnosticTestController::class, 'dtDetailsEdit'])->name('dt.settings.details.edit');
-        Route::post('/settings/details/update', [DiagnosticTestController::class, 'dtDetailsUpdate'])->name('dt.settings.details.update');
-        Route::delete('/settings/details/destroy/{id}', [DiagnosticTestController::class, 'dtDetailsDestroy'])->name('dt.settings.details.destroy');
-        Route::post('/settings/details/sort', [DiagnosticTestController::class, 'dtDetailsSort'])->name('dt.settings.details.sort');
+        Route::get('/settings/details', [DiagnosticTestController::class, 'dtDetailsList'])->name('dt.settings.details')->middleware('permission:view_dt_settings_access');
+        Route::get('/settings/details/create', [DiagnosticTestController::class, 'dtDetailsCreate'])->name('dt.settings.details.create')->middleware('permission:create_dt_settings_access');
+        Route::post('/settings/details/store', [DiagnosticTestController::class, 'dtDetailsStore'])->name('dt.settings.details.store')->middleware('permission:create_dt_settings_access');
+        Route::get('/settings/details/edit', [DiagnosticTestController::class, 'dtDetailsEdit'])->name('dt.settings.details.edit')->middleware('permission:edit_dt_settings_access');
+        Route::post('/settings/details/update', [DiagnosticTestController::class, 'dtDetailsUpdate'])->name('dt.settings.details.update')->middleware('permission:edit_dt_settings_access');
+        Route::delete('/settings/details/destroy/{id}', [DiagnosticTestController::class, 'dtDetailsDestroy'])->name('dt.settings.details.destroy')->middleware('permission:delete_dt_settings_access');
+        Route::post('/settings/details/sort', [DiagnosticTestController::class, 'dtDetailsSort'])->name('dt.settings.details.sort')->middleware('permission:view_dt_settings_access|edit_dt_settings_access');
 
         /* Diagnostic Test Detail Conditions */
-        Route::get('/settings/conditions/create', [DiagnosticTestController::class, 'dtConditionsCreate'])->name('dt.settings.conditions.create');
-        Route::post('/settings/conditions/store', [DiagnosticTestController::class, 'dtConditionsStore'])->name('dt.settings.conditions.store');
-        Route::get('/settings/conditions/edit', [DiagnosticTestController::class, 'dtConditionsEdit'])->name('dt.settings.conditions.edit');
-        Route::post('/settings/conditions/update', [DiagnosticTestController::class, 'dtConditionsUpdate'])->name('dt.settings.conditions.update');
-        Route::delete('/settings/conditions/destroy/{id}', [DiagnosticTestController::class, 'dtConditionsDestroy'])->name('dt.settings.conditions.destroy');
+        Route::get('/settings/conditions/create', [DiagnosticTestController::class, 'dtConditionsCreate'])->name('dt.settings.conditions.create')->middleware('permission:create_dt_settings_access');
+        Route::post('/settings/conditions/store', [DiagnosticTestController::class, 'dtConditionsStore'])->name('dt.settings.conditions.store')->middleware('permission:create_dt_settings_access');
+        Route::get('/settings/conditions/edit', [DiagnosticTestController::class, 'dtConditionsEdit'])->name('dt.settings.conditions.edit')->middleware('permission:edit_dt_settings_access');
+        Route::post('/settings/conditions/update', [DiagnosticTestController::class, 'dtConditionsUpdate'])->name('dt.settings.conditions.update')->middleware('permission:edit_dt_settings_access');
+        Route::delete('/settings/conditions/destroy/{id}', [DiagnosticTestController::class, 'dtConditionsDestroy'])->name('dt.settings.conditions.destroy')->middleware('permission:delete_dt_settings_access');
 
         /* Diagnostic Test Detail Categories */
-        Route::get('/settings/categories/create', [DiagnosticTestController::class, 'dtCategoriesCreate'])->name('dt.settings.categories.create');
-        Route::post('/settings/categories/store', [DiagnosticTestController::class, 'dtCategoriesStore'])->name('dt.settings.categories.store');
-        Route::get('/settings/categories/edit', [DiagnosticTestController::class, 'dtCategoriesEdit'])->name('dt.settings.categories.edit');
-        Route::post('/settings/categories/update', [DiagnosticTestController::class, 'dtCategoriesUpdate'])->name('dt.settings.categories.update');
-        Route::delete('/settings/categories/destroy/{id}', [DiagnosticTestController::class, 'dtCategoriesDestroy'])->name('dt.settings.categories.destroy');
+        Route::get('/settings/categories/create', [DiagnosticTestController::class, 'dtCategoriesCreate'])->name('dt.settings.categories.create')->middleware('permission:create_dt_settings_access');
+        Route::post('/settings/categories/store', [DiagnosticTestController::class, 'dtCategoriesStore'])->name('dt.settings.categories.store')->middleware('permission:create_dt_settings_access');
+        Route::get('/settings/categories/edit', [DiagnosticTestController::class, 'dtCategoriesEdit'])->name('dt.settings.categories.edit')->middleware('permission:edit_dt_settings_access');
+        Route::post('/settings/categories/update', [DiagnosticTestController::class, 'dtCategoriesUpdate'])->name('dt.settings.categories.update')->middleware('permission:edit_dt_settings_access');
+        Route::delete('/settings/categories/destroy/{id}', [DiagnosticTestController::class, 'dtCategoriesDestroy'])->name('dt.settings.categories.destroy')->middleware('permission:delete_dt_settings_access');
     });
     
     /* Shop */

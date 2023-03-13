@@ -39,16 +39,11 @@ import BreezeButton from '@/Components/Button.vue';
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full" :src="'/storage/' + user.avatar" alt="">
+                                                    <img class="h-10 w-10 rounded-full" :src="user.avatar" alt="">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">{{ user.display_name }}</div>
                                                     <div class="text-sm text-gray-500">{{ user.email }}</div>
-                                                    <div class="">
-                                                        <span v-for="(role, index) in user.user_has_role" :key="role.id">
-                                                            <span class="text-slate-500" v-if="index != 0"> / </span><span class="text-indigo-400 text-sm whitespace-nowrap mt-0.5">{{ role.role.display_name ? role.role.display_name : '' }}</span>
-                                                        </span>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
