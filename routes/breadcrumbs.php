@@ -175,10 +175,15 @@ Breadcrumbs::for('settings.diagnostic_test.create', function (BreadcrumbTrail $t
 /* Diagnostic Test Settings */
 Breadcrumbs::for('diagnostic_test.saved_result', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('Saved Result', route('diagnostic_test.saved_result'));
+    $trail->push('Diagnostic Test Saved Result', route('diagnostic_test.saved_result'));
 });
 
-// Breadcrumbs::for('fees.create', function (BreadcrumbTrail $trail) {
-//     $trail->parent('fees');
-//     $trail->push('Add Fee', route('fees'));
-// });
+Breadcrumbs::for('dt.settings', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Diagnostic Test Settings', route('dt.settings'));
+});
+
+Breadcrumbs::for('dt.settings.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('dt.settings');
+    $trail->push('Create', route('dt.settings.create'));
+});
