@@ -154,39 +154,39 @@ class UserController extends Controller
 
     public function manageRolesStore(Request $request)
     {
-        $user_exist =   $this->checkUserExist($request->user_id);
+        // $user_exist =   $this->checkUserExist($request->user_id);
         
-        /* If user exists */
-        if(!$user_exist){
-            DB::table('user_basic_information')
-                ->insert([
-                    'user_id'           => $request->user_id,
-                    'user_first_name'   => $request->form['first_name'],
-                    'user_last_name'    => $request->form['last_name'],
-                    'user_calling_code' => $request->form['calling_code'],
-                    'user_contact'      => $request->form['contact_number'],
-                    'user_address'      => $request->form['address'],
-                    'user_country'      => $request->form['country'],
-                    'user_state'        => $request->form['country_state'],
-                    'user_country_code' => $request->form['country_code'],
-                ]);
-        }
-        /* If user not exists */
-        else{
-            DB::table('user_basic_information')
-            ->where('user_id', $request->user_id)
-            ->update([
-                'user_first_name'   => $request->form['first_name'],
-                'user_last_name'    => $request->form['last_name'],
-                'user_calling_code' => $request->form['calling_code'],
-                'user_contact'      => $request->form['contact_number'],
-                'user_address'      => $request->form['address'],
-                'user_country'      => $request->form['country'],
-                'user_state'        => $request->form['country_state'],
-                'user_country_code' => $request->form['country_code'],
-                'updated_at'        => Carbon::now(),
-            ]);
-        }
+        // /* If user exists */
+        // if(!$user_exist){
+        //     DB::table('user_basic_information')
+        //         ->insert([
+        //             'user_id'           => $request->user_id,
+        //             'user_first_name'   => $request->form['first_name'],
+        //             'user_last_name'    => $request->form['last_name'],
+        //             'user_calling_code' => $request->form['calling_code'],
+        //             'user_contact'      => $request->form['contact_number'],
+        //             'user_address'      => $request->form['address'],
+        //             'user_country'      => $request->form['country'],
+        //             'user_state'        => $request->form['country_state'],
+        //             'user_country_code' => $request->form['country_code'],
+        //         ]);
+        // }
+        // /* If user not exists */
+        // else{
+        //     DB::table('user_basic_information')
+        //     ->where('user_id', $request->user_id)
+        //     ->update([
+        //         'user_first_name'   => $request->form['first_name'],
+        //         'user_last_name'    => $request->form['last_name'],
+        //         'user_calling_code' => $request->form['calling_code'],
+        //         'user_contact'      => $request->form['contact_number'],
+        //         'user_address'      => $request->form['address'],
+        //         'user_country'      => $request->form['country'],
+        //         'user_state'        => $request->form['country_state'],
+        //         'user_country_code' => $request->form['country_code'],
+        //         'updated_at'        => Carbon::now(),
+        //     ]);
+        // }
 
         $user                           =   User::find($request->user_id);
 
