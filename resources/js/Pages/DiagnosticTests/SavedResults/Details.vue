@@ -54,72 +54,114 @@ import BreezeButton from '@/Components/Button.vue';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="blue" class="py-1 px-2" @click="!processing ? viewChart(index, result.dt_id, result.total_answers, result.chart_type) : ''">View Chart</BreezeButton>
-                                            <BreezeButton buttonType="gray" class="py-1 px-2" @click="!processing ? viewAnswers(index++) : ''">Answer Records</BreezeButton>
+                                            <BreezeButton buttonType="blue" class="py-1 px-2" @click="!processing ? viewReport(index++, result.dt_id, result.total_answers, result.chart_type) : ''">
+                                                
+                                                <div class="flex items-center space-x-2" v-if="processing">
+                                                    <svg class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" viewBox="0 0 24 24">
+                                                    </svg>
+                                                    <span>Generating...</span>
+                                                </div>
+                                                <span v-else>View Report</span>
+                                            </BreezeButton>
                                         </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <Pagination :page_data="$page.props.answer_record" :params="'&result_id='+$page.props.result_id"></Pagination>
-                        <Modal :showModal="show_chart" @hideModal="show_chart = false">
+                        <Modal :showModal="show_report" @hideModal="show_report = false">
                             <template v-slot:header>
                                 <h3 class="text-gray-900 text-xl font-semibold">                
-                                    Chart
+                                    Diagnostic Test Report
                                 </h3>                
                             </template>
                             <template v-slot:content>
-                                <div class="p-4 space-y-4">
-                                    <div class="flex justify-center">
-                                        <canvas id="scatter-chart" class="hidden m-0"></canvas>
-                                        <canvas id="bar-chart" class="hidden m-0"></canvas>
-                                    </div>
-                                </div>
-                            </template>
-                            <template v-slot:footer>
-                                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                                    <BreezeButton buttonType="info" @click="show_chart = false">Close</BreezeButton>
-                                </div>
-                            </template>
-                        </Modal>
-                        <Modal :showModal="show_answers" modalType="lg" @hideModal="show_answers = false">
-                            <template v-slot:header>
-                                <h3 class="text-gray-900 text-xl font-semibold">                
-                                    Answer Records
-                                </h3>                
-                            </template>
-                            <template v-slot:content>
-                                <div class="p-4 space-y-4">
-                                    <div class="overflow-x-auto">
-                                        <table class="table-auto w-full">
-                                            <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
-                                                <tr>
-                                                    <th class="p-2 whitespace-nowrap border" v-for="answer, index in answer_data">
-                                                        <div class="flex justify-center font-semibold text-left text-gray-700">Q{{ ++index }}</div>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="text-sm divide-y divide-gray-100">
-                                                <tr>
-                                                    <td class="p-2 whitespace-nowrap border text-center align-middle" v-for="answer, index in answer_data">
-                                                        <div class="flex justify-center">
-                                                            <svg v-if="answer.correct" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill text-green-500" viewBox="0 0 16 16">
-                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                                                            </svg>
-                                                            <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-circle-fill text-red-500" viewBox="0 0 16 16">
-                                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
-                                                            </svg>
+                                <div class="flex justify-center bg-gray-200 py-4 rounded max-h-[90%] overflow-y-auto no-scrollbar" id="report">
+                                    <div class="bg-white w-[210mm] h-[297mm] space-y-6 py-4">
+                                        <div class="grid grid-rows-1">
+                                            <div class="flex justify-center">
+                                                <h1 class="font-bold text-slate-800 text-2xl py-4 uppercase">Diagnostic Test {{ report.title }}</h1>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-rows-1">
+                                            <div class="grid grid-cols-2 px-4 space-x-4">
+                                                <div class="flex items-center justify-center border-2 p-6 rounded-lg">
+                                                    <div id="chart_image"></div>
+                                                    <canvas id="scatter-chart" class="hidden m-0"></canvas>
+                                                    <canvas id="bar-chart" class="hidden m-0"></canvas>
+                                                </div>
+                                                <div class="border-2 p-6 rounded-lg">
+                                                    <!-- <h3 class="font-medium text-indigo-700">Student's Information</h3>
+                                                    <hr class="mt-3 border-2 border-indigo-700 border-dashed"> -->
+                                                    <dl class="mt-2 divide-y divide-gray-300">
+                                                        <div class="py-3 flex justify-between text-sm font-medium">
+                                                            <dt class="text-gray-500 min-w-[70px]">Name : </dt>
+                                                            <dd class="text-gray-900 break-word">{{ report.name }}</dd>
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                        <div class="py-3 flex justify-between text-sm font-medium">
+                                                            <dt class="text-gray-500">Age :</dt>
+                                                            <dd class="text-gray-900">{{ report.age }}</dd>
+                                                        </div>
+                                                        <div class="py-3 flex justify-between text-sm font-medium">
+                                                            <dt class="text-gray-500">Result :</dt>
+                                                            <dd class="text-gray-900">{{ report.result }}</dd>
+                                                        </div>
+                                                        <div class="py-3 flex justify-between text-sm font-medium">
+                                                            <dt class="text-gray-500">Date / Time :</dt>
+                                                            <dd class="text-gray-900">{{ report.datetime }}</dd>
+                                                        </div>
+                                                    </dl>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-rows-1">
+                                            <div class="grid grid-cols-1">
+                                                <div class="flex justify-center px-4">
+                                                    <table class="w-full">
+                                                        <thead class="text-xs font-semibold uppercase text-gray-400 bg-indigo-100">
+                                                            <tr>
+                                                                <th class="p-2 whitespace-nowrap border-2 rounded-tr" width="3">
+                                                                    <div class="flex justify-center font-semibold text-left text-gray-700">#</div>
+                                                                </th>
+                                                                <th class="p-2 whitespace-nowrap border-2">
+                                                                    <div class="flex font-semibold justify-center text-gray-700">Question</div>
+                                                                </th>
+                                                                <th class="p-2 whitespace-nowrap border-2 w-8">
+                                                                    <div class="flex justify-center font-semibold text-left text-gray-700">Result</div>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="text-sm divide-y divide-gray-100">
+                                                            <tr v-for="answer, index in answer_data">
+                                                                <td class="p-2 whitespace-nowrap border-2 text-center align-middle">{{ ++index }}</td>
+                                                                <td class="p-2 whitespace-nowrap border-2 align-middle">
+                                                                    <div class="flex flex-wrap">
+                                                                        <p class="whitespace-normal font-semibold uppercase">{{ answer.question }}</p>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="p-2 whitespace-nowrap border-2 text-center align-middle">
+                                                                    <div class="flex justify-center">
+                                                                        <svg v-if="answer.correct" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill text-green-500" viewBox="0 0 16 16">
+                                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                                                        </svg>
+                                                                        <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-circle-fill text-red-500" viewBox="0 0 16 16">
+                                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                                                                        </svg>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </template>
                             <template v-slot:footer>
-                                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                                    <BreezeButton buttonType="info" @click="show_answers = false">Close</BreezeButton>
+                                <div class="flex justify-between space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                                    <BreezeButton buttonType="info" @click="print">Print</BreezeButton>
+                                    <BreezeButton buttonType="gray" @click="show_report = false">Close</BreezeButton>
                                 </div>
                             </template>
                         </Modal>
@@ -141,6 +183,21 @@ import axios from 'axios'
 import Modal from '@/Components/Modal.vue'
 import Chart from 'chart.js/auto';
 
+const printOptions = {
+    name: '_blank',
+    specs: [
+        'fullscreen=yes',
+        'titlebar=yes',
+        'scrollbars=yes'
+    ],
+    styles: [
+        'http://127.0.0.1:8000/css/app.css',
+    ],
+    timeout: 1000, // default timeout before the print window appears
+    autoClose: true, // if false, the window will not close after printing
+    windowTitle: window.document.title, // override the window title
+}
+
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
@@ -152,10 +209,16 @@ export default {
     data(){
         return{
             processing: false,
-            show_chart: false,
-            show_answers: false,
             bar_chart: '',
-            scatter_chart: false,
+            scatter_chart: '',
+            show_report: false,
+            report: {
+                title: '',
+                name: '',
+                age: '',
+                result: '',
+                datetime: '',
+            },
             params: {
                 search: this.filter.search ? this.filter.search : '',
             },
@@ -180,7 +243,18 @@ export default {
         }
     },
     methods: {
-        viewChart(index, dt_id, total_answers, chart_type){
+        print() {
+            document.getElementById('bar-chart').style.display = 'none'
+            // document.getElementById('scatter-chart').style.display = 'none'
+            this.$htmlToPaper('report', printOptions, () => {
+                document.getElementById('bar-chart').style.display = 'block'
+                // document.getElementById('scatter-chart').style.display = 'block'
+            })
+        },
+        viewReport(result_id){
+            this.$inertia.get(route('diagnostic_test.saved_result.report'), {'result_id': result_id})
+        },
+        viewReport(index, dt_id, total_answers, chart_type){
             this.processing = true
             this.chart_data.total_answers = total_answers
 
@@ -201,7 +275,8 @@ export default {
                 this.chart_data.categories.data     =   response.data.data;
                 this.chart_data.categories.data     =   this.splitResultByCategory(index)
                 this.initChart(chart_type)
-                this.processing = false
+                this.initAnswers(index)
+                this.initInfos(index)
             })
             .catch(error => {
                 console.error(error);
@@ -225,7 +300,11 @@ export default {
                         }]
                     },
                     options: {
-                        animation: false,
+                        animation: {
+                            onComplete: function(){
+                                document.getElementById('chart_image').innerHTML = '<img src="'+this.toBase64Image()+'">'
+                            }
+                        },
                         plugins: {
                             legend: {
                                 display: false
@@ -252,7 +331,7 @@ export default {
                         ticks: {
                             precision:0
                         }
-                    }
+                    },
                 })
                 this.bar_chart = BarChart
             }
@@ -340,7 +419,11 @@ export default {
                         }]
                     },
                     options: {
-                        animation: false,
+                        animation: {
+                            onComplete: function(){
+                                document.getElementById('chart_image').innerHTML = '<img src="'+this.toBase64Image()+'">'
+                            }
+                        },
                         plugins: {
                             legend: {
                                 display: false
@@ -380,7 +463,6 @@ export default {
                 })
                 this.scatter_chart = ScatterChart
             }
-            this.show_chart = true
         },
         splitResultByCategory(index){
             const correctAnswers    = this.$page.props.answer_record.data[index].answer_record.filter(answer => answer.correct);
@@ -400,10 +482,29 @@ export default {
             });
             return Object.values(newObject)
         },
-        viewAnswers(index){
+        initAnswers(index){
             this.answer_data =   this.$page.props.answer_record.data[index].answer_record
-            this.show_answers = true
-        }
+        },
+        initInfos(index){
+            axios.get(route('diagnostic_test.get_saved_result_info'), {
+                params: {
+                    'result_id' : this.$page.props.result_id,
+                }
+            })
+            .then(response => {
+                this.report.title       = this.$page.props.answer_record.data[index].dt_name
+                this.report.name        = response.data.child_name
+                this.report.age         = response.data.child_age
+                this.report.result      = this.$page.props.answer_record.data[index].total_correct_answers + '/' + this.$page.props.answer_record.data[index].total_answers
+                this.report.datetime    = moment(response.data.created_at).format('DD/MM/YYYY, HH:MM A')
+                this.show_report = true
+                this.processing = false
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        },
+
     },
 }
 </script>

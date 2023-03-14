@@ -204,7 +204,8 @@ class DiagnosticTestController extends Controller
             $answer->answer_record          = unserialize($answer->answer_record);
 
             foreach($answer->answer_record as $key=> $result){
-                $answer->answer_record[$key]['category_id']      =   $questions->where('id', $result['question_id'])->pluck('category_id')->first();
+                $answer->answer_record[$key]['category_id']     =   $questions->where('id', $result['question_id'])->pluck('category_id')->first();
+                $answer->answer_record[$key]['question']        =   $questions->where('id', $result['question_id'])->pluck('question')->first();
             }
             $answer->total_correct_answers  = collect($answer->answer_record)->where('correct', true)->count();
             $answer->total_answers          = count($answer->answer_record);
@@ -234,6 +235,16 @@ class DiagnosticTestController extends Controller
         }
 
         return $categories;
+    }
+
+    public function getSavedResultInfo(Request $request)
+    {
+        $result_info    =   DB::table('diagnostic_test_result')
+                                ->join('diagnostic_test_ages', 'diagnostic_test_result.child_age', '=', 'diagnostic_test_ages.id')
+                                ->where('diagnostic_test_result.id', $request->result_id)
+                                ->select(['diagnostic_test_result.child_name', 'diagnostic_test_ages.name as child_age', 'diagnostic_test_result.created_at'])
+                                ->first();
+        return $result_info;
     }
 
     /* Settings */

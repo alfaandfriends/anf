@@ -5,6 +5,8 @@ import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';  
 import VueGuidedTour from "@alfaandfriends/vue-guided-tour";
 import { vue3Debounce } from 'vue-debounce';
+import  VueHtmlToPaper from './Plugins/VueHtmlToPaper'
+
 
 /* App title */
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'ALFA and Friends Centre';
@@ -23,6 +25,7 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(VueGuidedTour)
+            .use(VueHtmlToPaper)
             .directive('debounce', vue3Debounce({ 
                 lock: true,
             }))

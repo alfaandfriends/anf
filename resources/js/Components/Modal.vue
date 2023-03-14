@@ -3,12 +3,12 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <style scoped>
-::v-deep .modal-container {
+:deep(.modal-container){
   display: flex;
   justify-content: center;
   align-items: center;
 }
-::v-deep .modal-content-sm {
+:deep(.modal-content-sm) {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -17,8 +17,9 @@ import BreezeButton from '@/Components/Button.vue';
   border-radius: 0.25rem;
   background: #fff;
   width: 25%;
+  max-height: 90%;
 }
-::v-deep .modal-content {
+:deep(.modal-content) {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -26,9 +27,10 @@ import BreezeButton from '@/Components/Button.vue';
   border: 1px solid #e2e8f0;
   border-radius: 0.25rem;
   background: #fff;
-  width: 50%;
+  width: 45%;
+  max-height: 90%;
 }
-::v-deep .modal-content-lg {
+:deep(.modal-content-lg) {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -37,6 +39,7 @@ import BreezeButton from '@/Components/Button.vue';
   border-radius: 0.25rem;
   background: #fff;
   width: 80%;
+  max-height: 90%;
 }
 </style>
 
