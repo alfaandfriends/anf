@@ -112,7 +112,7 @@ class DiagnosticTestController extends Controller
 
         $data = array();
         foreach($request->answer_record as $answer){
-            $info['question_id']        = $answer['question_id'];
+            $info['question']           = $answer['question'];
             $info['correct']            = $answer['correct'];
             $data[$answer['dt_id']][]   = $info;
         }
@@ -186,7 +186,6 @@ class DiagnosticTestController extends Controller
 
     public function savedDtResultDetails(Request $request)
     {
-        $questions      =   DB::table('diagnostic_test_questions')->get();
         $answer_record  =   DB::table('diagnostic_test_result_details')
                                 ->join('diagnostic_test', 'diagnostic_test_result_details.dt_id', '=', 'diagnostic_test.id')
                                 ->where('result_id', $request->result_id)
@@ -200,13 +199,8 @@ class DiagnosticTestController extends Controller
 
         $answer_collection = collect($answer_record->items());
 
-        $answer_collection->map(function ($answer) use ($questions){
+        $answer_collection->map(function ($answer){
             $answer->answer_record          = unserialize($answer->answer_record);
-
-            foreach($answer->answer_record as $key=> $result){
-                $answer->answer_record[$key]['category_id']     =   $questions->where('id', $result['question_id'])->pluck('category_id')->first();
-                $answer->answer_record[$key]['question']        =   $questions->where('id', $result['question_id'])->pluck('question')->first();
-            }
             $answer->total_correct_answers  = collect($answer->answer_record)->where('correct', true)->count();
             $answer->total_answers          = count($answer->answer_record);
             return $answer;
@@ -218,7 +212,6 @@ class DiagnosticTestController extends Controller
         return Inertia::render('DiagnosticTests/SavedResults/Details', [
             'result_id'     =>  $request->result_id,
             'filter'        =>  request()->all('search'),
-            'questions'     =>  $questions,
             'answer_record' =>  $paginationData
         ]);
     }

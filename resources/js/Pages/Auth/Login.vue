@@ -58,7 +58,7 @@ const submit = () => {
             <div class="border-b-2 mt-4"></div>
             <div class="mt-4">
                 <div class="flex justify-end">
-                    <BreezeButton type="submit" :buttonType="'info'" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    <BreezeButton type="submit" :buttonType="'info'" :class="{ 'opacity-25 px-4 py-2': form.processing }" :disabled="form.processing">
                         Sign in
                     </BreezeButton>
                 </div>

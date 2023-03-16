@@ -284,6 +284,7 @@ export default defineComponent({
                 this.form.answer_record.push({
                     'dt_id' : this.dt_list[this.dt_index].dt_id,
                     'question_id' : this.dt_list[this.dt_index].id,
+                    'question' : this.dt_list[this.dt_index].question,
                     'correct' : this.correct
                 })
                 this.dt_index += 1

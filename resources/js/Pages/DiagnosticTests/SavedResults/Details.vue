@@ -136,7 +136,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                                 <td class="p-2 whitespace-nowrap border-2 text-center align-middle">{{ ++index }}</td>
                                                                 <td class="p-2 whitespace-nowrap border-2 align-middle">
                                                                     <div class="flex flex-wrap">
-                                                                        <p class="whitespace-normal font-semibold uppercase">{{ answer.question }}</p>
+                                                                        <p class="whitespace-normal font-semibold">{{ answer.question }}</p>
                                                                     </div>
                                                                 </td>
                                                                 <td class="p-2 whitespace-nowrap border-2 text-center align-middle">
@@ -496,7 +496,7 @@ export default {
                 this.report.name        = response.data.child_name
                 this.report.age         = response.data.child_age
                 this.report.result      = this.$page.props.answer_record.data[index].total_correct_answers + '/' + this.$page.props.answer_record.data[index].total_answers
-                this.report.datetime    = moment(response.data.created_at).format('DD/MM/YYYY, HH:MM A')
+                this.report.datetime    = moment(response.data.created_at).format('DD/MM/YYYY, hh:mm A')
                 this.show_report = true
                 this.processing = false
             })
