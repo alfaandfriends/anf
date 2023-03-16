@@ -54,9 +54,9 @@ import BreezeButton from '@/Components/Button.vue';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="blue" class="py-1 px-2" @click="!processing ? viewReport(index++, result.dt_id, result.total_answers, result.chart_type) : ''">
+                                            <BreezeButton buttonType="blue" class="py-1 px-2" @click="!processing_item[index].process && !processing ? viewReport(index, result.dt_id, result.total_answers, result.chart_type) : ''">
                                                 
-                                                <div class="flex items-center space-x-2" v-if="processing">
+                                                <div class="flex items-center space-x-2" v-if="processing_item[index].process && processing">
                                                     <svg class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" viewBox="0 0 24 24">
                                                     </svg>
                                                     <span>Generating...</span>
@@ -209,6 +209,7 @@ export default {
     data(){
         return{
             processing: false,
+            processing_item: [],
             bar_chart: '',
             scatter_chart: '',
             show_report: false,
@@ -251,11 +252,9 @@ export default {
                 // document.getElementById('scatter-chart').style.display = 'block'
             })
         },
-        viewReport(result_id){
-            this.$inertia.get(route('diagnostic_test.saved_result.report'), {'result_id': result_id})
-        },
         viewReport(index, dt_id, total_answers, chart_type){
             this.processing = true
+            this.processing_item[index].process = true
             this.chart_data.total_answers = total_answers
 
             this.bar_chart ? this.bar_chart.destroy() : ''
@@ -499,6 +498,7 @@ export default {
                 this.report.datetime    = moment(response.data.created_at).format('DD/MM/YYYY, hh:mm A')
                 this.show_report = true
                 this.processing = false
+                this.processing_item[index].process  = false
             })
             .catch(error => {
                 console.error(error);
@@ -506,5 +506,12 @@ export default {
         },
 
     },
+    created(){
+        this.$page.props.answer_record.data.map(()=>{
+            this.processing_item.push({
+                'process':false
+            })
+        })
+    }
 }
 </script>
