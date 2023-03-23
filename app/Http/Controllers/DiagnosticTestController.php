@@ -54,13 +54,13 @@ class DiagnosticTestController extends Controller
         $dt_details     =   DB::table('diagnostic_test')->where('id', $dt_id)->first();
         $dt_list        =   DB::table('diagnostic_test_questions')->where('dt_id', $dt_id)->orderBy('ordering', 'asc')->get();
         $answers_data   =   DB::table('diagnostic_test_answers')->whereIn('question_id', $dt_list->pluck('id'))->get();
-        
+
         if(!empty($dt_list)){
             foreach($dt_list as $key=>$dt_info){
                 $serialized_answers_data    =   $answers_data->where('question_id', $dt_info->id)->pluck('answer_data')->first();
                 $answers_info               =   unserialize($serialized_answers_data);
-                $dt_info->answers           =   array_key_exists('answers', $answers_info) ? $answers_info['answers'] : '';
-                $dt_info->correct_answer    =   array_key_exists('correct_answer', $answers_info) ? $answers_info['correct_answer'] : '';
+                $dt_info->answers           =   !empty($answers_info) && array_key_exists('answers', $answers_info) ? $answers_info['answers'] : '';
+                $dt_info->correct_answer    =   !empty($answers_info) && array_key_exists('correct_answer', $answers_info) ? $answers_info['correct_answer'] : '';
             }
         }
         
