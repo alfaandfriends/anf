@@ -155,10 +155,15 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>
                 <div class="flex flex-col space-y-10" v-if="current.question_type == 4">
                     <div class="py-28">
-                        <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5 mb-3">
-                            <h1 class="text-center font-mono font-bold text-2xl" v-for="(part, index) in sentence_parts" :key="index">
-                                <input type="text" v-if="part.input" v-model="part.answer" class="focus:ring-0 focus:border-indigo-300 rounded-md text-2xl border-gray-300">
-                                <h1 v-else>&nbsp;{{ part.text }}&nbsp;</h1>
+                        <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex flex-wrap items-center justify-center md:p-5 mb-3">
+                           
+                            <h1 class="text-center font-mono font-bold text-2xl space-y-4 leading-loose">
+                                <template v-for="(part, index) in sentence_parts" :key="index">
+                                    <input type="text" v-if="part.input" v-model="part.answer" class="focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-2xl border-gray-300">
+                                    <template v-else>
+                                        &nbsp;{{ part.text }}&nbsp;
+                                    </template>
+                                </template>
                             </h1>
                         </div>
                     </div>
@@ -260,6 +265,7 @@ export default{
         clearAllAnswers(){
             this.selected_answer.single_choice = '',
             this.selected_answer.multiple_choices = []
+            this.resetFillInBlank()
             this.correct = false
         },
         pushAnswer(){
@@ -363,7 +369,7 @@ export default{
             const re = /(\[[^\]]*\])/
             // The filter removes empty strings
             const parts = this.current.question.split(re).filter(text => text)
-
+            
             this.sentence_parts = parts.map(segment => {
                 const isInput = re.test(segment)
 
@@ -734,7 +740,9 @@ export default{
         },
         question: {
             immediate: true,
-            handler: 'resetFillInBlank'
+            handler(){
+                this.resetFillInBlank()
+            }
         }
     },
     beforeDestroy() {
