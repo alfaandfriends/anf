@@ -73,11 +73,11 @@ import BreezeButton from '@/Components/Button.vue';
         </div>
     </div>
     <div class="h-screen items-center flex flex-col justify-center bg-blue-100" v-if="show_quiz">
-        <div class="p-18 bg-white border border-gray-200 rounded-lg shadow-md w-[80%]">
+        <div class="p-18 bg-white border border-gray-200 rounded-lg shadow-md w-[70%] h-[70%]">
             <div class="inline-block min-w-full rounded text-center p-16">
                 <div class="px-6 pb-8">
                     <!-- <span class="text-2xl font-bold uppercase">{{ question_types[current.question_type].name }} Question</span> -->
-                    <span class="text-2xl font-bold uppercase">{{ dt_details.name }} Question</span>
+                    <span class="text-2xl font-bold uppercase">{{ dt_details.name }}</span>
                 </div>
                 <div class="question_container">
                     <div v-if="current.question != '' && current.question_type != 4" :class="!current.question_image ? 'py-28' : ''">
@@ -154,18 +154,15 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                 </div>
                 <div class="flex flex-col space-y-10" v-if="current.question_type == 4">
-                    <div class="py-28">
-                        <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex flex-wrap items-center justify-center md:p-5 mb-3">
-                           
-                            <h1 class="text-center font-mono font-bold text-2xl space-y-4 leading-loose">
-                                <template v-for="(part, index) in sentence_parts" :key="index">
-                                    <input type="text" v-if="part.input" v-model="part.answer" class="focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-2xl border-gray-300">
-                                    <template v-else>
-                                        &nbsp;{{ part.text }}&nbsp;
-                                    </template>
+                    <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex flex-wrap items-center justify-center md:p-5 mb-3">
+                        <h1 class="text-center font-mono font-bold text-2xl space-y-4 leading-loose">
+                            <template v-for="(part, index) in sentence_parts" :key="index">
+                                <input type="text" v-if="part.input" v-model="part.answer" class="w-32 focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-2xl border-gray-300">
+                                <template v-else>
+                                    &nbsp;{{ part.text }}&nbsp;
                                 </template>
-                            </h1>
-                        </div>
+                            </template>
+                        </h1>
                     </div>
                     <div class="flex flex-row justify-center">
                         <BreezeButton @click="saveFillInBlankAnswers()">Confirm Answers</BreezeButton>
@@ -363,20 +360,23 @@ export default{
             this.pushAnswer()
         },
         partIsCorrect (part) {
-            return !part.input || part.text === part.answer.replace(/\s+/g, ' ').trim()
+            // console.log(part.text)
+            const answer = part.answer.replace(/\s+/g, ' ').trim()
+            const answer_matched     =    part.text.includes(answer)
+            return !part.input || (Array.isArray(part.text) && part.text.length !== 0) === answer_matched
         },
         resetFillInBlank(){
             const re = /(\[[^\]]*\])/
+
             // The filter removes empty strings
             const parts = this.current.question.split(re).filter(text => text)
             
             this.sentence_parts = parts.map(segment => {
                 const isInput = re.test(segment)
-
                 return {
                     answer: '',
                     input: isInput,
-                    text: isInput ? segment.slice(1, -1) : segment
+                    text: isInput ? segment.slice(1, -1).split('|') : segment
                 }
             })
         },
@@ -737,12 +737,6 @@ export default{
                 }
             },
             immediate: true
-        },
-        question: {
-            immediate: true,
-            handler(){
-                this.resetFillInBlank()
-            }
         }
     },
     beforeDestroy() {

@@ -126,7 +126,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <span class="text-white">Remove</span>
                                                 </div>
                                             </div>
-                                            <img class="rounded w-full" :src="form.image_url != '' ? form.image_url : (diagnostic_test_info.question_image ? '/storage/' + diagnostic_test_info.question_image : '')" alt="">
+                                            <img class="rounded w-full" :src="form.image_url != '' ? form.image_url : (diagnostic_test_info.question_image ? '/storage/' + diagnostic_test_info.question_image : '')" alt="" @error="imageLoadError">
                                         </div>
                                     </div>
                                 </div>
@@ -352,6 +352,10 @@ export default defineComponent({
         },
         appendToForm(data){
             this.form.question_answer_data = data
+        },
+        imageLoadError(){
+            this.showImage = false
+            this.showUpload = true
         }
     }
 
