@@ -25,7 +25,7 @@ import BreezeButton from '@/Components/Button.vue';
     <Head title="Diagnostic Test" />
     <div class="h-screen items-center flex flex-col justify-center bg-blue-100" v-show="show_chart">
         <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md w-[80%] self-center" v-show="show_scatter_chart">
-            <canvas id="scatter-chart" class="hidden m-0"></canvas>
+            <canvas id="scatter-chart" class="hidden m-0" width="250" height="120" ></canvas>
         </div>
         <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md w-[80%] self-center" v-show="show_bar_chart">
             <canvas id="bar-chart" class="hidden m-0"></canvas>
@@ -76,13 +76,12 @@ import BreezeButton from '@/Components/Button.vue';
         <div class="p-18 bg-white border border-gray-200 rounded-lg shadow-md w-[70%] h-[70%]">
             <div class="inline-block min-w-full rounded text-center p-16">
                 <div class="px-6 pb-8">
-                    <!-- <span class="text-2xl font-bold uppercase">{{ question_types[current.question_type].name }} Question</span> -->
                     <span class="text-2xl font-bold uppercase">{{ dt_details.name }}</span>
                 </div>
                 <div class="question_container">
                     <div v-if="current.question != '' && current.question_type != 4" :class="!current.question_image ? 'py-28' : ''">
                         <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5 mb-3">
-                            <h1 class="text-center font-mono font-bold text-2xl">{{ current.question }}</h1>
+                            <h1 class="text-center font-mono font-bold text-2xl whitespace-pre-wrap">{{ current.question }}</h1>
                         </div>
                     </div>
                     <div class="px-6 pb-8" v-if="current.remarks">
@@ -155,11 +154,11 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>
                 <div class="flex flex-col space-y-10" v-if="current.question_type == 4">
                     <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex flex-wrap items-center justify-center md:p-5 mb-3">
-                        <h1 class="text-center font-mono font-bold text-2xl space-y-4 leading-loose">
+                        <h1 class="text-left font-mono font-bold text-2xl space-y-2 leading-loose whitespace-pre-line">
                             <template v-for="(part, index) in sentence_parts" :key="index">
-                                <input type="text" v-if="part.input" v-model="part.answer" class="w-32 focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-2xl border-gray-300">
+                                <input type="text" v-if="part.input" v-model="part.answer" class="h-10 w-32 focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-2xl border-gray-300">
                                 <template v-else>
-                                    &nbsp;{{ part.text }}&nbsp;
+                                    {{ part.text }}
                                 </template>
                             </template>
                         </h1>
@@ -205,7 +204,7 @@ export default{
             show_parent_details: false,
             show_thank_you: false,
             count: 1,
-            dt_index: 0,
+            dt_index: 3,
             correct: false,
             current: {
                 question: '',
@@ -360,7 +359,6 @@ export default{
             this.pushAnswer()
         },
         partIsCorrect (part) {
-            // console.log(part.text)
             const answer = part.answer.replace(/\s+/g, ' ').trim()
             const answer_matched     =    part.text.includes(answer)
             return !part.input || (Array.isArray(part.text) && part.text.length !== 0) === answer_matched
@@ -465,7 +463,6 @@ export default{
                 finalScores[index] = splittedAnswers[key];
             });
             Object.values(finalScores)
-
             this.chart_data = finalScores
             this.initChart()
 
@@ -511,6 +508,7 @@ export default{
                 id: 'scatterAnnotationLine',
                 beforeDraw: chart=>{
                     if(chart.tooltip._active && chart.tooltip._active.length){
+
                         const ctx = chart.ctx
                         ctx.save()
                         const activePoint = chart.tooltip._active[0]
@@ -551,13 +549,13 @@ export default{
                 type: 'scatter',
                 data: {
                     datasets: [{ 
-                        // data: [
-                        //     { x: this.chart_data[0], y: this.chart_data[1] }
-                        // ],
+                        data: [
+                            { x: this.chart_data[0] ? this.chart_data[0] : 0, y: this.chart_data[1] ? this.chart_data[1] : 0 }
+                        ],
                         label: "Test",
                         borderColor: "rgba(255, 8, 0, 1)",
                         pointStyle: 'crossRot',
-                        radius: 6,
+                        radius: 10,
                         hoverRadius: 10,
                         fill: false,
                     }]
@@ -566,8 +564,11 @@ export default{
                     animation: false,
                     plugins: {
                         legend: {
-                            display: false
+                            display: false // <-- this option disables legends
                         },
+                        tooltip: {
+                            enabled: false // <-- this option disables tooltips
+                        }
                     },
                     scales: {
                         y:{
@@ -580,7 +581,7 @@ export default{
                             title: {
                                 display: true,
                                 text: 'Operations'
-                            }
+                            },
                         },
                         x:{
                             min: 0,
@@ -592,12 +593,18 @@ export default{
                             title: {
                                 display: true,
                                 text: 'Numbers'
-                            }
+                            },
                         }
                     },
                     ticks: {
                         precision:0
-                    }
+                    },
+                    layout: {
+                        padding: {
+                            top: 5
+                        }
+                    },
+                    clip: false,
                 },
                 plugins: [scatterArbitraryLine, scatterAnnotationLine]
             })
