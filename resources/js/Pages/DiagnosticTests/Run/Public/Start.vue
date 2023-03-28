@@ -204,7 +204,7 @@ export default{
             show_parent_details: false,
             show_thank_you: false,
             count: 1,
-            dt_index: 3,
+            dt_index: 0,
             correct: false,
             current: {
                 question: '',
