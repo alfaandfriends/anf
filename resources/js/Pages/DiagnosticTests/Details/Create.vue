@@ -64,9 +64,11 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <svg class="fill-current h-6 w-6 text-indigo-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg>
                                                 </div>
                                                 <div>
-                                                    <p class="font-bold">In the question's input field, please wrap the answer keyword with [ ] for system to automatically replace the answer to blank spaces. For example,</p>
-                                                    <p class="font-semibold text-indigo-800">ALFA like to [play] football.</p>
-                                                    <p class="font-semibold text-indigo-800">ALFA like to [play] football during [summer].</p>
+                                                    <p class="font-bold">In the question's input field, please wrap the answer keyword with [ ] for system to automatically replace the answer to blank spaces. </p>
+                                                    <p class="text-indigo-600 font-semibold">ALFA like to [play] football.</p>
+                                                    <br>
+                                                    <p class="font-bold">Use | to set multiple correct answers.</p>
+                                                    <p class="text-indigo-600 font-semibold">ALFA like to [eat|drink|sleep].</p>
                                                 </div>
                                             </div>
                                         </div>
