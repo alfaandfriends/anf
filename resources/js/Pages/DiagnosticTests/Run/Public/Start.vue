@@ -89,7 +89,7 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                     <div class="flex container justify-center" v-if="current.question_image">
                         <div class="flex flex-col justify-center w-64 h-64">
-                            <img :src="'/storage/' + current.question_image" class="select-none rounded-lg" alt="">
+                            <img :src="'https://dt.alfaandfriends.com/storage/' + current.question_image" class="select-none rounded-lg" alt="">
                         </div>
                     </div>
                 </div>
@@ -246,7 +246,7 @@ export default{
             show_parent_details: false,
             show_thank_you: false,
             count: 1,
-            dt_index: 4,
+            dt_index: 0,
             correct: false,
             current: {
                 question: '',

@@ -66,7 +66,7 @@ class DiagnosticTestController extends Controller
         
         $diagnostic_test_categories_label   =   DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->pluck('name');
         $diagnostic_test_categories         =   DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->select(['id', 'name'])->orderBy('id')->get();
-
+        
         return Inertia::render('DiagnosticTests/Run/'.$template, [
             'form_data' =>  $request->form_data,
             'dt_details'   =>  $dt_details,
