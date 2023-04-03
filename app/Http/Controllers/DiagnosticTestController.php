@@ -83,13 +83,16 @@ class DiagnosticTestController extends Controller
         $new_level_data['dt_details']       =   DB::table('diagnostic_test')->where('id', $request->dt_id)->first();
         $new_level_data['dt_list']          =   DB::table('diagnostic_test_questions')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
         $answers_data   =   DB::table('diagnostic_test_answers')->whereIn('question_id', $new_level_data['dt_list']->pluck('id'))->get();
-
+        
         if(!empty($new_level_data['dt_list'])){
             foreach($new_level_data['dt_list'] as $key=>$dt_info){
                 $serialized_answers_data    =   $answers_data->where('question_id', $dt_info->id)->pluck('answer_data')->first();
                 $answers_info               =   unserialize($serialized_answers_data);
-                $dt_info->answers           =   array_key_exists('answers', $answers_info) ? $answers_info['answers'] : '';
-                $dt_info->correct_answer    =   array_key_exists('correct_answer', $answers_info) ? $answers_info['correct_answer'] : '';
+                if(!empty($answers_info)){
+                    $dt_info->answers           =   array_key_exists('answers', $answers_info) ? $answers_info['answers'] : '';
+                    $dt_info->correct_answer    =   array_key_exists('correct_answer', $answers_info) ? $answers_info['correct_answer'] : '';
+                }
+                
             }
         }
         return $new_level_data;
@@ -357,10 +360,29 @@ class DiagnosticTestController extends Controller
 
                 $data       =   unserialize($question_info->answer_data);
                 $images     =   $data['answers'];
-                foreach($images as $image){
-                    if($image['image_name']){
-                        if(Storage::exists('diagnostic_test_photo/'.$image['image_name'])){
-                            Storage::delete('diagnostic_test_photo/'.$image['image_name']);
+
+                
+                if($data['question_type'] == 3){
+                    foreach($data['answers'] as $answer){
+                        if($answer['criterion']['image_name']){
+                            if(Storage::exists('diagnostic_test_photo/'.$answer['criterion']['image_name'])){
+                                Storage::delete('diagnostic_test_photo/'.$answer['criterion']['image_name']);
+                            }
+                        }
+
+                        foreach($answer['element']['images'] as $image_name){
+                            if(Storage::exists('diagnostic_test_photo/'.$image_name)){
+                                Storage::delete('diagnostic_test_photo/'.$image_name);
+                            }
+                        }
+                    }
+                }
+                else{
+                    foreach($images as $image){
+                        if($image['image_name']){
+                            if(Storage::exists('diagnostic_test_photo/'.$image['image_name'])){
+                                Storage::delete('diagnostic_test_photo/'.$image['image_name']);
+                            }
                         }
                     }
                 }
@@ -418,27 +440,32 @@ class DiagnosticTestController extends Controller
                     $question_answer_data['answers'] = $answers_data;
                 }
                 else{
-                    $criterion_answers_data     =   [];
-                    $element_answers_data       =   [];
                     /* Insert image for criterion */
-                    foreach($question_answer_data['answers']['criterion'] as $key=>$data){
-                        if(array_key_exists('image_file', $data) && $data['image_file']){
-                            Storage::putFileAs('diagnostic_test_photo', $data['image_file'], $data['image_file']->getClientOriginalName());
+                    foreach($question_answer_data['answers'] as $key=>$data){
+                        if(!$data['criterion']['image_name'] && !$data['criterion']['value'] && !$data['element']['value'] && empty($data['element']['images'])){
+                            unset($question_answer_data['answers'][$key]);
                         }
-                        unset($data['image_file']);
-                        $criterion_answers_data[]   =  $data; 
-                    }
-                    $question_answer_data['answers']['criterion'] = $criterion_answers_data;
+                        if(array_key_exists('image_file', $data['criterion']) && $data['criterion']['image_file']){
+                            Storage::putFileAs('diagnostic_test_photo', $data['criterion']['image_file'], $data['criterion']['image_file']->getClientOriginalName());
+                        }
+                        unset($question_answer_data['answers'][$key]['criterion']['image_file']);
 
-                    /* Insert image for element */
-                    foreach($question_answer_data['answers']['element'] as $key=>$data){
-                        if(array_key_exists('image_file', $data) && $data['image_file']){
-                            Storage::putFileAs('diagnostic_test_photo', $data['image_file'], $data['image_file']->getClientOriginalName());
+                        if(!empty($data['element']['images'])){
+                            $saved_images   =   array();
+                            /* Insert image for element */
+                            foreach($data['element']['images'] as $image_key=>$image){
+                                if(array_key_exists('file', $image) && $image['file']){
+                                    Storage::putFileAs('diagnostic_test_photo', $image['file'], $image['file']->getClientOriginalName());
+                                }
+                                unset($question_answer_data['answers'][$key]['element']['images'][$image_key]['file']);
+                                $saved_images[]   =  $image;
+                            }
+                            $data['element']['images']  =   $saved_images;
                         }
-                        unset($data['image_file']);
-                        $element_answers_data[]   =  $data; 
+                        else{
+                            $question_answer_data['answers'][$key]['element']['images'] = array();
+                        }
                     }
-                    $question_answer_data['answers']['element'] = $element_answers_data;
                 }
             }
 
@@ -494,12 +521,11 @@ class DiagnosticTestController extends Controller
             /* Images to delete */
             if(!empty($request->question_answer_data['images_to_delete'])){
                 foreach($request->question_answer_data['images_to_delete'] as $key=>$image){
-                        Storage::delete('diagnostic_test_photo/'.$image);
+                    Storage::delete('diagnostic_test_photo/'.$image);
                 }
             }
             
             $question_answer_data   =   $request->question_answer_data;
-
             if(!empty($question_answer_data['answers'])){
                 if($request->question_answer_data['question_type'] != 3){
                     $answers_data   =   [];
@@ -520,47 +546,39 @@ class DiagnosticTestController extends Controller
                             }
                         }
                     }
-
+                    
                     $question_answer_data['answers'] = $answers_data;
                 }
                 else{
-                    $criterion_answers_data   =   [];
-                    $element_answers_data   =   [];
                     /* Insert image for criterion */
-                    foreach($question_answer_data['answers']['criterion'] as $key=>$data){
-                        if(array_key_exists('image_file', $data) && $data['image_file']){
-                            Storage::putFileAs('diagnostic_test_photo', $data['image_file'], $data['image_file']->getClientOriginalName());
+                    foreach($question_answer_data['answers'] as $key=>$data){
+                        if(array_key_exists('image_file', $data['criterion']) && $data['criterion']['image_file']){
+                            Storage::putFileAs('diagnostic_test_photo', $data['criterion']['image_file'], $data['criterion']['image_file']->getClientOriginalName());
                         }
-                        unset($data['image_file']);
-                        $criterion_answers_data[]   =  $data; 
-                    }
-                    /* delete empty array */
-                    if(!empty($criterion_answers_data)){
-                        foreach($criterion_answers_data as $key=>$data){
-                            if($data['value'] == null && $data['image_name'] == null){
-                                unset($criterion_answers_data[$key]);
-                            }
-                        }
-                    }
-                    $question_answer_data['answers']['criterion'] = $criterion_answers_data;
+                        unset($question_answer_data['answers'][$key]['criterion']['image_file']);
 
-                    /* Insert image for element */
-                    foreach($question_answer_data['answers']['element'] as $key=>$data){
-                        if(array_key_exists('image_file', $data) && $data['image_file']){
-                            Storage::putFileAs('diagnostic_test_photo', $data['image_file'], $data['image_file']->getClientOriginalName());
-                        }
-                        unset($data['image_file']);
-                        $element_answers_data[]   =  $data; 
-                    }
-                    /* delete empty array */
-                    if(!empty($element_answers_data)){
-                        foreach($element_answers_data as $key=>$data){
-                            if($data['value'] == null && $data['image_name'] == null){
-                                unset($element_answers_data[$key]);
+                        if(!empty($data['element']['images'])){
+                            $saved_images   =   array();
+                            foreach($data['element']['images'] as $image_key=>$image){
+                                if(array_key_exists('file', $image) && $image['file']){
+                                    Storage::putFileAs('diagnostic_test_photo', $image['file'], $image['file']->getClientOriginalName());
+                                }
+                                unset($question_answer_data['answers'][$key]['element']['images'][$image_key]['file']);
+                                
+                                /* delete criterion empty array */
+                                if(!empty($data['element']['images']) && $data['element']['value'] != null){
+                                    if($data['element']['value'] == null){
+                                        $question_answer_data['answers'][$key]['element']['value'] = '';
+                                    }
+                                }
+                                $saved_images[]   =  $image;
                             }
+                            $data['element']['images']  =   $saved_images;
+                        }
+                        else{
+                            $question_answer_data['answers'][$key]['element']['images'] = array();
                         }
                     }
-                    $question_answer_data['answers']['element'] = $element_answers_data;
                 }
             }
 
@@ -619,10 +637,27 @@ class DiagnosticTestController extends Controller
             $data       =   unserialize($dt_answers->answer_data);
             $images     =   $data['answers'];
             
-            foreach($images as $image){
-                if($image['image_name']){
-                    if(Storage::exists('diagnostic_test_photo/'.$image['image_name'])){
-                        Storage::delete('diagnostic_test_photo/'.$image['image_name']);
+            if($data['question_type'] == 3){
+                foreach($data['answers'] as $answer){
+                    if($answer['criterion']['image_name']){
+                        if(Storage::exists('diagnostic_test_photo/'.$answer['criterion']['image_name'])){
+                            Storage::delete('diagnostic_test_photo/'.$answer['criterion']['image_name']);
+                        }
+                    }
+
+                    foreach($answer['element']['images'] as $image_name){
+                        if(Storage::exists('diagnostic_test_photo/'.$image_name)){
+                            Storage::delete('diagnostic_test_photo/'.$image_name);
+                        }
+                    }
+                }
+            }
+            else{
+                foreach($images as $image){
+                    if($image['image_name']){
+                        if(Storage::exists('diagnostic_test_photo/'.$image['image_name'])){
+                            Storage::delete('diagnostic_test_photo/'.$image['image_name']);
+                        }
                     }
                 }
             }

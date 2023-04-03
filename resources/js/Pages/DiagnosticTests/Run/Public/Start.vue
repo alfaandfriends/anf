@@ -79,7 +79,7 @@ import BreezeButton from '@/Components/Button.vue';
                     <span class="text-2xl font-bold uppercase">{{ dt_details.name }}</span>
                 </div>
                 <div class="question_container">
-                    <div v-if="current.question != '' && current.question_type != 4" :class="!current.question_image ? 'py-28' : ''">
+                    <div v-if="current.question != '' && current.question_type != 4" :class="!current.question_image ? 'py-12' : ''">
                         <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5 mb-3">
                             <h1 class="text-center font-mono font-bold text-2xl whitespace-pre-wrap">{{ current.question }}</h1>
                         </div>
@@ -119,37 +119,40 @@ import BreezeButton from '@/Components/Button.vue';
                 <div class="flex flex-col space-y-10" v-if="current.question_type == 3">
                     <div class="text-left space-y-2">
                         <h3 class="font-semibold text-xl">Elements</h3>
-                        <draggable class="flex space-x-4 border-2 p-3 rounded border-gray-300 min-h-[60px]" :list="list1" group="people" @change="log">
-                            <div class="border px-2 py-1 rounded border-indigo-400 bg-indigo-300" v-for="(element, index) in list1">
-                                {{ element.name }} {{ index }}
-                            </div>
+                        <draggable class="flex flex-wrap gap-4 border-2 p-3 rounded border-gray-300 min-h-[60px]" :list="current.matrix_items" group="matrix_sorting" @change="log">
+                            <template v-for="element in current.matrix_items">
+                                <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab" v-html="element"></div>
+                            </template>
                         </draggable>
                     </div>
-                    <div class="flex justify-center">
+                    <div class="flex justify-start" v-for="answer, index in current.answers">
                         <div class="flex flex-col space-y-6 justify-center">
-                            <div class="flex items-center justify-center border-2 border-indigo-400 w-32 h-32 rounded-lg" v-for="(criterion, index) in current.criterions">
-                                <div class="p-1 w-32" v-if="criterion.image_name != null" v-html="criterion.value">
+                            <div class="flex items-center justify-center border-2 border-indigo-400 w-32 h-32 rounded-lg">
+                                <div class="p-1 w-32" v-if="answer.criterion.image_name != null" v-html="answer.criterion.value">
                                 </div>
                                 <div class="py-5 px-6" v-else>
-                                    <span v-html="criterion.value"></span>
+                                    <span v-html="answer.criterion.value"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="flex flex-col space-y-28 justify-center">
-                            <div class="" v-for="(criterion, index) in current.criterions">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-                                    <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                                </svg>
-                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                            </svg>
                         </div>
                         <div class="flex flex-col space-y-6 justify-center">
-                            <template v-for="(criterion, index) in current.criterions">
-                                <draggable class="flex items-center border-2 border-indigo-400 min-h-[8rem] min-w-[400px] rounded-lg space-x-2 p-3" :list="list2" group="people" @change="log">
-                                  <div class="border px-2 py-1 rounded border-indigo-400 bg-indigo-300" v-for="(element, index) in list2">
-                                      {{ element.name }} {{ index }}
-                                  </div>
+                            <!-- <template v-for="(criterion, index) in current.criterions"> -->
+                                <draggable class="flex items-center border-2 border-indigo-400 min-h-[8rem] min-w-[400px] rounded-lg space-x-2 p-3" :list="selected_answer.matrix_sorting[index]" group="matrix_sorting" @change="log">
+                                    <template v-for="element in selected_answer.matrix_sorting[index]">
+                                        <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab" v-html="element"></div>
+                                    </template>
                                 </draggable>
-                            </template>
+                                <!-- <draggable class="flex items-center border-2 border-indigo-400 min-h-[8rem] min-w-[400px] rounded-lg space-x-2 p-3" :list="list3" group="matrix_sorting" @change="log">
+                                    <template v-for="element in selected_answer">
+                                        <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab" v-html="element"></div>
+                                    </template>
+                                </draggable> -->
+                            <!-- </template> -->
                         </div>
 
                         <!-- <div class="flex flex-row justify-center space-x-6">
@@ -227,14 +230,6 @@ export default{
     },
     data() {
         return {
-            list1: [
-                { name: "John", id: 1 },
-                { name: "Joao", id: 2 },
-                { name: "Jean", id: 3 },
-                { name: "Gerard", id: 4 }
-            ],
-            list2: [
-            ],
             can_go_higher: true,
             can_go_lower: true,
             bar_chart: '',
@@ -246,7 +241,7 @@ export default{
             show_parent_details: false,
             show_thank_you: false,
             count: 1,
-            dt_index: 0,
+            dt_index: 11,
             correct: false,
             current: {
                 question: '',
@@ -255,8 +250,10 @@ export default{
                 remarks: '',
                 criterions: [],
                 answers: [],
-                score: 0,
-                answer_records: []
+                score: 8,
+                answer_records: [],
+                matrix_items: [],
+                matrix_sequence: []
             },
             question_types: {
                 1: {
@@ -318,11 +315,11 @@ export default{
             }
         },
         saveSingleChoice(selected_answer){
-            this.selected_answer.single_choice  =   selected_answer
-            if(this.selected_answer.single_choice == this.dt_list[this.dt_index].correct_answer){
-                this.current.score += 1
-                this.correct = true
-            }
+            // this.selected_answer.single_choice  =   selected_answer
+            // if(this.selected_answer.single_choice == this.dt_list[this.dt_index].correct_answer){
+                // this.current.score += 1
+            //     this.correct = true
+            // }
             this.pushAnswer()
         },
         selectMultipleChoices(selected_answer){
@@ -354,7 +351,7 @@ export default{
             }
         },
         saveMatrixSorting(){
-            const correct = this.checkIfArrayMatch(this.selected_answer.matrix_sorting, this.dt_list[this.dt_index].answers.element)
+            var correct   =  this.checkMatrixSortingAnswer()
             if(correct){
                 this.current.score += 1
                 this.correct = true
@@ -370,10 +367,37 @@ export default{
                 return false
             }
         },
-        checkArrayExistsInArray(arr1, arr2){
-            arr2.every(function(item) {
-                return arr1.indexOf(item) !== -1;
-            });
+        checkMatrixSortingAnswer(){
+            var matrix_answers  =   []
+            var item_count      =   0
+
+            this.current.matrix_sequence.map((item)=>{
+                item.map(()=>{
+                    item_count++
+                })
+            })
+
+            this.selected_answer.matrix_sorting.map((matrix_sorting_item, index)=>{
+                matrix_sorting_item.map((item)=>{
+                    if(!this.current.matrix_sequence[index].includes(item)){
+                        matrix_answers.push(false)
+                    }
+                    else{
+                        matrix_answers.push(true)
+                    }
+                })
+            })
+
+            if(matrix_answers.length == item_count){
+                if(matrix_answers.includes(false)){
+                    
+                }
+                else{
+                    return true
+                }
+            }
+            return false
+            
         },
         checkIfArrayMatch(arr1, arr2){
             arr1.sort();
@@ -776,11 +800,22 @@ export default{
                         this.current.question_image = this.dt_list[this.dt_index].question_image ? this.dt_list[this.dt_index].question_image : ''
                         this.current.remarks        = this.dt_list[this.dt_index].remarks ? this.dt_list[this.dt_index].remarks : ''
                         this.current.answers        = this.dt_list[this.dt_index].answers ? this.dt_list[this.dt_index].answers : ''
-                        this.current.criterions     = this.dt_list[this.dt_index].answers.criterion ? this.dt_list[this.dt_index].answers.criterion : ''
                         this.clearAllAnswers()
                         if(this.current.question_type == 3){
-                            this.selected_answer.matrix_sorting = this.dt_list[this.dt_index].answers.element.slice()
-                            this.shuffleArray(this.selected_answer.matrix_sorting)
+                            this.current.criterions     = this.dt_list[this.dt_index].answers.criterion ? this.dt_list[this.dt_index].answers.criterion : ''
+                            //reset sort items and matrix sequence
+                            this.current.matrix_items   = []
+                            this.current.matrix_sequence =   []
+                            //gather all sort items
+                            this.dt_list[this.dt_index].answers.map((question, index)=>{
+                                var matrix_images    =   question.element.value.split(", ");
+                                matrix_images.map((image)=>{
+                                    this.current.matrix_items.push(image)
+                                    this.shuffleArray(this.current.matrix_items)
+                                })
+                                this.current.matrix_sequence[index]  =   matrix_images
+                                this.selected_answer.matrix_sorting[index]  =   []
+                            })
                         }
                     }
                 }
