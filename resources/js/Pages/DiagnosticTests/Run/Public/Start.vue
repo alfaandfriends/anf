@@ -250,7 +250,7 @@ export default{
                 remarks: '',
                 criterions: [],
                 answers: [],
-                score: 8,
+                score: 0,
                 answer_records: [],
                 matrix_items: [],
                 matrix_sequence: []
@@ -315,11 +315,11 @@ export default{
             }
         },
         saveSingleChoice(selected_answer){
-            // this.selected_answer.single_choice  =   selected_answer
-            // if(this.selected_answer.single_choice == this.dt_list[this.dt_index].correct_answer){
-                // this.current.score += 1
-            //     this.correct = true
-            // }
+            this.selected_answer.single_choice  =   selected_answer
+            if(this.selected_answer.single_choice == this.dt_list[this.dt_index].correct_answer){
+                this.current.score += 1
+                this.correct = true
+            }
             this.pushAnswer()
         },
         selectMultipleChoices(selected_answer){
@@ -508,6 +508,7 @@ export default{
         processGraph(){
             /* Get current level answer records and get each question's category*/
             this.current.answer_records =   this.form.answer_record.filter(item => item.dt_id === this.form.eligible_level);
+            console.log(this.current.answer_records)
             const combined = this.current.answer_records.map(q => {
                 const category = this.dt_list.find(c => c.id === q.question_id);
                 return { ...q, category_id: category ? category.category_id : null };
@@ -727,6 +728,7 @@ export default{
             handler(){
                 if(this.dt_list.length){
                     if(this.dt_list.length == this.dt_index){
+                        this.chart_data = []
                         const current_score         =   this.current.score
                         const high_score_limit      =   this.dt_details.higher_score
                         const high_score_redirect   =   this.dt_details.higher_score_direction
@@ -787,7 +789,7 @@ export default{
                                 }
                             }
                             else{
-                                this.form.eligible_level += 1
+                                this.form.eligible_level = this.dt_details.id
                                 this.show_chart = true
                                 this.show_quiz = false
                             }
