@@ -4,11 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Menu extends Model
 {
     public static function getAllMenu(){
+        
+        $user_roles         =   collect(UserHasRoles::where('user_id', Auth::id())->pluck('role_id'))->toArray();
+        $role_permissions   =   collect(RoleHasPermissions::whereIn('role_id', $user_roles)->select('permission_id')->get())->toArray();
+        $user_permissions   =   collect(Permission::whereIn('id', $role_permissions)->select('name')->get())->toArray();
+        
         $data = DB::table('menu_sections')
                     ->rightJoin('menus', 'menu_sections.id', '=', 'menus.section_id')
                     ->leftJoin('menus_sub', 'menus.id', '=', 'menus_sub.menu_id')
@@ -24,6 +30,8 @@ class Menu extends Model
                         'menus_sub.menu_sub_label as sub_menu_name',
                         'menus_sub.menu_sub_route as sub_menu_route',
                         'menus_sub.permission_name as sub_menu_permission')
+                    ->whereIn('menus.permission_name', $user_permissions)
+                    ->orWhereIn('menus_sub.permission_name', $user_permissions)
                     ->orderBy('menus.menu_rank')
                     ->orderBy('menus_sub.menu_sub_rank')
                     ->get();
