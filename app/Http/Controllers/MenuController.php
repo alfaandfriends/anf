@@ -35,7 +35,11 @@ class MenuController extends Controller
 
     public function addMenu()
     {
-        return Inertia::render('Menus/AddMenu');
+        $menu_sections  =   DB::table('menu_sections')->get();
+
+        return Inertia::render('Menus/AddMenu', [
+            'menu_sections' => $menu_sections
+        ]);
     }
 
     public function storeMenu(Request $request)
@@ -55,6 +59,7 @@ class MenuController extends Controller
 
         DB::table('menus')->insert([
             'menu_label'        => $request->menu_label,
+            'section_id'        => $request->menu_section,
             'menu_route'        => $request->menu_route,
             'menu_icon'         => $request->menu_icon,
             'permission_name'   => $request->menu_permission,
@@ -98,10 +103,12 @@ class MenuController extends Controller
 
     public function editMenu()
     {
-        $menus  =   Menu::getMenu(request('menu_id'));
+        $menus          =   Menu::getMenu(request('menu_id'));
+        $menu_sections  =   DB::table('menu_sections')->get();
 
         return Inertia::render('Menus/EditMenu',[
-            'menus'    =>  $menus
+            'menus'         =>  $menus,
+            'menu_sections' => $menu_sections
         ]);
     }
 
@@ -120,11 +127,12 @@ class MenuController extends Controller
         DB::table('menus')
             ->where('id', $request->menu_id)
             ->update([
-                'menu_icon' => $request->menu_icon,
-                'permission_name' => $request->menu_permission,
-                'menu_label' => $request->menu_label,
-                'menu_route' => $request->menu_route,
-                'menu_status' => $request->menu_status,
+                'menu_icon'         => $request->menu_icon,
+                'permission_name'   => $request->menu_permission,
+                'menu_label'        => $request->menu_label,
+                'section_id'        => $request->menu_section,
+                'menu_route'        => $request->menu_route,
+                'menu_status'       => $request->menu_status,
                 'updated_at'        => Carbon::now(),
             ]);
 
