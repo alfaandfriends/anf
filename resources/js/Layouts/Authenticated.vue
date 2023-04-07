@@ -68,7 +68,7 @@ export default {
                     }
                     for (let sub_menu in this.$page.props.menu[section_key]['menus'][menu_key]['sub_menus']) {
                         const sub_menu_route    =   this.$page.props.menu[section_key]['menus'][menu_key]['sub_menus'][sub_menu]['sub_menu_route']
-                        if(route().current().startsWith(sub_menu_route)){
+                        if(route().current() && route().current().startsWith(sub_menu_route)){
                             const menu = this.menu_setting.find(menu_data => menu_data.section_key === section_key && menu_data.menu_key === menu_key);
                             menu.is_open = true
                             this.menu_opened.section_key = section_key
@@ -186,7 +186,7 @@ export default {
                                         <div class="mb-3 ml-3 space-y-1 pb-3" v-if="checkMenuIsOpen(section_key, menu_key)">
                                             <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
                                                 <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''" 
-                                                                :active="sub_menu.sub_menu_route ? route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg"
+                                                                :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg"
                                                 >
                                                 <span class="select-none tracking-normal">{{ sub_menu.sub_menu_name }}</span>
                                                 </BreezeNavSubLink>

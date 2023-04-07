@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Corcel\Model\User;
 use Inertia\Inertia;
 use App\Models\Centre;
+use Illuminate\Support\Facades\Route;
+
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $total_user = User::count();
         $total_school = Centre::count();

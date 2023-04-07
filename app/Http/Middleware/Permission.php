@@ -22,7 +22,6 @@ class Permission
         // if(!$profile_updated && !in_array(Route::currentRouteName(), ['profile', 'profile.store', 'profile.store.security.store'])){
         //     return redirect('profile');
         // }
-
         $user_permissions   = Inertia::getShared('can');
         $permissions =   explode('|', $permissions);
         foreach($permissions as $key=>$permission){
