@@ -22,10 +22,14 @@ export default {
     },
     data() {
         return {
+            menu_setting: [],
+            menu_opened: {
+                section_key: '',
+                menu_key: ''
+            },
             notificationOpen: false,
             showingNavigationDropdown: false,
             sideBar: false,
-            isOpen: false,
             selected: '',
             steps: [
                 {
@@ -42,9 +46,37 @@ export default {
         }
     },
     methods: {
-        toggleMenu (item) {
-            item == this.selected ? this.isOpen = !this.isOpen : this.isOpen = true
-            this.selected = item
+        toggleMenu(section_key, menu_key) {
+            const sectionKeyToFind = section_key.toString();
+            const menuKeyToFind = menu_key.toString();
+            
+            const menu = this.menu_setting.find(menu_data => menu_data.section_key === sectionKeyToFind && menu_data.menu_key === menuKeyToFind);
+            menu.is_open = !menu.is_open;
+        },
+        checkMenuIsOpen(section_key, menu_key){
+            const sectionKeyToFind = section_key.toString();
+            const menuKeyToFind = menu_key.toString();
+            
+            const menu = this.menu_setting.find(menu_data => menu_data.section_key === sectionKeyToFind && menu_data.menu_key === menuKeyToFind);
+            return menu.is_open
+        },
+        initMenu(){
+            for (let section_key in this.$page.props.menu) {
+                for (let menu_key in this.$page.props.menu[section_key]['menus']) {
+                    if(!this.$page.props.menu[section_key]['menus'][menu_key]['menu_route']){
+                        this.menu_setting.push({'section_key': section_key, 'menu_key': menu_key, 'is_open' : false})
+                    }
+                    for (let sub_menu in this.$page.props.menu[section_key]['menus'][menu_key]['sub_menus']) {
+                        const sub_menu_route    =   this.$page.props.menu[section_key]['menus'][menu_key]['sub_menus'][sub_menu]['sub_menu_route']
+                        if(route().current().startsWith(sub_menu_route)){
+                            const menu = this.menu_setting.find(menu_data => menu_data.section_key === section_key && menu_data.menu_key === menu_key);
+                            menu.is_open = true
+                            this.menu_opened.section_key = section_key
+                            this.menu_opened.menu_key = menu_key
+                        }
+                    }
+                }
+            }
         },
         completedTour(status){
             if(status){
@@ -114,6 +146,9 @@ export default {
         //     this.$vgt.start(0);
         // }
     },
+    created(){
+        this.initMenu()
+    }
 }
 </script>
 
@@ -123,42 +158,44 @@ export default {
 <template>
     <div class="flex">
         <!-- Sidebar -->
-        <div class="min-h-screen bg-gray-50 step-1" x-data="{ sideBar: false }">
+        <div class="min-h-screen bg-gray-50 step-1 lg:w-[21rem]">
             <div class="flex">
-                <nav class="fixed top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-60 sm:translate-x-0" 
+                <nav class="fixed top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-[18rem] sm:translate-x-0" 
                      :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
                 >
-                    <span class="flex justify-center items-center px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
-                    <nav class="text-sm font-medium text-gray-500">
-                        <template v-for="menu_data, key in $page.props.menu" :key="key">
-                            <template v-if="menu_data.menu_route">
-                                <BreezeNavLink v-if="$page.props.can[menu_data.permission_name]" :href="route(menu_data.menu_route)" :active="route().current(menu_data.menu_route)">
-                                    <span class="mr-2" v-html="menu_data.menu_icon"></span>
-                                    <span class="select-none">{{ menu_data.menu_label }}</span> 
-                                </BreezeNavLink>
-                            </template>
-                            <template v-else>
-                                <div v-if="$page.props.can[menu_data.permission_name]">
-                                    <div class="flex items-center justify-between px-4 py-3 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200" role="button" @click="toggleMenu(key)">
-                                        <div class="flex items-center">
-                                            <span class="mr-2" v-html="menu_data.menu_icon"></span>
-                                            <span class="select-none">{{ menu_data.menu_label }}</span> 
+                    <span class="flex justify-center items-center border-b border-dashed px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
+                    <nav class="text-sm font-medium text-gray-500 p-3 space-y-4 my-3">
+                        <div class="space-y-1" v-for="section, section_key in $page.props.menu">
+                            <p class="uppercase text-gray-100 text-xs mb-3 tracking-wide">{{ section.name }}</p>
+                            <template v-for="menu, menu_key in section.menus">
+                                <template v-if="menu.menu_route">
+                                    <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current(menu.menu_route)" class="rounded-lg">
+                                        <span class="mr-2" v-html="menu.menu_icon"></span>
+                                        <span class="select-none tracking-wide">{{ menu.menu_name }}</span> 
+                                    </BreezeNavLink>
+                                </template>
+                                <template v-else>
+                                    <div class="space-y-1" v-if="$page.props.can[menu.menu_permission]">
+                                        <div class="flex items-center justify-between px-4 py-2 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200 rounded-lg" :class="menu_opened.section_key == section_key && menu_opened.menu_key == menu_key ? 'text-white tracking-wide bg-gray-800' : ''" role="button" @click="toggleMenu(section_key, menu_key)">
+                                            <div class="flex items-center">
+                                                <span class="mr-2" v-html="menu.menu_icon"></span>
+                                                <span class="select-none tracking-wide">{{ menu.menu_name }}</span> 
+                                            </div>
+                                            <ChevronRightIcon :class="{ 'rotate-90': checkMenuIsOpen(section_key, menu_key) }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                         </div>
-                                        <ChevronRightIcon :class="{ 'rotate-90': isOpen && key === selected }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
+                                        <div class="mb-3 ml-3 space-y-1 pb-3" v-if="checkMenuIsOpen(section_key, menu_key)">
+                                            <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
+                                                <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''" 
+                                                                :active="sub_menu.sub_menu_route ? route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg"
+                                                >
+                                                <span class="select-none tracking-normal">{{ sub_menu.sub_menu_name }}</span>
+                                                </BreezeNavSubLink>
+                                            </template>
+                                        </div>
                                     </div>
-                                    <div class="mb-3" v-if="isOpen && key === selected">
-                                        <template v-for="(sub_menu_data, key) in menu_data.sub_menu" :key="key">
-                                            <BreezeNavSubLink v-if="$page.props.can[sub_menu_data.permission_name]" :href="sub_menu_data.sub_menu_route ? route(sub_menu_data.sub_menu_route) : ''" 
-                                                            :active="sub_menu_data.sub_menu_route ? route().current(sub_menu_data.sub_menu_route) : ''"
-                                            >
-                                            <span class="select-none">{{ sub_menu_data.sub_menu_label }}</span>
-                                            </BreezeNavSubLink>
-                                        </template>
-                                    </div>
-                                </div>
+                                </template>
                             </template>
-                            
-                        </template>
+                        </div>
                         <BreezeNavLink class="w-full sm:hidden" :href="route('logout')" method="post" as="button">
                             <LogoutIcon class="h-6 w-6 mr-2"></LogoutIcon>
                             Log Out
@@ -328,7 +365,7 @@ export default {
                             <Breadcrumbs :breadcrumbs="$page.props.breadcrumbs"/>
                         </div>
                     </header>
-                        <div class="px-6 py-3 bg-blue bg-red-500 flex justify-between items-center" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
+                        <div class="px-6 py-3 bg-blue bg-red-500 space-y-4 lg:flex lg:space-y-0 justify-between items-center" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
                             <span class="text-white text-sm italic">Warning: use with caution, any changes will reflect to user that being impersonated.</span>
                             <form @submit.prevent="impersonate" class="flex space-x-2 items-center sm:justify-end">
                                 <label for="" class="text-white lg:text-sm sm:text-md font-bold">Username</label>

@@ -30,6 +30,16 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                         <div class="mb-4">
+                                            <label for="menu_section" class="block text-sm font-bold text-gray-700"> Section </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select class="border-gray-300 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" name="" id="menu_section" v-model="form.menu_section">
+                                                    <option :value="menu_section.id" v-for="menu_section in $page.props.menu_sections">{{menu_section.name}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                        <div class="mb-4">
                                             <label for="have_sub_menu" class="block text-sm font-bold text-gray-700"> Sub Menu </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <select class="border-gray-300 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" name="" id="have_sub_menu" v-model="have_sub_menu" @change="resetRoute">
@@ -106,6 +116,7 @@ export default {
             form: {
                 menu_label: '',
                 menu_route: '',
+                menu_section: this.$page.props.menu_sections[0].id,
                 menu_icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
                 menu_permission: '',
                 menu_status: true,
