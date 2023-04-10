@@ -28,7 +28,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </div>
                                     <div class="w-full flex justify-between mt-4">
                                         <button class="text-red-700 px-2">DELETE</button>
-                                        <label class="block tracking-wide text-gray-700" for="grid-first-name"> Quantity 
+                                        <label class="block tracking-wide text-gray-700" for="grid-first-name"> Quantity
                                             <button class="py-1 px-3 bg-indigo-600 hover:bg-indigo-700 rounded-sm text-white">-</button>
                                             <label class="px-3 font-bold">3</label>
                                             <button class="py-1 px-3 bg-indigo-600 hover:bg-indigo-700 rounded-sm text-white">+</button>
@@ -47,7 +47,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
                                     </div>
                                     <div class="w-full flex justify-between mt-4">
                                         <button class="text-red-700 px-2">DELETE</button>
-                                        <label class="block tracking-wide text-gray-700" for="grid-first-name"> Quantity 
+                                        <label class="block tracking-wide text-gray-700" for="grid-first-name"> Quantity
                                             <button class="py-1 px-3 bg-indigo-600 hover:bg-indigo-700 rounded-sm text-white">-</button>
                                             <label class="px-3 font-bold">3</label>
                                             <button class="py-1 px-3 bg-indigo-600 hover:bg-indigo-700 rounded-sm text-white">+</button>
@@ -155,7 +155,7 @@ export default {
         //         }
         //     },
         //     deep: true
-        // } 
+        // }
     },
     methods: {
         checkout(){
@@ -176,7 +176,7 @@ export default {
                 bankSelected[key] = false
             })
             activePayment[method] = true
-            
+
             if(this.activePayment.cc){
                 loadScript({ "client-id": "test" })
                     .then((paypal) => {
@@ -188,7 +188,7 @@ export default {
                                     color:  'blue',
                                     shape:  'rect',
                                     label:  'pay'
-                                }   
+                                }
                             })
                             .render("#paypal-button-container")
                             .catch((error) => {
@@ -215,7 +215,7 @@ export default {
             if(this.activePayment.fpx){
                 axios.post('https://www.billplz-sandbox.com/api/v3/bills', this.form, {
                                 headers: {
-                                    'Authorization': 'Basic ' + btoa(process.env.MIX_BILLPLZ_SANDBOX_API_KEY)
+                                    'Authorization': 'Basic ' + btoa(import.meta.env.MIX_BILLPLZ_SANDBOX_API_KEY)
                                 }
                             })
                             .then(function (response) {
