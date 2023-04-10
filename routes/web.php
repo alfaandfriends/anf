@@ -22,15 +22,10 @@ use App\Http\Controllers\ProgrammeController;
 /* Authorized Only */
 Route::middleware(['auth'])->group(function(){
     /* Default Landing Page */
-    Route::get('/', [DashboardController::class, 'index'])->middleware('permission:dashboard_access');
-    // Route::get('/', function () {
-    //     return Inertia::render('Welcome', [
-    //         'canLogin' => Route::has('login'),
-    //         'canRegister' => Route::has('register'),
-    //         'laravelVersion' => Application::VERSION,
-    //         'phpVersion' => PHP_VERSION,
-    //     ]);
-    // });
+    Route::get('/', function () {
+        return redirect('/dashboard');
+    });
+    
     /* User Impersonation */
     Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate');
     Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate');;
