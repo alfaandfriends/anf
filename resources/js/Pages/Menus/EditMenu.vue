@@ -30,6 +30,16 @@
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                         <div class="mb-4">
+                                            <label for="menu_section" class="block text-sm font-bold text-gray-700"> Section </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select class="border-gray-300 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" name="" id="menu_section" v-model="form.menu_section">
+                                                    <option :value="menu_section.id" v-for="menu_section in $page.props.menu_sections">{{menu_section.name}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                        <div class="mb-4">
                                             <label for="have_sub_menu" class="block text-sm font-bold text-gray-700"> Sub Menu </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <select class="border-gray-300 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" name="" id="have_sub_menu" v-model="have_sub_menu" @change="resetRoute">
@@ -57,7 +67,7 @@
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <label for="menu_icon" class="block text-sm font-bold text-gray-700"> Permission <span class="text-red-500">*</span></label>
+                                            <label for="menu_icon" class="block text-sm font-bold text-gray-700"> SVG Icon <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <textarea name="menu_icon" rows="5" id="menu_icon" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.menu_icon ? 'border-red-300' : 'border-gray-300'" v-model="form.menu_icon" autocomplete="off"></textarea>
                                             </div>
@@ -109,6 +119,7 @@ export default {
             form: {
                 menu_id: this.menus.id,
                 menu_label: this.menus.menu_label,
+                menu_section: this.menus.section_id ? this.menus.section_id : this.$page.props.menu_sections[0].id,
                 menu_route: this.menus.menu_route,
                 menu_icon: this.menus.menu_icon,
                 menu_permission: this.menus.permission_name,
