@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArtGalleryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MenuController;
@@ -159,13 +160,18 @@ Route::middleware(['auth'])->group(function(){
 
     /* External User Management */
     Route::prefix('external-user-management')->group(function () {
-        Route::get('/division-manager', [ExternalUserManagementController::class, 'divisionManagerList'])->name('division_manager.users');
+        Route::get('/division-manager', [ExternalUserManagementController::class, 'divisionManagerList'])->name('division_manager');
         Route::get('/division-manager/manage', [ExternalUserManagementController::class, 'manageDivisionManager'])->name('division_manager.manage');
         Route::post('/division-manager/manage/store', [ExternalUserManagementController::class, 'manageDivisionManagerStore'])->name('division_manager.store');
 
-        Route::get('/centre-manager', [ExternalUserManagementController::class, 'centreManagerList'])->name('centre_manager.users');
+        Route::get('/centre-manager', [ExternalUserManagementController::class, 'centreManagerList'])->name('centre_manager');
         Route::get('/centre-manager/manage', [ExternalUserManagementController::class, 'manageCentreManager'])->name('centre_manager.manage');
         Route::post('/centre-manager/manage/store', [ExternalUserManagementController::class, 'manageCentreManagerStore'])->name('centre_manager.store');
+
+        Route::get('/edupreneurs', [ExternalUserManagementController::class, 'edupreneurList'])->name('edupreneurs');
+        Route::get('/edupreneurs/manage', [ExternalUserManagementController::class, 'manageEdupreneur'])->name('edupreneurs.manage');
+        Route::post('/edupreneurs/manage/store', [ExternalUserManagementController::class, 'manageEdupreneurStore'])->name('edupreneurs.store');
+        
     });
 
     
@@ -216,6 +222,15 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/notifications/view', [NotificationController::class, 'viewNotification'])->name('view_notification');
     Route::get('/notifications/show-more', [NotificationController::class, 'showMoreNotifications'])->name('show_more_notifications');
     Route::delete('/notifications/delete', [NotificationController::class, 'deleteNotification'])->name('delete_notification');
+
+    /* Art Gallery */
+    Route::get('/art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery');
+    Route::get('/art-gallery/create', [ArtGalleryController::class, 'create'])->name('art_gallery.create');
+    Route::post('/art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store');
+    Route::delete('/art-gallery/destroy/{id}', [ArtGalleryController::class, 'destroy'])->name('art_gallery.destroy');
+    Route::get('/art-gallery/get_themes/{id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes');
+    Route::get('/art-gallery/get_lessons/{id}', [ArtGalleryController::class, 'getLessons'])->name('art_gallery.get_lessons');
+    Route::get('/art-gallery/get_activities/{id}', [ArtGalleryController::class, 'getActivities'])->name('art_gallery.get_activities');
 });
 
 

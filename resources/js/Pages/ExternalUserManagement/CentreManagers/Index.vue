@@ -158,7 +158,7 @@ export default {
         params: {
             handler(){
                 if(this.params){
-                    this.$inertia.get(this.route('centre_manager.users'), this.params, { replace: true, preserveState: true});
+                    this.$inertia.get(this.route('centre_manager'), this.params, { replace: true, preserveState: true});
                 }
             },
             deep: true

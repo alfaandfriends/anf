@@ -44,7 +44,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         container: 
                                                             $page.props.errors.centre_id ? 
                                                             'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-[38px]',
+                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
                                                         containerDisabled: 'cursor-default bg-gray-100',
                                                         containerOpen: 'rounded-b-none',
                                                         containerOpenTop: 'rounded-t-none',
@@ -98,7 +98,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         container: 
                                                             $page.props.errors.centre_id ? 
                                                             'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-[38px]',
+                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
                                                         containerDisabled: 'cursor-default bg-gray-100',
                                                         containerOpen: 'rounded-b-none',
                                                         containerOpenTop: 'rounded-t-none',

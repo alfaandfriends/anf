@@ -33,14 +33,14 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-if="!$page.props.division_managers.data.length">
+                                    <tr v-if="!$page.props.edupreneurs.data.length">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
                                                 No Record Found! 
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr class="hover:bg-gray-200" v-for="(user, index) in $page.props.division_managers.data" :key="user.ID">
+                                    <tr class="hover:bg-gray-200" v-for="(user, index) in $page.props.edupreneurs.data" :key="user.ID">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-700">{{ ++index }}</div>
                                         </td>
@@ -56,14 +56,14 @@ import BreezeButton from '@/Components/Button.vue';
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <BreezeButton buttonType="blue" title="Manage User" @click="manageUser(user.id)">Manage</BreezeButton>
+                                                    <BreezeButton buttonType="blue" title="Manage User" @click="manageEdupreneur(user.id)">Manage</BreezeButton>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :page_data="$page.props.division_managers"></Pagination>
+                            <Pagination :page_data="$page.props.edupreneurs"></Pagination>
                         </div>
                     </div>
                 </div>
@@ -155,15 +155,15 @@ export default {
         params: {
             handler(){
                 if(this.params){
-                    this.$inertia.get(this.route('divisions.users'), this.params, { replace: true, preserveState: true});
+                    this.$inertia.get(this.route('edupreneurs'), this.params, { replace: true, preserveState: true});
                 }
             },
             deep: true
         }
     },
     methods: {
-        manageUser(user_id){
-            this.$inertia.get(this.route('division_manager.manage'), {'user_id': user_id});
+        manageEdupreneur(user_id){
+            this.$inertia.get(this.route('edupreneurs.manage'), {'user_id': user_id});
         }
     }
 }

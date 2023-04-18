@@ -155,7 +155,7 @@ export default {
         params: {
             handler(){
                 if(this.params){
-                    this.$inertia.get(this.route('division_manager.users'), this.params, { replace: true, preserveState: true});
+                    this.$inertia.get(this.route('division_manager'), this.params, { replace: true, preserveState: true});
                 }
             },
             deep: true
