@@ -51,8 +51,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                 groupLabel="select_all"
                                                 :groupSelect="true"
                                                 placeholder="Select Centres"
-                                                trackBy="name"
-                                                label="name"
+                                                trackBy="label"
+                                                label="label"
                                                 :classes="{
                                                     container: 
                                                         $page.props.errors.centre_id ? 
@@ -98,7 +98,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
                                     <div class="flex flex-row-reverse items-center">
                                         <div class="flex space-x-2">
-                                            <BreezeButton :buttonType="'gray'" :route="route('division_manager.users')">Cancel</BreezeButton>
+                                            <BreezeButton :buttonType="'gray'" :route="route('division_manager')">Cancel</BreezeButton>
                                             <BreezeButton type="submit">Save</BreezeButton>
                                         </div>
                                     </div>
@@ -137,7 +137,7 @@ export default {
         return{
             options: [{
                 select_all: 'Select All Centres',
-                libs: this.$page.props.centres
+                libs: this.$page.props.allowed_centres
             }],
             selected_centres: []
         }

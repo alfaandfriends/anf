@@ -169,10 +169,13 @@ export default {
                             <p class="uppercase text-gray-100 text-xs mb-3 tracking-wide">{{ section.name }}</p>
                             <template v-for="menu, menu_key in section.menus">
                                 <template v-if="menu.menu_route">
-                                    <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current(menu.menu_route)" class="rounded-lg">
-                                        <span class="mr-2" v-html="menu.menu_icon"></span>
-                                        <span class="select-none tracking-wide">{{ menu.menu_name }}</span> 
-                                    </BreezeNavLink>
+                                    <div class="flex space-x-1">
+                                        <div class="px-0.5 rounded-r" :class="route().current(menu.menu_route) ? 'bg-red-500' : ''"></div>
+                                        <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current(menu.menu_route)" class="rounded-lg flex-auto">
+                                            <span class="mr-2" v-html="menu.menu_icon"></span>
+                                            <span class="select-none tracking-wide">{{ menu.menu_name }}</span> 
+                                        </BreezeNavLink>
+                                    </div>
                                 </template>
                                 <template v-else>
                                     <div class="space-y-1" v-if="$page.props.can[menu.menu_permission]">
@@ -185,11 +188,14 @@ export default {
                                         </div>
                                         <div class="mb-3 ml-3 space-y-1 pb-3" v-if="checkMenuIsOpen(section_key, menu_key)">
                                             <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
-                                                <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''" 
-                                                                :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg"
-                                                >
-                                                <span class="select-none tracking-normal">{{ sub_menu.sub_menu_name }}</span>
-                                                </BreezeNavSubLink>
+                                                <div class="flex space-x-1">
+                                                    <div class="px-0.5 rounded-r" :class="route().current() && route().current().startsWith(sub_menu.sub_menu_route) ? 'bg-red-500' : ''"></div>
+                                                    <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''" 
+                                                                    :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg flex-auto"
+                                                    >
+                                                    <span class="select-none tracking-normal">{{ sub_menu.sub_menu_name }}</span>
+                                                    </BreezeNavSubLink>
+                                                </div>
                                             </template>
                                         </div>
                                     </div>

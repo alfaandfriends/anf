@@ -32,6 +32,21 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
+                                        <div class="relative inline-flex">
+                                            <select class="appearance-none bg-gray-100 border border-gray-300 rounded-md py-2 pl-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                                <option>Option 1</option>
+                                                <option>Option 2</option>
+                                                <option>Option 3</option>
+                                                <option>Option 4</option>
+                                            </select>
+                                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                            <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                                                <path d="M10 12l-6-6 1.41-1.41L10 9.17l4.59-4.58L16 6l-6 6z"/>
+                                            </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                         <div class="mb-4">
                                             <label for="centres" class="block text-sm font-bold text-gray-700">Centres</label>
                                             <Multiselect 
@@ -51,8 +66,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                 groupLabel="select_all"
                                                 :groupSelect="true"
                                                 placeholder="Select Centres"
-                                                trackBy="name"
-                                                label="name"
+                                                trackBy="label"
+                                                label="label"
                                                 :classes="{
                                                     container: 
                                                         $page.props.errors.centre_id ? 
@@ -96,7 +111,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
                                     <div class="flex flex-row-reverse items-center">
                                         <div class="flex space-x-2">
-                                            <BreezeButton :buttonType="'gray'" :route="route('division_manager.users')">Cancel</BreezeButton>
+                                            <BreezeButton :buttonType="'gray'" :route="route('division_manager')">Cancel</BreezeButton>
                                             <BreezeButton type="submit">Save</BreezeButton>
                                         </div>
                                     </div>
@@ -122,7 +137,6 @@ export default {
     },
     props: {
         user_id: String,
-        centres: Object,
         user_centres: Object
     },
     created(){
@@ -135,7 +149,7 @@ export default {
         return{
             options: [{
                 select_all: 'Select All Centres',
-                libs: this.$page.props.centres
+                libs: this.$page.props.allowed_centres
             }],
             selected_centres: []
         }

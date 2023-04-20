@@ -16,7 +16,8 @@ import BreezeButton from '@/Components/Button.vue';
   border: 1px solid #e2e8f0;
   border-radius: 0.25rem;
   background: #fff;
-  width: 25%;
+  min-width: 25%;
+  max-width: 30%;
   max-height: 90%;
 }
 :deep(.modal-content) {

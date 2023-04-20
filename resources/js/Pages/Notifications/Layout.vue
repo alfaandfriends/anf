@@ -27,9 +27,9 @@
                                     </div>
                                     <div class="h-[74vh]">
                                         <div class="flex flex-row space-x-2 border-t border-b border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-500">
-                                            <BreezeButton buttonType="blue" :class="route().params.filter ? 'bg-blue-400' : ''" @click="showAllNotifications()">All</BreezeButton>
-                                            <BreezeButton buttonType="blue" :class="route().current('notifications', {'filter':'unread'}) ? '' : 'bg-blue-400'" @click="showReadNotifications()">Unread</BreezeButton>
-                                            <BreezeButton buttonType="blue" :class="route().current('notifications', {'filter':'read'}) ? '' : 'bg-blue-400'" @click="showUnreadNotifications()">Read</BreezeButton>
+                                            <button class="shadow-md inline-flex items-center border border-transparent rounded font-semibold text-xs text-white uppercase tracking-widest focus:outline-none transition ease-in-out duration-150 cursor-pointer" :class="route().current('notifications', {'filter':'unread'}) || route().current('notifications', {'filter':'read'}) ? 'bg-blue-400 px-2 py-1' : 'bg-blue-700 py-1 px-2'" @click="showAllNotifications()">All</button>
+                                            <button class="shadow-md inline-flex items-center border border-transparent rounded font-semibold text-xs text-white uppercase tracking-widest focus:outline-none transition ease-in-out duration-150 cursor-pointer" :class="route().current('notifications', {'filter':'unread'}) ? 'bg-blue-700 px-2 py-1' : 'bg-blue-400 py-1 px-2'" @click="showReadNotifications()">Unread</button>
+                                            <button class="shadow-md inline-flex items-center border border-transparent rounded font-semibold text-xs text-white uppercase tracking-widest focus:outline-none transition ease-in-out duration-150 cursor-pointer" :class="route().current('notifications', {'filter':'read'}) ? 'bg-blue-700 px-2 py-1' : 'bg-blue-400 py-1 px-2'" @click="showUnreadNotifications()">Read</button>
                                         </div>
                                         <div class="bg-blue-100 h-[70vh] overflow-hidden overflow-y-auto no-scrollbar" v-if="!$page.props.notifications.length">
                                             <div aria-label="Message list" class="h-full text-center pt-6">
@@ -121,7 +121,7 @@
         XIcon,
         },
         created(){
-            
+            console.log(route().current())
         },
         setup() {
             const open = ref(false)
