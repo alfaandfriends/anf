@@ -4,7 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Diagnostic Test" />
+    <Head title="Art Gallery" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
@@ -113,7 +113,6 @@ import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
-import moment from 'moment';
 import axios from 'axios'
 import Modal from '@/Components/Modal.vue'
 

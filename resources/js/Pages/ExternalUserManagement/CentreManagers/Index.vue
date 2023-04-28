@@ -9,7 +9,7 @@ import BreezeButton from '@/Components/Button.vue';
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <div class="py-4 px-4">
-            <!-- <div class="overflow-x-auto"> -->
+            <div class="overflow-x-auto">
                 <div class="mx-auto">
                     <div class="align-middle inline-block min-w-full px-2">
                         <div class="flex justify-between mb-4">
@@ -67,7 +67,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                     </div>
                 </div>
-            <!-- </div> -->
+            </div>
             <ConfirmationModal 
                 :show="isOpen" 
                 @close="isOpen = false"

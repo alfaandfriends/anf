@@ -17,6 +17,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ExternalUserManagementController;
+use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProgrammeController;
 
@@ -231,6 +232,14 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/art-gallery/get_themes/{id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes');
     Route::get('/art-gallery/get_lessons/{id}', [ArtGalleryController::class, 'getLessons'])->name('art_gallery.get_lessons');
     Route::get('/art-gallery/get_activities/{id}', [ArtGalleryController::class, 'getActivities'])->name('art_gallery.get_activities');
+    
+    /* Math Manipulatives */
+    Route::get('/math-manipulatives', [MathManipulativesController::class, 'index'])->name('math_manipulatives');
+    Route::get('/math-manipulatives/play', [MathManipulativesController::class, 'play'])->name('math_manipulatives.play');
+    Route::get('/math-manipulatives/configuration', [MathManipulativesController::class, 'configuration'])->name('math_manipulatives.configuration');
+    Route::get('/math-manipulatives/configuration/create', [MathManipulativesController::class, 'configurationCreate'])->name('math_manipulatives.configuration.create');
+    Route::post('/math-manipulatives/configuration/store', [MathManipulativesController::class, 'configurationStore'])->name('math_manipulatives.configuration.store');
+    Route::delete('/math-manipulatives/configuration/delete/{id}', [MathManipulativesController::class, 'configurationDelete'])->name('math_manipulatives.configuration.delete');
 });
 
 
