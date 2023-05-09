@@ -150,7 +150,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <label class="block text-sm text-gray-700 font-bold mb-2"> Artwork File </label>
                                         <div class="flex flex-row justify-start space-x-2">
                                             <div class="flex-column text-center">
-                                                <img :src="form.artwork.image_url" alt="">
+                                                <img class="object-scale-down w-full" :src="form.artwork.image_url" alt="">
                                             </div>
                                             <div class="flex-column">
                                                 <div class="flex flex-col space-y-1">

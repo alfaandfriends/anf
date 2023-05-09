@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Classes\NotificationHelper;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 
 class StudentController extends Controller
@@ -19,19 +21,16 @@ class StudentController extends Controller
         $can_access_centre = $allowed_centres->search(function ($value) { 
             return $value->ID == request('centre_id');
         });
-
+        
         $query          =   DB::table('students')
                                 ->join('children', 'students.children_id', '=', 'children.id')
-                                ->leftJoin('student_fees', 'students.id', '=', 'student_fees.student_id')
-                                ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
-                                ->leftJoin('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
-                                ->leftJoin('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-                                ->leftJoin('classes', 'programme_levels.id', '=', 'classes.programme_level_id')
-                                ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
-                                ->distinct()
+                                ->join('student_fees', 'students.id', '=', 'student_fees.student_id')
+                                ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
                                 ->select([  'students.id as id', 
                                             'children.name as name', 
-                                            'programmes.name as programme_name', 
                                             'wpvt_users.display_name as parent_name', 
                                             'students.status']);
 
@@ -50,7 +49,7 @@ class StudentController extends Controller
             ]);
         }
         
-        $query->where('classes.centre_id', '=', $request->centre_id)->toSql();
+        $query->where('student_fees.centre_id', '=', $request->centre_id);
 
         return Inertia::render('CentreManagement/Students/Index', [
             'filter'        => request()->all('search', 'centre_id'),
@@ -72,43 +71,57 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        $student_id         =   DB::table('students')->insertGetId([
-            'centre_id'     =>  $request->centre_id,
-            'children_id'    =>  $request->student_id,
-        ]);
+        // $student_id         =   DB::table('students')->insertGetId([
+        //     'children_id'    =>  $request->student_id,
+        // ]);
 
-        $student_fee_id     =   DB::table('student_fees')->insertGetId([
-            'student_id'    =>  $student_id,
-            'fee_id'        =>  $request->fee['id'],
-        ]);
+        // $student_fee_id     =   DB::table('student_fees')->insertGetId([
+        //     'student_id'        =>  $student_id,
+        //     'centre_id'         =>  $request->centre_id,
+        //     'fee_id'            =>  $request->fee['id'],
+        //     'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
+        // ]);
 
-        foreach($request->classes as $key => $class_id){
-            DB::table('student_classes')->insert([
-                'student_fee_id'    =>  $student_fee_id,
-                'class_id'          =>  $class_id,
-            ]);
-        }
+        // foreach($request->classes as $key => $class_id){
+        //     DB::table('student_classes')->insert([
+        //         'student_fee_id'    =>  $student_fee_id,
+        //         'class_id'          =>  $class_id,
+        //     ]);
+        // }
+
+        // /* Create progress report */
+        // $programme_id   =   DB::table('programme_level_fees')
+        //                         ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+        //                         ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+        //                         ->where('programme_level_fees.id', $request->fee['id'])
+        //                         ->pluck('programmes.id')
+        //                         ->first();
+
+        // $report_info        =   DB::table('progress_report_configs')->where('programme_id', $programme_id)->select('table', 'columns')->first();
+        // $report_table       =   $report_info->table;
+        // $report_columns     =   Str($report_info->columns);
+
+        // $progress_report_id =   DB::table('progress_reports')->insertGetId([
+        //     'student_id'        =>  $request->student_id,
+        //     'centre_id'         =>  $request->centre_id,
+        //     'programme_id'      =>  $programme_id,
+        //     'month'             =>  Carbon::parse($request->date_admission)->format('Y-m-d')
+        // ]);
+
+        // $columns                                =   explode(", ", $report_columns);
+        // $values                                 =   array_fill(0, count($columns), null);
+        // $empty_record                           =   array_combine($columns, $values);
+        // $empty_record['progress_report_id']     =   $progress_report_id;
+
+        // DB::table($report_table)->insert($empty_record);
+
+        dd($this->getDatesForDayOfWeekFromCustomDate(1, Carbon::parse($request->date_admission)->format('Y-m-d')));
 
         return redirect(route('students'))->with(['type'=>'success', 'message'=>'Admission success !']);
     }
 
     public function edit(Request $request)
     {
-        $allowed_centres    =   (object)Inertia::getShared('allowed_centres');
-        $can_access_centre = $allowed_centres->search(function ($value) {
-            return $value->ID == request('centre_id');
-        });
-        if($request->centre_id){
-            $request->merge([
-                'centre_id' => !$can_access_centre ? $allowed_centres[0]->ID : $request->centre_id,
-            ]);
-        }
-        else{
-            $request->merge([
-                'centre_id' => $allowed_centres[0]->ID
-            ]);
-        }
-        
         $student_info       =   DB::table('students')
                                     ->join('children', 'students.children_id', '=', 'children.id')
                                     ->join('genders', 'children.gender_id', '=', 'genders.id')
@@ -215,9 +228,12 @@ class StudentController extends Controller
         if(empty($request->classes)){
             return back()->with(['type'=>'error', 'message'=>'Please select at least 1 class !']);
         }
-        $student_fee_id     =   DB::table('student_fees')->insertGetId([
-            'student_id'    =>  $request->student_id,
-            'fee_id'        =>  $request->fee['id'],
+
+        $student_fee_id =   DB::table('student_fees')->insertGetId([
+            'student_id'        =>  $request->student_id,
+            'centre_id'         =>  $request->centre_id,
+            'fee_id'            =>  $request->fee['id'],
+            'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
         ]);
 
         foreach($request->classes as $key => $class_id){
@@ -226,6 +242,74 @@ class StudentController extends Controller
                 'class_id'          =>  $class_id,
             ]);
         }
+        
+        /* Create progress report */
+        $programme_id   =   DB::table('programme_level_fees')
+                                ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                ->where('programme_level_fees.id', $request->fee['id'])
+                                ->pluck('programmes.id')
+                                ->first();
+
+        $progress_report_id =   DB::table('progress_reports')->insertGetId([
+            'student_id'        =>  $request->student_id,
+            'centre_id'         =>  $request->centre_id,
+            'programme_id'      =>  $programme_id,
+            'month'             =>  Carbon::createFromTimeString($request->date_admission)->month,
+        ]);
+
+        // if(!empty($request->classes)){
+        //     $classes    =   DB::table('classes')
+        //                         ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')
+        //                         ->join('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
+        //                         ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+        //                         ->whereIn('classes.id', $request->classes)
+        //                         ->select('class_days.id', 'class_days.name', 'programmes.table')
+        //                         ->get();
+
+        //     foreach($classes as $key=>$class_info){
+        //         $class_day      =    $class_info->id;
+        //         $table_name     =    $class_info->table;
+
+        //         $daysForMonth   =   $this->getDatesForDayOfWeekFromCustomDate($class_info->id, date('Y-m-d'));
+        //         dd($daysForMonth);
+        //         if(!empty($daysForMonth)){
+        //             foreach($daysForMonth as $key=>$date){
+        //                 DB::table($table_name)->insert([
+        //                     'date'
+        //                 ]);
+        //             }
+        //         }
+
+        //     }
+        // }
+        
         return redirect()->back()->with(['type'=>'success', 'message'=>'New class added successfully !']);
+    }
+
+    /* Usage: $this->getDatesForDayOfWeekFromCustomDate(1, '2023-05-02') */
+    public function getDatesForDayOfWeekFromCustomDate($dayOfWeek, $customDate) {
+        $dates = array();
+        $startDate = new DateTime($customDate);
+        $year = $startDate->format('Y');
+        $month = $startDate->format('m');
+        $date = new DateTime("$year-$month-01");
+        if ($startDate->format('N') != $dayOfWeek) {
+            $startDate->modify("next Monday");
+            $startDate->modify("+".($dayOfWeek-1)." days");
+        }
+        if ($startDate->format('j') < $date->format('j')) {
+            $startDate->modify("+7 days");
+        }
+        $weeksProcessed = 0;
+        while ($startDate->format('m') == $month) {
+            $dates[] = $startDate->format('Y-m-d');
+            $startDate->modify("+7 days");
+            $weeksProcessed++;
+            if ($weeksProcessed >= 4) {
+                break;
+            }
+        }
+        return $dates;
     }
 }

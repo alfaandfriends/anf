@@ -220,8 +220,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                 :classes="{
                                                     container: 
                                                         $page.props.errors.centre_id ? 
-                                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded bg-white text-base leading-snug outline-none':
-                                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-[38px]',
+                                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
+                                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
                                                     containerDisabled: 'cursor-default bg-gray-100',
                                                     containerOpen: 'rounded-b-none',
                                                     containerOpenTop: 'rounded-t-none',
@@ -262,18 +262,30 @@ import BreezeButton from '@/Components/Button.vue';
                                             />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
                                                 <option value="">-- Select Programme --</option>
-                                                <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
+                                                <option :value="programme.id" v-for="(programme, index) in $page.props.programme_list" :key="index">{{ programme.name }}</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-4">
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                        <div class="mb-4">
+                                            <label for="programme" class="block text-sm font-bold text-gray-700"> Admission Date <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <Datepicker :class="'w-full rounded-lg shadow-sm '" 
+                                                    :style="$page.props.errors.date_admission ? '--dp-border-color: #fa9e9e; --dp-icon-color: #fa9e9e' : '--dp-border-color: #D1D5DB; --dp-icon-color: black'" 
+                                                    input-class-name="date-picker"
+                                                    v-model="form.date_admission" 
+                                                    :enable-time-picker="false"
+                                                    :auto-apply="true" 
+                                                />
+                                            </div>
+                                        </div>
                                         <div class="mb-4">
                                             <label for="class_type" class="block text-sm font-bold text-gray-700"> Class Type <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
@@ -283,6 +295,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </select>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                         <div class="mb-4">
                                             <label for="class_level" class="block text-sm font-bold text-gray-700"> Class Level <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
@@ -297,7 +311,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <select name="class_method" id="class_method" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_method ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_method" autocomplete="off">
                                                     <option value="">-- Select Method --</option>
-                                                    <option :value="method.id" v-for="(method, index) in method_list" :key="index">{{ method.name }}</option>
+                                                    <option :value="method.id" v-for="(method, index) in $page.props.method_list" :key="index">{{ method.name }}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -422,9 +436,6 @@ export default {
     props: {
         student_info: Object,
         student_academics: Object,
-        programme_list: Object,
-        method_list: Object,
-        centre_id: String,
     },
     data(){
         return{
@@ -454,15 +465,17 @@ export default {
                 available_classes: [],
             },
             search_form:{
-                centre_id: this.centre_id ? this.centre_id : '',
+                centre_id: '',
                 programme_id: '',
                 class_type: '',
                 class_level: '',
                 class_method: '',
             },
             form: {
+                date_admission: '',
+                centre_id: '',
                 basic_info: {
-                    name: this.student_info ? this.student_info.name : '',
+                    name: this.student_info ? this.student_info.    name : '',
                     gender: this.student_info ? this.student_info.gender : '',
                     dob: this.student_info ? this.student_info.dob : '',
                 },
@@ -609,6 +622,7 @@ export default {
             }
         },
         addClass(){
+            this.form.centre_id =   this.search_form.centre_id
             this.$inertia.post(route('students.add_student_class'), this.form, {
                 onSuccess: ()=>{
                     this.show_admission_modal = false
@@ -639,6 +653,11 @@ export default {
             }
             this.show_admission_modal = status
         }
+    },
+    mounted(){
+        const now = new Date();
+        const dateString = now.toISOString().substring(0, 10);
+        this.form.date_admission = `${dateString}T05:59:00.000Z`;
     }
 }
 </script>

@@ -3,6 +3,11 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
+<style>
+.date-picker{
+    color: black;
+}
+</style>
 <template>
     <Head title="Students" />
 
@@ -136,13 +141,27 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                        <div class="mb-4">
-                                            <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
-                                                    <option value="">-- Select Programme --</option>
-                                                    <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
-                                                </select>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                            <div class="mb-4">
+                                                <label for="programme" class="block text-sm font-bold text-gray-700"> Admission Date <span class="text-red-500">*</span></label>
+                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                    <Datepicker :class="'w-full rounded-lg shadow-sm '" 
+                                                        :style="$page.props.errors.end_time ? '--dp-border-color: #fa9e9e;' : '--dp-border-color: rgb(209 213 219 / var(--tw-border-opacity)); --dp-icon-color: black'" 
+                                                        input-class-name="date-picker"
+                                                        v-model="form.date_admission" 
+                                                        :enable-time-picker="false"
+                                                        :auto-apply="true" 
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
+                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                    <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
+                                                        <option value="">-- Select Programme --</option>
+                                                        <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-4">
@@ -284,11 +303,11 @@ import Toggle from '@vueform/toggle';
 import Multiselect from '@vueform/multiselect'
 import moment from 'moment';
 import { debounce } from 'vue-debounce'
-// import route from 'vendor/tightenco/ziggy/src/js';
+
 
 export default {
     components: {
-        Head, Link, Datepicker, Toggle, Multiselect
+        Head, Link, Datepicker, Toggle, Multiselect, 
     },
     props: {
         programme_list: Object,
@@ -324,6 +343,7 @@ export default {
                 class_method: '',
             },
             form: {
+                date_admission: '',
                 student_id: '',
                 centre_id: this.centre_id ? this.centre_id : '',
                 fee: [],
@@ -464,6 +484,11 @@ export default {
         addStudent(){
             this.$inertia.post(route('students.store'), this.form)
         }
+    },
+    mounted(){
+        const now = new Date();
+        const dateString = now.toISOString().substring(0, 10);
+        this.form.date_admission = `${dateString}T05:59:00.000Z`;
     }
 }
 </script>

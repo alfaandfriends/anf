@@ -20,6 +20,7 @@ use App\Http\Controllers\ExternalUserManagementController;
 use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProgrammeController;
+use App\Http\Controllers\ProgressReportController;
 
 /* Authorized Only */
 Route::middleware(['auth'])->group(function(){
@@ -240,6 +241,14 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/math-manipulatives/configuration/create', [MathManipulativesController::class, 'configurationCreate'])->name('math_manipulatives.configuration.create');
     Route::post('/math-manipulatives/configuration/store', [MathManipulativesController::class, 'configurationStore'])->name('math_manipulatives.configuration.store');
     Route::delete('/math-manipulatives/configuration/delete/{id}', [MathManipulativesController::class, 'configurationDelete'])->name('math_manipulatives.configuration.delete');
+    
+    /* Progress Report */
+    Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');
+    Route::get('/progress-report/create', [ProgressReportController::class, 'create'])->name('progress_report.create');
+    Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store');
+    Route::get('/progress-report/edit', [ProgressReportController::class, 'edit'])->name('progress_report.edit');
+    Route::post('/progress-report/update', [ProgressReportController::class, 'update'])->name('progress_report.update');
+    Route::delete('/progress-report/destroy/{id}', [ProgressReportController::class, 'destroy'])->name('progress_report.destroy');
 });
 
 
