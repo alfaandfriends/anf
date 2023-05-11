@@ -115,9 +115,10 @@ class DiagnosticTestController extends Controller
 
         $data = array();
         foreach($request->answer_record as $answer){
-            $info['question']           = $answer['question'];
-            $info['correct']            = $answer['correct'];
-            $data[$answer['dt_id']][]   = $info;
+            $info['question']               = $answer['question'];
+            $info['question_category_id']   = $answer['question_category_id'];
+            $info['correct']                = $answer['correct'];
+            $data[$answer['dt_id']][]       = $info;
         }
 
         foreach($data as $dt_id=>$dt_data){

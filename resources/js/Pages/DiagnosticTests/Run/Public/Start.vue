@@ -87,7 +87,7 @@ import BreezeButton from '@/Components/Button.vue';
                     <p class="text-sm font-medium">Question {{ dt_index + 1 }} of {{ dt_list.length }}</p>
                     <ol role="list" class="ml-8 flex items-center space-x-5">
                         <li v-for="(data, key) in dt_list" :key="key">
-                            <div v-if="form.answer_record[key] && form.answer_record[key].correct" class="block w-2.5 h-2.5 bg-green-400 rounded-full">
+                            <div v-if="current.answer_records[key] && current.answer_records[key].correct" class="block w-2.5 h-2.5 bg-green-400 rounded-full">
                                 <span class="sr-only">{{ key }}</span>
                             </div>
                             <div v-else-if="dt_index == key" class="relative flex items-center justify-center">
@@ -97,7 +97,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <span class="relative block w-2.5 h-2.5 bg-white rounded-full" />
                                 <span class="sr-only">{{ key }}</span>
                             </div>
-                            <div v-else-if="form.answer_record[key] && !form.answer_record[key].correct" class="block w-2.5 h-2.5 bg-red-500 rounded-full">
+                            <div v-else-if="current.answer_records[key] && !current.answer_records[key].correct" class="block w-2.5 h-2.5 bg-red-500 rounded-full">
                                 <span class="sr-only">{{ key }}</span>
                             </div>
                             <div v-else class="block w-2.5 h-2.5 bg-gray-300 rounded-full">
@@ -297,6 +297,14 @@ export default{
                 this.form.answer_record.push({
                     'dt_id' : this.dt_list[this.dt_index].dt_id,
                     'question_id' : this.dt_list[this.dt_index].id,
+                    'question_category_id' : this.dt_list[this.dt_index].category_id,
+                    'question' : this.dt_list[this.dt_index].question,
+                    'correct' : this.correct
+                })
+                this.current.answer_records.push({
+                    'dt_id' : this.dt_list[this.dt_index].dt_id,
+                    'question_id' : this.dt_list[this.dt_index].id,
+                    'question_category_id' : this.dt_list[this.dt_index].category_id,
                     'question' : this.dt_list[this.dt_index].question,
                     'correct' : this.correct
                 })
@@ -326,7 +334,7 @@ export default{
                 alert('Please select at least ONE answer.')
             }
             else{
-                const correct    =   this.checkIfArrayMatch(this.selected_answer.multiple_choices, this.dt_list[this.dt_index].correct_answer)
+                const correct    =   this.checkIfArrayMatch(this.selected_answer.multiple_choices, this.dt_list[this.dt_index].correct_answer.map(Number))
                 if(correct){
                     this.current.score += 1
                     this.correct = true
@@ -452,6 +460,7 @@ export default{
                 this.$page.props.diagnostic_test_categories_label = response.data.category_label
                 this.$page.props.dt_details = response.data.dt_details
                 this.$page.props.dt_list = response.data.dt_list
+                this.current.answer_records = []
             })
             .catch(error => {
                 console.error(error);
@@ -496,6 +505,7 @@ export default{
                 const category = this.dt_list.find(c => c.id === q.question_id);
                 return { ...q, category_id: category ? category.category_id : null };
             });
+            console.log(combined)
 
             const correctAnswers    = combined.filter(answer => answer.correct);
             const splittedAnswers   = correctAnswers.reduce((acc, item) => {

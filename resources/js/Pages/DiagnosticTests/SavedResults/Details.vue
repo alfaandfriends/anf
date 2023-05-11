@@ -246,10 +246,10 @@ export default {
     methods: {
         print() {
             document.getElementById('bar-chart').style.display = 'none'
-            // document.getElementById('scatter-chart').style.display = 'none'
+            document.getElementById('scatter-chart').style.display = 'none'
             this.$htmlToPaper('report', printOptions, () => {
                 document.getElementById('bar-chart').style.display = 'block'
-                // document.getElementById('scatter-chart').style.display = 'block'
+                document.getElementById('scatter-chart').style.display = 'block'
             })
         },
         viewReport(index, dt_id, total_answers, chart_type){
@@ -467,14 +467,15 @@ export default {
             const correctAnswers    = this.$page.props.answer_record.data[index].answer_record.filter(answer => answer.correct);
             const splittedAnswers   = correctAnswers.reduce((acc, item) => {
                 if (item.correct) {
-                    if (!acc[item.category_id]) {
-                    acc[item.category_id] = 1;
+                    if (!acc[item.question_category_id]) {
+                    acc[item.question_category_id] = 1;
                     } else {
-                    acc[item.category_id]++;
+                    acc[item.question_category_id]++;
                     }
                 }
                 return acc;
             }, {})
+            
             const newObject = {};
             Object.keys(splittedAnswers).forEach((key, index) => {
                 newObject[index] = splittedAnswers[key];
