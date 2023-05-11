@@ -4,6 +4,11 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <style>
+.criterion_image img{
+    object-fit: scale-down; 
+    height: 5rem;
+}
+
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.5s ease;
@@ -72,28 +77,49 @@ import BreezeButton from '@/Components/Button.vue';
             <button type="submit" class="mt-5 w-full border p-2 bg-gray-800 text-white rounded-[4px] hover:bg-gray-700" @click="returnHome">Return Home</button>
         </div>
     </div>
-    <div class="h-screen items-center flex flex-col justify-center bg-blue-100" v-if="show_quiz">
-        <div class="p-18 bg-white border border-gray-200 rounded-lg shadow-md w-[70%] h-[70%] overflow-y-auto no-scrollbar">
-            <div class="inline-block min-w-full rounded text-center p-16">
-                <div class="px-6 pb-8">
+    <div class="h-screen items-center flex justify-center bg-blue-100" v-if="show_quiz">
+        <div class="flex flex-col bg-white rounded-lg shadow min-w-[70%]">
+            <div class="flex flex-col min-w-full rounded text-center p-16 space-y-10">
+                <div class="px-6">
                     <span class="text-2xl font-bold uppercase">{{ dt_details.name }}</span>
                 </div>
-                <div class="question_container">
-                    <div v-if="current.question != '' && current.question_type != 4" :class="!current.question_image ? 'py-12' : ''">
-                        <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5 mb-3">
-                            <h1 class="text-center font-mono font-bold text-2xl whitespace-pre-wrap">{{ current.question }}</h1>
-                        </div>
-                    </div>
-                    <div class="px-6 pb-8" v-if="current.remarks">
-                        <span class="font-bold uppercase italic text-red-500">* {{ current.remarks }} *</span>
-                    </div>
-                    <div class="flex container justify-center" v-if="current.question_image">
-                        <div class="flex flex-col justify-center w-64 h-64">
-                            <img :src="'https://dt.alfaandfriends.com/storage/' + current.question_image" class="select-none rounded-lg" alt="">
-                        </div>
+                <nav class="flex items-center justify-center" aria-label="Progress">
+                    <p class="text-sm font-medium">Question {{ dt_index + 1 }} of {{ dt_list.length }}</p>
+                    <ol role="list" class="ml-8 flex items-center space-x-5">
+                        <li v-for="(data, key) in dt_list" :key="key">
+                            <div v-if="form.answer_record[key] && form.answer_record[key].correct" class="block w-2.5 h-2.5 bg-green-400 rounded-full">
+                                <span class="sr-only">{{ key }}</span>
+                            </div>
+                            <div v-else-if="dt_index == key" class="relative flex items-center justify-center">
+                                <span class="absolute w-5 h-5 p-px flex">
+                                <span class="w-full h-full rounded-full bg-indigo-500" />
+                                </span>
+                                <span class="relative block w-2.5 h-2.5 bg-white rounded-full" />
+                                <span class="sr-only">{{ key }}</span>
+                            </div>
+                            <div v-else-if="form.answer_record[key] && !form.answer_record[key].correct" class="block w-2.5 h-2.5 bg-red-500 rounded-full">
+                                <span class="sr-only">{{ key }}</span>
+                            </div>
+                            <div v-else class="block w-2.5 h-2.5 bg-gray-300 rounded-full">
+                                <span class="sr-only">{{ key }}</span>
+                            </div>
+                        </li>
+                    </ol>
+                </nav>
+                <div v-if="current.question != '' && current.question_type != 4">
+                    <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5">
+                        <h1 class="text-center font-mono font-bold text-2xl whitespace-pre-wrap">{{ current.question }}</h1>
                     </div>
                 </div>
-                <div class="flex flex-row justify-center space-x-10 pt-20" v-if="current.question_type == 1">
+                <div class="px-6" v-if="current.remarks">
+                    <span class="font-bold uppercase italic text-red-500">* {{ current.remarks }} *</span>
+                </div>
+                <div class="flex container justify-center" v-if="current.question_image">
+                    <div class="flex flex-col justify-center w-64 h-64">
+                        <img :src="'https://dt.alfaandfriends.com/storage/' + current.question_image" class="select-none rounded-lg" alt="">
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center space-x-10" v-if="current.question_type == 1">
                     <div class="select-none flex justify-center items-center rounded bg-indigo-300 hover:bg-indigo-500 hover:text-white cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="saveSingleChoice(index)">
                         <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
                         </div>
@@ -103,7 +129,7 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                 </div>
                 <div class="flex flex-col space-y-10" v-if="current.question_type == 2">
-                    <div class="select-none flex flex-row justify-center space-x-10 pt-20">
+                    <div class="select-none flex flex-row justify-center space-x-10">
                         <div class="flex justify-center items-center rounded cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="selectMultipleChoices(index)" :class="checkSingleValueExistsInArray(index) ? 'text-white bg-indigo-500' : 'bg-indigo-300'">
                             <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
                             </div>
@@ -116,19 +142,19 @@ import BreezeButton from '@/Components/Button.vue';
                         <BreezeButton @click="saveMultipleChoices()">Confirm Answers</BreezeButton>
                     </div>
                 </div>
-                <div class="flex flex-col space-y-10" v-if="current.question_type == 3">
+                <div class="flex flex-col space-y-2" v-if="current.question_type == 3">
                     <div class="text-left space-y-2">
                         <h3 class="font-semibold text-xl">Elements</h3>
-                        <draggable class="flex flex-wrap gap-4 border-2 p-3 rounded border-gray-300 min-h-[60px]" :list="current.matrix_items" group="matrix_sorting" @change="log">
+                        <draggable class="flex flex-wrap gap-4 border-2 p-3 rounded border-gray-300 min-h-[30px]" :list="current.matrix_items" group="matrix_sorting" @change="log">
                             <template v-for="element in current.matrix_items">
-                                <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab" v-html="element"></div>
+                                <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab criterion_image" v-html="element"></div>
                             </template>
                         </draggable>
                     </div>
                     <div class="flex justify-start" v-for="answer, index in current.answers">
                         <div class="flex flex-col space-y-6 justify-center">
-                            <div class="flex items-center justify-center border-2 border-indigo-400 w-32 h-32 rounded-lg">
-                                <div class="p-1 w-32" v-if="answer.criterion.image_name != null" v-html="answer.criterion.value">
+                            <div class="flex items-center justify-center border-2 border-indigo-400 w-[5rem] h-[5rem] rounded-lg">
+                                <div class="p-1 w-[5rem]" v-if="answer.criterion.image_name != null" v-html="answer.criterion.value">
                                 </div>
                                 <div class="py-5 px-6" v-else>
                                     <span v-html="answer.criterion.value"></span>
@@ -141,59 +167,22 @@ import BreezeButton from '@/Components/Button.vue';
                             </svg>
                         </div>
                         <div class="flex flex-col space-y-6 justify-center">
-                            <!-- <template v-for="(criterion, index) in current.criterions"> -->
-                                <draggable class="flex items-center border-2 border-indigo-400 min-h-[8rem] min-w-[400px] rounded-lg space-x-2 p-3" :list="selected_answer.matrix_sorting[index]" group="matrix_sorting" @change="log">
-                                    <template v-for="element in selected_answer.matrix_sorting[index]">
-                                        <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab" v-html="element"></div>
-                                    </template>
-                                </draggable>
-                                <!-- <draggable class="flex items-center border-2 border-indigo-400 min-h-[8rem] min-w-[400px] rounded-lg space-x-2 p-3" :list="list3" group="matrix_sorting" @change="log">
-                                    <template v-for="element in selected_answer">
-                                        <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab" v-html="element"></div>
-                                    </template>
-                                </draggable> -->
-                            <!-- </template> -->
+                            <draggable class="flex flex-wrap items-center border-2 border-indigo-400 min-h-[5rem] min-w-[12rem] rounded-lg space-x-2 p-3" :list="selected_answer.matrix_sorting[index]" group="matrix_sorting" @change="log">
+                                <template v-for="element in selected_answer.matrix_sorting[index]">
+                                    <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab criterion_image" v-html="element"></div>
+                                </template>
+                            </draggable>
                         </div>
-
-                        <!-- <div class="flex flex-row justify-center space-x-6">
-                            <div class="flex items-center justify-center border-2 border-indigo-400 w-32 h-32 rounded-lg" v-for="(criterion, index) in current.criterions">
-                                <div class="p-1 w-32" v-if="criterion.image_name != null" v-html="criterion.value">
-                                </div>
-                                <div class="py-5 px-6" v-else>
-                                    <span v-html="criterion.value"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-row justify-center space-x-28">
-                            <div class="" v-for="(criterion, index) in current.criterions">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-caret-down-fill w-10 h-10" viewBox="0 0 16 16">
-                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                    </svg>
-                            </div>
-                        </div>
-                        <div class="flex justify-center">
-                            <div class="flex flex-row justify-center rounded-lg bg-indigo-50 shadow-md p-3">
-                                <draggable :animation="300" class="flex space-x-6" v-model="selected_answer.matrix_sorting">
-                                    <div class="flex items-center justify-center border-2 border-indigo-400 w-32 h-32 rounded-lg cursor-move" v-for="(element, index) in selected_answer.matrix_sorting">
-                                        <div class="p-1 w-32" v-if="element.image_name != null" v-html="element.value">
-                                        </div>
-                                        <div class="py-5 px-6" v-else>
-                                            <span v-html="element.value"></span>
-                                        </div>
-                                    </div>
-                                </draggable>
-                            </div>
-                        </div> -->
                     </div>
                     <div class="flex flex-row justify-center">
                         <BreezeButton @click="saveMatrixSorting()">Confirm Answers</BreezeButton>
                     </div>
                 </div>
                 <div class="flex flex-col space-y-10" v-if="current.question_type == 4">
-                    <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex flex-wrap items-center justify-center md:p-5 mb-3">
+                    <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex flex-wrap items-center justify-center md:p-5">
                         <h1 class="text-left font-mono font-bold text-2xl space-y-2 leading-loose whitespace-pre-line">
                             <template v-for="(part, index) in sentence_parts" :key="index">
-                                <input type="text" v-if="part.input" v-model="part.answer" class="h-10 w-32 focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-2xl border-gray-300">
+                                <input v-if="part.input" type="text" v-model="part.answer" :style="[part.answer.length < 2 ? 'width: 2.6rem': 'width: ' + (part.answer.length * 1 + 2) + 'rem']" class="text-center h-10 focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-2xl border-gray-300 tracking-widest">
                                 <template v-else>
                                     {{ part.text }}
                                 </template>
@@ -212,10 +201,10 @@ import BreezeButton from '@/Components/Button.vue';
 <script>
 import { defineComponent } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
-import { Head, Link  } from '@inertiajs/inertia-vue3';
+import { Head, Link  } from '@inertiajs/inertia-vue3'
 import { VueDraggableNext  } from 'vue-draggable-next'
-import Chart from 'chart.js/auto';
-import axios from 'axios';
+import Chart from 'chart.js/auto'
+import axios from 'axios'
 
 export default{
     components: {
@@ -337,17 +326,12 @@ export default{
                 alert('Please select at least ONE answer.')
             }
             else{
-                if (this.selected_answer.multiple_choices.length !== this.dt_list[this.dt_index].correct_answer.length) {
-                    this.dt_index += 1
+                const correct    =   this.checkIfArrayMatch(this.selected_answer.multiple_choices, this.dt_list[this.dt_index].correct_answer)
+                if(correct){
+                    this.current.score += 1
+                    this.correct = true
                 }
-                else{
-                    const correct    =   this.checkIfArrayMatch(this.selected_answer.multiple_choices, this.dt_list[this.dt_index].correct_answer)
-                    if(correct){
-                        this.current.score += 1
-                        this.correct = true
-                    }
-                    this.pushAnswer()
-                }
+                this.pushAnswer()
             }
         },
         saveMatrixSorting(){
@@ -508,7 +492,6 @@ export default{
         processGraph(){
             /* Get current level answer records and get each question's category*/
             this.current.answer_records =   this.form.answer_record.filter(item => item.dt_id === this.form.eligible_level);
-            console.log(this.current.answer_records)
             const combined = this.current.answer_records.map(q => {
                 const category = this.dt_list.find(c => c.id === q.question_id);
                 return { ...q, category_id: category ? category.category_id : null };

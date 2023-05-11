@@ -68,6 +68,7 @@ export default {
                     }
                     for (let sub_menu in this.$page.props.menu[section_key]['menus'][menu_key]['sub_menus']) {
                         const sub_menu_route    =   this.$page.props.menu[section_key]['menus'][menu_key]['sub_menus'][sub_menu]['sub_menu_route']
+                        // console.log(sub_menu_route)
                         if(route().current() && route().current().startsWith(sub_menu_route)){
                             const menu = this.menu_setting.find(menu_data => menu_data.section_key === section_key && menu_data.menu_key === menu_key);
                             menu.is_open = true
