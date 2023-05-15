@@ -28,15 +28,19 @@ import BreezeButton from '@/Components/Button.vue';
 </style>
 <template>
     <Head title="Diagnostic Test" />
-    <div class="h-screen items-center flex flex-col justify-center bg-blue-100" v-show="show_chart">
-        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md w-[80%] self-center" v-show="show_scatter_chart">
-            <canvas id="scatter-chart" class="hidden m-0" width="250" height="120" ></canvas>
-        </div>
-        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md w-[80%] self-center" v-show="show_bar_chart">
-            <canvas id="bar-chart" class="hidden m-0"></canvas>
-        </div>
-        <div class="p-6">
-            <button class="py-2 px-4 rounded shadow-md bg-gray-800 text-white hover:bg-gray-700" @click="parentDetails">Next Step</button>
+    <div class="h-screen" v-show="show_chart">
+        <div class=" items-center flex flex-col justify-center bg-blue-100">
+            <div class="flex-1 bg-gray-200">
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md w-[80%] self-center" v-show="show_scatter_chart">
+                    <canvas id="scatter-chart" class="hidden m-0" width="250" height="120" ></canvas>
+                </div>
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md w-[80%] self-center" v-show="show_bar_chart">
+                    <canvas id="bar-chart" class="hidden m-0"></canvas>
+                </div>
+                <div class="p-6">
+                    <button class="py-2 px-4 rounded shadow-md bg-gray-800 text-white hover:bg-gray-700" @click="parentDetails">Next Step</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="h-screen items-center flex flex-col justify-center bg-blue-100" v-if="show_parent_details">

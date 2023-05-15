@@ -182,6 +182,7 @@ import Multiselect from '@vueform/multiselect'
 import axios from 'axios'
 import Modal from '@/Components/Modal.vue'
 import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const printOptions = {
     name: '_blank',
@@ -208,6 +209,7 @@ export default {
     },
     data(){
         return{
+            current_chart_type: '',
             processing: false,
             processing_item: [],
             bar_chart: '',
@@ -245,14 +247,23 @@ export default {
     },
     methods: {
         print() {
-            document.getElementById('bar-chart').style.display = 'none'
-            document.getElementById('scatter-chart').style.display = 'none'
+            if(this.current_chart_type == 1){
+                document.getElementById('bar-chart').style.display = 'none'
+            }
+            else{
+                document.getElementById('scatter-chart').style.display = 'none'
+            }
             this.$htmlToPaper('report', printOptions, () => {
-                document.getElementById('bar-chart').style.display = 'block'
-                document.getElementById('scatter-chart').style.display = 'block'
+                if(this.current_chart_type == 1){
+                    document.getElementById('bar-chart').style.display = 'block'
+                }
+                else{
+                    document.getElementById('scatter-chart').style.display = 'block'
+                }
             })
         },
         viewReport(index, dt_id, total_answers, chart_type){
+            this.current_chart_type =   chart_type
             this.processing = true
             this.processing_item[index].process = true
             this.chart_data.total_answers = total_answers
@@ -299,6 +310,8 @@ export default {
                         }]
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         animation: {
                             onComplete: function(){
                                 document.getElementById('chart_image').innerHTML = '<img src="'+this.toBase64Image()+'">'
@@ -308,6 +321,17 @@ export default {
                             legend: {
                                 display: false
                             },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'end',
+                                color: '#000000',
+                                font: {
+                                    size: 14
+                                },
+                                formatter: function(value, context) {
+                                    return value;
+                                }
+                            }
                         },
                         scales: {
                             y:{
@@ -331,6 +355,7 @@ export default {
                             precision:0
                         }
                     },
+                    plugins: [ChartDataLabels]
                 })
                 this.bar_chart = BarChart
             }
@@ -427,6 +452,15 @@ export default {
                             legend: {
                                 display: false
                             },
+                            // datalabels: {
+                            //     display: true,
+                            //     anchor: 'end',
+                            //     align: 'end',
+                            //     color: '#000000',
+                            //     font: {
+                            //         size: 14
+                            //     }
+                            // }
                         },
                         scales: {
                             y:{
