@@ -85,7 +85,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                         <div class="grid grid-rows-1">
                                             <div class="grid grid-cols-2 px-4 space-x-4">
-                                                <div class="flex items-center justify-center border-2 p-6 rounded-lg">
+                                                <div class="flex items-center justify-center border-2 p-6 rounded-lg h-[300px]">
                                                     <div id="chart_image"></div>
                                                     <canvas id="scatter-chart" class="hidden m-0"></canvas>
                                                     <canvas id="bar-chart" class="hidden m-0"></canvas>
@@ -107,8 +107,12 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <dd class="text-gray-900">{{ report.result }}</dd>
                                                         </div>
                                                         <div class="py-3 flex justify-between text-sm font-medium">
-                                                            <dt class="text-gray-500">Date / Time :</dt>
-                                                            <dd class="text-gray-900">{{ report.datetime }}</dd>
+                                                            <dt class="text-gray-500">Date :</dt>
+                                                            <dd class="text-gray-900">{{ moment(report.datetime).format('DD/MM/Y') }}</dd>
+                                                        </div>
+                                                        <div class="py-3 flex justify-between text-sm font-medium">
+                                                            <dt class="text-gray-500">Time :</dt>
+                                                            <dd class="text-gray-900">{{ moment(report.datetime).format('h:mm A') }}</dd>
                                                         </div>
                                                     </dl>
                                                 </div>
@@ -256,9 +260,11 @@ export default {
             this.$htmlToPaper('report', printOptions, () => {
                 if(this.current_chart_type == 1){
                     document.getElementById('bar-chart').style.display = 'block'
+                    document.getElementById('chart_image').style.display = 'none'
                 }
                 else{
                     document.getElementById('scatter-chart').style.display = 'block'
+                    document.getElementById('chart_image').style.display = 'none'
                 }
             })
         },

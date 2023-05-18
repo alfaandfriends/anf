@@ -71,51 +71,64 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        // $student_id         =   DB::table('students')->insertGetId([
-        //     'children_id'    =>  $request->student_id,
-        // ]);
+        $student_id         =   DB::table('students')->insertGetId([
+            'children_id'    =>  $request->children_id,
+        ]);
 
-        // $student_fee_id     =   DB::table('student_fees')->insertGetId([
-        //     'student_id'        =>  $student_id,
-        //     'centre_id'         =>  $request->centre_id,
-        //     'fee_id'            =>  $request->fee['id'],
-        //     'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
-        // ]);
+        $student_fee_id     =   DB::table('student_fees')->insertGetId([
+            'student_id'        =>  $student_id,
+            'centre_id'         =>  $request->centre_id,
+            'fee_id'            =>  $request->fee['id'],
+            'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
+        ]);
 
-        // foreach($request->classes as $key => $class_id){
-        //     DB::table('student_classes')->insert([
-        //         'student_fee_id'    =>  $student_fee_id,
-        //         'class_id'          =>  $class_id,
-        //     ]);
-        // }
+        foreach($request->classes as $key => $class_id){
+            DB::table('student_classes')->insert([
+                'student_fee_id'    =>  $student_fee_id,
+                'class_id'          =>  $class_id,
+            ]);
+        }
 
-        // /* Create progress report */
-        // $programme_id   =   DB::table('programme_level_fees')
-        //                         ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
-        //                         ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-        //                         ->where('programme_level_fees.id', $request->fee['id'])
-        //                         ->pluck('programmes.id')
-        //                         ->first();
+        /* Create progress report */
+        $programme_id   =   DB::table('programme_level_fees')
+                                ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                ->where('programme_level_fees.id', $request->fee['id'])
+                                ->pluck('programmes.id')
+                                ->first();
 
-        // $report_info        =   DB::table('progress_report_configs')->where('programme_id', $programme_id)->select('table', 'columns')->first();
-        // $report_table       =   $report_info->table;
-        // $report_columns     =   Str($report_info->columns);
+        $progress_report_config_id  =   DB::table('progress_report_configs')->where('programme_id', $programme_id)->pluck('id')->first();
 
-        // $progress_report_id =   DB::table('progress_reports')->insertGetId([
-        //     'student_id'        =>  $request->student_id,
-        //     'centre_id'         =>  $request->centre_id,
-        //     'programme_id'      =>  $programme_id,
-        //     'month'             =>  Carbon::parse($request->date_admission)->format('Y-m-d')
-        // ]);
+        $progress_report_id =   DB::table('progress_reports')->insertGetId([
+            'student_fee_id'                =>  $student_fee_id,
+            'progress_report_config_id'     =>  $progress_report_config_id,
+            'month'                         =>  Carbon::parse($request->date_admission)->format('Y-m-d')
+        ]);
 
-        // $columns                                =   explode(", ", $report_columns);
-        // $values                                 =   array_fill(0, count($columns), null);
-        // $empty_record                           =   array_combine($columns, $values);
-        // $empty_record['progress_report_id']     =   $progress_report_id;
+        $class_days     =   DB::table('classes')->whereIn('id', $request->classes)->select('class_day_id as class_day')->get();
+        $total_class    =   count($class_days) * 4;
 
-        // DB::table($report_table)->insert($empty_record);
+        $total_date_available   =   0;
+        foreach($class_days as $data){
+            $date_available =   $this->getDatesForDayOfWeekFromCustomDate($data->class_day, Carbon::parse($request->date_admission)->format('Y-m-d'));
+            foreach($date_available as $date){
+                DB::table('progress_report_details')->insert([
+                    'progress_report_id'    => $progress_report_id,
+                    'date'                  => $date
+                ]);
+                $total_date_available++;
+            }
+        }
 
-        dd($this->getDatesForDayOfWeekFromCustomDate(1, Carbon::parse($request->date_admission)->format('Y-m-d')));
+        $remaining_days =   $total_class - $total_date_available;
+        if($remaining_days != 0){
+            for($i = 1; $i <= $remaining_days; $i++){
+                DB::table('progress_report_details')->insert([
+                    'progress_report_id'    => $progress_report_id,
+                    'date'                  => now()
+                ]);
+            }
+        }
 
         return redirect(route('students'))->with(['type'=>'success', 'message'=>'Admission success !']);
     }
@@ -289,27 +302,20 @@ class StudentController extends Controller
 
     /* Usage: $this->getDatesForDayOfWeekFromCustomDate(1, '2023-05-02') */
     public function getDatesForDayOfWeekFromCustomDate($dayOfWeek, $customDate) {
-        $dates = array();
+        $dates = [];
         $startDate = new DateTime($customDate);
-        $year = $startDate->format('Y');
-        $month = $startDate->format('m');
-        $date = new DateTime("$year-$month-01");
-        if ($startDate->format('N') != $dayOfWeek) {
-            $startDate->modify("next Monday");
-            $startDate->modify("+".($dayOfWeek-1)." days");
-        }
-        if ($startDate->format('j') < $date->format('j')) {
-            $startDate->modify("+7 days");
-        }
-        $weeksProcessed = 0;
-        while ($startDate->format('m') == $month) {
-            $dates[] = $startDate->format('Y-m-d');
-            $startDate->modify("+7 days");
-            $weeksProcessed++;
-            if ($weeksProcessed >= 4) {
-                break;
+        $endDate = clone $startDate;
+        $endDate->modify('last day of this month');
+
+        $count = 0;
+        while ($startDate <= $endDate && $count < 4) {
+            if ($startDate->format('N') == $dayOfWeek) {
+                $dates[] = $startDate->format('Y-m-d');
+                $count++;
             }
+            $startDate->modify('+1 day');
         }
+        
         return $dates;
     }
 }

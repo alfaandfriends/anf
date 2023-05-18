@@ -29,7 +29,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="flex">
                                 <div class="flex w-full relative text-gray-400">
                                     <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3" :style="'top:30%'"></SearchIcon>
-                                    <input class="w-full border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none text-base font-sans leading-snug text-gray-400 block pl-10"
+                                    <input class="w-full border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none text-gray-800 font-sans leading-snug text-gray-400 block pl-10"
                                             type="text" v-model="params.search" placeholder="Search">
                                 </div>
                             </div>
@@ -152,105 +152,50 @@ import BreezeButton from '@/Components/Button.vue';
                                             :placeholder="'Month / Year'" 
                                 />
                             </div>
-                            <!-- <div class="flex lg:w-36">
-                                <Multiselect 
-                                    v-model="params.day"
-                                    valueProp="id"
-                                    :appendNewOption="false"
-                                    :searchable="true"
-                                    :options="$page.props.class_days"
-                                    :clearOnSelect="false"
-                                    :canClear="false"
-                                    :canDeselect="true"
-                                    trackBy="name"
-                                    label="name"
-                                    placeholder="Day"
-                                    :classes="{
-                                        container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10 px-40 pr-16 ',
-                                        containerDisabled: 'cursor-default bg-gray-100',
-                                        containerOpen: 'rounded-b-none border-2 border-gray-300',
-                                        containerOpenTop: 'rounded-t-none',
-                                        containerActive: '',
-                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                        multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none border-2 border-gray-300 focus:border-transparent text-base font-sans bg-white rounded-lg pl-3.5',
-                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-400',
-                                        caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none',
-                                        caretOpen: 'rotate-180 pointer-events-auto',
-                                        clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                        clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                        spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                        dropdownHidden: 'hidden',
-                                        options: 'flex flex-col p-0 m-0 list-none w-full',
-                                        optionsTop: 'flex-col-reverse',
-                                        group: 'p-0 m-0',
-                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                        groupLabelPointable: 'cursor-pointer',
-                                        groupLabelPointed: 'bg-gray-300 text-black-700',
-                                        groupLabelSelected: 'bg-gray-100 text-black',
-                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                        groupOptions: 'p-0 m-0',
-                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                        optionPointed: 'text-gray-800 bg-gray-100',
-                                        optionSelected: 'text-white bg-indigo-500',
-                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                        spacer: 'h-9 py-px box-content',
-                                        assist: 'hidden',
-                                    }"
-                                />
-                            </div> -->
                         </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="table-auto min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-300">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Name</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Total Class</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Total Present</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Total Absent</th>
-                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">#</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Total Present</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Total Absent</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-if="!$page.props.math_manipulatives.data">
+                                <tr v-if="!$page.props.progress_reports.data.length">
                                     <td class="text-center" colspan="10">
                                         <div class="p-3">
                                             No Record Found! 
                                         </div>
                                     </td>
-                                </tr> 
-                                <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.math_manipulatives.data" :key="result.id">
+                                </tr>
+                                <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.progress_reports.data" :key="result.report_id">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-700">{{ ++index }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ result.name }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ result.student_name }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ result.folder_name }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ result.total_present + '/' + result.total_class }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ moment(result.created_at, "HH:mm:ss").format('d/m/Y') }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ result.total_absent + '/' + result.total_class }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="danger" @click="deleteFolder(result.id)">Delete</BreezeButton>
+                                            <BreezeButton buttonType="blue" @click="viewProgressReport(result.progress_report_id)">Progress Report</BreezeButton>
+                                            <BreezeButton buttonType="info" class="py-1 px-2" @click="viewProgressReport(result.progress_report_id)">Show / Print</BreezeButton>
                                         </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <Pagination :page_data="$page.props.math_manipulatives"></Pagination>
+                        <Pagination :page_data="$page.props.progress_reports"></Pagination>
                     </div>
                 </div>
             </div>
@@ -291,22 +236,30 @@ export default {
             confirmationRoute: '',
             open_modal: false,
             params: {
-                search: '',
-                centre_id: '',
-                programme_id: '',
-                date: '',
+                search: this.$page.props.filter.search ? this.$page.props.filter.search : '',
+                centre_id: this.$page.props.filter.centre_id ? this.$page.props.filter.centre_id : '',
+                programme_id: this.$page.props.filter.programme_id ? this.$page.props.filter.programme_id : '',
+                date: this.$page.props.filter.date ? this.$page.props.filter.date : '',
                 day: ''
             }
         }
     },
     watch: {
+        params: {
+            handler(){
+                if(this.params){
+                    this.$inertia.get(this.route('progress_report'), this.params, { replace: true, preserveState: true})
+                }
+            },
+            deep: true
+        }
     },
     methods: {
-        openNewTab(){
-            window.open(route('math_manipulatives.play'), '_blank')
+        viewProgressReport(progress_report_id){
+            this.$inertia.get(this.route('progress_report.details'), {'progress_report_id': progress_report_id}, { replace: true, preserveState: true})
         },
         deleteFolder(math_manipulative_id){
-            this.confirmationRoute = 'math_manipulatives.configuration.delete'
+            this.confirmationRoute = 'progress_reports.configuration.delete'
             this.confirmationData = math_manipulative_id
             this.isOpen = true
         }

@@ -30,7 +30,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="mt-1 flex rounded-md.shadow-sm">
                                                 <Multiselect 
                                                     v-debounce="findStudents"
-                                                    v-model="form.student_id"
+                                                    v-model="form.children_id"
                                                     @close="clearStudents"
                                                     valueProp="id"
                                                     :loading="searching_students"
@@ -344,7 +344,7 @@ export default {
             },
             form: {
                 date_admission: '',
-                student_id: '',
+                children_id: '',
                 centre_id: this.centre_id ? this.centre_id : '',
                 fee: [],
                 classes: [],
@@ -412,7 +412,7 @@ export default {
             }
         },
         findClasses(){
-            if(this.form.student_id && this.search_form.centre_id && this.search_form.programme_id && this.search_form.class_level && this.search_form.class_type && this.search_form.class_method){
+            if(this.form.children_id && this.search_form.centre_id && this.search_form.programme_id && this.search_form.class_level && this.search_form.class_type && this.search_form.class_method){
                 this.searching_classes = true   
                 this.enable_container.show_fee = false
                 this.list.available_classes = []
