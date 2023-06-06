@@ -17,7 +17,7 @@ import BreezeButton from '@/Components/Button.vue';
 }
 </style>
 <template>
-    <Head title="Math Manipulatives" />
+    <Head title="Progress Report" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
@@ -47,16 +47,14 @@ import BreezeButton from '@/Components/Button.vue';
                                     label="label"
                                     placeholder="Centre"
                                     :classes="{
-                                        container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10 px-40 pr-16 ',
+                                        container: 'relative mx-auto w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
                                         containerDisabled: 'cursor-default bg-gray-100',
                                         containerOpen: 'rounded-b-none',
-                                        containerOpenTop: 'rounded-t-none',
                                         containerActive: 'border-2 border-gray-300',
                                         singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
                                         singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                        multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none border-2 border-gray-300 focus:border-white text-base font-sans bg-white rounded-lg',
-                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-400',
+                                        search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-gray-300 text-base font-sans bg-white rounded-lg',
+                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
                                         caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none',
                                         caretOpen: 'rotate-180 pointer-events-auto',
                                         clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
@@ -66,7 +64,6 @@ import BreezeButton from '@/Components/Button.vue';
                                         dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
                                         dropdownHidden: 'hidden',
                                         options: 'flex flex-col p-0 m-0 list-none w-full',
-                                        optionsTop: 'flex-col-reverse',
                                         group: 'p-0 m-0',
                                         groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
                                         groupLabelPointable: 'cursor-pointer',
@@ -83,7 +80,6 @@ import BreezeButton from '@/Components/Button.vue';
                                         noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
                                         noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                         fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                        spacer: 'h-9 py-px box-content',
                                     }"
                                 />
                             </div>
@@ -101,16 +97,14 @@ import BreezeButton from '@/Components/Button.vue';
                                     label="name"
                                     placeholder="Programme"
                                     :classes="{
-                                        container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10 px-40 pr-16 ',
+                                        container: 'relative mx-auto w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
                                         containerDisabled: 'cursor-default bg-gray-100',
-                                        containerOpen: 'rounded-b-none border-2 border-gray-300',
-                                        containerOpenTop: 'rounded-t-none',
-                                        containerActive: '',
+                                        containerOpen: 'rounded-b-none',
+                                        containerActive: 'border-2 border-gray-300',
                                         singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
                                         singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                        multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none border-2 border-gray-300 focus:border-transparent text-base font-sans bg-white rounded-lg',
-                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-400',
+                                        search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-gray-300 text-base font-sans bg-white rounded-lg',
+                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
                                         caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none',
                                         caretOpen: 'rotate-180 pointer-events-auto',
                                         clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
@@ -120,7 +114,6 @@ import BreezeButton from '@/Components/Button.vue';
                                         dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
                                         dropdownHidden: 'hidden',
                                         options: 'flex flex-col p-0 m-0 list-none w-full',
-                                        optionsTop: 'flex-col-reverse',
                                         group: 'p-0 m-0',
                                         groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
                                         groupLabelPointable: 'cursor-pointer',
@@ -137,8 +130,6 @@ import BreezeButton from '@/Components/Button.vue';
                                         noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
                                         noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                         fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                        spacer: 'h-9 py-px box-content',
-                                        assist: 'hidden',
                                     }"
                                 />
                             </div>
@@ -188,7 +179,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="blue" @click="viewProgressReport(result.progress_report_id)">Progress Report</BreezeButton>
+                                            <BreezeButton buttonType="blue" @click="viewProgressReport(result.progress_report_id)">View Details</BreezeButton>
                                             <BreezeButton buttonType="info" class="py-1 px-2" @click="viewProgressReport(result.progress_report_id)">Show / Print</BreezeButton>
                                         </div>
                                     </td>
@@ -256,7 +247,7 @@ export default {
     },
     methods: {
         viewProgressReport(progress_report_id){
-            this.$inertia.get(this.route('progress_report.details'), {'progress_report_id': progress_report_id}, { replace: true, preserveState: true})
+            this.$inertia.get(this.route('progress_report.details'), {'progress_report_id': progress_report_id}, { })
         },
         deleteFolder(math_manipulative_id){
             this.confirmationRoute = 'progress_reports.configuration.delete'

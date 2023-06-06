@@ -15,7 +15,7 @@
                         <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600">
                             <div class="flex">
                                 <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3" :style="'top:21%'"></SearchIcon>
-                                <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
+                                <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                         type="text" v-model="params.search" placeholder="Search">
                             </div>
                             <div class="flex" v-if="$page.props.can.centre_create_access">

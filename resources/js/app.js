@@ -6,7 +6,20 @@ import { InertiaProgress } from '@inertiajs/progress';
 import VueGuidedTour from "@alfaandfriends/vue-guided-tour";
 import { vue3Debounce } from 'vue-debounce';
 import  VueHtmlToPaper from './Plugins/VueHtmlToPaper'
+import axios from 'axios';
 
+/* Intercept axios request */
+axios.interceptors.response.use(
+    response => response,
+    error => {
+      if (error.response && error.response.status === 401) {
+        // Unauthorized response, perform redirect
+        // Example: Redirect to login page
+        window.location.href = '/login';
+      }
+      return Promise.reject(error);
+    }
+  );
 
 /* App title */
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'ALFA and Friends Centre';

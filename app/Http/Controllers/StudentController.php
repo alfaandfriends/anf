@@ -112,7 +112,7 @@ class StudentController extends Controller
         foreach($class_days as $data){
             $date_available =   $this->getDatesForDayOfWeekFromCustomDate($data->class_day, Carbon::parse($request->date_admission)->format('Y-m-d'));
             foreach($date_available as $date){
-                DB::table('progress_report_details')->insert([
+                DB::table('progress_report_summaries')->insert([
                     'progress_report_id'    => $progress_report_id,
                     'date'                  => $date
                 ]);
@@ -123,7 +123,7 @@ class StudentController extends Controller
         $remaining_days =   $total_class - $total_date_available;
         if($remaining_days != 0){
             for($i = 1; $i <= $remaining_days; $i++){
-                DB::table('progress_report_details')->insert([
+                DB::table('progress_report_summaries')->insert([
                     'progress_report_id'    => $progress_report_id,
                     'date'                  => now()
                 ]);
