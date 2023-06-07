@@ -49,10 +49,9 @@ const submit = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex items-center justify-end">
-                                        <div class="flex space-x-2">
-                                            <BreezeButton type="submit">{{ (category) ? 'Update' : 'Create' }}</BreezeButton>
-                                        </div>
+                                    <div class="flex items-center justify-between space-x-2">
+                                        <BreezeButton :route="route('product-categories')" buttonType="gray">Back</BreezeButton>
+                                        <BreezeButton type="submit">{{ (category) ? 'Update' : 'Create' }}</BreezeButton>
                                     </div>
                                 </div>
                             </div>

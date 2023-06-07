@@ -222,7 +222,6 @@ Breadcrumbs::for('dt.settings.details.edit', function (BreadcrumbTrail $trail) {
 
 /* Product Categories */
 Breadcrumbs::for('product-categories', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
     $trail->push('Product Categories', route('product-categories'));
 });
 

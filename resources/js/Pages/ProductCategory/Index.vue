@@ -35,7 +35,7 @@ const handleDelete = (id) => {
                                 </div> -->
                             </div>
 
-                            <BreezeButton :route="route('product-categories.create')" @click="newAdmission(params.centre_id)">New Product Category</BreezeButton></div>
+                            <BreezeButton :route="route('product-categories.create')">New Product Category</BreezeButton></div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-300">
