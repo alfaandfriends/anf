@@ -15,7 +15,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="flex space-x-2">
                             <div class="flex relative text-gray-400 focus-within:text-gray-600">
                                 <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3" :style="'top:30%'"></SearchIcon>
-                                <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
+                                <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                         type="text" v-model="params.search" placeholder="Search">
                             </div>
                         </div>
@@ -85,7 +85,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                         <div class="grid grid-rows-1">
                                             <div class="grid grid-cols-2 px-4 space-x-4">
-                                                <div class="flex items-center justify-center border-2 p-6 rounded-lg">
+                                                <div class="flex items-center justify-center border-2 p-6 rounded-lg h-[300px]">
                                                     <div id="chart_image"></div>
                                                     <canvas id="scatter-chart" class="hidden m-0"></canvas>
                                                     <canvas id="bar-chart" class="hidden m-0"></canvas>
@@ -107,8 +107,12 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <dd class="text-gray-900">{{ report.result }}</dd>
                                                         </div>
                                                         <div class="py-3 flex justify-between text-sm font-medium">
-                                                            <dt class="text-gray-500">Date / Time :</dt>
-                                                            <dd class="text-gray-900">{{ report.datetime }}</dd>
+                                                            <dt class="text-gray-500">Date :</dt>
+                                                            <dd class="text-gray-900">{{ moment(report.datetime).format('DD/MM/Y') }}</dd>
+                                                        </div>
+                                                        <div class="py-3 flex justify-between text-sm font-medium">
+                                                            <dt class="text-gray-500">Time :</dt>
+                                                            <dd class="text-gray-900">{{ moment(report.datetime).format('h:mm A') }}</dd>
                                                         </div>
                                                     </dl>
                                                 </div>
@@ -182,6 +186,7 @@ import Multiselect from '@vueform/multiselect'
 import axios from 'axios'
 import Modal from '@/Components/Modal.vue'
 import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const printOptions = {
     name: '_blank',
@@ -208,6 +213,7 @@ export default {
     },
     data(){
         return{
+            current_chart_type: '',
             processing: false,
             processing_item: [],
             bar_chart: '',
@@ -245,14 +251,25 @@ export default {
     },
     methods: {
         print() {
-            document.getElementById('bar-chart').style.display = 'none'
-            // document.getElementById('scatter-chart').style.display = 'none'
+            if(this.current_chart_type == 1){
+                document.getElementById('bar-chart').style.display = 'none'
+            }
+            else{
+                document.getElementById('scatter-chart').style.display = 'none'
+            }
             this.$htmlToPaper('report', printOptions, () => {
-                document.getElementById('bar-chart').style.display = 'block'
-                // document.getElementById('scatter-chart').style.display = 'block'
+                if(this.current_chart_type == 1){
+                    document.getElementById('bar-chart').style.display = 'block'
+                    document.getElementById('chart_image').style.display = 'none'
+                }
+                else{
+                    document.getElementById('scatter-chart').style.display = 'block'
+                    document.getElementById('chart_image').style.display = 'none'
+                }
             })
         },
         viewReport(index, dt_id, total_answers, chart_type){
+            this.current_chart_type =   chart_type
             this.processing = true
             this.processing_item[index].process = true
             this.chart_data.total_answers = total_answers
@@ -299,6 +316,8 @@ export default {
                         }]
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         animation: {
                             onComplete: function(){
                                 document.getElementById('chart_image').innerHTML = '<img src="'+this.toBase64Image()+'">'
@@ -308,6 +327,17 @@ export default {
                             legend: {
                                 display: false
                             },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'end',
+                                color: '#000000',
+                                font: {
+                                    size: 14
+                                },
+                                formatter: function(value, context) {
+                                    return value;
+                                }
+                            }
                         },
                         scales: {
                             y:{
@@ -331,6 +361,7 @@ export default {
                             precision:0
                         }
                     },
+                    plugins: [ChartDataLabels]
                 })
                 this.bar_chart = BarChart
             }
@@ -427,6 +458,15 @@ export default {
                             legend: {
                                 display: false
                             },
+                            // datalabels: {
+                            //     display: true,
+                            //     anchor: 'end',
+                            //     align: 'end',
+                            //     color: '#000000',
+                            //     font: {
+                            //         size: 14
+                            //     }
+                            // }
                         },
                         scales: {
                             y:{
@@ -467,14 +507,15 @@ export default {
             const correctAnswers    = this.$page.props.answer_record.data[index].answer_record.filter(answer => answer.correct);
             const splittedAnswers   = correctAnswers.reduce((acc, item) => {
                 if (item.correct) {
-                    if (!acc[item.category_id]) {
-                    acc[item.category_id] = 1;
+                    if (!acc[item.question_category_id]) {
+                    acc[item.question_category_id] = 1;
                     } else {
-                    acc[item.category_id]++;
+                    acc[item.question_category_id]++;
                     }
                 }
                 return acc;
             }, {})
+            
             const newObject = {};
             Object.keys(splittedAnswers).forEach((key, index) => {
                 newObject[index] = splittedAnswers[key];

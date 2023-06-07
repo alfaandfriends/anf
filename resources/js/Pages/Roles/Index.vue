@@ -17,7 +17,7 @@
                                 Add Role
                             </BreezeButton>
                             <!-- <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
-                            <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
+                            <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                     type="text" v-model="params.search" placeholder="Search"> -->
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">

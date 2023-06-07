@@ -115,9 +115,10 @@ class DiagnosticTestController extends Controller
 
         $data = array();
         foreach($request->answer_record as $answer){
-            $info['question']           = $answer['question'];
-            $info['correct']            = $answer['correct'];
-            $data[$answer['dt_id']][]   = $info;
+            $info['question']               = $answer['question'];
+            $info['question_category_id']   = $answer['question_category_id'];
+            $info['correct']                = $answer['correct'];
+            $data[$answer['dt_id']][]       = $info;
         }
 
         foreach($data as $dt_id=>$dt_data){
@@ -635,7 +636,6 @@ class DiagnosticTestController extends Controller
 
             $dt_answers =   DB::table('diagnostic_test_answers')->where('question_id', $id)->first();
             $data       =   unserialize($dt_answers->answer_data);
-            $images     =   $data['answers'];
             
             if($data['question_type'] == 3){
                 foreach($data['answers'] as $answer){
@@ -653,6 +653,7 @@ class DiagnosticTestController extends Controller
                 }
             }
             else{
+                $images     =   $data['answers'];   
                 foreach($images as $image){
                     if($image['image_name']){
                         if(Storage::exists('diagnostic_test_photo/'.$image['image_name'])){

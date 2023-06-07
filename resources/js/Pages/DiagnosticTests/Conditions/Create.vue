@@ -6,7 +6,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="General Setting" />
+    <Head title="Diagnostic Test" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>

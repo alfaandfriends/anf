@@ -4,7 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Classes" />
+    <Head title="Art Gallery" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
@@ -52,7 +52,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                                     multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
                                                     search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 sm:text-sm font-sans bg-white rounded-md pl-3.5',
-                                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-400',
+                                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
                                                     clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
                                                     clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
                                                     dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
@@ -150,7 +150,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <label class="block text-sm text-gray-700 font-bold mb-2"> Artwork File </label>
                                         <div class="flex flex-row justify-start space-x-2">
                                             <div class="flex-column text-center">
-                                                <img :src="form.artwork.image_url" alt="">
+                                                <img class="object-scale-down w-full" :src="form.artwork.image_url" alt="">
                                             </div>
                                             <div class="flex-column">
                                                 <div class="flex flex-col space-y-1">

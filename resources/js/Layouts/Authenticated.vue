@@ -68,6 +68,7 @@ export default {
                     }
                     for (let sub_menu in this.$page.props.menu[section_key]['menus'][menu_key]['sub_menus']) {
                         const sub_menu_route    =   this.$page.props.menu[section_key]['menus'][menu_key]['sub_menus'][sub_menu]['sub_menu_route']
+                        // console.log(sub_menu_route)
                         if(route().current() && route().current().startsWith(sub_menu_route)){
                             const menu = this.menu_setting.find(menu_data => menu_data.section_key === section_key && menu_data.menu_key === menu_key);
                             menu.is_open = true
@@ -170,7 +171,7 @@ export default {
                             <template v-for="menu, menu_key in section.menus">
                                 <template v-if="menu.menu_route">
                                     <div class="flex space-x-1">
-                                        <div class="px-0.5 rounded-r" :class="route().current(menu.menu_route) ? 'bg-red-500' : ''"></div>
+                                        <div class="px-0.5 rounded-r bg-red-500" v-if="route().current(menu.menu_route)"></div>
                                         <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current(menu.menu_route)" class="rounded-lg flex-auto">
                                             <span class="mr-2" v-html="menu.menu_icon"></span>
                                             <span class="select-none tracking-wide">{{ menu.menu_name }}</span> 
@@ -189,7 +190,7 @@ export default {
                                         <div class="mb-3 ml-3 space-y-1 pb-3" v-if="checkMenuIsOpen(section_key, menu_key)">
                                             <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
                                                 <div class="flex space-x-1">
-                                                    <div class="px-0.5 rounded-r" :class="route().current() && route().current().startsWith(sub_menu.sub_menu_route) ? 'bg-red-500' : ''"></div>
+                                                    <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(sub_menu.sub_menu_route)"></div>
                                                     <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''" 
                                                                     :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg flex-auto"
                                                     >

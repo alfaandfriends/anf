@@ -9,14 +9,14 @@ import BreezeButton from '@/Components/Button.vue';
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <div class="py-4 px-4">
-            <!-- <div class="overflow-x-auto"> -->
+            <div class="overflow-x-auto">
                 <div class="mx-auto">
                     <div class="align-middle inline-block min-w-full px-2">
                         <div class="flex justify-between mb-4">
                             <div class="flex space-x-2">
                                 <div class="flex relative text-gray-400 focus-within:text-gray-600">
                                     <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3" :style="'top:30%'"></SearchIcon>
-                                    <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
+                                    <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                             type="text" v-model="params.search" placeholder="Search">
                                 </div>
                             </div>
@@ -67,7 +67,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                     </div>
                 </div>
-            <!-- </div> -->
+            </div>
             <ConfirmationModal 
                 :show="isOpen" 
                 @close="isOpen = false"

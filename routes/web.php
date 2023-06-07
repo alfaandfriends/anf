@@ -17,8 +17,12 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ExternalUserManagementController;
+use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProgrammeController;
+use App\Http\Controllers\ProgressReportController;
+use App\Http\Controllers\TeacherResources;
+use App\Http\Controllers\TeacherResourcesController;
 
 /* Authorized Only */
 Route::middleware(['auth'])->group(function(){
@@ -231,11 +235,45 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/art-gallery/get_themes/{id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes');
     Route::get('/art-gallery/get_lessons/{id}', [ArtGalleryController::class, 'getLessons'])->name('art_gallery.get_lessons');
     Route::get('/art-gallery/get_activities/{id}', [ArtGalleryController::class, 'getActivities'])->name('art_gallery.get_activities');
+    
+    /* Math Manipulatives */
+    Route::get('/math-manipulatives', [MathManipulativesController::class, 'index'])->name('math_manipulatives');
+    Route::get('/math-manipulatives/play', [MathManipulativesController::class, 'play'])->name('math_manipulatives.play');
+    Route::get('/math-manipulatives/configuration', [MathManipulativesController::class, 'configuration'])->name('math_manipulatives.configuration');
+    Route::get('/math-manipulatives/configuration/create', [MathManipulativesController::class, 'configurationCreate'])->name('math_manipulatives.configuration.create');
+    Route::post('/math-manipulatives/configuration/store', [MathManipulativesController::class, 'configurationStore'])->name('math_manipulatives.configuration.store');
+    Route::delete('/math-manipulatives/configuration/delete/{id}', [MathManipulativesController::class, 'configurationDelete'])->name('math_manipulatives.configuration.delete');
+    
+    /* Teacher Resources */
+    Route::get('/teacher-resources', [TeacherResourcesController::class, 'index'])->name('teacher_resources');
+    Route::get('/teacher-resources/create', [TeacherResourcesController::class, 'create'])->name('teacher_resources.create');
+    Route::post('/teacher-resources/store', [TeacherResourcesController::class, 'store'])->name('teacher_resources.store');
+    Route::get('/teacher-resources/edit', [TeacherResourcesController::class, 'edit'])->name('teacher_resources.edit');
+    Route::post('/teacher-resources/update', [TeacherResourcesController::class, 'update'])->name('teacher_resources.update');
+    Route::get('/teacher-resources/get-resource', [TeacherResourcesController::class, 'getResource'])->name('teacher_resources.get_resource');
+
+    /* Progress Report */
+    Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');
+    Route::get('/progress-report/details', [ProgressReportController::class, 'details'])->name('progress_report.details');
+    // Route::get('/progress-report/create', [ProgressReportController::class, 'create'])->name('progress_report.create');
+    // Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store');
+    // Route::get('/progress-report/edit', [ProgressReportController::class, 'edit'])->name('progress_report.edit');
+    // Route::post('/progress-report/update', [ProgressReportController::class, 'update'])->name('progress_report.update');
+    // Route::delete('/progress-report/destroy/{id}', [ProgressReportController::class, 'destroy'])->name('progress_report.destroy');
+
+    /* Maths select options */
+    Route::post('/progress-report/math/store', [ProgressReportController::class, 'storeMath'])->name('progress_report.store_math');
+    Route::get('/progress-report/math/get-units-lessons/{report_id}', [ProgressReportController::class, 'getMathUnitsLessons'])->name('progress_report.get_math_units_lessons');
+    Route::get('/progress-report/math/get-units-lessons-objectives/{report_id}', [ProgressReportController::class, 'getMathUnitsLessonsObjectives'])->name('progress_report.get_math_units_lessons_objectives');
+    Route::get('/progress-report/math/get-terms-books/{report_id}', [ProgressReportController::class, 'getMathTermsBooks'])->name('progress_report.get_math_terms_books');
+    Route::get('/progress-report/math/get-units/{term_book_id}', [ProgressReportController::class, 'getMathUnits'])->name('progress_report.get_math_units');
+    Route::get('/progress-report/math/get-lessons/{unit_id}', [ProgressReportController::class, 'getMathLessons'])->name('progress_report.get_math_lessons');
+    Route::get('/progress-report/math/get-objectives/{lesson_id}', [ProgressReportController::class, 'getMathObjectives'])->name('progress_report.get_math_objectives');
 });
 
 
 Route::prefix('diagnostic-test')->group(function () {
-    Route::get('/', [DiagnosticTestController::class, 'dtMain'])->middleware('auth')->name('diagnostic_test')->middleware('permission:view_test_access');
+    Route::get('/', [DiagnosticTestController::class, 'dtMain'])->middleware('auth')->name('diagnostic_test.authenticated')->middleware('permission:view_test_access');
     Route::get('/public', [DiagnosticTestController::class, 'dtMain'])->name('public.diagnostic_test');
     Route::post('/start', [DiagnosticTestController::class, 'dtStart'])->name('diagnostic_test.run');
     Route::get('/new-level', [DiagnosticTestController::class, 'dtNewLevel'])->name('diagnostic_test.new_level');

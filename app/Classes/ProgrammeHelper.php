@@ -44,4 +44,10 @@ class ProgrammeHelper {
 
         return true;
     }
+
+    public static function getProgrammeLevels($programme_id){
+        $programme_levels  =   DB::table('programme_levels')->where('programme_id', $programme_id)->select('level')->distinct()->get();
+
+        return $programme_levels;
+    }
 }

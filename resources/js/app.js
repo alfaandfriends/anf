@@ -7,8 +7,22 @@ import { InertiaProgress } from '@inertiajs/progress';
 import VueGuidedTour from "@alfaandfriends/vue-guided-tour";
 import { vue3Debounce } from 'vue-debounce';
 import  VueHtmlToPaper from './Plugins/VueHtmlToPaper'
+import axios from 'axios';
 
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+
+/* Intercept axios request */
+axios.interceptors.response.use(
+    response => response,
+    error => {
+      if (error.response && error.response.status === 401) {
+        // Unauthorized response, perform redirect
+        // Example: Redirect to login page
+        window.location.href = '/login';
+      }
+      return Promise.reject(error);
+    }
+);
 
 
 /* App title */

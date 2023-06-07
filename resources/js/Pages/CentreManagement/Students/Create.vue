@@ -3,6 +3,11 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
+<style>
+.date-picker{
+    color: black;
+}
+</style>
 <template>
     <Head title="Students" />
 
@@ -25,7 +30,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="mt-1 flex rounded-md.shadow-sm">
                                                 <Multiselect 
                                                     v-debounce="findStudents"
-                                                    v-model="form.student_id"
+                                                    v-model="form.children_id"
                                                     @close="clearStudents"
                                                     valueProp="id"
                                                     :loading="searching_students"
@@ -53,7 +58,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                                         multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
                                                         search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5',
-                                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-400',
+                                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
                                                         clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
                                                         clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
                                                         dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
@@ -107,7 +112,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                                         multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
                                                         search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5',
-                                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-400',
+                                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
                                                         clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
                                                         clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
                                                         dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
@@ -136,13 +141,27 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                        <div class="mb-4">
-                                            <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
-                                                    <option value="">-- Select Programme --</option>
-                                                    <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
-                                                </select>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                            <div class="mb-4">
+                                                <label for="programme" class="block text-sm font-bold text-gray-700"> Admission Date <span class="text-red-500">*</span></label>
+                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                    <Datepicker :class="'w-full rounded-lg shadow-sm '" 
+                                                        :style="$page.props.errors.end_time ? '--dp-border-color: #fa9e9e;' : '--dp-border-color: rgb(209 213 219 / var(--tw-border-opacity)); --dp-icon-color: black'" 
+                                                        input-class-name="date-picker"
+                                                        v-model="form.date_admission" 
+                                                        :enable-time-picker="false"
+                                                        :auto-apply="true" 
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
+                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                    <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
+                                                        <option value="">-- Select Programme --</option>
+                                                        <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-4">
@@ -284,11 +303,11 @@ import Toggle from '@vueform/toggle';
 import Multiselect from '@vueform/multiselect'
 import moment from 'moment';
 import { debounce } from 'vue-debounce'
-// import route from 'vendor/tightenco/ziggy/src/js';
+
 
 export default {
     components: {
-        Head, Link, Datepicker, Toggle, Multiselect
+        Head, Link, Datepicker, Toggle, Multiselect, 
     },
     props: {
         programme_list: Object,
@@ -324,7 +343,8 @@ export default {
                 class_method: '',
             },
             form: {
-                student_id: '',
+                date_admission: '',
+                children_id: '',
                 centre_id: this.centre_id ? this.centre_id : '',
                 fee: [],
                 classes: [],
@@ -392,7 +412,7 @@ export default {
             }
         },
         findClasses(){
-            if(this.form.student_id && this.search_form.centre_id && this.search_form.programme_id && this.search_form.class_level && this.search_form.class_type && this.search_form.class_method){
+            if(this.form.children_id && this.search_form.centre_id && this.search_form.programme_id && this.search_form.class_level && this.search_form.class_type && this.search_form.class_method){
                 this.searching_classes = true   
                 this.enable_container.show_fee = false
                 this.list.available_classes = []
@@ -464,6 +484,11 @@ export default {
         addStudent(){
             this.$inertia.post(route('students.store'), this.form)
         }
+    },
+    mounted(){
+        const now = new Date();
+        const dateString = now.toISOString().substring(0, 10);
+        this.form.date_admission = `${dateString}T05:59:00.000Z`;
     }
 }
 </script>
