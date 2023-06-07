@@ -1,8 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue';
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
-import { Head, Link, usePage, useForm } from '@inertiajs/inertia-vue3';
+import { Head } from '@inertiajs/inertia-vue3';
+import { Inertia } from '@inertiajs/inertia'
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid';
@@ -14,10 +14,14 @@ const props = defineProps({
         type: Object,
     },
 });
+
+const handleDelete = (id) => {
+    Inertia.visit(route('product-categories.destroy', id), { method: 'delete' });
+}
 </script>
 
 <template>
-    <Head title="Students" />
+    <Head title="Product Category" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
@@ -89,59 +93,44 @@ const props = defineProps({
                                     /> -->
                                 </div>
                             </div>
-                            <BreezeButton @click="newAdmission(params.centre_id)">New Admission</BreezeButton>
-                        </div>
+
+                            <BreezeButton :route="route('product-categories.create')" @click="newAdmission(params.centre_id)">New Product Category</BreezeButton></div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-300">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Name</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Programme</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Parent</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Status</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-if="!categories.length">
+                                    <tr v-if="!categories.data.length">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
                                                 No Record Found!
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr class="hover:bg-gray-200" v-for="(students, index) in categories" :key="students.ID">
+                                    <tr class="hover:bg-gray-200" v-for="(category, index) in categories.data" :key="index">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-700">{{ ++index }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ students.name }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ students.programme_name }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ students.parent_name }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="students.status == true ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ students.status == true ? 'Active' : 'Not Active' }} </span>
+                                            <div class="text-sm font-medium text-gray-900">{{ category.name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <BreezeButton buttonType="warning" title="Edit Class" @click="editStudent(students.id)">
-                                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="text-white-600 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                                        </svg> -->
-                                                        Edit Student
+                                                    <BreezeButton :route="route('product-categories.edit', category.id)" buttonType="warning" title="Edit Category">
+                                                        Edit
                                                     </BreezeButton>
                                                 </div>
-                                                <!-- <div class="flex">
-                                                    <BreezeButton buttonType="danger" title="Delete Class" @click="deleteStudent(students.id)">
+                                                <div class="flex">
+                                                    <BreezeButton @click="handleDelete(category.id)" buttonType="danger" title="Delete Category">
                                                         Delete
                                                     </BreezeButton>
-                                                </div> -->
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

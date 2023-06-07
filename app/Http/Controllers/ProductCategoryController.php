@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductCategoryRequest;
+use App\Http\Requests\UpdateProductCategoryRequest;
 use App\Models\ProductCategory;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ProductCategoryController extends Controller
@@ -15,8 +20,7 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        // $data['products'] = Product::all();
-        $data['categories'] = [];
+        $data['categories'] = ProductCategory::paginate(5);
         return Inertia::render('ProductCategory/Index', $data);
     }
 
@@ -27,7 +31,7 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('ProductCategory/Create');
     }
 
     /**
@@ -36,9 +40,21 @@ class ProductCategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductCategoryRequest $request)
     {
-        //
+        try {
+            DB::transaction(function () use ($request) {
+                ProductCategory::create([
+                    'name' => $request->category_name,
+                ]);
+            });
+
+            return redirect(route('product-categories'))->with(['type'=>'success', 'message'=>'Product Category added successfully !']);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return redirect(route('product-categories'))->with(['type'=>'error', 'message'=>'Opps something went wrong']);
+        }
     }
 
     /**
@@ -60,7 +76,7 @@ class ProductCategoryController extends Controller
      */
     public function edit(ProductCategory $productCategory)
     {
-        //
+        return Inertia::render('ProductCategory/Create', ['category' => $productCategory]);
     }
 
     /**
@@ -70,9 +86,20 @@ class ProductCategoryController extends Controller
      * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProductCategory $productCategory)
+    public function update(UpdateProductCategoryRequest $request, ProductCategory $productCategory)
     {
-        //
+        try {
+            DB::transaction(function () use ($request, $productCategory) {
+                $productCategory->name = $request->category_name;
+                $productCategory->save();
+            });
+
+            return redirect(route('product-categories'))->with(['type'=>'success', 'message'=>'Product Category updated successfully !']);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return redirect(route('product-categories'))->with(['type'=>'error', 'message'=>'Opps something went wrong']);
+        }
     }
 
     /**
@@ -83,6 +110,16 @@ class ProductCategoryController extends Controller
      */
     public function destroy(ProductCategory $productCategory)
     {
-        //
+        try {
+            DB::transaction(function () use ($productCategory) {
+                $productCategory->delete();
+            });
+
+            return redirect(route('product-categories'))->with(['type'=>'success', 'message'=>'Product Category deleted successfully !']);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return redirect(route('product-categories'))->with(['type'=>'error', 'message'=>'Opps something went wrong']);
+        }
     }
 }
