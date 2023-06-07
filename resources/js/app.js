@@ -1,12 +1,15 @@
-require('./bootstrap');
+import './bootstrap';
+import '../css/app.css';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
-import { InertiaProgress } from '@inertiajs/progress';  
+import { InertiaProgress } from '@inertiajs/progress';
 import VueGuidedTour from "@alfaandfriends/vue-guided-tour";
 import { vue3Debounce } from 'vue-debounce';
 import  VueHtmlToPaper from './Plugins/VueHtmlToPaper'
 import axios from 'axios';
+
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
 /* Intercept axios request */
 axios.interceptors.response.use(
@@ -19,7 +22,8 @@ axios.interceptors.response.use(
       }
       return Promise.reject(error);
     }
-  );
+);
+
 
 /* App title */
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'ALFA and Friends Centre';
@@ -34,12 +38,13 @@ document.addEventListener('inertia:finish', cleanApp)
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: name => name.startsWith('Components/') ? require(`./${name}.vue`) : require(`./Pages/${name}.vue`),
+    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(VueGuidedTour)
             .use(VueHtmlToPaper)
-            .directive('debounce', vue3Debounce({ 
+            .directive('debounce', vue3Debounce({
                 lock: true,
             }))
             .mixin({ methods: { route } })
@@ -48,7 +53,7 @@ createInertiaApp({
 }).then(cleanApp);
 
 /* Progress bar color */
-InertiaProgress.init({   
+InertiaProgress.init({
     color: '#9E7BFF',
     showSpinner: true,
 });
