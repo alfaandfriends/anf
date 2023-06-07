@@ -11,7 +11,6 @@ import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } 
 import Toast from '@/Components/Toast.vue'
 import VueGuidedTour from "@alfaandfriends/vue-guided-tour/src/components/vueGuidedTour.vue"
 import Breadcrumbs from '@/Components/Breadcrumbs.vue'
-import { fortawesome } from '@fortawesome/free-regular-svg-icons'
 import TimeAgo from '@/Components/TimeAgo.vue'
 
 export default {
@@ -49,14 +48,14 @@ export default {
         toggleMenu(section_key, menu_key) {
             const sectionKeyToFind = section_key.toString();
             const menuKeyToFind = menu_key.toString();
-            
+
             const menu = this.menu_setting.find(menu_data => menu_data.section_key === sectionKeyToFind && menu_data.menu_key === menuKeyToFind);
             menu.is_open = !menu.is_open;
         },
         checkMenuIsOpen(section_key, menu_key){
             const sectionKeyToFind = section_key.toString();
             const menuKeyToFind = menu_key.toString();
-            
+
             const menu = this.menu_setting.find(menu_data => menu_data.section_key === sectionKeyToFind && menu_data.menu_key === menuKeyToFind);
             return menu.is_open
         },
@@ -161,7 +160,7 @@ export default {
         <!-- Sidebar -->
         <div class="min-h-screen bg-gray-50 step-1 lg:w-[21rem]">
             <div class="flex">
-                <nav class="fixed top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-[18rem] sm:translate-x-0" 
+                <nav class="fixed top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-[18rem] sm:translate-x-0"
                      :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
                 >
                     <span class="flex justify-center items-center border-b border-dashed px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
@@ -174,7 +173,7 @@ export default {
                                         <div class="px-0.5 rounded-r bg-red-500" v-if="route().current(menu.menu_route)"></div>
                                         <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current(menu.menu_route)" class="rounded-lg flex-auto">
                                             <span class="mr-2" v-html="menu.menu_icon"></span>
-                                            <span class="select-none tracking-wide">{{ menu.menu_name }}</span> 
+                                            <span class="select-none tracking-wide">{{ menu.menu_name }}</span>
                                         </BreezeNavLink>
                                     </div>
                                 </template>
@@ -183,7 +182,7 @@ export default {
                                         <div class="flex items-center justify-between px-4 py-2 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200 rounded-lg" :class="menu_opened.section_key == section_key && menu_opened.menu_key == menu_key ? 'text-white tracking-wide bg-gray-800' : ''" role="button" @click="toggleMenu(section_key, menu_key)">
                                             <div class="flex items-center">
                                                 <span class="mr-2" v-html="menu.menu_icon"></span>
-                                                <span class="select-none tracking-wide">{{ menu.menu_name }}</span> 
+                                                <span class="select-none tracking-wide">{{ menu.menu_name }}</span>
                                             </div>
                                             <ChevronRightIcon :class="{ 'rotate-90': checkMenuIsOpen(section_key, menu_key) }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                         </div>
@@ -191,7 +190,7 @@ export default {
                                             <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
                                                 <div class="flex space-x-1">
                                                     <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(sub_menu.sub_menu_route)"></div>
-                                                    <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''" 
+                                                    <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''"
                                                                     :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg flex-auto"
                                                     >
                                                     <span class="select-none tracking-normal">{{ sub_menu.sub_menu_name }}</span>
@@ -245,7 +244,7 @@ export default {
                                         </Link>
                                     </div>
                                 </div>
-        
+
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                                 <!-- Settings Dropdown -->
                                     <div class="ml-3 relative">
@@ -330,32 +329,32 @@ export default {
                                                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
                                                         </svg>
                                                         <span>Profile</span>
-                                                        
+
                                                     </BreezeDropdownLink>
                                                     <BreezeDropdownLink class="flex space-x-2" :href="route('children')" v-if="this.$page.props.can.children_access">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 640 512">
                                                             <path d="M160 128c-35.3 0-64-28.7-64-64s28.7-64 64-64s64 28.7 64 64s-28.7 64-64 64zM88 480V400H70.2c-10.9 0-18.6-10.7-15.2-21.1l31.1-93.4L57.5 323.3c-10.7 14.1-30.8 16.8-44.8 6.2s-16.8-30.7-6.2-44.8L65.4 207c22.4-29.6 57.5-47 94.6-47s72.2 17.4 94.6 47l58.9 77.7c10.7 14.1 7.9 34.2-6.2 44.8s-34.2 7.9-44.8-6.2l-28.6-37.8L265 378.9c3.5 10.4-4.3 21.1-15.2 21.1H232v80c0 17.7-14.3 32-32 32s-32-14.3-32-32V400H152v80c0 17.7-14.3 32-32 32s-32-14.3-32-32zM480 128c-35.3 0-64-28.7-64-64s28.7-64 64-64s64 28.7 64 64s-28.7 64-64 64zm-8 256v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V300.5L395.1 321c-9.4 15-29.2 19.4-44.1 10s-19.4-29.2-10-44.1l51.7-82.1c17.6-27.9 48.3-44.9 81.2-44.9h12.3c33 0 63.7 16.9 81.2 44.9L619.1 287c9.4 15 4.9 34.7-10 44.1s-34.7 4.9-44.1-10L552 300.5V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V384H472z"/>
                                                         </svg>
                                                         <span>Children</span>
-                                                        
+
                                                     </BreezeDropdownLink>
                                                     <BreezeDropdownLink class="flex space-x-2 border-t" :href="route('logout')" method="post" as="button">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
                                                             <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
                                                             <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
                                                         </svg>
-                                                        <span>Log Out</span> 
+                                                        <span>Log Out</span>
                                                     </BreezeDropdownLink>
                                                 </div>
                                             </template>
                                         </BreezeDropdown>
                                     </div>
                                 </div>
-        
+
                                 <!-- Hamburger -->
-                                <div class="-mr-2 flex items-center sm:hidden"> 
-                                    <button class=" inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out" 
-                                            @click="showingNavigationDropdown = !showingNavigationDropdown, sideBar = !sideBar" 
+                                <div class="-mr-2 flex items-center sm:hidden">
+                                    <button class=" inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                                            @click="showingNavigationDropdown = !showingNavigationDropdown, sideBar = !sideBar"
                                     >
                                         <MenuIcon class="h-6 w-6" :class="{hidden: showingNavigationDropdown, 'inline-flex': !showingNavigationDropdown}"/>
                                         <XIcon class="h-6 w-6" :class="{hidden: !showingNavigationDropdown, 'inline-flex': showingNavigationDropdown}"/>
@@ -364,7 +363,7 @@ export default {
                             </div>
                         </div>
                     </nav>
-        
+
                     <!-- Page Heading -->
                     <header class="bg-indigo-600 shadow" v-if="$slots.header">
                         <div class="flex mx-auto py-3 px-4 sm:px-6 lg:px-6 justify-between">
