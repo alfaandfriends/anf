@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('product_variation_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_variation_options_id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->unsignedBigInteger('product_variation_id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('name', 50);
             $table->bigInteger('price');
             $table->integer('stock');
             $table->string('sku');
-            $table->integer('sales');
+            $table->integer('sales')->default(0);
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('product_variation_options_id')->references('id')->on('product_variation_options');
+            $table->foreign('product_variation_id')->references('id')->on('product_variations');
         });
     }
 

@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductImage;
+use App\Models\ProductVariation;
+use App\Models\ProductVariationItem;
+use App\Models\ProductVariationOption;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,13 +49,38 @@ class ProductController extends Controller
     {
         try {
             DB::transaction(function () use ($request) {
-                Product::create([
+                $product = Product::create([
                     'name' => $request->product_name,
                     'description' => $request->product_description,
                     'price' => $request->product_price * 100,
                     'stock' => $request->product_stock,
                     'product_category_id' => $request->product_category,
                 ]);
+
+                foreach ($request->all() as $key => $value) {
+                    if ($request->hasFile($key)) {
+                        ProductImage::create([
+                            'name' => $request->file($key)->store('products'),
+                            'product_id' => $product->id,
+                        ]);
+                    }
+                }
+
+                foreach ($request->product_variation_items as $key => $variation) {
+                    $productVariation = ProductVariation::create([
+                        'name' => $variation['name'],
+                        'product_id' => $product->id,
+                    ]);
+                    foreach ($variation['options'] as $key => $option) {
+                        ProductVariationItem::create([
+                            'name' => $option['name'],
+                            'price' => $option['price'],
+                            'stock' => $option['stock'],
+                            'sku' => $option['sku'],
+                            'product_variation_id' => $productVariation->id,
+                        ]);
+                    }
+                }
             });
 
             return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product added successfully !']);
