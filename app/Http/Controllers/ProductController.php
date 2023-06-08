@@ -15,8 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data['products'] = Product::all();
-        return Inertia::render('Products/Index', $data);
+        $data['products'] = Product::paginate(5);
+        return Inertia::render('Product/Index', $data);
     }
 
     /**
@@ -26,7 +26,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Product/Create');
     }
 
     /**
