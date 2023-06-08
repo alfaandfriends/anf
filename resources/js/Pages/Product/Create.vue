@@ -5,6 +5,7 @@ import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
 import ToggleRadio from '@/Components/ToggleRadio.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
 import Modal from '@/Components/Modal.vue';
+import Variation from '@/Components/Variation.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
 
@@ -20,14 +21,6 @@ const props = defineProps({
 const currentStep = ref(1);
 const productType = ref('diy');
 const addCategory = ref(false);
-const variations = ref([
-    {
-        name: '',
-        options: [
-            { value: ''}
-        ]
-    }
-]);
 const previewUrl = ref([
     {label: 'Cover Image', name: 'product_cover_image', value: null},
     {label: 'Image 1', name: 'product_image_1', value: null},
@@ -62,7 +55,7 @@ const productForm = useForm({
     product_image_5: null,
     product_image_6: null,
     product_variation: 'disabled',
-    product_variation_items: variations.value,
+    product_variation_items: [],
 });
 
 const productCategoryForm = useForm({
@@ -104,29 +97,6 @@ const updatePreviewUrl = (name, value) => {
         }
     });
 }
-
-const addVariation = () => {
-    variations.value.push(
-        {
-            name: '',
-            options: [
-                { value: ''}
-            ]
-        }
-    );
-};
-
-const removeVariation = (index) => {
-    variations.value.splice(index, 1);
-};
-
-const addVariationOption = (index) => {
-    variations.value[index].options.push({ value: '' });
-};
-
-const removeVariationOption = (variationIndex, variationOptionIndex) => {
-    variations.value[variationIndex].options.splice(variationOptionIndex, 1);
-};
 
 const submit = () => {
     productForm[formMethod](formUrl, {
@@ -251,40 +221,7 @@ const submitProductCategoryForm = () => {
                                                     </div>
                                                 </div>
                                                 <div v-if="productForm.product_variation === 'enabled'">
-                                                    <div class="flex">
-                                                        <h2 class="focus:outline-none text-3xl font-bold text-gray-800 mt-6 mr-4">Variations</h2>
-                                                        <div class="w-full bg-white shadow-md rounded-md overflow-hidden">
-                                                            <div v-for="(variation, variationIndex) in variations" :key="variationIndex" class="border-b border-gray-200 px-4 py-6">
-                                                                <div class="flex items-center justify-between py-2">
-                                                                    <h2 class="text-xl font-semibold">Variation {{ variationIndex+1 }}</h2>
-                                                                    <BreezeButton @click="removeVariation(variationIndex)" buttonType="danger">X</BreezeButton>
-                                                                </div>
-                                                                <hr class="bg-gray-500 mx-auto mb-4" />
-
-                                                                <div class="mb-4">
-                                                                    <label :for="'variation_'+variationIndex" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
-                                                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                                                        <input type="text" :name="'variation_'+variationIndex" :id="'variation_'+variationIndex" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="variation.name" autocomplete="off"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-4">
-                                                                    <div class="flex items-center justify-between py-2">
-                                                                        <label class="block text-sm text-gray-700 font-bold"> Option <span class="text-red-500">*</span></label>
-                                                                        <BreezeButton @click="addVariationOption(variationIndex)" buttonType="success" class="text-sm py-1 px-2">Add option</BreezeButton>
-                                                                    </div>
-                                                                    <div v-for="(option, variationOptionIndex) in variation.options" :key="variationOptionIndex" class="mt-1 flex rounded-md shadow-sm">
-                                                                        <input type="text" :name="'variation_option_'+variationOptionIndex" :id="'variation_option_'+variationOptionIndex" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-tl-md rounded-bl-md sm:text-sm" v-model="option.value" autocomplete="off"/>
-                                                                        <BreezeButton @click="removeVariationOption(variationIndex, variationOptionIndex)" buttonType="danger" class="py-2 px-4 rounded-tr-md rounded-br-md">X</BreezeButton>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex items-center justify-center my-10">
-                                                        <div @click="addVariation" class="w-full text-center border border-solid border-black hover:bg-gray-100 cursor-pointer px-6 py-4">
-                                                            <span class="text-center">Add variation</span>
-                                                        </div>
-                                                    </div>
+                                                    <Variation @update:variation="productForm.product_variation_items = $event" />
                                                 </div>
                                             </div>
                                         </div>

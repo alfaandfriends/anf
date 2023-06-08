@@ -11,6 +11,9 @@ const variations = ref([
         ]
     }
 ]);
+
+const emit = defineEmits(['update:variation']);
+
 const addVariation = () => {
     variations.value.push(
         {
@@ -20,18 +23,22 @@ const addVariation = () => {
             ]
         }
     );
+    emit('update:variation', variations.value);
 };
 
 const removeVariation = (index) => {
     variations.value.splice(index, 1);
+    emit('update:variation', variations.value);
 };
 
 const addVariationOption = (index) => {
     variations.value[index].options.push({ name: '',  price: '',  stock: '',  sku: ''  });
+    emit('update:variation', variations.value);
 };
 
 const removeVariationOption = (variationIndex, index) => {
     variations.value[variationIndex].options.splice(index, 1);
+    emit('update:variation', variations.value);
 };
 
 const addVariationOptionVariation = (variationIndex, index) => {
@@ -41,6 +48,7 @@ const addVariationOptionVariation = (variationIndex, index) => {
             { name: '',  price: '',  stock: '',  sku: '' }
         ]
     });
+    emit('update:variation', variations.value);
 };
 </script>
 
@@ -52,11 +60,11 @@ const addVariationOptionVariation = (variationIndex, index) => {
                     <div class="mb-4">
                         <label :for="'variation_'+index" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
                         <div class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text" :name="'variation_'+index" :id="'variation_'+index" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="variation.name" autocomplete="off"/>
+                            <input @input="emit('update:variation', variations)" type="text" :name="'variation_'+index" :id="'variation_'+index" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="variation.name" autocomplete="off"/>
                         </div>
                     </div>
                     <div class="mb-4">
-                        <VariationOption :options="variation.options" :variationIndex="index" @add:option="addVariationOption" @remove:option="removeVariationOption" @add:variation="addVariationOptionVariation" />
+                        <VariationOption :options="variation.options" :variationIndex="index" @add:option="addVariationOption" @remove:option="removeVariationOption" @add:variation="addVariationOptionVariation" @update:variation="emit('update:variation', variations)" />
                     </div>
                     <hr class="bg-gray-500 mx-auto my-4" />
                     <div class="flex items-center justify-end py-2">
