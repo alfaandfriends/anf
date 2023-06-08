@@ -4,6 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
 import ToggleRadio from '@/Components/ToggleRadio.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
+import Modal from '@/Components/Modal.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
 
@@ -11,9 +12,14 @@ const props = defineProps({
     product: {
         type: Object,
     },
+    categories: {
+        type: Object,
+    },
 });
 
 const currentStep = ref(1);
+const productType = ref('diy');
+const addCategory = ref(false);
 const previewUrl = ref([
     {label: 'Cover Image', name: 'product_cover_image', value: null},
     {label: 'Image 1', name: 'product_image_1', value: null},
@@ -24,14 +30,19 @@ const previewUrl = ref([
     {label: 'Image 6', name: 'product_image_6', value: null},
 ]);
 
-const radioOptions = [
+const variationOptions = [
     { label: 'Enable Variation', value: 'enable' },
     { label: 'Disable Variation', value: 'disable' },
 ];
 
-const form = useForm({
+const productTypeOptions = [
+    { label: 'Create Your Own Product', value: 'diy' },
+    { label: 'Alfa and Friends Products', value: 'default' },
+];
+
+const productForm = useForm({
     product_name: (props.product) ? props.product.name : '',
-    product_descriptions: '',
+    product_description: '',
     product_category: '',
     product_price: '',
     product_stock: 0,
@@ -45,7 +56,11 @@ const form = useForm({
     product_variation: 'disable',
 });
 
-const formUrl = (props.product) ? route('product-categories.update', props.product.id): route('product-categories.store');
+const productCategoryForm = useForm({
+    category_name: '',
+});
+
+const formUrl = (props.product) ? route('products.update', props.product.id): route('products.store');
 const formMethod = (props.product) ? 'put' : 'post';
 
 const nextStep = () => {
@@ -67,7 +82,7 @@ const handleFileChange = (file, name) => {
             updatePreviewUrl(name, reader.result);
         };
         reader.readAsDataURL(file);
-        form[name] = file;
+        productForm[name] = file;
     } else {
         updatePreviewUrl(name, null);
     }
@@ -82,10 +97,17 @@ const updatePreviewUrl = (name, value) => {
 }
 
 const submit = () => {
-    // form[formMethod](formUrl, {
-    //     onFinish: () => form.reset(),
-    // });
-    console.log(form);
+    productForm[formMethod](formUrl, {
+        onSuccess: () => productForm.reset(),
+    });
+};
+const submitProductCategoryForm = () => {
+    productCategoryForm.post(route('product-categories.store'), {
+        onSuccess: () => {
+            form.reset();
+            addCategory.value = false;
+        },
+    });
 };
 </script>
 
@@ -130,70 +152,86 @@ const submit = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div v-if="currentStep === 1">
-                                            <h1
-                                                tabindex="0"
-                                                role="heading"
-                                                aria-label="profile information"
-                                                class="focus:outline-none text-3xl font-bold text-gray-800 mt-12"
-                                            >
-                                                Choose Product Type
-                                            </h1>
-                                        </div>
-                                        <div v-if="currentStep === 2">
-                                            <div class="mb-4">
-                                                <label for="category_name" class="block text-sm text-gray-700 font-bold mb-2"> Product Images <span class="text-red-500">*</span></label>
-                                                <div class="flex flex-wrap justify-center">
-                                                    <div v-for="item in previewUrl" :key="item.name" class="flex flex-col items-center p-2 m-2">
-                                                        <UploadPreview :previewUrl="item.value" @update:value="handleFileChange($event, item.name)" />
-                                                        <label :for="item.label" class="text-sm text-gray-500 text-center"> {{ item.label }} </label>
+                                        <div class="px-10">
+                                            <div v-if="currentStep === 1">
+                                                <h1
+                                                    tabindex="0"
+                                                    role="heading"
+                                                    aria-label="profile information"
+                                                    class="focus:outline-none text-3xl font-bold text-gray-800 mt-12"
+                                                >
+                                                    Choose Product Type
+                                                </h1>
+                                                <div class="my-4">
+                                                    <ToggleRadio :options="productTypeOptions" :value="productType" @update:value="productType = $event;" />
+                                                </div>
+                                            </div>
+                                            <div v-if="currentStep === 2">
+                                                <div class="mb-4">
+                                                    <label for="category_name" class="block text-sm text-gray-700 font-bold mb-2"> Product Images <span class="text-red-500">*</span></label>
+                                                    <div class="flex flex-wrap justify-center">
+                                                        <div v-for="item in previewUrl" :key="item.name" class="flex flex-col items-center p-2 m-2">
+                                                            <UploadPreview :previewUrl="item.value" @update:value="handleFileChange($event, item.name)" />
+                                                            <label :for="item.label" class="text-sm text-gray-500 text-center"> {{ item.label }} </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <label for="product_name" class="block text-sm text-gray-700 font-bold mb-2"> Product Name <span class="text-red-500">*</span></label>
+                                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                                        <input type="text" name="product_name" id="product_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="productForm.product_name" autocomplete="off"/>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <label for="product_description" class="block text-sm text-gray-700 font-bold mb-2"> Product Description <span class="text-red-500">*</span></label>
+                                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                                        <textarea name="product_description" id="product_description" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="productForm.product_description" cols="30" rows="10"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Product Name <span class="text-red-500">*</span></label>
+                                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                                        <select name="product_category" id="product_category" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="productForm.product_category">
+                                                            <option value="">Please Select</option>
+                                                            <option v-for="(category, index) in categories" :key="index" :value="category.id"> {{ category.name }} </option>
+                                                        </select>
+                                                        <BreezeButton @click="addCategory = true" buttonType="warning">Add New Category</BreezeButton>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mb-4">
-                                                <label for="product_name" class="block text-sm text-gray-700 font-bold mb-2"> Product Name <span class="text-red-500">*</span></label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <input type="text" name="product_name" id="product_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.product_name" autocomplete="off"/>
+                                            <div v-if="currentStep === 3">
+                                                <div class="mb-4">
+                                                    <ToggleRadio :options="variationOptions" :value="productForm.product_variation" @update:value="productForm.product_variation = $event;" />
                                                 </div>
-                                            </div>
-                                            <div class="mb-4">
-                                                <label for="product_descriptions" class="block text-sm text-gray-700 font-bold mb-2"> Product Description <span class="text-red-500">*</span></label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <input type="text" name="product_descriptions" id="product_descriptions" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.product_descriptions" autocomplete="off"/>
+                                                <div class="mb-4">
+                                                    <label for="product_price" class="block text-sm text-gray-700 font-bold"> Price <span class="text-red-500">*</span></label>
+                                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                                        <input type="text" name="product_price" id="product_price" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="productForm.product_price" autocomplete="off"/>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div v-if="currentStep === 3">
-                                            <div class="mb-4">
-                                                <ToggleRadio :options="radioOptions" :value="form.product_variation" @update:value="form.product_variation = $event;" />
-                                            </div>
-                                            <div class="mb-4">
-                                                <label for="product_price" class="block text-sm text-gray-700 font-bold"> Price <span class="text-red-500">*</span></label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <input type="text" name="product_price" id="product_price" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.product_price" autocomplete="off"/>
-                                                </div>
-                                            </div>
-                                            <div class="mb-4">
-                                                <label for="product_stock" class="block text-sm text-gray-700 font-bold"> Stock <span class="text-red-500">*</span></label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <input type="number" step="1" name="product_stock" id="product_stock" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.product_stock" autocomplete="off"/>
+                                                <div class="mb-4">
+                                                    <label for="product_stock" class="block text-sm text-gray-700 font-bold"> Stock <span class="text-red-500">*</span></label>
+                                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                                        <input type="number" step="1" name="product_stock" id="product_stock" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="productForm.product_stock" autocomplete="off"/>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-between space-x-2">
-                                        <BreezeButton @click="previousStep" buttonType="gray">Back</BreezeButton>
+                                        <BreezeButton v-if="currentStep != 1" @click="previousStep" buttonType="gray">Back</BreezeButton>
+                                        <BreezeButton v-if="currentStep === 1" :route="route('products')" buttonType="gray">Back</BreezeButton>
                                         <BreezeButton v-if="currentStep != 3" @click="nextStep">
                                             Next Step
                                             <svg
-                                                class="mt-1 ml-3"
+                                                class="ml-3"
                                                 width="12"
                                                 height="8"
                                                 viewBox="0 0 12 8"
                                                 fill="none"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path d="M8.01 3H0V5H8.01V8L12 4L8.01 0V3Z" fill="#fff" />
+                                                <path d="M8.01 3H0V5H8.01V8L12 4L8.01 0V3Z" fill="currentColor" />
                                             </svg>
                                         </BreezeButton>
                                         <BreezeButton v-if="currentStep === 3" type="submit">{{ (product) ? 'Update' : 'Create' }}</BreezeButton>
@@ -205,5 +243,30 @@ const submit = () => {
                 </form>
             </div>
         </div>
+
+        <Modal :showModal="addCategory" modalType="sm" @hideModal="addCategory = false">
+            <template v-slot:header>
+                <h3 class="text-gray-900 text-xl font-semibold">
+                    Add New Product Category
+                </h3>
+            </template>
+            <template v-slot:content>
+                <div class="p-6 grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
+                    <BreezeValidationErrors class="mb-4" />
+                    <div class="mb-4">
+                        <label for="category_name" class="block text-sm text-gray-700 font-bold"> Product Category Name <span class="text-red-500">*</span></label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                            <input type="text" name="category_name" id="category_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="productCategoryForm.category_name" autocomplete="off"/>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:footer>
+                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                    <BreezeButton buttonType="gray" @click="addCategory = false">Cancel</BreezeButton>
+                    <BreezeButton @click="submitProductCategoryForm">Create</BreezeButton>
+                </div>
+            </template>
+        </Modal>
     </BreezeAuthenticatedLayout>
 </template>

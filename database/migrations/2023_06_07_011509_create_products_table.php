@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->bigInteger('price');
             $table->integer('stock');
-            $table->integer('sales');
+            $table->integer('sales')->default(0);
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('product_category_id')->references('id')->on('product_categories');

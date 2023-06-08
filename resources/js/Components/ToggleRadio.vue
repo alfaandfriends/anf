@@ -26,7 +26,7 @@ const props = defineProps({
         required: true
     }
 });
-const emit = defineEmits(['update:checked']);
+const emit = defineEmits(['update:value']);
 
 const selectedOption = ref(props.value);
 

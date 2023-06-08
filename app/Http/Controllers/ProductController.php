@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
+use App\Models\ProductCategory;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -26,7 +31,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Product/Create');
+        $data['categories'] = ProductCategory::select('id', 'name')->get();
+        return Inertia::render('Product/Create', $data);
     }
 
     /**
@@ -35,9 +41,25 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        //
+        try {
+            DB::transaction(function () use ($request) {
+                Product::create([
+                    'name' => $request->product_name,
+                    'description' => $request->product_description,
+                    'price' => $request->product_price * 100,
+                    'stock' => $request->product_stock,
+                    'product_category_id' => $request->product_category,
+                ]);
+            });
+
+            return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product added successfully !']);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return redirect(route('products'))->with(['type'=>'error', 'message'=>'Opps something went wrong']);
+        }
     }
 
     /**
