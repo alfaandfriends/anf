@@ -119,23 +119,23 @@ const props = defineProps({
                                             <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ product.programme_name }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ product.price }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ product.parent_name }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ product.stock }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ product.parent_name }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ product.sales }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <BreezeButton :route="route('products.edit', category.id)" buttonType="warning" title="Edit Category">
+                                                    <BreezeButton :route="route('products.edit', product.id)" buttonType="warning" title="Edit Product">
                                                         Edit
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="flex">
-                                                    <BreezeButton @click="handleDelete(category.id)" buttonType="danger" title="Delete Category">
+                                                    <BreezeButton @click="handleDelete(product.id)" buttonType="danger" title="Delete Product">
                                                         Delete
                                                     </BreezeButton>
                                                 </div>
