@@ -24,7 +24,30 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data['products'] = Product::paginate(5);
+        $data['products'] = Product::with(
+            'images:id,product_id,name',
+            'variations:id,product_id,name',
+            'variations.items:id,product_variation_id,name,price,sales,stock,sku'
+        )->paginate(5);
+
+        $items = $data['products']->flatMap(function ($product) {
+            return $product->variations->flatMap(function ($variation) use ($product) {
+                return $variation->items->map(function ($item) use ($product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name.'-'.$item->name,
+                        'price' => $item->price,
+                        'sales' => $item->sales,
+                        'stock' => $item->stock,
+                        'sku' => $item->sku,
+                        'image' => ($product->images->first()) ? 'storage/'.$product->images->first()->name : 'https://placehold.co/200x200',
+                    ];
+                });
+            });
+        });
+
+        $data['products']->setCollection($items);
+
         return Inertia::render('Product/Index', $data);
     }
 
@@ -52,8 +75,6 @@ class ProductController extends Controller
                 $product = Product::create([
                     'name' => $request->product_name,
                     'description' => $request->product_description,
-                    'price' => $request->product_price * 100,
-                    'stock' => $request->product_stock,
                     'product_category_id' => $request->product_category,
                 ]);
 
@@ -66,21 +87,35 @@ class ProductController extends Controller
                     }
                 }
 
-                foreach ($request->product_variation_items as $key => $variation) {
+                if (empty($request->product_variation_items)) {
                     $productVariation = ProductVariation::create([
-                        'name' => $variation['name'],
+                        'name' => $request->product_name,
                         'product_id' => $product->id,
                     ]);
-                    foreach ($variation['options'] as $key => $option) {
-                        ProductVariationItem::create([
-                            'name' => $option['name'],
-                            'price' => $option['price'],
-                            'stock' => $option['stock'],
-                            'sku' => $option['sku'],
-                            'product_variation_id' => $productVariation->id,
+                    ProductVariationItem::create([
+                        'name' => $request->product_name,
+                        'price' => $request->product_price,
+                        'stock' => $request->product_stock,
+                        'product_variation_id' => $productVariation->id,
+                    ]);
+                } else {
+                    foreach ($request->product_variation_items as $key => $variation) {
+                        $productVariation = ProductVariation::create([
+                            'name' => $variation['name'],
+                            'product_id' => $product->id,
                         ]);
+                        foreach ($variation['options'] as $key => $option) {
+                            ProductVariationItem::create([
+                                'name' => $option['name'],
+                                'price' => $option['price'],
+                                'stock' => $option['stock'],
+                                'sku' => $option['sku'],
+                                'product_variation_id' => $productVariation->id,
+                            ]);
+                        }
                     }
                 }
+
             });
 
             return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product added successfully !']);

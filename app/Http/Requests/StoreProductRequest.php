@@ -23,10 +23,10 @@ class StoreProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'product_name' => 'required',
             'product_description' => 'required',
-            'product_price' => 'exclude_if:product_variation,enabled|required',
+            'product_price' => 'exclude_if:product_variation,enabled|numeric',
             'product_stock' => 'exclude_if:product_variation,enabled|required',
             'product_category' => 'required',
             'product_cover_image' => 'nullable|image',
@@ -39,5 +39,11 @@ class StoreProductRequest extends FormRequest
             'product_variation' => 'required',
             'product_variation_items' => 'exclude_if:product_variation,disabled|required'
         ];
+
+        if ($this->input('product_variation') === 'enabled') {
+            $rules['product_variation_items.*.options.*.price'] = 'numeric';
+        }
+
+        return $rules;
     }
 }
