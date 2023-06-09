@@ -1,5 +1,4 @@
 <script setup>
-import { ref, computed } from 'vue';
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 import { Head, Link, usePage, useForm } from '@inertiajs/inertia-vue3';
@@ -113,9 +112,10 @@ const props = defineProps({
                                     </tr>
                                     <tr class="hover:bg-gray-200" v-for="(product, index) in products.data" :key="index">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-700">{{ ++index }}</div>
+                                            <div class="text-sm text-gray-700">{{ index + 1 }}</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="flex items-center px-6 py-4 whitespace-nowrap">
+                                            <img class="w-24 h-24 mr-4" :src="product.image" alt="">
                                             <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
