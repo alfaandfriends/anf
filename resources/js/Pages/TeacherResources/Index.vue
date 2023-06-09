@@ -105,7 +105,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="flex justify-center space-x-2">
                                             <BreezeButton buttonType="blue" @click="viewResource(result.id)">View / Download</BreezeButton>
                                             <BreezeButton buttonType="warning" @click="editResource(result.id)">Edit</BreezeButton>
-                                            <BreezeButton buttonType="danger" @click="deleteFolder(result.id)">Delete</BreezeButton>
+                                            <BreezeButton buttonType="danger" @click="deleteResource(result.id)">Delete</BreezeButton>
                                         </div>
                                     </td>
                                 </tr>
@@ -120,8 +120,8 @@ import BreezeButton from '@/Components/Button.vue';
             :show="isOpen" 
             @close="isOpen = false"
             confirmationAlert="danger"
-            confirmationTitle="Delete Artwork"
-            confirmationText="Are you sure want to delete this artwork?"
+            confirmationTitle="Delete Resource"
+            confirmationText="Are you sure want to delete this resource?"
             confirmationButton="Delete"
             confirmationMethod="delete"
             :confirmationRoute="confirmationRoute"
@@ -256,9 +256,9 @@ export default {
         editResource(resource_id){
             this.$inertia.get(route('teacher_resources.edit'), {'resource_id':resource_id})
         },
-        deleteFolder(math_manipulative_id){
-            this.confirmationRoute = 'teacher_resources'
-            this.confirmationData = math_manipulative_id
+        deleteResource(resource_id){
+            this.confirmationRoute = 'teacher_resources.destroy'
+            this.confirmationData = resource_id
             this.isOpen = true
         },
         baseUrl() {

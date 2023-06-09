@@ -250,6 +250,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/teacher-resources/store', [TeacherResourcesController::class, 'store'])->name('teacher_resources.store');
     Route::get('/teacher-resources/edit', [TeacherResourcesController::class, 'edit'])->name('teacher_resources.edit');
     Route::post('/teacher-resources/update', [TeacherResourcesController::class, 'update'])->name('teacher_resources.update');
+    Route::delete('/teacher-resources/destroy/{id}', [TeacherResourcesController::class, 'destroy'])->name('teacher_resources.destroy');
     Route::get('/teacher-resources/get-resource', [TeacherResourcesController::class, 'getResource'])->name('teacher_resources.get_resource');
 
     /* Progress Report */
