@@ -8,7 +8,6 @@ use App\Models\ProductCategory;
 use App\Models\ProductImage;
 use App\Models\ProductVariation;
 use App\Models\ProductVariationItem;
-use App\Models\ProductVariationOption;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +24,7 @@ class ProductController extends Controller
     public function index()
     {
         $data['products'] = Product::with(
-            'images:id,product_id,name',
+            'images:id,product_id,path',
             'variations:id,product_id,name',
             'variations.items:id,product_variation_id,name,price,sales,stock,sku'
         )->paginate(5);
@@ -35,12 +34,13 @@ class ProductController extends Controller
                 return $variation->items->map(function ($item) use ($product) {
                     return [
                         'id' => $product->id,
+                        'variation_item_id' => $item->id,
                         'name' => $product->name.'-'.$item->name,
                         'price' => $item->price,
                         'sales' => $item->sales,
                         'stock' => $item->stock,
                         'sku' => $item->sku,
-                        'image' => ($product->images->first()) ? 'storage/'.$product->images->first()->name : 'https://placehold.co/200x200',
+                        'image' => ($product->images->first()) ? 'storage/'.$product->images->first()->path : 'https://placehold.co/200x200',
                     ];
                 });
             });
@@ -81,7 +81,8 @@ class ProductController extends Controller
                 foreach ($request->all() as $key => $value) {
                     if ($request->hasFile($key)) {
                         ProductImage::create([
-                            'name' => $request->file($key)->store('products'),
+                            'name' => str_replace('product_', '', $key),
+                            'path' => $request->file($key)->store('products'),
                             'product_id' => $product->id,
                         ]);
                     }
@@ -145,7 +146,15 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $productImages = ProductImage::select('id', 'name', 'path')->where('product_id', $product->id)->get();
+        $productVariations = ProductVariation::select('id', 'name')->where('product_id', $product->id)->get();
+        $categories = ProductCategory::select('id', 'name')->get();
+        return Inertia::render('Product/Create', [
+            'product' => $product,
+            'productImages' => $productImages,
+            'productVariations' => $productVariations,
+            'categories' => $categories
+        ]);
     }
 
     /**
