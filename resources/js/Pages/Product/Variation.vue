@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import BreezeButton from '@/Components/Button.vue';
-import VariationOption from '@/Components/VariationOption.vue';
+import VariationOption from './VariationOption.vue';
 
 const variations = ref([
     {

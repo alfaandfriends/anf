@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import BreezeButton from '@/Components/Button.vue';
-import Variation from '@/Components/Variation.vue';
+import Variation from './Variation.vue';
 
 const props = defineProps({
     options: {

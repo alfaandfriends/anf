@@ -5,7 +5,7 @@ import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
 import ToggleRadio from '@/Components/ToggleRadio.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
 import Modal from '@/Components/Modal.vue';
-import Variation from '@/Components/Variation.vue';
+import Variation from './Variation.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
 
