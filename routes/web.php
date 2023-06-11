@@ -21,6 +21,7 @@ use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductVariationItemController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\ProgressReportController;
 use App\Http\Controllers\TeacherResources;
@@ -227,6 +228,9 @@ Route::middleware(['auth'])->group(function(){
     Route::middleware(['auth'])->group(function () {
         Route::resource('products', ProductController::class)->names([
             'index' => 'products'
+        ]);
+        Route::resource('product-variation-item', ProductVariationItemController::class)->only([
+            'update', 'destroy'
         ]);
         Route::resource('product-categories', ProductCategoryController::class)->names([
             'index' => 'product-categories'

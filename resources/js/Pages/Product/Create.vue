@@ -34,17 +34,17 @@ const previewUrl = ref([
     {label: 'Image 6', name: 'product_image_6', value: null},
 ]);
 
-onMounted(() => {
-    if(props.productImages) {
-        previewUrl.value.forEach((url) => {
-            Object(props.productImages).forEach((item) => {
-                if(url.name == 'product_'+item.name){
-                    url.value = '../../storage/'+item.path;
-                }
-            });
-        });
-    }
-});
+// onMounted(() => {
+//     if(props.productImages) {
+//         previewUrl.value.forEach((url) => {
+//             Object(props.productImages).forEach((item) => {
+//                 if(url.name == 'product_'+item.name){
+//                     url.value = '../../storage/'+item.path;
+//                 }
+//             });
+//         });
+//     }
+// });
 
 const variationOptions = [
     { label: 'Enable Variation', value: 'enabled' },

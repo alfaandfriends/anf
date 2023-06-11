@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductImage;
@@ -147,12 +148,10 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $productImages = ProductImage::select('id', 'name', 'path')->where('product_id', $product->id)->get();
-        $productVariations = ProductVariation::select('id', 'name')->where('product_id', $product->id)->get();
         $categories = ProductCategory::select('id', 'name')->get();
         return Inertia::render('Product/Create', [
             'product' => $product,
             'productImages' => $productImages,
-            'productVariations' => $productVariations,
             'categories' => $categories
         ]);
     }
@@ -164,9 +163,8 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        //
     }
 
     /**
@@ -175,8 +173,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Product  $product)
     {
-        //
     }
 }

@@ -3,16 +3,43 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 import { Head, Link, usePage, useForm } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import AlertDialog from '@/Components/AlertDialog.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid';
 import Multiselect from '@vueform/multiselect';
 import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal';
+import Edit from './Edit.vue';
+import { ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia'
 
 const props = defineProps({
     products: {
         type: Object,
     },
 });
+
+const isEdit = ref(false);
+const itemToEdit = ref();
+
+const isDestroy = ref(false);
+const toBeDelete = ref();
+
+const editItem = (item) => {
+    itemToEdit.value = item;
+    isEdit.value = true;
+}
+
+const destroyItem = (id, variationItemId) => {
+    isDestroy.value = true;
+    toBeDelete.value = variationItemId;
+}
+
+const toggle = (close, confirm) => {
+    isDestroy.value = close;
+    if (confirm) {
+        Inertia.visit(route('products.destroy', toBeDelete.value), { method: 'delete' });
+    }
+}
 </script>
 
 <template>
@@ -130,12 +157,12 @@ const props = defineProps({
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <BreezeButton :route="route('products.edit', product.id)" buttonType="warning" title="Edit Product">
+                                                    <BreezeButton @click="editItem(product)" buttonType="warning" title="Edit Product">
                                                         Edit
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="flex">
-                                                    <BreezeButton @click="handleDelete(product.id)" buttonType="danger" title="Delete Product">
+                                                    <BreezeButton @click="destroyItem(product.id, product.variation_item_id)" buttonType="danger" title="Delete Product">
                                                         Delete
                                                     </BreezeButton>
                                                 </div>
@@ -149,18 +176,20 @@ const props = defineProps({
                     </div>
                 </div>
             </div>
-            <!-- <ConfirmationModal
-                :show="isOpen"
-                @close="isOpen = false"
+            <ConfirmationModal
+                :show="isDestroy"
+                @close="isDestroy = false"
                 confirmationAlert="danger"
                 confirmationTitle="Delete Class"
                 confirmationText="Are you sure want to delete this class?"
                 confirmationButton="Delete"
                 confirmationMethod="delete"
-                :confirmationRoute="confirmationRoute"
-                :confirmationData="confirmationData"
+                confirmationRoute="product-variation-item.destroy"
+                :confirmationData="toBeDelete"
             >
-            </ConfirmationModal> -->
+            </ConfirmationModal>
+            <!-- <AlertDialog :open="isDestroy" title="Delete Product" message="Are you sure want to delete this product?" level="danger" @toggle:alert="toggle" /> -->
+            <Edit :item="itemToEdit" :open="isEdit" @toggle:show="isEdit = $event" />
         </div>
     </BreezeAuthenticatedLayout>
 </template>
