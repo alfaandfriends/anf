@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductVariationItemRequest;
 use App\Http\Requests\UpdateProductVariationItemRequest;
+use App\Models\Product;
+use App\Models\ProductImage;
+use App\Models\ProductVariation;
 use App\Models\ProductVariationItem;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProductVariationItemController extends Controller
 {
@@ -100,7 +104,25 @@ class ProductVariationItemController extends Controller
     {
         try {
             DB::transaction(function () use ($productVariationItem) {
+                $productVariation = ProductVariation::where('id', $productVariationItem->product_variation_id)->first();
                 $productVariationItem->delete();
+                $allProductVariationItems = ProductVariationItem::where('product_variation_id', $productVariation->id)->get();
+
+                if ($allProductVariationItems->isEmpty()) {
+                    $product = Product::where('id', $productVariation->product_id)->first();
+                    $productVariation->delete();
+                    $allProductVariation = ProductVariation::where('product_id', $product->id)->get();
+                    if ($allProductVariation->isEmpty()) {
+                        $productImages = ProductImage::where('product_id', $product->id)->get();
+                        foreach ($productImages as $key => $image) {
+                            $image->delete();
+                            Storage::delete($image->path);
+                        }
+                        $product->delete();
+                    }
+                }
+
+
             });
 
             return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product deleted successfully !']);

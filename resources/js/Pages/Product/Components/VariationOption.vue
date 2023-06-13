@@ -23,7 +23,7 @@ const emit = defineEmits(['add:option', 'remove:option', 'add:variation', 'updat
     <div>
         <div class="flex items-center justify-between py-2">
             <label class="block text-sm text-gray-700 font-bold"> Options <span class="text-red-500">*</span></label>
-            <BreezeButton @click="emit('add:option', variationIndex)" buttonType="success" class="text-sm py-1 px-2">Add option</BreezeButton>
+            <BreezeButton @click.stop="emit('add:option', variationIndex)" buttonType="success" class="text-sm py-1 px-2">Add option</BreezeButton>
         </div>
         <div v-if="variationOptions.some(item => item.hasOwnProperty('options') && Array.isArray(item.options))">
             <Variation />

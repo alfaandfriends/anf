@@ -7,7 +7,7 @@ import UploadPreview from '@/Components/UploadPreview.vue';
 import Modal from '@/Components/Modal.vue';
 import Variation from './Components/Variation.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     product: {
@@ -80,16 +80,8 @@ const productCategoryForm = useForm({
 const formUrl = (props.product) ? route('products.update', props.product.id): route('products.store');
 const formMethod = (props.product) ? 'put' : 'post';
 
-const nextStep = () => {
-  currentStep.value++;
-};
-
-const previousStep = () => {
-  currentStep.value--;
-};
-
 const setStep = (step) => {
-  currentStep.value = step;
+    currentStep.value = step;
 };
 
 const handleFileChange = (file, name) => {
@@ -242,9 +234,9 @@ const submitProductCategoryForm = () => {
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-between space-x-2">
-                                        <BreezeButton v-if="currentStep != 1" @click="previousStep" buttonType="gray">Back</BreezeButton>
+                                        <BreezeButton v-if="currentStep != 1" @click.stop="currentStep--" buttonType="gray">Back</BreezeButton>
                                         <BreezeButton v-if="currentStep === 1" :route="route('products')" buttonType="gray">Back</BreezeButton>
-                                        <BreezeButton v-if="currentStep != 3" @click="nextStep">
+                                        <BreezeButton v-if="currentStep != 3" @click.stop="currentStep++">
                                             Next Step
                                             <svg
                                                 class="ml-3"
