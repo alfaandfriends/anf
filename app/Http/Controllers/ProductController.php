@@ -81,7 +81,7 @@ class ProductController extends Controller
                         'sales' => $item->sales,
                         'stock' => $item->stock,
                         'sku' => $item->sku,
-                        'image' => ($product->images->first()) ? 'storage/'.$product->images->first()->path : 'https://placehold.co/200x200',
+                        'image' => ($product->images->first()) ? '../storage/'.$product->images->first()->path : 'https://placehold.co/200x200',
                     ];
                 });
             });

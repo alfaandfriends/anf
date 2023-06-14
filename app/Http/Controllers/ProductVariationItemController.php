@@ -131,25 +131,25 @@ class ProductVariationItemController extends Controller
         }
     }
 
-    public function restore(ProductVariationItem $productVariationItem)
+    public function restore($id)
     {
         try {
-            DB::transaction(function () use ($productVariationItem) {
-                $productVariation = ProductVariation::where('id', $productVariationItem->product_variation_id)->first();
+            DB::transaction(function () use ($id) {
+                $productVariationItem = ProductVariationItem::withTrashed()->where('id', $id)->first();
+                $productVariation = ProductVariation::withTrashed()->where('id', $productVariationItem->product_variation_id)->first();
 
                 if ($productVariation->trashed()) {
-                    $productVariationItem->restore();
-                    $product = Product::where('id', $productVariation->product_id)->first();
+                    $product = Product::withTrashed()->where('id', $productVariation->product_id)->first();
                     if ($product->trashed()) {
-                        $productImages = ProductImage::where('product_id', $product->id)->get();
-                        $product->restore();
+                        $productImages = ProductImage::withTrashed()->where('product_id', $product->id)->get();
                         foreach ($productImages as $key => $image) {
                             $image->restore();
                         }
+                        $product->restore();
                     }
+                    $productVariation->restore();
+                    $productVariationItem->restore();
                 }
-
-
             });
 
             return redirect(route('products.trash'))->with(['type'=>'success', 'message'=>'Product restored successfully !']);

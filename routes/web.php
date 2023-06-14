@@ -230,8 +230,10 @@ Route::middleware(['auth'])->group(function(){
         Route::resource('products', ProductController::class)->names([
             'index' => 'products'
         ]);
-        Route::patch('product-variation-item/{product_variation_item}/restore', [ProductVariationItemController::class, 'restore'])->name('product-variation-item.restore');
-        Route::resource('product-variation-item', ProductVariationItemController::class);
+        Route::resource('product-variation-item', ProductVariationItemController::class)->only(
+            'update', 'destroy'
+        );
+        Route::patch('product-variation-item/restore/{id}', [ProductVariationItemController::class, 'restore'])->name('product-variation-item.restore');
         Route::resource('product-categories', ProductCategoryController::class)->names([
             'index' => 'product-categories'
         ]);
