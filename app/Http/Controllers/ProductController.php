@@ -22,13 +22,17 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $data['products'] = Product::with(
             'images:id,product_id,path',
             'variations:id,product_id,name',
             'variations.items:id,product_variation_id,name,price,sales,stock,sku'
-        )->paginate(5);
+        )->when($request->search, function ($query, $search) {
+            return $query->where('name', 'like', '%' . $search . '%');
+        })->when($request->filter, function ($query, $filter) {
+            return $query->where('name', 'like', '%' . $filter . '%');
+        })->paginate(10);
 
         $items = $data['products']->flatMap(function ($product) {
             return $product->variations->flatMap(function ($variation) use ($product) {
@@ -50,6 +54,42 @@ class ProductController extends Controller
         $data['products']->setCollection($items);
 
         return Inertia::render('Product/Index', $data);
+    }
+
+    public function trash(Request $request)
+    {
+        $data['products'] = Product::with(
+            [
+                'images' => fn($q) => $q->onlyTrashed(),
+                'variations' => fn($q) => $q->onlyTrashed(),
+                'variations.items' => fn($q) => $q->onlyTrashed()
+            ]
+        )->when($request->search, function ($query, $search) {
+            return $query->where('name', 'like', '%' . $search . '%');
+        })->when($request->filter, function ($query, $filter) {
+            return $query->where('name', 'like', '%' . $filter . '%');
+        })->onlyTrashed()->paginate(10);
+
+        $items = $data['products']->flatMap(function ($product) {
+            return $product->variations->flatMap(function ($variation) use ($product) {
+                return $variation->items->map(function ($item) use ($product) {
+                    return [
+                        'id' => $product->id,
+                        'variation_item_id' => $item->id,
+                        'name' => $product->name.'-'.$item->name,
+                        'price' => $item->price,
+                        'sales' => $item->sales,
+                        'stock' => $item->stock,
+                        'sku' => $item->sku,
+                        'image' => ($product->images->first()) ? 'storage/'.$product->images->first()->path : 'https://placehold.co/200x200',
+                    ];
+                });
+            });
+        });
+
+        $data['products']->setCollection($items);
+
+        return Inertia::render('Product/Trash', $data);
     }
 
     /**

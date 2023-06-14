@@ -226,12 +226,12 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/shop/payment/status', [ShopController::class, 'shopPaymentStatus'])->name('shop.payment.status');
 
     Route::middleware(['auth'])->group(function () {
+        Route::get('/products/trash', [ProductController::class, 'trash'])->name('products.trash');
         Route::resource('products', ProductController::class)->names([
             'index' => 'products'
         ]);
-        Route::resource('product-variation-item', ProductVariationItemController::class)->only([
-            'update', 'destroy'
-        ]);
+        Route::patch('product-variation-item/{product_variation_item}/restore', [ProductVariationItemController::class, 'restore'])->name('product-variation-item.restore');
+        Route::resource('product-variation-item', ProductVariationItemController::class);
         Route::resource('product-categories', ProductCategoryController::class)->names([
             'index' => 'product-categories'
         ]);

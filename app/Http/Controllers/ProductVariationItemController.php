@@ -11,7 +11,6 @@ use App\Models\ProductVariationItem;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class ProductVariationItemController extends Controller
 {
@@ -116,7 +115,6 @@ class ProductVariationItemController extends Controller
                         $productImages = ProductImage::where('product_id', $product->id)->get();
                         foreach ($productImages as $key => $image) {
                             $image->delete();
-                            Storage::delete($image->path);
                         }
                         $product->delete();
                     }
@@ -130,6 +128,35 @@ class ProductVariationItemController extends Controller
             Log::error($exception->getMessage());
 
             return redirect(route('products'))->with(['type'=>'error', 'message'=>'Opps something went wrong']);
+        }
+    }
+
+    public function restore(ProductVariationItem $productVariationItem)
+    {
+        try {
+            DB::transaction(function () use ($productVariationItem) {
+                $productVariation = ProductVariation::where('id', $productVariationItem->product_variation_id)->first();
+
+                if ($productVariation->trashed()) {
+                    $productVariationItem->restore();
+                    $product = Product::where('id', $productVariation->product_id)->first();
+                    if ($product->trashed()) {
+                        $productImages = ProductImage::where('product_id', $product->id)->get();
+                        $product->restore();
+                        foreach ($productImages as $key => $image) {
+                            $image->restore();
+                        }
+                    }
+                }
+
+
+            });
+
+            return redirect(route('products.trash'))->with(['type'=>'success', 'message'=>'Product restored successfully !']);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return redirect(route('products.trash'))->with(['type'=>'error', 'message'=>'Opps something went wrong']);
         }
     }
 }

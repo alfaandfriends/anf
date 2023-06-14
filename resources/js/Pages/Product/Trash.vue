@@ -3,10 +3,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
-import AlertDialog from '@/Components/AlertDialog.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid';
-import Edit from './Edit.vue';
 import { ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia'
 
@@ -16,38 +14,23 @@ const props = defineProps({
     },
 });
 
-const isEdit = ref(false);
-const itemToEdit = ref();
-
-const isDestroy = ref(false);
-const toBeDelete = ref();
+const isRestore = ref(false);
+const toBeRestore = ref();
 
 const search = ref();
 const filter = ref();
 
-const editItem = (item) => {
-    itemToEdit.value = item;
-    isEdit.value = true;
-}
-
-const destroyItem = (id) => {
-    isDestroy.value = true;
-    toBeDelete.value = id;
-}
-
-const toggle = (close, confirm) => {
-    isDestroy.value = close;
-    if (confirm) {
-        Inertia.visit(route('products.destroy', toBeDelete.value), { method: 'delete' });
-    }
+const restoreItem = (id) => {
+    isRestore.value = true;
+    toBeRestore.value = id;
 }
 
 watch(
     () => search.value, (newValue) => {
-        Inertia.visit(route('products', {search: newValue}), { method: 'get' });
+        Inertia.visit(route('products.trash', {search: newValue}), { method: 'get' });
     },
     () => filter.value, (newValue) => {
-        Inertia.visit(route('products', newValue), { method: 'get' });
+        Inertia.visit(route('products.trash', newValue), { method: 'get' });
     }
 );
 </script>
@@ -68,7 +51,6 @@ watch(
                                     <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10" type="text" v-model="search" placeholder="Search">
                                 </div>
                             </div>
-                            <BreezeButton :route="route('products.create')">Add New Product</BreezeButton>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
@@ -109,14 +91,9 @@ watch(
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
-                                                <div class="flex pr-1">
-                                                    <BreezeButton @click="editItem(product)" buttonType="warning" title="Edit Product">
-                                                        Edit
-                                                    </BreezeButton>
-                                                </div>
                                                 <div class="flex">
-                                                    <BreezeButton @click="destroyItem(product.variation_item_id)" buttonType="danger" title="Delete Product">
-                                                        Delete
+                                                    <BreezeButton @click="restoreItem(product.variation_item_id)" buttonType="warning" title="Delete Product">
+                                                        Restore
                                                     </BreezeButton>
                                                 </div>
                                             </div>
@@ -130,19 +107,17 @@ watch(
                 </div>
             </div>
             <ConfirmationModal
-                :show="isDestroy"
-                @close="isDestroy = false"
-                confirmationAlert="danger"
-                confirmationTitle="Delete Product"
-                confirmationText="Are you sure want to delete this product?"
-                confirmationButton="Delete"
-                confirmationMethod="delete"
-                confirmationRoute="product-variation-item.destroy"
-                :confirmationData="toBeDelete"
+                :show="isRestore"
+                @close="isRestore = false"
+                confirmationAlert="warning"
+                confirmationTitle="Restore Product"
+                confirmationText="Are you sure want to restore this product?"
+                confirmationButton="Restore"
+                confirmationMethod="patch"
+                confirmationRoute="product-variation-item.restore"
+                :confirmationData="toBeRestore"
             >
             </ConfirmationModal>
-            <!-- <AlertDialog :open="isDestroy" title="Delete Product" message="Are you sure want to delete this product?" level="danger" @toggle:alert="toggle" /> -->
-            <Edit :item="itemToEdit" :open="isEdit" @toggle:show="isEdit = $event" />
         </div>
     </BreezeAuthenticatedLayout>
 </template>
