@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use Inertia\Inertia;
 
 class TeacherResourcesController extends Controller
@@ -79,7 +81,7 @@ class TeacherResourcesController extends Controller
             Storage::putFileAs('teacher_resources', $request->file('embed_file'), $filename);
         }
 
-        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Teacher Resource added successfully !']);
+        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Teacher resource added successfully !']);
     }
 
     public function edit(Request $request)
@@ -90,11 +92,72 @@ class TeacherResourcesController extends Controller
         $resource_info  =   DB::table('teacher_resources')->where('id', $request->resource_id)->first();
 
         return Inertia::render('TeacherResources/Edit', [
-            'programmes'    =>  $programmes,
-            'languages'     =>  $languages,
-            'media_types'   =>  $media_types,
-            'resource_info'   =>  $resource_info
+            'id'                =>  $request->resource_id,
+            'programmes'        =>  $programmes,
+            'languages'         =>  $languages,
+            'media_types'       =>  $media_types,
+            'resource_info'     =>  $resource_info
         ]);
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'title'             =>  'required',
+            'programme_id'      =>  'required',
+            'level_id'          =>  'required',
+            'language_id'       =>  'required',
+            'media_type_id'     =>  'required',
+            'embed_link'        =>  'required_if:media_type_id, 1',
+        ]);
+
+        if((($request->media_type_id === 2 || $request->media_type_id === 3) && (!$request->embed_link && !$request->embed_file))){
+            $customErrors = new MessageBag([
+                'embed_file' => ['File is required'],
+            ]);
+    
+            return redirect()->back()->withErrors($customErrors)->withInput();
+        }
+        if($request->delete_previous_file){
+            $previous_file  =   DB::table('teacher_resources')->where('id', $request->id)->pluck('content')->first();
+            $file_deleted   =   Storage::delete('teacher_resources/'.$previous_file);
+        }
+
+        if($request->file('embed_file')){
+            $file = $request->file('embed_file');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+        }
+
+        DB::table('teacher_resources')->where('id', $request->id)->update([
+            'programme_id'  => $request->programme_id,
+            'level'         => $request->level_id,
+            'language_id'   => $request->language_id,
+            'title'         => $request->title,
+            'media_type'    => $request->media_type_id,
+            'content'       => $request->file('embed_file') ? $filename : $request->embed_link,
+            'file_size'     => $request->file('embed_file') ? $request->file('embed_file')->getSize() : null,
+        ]);
+
+        if($request->file('embed_file')){
+            Storage::putFileAs('teacher_resources', $request->file('embed_file'), $filename);
+        }
+
+        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Teacher resource updated successfully !']);
+    }
+
+    public function destroy($id)
+    {
+        
+        $info  =   DB::table('teacher_resources')->where('id', $id)->first();
+
+        if($info->media_type){
+            Storage::delete('teacher_resources/'.$info->content);
+        }
+
+        DB::table('teacher_resources')->where('id', $id)->delete();
+        
+        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Teacher resource deleted successfully !']);
     }
 
     public function getResource(Request $request)
