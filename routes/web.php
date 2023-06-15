@@ -19,6 +19,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ExternalUserManagementController;
 use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\ProgressReportController;
 use App\Http\Controllers\TeacherResources;
@@ -30,7 +31,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/', function () {
         return redirect('/dashboard');
     });
-    
+
     /* User Impersonation */
     Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate');
     Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate');;
@@ -114,7 +115,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/centres/create', [CentreController::class, 'create'])->name('centres.create')->middleware('permission:centre_create_access');
         Route::post('/centres/store', [CentreController::class, 'store'])->name('centres.store')->middleware('permission:centre_create_access');
         Route::get('/centres/edit', [CentreController::class, 'edit'])->name('centres.edit')->middleware('permission:centre_edit_access');
-        Route::post('/centres/update', [CentreController::class, 'update'])->name('centres.update')->middleware('permission:centre_edit_access');  
+        Route::post('/centres/update', [CentreController::class, 'update'])->name('centres.update')->middleware('permission:centre_edit_access');
         Route::delete('/centres/destroy/{id}', [CentreController::class, 'destroy'])->name('centres.destroy')->middleware('permission:centre_delete_access');
         Route::delete('/centres/image/destroy/{id}', [CentreController::class, 'destroyImage'])->name('centres.destroy_image')->middleware('permission:centre_delete_access');
         Route::get('/centres/images', [CentreController::class, 'getCentreImages'])->name('centres.get_images')->middleware('permission:centre_view_access');
@@ -125,16 +126,16 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/programmes/create', [ProgrammeController::class, 'addProgramme'])->name('programmes.create')->middleware('permission:programme_create_access');
         Route::post('/programmes/store', [ProgrammeController::class, 'storeProgramme'])->name('programmes.store')->middleware('permission:programme_create_access');
         Route::get('/programmes/edit', [ProgrammeController::class, 'editProgramme'])->name('programmes.edit')->middleware('permission:programme_edit_access');
-        Route::post('/programmes/update', [ProgrammeController::class, 'updateProgramme'])->name('programmes.update')->middleware('permission:programme_edit_access'); 
+        Route::post('/programmes/update', [ProgrammeController::class, 'updateProgramme'])->name('programmes.update')->middleware('permission:programme_edit_access');
         Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:programme_delete_access');
         Route::get('/programmes/get-fee', [ProgrammeController::class, 'getFee'])->name('programmes.get_fee')->middleware('permission:programme_view_access|programme_create_access|programme_edit_access');
-        
+
         /* Classes */
         Route::get('/classes', [ClassController::class, 'index'])->name('classes')->middleware('permission:class_view_access');
         Route::get('/classes/create', [ClassController::class, 'create'])->name('classes.create')->middleware('permission:class_create_access');
         Route::post('/classes/store', [ClassController::class, 'store'])->name('classes.store')->middleware('permission:class_create_access');
         Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:class_edit_access');
-        Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:class_edit_access');  
+        Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:class_edit_access');
         Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:class_delete_access');
         Route::get('/classes/get-class-types', [ClassController::class, 'getClassTypes'])->name('classes.get_class_types')->middleware('permission:class_view_access|class_create_access|class_edit_access');
         Route::get('/classes/get-class-levels', [ClassController::class, 'getClassLevels'])->name('classes.get_class_levels')->middleware('permission:class_view_access|class_create_access|class_edit_access');
@@ -150,7 +151,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/students/find', [StudentController::class, 'findStudents'])->name('students.find')->middleware('permission:student_view_access|student_create_access|student_edit_access');
         Route::post('/students/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class')->middleware('permission:student_view_access|student_create_access|student_edit_access');
 
-        /* Settings */    
+        /* Settings */
         Route::get('/settings', [SettingController::class, 'classTypeList'])->name('settings')->middleware('permission:setting_view_access');
             /* Class Types */
             Route::get('/settings/class_types', [SettingController::class, 'classTypeList'])->name('settings.class_types')->middleware('permission:setting_class_type_view_access');
@@ -175,10 +176,10 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/edupreneurs', [ExternalUserManagementController::class, 'edupreneurList'])->name('edupreneurs');
         Route::get('/edupreneurs/manage', [ExternalUserManagementController::class, 'manageEdupreneur'])->name('edupreneurs.manage');
         Route::post('/edupreneurs/manage/store', [ExternalUserManagementController::class, 'manageEdupreneurStore'])->name('edupreneurs.store');
-        
+
     });
 
-    
+
     /* Diagnostic Test Setting*/
     Route::prefix('diagnostic-test')->group(function () {
 
@@ -213,13 +214,19 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/settings/categories/update', [DiagnosticTestController::class, 'dtCategoriesUpdate'])->name('dt.settings.categories.update')->middleware('permission:edit_dt_settings_access');
         Route::delete('/settings/categories/destroy/{id}', [DiagnosticTestController::class, 'dtCategoriesDestroy'])->name('dt.settings.categories.destroy')->middleware('permission:delete_dt_settings_access');
     });
-    
+
     /* Shop */
     Route::get('/shop', [ShopController::class, 'index'])->name('shop');
     Route::get('/shop/cart', [ShopController::class, 'shopCart'])->name('shop.cart');
     Route::get('/shop/checkout', [ShopController::class, 'shopCheckout'])->name('shop.checkout');
     Route::post('/shop/payment', [ShopController::class, 'shopPayment'])->name('shop.payment');
     Route::get('/shop/payment/status', [ShopController::class, 'shopPaymentStatus'])->name('shop.payment.status');
+
+    Route::middleware(['auth'])->group(function () {
+        Route::resource('orders', OrderController::class)->names([
+            'index' => 'orders'
+        ]);
+    });
 
     /* Notifications */
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
@@ -235,7 +242,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/art-gallery/get_themes/{id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes');
     Route::get('/art-gallery/get_lessons/{id}', [ArtGalleryController::class, 'getLessons'])->name('art_gallery.get_lessons');
     Route::get('/art-gallery/get_activities/{id}', [ArtGalleryController::class, 'getActivities'])->name('art_gallery.get_activities');
-    
+
     /* Math Manipulatives */
     Route::get('/math-manipulatives', [MathManipulativesController::class, 'index'])->name('math_manipulatives');
     Route::get('/math-manipulatives/play', [MathManipulativesController::class, 'play'])->name('math_manipulatives.play');
@@ -243,7 +250,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/math-manipulatives/configuration/create', [MathManipulativesController::class, 'configurationCreate'])->name('math_manipulatives.configuration.create');
     Route::post('/math-manipulatives/configuration/store', [MathManipulativesController::class, 'configurationStore'])->name('math_manipulatives.configuration.store');
     Route::delete('/math-manipulatives/configuration/delete/{id}', [MathManipulativesController::class, 'configurationDelete'])->name('math_manipulatives.configuration.delete');
-    
+
     /* Teacher Resources */
     Route::get('/teacher-resources', [TeacherResourcesController::class, 'index'])->name('teacher_resources');
     Route::get('/teacher-resources/create', [TeacherResourcesController::class, 'create'])->name('teacher_resources.create');
