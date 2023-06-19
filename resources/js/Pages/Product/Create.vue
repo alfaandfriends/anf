@@ -140,23 +140,16 @@ const submitProductCategoryForm = () => {
                                     <div class="p-10">
                                         <BreezeValidationErrors class="mb-4" />
                                         <div class="md:flex items-center justify-center border-b pb-6 border-gray-200 mb-4">
-                                            <div class="flex items-center md:mt-0 mt-4" @click="setStep(1)" :class="{'cursor-pointer': currentStep != 1}">
+                                            <div class="flex items-center md:mt-0 mt-4 md:ml-12" @click="setStep(1)" :class="{'cursor-pointer': currentStep != 2}">
                                                 <div class="w-full h-full p-4 rounded flex items-center justify-center" :class="{'bg-indigo-700': currentStep === 1}">
-                                                    <p class="text-base font-medium leading-4 text-gray-800" :class="{'text-white': currentStep === 1}">
-                                                        Product Type
+                                                    <p class="text-base ml-3 font-medium leading-4 text-gray-800" :class="{'text-white': currentStep === 1}">
+                                                        Basic Information
                                                     </p>
                                                 </div>
                                             </div>
                                             <div class="flex items-center md:mt-0 mt-4 md:ml-12" @click="setStep(2)" :class="{'cursor-pointer': currentStep != 2}">
                                                 <div class="w-full h-full p-4 rounded flex items-center justify-center" :class="{'bg-indigo-700': currentStep === 2}">
                                                     <p class="text-base ml-3 font-medium leading-4 text-gray-800" :class="{'text-white': currentStep === 2}">
-                                                        Basic Information
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="flex items-center md:mt-0 mt-4 md:ml-12" @click="setStep(3)" :class="{'cursor-pointer': currentStep != 3}">
-                                                <div class="w-full h-full p-4 rounded flex items-center justify-center" :class="{'bg-indigo-700': currentStep === 3}">
-                                                    <p class="text-base ml-3 font-medium leading-4 text-gray-800" :class="{'text-white': currentStep === 3}">
                                                         Sales Information
                                                     </p>
                                                 </div>
@@ -164,19 +157,6 @@ const submitProductCategoryForm = () => {
                                         </div>
                                         <div class="px-10">
                                             <div v-if="currentStep === 1">
-                                                <h1
-                                                    tabindex="0"
-                                                    role="heading"
-                                                    aria-label="profile information"
-                                                    class="focus:outline-none text-3xl font-bold text-gray-800 mb-9"
-                                                >
-                                                    Choose Product Type
-                                                </h1>
-                                                <div class="my-4">
-                                                    <ToggleRadio :options="productTypeOptions" :value="productType" @update:value="productType = $event;" />
-                                                </div>
-                                            </div>
-                                            <div v-if="currentStep === 2">
                                                 <div class="mb-4">
                                                     <label for="category_name" class="block text-sm text-gray-700 font-bold mb-2"> Product Images <span class="text-red-500">*</span></label>
                                                     <div class="flex flex-wrap justify-center">
@@ -209,7 +189,7 @@ const submitProductCategoryForm = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div v-if="currentStep === 3">
+                                            <div v-if="currentStep === 2">
                                                 <div class="mb-6">
                                                     <ToggleRadio :options="variationOptions" :value="productForm.product_variation" @update:value="productForm.product_variation = $event;" />
                                                 </div>
@@ -236,7 +216,7 @@ const submitProductCategoryForm = () => {
                                     <div class="flex items-center justify-between space-x-2">
                                         <BreezeButton v-if="currentStep != 1" @click.stop="currentStep--" buttonType="gray">Back</BreezeButton>
                                         <BreezeButton v-if="currentStep === 1" :route="route('products')" buttonType="gray">Back</BreezeButton>
-                                        <BreezeButton v-if="currentStep != 3" @click.stop="currentStep++">
+                                        <BreezeButton v-if="currentStep != 2" @click.stop="currentStep++">
                                             Next Step
                                             <svg
                                                 class="ml-3"
@@ -249,7 +229,7 @@ const submitProductCategoryForm = () => {
                                                 <path d="M8.01 3H0V5H8.01V8L12 4L8.01 0V3Z" fill="currentColor" />
                                             </svg>
                                         </BreezeButton>
-                                        <BreezeButton v-if="currentStep === 3" type="submit">{{ (product) ? 'Update' : 'Create' }}</BreezeButton>
+                                        <BreezeButton v-if="currentStep === 2" type="submit">{{ (product) ? 'Update' : 'Create' }}</BreezeButton>
                                     </div>
                                 </div>
                             </div>
