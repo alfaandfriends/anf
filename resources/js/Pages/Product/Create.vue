@@ -5,12 +5,15 @@ import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
 import ToggleRadio from '@/Components/ToggleRadio.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
 import Modal from '@/Components/Modal.vue';
-import Variation from '@/Components/Variation.vue';
+import Variation from './Components/Variation.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
 
 const props = defineProps({
     product: {
+        type: Object,
+    },
+    productImages: {
         type: Object,
     },
     categories: {
@@ -31,6 +34,18 @@ const previewUrl = ref([
     {label: 'Image 6', name: 'product_image_6', value: null},
 ]);
 
+// onMounted(() => {
+//     if(props.productImages) {
+//         previewUrl.value.forEach((url) => {
+//             Object(props.productImages).forEach((item) => {
+//                 if(url.name == 'product_'+item.name){
+//                     url.value = '../../storage/'+item.path;
+//                 }
+//             });
+//         });
+//     }
+// });
+
 const variationOptions = [
     { label: 'Enable Variation', value: 'enabled' },
     { label: 'Disable Variation', value: 'disabled' },
@@ -43,19 +58,19 @@ const productTypeOptions = [
 
 const productForm = useForm({
     product_name: (props.product) ? props.product.name : '',
-    product_description: '',
-    product_category: '',
-    product_price: '',
-    product_stock: 0,
-    product_cover_image: null,
-    product_image_1: null,
-    product_image_2: null,
-    product_image_3: null,
-    product_image_4: null,
-    product_image_5: null,
-    product_image_6: null,
-    product_variation: 'disabled',
-    product_variation_items: [],
+    product_description: (props.product) ? props.product.description : '',
+    product_category: (props.product) ? props.product.product_category_id : '',
+    product_price: (props.product) ? props.product.price : '',
+    product_stock: (props.product) ? props.product.stock : '',
+    product_cover_image: '',
+    product_image_1: '',
+    product_image_2: '',
+    product_image_3: '',
+    product_image_4: '',
+    product_image_5: '',
+    product_image_6: '',
+    product_variation: (props.product) ? props.product.name : 'disabled',
+    product_variation_items: (props.product) ? props.product.name : [],
 });
 
 const productCategoryForm = useForm({
@@ -65,16 +80,8 @@ const productCategoryForm = useForm({
 const formUrl = (props.product) ? route('products.update', props.product.id): route('products.store');
 const formMethod = (props.product) ? 'put' : 'post';
 
-const nextStep = () => {
-  currentStep.value++;
-};
-
-const previousStep = () => {
-  currentStep.value--;
-};
-
 const setStep = (step) => {
-  currentStep.value = step;
+    currentStep.value = step;
 };
 
 const handleFileChange = (file, name) => {
@@ -192,7 +199,7 @@ const submitProductCategoryForm = () => {
                                                     </div>
                                                 </div>
                                                 <div class="mb-4">
-                                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Product Name <span class="text-red-500">*</span></label>
+                                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Product Category <span class="text-red-500">*</span></label>
                                                     <div class="mt-1 flex rounded-md shadow-sm">
                                                         <select name="product_category" id="product_category" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="productForm.product_category">
                                                             <option value="">Please Select</option>
@@ -227,9 +234,9 @@ const submitProductCategoryForm = () => {
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-between space-x-2">
-                                        <BreezeButton v-if="currentStep != 1" @click="previousStep" buttonType="gray">Back</BreezeButton>
+                                        <BreezeButton v-if="currentStep != 1" @click.stop="currentStep--" buttonType="gray">Back</BreezeButton>
                                         <BreezeButton v-if="currentStep === 1" :route="route('products')" buttonType="gray">Back</BreezeButton>
-                                        <BreezeButton v-if="currentStep != 3" @click="nextStep">
+                                        <BreezeButton v-if="currentStep != 3" @click.stop="currentStep++">
                                             Next Step
                                             <svg
                                                 class="ml-3"

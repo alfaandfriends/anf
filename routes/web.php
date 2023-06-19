@@ -21,6 +21,7 @@ use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductVariationItemController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\ProgressReportController;
 use App\Http\Controllers\TeacherResources;
@@ -225,9 +226,14 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/shop/payment/status', [ShopController::class, 'shopPaymentStatus'])->name('shop.payment.status');
 
     Route::middleware(['auth'])->group(function () {
+        Route::get('/products/trash', [ProductController::class, 'trash'])->name('products.trash');
         Route::resource('products', ProductController::class)->names([
             'index' => 'products'
         ]);
+        Route::resource('product-variation-item', ProductVariationItemController::class)->only(
+            'update', 'destroy'
+        );
+        Route::patch('product-variation-item/restore/{id}', [ProductVariationItemController::class, 'restore'])->name('product-variation-item.restore');
         Route::resource('product-categories', ProductCategoryController::class)->names([
             'index' => 'product-categories'
         ]);
@@ -262,6 +268,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/teacher-resources/store', [TeacherResourcesController::class, 'store'])->name('teacher_resources.store');
     Route::get('/teacher-resources/edit', [TeacherResourcesController::class, 'edit'])->name('teacher_resources.edit');
     Route::post('/teacher-resources/update', [TeacherResourcesController::class, 'update'])->name('teacher_resources.update');
+    Route::delete('/teacher-resources/destroy/{id}', [TeacherResourcesController::class, 'destroy'])->name('teacher_resources.destroy');
     Route::get('/teacher-resources/get-resource', [TeacherResourcesController::class, 'getResource'])->name('teacher_resources.get_resource');
 
     /* Progress Report */

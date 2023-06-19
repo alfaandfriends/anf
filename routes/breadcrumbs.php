@@ -231,9 +231,14 @@ Breadcrumbs::for('products.create', function (BreadcrumbTrail $trail) {
     $trail->push('Add New Product', route('products.create'));
 });
 
-Breadcrumbs::for('products.edit', function (BreadcrumbTrail $trail, Product $product_category) {
+Breadcrumbs::for('products.trash', function (BreadcrumbTrail $trail) {
     $trail->parent('products');
-    $trail->push('Edit Product', route('products.edit', $product_category));
+    $trail->push('Trash', route('products.trash'));
+});
+
+Breadcrumbs::for('products.edit', function (BreadcrumbTrail $trail, Product $product) {
+    $trail->parent('products');
+    $trail->push('Edit Product', route('products.edit', $product));
 });
 
 /* Product Categories */

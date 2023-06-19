@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('product_images', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('name');
+            $table->string('name', 20);
+            $table->string('path');
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('product_id')->references('id')->on('products');

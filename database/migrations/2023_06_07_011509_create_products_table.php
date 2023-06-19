@@ -18,9 +18,6 @@ return new class extends Migration
             $table->unsignedBigInteger('product_category_id')->nullable()->cascadeOnUpdate()->nullOnDelete();
             $table->string('name', 50);
             $table->text('description');
-            $table->bigInteger('price');
-            $table->integer('stock');
-            $table->integer('sales')->default(0);
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('product_category_id')->references('id')->on('product_categories');

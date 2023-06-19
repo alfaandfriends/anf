@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name', 50);
             $table->bigInteger('price');
             $table->integer('stock');
-            $table->string('sku');
+            $table->string('sku')->nullable();
             $table->integer('sales')->default(0);
             $table->softDeletes();
             $table->timestamps();
