@@ -17,6 +17,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ExternalUserManagementController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProgrammeController;
@@ -252,6 +253,10 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/teacher-resources/update', [TeacherResourcesController::class, 'update'])->name('teacher_resources.update');
     Route::delete('/teacher-resources/destroy/{id}', [TeacherResourcesController::class, 'destroy'])->name('teacher_resources.destroy');
     Route::get('/teacher-resources/get-resource', [TeacherResourcesController::class, 'getResource'])->name('teacher_resources.get_resource');
+
+    /* Invoices */
+    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
+    Route::get('/invoices/edit', [ProgressReportController::class, 'edit'])->name('invoices.edit');
 
     /* Progress Report */
     Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');
