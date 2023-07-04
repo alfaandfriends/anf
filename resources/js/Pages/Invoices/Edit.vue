@@ -98,7 +98,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="grid grid-cols-3">
                                         <div class="mb-4">
                                             <label for="amount" class="block text-sm font-bold text-gray-700"> Payment Status </label>
-                                            <div class="p-1 px-3 rounded flex font-semibold mt-2" :class="[$page.props.invoice_data.status_text_color, $page.props.invoice_data.status_bg_color]">{{ $page.props.invoice_data.status }}</div>
+                                            <div class="p-1.5 px-3 rounded flex font-semibold mt-2" :class="[$page.props.invoice_data.status_text_color, $page.props.invoice_data.status_bg_color]">{{ $page.props.invoice_data.status }}</div>
                                             <div class=" flex rounded-md shadow-sm">
                                             </div>
                                         </div>
