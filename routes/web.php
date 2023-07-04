@@ -256,7 +256,8 @@ Route::middleware(['auth'])->group(function(){
 
     /* Invoices */
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
-    Route::get('/invoices/edit', [ProgressReportController::class, 'edit'])->name('invoices.edit');
+    Route::get('/invoices/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
+    Route::post('/invoices/update', [InvoiceController::class, 'update'])->name('invoices.update');
 
     /* Progress Report */
     Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');

@@ -211,7 +211,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
                                             <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton>
-                                            <BreezeButton buttonType="warning" @click="editResource(result.id)">Edit</BreezeButton>
+                                            <BreezeButton buttonType="warning" @click="editInvoice(result.id)">Edit / Collect Payment</BreezeButton>
                                             <BreezeButton buttonType="danger" @click="deleteResource(result.id)">Delete</BreezeButton>
                                         </div>
                                     </td>
@@ -334,8 +334,8 @@ export default {
             
             this.open_modal = true
         },
-        editResource(resource_id){
-            this.$inertia.get(route('invoices'), {'resource_id':resource_id})
+        editInvoice(invoice_id){
+            this.$inertia.get(route('invoices.edit'), {'invoice_id':invoice_id})
         },
         deleteResource(resource_id){
             this.confirmationRoute = 'invoices.destroy'

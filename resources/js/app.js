@@ -1,5 +1,6 @@
 import './bootstrap';
 import '../css/app.css';
+import 'viewerjs/dist/viewer.css'
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
@@ -8,6 +9,7 @@ import VueGuidedTour from "@alfaandfriends/vue-guided-tour";
 import { vue3Debounce } from 'vue-debounce';
 import  VueHtmlToPaper from './Plugins/VueHtmlToPaper'
 import axios from 'axios';
+import VueViewer from 'v-viewer'
 
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
@@ -44,6 +46,7 @@ createInertiaApp({
             .use(plugin)
             .use(VueGuidedTour)
             .use(VueHtmlToPaper)
+            .use(VueViewer)
             .directive('debounce', vue3Debounce({
                 lock: true,
             }))
