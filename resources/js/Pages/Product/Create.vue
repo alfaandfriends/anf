@@ -190,10 +190,13 @@ const submitProductCategoryForm = () => {
                                                 </div>
                                             </div>
                                             <div v-if="currentStep === 2">
-                                                <div class="mb-6">
-                                                    <ToggleRadio :options="variationOptions" :value="productForm.product_variation" @update:value="productForm.product_variation = $event;" />
-                                                </div>
                                                 <div v-if="productForm.product_variation === 'disabled'">
+                                                    <div class="mb-4">
+                                                        <label class="block text-sm text-gray-700 font-bold"> Variation </label>
+                                                        <div class="mt-1 flex rounded-md">
+                                                            <BreezeButton @click="productForm.product_variation = 'enabled'" buttonType="gray">Enable Variation</BreezeButton>
+                                                        </div>
+                                                    </div>
                                                     <div class="mb-4">
                                                         <label for="product_price" class="block text-sm text-gray-700 font-bold"> Price <span class="text-red-500">*</span></label>
                                                         <div class="mt-1 flex rounded-md shadow-sm">
@@ -208,7 +211,10 @@ const submitProductCategoryForm = () => {
                                                     </div>
                                                 </div>
                                                 <div v-if="productForm.product_variation === 'enabled'">
-                                                    <Variation @update:variation="productForm.product_variation_items = $event" />
+                                                    <label class="block text-sm text-gray-700 font-bold"> Variation </label>
+                                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                                        <Variation @update:variation="productForm.product_variation_items = $event" @delete:variation="productForm.product_variation = 'disabled'" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
