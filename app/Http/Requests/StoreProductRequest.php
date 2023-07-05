@@ -41,7 +41,7 @@ class StoreProductRequest extends FormRequest
         ];
 
         if ($this->input('product_variation') === 'enabled') {
-            $rules['product_variation_items.*.options.*.price'] = 'numeric';
+            $rules['product_variation_items.0.options.*.row.price'] = 'numeric';
         }
 
         return $rules;

@@ -185,7 +185,7 @@ const submitProductCategoryForm = () => {
                                                             <option value="">Please Select</option>
                                                             <option v-for="(category, index) in categories" :key="index" :value="category.id"> {{ category.name }} </option>
                                                         </select>
-                                                        <BreezeButton @click="addCategory = true" buttonType="warning">Add New Category</BreezeButton>
+                                                        <BreezeButton @click="addCategory = true" buttonType="warning" class="h-full p-2">Add New Category</BreezeButton>
                                                     </div>
                                                 </div>
                                             </div>

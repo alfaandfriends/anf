@@ -26,10 +26,7 @@ const emit = defineEmits(['add:option', 'remove:option', 'add:variation', 'updat
             <BreezeButton @click.stop="emit('add:option', variationIndex)" buttonType="success" class="text-sm py-1 px-2">Add option</BreezeButton>
         </div>
         <div v-for="(option, index) in variationOptions" :key="index" class="mt-1 flex rounded-md shadow-sm">
-            <input @input="emit('update:variation', variationOptions)" type="text" placeholder="option" :name="'variation_option_'+index" :id="'variation_option_'+index" class="focus:ring-0 focus:border-indigo-300 flex-1 block rounded-tl-md rounded-bl-md sm:text-sm" v-model="option.name" autocomplete="off"/>
-            <!-- <input @input="emit('update:variation', variationOptions)" type="text" placeholder="price" :name="'variation_option_price'+index" :id="'variation_option_price'+index" class="focus:ring-0 focus:border-indigo-300 flex-1 block sm:text-sm" v-model="option.price" autocomplete="off"/>
-            <input @input="emit('update:variation', variationOptions)" type="number" placeholder="stock" :name="'variation_option_stock'+index" :id="'variation_option_stock'+index" class="focus:ring-0 focus:border-indigo-300 flex-1 block sm:text-sm" v-model="option.stock" autocomplete="off"/>
-            <input @input="emit('update:variation', variationOptions)" type="text" placeholder="sku" :name="'variation_option_sku'+index" :id="'variation_option_sku'+index" class="focus:ring-0 focus:border-indigo-300 flex-1 block sm:text-sm" v-model="option.sku" autocomplete="off"/> -->
+            <input @input="emit('update:variation', {variationOptions,index})" type="text" placeholder="option" :name="'variation_option_'+index" :id="'variation_option_'+index" class="focus:ring-0 focus:border-indigo-300 flex-1 block rounded-tl-md rounded-bl-md sm:text-sm" v-model="option.name" autocomplete="off"/>
             <BreezeButton @click="emit('remove:option', variationIndex, index)" buttonType="danger" class="h-full px-4 rounded-none">X</BreezeButton>
         </div>
     </div>
