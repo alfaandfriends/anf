@@ -21,7 +21,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1">
                                         <div class="mb-4">
-                                            <label for="invoice_number" class="block text-sm font-bold text-gray-700"> Invoice Number <span class="text-red-500">*</span></label>
+                                            <label for="invoice_number" class="block text-sm font-bold text-gray-700"> Invoice Number </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <input disabled type="text" name="invoice_number" id="invoice_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="this.$page.props.invoice_data.invoice_number" autocomplete="off">
                                             </div>
@@ -29,13 +29,13 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-2 gap-4">
                                         <div class="mb-4">
-                                            <label for="date_issued" class="block text-sm font-bold text-gray-700"> Date Issued <span class="text-red-500">*</span></label>
+                                            <label for="date_issued" class="block text-sm font-bold text-gray-700"> Date Issued </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <input disabled type="text" name="date_issued" id="date_issued" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="date_issued" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="mb-4">
-                                            <label for="due_date" class="block text-sm font-bold text-gray-700"> Due Date <span class="text-red-500">*</span></label>
+                                            <label for="due_date" class="block text-sm font-bold text-gray-700"> Due Date </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <input disabled type="text" name="due_date" id="due_date" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="due_date" autocomplete="off">
                                             </div>
@@ -43,7 +43,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1">
                                         <div class="mb-4">
-                                            <label for="student_name" class="block text-sm font-bold text-gray-700"> Student Name <span class="text-red-500">*</span></label>
+                                            <label for="student_name" class="block text-sm font-bold text-gray-700"> Student Name </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <input disabled type="text" name="student_name" id="student_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="this.$page.props.invoice_data.student_name" autocomplete="off">
                                             </div>
@@ -66,7 +66,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <td class="border text-sm py-2 px-4">
                                                             <div class="flex flex-col space-y-4">
                                                                 <div class="bg-indigo-300 py-2 px-3 rounded-t-md">
-                                                                    <label class="font-semibold"> {{ item.programme }} ( Level {{ item.programme_level }} )</label>
+                                                                    <label class="font-semibold"> {{ item.programme_name }} ( Level {{ item.programme_level }} )</label>
                                                                 </div>
                                                                 <div class="flex flex-col space-y-2 pl-5">
                                                                     <div class="bg-indigo-100 py-1 px-3 rounded-sm">
@@ -96,19 +96,21 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-3">
-                                        <div class="mb-4">
-                                            <label for="amount" class="block text-sm font-bold text-gray-700"> Payment Status </label>
-                                            <div class="p-1.5 px-3 rounded flex font-semibold mt-2" :class="[$page.props.invoice_data.status_text_color, $page.props.invoice_data.status_bg_color]">{{ $page.props.invoice_data.status }}</div>
-                                            <div class=" flex rounded-md shadow-sm">
-                                            </div>
+                                        <div class="mb-4 text-left">
+                                            <label for="payment_status" class="block text-sm font-bold text-gray-700"> Payment Status </label>
+                                            <select name="payment_status" id="payment_status" class="mt-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" autocomplete="off" v-model="form.payment.status">
+                                                <option :value="status.id" v-for="status in $page.props.invoice_status">{{ status.name }}</option>
+                                            </select>
+                                            <!-- <div class="text-center p-1.5 px-3 rounded font-semibold mt-2" :class="[$page.props.invoice_data.status_text_color, $page.props.invoice_data.status_bg_color]">
+                                                {{ $page.props.invoice_data.status }}
+                                            </div> -->
                                         </div>
                                         <div class="mb-4">
                                         </div>
-                                        <div class="mb-4">
-                                            <label for="amount" class="block text-sm font-bold text-gray-700"> Total Amount <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input disabled type="text" name="amount" id="amount" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" :value="calculateTotals(this.form.invoice_items)" autocomplete="off">
-                                            </div>
+                                        <div class="mb-4 text-right pr-5">
+                                            <label for="amount" class="block text-md font-bold text-gray-700"> Total Amount</label>
+                                            <span class="text-2xl font-bold text-indigo-500">{{ totalFee(this.form.invoice_items) }}</span>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -121,24 +123,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1">
                                         <div class="mb-4">
-                                            <label for="payment_type" class="block text-sm font-bold text-gray-700"> Payment Type <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="payment_type" id="payment_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.payment_type ? 'border-red-300' : 'border-gray-300'" v-model="form.payment.status" autocomplete="off">
-                                                    <option value="">Please Select</option>
-                                                    <option :value="type.id" v-for="type, index in $page.props.payment_types" :key="type.id">{{ type.name }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1">
-                                        <div class="mb-4">
-                                            <label for="transaction_id" class="block text-sm font-bold text-gray-700"> Transaction ID <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="transaction_id" id="transaction_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.transaction_id ? 'border-red-300' : 'border-gray-300'" v-model="form.payment.transaction_id" autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="date" class="block text-sm font-bold text-gray-700"> Date <span class="text-red-500">*</span></label>
+                                            <label for="date" class="block text-sm font-bold text-gray-700"> Date </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 
                                                 <Datepicker 
@@ -151,11 +136,38 @@ import BreezeButton from '@/Components/Button.vue';
                                                 />
                                             </div>
                                         </div>
+                                        <div class="mb-4">
+                                            <label for="transaction_id" class="block text-sm font-bold text-gray-700"> Transaction ID </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input type="text" name="transaction_id" id="transaction_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.transaction_id ? 'border-red-300' : 'border-gray-300'" v-model="form.payment.transaction_id" autocomplete="off">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="grid grid-cols-1">
                                         <div class="mb-4">
-                                            <label for="student_name" class="block text-sm font-bold text-gray-700"> Proof of Payment <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                            <label for="student_name" class="block text-sm font-bold text-gray-700"> Proof of Payment </label>
+                                            <div class="mt-1 items-center space-x-2 w-full">
+                                                <div class="mb-4" v-if="!form.payment.proof.url.length"> 
+                                                    <label class="block focus:ring-0 focus:border-gray-300">
+                                                        <span class="sr-only">Browse File</span>
+                                                        <input type="file" ref="file_input" class="focus:ring-0 border rounded-md block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 focus:outline-none" :class="$page.props.errors.proof ? 'border-red-300' : 'border-gray-300'" @change="uploadFile"/>
+                                                    </label>
+                                                </div>
+                                                <div class="flex justify-between py-2 border bg-gray-50 shadow-md p-4 rounded-md" v-else>
+                                                    <a :href="form.payment.proof.file ? form.payment.proof.url : '/storage/proof_of_payment/' + form.payment.proof.url" download class="flex items-center space-x-2 text-indigo-500 hover:text-indigo-600">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                                                            <path d="M364.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z"/>
+                                                        </svg>
+                                                        <span>{{ form.payment.proof.file ? form.payment.proof.file.name : form.payment.proof.url  }}</span>
+                                                    </a>
+                                                    <div class="flex">
+                                                        <button type="button" class="rounded-md p-2 bg-red-500 text-white" @click="deleteProof()">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="text-white h-3 w-3">
+                                                                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -191,33 +203,33 @@ import { component as Viewer } from "v-viewer"
 
 export default {
     components: {
-        Head, Link, Viewer
+        Head, Link, Viewer, 
     },
     data(){
         return{
+            show_proof: false,
             date_issued: moment(this.$page.props.invoice_data.date_issued).format('DD MMM Y'),
             due_date: moment(this.$page.props.invoice_data.due_date).format('DD MMM Y'),
             form: {
                 invoice_id: this.$page.props.invoice_data.id,
                 invoice_items: JSON.parse(this.$page.props.invoice_data.invoice_items),
+                invoice_amount: this.$page.props.invoice_data.amount,
                 payment: {
-                    status: '',
-                    transaction_id: '',
-                    date: ''
+                    status: this.$page.props.invoice_data.status,
+                    date: this.$page.props.invoice_data.payment_date,
+                    transaction_id: this.$page.props.invoice_data.payment_transaction_id,
+                    proof: {
+                        url: this.$page.props.invoice_data.payment_proof ? this.$page.props.invoice_data.payment_proof : '',
+                        file: '',
+                        delete_previous: false
+                    }
                 }
             },
-            viewer_options: { 
-                inline: false, 
-                
-                url: 'data-source' 
-            },
-            images: [
-                "https://picsum.photos/200/200"
-            ]
         }
     },
     methods: {
         submit() {
+            this.form.invoice_amount = this.totalFee(this.form.invoice_items)
             this.$inertia.post(route('invoices.update'), this.form, { preserveState: true})
         },
         numbersOnly (evt){
@@ -242,48 +254,45 @@ export default {
                 return true;
             }
         },
-        calculateTotals(invoice_items) {
-            let programmeFeeSum = 0;
-            let materialFeeSum = 0;
-            let programmeFeeDiscountSum = 0;
-            let materialFeeDiscountSum = 0;
+        totalFee(invoice_items) {
+            let total = 0;
+            for (const item of invoice_items) {
+                // Parse fees and discounts as numbers
+                const programmeFee = parseFloat(item.programme_fee);
+                const programmeDiscount = parseFloat(item.programme_fee_discount);
+                const materialFee = parseFloat(item.material_fee);
+                const materialDiscount = parseFloat(item.material_fee_discount);
 
-            invoice_items.forEach(item => {
-                programmeFeeSum += item.programme_fee;
-                programmeFeeDiscountSum += item.programme_fee_discount;
+                // Add programme fee and subtract programme discount
+                total += programmeFee - programmeDiscount;
 
+                // Check if material fee should be included
                 if (item.include_material_fee) {
-                materialFeeSum += item.material_fee;
-                materialFeeDiscountSum += item.material_fee_discount;
+                // Add material fee and subtract material discount
+                total += materialFee - materialDiscount;
                 }
-            });
-
-            this.programmeFeeTotal = programmeFeeSum;
-            this.materialFeeTotal = materialFeeSum;
-            this.programmeFeeDiscountTotal = programmeFeeDiscountSum;
-            this.materialFeeDiscountTotal = materialFeeDiscountSum;
-
-            const grandTotal = (programmeFeeSum - programmeFeeDiscountSum) + (materialFeeSum - materialFeeDiscountSum);
-
-            return grandTotal
+            }
+            return total;
         },
-        show(){
-            this.$viewerApi({options: {
-                button: true, 
-                navbar: false, 
-                title: false, 
-                toolbar: false, 
-                tooltip: false, 
-                movable: false, 
-                zoomable: false, 
-                rotatable: false, 
-                scalable: true, 
-                transition: true, 
-                fullscreen: true, 
-                keyboard: false, 
-                movable: false, 
-            }, images: ['https://picsum.photos/1280/800']})
-        }
+        deleteProof(){
+            this.form.payment.proof.url                 =   []
+            this.form.payment.proof.file                =   ''
+            this.form.payment.proof.delete_previous     =   true
+        },
+        uploadFile($event){
+            const file  =   $event.target.files[0]
+            
+            if(file.type == 'application/pdf' || file.name.toLowerCase().endsWith('.pdf') || file.type == 'image/jpeg' || file.name.toLowerCase().endsWith('.png')){
+                this.form.payment.proof.url     =   [URL.createObjectURL(file)];
+                this.form.payment.proof.file    =   file
+            }
+            else{
+                alert('Only Image / PDF File allowed!')
+                this.$refs.file_input.value = ''
+                this.form.payment.proof.url = ''
+                this.form.payment.proof.file = ''
+            }
+        },
     },
 }
 </script>

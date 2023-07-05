@@ -199,7 +199,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="text-sm font-medium text-gray-900">{{ moment(result.due_date).format('DD MMM Y') }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ calculateTotals(result.invoice_items) }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ result.amount }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="ml-2 flex-shrink-0 flex">
@@ -330,44 +330,38 @@ export default {
             this.invoice_data.invoice_items     = JSON.parse(this.$page.props.invoices.data[invoice_index].invoice_items)
             this.invoice_data.date_issued       = this.$page.props.invoices.data[invoice_index].date_issued
             this.invoice_data.due_date          = this.$page.props.invoices.data[invoice_index].due_date
-            this.invoice_data.total_amount      = this.calculateTotals(this.$page.props.invoices.data[invoice_index].invoice_items)
+            this.invoice_data.total_amount      = this.totalFee(this.$page.props.invoices.data[invoice_index].invoice_items)
             
             this.open_modal = true
         },
         editInvoice(invoice_id){
-            this.$inertia.get(route('invoices.edit'), {'invoice_id':invoice_id})
+            this.$inertia.get(route('invoices.edit'), {'invoice_id':invoice_id}, {preserveState: false})
         },
         deleteResource(resource_id){
             this.confirmationRoute = 'invoices.destroy'
             this.confirmationData = resource_id
             this.isOpen = true
         },
-        calculateTotals(invoice_items) {
+        totalFee(invoice_items) {
+            let total = 0;
             const parsed_invoice_items =   JSON.parse(invoice_items)
-            
-            let programmeFeeSum = 0;
-            let materialFeeSum = 0;
-            let programmeFeeDiscountSum = 0;
-            let materialFeeDiscountSum = 0;
+            for (const item of parsed_invoice_items) {
+                // Parse fees and discounts as numbers
+                const programmeFee = parseFloat(item.programme_fee);
+                const programmeDiscount = parseFloat(item.programme_fee_discount);
+                const materialFee = parseFloat(item.material_fee);
+                const materialDiscount = parseFloat(item.material_fee_discount);
 
-            parsed_invoice_items.forEach(item => {
-                programmeFeeSum += item.programme_fee;
-                programmeFeeDiscountSum += item.programme_fee_discount;
+                // Add programme fee and subtract programme discount
+                total += programmeFee - programmeDiscount;
 
+                // Check if material fee should be included
                 if (item.include_material_fee) {
-                materialFeeSum += item.material_fee;
-                materialFeeDiscountSum += item.material_fee_discount;
+                // Add material fee and subtract material discount
+                total += materialFee - materialDiscount;
                 }
-            });
-
-            this.programmeFeeTotal = programmeFeeSum;
-            this.materialFeeTotal = materialFeeSum;
-            this.programmeFeeDiscountTotal = programmeFeeDiscountSum;
-            this.materialFeeDiscountTotal = materialFeeDiscountSum;
-
-            const grandTotal = (programmeFeeSum - programmeFeeDiscountSum) + (materialFeeSum - materialFeeDiscountSum);
-
-            return grandTotal
+            }
+            return total;
         },
         print(){
             this.printing = true

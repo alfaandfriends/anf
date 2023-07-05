@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\DB;
 
 class ProgrammeHelper {
 
+    public static function programmes(){
+        $programmes =   DB::table('programmes')->get();
+
+        return $programmes;
+    }
+
     public function getProgrammeName($programme_id)
     {
         $programme_name     =   DB::table('programmes')->where('id', $programme_id)->pluck('name')->first();

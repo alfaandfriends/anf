@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\ProgrammeHelper;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class ProgressReportController extends Controller
             return $value->ID == request('centre_id');
         });
 
-        $programmes =   DB::table('programmes')->get();
+        $programmes =   ProgrammeHelper::programmes();
         
         $query  =   DB::table('progress_report_summaries')
                         ->join('progress_reports', 'progress_report_summaries.progress_report_id', '=', 'progress_reports.id')

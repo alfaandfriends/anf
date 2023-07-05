@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ClassHelper;
+use App\Classes\ProgrammeHelper;
 use App\Http\Controllers\Approval\ClassApprovalController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -63,7 +64,7 @@ class ClassController extends Controller
 
     public function create(Request $request)
     {
-        $programme_list     =   DB::table('programmes')->get();
+        $programme_list     =   ProgrammeHelper::programmes();
         $day_list           =   DB::table('class_days')->get();
         $method_list        =   DB::table('class_methods')->get();
 
@@ -129,7 +130,7 @@ class ClassController extends Controller
                                     ->orderBy('level')
                                     ->get();
 
-        $programme_list     =   DB::table('programmes')->get();
+        $programme_list     =   ProgrammeHelper::programmes();
         $day_list           =   DB::table('class_days')->get();
         $type_list          =   DB::table('class_types')->get();
         $method_list        =   DB::table('class_methods')->get();
@@ -190,7 +191,7 @@ class ClassController extends Controller
                                                     ->orderBy('level')
                                                     ->get();
 
-            $approval_data['programme_list']    =   DB::table('programmes')->get();
+            $approval_data['programme_list']    =   ProgrammeHelper::programmes();
             $approval_data['day_list']          =   DB::table('class_days')->get();
             $approval_data['type_list']         =   DB::table('class_types')->get();
             $approval_data['method_list']       =   DB::table('class_methods')->get();

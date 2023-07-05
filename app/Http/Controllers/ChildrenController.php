@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\ProgrammeHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class ChildrenController extends Controller
                                     ->orderBy('children.date_of_birth')
                                     ->get();
         $gender_list        =   DB::table('genders')->get();
-        $programme_list     =   DB::table('programmes')->get();
+        $programme_list     =   ProgrammeHelper::programmes();
 
         return Inertia::render('Children/Create', [
             'gender_list'       => $gender_list,

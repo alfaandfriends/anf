@@ -4,9 +4,11 @@ namespace App\Classes;
 
 use Illuminate\Support\Facades\DB;
 
-class ClassHelper {
-    // public static function getStudentInvoices($student_id)
-    // {
-        
-    // }
+class InvoiceHelper {
+    public static function invoiceStatus()
+    {
+        $status =   DB::table('invoice_status')->get();
+
+        return $status;
+    }
 }

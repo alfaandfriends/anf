@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\NotificationHelper;
+use App\Classes\ProgrammeHelper;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ class StudentController extends Controller
 
     public function create(Request $request)
     {
-        $programme_list     =   DB::table('programmes')->get();
+        $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
 
         return Inertia::render('CentreManagement/Students/Create', [
@@ -176,7 +177,7 @@ class StudentController extends Controller
                                     ->orderBy('class_days.id')
                                     ->get();
         $gender_list        =   DB::table('genders')->get();
-        $programme_list     =   DB::table('programmes')->get();
+        $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
         
         return Inertia::render('CentreManagement/Students/Edit', [

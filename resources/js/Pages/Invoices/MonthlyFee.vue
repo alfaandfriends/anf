@@ -155,7 +155,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <tbody>
                             <tr class="border" v-for="data in invoice_data.invoice_items">
                                 <td class="py-2 px-4">
-                                    <p class="font-bold text-md text-gray-800 mb-1">{{ data.programme }} ( Level {{ data.programme_level }} ) - June 2023</p>
+                                    <p class="font-bold text-md text-gray-800 mb-1">{{ data.programme_name }} ( Level {{ data.programme_level }} ) - June 2023</p>
                                     <p class="font-normal text-md text-gray-800" v-if="data.include_material_fee">- Material Fee</p>
                                     <p class="font-normal text-md text-gray-800">- {{ data.programme_type }}</p>
                                 </td>
