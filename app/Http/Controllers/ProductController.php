@@ -34,27 +34,6 @@ class ProductController extends Controller
             return $query->where('name', 'like', '%' . $filter . '%');
         })->paginate(10);
 
-        dd($data['products']);
-
-        // $items = $data['products']->flatMap(function ($product) {
-        //     return $product->variations->flatMap(function ($variation) use ($product) {
-        //         return $variation->items->map(function ($item) use ($product) {
-        //             return [
-        //                 'id' => $product->id,
-        //                 'variation_item_id' => $item->id,
-        //                 'name' => $product->name.'-'.$item->name,
-        //                 'price' => $item->price,
-        //                 'sales' => $item->sales,
-        //                 'stock' => $item->stock,
-        //                 'sku' => $item->sku,
-        //                 'image' => ($product->images->first()) ? 'storage/'.$product->images->first()->path : 'https://placehold.co/200x200',
-        //             ];
-        //         });
-        //     });
-        // });
-
-        // $data['products']->setCollection($items);
-
         return Inertia::render('Product/Index', $data);
     }
 
