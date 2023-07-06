@@ -20,8 +20,6 @@ const variations = ref([
     }
 ]);
 
-const tableData = ref(variations.value);
-
 const emit = defineEmits(['update:variation', 'delete:variation']);
 
 const addVariation = () => {
@@ -147,58 +145,14 @@ const updatePreviewUrl = (name, value, index, file) => {
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-if="variations.length == 1" class="hover:bg-gray-200" v-for="(variation_1, variation_1_index) in variations[0].options" :key="variation_1_index">
+                <tr class="hover:bg-gray-200" v-for="(variation_1, variation_1_index) in variations[0].options" :key="variation_1_index">
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col items-center p-2 m-2">
                             <UploadPreview :previewUrl="variation_1.url" @update:value="handleFileChange($event, variation_1.name, variation_1_index)" />
                             <label :for="variation_1.name" class="text-sm text-gray-500 text-center"> {{ variation_1.name }} </label>
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">
-                            <input
-                                type="text" placeholder="input"
-                                :name="'variation_option_price'+variation_1_index"
-                                :id="'variation_option_price'+variation_1_index"
-                                class="focus:ring-0 focus:border-indigo-300 flex-1 block sm:text-sm"
-                                v-model="variation_1.price"
-                                autocomplete="off"
-                            />
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">
-                            <input
-                                type="text" placeholder="0"
-                                :name="'variation_option_stock'+variation_1_index"
-                                :id="'variation_option_stock'+variation_1_index"
-                                class="focus:ring-0 focus:border-indigo-300 flex-1 block sm:text-sm"
-                                v-model="variation_1.stock"
-                                autocomplete="off"
-                            />
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">
-                            <input
-                                type="text" placeholder="input"
-                                :name="'variation_option_sku'+variation_1_index"
-                                :id="'variation_option_sku'+variation_1_index"
-                                class="focus:ring-0 focus:border-indigo-300 flex-1 block sm:text-sm"
-                                v-model="variation_1.sku"
-                                autocomplete="off"
-                            />
-                        </div>
-                    </td>
-                </tr>
-                <tr v-else class="hover:bg-gray-200" v-for="(variation_1, variation_2_index) in variations[0].options" :key="variation_2_index">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex flex-col items-center p-2 m-2">
-                            <UploadPreview :previewUrl="variation_1.url" @update:value="handleFileChange($event, variation_1.name, variation_2_index)" />
-                            <label :for="variation_1.name" class="text-sm text-gray-500 text-center"> {{ variation_1.name }} </label>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td v-if="variations[1]" class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col items-center p-2 m-2" v-for="(variation_2, variation_2_index) in variations[1].options" :key="variation_2_index">
                             <label :for="variation_2.name" class="text-sm text-gray-500 text-center"> {{ variation_2.name }} </label>
                         </div>

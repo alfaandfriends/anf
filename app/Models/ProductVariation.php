@@ -11,9 +11,4 @@ class ProductVariation extends Model
     use HasFactory;
     use SoftDeletes;
     protected $guarded = ['id'];
-
-    public function items()
-    {
-        return $this->hasMany(ProductVariationItem::class);
-    }
 }

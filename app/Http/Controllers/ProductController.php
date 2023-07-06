@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -26,32 +27,33 @@ class ProductController extends Controller
     {
         $data['products'] = Product::with(
             'images:id,product_id,path',
-            'variations:id,product_id,name',
-            'variations.items:id,product_variation_id,name,price,sales,stock,sku'
+            'variations:id,product_id,variation1,variation2,price,stock,sku,sales',
         )->when($request->search, function ($query, $search) {
             return $query->where('name', 'like', '%' . $search . '%');
         })->when($request->filter, function ($query, $filter) {
             return $query->where('name', 'like', '%' . $filter . '%');
         })->paginate(10);
 
-        $items = $data['products']->flatMap(function ($product) {
-            return $product->variations->flatMap(function ($variation) use ($product) {
-                return $variation->items->map(function ($item) use ($product) {
-                    return [
-                        'id' => $product->id,
-                        'variation_item_id' => $item->id,
-                        'name' => $product->name.'-'.$item->name,
-                        'price' => $item->price,
-                        'sales' => $item->sales,
-                        'stock' => $item->stock,
-                        'sku' => $item->sku,
-                        'image' => ($product->images->first()) ? 'storage/'.$product->images->first()->path : 'https://placehold.co/200x200',
-                    ];
-                });
-            });
-        });
+        dd($data['products']);
 
-        $data['products']->setCollection($items);
+        // $items = $data['products']->flatMap(function ($product) {
+        //     return $product->variations->flatMap(function ($variation) use ($product) {
+        //         return $variation->items->map(function ($item) use ($product) {
+        //             return [
+        //                 'id' => $product->id,
+        //                 'variation_item_id' => $item->id,
+        //                 'name' => $product->name.'-'.$item->name,
+        //                 'price' => $item->price,
+        //                 'sales' => $item->sales,
+        //                 'stock' => $item->stock,
+        //                 'sku' => $item->sku,
+        //                 'image' => ($product->images->first()) ? 'storage/'.$product->images->first()->path : 'https://placehold.co/200x200',
+        //             ];
+        //         });
+        //     });
+        // });
+
+        // $data['products']->setCollection($items);
 
         return Inertia::render('Product/Index', $data);
     }
@@ -119,7 +121,7 @@ class ProductController extends Controller
                     'product_category_id' => $request->product_category,
                 ]);
 
-                foreach ($request->all() as $key => $value) {
+                foreach($request->all() as $key => $value) {
                     if ($request->hasFile($key)) {
                         ProductImage::create([
                             'name' => str_replace('product_', '', $key),
@@ -130,30 +132,42 @@ class ProductController extends Controller
                 }
 
                 if (empty($request->product_variation_items)) {
-                    $productVariation = ProductVariation::create([
-                        'name' => $request->product_name,
-                        'product_id' => $product->id,
-                    ]);
-                    ProductVariationItem::create([
-                        'name' => $request->product_name,
+                    ProductVariation::create([
+                        'variation1' => $request->product_name,
                         'price' => $request->product_price,
                         'stock' => $request->product_stock,
-                        'product_variation_id' => $productVariation->id,
+                        'product_id' => $product->id,
                     ]);
                 } else {
-                    foreach ($request->product_variation_items as $key => $variation) {
-                        $productVariation = ProductVariation::create([
-                            'name' => $variation['name'],
-                            'product_id' => $product->id,
-                        ]);
-                        foreach ($variation['options'] as $key => $option) {
-                            ProductVariationItem::create([
-                                'name' => $option['name'],
-                                'price' => $option['price'],
-                                'stock' => $option['stock'],
-                                'sku' => $option['sku'],
-                                'product_variation_id' => $productVariation->id,
-                            ]);
+                    foreach($request->product_variation_items[0]['options'] as $key => $variation) {
+                        $path = null;
+                        if($variation['image']){
+                            $path = 'products/'.$product->id.'/' . $variation['image']->getClientOriginalName();
+                            Storage::put($path, file_get_contents($variation['image']));
+                        }
+                        if(count($variation['row']) == 1) {
+                            foreach($variation['row'] as $row){
+                                ProductVariation::create([
+                                    'image' => $path,
+                                    'variation1' => $variation['name'],
+                                    'price' => $row['price'],
+                                    'stock' => $row['stock'],
+                                    'sku' => $row['sku'],
+                                    'product_id' => $product->id,
+                                ]);
+                            }
+                        }else{
+                            foreach($variation['row'] as $row){
+                                ProductVariation::create([
+                                    'image' => $path,
+                                    'variation1' => $request->product_variation_items[0]['name'],
+                                    'variation2' => $row['name'],
+                                    'price' => $row['price'],
+                                    'stock' => $row['stock'],
+                                    'sku' => $row['sku'],
+                                    'product_id' => $product->id,
+                                ]);
+                            }
                         }
                     }
                 }
