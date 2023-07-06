@@ -1,8 +1,14 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import BreezeButton from '@/Components/Button.vue';
 import VariationOption from './VariationOption.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
+
+const props = defineProps({
+    productVariations: {
+        type: Object,
+    },
+});
 
 const variations = ref([
     {
@@ -105,6 +111,22 @@ const updatePreviewUrl = (name, value, index, file) => {
         }
     });
 }
+
+onMounted(() => {
+    console.log(props.productVariations);
+    if(props.productVariations) {
+        variations.value.forEach((variation) => {
+            console.log(variation);
+            Object(props.productVariations).forEach((item) => {
+            console.log(item);
+                // if(url.name == 'product_'+item.name){
+                //     url.value = '../../storage/'+item.path;
+                // }
+            });
+        });
+    }
+    console.log(variations.value);
+});
 </script>
 
 <template>

@@ -26,13 +26,15 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $data['products'] = Product::with(
-            'images:id,product_id,path',
+            'images:id,product_id,name,path',
             'variations:id,product_id,variation1,variation2,price,stock,sku,sales',
         )->when($request->search, function ($query, $search) {
             return $query->where('name', 'like', '%' . $search . '%');
         })->when($request->filter, function ($query, $filter) {
             return $query->where('name', 'like', '%' . $filter . '%');
         })->paginate(10);
+
+        $data['categories'] = ProductCategory::select('id', 'name')->get();
 
         return Inertia::render('Product/Index', $data);
     }
@@ -182,8 +184,10 @@ class ProductController extends Controller
     {
         $productImages = ProductImage::select('id', 'name', 'path')->where('product_id', $product->id)->get();
         $categories = ProductCategory::select('id', 'name')->get();
+        $productVariatons = ProductVariation::select('id','image','variation1','variation2','price','stock','sku','sales',)->where('product_id', $product->id)->get();
         return Inertia::render('Product/Create', [
             'product' => $product,
+            'productVariations' => $productVariatons,
             'productImages' => $productImages,
             'categories' => $categories
         ]);

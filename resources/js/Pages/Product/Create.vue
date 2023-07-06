@@ -2,15 +2,17 @@
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
-import ToggleRadio from '@/Components/ToggleRadio.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
 import Modal from '@/Components/Modal.vue';
 import Variation from './Components/Variation.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const props = defineProps({
     product: {
+        type: Object,
+    },
+    productVariations: {
         type: Object,
     },
     productImages: {
@@ -22,7 +24,6 @@ const props = defineProps({
 });
 
 const currentStep = ref(1);
-const productType = ref('diy');
 const addCategory = ref(false);
 const previewUrl = ref([
     {label: 'Cover Image', name: 'product_cover_image', value: null},
@@ -34,17 +35,17 @@ const previewUrl = ref([
     {label: 'Image 6', name: 'product_image_6', value: null},
 ]);
 
-// onMounted(() => {
-//     if(props.productImages) {
-//         previewUrl.value.forEach((url) => {
-//             Object(props.productImages).forEach((item) => {
-//                 if(url.name == 'product_'+item.name){
-//                     url.value = '../../storage/'+item.path;
-//                 }
-//             });
-//         });
-//     }
-// });
+onMounted(() => {
+    if(props.productImages) {
+        previewUrl.value.forEach((url) => {
+            Object(props.productImages).forEach((item) => {
+                if(url.name == 'product_'+item.name){
+                    url.value = '../../storage/'+item.path;
+                }
+            });
+        });
+    }
+});
 
 const variationOptions = [
     { label: 'Enable Variation', value: 'enabled' },
@@ -69,7 +70,7 @@ const productForm = useForm({
     product_image_4: '',
     product_image_5: '',
     product_image_6: '',
-    product_variation: (props.product) ? props.product.name : 'disabled',
+    product_variation: (props.product) ? 'enabled' : 'disabled',
     product_variation_items: (props.product) ? props.product.name : [],
 });
 
@@ -213,7 +214,7 @@ const submitProductCategoryForm = () => {
                                                 <div v-if="productForm.product_variation === 'enabled'">
                                                     <label class="block text-sm text-gray-700 font-bold"> Variation </label>
                                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                                        <Variation @update:variation="productForm.product_variation_items = $event" @delete:variation="productForm.product_variation = 'disabled'" />
+                                                        <Variation :productVariations="productVariations" @update:variation="productForm.product_variation_items = $event" @delete:variation="productForm.product_variation = 'disabled'" />
                                                     </div>
                                                 </div>
                                             </div>

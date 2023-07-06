@@ -14,6 +14,9 @@ const props = defineProps({
     products: {
         type: Object,
     },
+    categories: {
+        type: Object,
+    },
 });
 
 const isEdit = ref(false);
@@ -110,7 +113,10 @@ watch(
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <BreezeButton @click="editItem(product)" buttonType="warning" title="Edit Product">
+                                                    <!-- <BreezeButton @click="editItem(product)" buttonType="warning" title="Edit Product">
+                                                        Edit
+                                                    </BreezeButton> -->
+                                                    <BreezeButton :route="route('products.edit', product.id)" buttonType="warning" title="Edit Category">
                                                         Edit
                                                     </BreezeButton>
                                                 </div>
@@ -142,7 +148,7 @@ watch(
             >
             </ConfirmationModal>
             <!-- <AlertDialog :open="isDestroy" title="Delete Product" message="Are you sure want to delete this product?" level="danger" @toggle:alert="toggle" /> -->
-            <Edit :item="itemToEdit" :open="isEdit" @toggle:show="isEdit = $event" />
+            <Edit :item="itemToEdit" :categories="categories" :open="isEdit" @toggle:show="isEdit = $event" />
         </div>
     </BreezeAuthenticatedLayout>
 </template>
