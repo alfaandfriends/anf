@@ -19,6 +19,12 @@ class ProgrammeHelper {
         return $programme_name;
     }
 
+    public static function distinctLevels(){
+        $programme_name     =   DB::table('programme_levels')->distinct()->select('level')->get();
+
+        return $programme_name;
+    }
+
     public static function checkProgrammePreviousApprovals($programme_id, $notification_config_id)
     {
         $previous_programme_approval  =   DB::table('notifications')

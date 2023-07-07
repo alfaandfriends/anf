@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\DB;
 
 class ClassHelper {
 
+    public static function classTypeDetails(){
+        $class_types    =   DB::table('class_types_detail')->get();
+
+        return $class_types;
+    }
+
     public static function getClassInfo($class_id)
     {
         $class_info                =   collect(DB::table('classes')

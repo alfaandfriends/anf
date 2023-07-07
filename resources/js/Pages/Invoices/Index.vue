@@ -143,7 +143,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                         </div>
                         <div class="flex">
-                            <BreezeButton :route="route('invoices')">New invoice</BreezeButton>
+                            <BreezeButton :route="route('fee.invoices.create')">New invoice</BreezeButton>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
@@ -212,7 +212,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="flex justify-center space-x-2">
                                             <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton>
                                             <BreezeButton buttonType="warning" @click="editInvoice(result.id)">Edit / Collect Payment</BreezeButton>
-                                            <BreezeButton buttonType="danger" @click="deleteResource(result.id)">Delete</BreezeButton>
+                                            <!-- <BreezeButton buttonType="danger" @click="deleteResource(result.id)">Delete</BreezeButton> -->
                                         </div>
                                     </td>
                                 </tr>
@@ -301,7 +301,9 @@ export default {
             open_modal: false,
             params: {
                 search: this.$page.props.filter ? this.$page.props.filter.search : '',
+                centre_id: this.$page.props.filter ? this.$page.props.filter.centre_id : '',
                 programme_id: this.$page.props.filter ? this.$page.props.filter.programme_id : '',
+                date: this.$page.props.filter ? this.$page.props.filter.date : '',
             },
             invoice_data: {
                 parent_name: '',
@@ -317,7 +319,7 @@ export default {
     watch: {
         params: {
             handler(){
-                this.$inertia.get(route('invoices'), this.params)
+                this.$inertia.get(route('fee.invoices'), this.params)
             },
             deep: true
         },
@@ -335,12 +337,7 @@ export default {
             this.open_modal = true
         },
         editInvoice(invoice_id){
-            this.$inertia.get(route('invoices.edit'), {'invoice_id':invoice_id}, {preserveState: false})
-        },
-        deleteResource(resource_id){
-            this.confirmationRoute = 'invoices.destroy'
-            this.confirmationData = resource_id
-            this.isOpen = true
+            this.$inertia.get(route('fee.invoices.edit'), {'invoice_id':invoice_id}, {preserveState: false})
         },
         totalFee(invoice_items) {
             let total = 0;

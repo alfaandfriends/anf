@@ -255,9 +255,11 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/teacher-resources/get-resource', [TeacherResourcesController::class, 'getResource'])->name('teacher_resources.get_resource');
 
     /* Invoices */
-    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
-    Route::get('/invoices/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
-    Route::post('/invoices/update', [InvoiceController::class, 'update'])->name('invoices.update');
+    Route::get('/invoices/fee', [InvoiceController::class, 'feeInvoiceIndex'])->name('fee.invoices');
+    Route::get('/invoices/fee/create', [InvoiceController::class, 'feeInvoiceCreate'])->name('fee.invoices.create');
+    Route::post('/invoices/fee/store', [InvoiceController::class, 'feeInvoiceStore'])->name('fee.invoices.store');
+    Route::get('/invoices/fee/edit', [InvoiceController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit');
+    Route::post('/invoices/fee/update', [InvoiceController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update');
 
     /* Progress Report */
     Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');

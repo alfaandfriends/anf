@@ -4,7 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Invoices" />
+    <Head title="Fee Invoices" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
@@ -27,6 +27,14 @@ import BreezeButton from '@/Components/Button.vue';
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="grid grid-cols-1">
+                                        <div class="mb-4">
+                                            <label for="student_name" class="block text-sm font-bold text-gray-700"> Student Name </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <input disabled type="text" name="student_name" id="student_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="this.$page.props.invoice_data.student_name" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="grid grid-cols-2 gap-4">
                                         <div class="mb-4">
                                             <label for="date_issued" class="block text-sm font-bold text-gray-700"> Date Issued </label>
@@ -38,14 +46,6 @@ import BreezeButton from '@/Components/Button.vue';
                                             <label for="due_date" class="block text-sm font-bold text-gray-700"> Due Date </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <input disabled type="text" name="due_date" id="due_date" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="due_date" autocomplete="off">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1">
-                                        <div class="mb-4">
-                                            <label for="student_name" class="block text-sm font-bold text-gray-700"> Student Name </label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input disabled type="text" name="student_name" id="student_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="this.$page.props.invoice_data.student_name" autocomplete="off">
                                             </div>
                                         </div>
                                     </div>
@@ -95,6 +95,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             </table>
                                         </div>
                                     </div>
+                                    <div class=" border-b border-dashed border-indigo-900 mb-5"></div>
                                     <div class="grid grid-cols-3">
                                         <div class="mb-4 text-left">
                                             <label for="payment_status" class="block text-sm font-bold text-gray-700"> Payment Status </label>
@@ -179,7 +180,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex items-center justify-end">
                                         <div class="flex space-x-2">
-                                            <BreezeButton buttonType="gray" :route="route('invoices')">Cancel</BreezeButton>
+                                            <BreezeButton buttonType="gray" :route="route('fee.invoices')">Cancel</BreezeButton>
                                             <BreezeButton type="submit">Save</BreezeButton>
                                         </div>
                                     </div>
@@ -207,7 +208,6 @@ export default {
     },
     data(){
         return{
-            show_proof: false,
             date_issued: moment(this.$page.props.invoice_data.date_issued).format('DD MMM Y'),
             due_date: moment(this.$page.props.invoice_data.due_date).format('DD MMM Y'),
             form: {
@@ -227,10 +227,23 @@ export default {
             },
         }
     },
+    watch: {
+        'form.invoice_items': {
+            handler(newVal) {
+                newVal.forEach(item => {
+                    !item.programme_fee             ? item.programme_fee = 0 : ''
+                    !item.programme_fee_discount    ? item.programme_fee_discount = 0 : ''
+                    !item.material_fee              ? item.material_fee = 0 : ''
+                    !item.material_fee_discount     ? item.material_fee_discount = 0 : ''
+                });
+            },
+            deep: true,
+        }
+    },
     methods: {
         submit() {
             this.form.invoice_amount = this.totalFee(this.form.invoice_items)
-            this.$inertia.post(route('invoices.update'), this.form, { preserveState: true})
+            this.$inertia.post(route('fee.invoices.update'), this.form, { preserveState: true})
         },
         numbersOnly (evt){
             evt = evt ? evt : window.event;

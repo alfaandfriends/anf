@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\CentreHelper;
+use App\Classes\ClassHelper;
 use App\Classes\InvoiceHelper;
 use App\Classes\ProgrammeHelper;
 use Carbon\Carbon;
@@ -12,13 +14,17 @@ use Inertia\Inertia;
 
 class InvoiceController extends Controller
 {
-    public function index(Request $request)
+    private $fee_invoice_id   =   1;
+    private $product_invoice_id   =   2;
+
+    public function feeInvoiceIndex(Request $request)
     {
         $query =   DB::table('invoices')
                         ->join('students', 'invoices.student_id', '=', 'students.id')
                         ->join('children', 'students.children_id', '=', 'children.id')
                         ->join('user_basic_information', 'children.parent_id', '=', 'user_basic_information.user_id')
                         ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
+                        ->where('invoice_type_id', $this->fee_invoice_id)
                         ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                     'user_basic_information.user_first_name as parent_first_name', 'user_basic_information.user_last_name as parent_last_name', 
                                     'user_basic_information.user_address as parent_address', 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 
@@ -27,22 +33,51 @@ class InvoiceController extends Controller
             $query->where('children.name', 'LIKE', '%'.request('search').'%')
                 ->orWhere('invoices.invoice_number', 'LIKE', '%'.request('search').'%')
                 ->orWhere('invoice_status.name', 'LIKE', '%'.request('search').'%');
-        }
+        }   
+        
+        if($request->centre_id){
+            $query->where('invoices.invoice_items', 'LIKE', '%centre_id": "'.$request->centre_id.'%');
+        }     
         
         if($request->programme_id){
-            $query->where('invoices.invoice_items', 'LIKE', '%"programme_id": "'.$request->programme_id.'%');
-        }                   
+            $query->where('invoices.invoice_items', 'LIKE', '%programme_id": "'.$request->programme_id.'%');
+        }     
+        
+        if($request->date){
+            $query->where('invoices.date_issued', 'LIKE', '%'.$request->date['year'].'-0'.$request->date['month']  + 1 .'%');
+        }         
 
-        $programmes     =   ProgrammeHelper::programmes();
+        $programmes =   ProgrammeHelper::programmes();
         
         return Inertia::render('Invoices/Index', [
-            'filter'            =>  request()->all('search', 'programme_id'),
-            'invoices'          =>  $query->paginate(10),
-            'programmes'        =>  $programmes
+            'filter'        =>  request()->all('search', 'centre_id', 'programme_id', 'date'),
+            'invoices'      =>  $query->paginate(10),
+            'programmes'    =>  $programmes,
+        ]);
+    }
+
+    public function feeInvoiceCreate(){
+        $programmes     =   ProgrammeHelper::programmes();
+        $fee_types      =   ClassHelper::classTypeDetails();
+        $levels         =   ProgrammeHelper::distinctLevels();
+        $payment_status =   InvoiceHelper::invoiceStatus();
+
+        return Inertia::render('Invoices/Create', [
+            'programmes'        =>  $programmes,
+            'fee_types'         =>  $fee_types,
+            'levels'            =>  $levels,
+            'payment_status'    =>  $payment_status,
         ]);
     }
     
-    public function edit(Request $request){
+    public function feeInvoiceStore(Request $request){
+        dd($request->all());
+        DB::table('invoices')->insert([
+            'student_id'    => $request->student_id,
+        ]);
+    }
+
+    public function feeInvoiceEdit(Request $request){
         $invoice_data   =   DB::table('invoices')
                                 ->join('students', 'invoices.student_id', '=', 'students.id')
                                 ->join('children', 'students.children_id', '=', 'children.id')
@@ -59,7 +94,7 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function update(Request $request){
+    public function feeInvoiceUpdate(Request $request){
         $previous_file  =   DB::table('invoices')->where('id', $request->invoice_id)->pluck('payment_proof')->first();
 
         if($request->payment['proof']['delete_previous']){
@@ -83,6 +118,6 @@ class InvoiceController extends Controller
             'payment_proof'             =>  $request->file('payment.proof') ? $filename : $previous_file,
         ]);
 
-        return redirect(route('invoices'))->with(['type'=>'success', 'message'=>'Invoice updated successfully !']);
+        return redirect(route('fee.invoices'))->with(['type'=>'success', 'message'=>'Invoice updated successfully !']);
     }
 }
