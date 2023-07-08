@@ -148,7 +148,6 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/students/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:student_edit_access');
         Route::post('/students/update', [StudentController::class, 'update'])->name('students.update')->middleware('permission:student_edit_access');
         Route::delete('/students/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:student_delete_access');
-        Route::get('/students/find', [StudentController::class, 'findStudents'])->name('students.find')->middleware('permission:student_view_access|student_create_access|student_edit_access');
         Route::post('/students/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class')->middleware('permission:student_view_access|student_create_access|student_edit_access');
 
         /* Settings */    

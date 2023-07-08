@@ -399,7 +399,7 @@ export default {
                 invoice_items: [],
                 date_issued: '',
                 due_date: '',
-                amount: '',
+                invoice_amount: '',
                 status: 1,
                 payment: {
                     date: '',

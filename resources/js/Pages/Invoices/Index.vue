@@ -17,7 +17,7 @@ import BreezeButton from '@/Components/Button.vue';
 }
 </style>
 <template>
-    <Head title="Teacher Resources" />
+    <Head title="Fee Invoices" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>

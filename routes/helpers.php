@@ -13,4 +13,9 @@ Route::middleware(['auth'])->group(function(){
     Route::prefix('programmes')->group(function () {
         Route::get('get-programme-levels/{programme_id}', [ProgrammeHelper::class, 'getProgrammeLevels'])->name('get_programme_levels');
     });
+
+    /* Students */
+    Route::prefix('students')->group(function () {
+        Route::get('find', [StudentController::class, 'findStudents'])->name('students.find');
+    });
 });
