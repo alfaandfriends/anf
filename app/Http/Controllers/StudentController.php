@@ -222,17 +222,10 @@ class StudentController extends Controller
     }
 
     public function findStudents(Request $request){
-        $students   =   DB::table('children')
-                            ->join('user_basic_information', 'user_basic_information.user_id', '=', 'children.parent_id')
+        $students   =   DB::table('students')
+                            ->join('children', 'students.children_id', '=', 'children.id')
                             ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
-                            ->whereNotExists(function ($query) {
-                                $query->select(DB::raw(1))
-                                      ->from('students')
-                                      ->whereColumn('students.children_id', 'children.id');
-                            })
-                            ->select(['children.id', 
-                                        DB::Raw("CONCAT(children.name, ' - ( ', user_basic_information.user_first_name, ' ', user_basic_information.user_last_name, ' )') AS name")
-                                    ])->get();
+                            ->get();
 
         return $students;
     }

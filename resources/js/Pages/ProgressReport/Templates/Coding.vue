@@ -304,6 +304,12 @@ export default {
                 units: true,
                 lessons: true,
             },
+            saved_options:{
+                terms_books: [],
+                units: [],
+                lessons: [],
+                objectives: [],
+            },
             options: {
                 terms_books: [],
                 units: [],
@@ -412,17 +418,17 @@ export default {
         },
         async getLessons(unit_id, init = false) {
             if (unit_id) {
-            init ? this.loading.lessons = false : this.loading.lessons = true;
-            this.options.lessons = [];
-            this.disabled.lessons = true;
-            const response = await axios.get(route('progress_report.get_math_lessons', unit_id));
-            this.options.lessons = response.data;
-            init ? '' : this.form.lesson_id = '';
-            this.disabled.lessons = false;
-            this.loading.lessons = false;
+                init ? this.loading.lessons = false : this.loading.lessons = true;
+                this.options.lessons = [];
+                this.disabled.lessons = true;
+                const response = await axios.get(route('progress_report.get_math_lessons', unit_id));
+                this.options.lessons = response.data;
+                init ? '' : this.form.lesson_id = '';
+                this.disabled.lessons = false;
+                this.loading.lessons = false;
             } else {
-            this.options.lessons = [];
-            this.disabled.lessons = true;
+                this.options.lessons = [];
+                this.disabled.lessons = true;
             }
         },
         addUnitLesson() {

@@ -106,6 +106,7 @@ class ProgressReportController extends Controller
 
     public function storeMath(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'date'  => 'required'
         ]);

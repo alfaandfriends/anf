@@ -26,10 +26,10 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <label for="class_name" class="block text-sm font-bold text-gray-700"> Student Name <span class="text-red-500">*</span></label>
+                                            <label for="class_name" class="block text-sm font-bold text-gray-700"> Children Name <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md.shadow-sm">
                                                 <Multiselect 
-                                                    v-debounce="findStudents"
+                                                    v-debounce="findChildren"
                                                     v-model="form.children_id"
                                                     @close="clearStudents"
                                                     valueProp="id"
@@ -324,6 +324,7 @@ export default {
             selected_class_count: 0,
             searching_students: false,
             searching_classes: false,
+            searching_fee: false,
             disable_input: {
                 class_type: true,
                 class_levels: true,
@@ -396,11 +397,11 @@ export default {
         submit() {
             this.$inertia.post(route('classes.store'), this.form, { preserveState: true})
         },
-        findStudents(query){
+        findChildren(query){
             debounce(val => '400ms')(10)
             if(query){
                 this.searching_students = true
-                axios.get(route('students.find'), {
+                axios.get(route('children.find'), {
                     params: {
                         'keyword': query
                     }
@@ -453,24 +454,29 @@ export default {
             }
         },
         getFee(class_id, index, byClassCount = false){
+            if(this.searching_fee){
+                return
+            }
+            this.searching_fee = true
             axios.get(route('programmes.get_fee'), {
-                    'params': {
-                        'class_id' : !byClassCount ? class_id : '',
-                        'class_type' : this.search_form.class_type,
-                        'class_count':this.selected_class_count
-                    }
-                })
-                .then((res) => {
-                    this.form.fee = []
-                    this.form.fee = res.data
-                    if(res.data.id){
-                        this.enable_container.show_fee = true
-                        this.scrollToElement('class_fee')
-                    }
-                    else{
-                        this.enable_container.show_fee = false
-                    }
-                });
+                'params': {
+                    'class_id' : !byClassCount ? class_id : '',
+                    'class_type' : this.search_form.class_type,
+                    'class_count':this.selected_class_count
+                }
+            })
+            .then((res) => {
+                this.form.fee = []
+                this.form.fee = res.data
+                if(res.data.id){
+                    this.enable_container.show_fee = true
+                    this.scrollToElement('class_fee')
+                }
+                else{
+                    this.enable_container.show_fee = false
+                }
+                this.searching_fee = false
+            });
         },
         clearStudents(){
             this.students = []

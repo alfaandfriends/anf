@@ -74,4 +74,21 @@ class ChildrenController extends Controller
     {
         DB::table('children')->where('id', $id)->delete();
     }
+
+    public function findChildren(Request $request){
+        $children   =   DB::table('children')
+                            ->leftJoin('user_basic_information', 'children.parent_id', '=', 'user_basic_information.user_id')
+                            ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
+                            ->whereNotExists(function ($query) {
+                                $query->select(DB::raw(1))
+                                      ->from('students')
+                                      ->whereColumn('students.children_id', 'children.id');
+                            })
+                            ->select(['children.id', 'children.name'])->get();
+                            // ->select(['children.id', 
+                            //             DB::Raw("CONCAT(children.name, ' - ( ', user_basic_information.user_first_name, ' ', user_basic_information.user_last_name, ' )') AS name")
+                            //         ])->get();
+
+        return $children;
+    }
 }
