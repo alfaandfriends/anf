@@ -106,6 +106,7 @@ import BreezeButton from '@/Components/Button.vue';
       border-radius: 0.25rem;
       background: #fff;
       max-height: 90%;
+      width: 65%;
     }
 }
 </style>
