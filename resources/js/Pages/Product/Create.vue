@@ -71,7 +71,7 @@ const productForm = useForm({
     product_image_5: '',
     product_image_6: '',
     product_variation: (props.product) ? 'enabled' : 'disabled',
-    product_variation_items: (props.product) ? props.product.name : [],
+    product_variation_items: [],
 });
 
 const productCategoryForm = useForm({
@@ -120,6 +120,14 @@ const submitProductCategoryForm = () => {
         },
     });
 };
+
+// onMounted(() => {
+//     if(props.productImages) {
+//         Object(props.productImages).forEach((item, index) => {
+//             productForm['product_'+item.name] = item.path;
+//         });
+//     };
+// });
 </script>
 
 <template>
@@ -135,7 +143,7 @@ const submitProductCategoryForm = () => {
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="mb-5">
-                                        <h1 class="font-bold text-indigo-800">New Product</h1>
+                                        <h1 class="font-bold text-indigo-800">{{ (product) ? 'Edit' : 'New' }} Product</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
                                     <div class="p-10">

@@ -113,6 +113,10 @@ export default {
                         this.$emit('close'),
                         this.processing = false
                     },
+                    onFinished: ()  =>  {
+                        this.$emit('close'),
+                        this.processing = false
+                    },
                 })
             }
         }

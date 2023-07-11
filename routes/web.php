@@ -227,6 +227,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::middleware(['auth'])->group(function () {
         Route::get('/products/trash', [ProductController::class, 'trash'])->name('products.trash');
+        Route::patch('products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
         Route::resource('products', ProductController::class)->names([
             'index' => 'products'
         ]);

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('variation1', 50);
             $table->string('variation2', 50)->nullable();
+            $table->string('option1', 50);
+            $table->string('option2', 50)->nullable();
             $table->bigInteger('price');
             $table->integer('stock');
             $table->string('sku')->nullable();

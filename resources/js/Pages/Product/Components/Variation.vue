@@ -113,18 +113,63 @@ const updatePreviewUrl = (name, value, index, file) => {
 }
 
 onMounted(() => {
-    console.log(props.productVariations);
     if(props.productVariations) {
-        variations.value.forEach((variation) => {
-            console.log(variation);
-            Object(props.productVariations).forEach((item) => {
-            console.log(item);
-                // if(url.name == 'product_'+item.name){
-                //     url.value = '../../storage/'+item.path;
-                // }
-            });
+        variations.value = [];
+        let count = 0;
+        Object(props.productVariations).forEach((item, index) => {
+            if (variations.value.length == 0 && index == 0) {
+                variations.value.push(
+                    {
+                        name: item.variation1,
+                        options: [
+                            {
+                                name: item.option1,
+                                image: '',
+                                url: '/storage/'+item.image,
+                                row: [
+                                    { name: item.option2, price: item.price,  stock: item.stock,  sku: item.sku }
+                                ]
+                            }
+                        ]
+                    }
+                );
+                variations.value.push(
+                    {
+                        name: item.variation2,
+                        options: [
+                            { name: item.option2 }
+                        ]
+                    }
+                );
+            } else {
+                if (variations.value[0].options[index-1] && props.productVariations[index-1].option1 == item.option1 && variations.value[0].options[index-1].name == item.option1) {
+                    variations.value[0].options.forEach(option => {
+                        option.row.push({ name: item.option2, price: item.price,  stock: item.stock,  sku: item.sku })
+                    });
+                }else{
+                    count++;
+                    if(!variations.value[0].options[index-count]){
+                        variations.value[0].options.push({
+                            name: item.option1,
+                            image: '',
+                            url: (item.image) ? '/storage/'+item.image : '',
+                            row: [
+                                { name: item.option2, price: item.price,  stock: item.stock,  sku: item.sku }
+                            ]
+                        });
+                    }else{
+                        variations.value[0].options[index-count].row.push({
+                            name: item.option2, price: item.price,  stock: item.stock,  sku: item.sku
+                        });
+                        variations.value[1].options.push({
+                            name: item.option2
+                        });
+                    }
+                }
+            }
         });
     }
+    emit('update:variation', variations.value)
     console.log(variations.value);
 });
 </script>

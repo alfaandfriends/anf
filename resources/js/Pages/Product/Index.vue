@@ -143,7 +143,7 @@ watch(
                 confirmationText="Are you sure want to delete this product?"
                 confirmationButton="Delete"
                 confirmationMethod="delete"
-                confirmationRoute="product-variation-item.destroy"
+                confirmationRoute="products.destroy"
                 :confirmationData="toBeDelete"
             >
             </ConfirmationModal>

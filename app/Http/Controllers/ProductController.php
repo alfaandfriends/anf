@@ -27,7 +27,7 @@ class ProductController extends Controller
     {
         $data['products'] = Product::with(
             'images:id,product_id,name,path',
-            'variations:id,product_id,variation1,variation2,price,stock,sku,sales',
+            'variations:id,product_id,variation1,variation2,option1,option2,price,stock,sku,sales',
         )->when($request->search, function ($query, $search) {
             return $query->where('name', 'like', '%' . $search . '%');
         })->when($request->filter, function ($query, $filter) {
@@ -45,32 +45,12 @@ class ProductController extends Controller
             [
                 'images' => fn($q) => $q->onlyTrashed(),
                 'variations' => fn($q) => $q->onlyTrashed(),
-                'variations.items' => fn($q) => $q->onlyTrashed()
             ]
         )->when($request->search, function ($query, $search) {
             return $query->where('name', 'like', '%' . $search . '%');
         })->when($request->filter, function ($query, $filter) {
             return $query->where('name', 'like', '%' . $filter . '%');
         })->onlyTrashed()->paginate(10);
-
-        $items = $data['products']->flatMap(function ($product) {
-            return $product->variations->flatMap(function ($variation) use ($product) {
-                return $variation->items->map(function ($item) use ($product) {
-                    return [
-                        'id' => $product->id,
-                        'variation_item_id' => $item->id,
-                        'name' => $product->name.'-'.$item->name,
-                        'price' => $item->price,
-                        'sales' => $item->sales,
-                        'stock' => $item->stock,
-                        'sku' => $item->sku,
-                        'image' => ($product->images->first()) ? '../storage/'.$product->images->first()->path : 'https://placehold.co/200x200',
-                    ];
-                });
-            });
-        });
-
-        $data['products']->setCollection($items);
 
         return Inertia::render('Product/Trash', $data);
     }
@@ -130,7 +110,8 @@ class ProductController extends Controller
                             foreach($variation['row'] as $row){
                                 ProductVariation::create([
                                     'image' => $path,
-                                    'variation1' => $variation['name'],
+                                    'variation1' => $request->product_variation_items[0]['name'],
+                                    'option1' => $variation['name'],
                                     'price' => $row['price'],
                                     'stock' => $row['stock'],
                                     'sku' => $row['sku'],
@@ -142,7 +123,9 @@ class ProductController extends Controller
                                 ProductVariation::create([
                                     'image' => $path,
                                     'variation1' => $request->product_variation_items[0]['name'],
-                                    'variation2' => $row['name'],
+                                    'option1' => $variation['name'],
+                                    'variation2' => $request->product_variation_items[1]['name'],
+                                    'option2' => $row['name'],
                                     'price' => $row['price'],
                                     'stock' => $row['stock'],
                                     'sku' => $row['sku'],
@@ -184,7 +167,7 @@ class ProductController extends Controller
     {
         $productImages = ProductImage::select('id', 'name', 'path')->where('product_id', $product->id)->get();
         $categories = ProductCategory::select('id', 'name')->get();
-        $productVariatons = ProductVariation::select('id','image','variation1','variation2','price','stock','sku','sales',)->where('product_id', $product->id)->get();
+        $productVariatons = ProductVariation::select('id','image','variation1','variation2','option1','option2','price','stock','sku','sales',)->where('product_id', $product->id)->get();
         return Inertia::render('Product/Create', [
             'product' => $product,
             'productVariations' => $productVariatons,
@@ -202,6 +185,76 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+        try {
+            DB::transaction(function () use ($request, $product) {
+                $product->name = $request->product_name;
+                $product->description = $request->product_description;
+                $product->product_category_id = $request->product_category;
+                $product->save();
+
+                $productImages = ProductImage::where('product_id', $product->id)->get();
+                ProductVariation::where('product_id', $product->id)->delete();
+
+                foreach($request->all() as $name => $value) {
+                    if ($request->hasFile($name)) {
+                        foreach ($productImages as $image) {
+                            $image->path = $request->file($name)->store('products');
+                        }
+                    }
+                }
+
+                if (empty($request->product_variation_items)) {
+                    ProductVariation::create([
+                        'variation1' => $request->product_name,
+                        'price' => $request->product_price,
+                        'stock' => $request->product_stock,
+                        'product_id' => $product->id,
+                    ]);
+                } else {
+                    foreach($request->product_variation_items[0]['options'] as $key => $variation) {
+                        $path = null;
+                        if($variation['image']){
+                            $path = 'products/'.$product->id.'/' . $variation['image']->getClientOriginalName();
+                            Storage::put($path, file_get_contents($variation['image']));
+                        }
+                        if(count($variation['row']) == 1) {
+                            foreach($variation['row'] as $row){
+                                ProductVariation::create([
+                                    'image' => $path,
+                                    'variation1' => $request->product_variation_items[0]['name'],
+                                    'option1' => $variation['name'],
+                                    'price' => $row['price'],
+                                    'stock' => $row['stock'],
+                                    'sku' => $row['sku'],
+                                    'product_id' => $product->id,
+                                ]);
+                            }
+                        }else{
+                            foreach($variation['row'] as $row){
+                                ProductVariation::create([
+                                    'image' => $path,
+                                    'variation1' => $request->product_variation_items[0]['name'],
+                                    'option1' => $variation['name'],
+                                    'variation2' => $request->product_variation_items[1]['name'],
+                                    'option2' => $row['name'],
+                                    'price' => $row['price'],
+                                    'stock' => $row['stock'],
+                                    'sku' => $row['sku'],
+                                    'product_id' => $product->id,
+                                ]);
+                            }
+                        }
+                    }
+                }
+
+            });
+
+            return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product updated successfully !']);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return redirect(route('products'))->with(['type'=>'error', 'message'=>'Opps something went wrong']);
+        }
     }
 
     /**
@@ -212,5 +265,36 @@ class ProductController extends Controller
      */
     public function destroy(Product  $product)
     {
+        try {
+            DB::transaction(function () use ($product) {
+                ProductImage::where('product_id', $product->id)->delete();
+                ProductVariation::where('product_id', $product->id)->delete();
+                $product->delete();
+            });
+
+            return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product deleted successfully !']);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return redirect(route('products'))->with(['type'=>'error', 'message'=>'Opps something went wrong']);
+        }
+    }
+
+    public function restore($id)
+    {
+        try {
+            DB::transaction(function () use ($id) {
+                $product = Product::where('id', $id)->withTrashed()->first();
+                $product->restore();
+                ProductImage::where('product_id', $product->id)->restore();
+                ProductVariation::where('product_id', $product->id)->restore();
+            });
+
+            return redirect(route('products.trash'))->with(['type'=>'success', 'message'=>'Product restored successfully !']);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return redirect(route('products.trash'))->with(['type'=>'error', 'message'=>'Opps something went wrong']);
+        }
     }
 }
