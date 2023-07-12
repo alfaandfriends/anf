@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,3 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('find-email/{email}', [UserController::class, 'emailExist']);
 Route::get('find-username/{username}', [UserController::class, 'usernameExist']);
+
+//TODO: define middleware
+Route::prefix('api')->name('api.')->group(function () {
+    Route::prefix('product')->name('product.')->group(function () {
+        Route::apiResources([
+            'categories' => ProductCategoryController::class,
+        ]);
+    });
+});
