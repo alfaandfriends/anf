@@ -249,7 +249,15 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="mb-3">
                                     <label for="" class="block text-sm font-bold text-gray-700"> </label>
                                     <div class="mt-1 flex rounded-md.shadow-sm">
-                                        <BreezeButton class="py-3 px-4" buttonType="info" @click="addItem">Add</BreezeButton>
+                                        <BreezeButton class="py-3 px-4" buttonType="info" @click="addItem">
+                                            <div class="flex items-center">
+                                                <svg v-if="searching" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                                </svg>
+                                                {{ searching ? 'Adding' : 'Add' }}
+                                            </div>
+                                        </BreezeButton>
                                     </div>
                                 </div>
                             </div>
@@ -258,14 +266,8 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="mb-3">
                                 <label for="title" class="block text-sm font-bold text-gray-700"> Objectives </label>
                             </div>
-                            <div class="grid grid-cols-1 py-3" v-if="!form.report_data">
-                                <div class="flex justify-center py-4 items-center space-x-2" v-if="loading.objectives">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat animate-spin" viewBox="0 0 16 16">
-                                        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                                        <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-                                        </svg>
-                                        <span>Loading...</span>
-                                </div>
+                            <div class="grid grid-cols-1 divide-y divide-neutral-200 border-x border-t border-b mb-3" v-if="!form.report_data">
+                                <div class="p-3 bg-gray-50">No objectives found.</div>
                             </div>
                             <div class="grid grid-cols-1 divide-y divide-neutral-200 border-x border-t border-b mb-3" v-else>
                                 <div class="p-3 bg-gray-50" v-if="!form.report_data.length">No objectives found.</div>
@@ -284,8 +286,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </svg>
                                             </span>
                                         </summary>
-                                        <ul class="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg">
-                                            <li class="w-full border-b border-gray-200 rounded-t-lg" v-for="objective, objective_index in data.objectives">
+                                        <ul class="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg divide-y">
+                                            <li class="w-full" v-for="objective, objective_index in data.objectives">
                                                 <div class="flex items-center pl-3">
                                                     <input :id="objective.id" type="checkbox" :value="objective.id" v-model="form.report_data[index].objectives[objective_index].achieved" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-300 focus:ring-0">
                                                     <label :for="objective.id" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 cursor-pointer">{{ objective.name }}</label>
@@ -345,7 +347,7 @@ export default {
     data(){
         return{
             show_progress_report: false,
-            objectives_not_found: false,
+            searching: false,
             progress_report_list: {},
             disabled:{
                 terms_books: true,
@@ -371,7 +373,7 @@ export default {
             },
             form: {
                 date: '',
-                report_data: '',
+                report_data: [],
                 comments: '',
                 attendance_status: '',
             }
@@ -379,9 +381,10 @@ export default {
     },
     methods: {
         viewProgressReport(index) {
+            this.clearSearch()
             this.form.report_id             =   this.$page.props.progress_reports[index].id
             this.form.date                  =   this.$page.props.progress_reports[index].date
-            this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data)
+            this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data) ? JSON.parse(this.$page.props.progress_reports[index].report_data) : []
             this.form.attendance_status     =   this.$page.props.progress_reports[index].attendance_status
             this.form.comments              =   this.$page.props.progress_reports[index].comments
             this.show_progress_report       =   true;
@@ -431,13 +434,16 @@ export default {
             });
         },
         addItem() {
+            if(this.searching){
+                return
+            }
             if(this.search.term_book_id && this.search.unit_id && this.search.lesson_id) {
                 const objectives_exists =  this.form.report_data.find(item => item.lesson_id === this.search.lesson_id)
-                console.log(objectives_exists)
                 if(objectives_exists){
                     alert('You already added this lesson!')
                     return
                 }
+                this.searching = true
                 axios.get(route('progress_report.get_math_objectives', this.search.lesson_id))
                 .then(response => {
                     const new_item  =   {
@@ -461,6 +467,7 @@ export default {
                             achieved: false
                         })
                     })
+                    this.searching = false
                 });
             }
         },
@@ -469,6 +476,11 @@ export default {
         },
         customLabel ({ title, desc }) {
             return `${title} - ${desc}`
+        },
+        clearSearch(){
+            this.search.term_book_id = ''
+            this.search.unit_id = ''
+            this.search.lesson_id = ''
         }
     },
 }
