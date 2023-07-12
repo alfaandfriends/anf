@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\ProgrammeHelper;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -19,10 +20,10 @@ class ProgressReportController extends Controller
             return $value->ID == request('centre_id');
         });
 
-        $programmes =   DB::table('programmes')->get();
+        $programmes =   ProgrammeHelper::programmes();
         
-        $query  =   DB::table('progress_report_summaries')
-                        ->join('progress_reports', 'progress_report_summaries.progress_report_id', '=', 'progress_reports.id')
+        $query  =   DB::table('progress_report_details')
+                        ->join('progress_reports', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
                         ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
                         ->join('student_fees', 'progress_reports.student_fee_id', '=' ,'student_fees.id')
                         ->join('students', 'student_fees.student_id', '=' ,'students.id')
@@ -31,8 +32,8 @@ class ProgressReportController extends Controller
                                     'students.id as student_id', 
                                     'children.name as student_name', 
                                     DB::raw('count(progress_reports.id) as total_class'), 
-                                    DB::raw('count(CASE WHEN progress_report_summaries.attendance_status = 1 THEN 1 END) as total_present'), 
-                                    DB::raw('count(CASE WHEN progress_report_summaries.attendance_status = 2 THEN 1 END) as total_absent'), 
+                                    DB::raw('count(CASE WHEN progress_report_details.attendance_status = 1 THEN 1 END) as total_present'), 
+                                    DB::raw('count(CASE WHEN progress_report_details.attendance_status = 2 THEN 1 END) as total_absent'), 
                         );
                         
         if($request->search){
@@ -83,23 +84,27 @@ class ProgressReportController extends Controller
                                 ->first();
         // dd($student_info);
         /* Math Init Selection */
-        $math_terms_books   =   DB::table('math_terms_books')->get();
+        $math_terms_books   =   DB::table('math_terms_books')->where('level_id', $student_info->level)->get();
 
         /* Coding Init Selection */
 
         /* Digital Art Init Selection */
 
-
         $attendance_status  =   DB::table('progress_report_status')->get();
         $report_details     =   DB::table('progress_reports')->where('id', $request->progress_report_id)->first();   
         $config_info        =   DB::table('progress_report_configs')->where('id', $report_details->progress_report_config_id)->first();
-        $progress_reports   =   DB::table('progress_report_summaries')->where('progress_report_id', $request->progress_report_id)->get();
+        $progress_reports   =   DB::table('progress_report_details')
+                                    ->join('progress_report_status', 'progress_report_details.attendance_status', '=', 'progress_report_status.id')
+                                    ->select('progress_report_details.progress_report_id', 'progress_report_details.id', 'progress_report_details.date', 
+                                            'progress_report_details.report_data', 'progress_report_details.comments', 'progress_report_details.attendance_status',
+                                            'progress_report_status.class as attendance_status_class_name', 'progress_report_status.name as attendance_status_name')
+                                    ->where('progress_report_id', $request->progress_report_id)->get();
         
         return Inertia::render('ProgressReport/Templates/'.$config_info->vue_template, [
             'student_info'          => $student_info,
             'math_terms_books'      => $math_terms_books,
             'progress_reports'      => $progress_reports,
-            'attendance_status'     => $attendance_status
+            'attendance_status'     => $attendance_status,
         ]);
     }
 
@@ -112,32 +117,12 @@ class ProgressReportController extends Controller
             return redirect()->back()->with(['type'=>'error', 'message'=>'Date is required!']);
         }
 
-        DB::table('progress_report_summaries')->where('id', $request->report_id)->update([
+        DB::table('progress_report_details')->where('id', $request->report_id)->update([
             'date'                  => Carbon::parse($request->date)->format('Y-m-d'),
-            'math_term_book_id'     => $request->term_book_id,
+            'report_data'           => json_encode($request->report_data),
             'comments'              => $request->comments,
             'attendance_status'     => $request->attendance_status,
         ]);
-
-
-        if(!empty($request->units_lessons)){
-            DB::table('progress_report_details')->where('progress_report_summary_id', $request->report_id)->delete();
-            foreach($request->units_lessons as $key=>$unit_lesson){
-                $objectives =   '';
-                if(!empty($unit_lesson['math_objective_id'])){
-                    $filteredArray = array_filter($unit_lesson['math_objective_id'], function ($value) {
-                        return !empty($value);
-                    });
-                    $objectives = implode(', ', $filteredArray);
-                }
-                DB::table('progress_report_details')->insert([
-                    'progress_report_summary_id'    =>  $request->report_id,
-                    'math_unit_id'                  =>  $unit_lesson['math_unit_id'],
-                    'math_lesson_id'                =>  $unit_lesson['math_lesson_id'],
-                    'math_objective_id'             =>  $objectives
-                ]);
-            }
-        }
 
         return back()->with(['type'=>'success', 'message'=>'Progress report updated successfully !']);
     }

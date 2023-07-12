@@ -17,6 +17,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ExternalUserManagementController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProductCategoryController;
@@ -151,7 +152,6 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/students/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:student_edit_access');
         Route::post('/students/update', [StudentController::class, 'update'])->name('students.update')->middleware('permission:student_edit_access');
         Route::delete('/students/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:student_delete_access');
-        Route::get('/students/find', [StudentController::class, 'findStudents'])->name('students.find')->middleware('permission:student_view_access|student_create_access|student_edit_access');
         Route::post('/students/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class')->middleware('permission:student_view_access|student_create_access|student_edit_access');
 
         /* Settings */
@@ -271,6 +271,13 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/teacher-resources/update', [TeacherResourcesController::class, 'update'])->name('teacher_resources.update');
     Route::delete('/teacher-resources/destroy/{id}', [TeacherResourcesController::class, 'destroy'])->name('teacher_resources.destroy');
     Route::get('/teacher-resources/get-resource', [TeacherResourcesController::class, 'getResource'])->name('teacher_resources.get_resource');
+
+    /* Invoices */
+    Route::get('/invoices/fee', [InvoiceController::class, 'feeInvoiceIndex'])->name('fee.invoices');
+    Route::get('/invoices/fee/create', [InvoiceController::class, 'feeInvoiceCreate'])->name('fee.invoices.create');
+    Route::post('/invoices/fee/store', [InvoiceController::class, 'feeInvoiceStore'])->name('fee.invoices.store');
+    Route::get('/invoices/fee/edit', [InvoiceController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit');
+    Route::post('/invoices/fee/update', [InvoiceController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update');
 
     /* Progress Report */
     Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');

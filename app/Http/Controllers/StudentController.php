@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\NotificationHelper;
+use App\Classes\ProgrammeHelper;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ class StudentController extends Controller
 
     public function create(Request $request)
     {
-        $programme_list     =   DB::table('programmes')->get();
+        $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
 
         return Inertia::render('CentreManagement/Students/Create', [
@@ -176,7 +177,7 @@ class StudentController extends Controller
                                     ->orderBy('class_days.id')
                                     ->get();
         $gender_list        =   DB::table('genders')->get();
-        $programme_list     =   DB::table('programmes')->get();
+        $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
         
         return Inertia::render('CentreManagement/Students/Edit', [
@@ -221,17 +222,10 @@ class StudentController extends Controller
     }
 
     public function findStudents(Request $request){
-        $students   =   DB::table('children')
-                            ->join('user_basic_information', 'user_basic_information.user_id', '=', 'children.parent_id')
+        $students   =   DB::table('students')
+                            ->join('children', 'students.children_id', '=', 'children.id')
                             ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
-                            ->whereNotExists(function ($query) {
-                                $query->select(DB::raw(1))
-                                      ->from('students')
-                                      ->whereColumn('students.children_id', 'children.id');
-                            })
-                            ->select(['children.id', 
-                                        DB::Raw("CONCAT(children.name, ' - ( ', user_basic_information.user_first_name, ' ', user_basic_information.user_last_name, ' )') AS name")
-                                    ])->get();
+                            ->get();
 
         return $students;
     }

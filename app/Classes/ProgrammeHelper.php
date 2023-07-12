@@ -6,9 +6,21 @@ use Illuminate\Support\Facades\DB;
 
 class ProgrammeHelper {
 
+    public static function programmes(){
+        $programmes =   DB::table('programmes')->get();
+
+        return $programmes;
+    }
+
     public function getProgrammeName($programme_id)
     {
         $programme_name     =   DB::table('programmes')->where('id', $programme_id)->pluck('name')->first();
+
+        return $programme_name;
+    }
+
+    public static function distinctLevels(){
+        $programme_name     =   DB::table('programme_levels')->distinct()->select('level')->get();
 
         return $programme_name;
     }

@@ -537,20 +537,6 @@ export default {
         saveStudentDetails(){
             this.$inertia.post(route('students.update'), this.form, { preserveState: true})
         },
-        findStudents(query){
-            if(query){
-                this.searching_students = true
-                axios.get(route('students.find'), {
-                    'params': {
-                        'keyword': query
-                    }
-                })
-                .then((res) => {
-                    this.students = res.data
-                    this.searching_students = false
-                });
-            }
-        },
         findClasses(){
             if(this.search_form.centre_id && this.search_form.programme_id && this.search_form.class_level && this.search_form.class_type && this.search_form.class_method){
                 this.searching_classes = true   
