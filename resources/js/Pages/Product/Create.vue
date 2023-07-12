@@ -113,11 +113,19 @@ const submit = () => {
 };
 
 const submitProductCategoryForm = () => {
-    productCategoryForm.post(route('product-categories.store'), {
-        onSuccess: () => {
-            form.reset();
+    // productCategoryForm.post(route('product-categories.store'), {
+    //     onSuccess: () => {
+    //         form.reset();
+    //         addCategory.value = false;
+    //     },
+    // });
+    axios.post(route('api.product.categories.store'), productCategoryForm).then(response => {
+        console.log(response);
+        if (response.status == 200) {
             addCategory.value = false;
-        },
+        }
+    }).catch(error => {
+        console.error(error);
     });
 };
 
@@ -274,7 +282,7 @@ const submitProductCategoryForm = () => {
             <template v-slot:footer>
                 <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
                     <BreezeButton buttonType="gray" @click="addCategory = false">Cancel</BreezeButton>
-                    <BreezeButton @click="submitProductCategoryForm">Create</BreezeButton>
+                    <BreezeButton @click.stop="submitProductCategoryForm">Create</BreezeButton>
                 </div>
             </template>
         </Modal>

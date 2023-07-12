@@ -4,7 +4,9 @@ import BreezeButton from '@/Components/Button.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia'
 import Pagination from '@/Components/Pagination.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
     categories: {
@@ -12,8 +14,12 @@ const props = defineProps({
     },
 });
 
+const isDestroy = ref(false);
+const toBeDelete = ref();
+
 const handleDelete = (id) => {
-    Inertia.visit(route('product-categories.destroy', id), { method: 'delete' });
+    isDestroy.value = true;
+    toBeDelete.value = id;
 }
 </script>
 
@@ -82,6 +88,18 @@ const handleDelete = (id) => {
                     </div>
                 </div>
             </div>
+            <ConfirmationModal
+                :show="isDestroy"
+                @close="isDestroy = false"
+                confirmationAlert="danger"
+                confirmationTitle="Delete Product Category"
+                confirmationText="Are you sure want to delete this product category?"
+                confirmationButton="Delete"
+                confirmationMethod="delete"
+                confirmationRoute="product-categories.destroy"
+                :confirmationData="toBeDelete"
+            >
+            </ConfirmationModal>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
