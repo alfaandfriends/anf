@@ -288,14 +288,7 @@ Route::middleware(['auth'])->group(function(){
     // Route::post('/progress-report/update', [ProgressReportController::class, 'update'])->name('progress_report.update');
     // Route::delete('/progress-report/destroy/{id}', [ProgressReportController::class, 'destroy'])->name('progress_report.destroy');
 
-    /* Maths select options */
-    Route::post('/progress-report/math/store', [ProgressReportController::class, 'storeMath'])->name('progress_report.store_math');
-    Route::get('/progress-report/math/get-units-lessons/{report_id}', [ProgressReportController::class, 'getMathUnitsLessons'])->name('progress_report.get_math_units_lessons');
-    Route::get('/progress-report/math/get-units-lessons-objectives/{report_id}', [ProgressReportController::class, 'getMathUnitsLessonsObjectives'])->name('progress_report.get_math_units_lessons_objectives');
-    Route::get('/progress-report/math/get-terms-books/{report_id}', [ProgressReportController::class, 'getMathTermsBooks'])->name('progress_report.get_math_terms_books');
-    Route::get('/progress-report/math/get-units/{term_book_id}', [ProgressReportController::class, 'getMathUnits'])->name('progress_report.get_math_units');
-    Route::get('/progress-report/math/get-lessons/{unit_id}', [ProgressReportController::class, 'getMathLessons'])->name('progress_report.get_math_lessons');
-    Route::get('/progress-report/math/get-objectives/{lesson_id}', [ProgressReportController::class, 'getMathObjectives'])->name('progress_report.get_math_objectives');
+    Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store');
 });
 
 

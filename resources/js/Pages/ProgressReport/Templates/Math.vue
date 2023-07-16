@@ -232,16 +232,6 @@ import BreezeButton from '@/Components/Button.vue';
                                             noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                         }"
                                     >
-                                        <template slot="singleLabel" slot-scope="props">
-                                            <img class="option__image" :src="'https://picsum.photos/200'" alt="No Man’s Sky">
-                                            <span class="option__desc">
-                                                <span class="option__title">{{ options.lessons.id }}</span>
-                                            </span>
-                                            </template>
-                                        <template slot="option" slot-scope="props">
-                                            <img class="option__image" :src="'https://picsum.photos/200'" alt="No Man’s Sky">
-                                        <div class="option__desc"><span class="option__title">{{ options.lessons.id }}</span><span class="option__small">{{ options.lessons.id }}</span></div>
-                                        </template>
                                     </Multiselect>
                                 </div>
                             </div>
@@ -274,12 +264,17 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="p-5 bg-gray-50 hover:bg-gray-100" v-for="data, index in form.report_data">
                                     <details class="group space-y-4">
                                         <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
-                                            <div class="ml-2 text-sm">
-                                                <div class="flex space-x-4">
-                                                    <label for="helper-checkbox" class="font-medium text-gray-900">{{ data.unit_name }}</label>
-                                                    <label class="font-medium text-red-500 hover:text-red-600 cursor-pointer" @click="deleteItem(index)">Delete</label>
+                                            <div class="space-y-2 ml-2 text-sm">
+                                                <div class="flex space-x-4 items-center justify-between">
+                                                    <span class="text-slate-700 font-bold font-sans">{{ data.term_book_name }}</span>
+                                                    <label class="text-red-500 hover:text-red-600 cursor-pointer uppercase font-bold" @click="deleteItem(index)">Delete</label>
                                                 </div>
-                                                <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500">{{ data.lesson_name }}</p>
+                                                <div class="border border-b-black"></div>
+                                                <div class="flex space-x-2">
+                                                    <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded uppercase font-sans">Unit {{ data.unit_name }}</span>
+                                                    <span class="bg-gray-300 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded border border-gray-400 uppercase font-sans">Lesson {{ data.lesson_name }}</span>
+                                                </div>
+                                                <!-- <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500">Lesson {{ data.lesson_name }}</p> -->
                                             </div>
                                             <span class="transition group-open:rotate-180">
                                                 <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path>
@@ -390,7 +385,7 @@ export default {
             this.show_progress_report       =   true;
         },
         updateProgressReport() {
-            this.$inertia.post(route('progress_report.store_math'), this.form, {
+            this.$inertia.post(route('progress_report.store'), this.form, {
             onBefore: visit => {
                 // this.show_progress_report = false
             },
@@ -438,44 +433,44 @@ export default {
                 return
             }
             if(this.search.term_book_id && this.search.unit_id && this.search.lesson_id) {
-                const objectives_exists =  this.form.report_data.find(item => item.lesson_id === this.search.lesson_id)
-                if(objectives_exists){
-                    alert('You already added this lesson!')
-                    return
+                const lessonIdExists = this.form.report_data.some(item => item.lesson_id === this.search.lesson_id);
+                if(lessonIdExists){
+                    console.log(lessonIdExists)
+                    return false
+                    // alert('Objectives exists!')
                 }
-                this.searching = true
-                axios.get(route('progress_report.get_math_objectives', this.search.lesson_id))
-                .then(response => {
-                    const new_item  =   {
-                        term_book_id: this.search.term_book_id,
-                        term_book_name: this.$page.props.math_terms_books.find(item => item.id === this.search.term_book_id)?.name,
-                        unit_id: this.search.unit_id,
-                        unit_name: this.options.units.find(item => item.id === this.search.unit_id)?.name,
-                        lesson_id: this.search.lesson_id,
-                        lesson_name: this.options.lessons.find(item => item.id === this.search.lesson_id)?.name,
-                        objectives: []
-                    }
-                    const initialLength     =   this.form.report_data.length
-                    const test              =   this.form.report_data.push(new_item)
-                    const addedItemIndex    =   initialLength;
-                    const addedItem         =   this.form.report_data[addedItemIndex];
-                            
-                    response.data.forEach(data => {
-                        addedItem.objectives.push({
-                            id: data.id,
-                            name: data.name,
-                            achieved: false
+                else{
+                    this.searching = true
+                    axios.get(route('progress_report.get_math_objectives', this.search.lesson_id))
+                    .then(response => {
+                        const new_item  =   {
+                            term_book_id: this.search.term_book_id,
+                            term_book_name: this.$page.props.math_terms_books.find(item => item.id === this.search.term_book_id)?.name,
+                            unit_id: this.search.unit_id,
+                            unit_name: this.options.units.find(item => item.id === this.search.unit_id)?.name,
+                            lesson_id: this.search.lesson_id,
+                            lesson_name: this.options.lessons.find(item => item.id === this.search.lesson_id)?.name,
+                            objectives: []
+                        }
+                        const initialLength     =   this.form.report_data.length
+                        const test              =   this.form.report_data.push(new_item)
+                        const addedItemIndex    =   initialLength;
+                        const addedItem         =   this.form.report_data[addedItemIndex];
+                                
+                        response.data.forEach(data => {
+                            addedItem.objectives.push({
+                                id: data.id,
+                                name: data.name,
+                                achieved: false
+                            })
                         })
-                    })
-                    this.searching = false
-                });
+                        this.searching = false
+                    });
+                }
             }
         },
         deleteItem(index) {
             this.form.report_data.splice(index, 1);
-        },
-        customLabel ({ title, desc }) {
-            return `${title} - ${desc}`
         },
         clearSearch(){
             this.search.term_book_id = ''

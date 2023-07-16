@@ -4,6 +4,7 @@ use App\Classes\ProgrammeHelper;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ProgressReportController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,14 @@ Route::middleware(['auth'])->group(function(){
     Route::prefix('students')->group(function () {
         Route::get('find', [StudentController::class, 'findStudents'])->name('students.find');
     });
+
+    /* Math Select Options */
+    Route::get('/progress-report/math/get-units/{term_book_id}', [ProgressReportController::class, 'getMathUnits'])->name('progress_report.get_math_units');
+    Route::get('/progress-report/math/get-lessons/{unit_id}', [ProgressReportController::class, 'getMathLessons'])->name('progress_report.get_math_lessons');
+    Route::get('/progress-report/math/get-objectives/{lesson_id}', [ProgressReportController::class, 'getMathObjectives'])->name('progress_report.get_math_objectives');
+    
+    /* Coding Select Options */
+    Route::get('/progress-report/coding/get-topics/{lesson_id}', [ProgressReportController::class, 'getCodingTopics'])->name('progress_report.get_coding_topics');
+    Route::get('/progress-report/coding/get-objectives/{topic_id}', [ProgressReportController::class, 'getCodingObjectives'])->name('progress_report.get_coding_objectives');
+    Route::get('/progress-report/coding/get-activities-procedures/{objective_id}', [ProgressReportController::class, 'getCodingActivitiesProcedures'])->name('progress_report.get_coding_activities_procedures');
 });
