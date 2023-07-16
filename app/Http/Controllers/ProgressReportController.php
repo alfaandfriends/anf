@@ -204,4 +204,3 @@ class ProgressReportController extends Controller
 
         return $objectives;
     }
-}
