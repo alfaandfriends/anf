@@ -12,8 +12,7 @@ use Inertia\Inertia;
 
 class ProgressReportController extends Controller
 {
-    public function index(Request $request)
-    {
+    public function index(Request $request){
 
         $allowed_centres    =   (object)Inertia::getShared('allowed_centres');
         $can_access_centre = $allowed_centres->search(function ($value) { 
@@ -69,8 +68,7 @@ class ProgressReportController extends Controller
         ]);
     }
 
-    public function details(Request $request)
-    {
+    public function details(Request $request){
         /* Student Information */
         $student_info   =   DB::table('progress_reports')
                                 ->join('student_fees', 'progress_reports.student_fee_id', '=', 'student_fees.id')
@@ -84,9 +82,10 @@ class ProgressReportController extends Controller
                                 ->first();
         // dd($student_info);
         /* Math Init Selection */
-        $math_terms_books   =   DB::table('math_terms_books')->where('level_id', $student_info->level)->get();
+        $math_terms_books   =   $this->getMathTermBooks($student_info->level);
 
         /* Coding Init Selection */
+        $coding_lessons     =   $this->getCodingLessons($student_info->level);
 
         /* Digital Art Init Selection */
 
@@ -103,13 +102,13 @@ class ProgressReportController extends Controller
         return Inertia::render('ProgressReport/Templates/'.$config_info->vue_template, [
             'student_info'          => $student_info,
             'math_terms_books'      => $math_terms_books,
+            'coding_lessons'        => $coding_lessons,
             'progress_reports'      => $progress_reports,
             'attendance_status'     => $attendance_status,
         ]);
     }
 
-    public function storeMath(Request $request)
-    {
+    public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'date'  => 'required'
         ]);
@@ -127,80 +126,81 @@ class ProgressReportController extends Controller
         return back()->with(['type'=>'success', 'message'=>'Progress report updated successfully !']);
     }
 
-    public function getMathUnitsLessons($report_id)
-    {
-        $results   =   DB::table('progress_report_details')
-                        ->where('progress_report_summary_id', $report_id)
-                        ->select('progress_report_details.id', 
-                                'progress_report_details.math_unit_id', 
-                                'progress_report_details.math_lesson_id', 
-                                'progress_report_details.math_objective_id')
-                        ->get();
-        $data                   =   [];
-        $data['units_lessons']  =   [];
-        if(!empty($results )){
-            foreach($results as $result){
-                $info['id']                 =   $result->id;
-                $info['math_unit_id']       =   $result->math_unit_id;
-                $info['math_lesson_id']     =   $result->math_lesson_id;
-                $info['math_objective_id']  =   explode(', ', $result->math_objective_id);
-                $data['units_lessons'][]    =   $info;
-            }
-        }
-
-        $units              =   $results->pluck('math_unit_id');
-        $lessons            =   $results->pluck('math_lesson_id');
-        $data['units']      =   DB::table('math_units')->whereIn('id', $units)->select('id', 'name')->get();
-        $data['lessons']    =   DB::table('math_lessons')->whereIn('id', $lessons)->select('id', 'name')->get();
-
-        return $data;
-    }
-
-    public function getMathUnitsLessonsObjectives($report_id)
-    {
-        $objectives   =   DB::table('progress_report_summaries')
-                            ->join('progress_report_details', 'progress_report_details.progress_report_summary_id', '=', 'progress_report_summaries.id')
-                            ->join('math_objectives', 'progress_report_details.math_lesson_id', '=', 'math_objectives.lesson_id')
-                            ->where('progress_report_summaries.id', $report_id)
-                            ->select('math_objectives.id', 'math_objectives.name', 'math_objectives.lesson_id')
-                            ->get();
-
-        return $objectives;
-    }
-
-    public function getMathTermsBooks($report_id)
-    {
-        $programme_level    =   DB::table('progress_report_summaries')
-                                    ->join('progress_reports','progress_report_summaries.progress_report_id','=','progress_reports.id')
-                                    ->join('student_fees','progress_reports.student_fee_id','=','student_fees.id')
-                                    ->join('programme_level_fees','student_fees.fee_id','=','programme_level_fees.id')
-                                    ->join('programme_levels','programme_level_fees.programme_level_id','=','programme_levels.id')
-                                    ->where('progress_report_summaries.id',$report_id)
-                                    ->pluck('level')
-                                    ->first();
-        
-        $terms_books   =   DB::table('math_terms_books')->where('level_id', $programme_level)->get();
+    /* Math */
+    public function getMathTermBooks($level_id){
+        $terms_books   =   DB::table('pr_math_terms_books')->where('level_id', $level_id)->get();
 
         return $terms_books;
     }
 
-    public function getMathUnits($term_book_id)
-    {
-        $units   =   DB::table('math_units')->where('term_book_id', $term_book_id)->get();
+    public function getMathUnits($term_book_id){
+        $units   =   DB::table('pr_math_units')->where('term_book_id', $term_book_id)->get();
 
         return $units;
     }
 
-    public function getMathLessons($unit_id)
-    {
-        $lessons   =   DB::table('math_lessons')->where('unit_id', $unit_id)->get();
+    public function getMathLessons($unit_id){
+        $lessons   =   DB::table('pr_math_lessons')->where('unit_id', $unit_id)->get();
 
         return $lessons;
     }
 
-    public function getMathObjectives($lesson_id)
-    {
-        $objectives   =   DB::table('math_objectives')->where('lesson_id', $lesson_id)->select('id', 'name', 'lesson_id')->get();
+    public function getMathObjectives($lesson_id){
+        $objectives   =   DB::table('pr_math_objectives')->where('lesson_id', $lesson_id)->select('id', 'name', 'lesson_id')->get();
+
+        return $objectives;
+    }
+
+    /* Coding */
+    public function getCodingLessons($level_id){
+        $lessons     =   DB::table('pr_coding_lessons')->where('level_id', $level_id)->get();
+
+        return $lessons;
+    }
+    public function getCodingTopics($lesson_id){
+        $topics   =   DB::table('pr_coding_topics')->where('lesson_id', $lesson_id)->get();
+
+        return $topics;
+    }
+
+    public function getCodingObjectives($topic_id){
+        $objectives   =   DB::table('pr_coding_objectives')->where('topic_id', $topic_id)->get();
+
+        return $objectives;
+    }
+
+    public function getCodingActivitiesProcedures($objective_id){
+        $activities_procedures   =   DB::table('pr_coding_activities_procedures')->where('objective_id', $objective_id)->get();
+
+        return $activities_procedures;
+    }
+
+    /* Art */
+    public function getArtThemes($level_id){
+        $themes     =   DB::table('pr_art_themes')->where('level_id', $level_id)->get();
+
+        return $themes;
+    }
+    public function getArtLessons($theme_id){
+        $lessons   =   DB::table('pr_art_lessons')->where('theme_id', $theme_id)->get();
+
+        return $lessons;
+    }
+
+    public function getArtActivities($lesson_id){
+        $activities   =   DB::table('pr_art_activities')->where('lesson_id', $lesson_id)->get();
+
+        return $activities;
+    }
+
+    public function getArtLearningOutcomes($activity_id){
+        $learning_outcomes   =   DB::table('pr_art_learning_outcomes')->where('activity_id', $activity_id)->get();
+
+        return $learning_outcomes;
+    }
+
+    public function getArtObjectives($outcome_id){
+        $objectives   =   DB::table('pr_art_objectives')->where('outcome_id', $outcome_id)->get();
 
         return $objectives;
     }

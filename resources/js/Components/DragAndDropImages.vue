@@ -103,159 +103,161 @@ export default {
 </script>
 
 <template>
-    <div
-        class="container mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
-        @dragover.prevent="dragOver"
-        @dragleave.prevent="dragLeave"
-        @drop.prevent="drop($event)"
-    >
-    <div class="drop" v-show="dropped == 2"></div>
-    <!-- Error Message -->
-    <div v-show="error" class="error">
-      {{ error }}
-    </div>
+    <div>
+        <div
+            class="container mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+            @dragover.prevent="dragOver"
+            @dragleave.prevent="dragLeave"
+            @drop.prevent="drop($event)"
+        >
+            <div class="drop" v-show="dropped == 2"></div>
+            <!-- Error Message -->
+            <div v-show="error" class="error">
+            {{ error }}
+            </div>
 
-    <!-- To inform user how to upload image -->
-    <div v-show="Imgs.length == 0" class="beforeUpload">
-        <input
-            type="file"
-            style="z-index: 1"
-            accept="image/*"
-            ref="uploadInput"
-            @change="previewImgs"
-            multiple
-        />
-      <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <title>Upload Image</title>
-        <g id="Upload_Image" data-name="Upload Image">
-          <g id="_Group_" data-name="&lt;Group&gt;">
-            <g id="_Group_2" data-name="&lt;Group&gt;">
-              <g id="_Group_3" data-name="&lt;Group&gt;">
-                <circle
-                  id="_Path_"
-                  data-name="&lt;Path&gt;"
-                  cx="18.5"
-                  cy="16.5"
-                  r="5"
-                  style="
-                    fill: none;
-                    stroke: #303c42;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                  "
+            <!-- To inform user how to upload image -->
+            <div v-show="Imgs.length == 0" class="beforeUpload">
+                <input
+                    type="file"
+                    style="z-index: 1"
+                    accept="image/*"
+                    ref="uploadInput"
+                    @change="previewImgs"
+                    multiple
                 />
-              </g>
-              <polyline
-                id="_Path_2"
-                data-name="&lt;Path&gt;"
-                points="16.5 15.5 18.5 13.5 20.5 15.5"
-                style="
-                  fill: none;
-                  stroke: #303c42;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-              />
-              <line
-                id="_Path_3"
-                data-name="&lt;Path&gt;"
-                x1="18.5"
-                y1="13.5"
-                x2="18.5"
-                y2="19.5"
-                style="
-                  fill: none;
-                  stroke: #303c42;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-              />
-            </g>
-            <g id="_Group_4" data-name="&lt;Group&gt;">
-              <polyline
-                id="_Path_4"
-                data-name="&lt;Path&gt;"
-                points="0.6 15.42 6 10.02 8.98 13"
-                style="
-                  fill: none;
-                  stroke: #303c42;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-              />
-              <polyline
-                id="_Path_5"
-                data-name="&lt;Path&gt;"
-                points="17.16 11.68 12.5 7.02 7.77 11.79"
-                style="
-                  fill: none;
-                  stroke: #303c42;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-              />
-              <circle
-                id="_Path_6"
-                data-name="&lt;Path&gt;"
-                cx="8"
-                cy="6.02"
-                r="1.5"
-                style="
-                  fill: none;
-                  stroke: #303c42;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-              />
-              <path
-                id="_Path_7"
-                data-name="&lt;Path&gt;"
-                d="M19.5,11.6V4A1.5,1.5,0,0,0,18,2.5H2A1.5,1.5,0,0,0,.5,4V15A1.5,1.5,0,0,0,2,16.5H13.5"
-                style="
-                  fill: none;
-                  stroke: #303c42;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-              />
-            </g>
-          </g>
-        </g>
-      </svg>
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <title>Upload Image</title>
+                <g id="Upload_Image" data-name="Upload Image">
+                <g id="_Group_" data-name="&lt;Group&gt;">
+                    <g id="_Group_2" data-name="&lt;Group&gt;">
+                    <g id="_Group_3" data-name="&lt;Group&gt;">
+                        <circle
+                        id="_Path_"
+                        data-name="&lt;Path&gt;"
+                        cx="18.5"
+                        cy="16.5"
+                        r="5"
+                        style="
+                            fill: none;
+                            stroke: #303c42;
+                            stroke-linecap: round;
+                            stroke-linejoin: round;
+                        "
+                        />
+                    </g>
+                    <polyline
+                        id="_Path_2"
+                        data-name="&lt;Path&gt;"
+                        points="16.5 15.5 18.5 13.5 20.5 15.5"
+                        style="
+                        fill: none;
+                        stroke: #303c42;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        "
+                    />
+                    <line
+                        id="_Path_3"
+                        data-name="&lt;Path&gt;"
+                        x1="18.5"
+                        y1="13.5"
+                        x2="18.5"
+                        y2="19.5"
+                        style="
+                        fill: none;
+                        stroke: #303c42;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        "
+                    />
+                    </g>
+                    <g id="_Group_4" data-name="&lt;Group&gt;">
+                    <polyline
+                        id="_Path_4"
+                        data-name="&lt;Path&gt;"
+                        points="0.6 15.42 6 10.02 8.98 13"
+                        style="
+                        fill: none;
+                        stroke: #303c42;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        "
+                    />
+                    <polyline
+                        id="_Path_5"
+                        data-name="&lt;Path&gt;"
+                        points="17.16 11.68 12.5 7.02 7.77 11.79"
+                        style="
+                        fill: none;
+                        stroke: #303c42;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        "
+                    />
+                    <circle
+                        id="_Path_6"
+                        data-name="&lt;Path&gt;"
+                        cx="8"
+                        cy="6.02"
+                        r="1.5"
+                        style="
+                        fill: none;
+                        stroke: #303c42;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        "
+                    />
+                    <path
+                        id="_Path_7"
+                        data-name="&lt;Path&gt;"
+                        d="M19.5,11.6V4A1.5,1.5,0,0,0,18,2.5H2A1.5,1.5,0,0,0,.5,4V15A1.5,1.5,0,0,0,2,16.5H13.5"
+                        style="
+                        fill: none;
+                        stroke: #303c42;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        "
+                    />
+                    </g>
+                </g>
+                </g>
+            </svg>
 
-    <div class="flex text-sm text-gray-600">
-        <label for="file-upload mainMessage">
-            <span>{{ uploadMsg ? uploadMsg : "Upload a file or drag and drop" }}</span>
-            <input id="file-upload" name="file-upload" type="file" class="sr-only"/>
-        </label>
+            <div class="flex text-sm text-gray-600">
+                <label for="file-upload mainMessage">
+                    <span>{{ uploadMsg ? uploadMsg : "Upload a file or drag and drop" }}</span>
+                    <input id="file-upload" name="file-upload" type="file" class="sr-only"/>
+                </label>
+            </div>
+            </div>
+            <div class="imgsPreview" v-show="Imgs.length > 0">
+            <button type="button" class="clearButton" @click="reset">
+                <span class="text-red-500">{{ clearAll ? clearAll : "Clear all" }}</span>
+            </button>
+            <div class="imageHolder" v-for="(img, i) in Imgs" :key="i">
+                <img :src="img" />
+                <span class="delete" style="color: white" @click="deleteImg(--i)">
+                <svg
+                    class="icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                </svg>
+                </span>
+                <div class="plus" @click="append" v-if="++i == Imgs.length">+</div>
+            </div>
+            </div>
+        </div>
     </div>
-    </div>
-    <div class="imgsPreview" v-show="Imgs.length > 0">
-      <button type="button" class="clearButton" @click="reset">
-        <span class="text-red-500">{{ clearAll ? clearAll : "Clear all" }}</span>
-      </button>
-      <div class="imageHolder" v-for="(img, i) in Imgs" :key="i">
-        <img :src="img" />
-        <span class="delete" style="color: white" @click="deleteImg(--i)">
-          <svg
-            class="icon"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </svg>
-        </span>
-        <div class="plus" @click="append" v-if="++i == Imgs.length">+</div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <style scoped>
