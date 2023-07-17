@@ -180,7 +180,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
                                             <BreezeButton buttonType="blue" @click="viewProgressReport(result.progress_report_id)">View Details</BreezeButton>
-                                            <BreezeButton buttonType="info" class="py-1 px-2" @click="viewProgressReport(result.progress_report_id)">Show / Print</BreezeButton>
+                                            <BreezeButton class="py-1 px-2" @click="showProgressReport(result.progress_report_id)">Show / Print</BreezeButton>
                                         </div>
                                     </td>
                                 </tr>
@@ -203,6 +203,25 @@ import BreezeButton from '@/Components/Button.vue';
                 :confirmationData="confirmationData"
             />
         </div>
+        <Modal :modalType="'lg'" :showModal="show_progress_report" @hideModal="show_progress_report = false">
+            <template v-slot:header>
+                <h3 class="text-gray-900 text-xl font-semibold">                
+                    Update Progress Report
+                </h3>                
+            </template>
+            <template v-slot:content>
+                <div class="p-6 overflow-y-auto no-scrollbar">
+                    <div class="grid grid-rows-1">
+                    </div>
+                </div>
+            </template>
+            <template v-slot:footer>
+                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                    <BreezeButton buttonType="gray" @click="show_progress_report = false">Cancel</BreezeButton>
+                    <BreezeButton @click="">Save</BreezeButton>
+                </div>
+            </template>
+        </Modal>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -212,16 +231,19 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
 import moment from 'moment';
+import axios from 'axios';
 import Multiselect from '@vueform/multiselect'
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import Modal from '@/Components/Modal.vue'
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal, Multiselect, Datepicker
+        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal, Multiselect, Datepicker, Modal
     },
     data(){
         return{
+            show_progress_report: false,
             isOpen: false,
             confirmationData: '',
             confirmationRoute: '',
@@ -236,24 +258,30 @@ export default {
         }
     },
     watch: {
-        params: {
-            handler(){
-                if(this.params){
-                    this.$inertia.get(this.route('progress_report'), this.params, { replace: true, preserveState: true})
-                }
-            },
-            deep: true
-        }
+        // params: {
+        //     handler(){
+        //         if(this.params){
+        //             this.$inertia.get(this.route('progress_report'), this.params, { replace: true, preserveState: true})
+        //         }
+        //     },
+        //     deep: true
+        // }
     },
     methods: {
         viewProgressReport(progress_report_id){
             this.$inertia.get(this.route('progress_report.details'), {'progress_report_id': progress_report_id}, { })
         },
-        deleteFolder(math_manipulative_id){
-            this.confirmationRoute = 'progress_reports.configuration.delete'
-            this.confirmationData = math_manipulative_id
-            this.isOpen = true
-        }
+        showProgressReport(progress_report_id){
+            console.log(progress_report_id)
+            // axios.get(route('progress_report.full_reports', progress_report_id))
+            // .then(response => {
+            //     console.log(response)
+            //     // this.options.topics  =   response.data
+            //     // this.disabled.topics = false;
+            //     // this.loading.topics = false;
+            // });
+            // this.show_progress_report = true
+        },
     }
 }
 </script>

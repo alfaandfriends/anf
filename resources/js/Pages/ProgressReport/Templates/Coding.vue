@@ -435,9 +435,7 @@ export default {
             if(this.search.lesson_id && this.search.topic_id && this.search.objective_id) {
                 const dataExist = this.form.report_data.some(item => item.objective_id === this.search.objective_id);
                 if(dataExist){
-                    console.log(dataExist)
-                    return false
-                    // alert('Objectives exists!')
+                    alert('Item Exists!')
                 }
                 else{
                     this.searching = true

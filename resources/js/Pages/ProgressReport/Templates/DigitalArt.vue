@@ -81,7 +81,7 @@ import BreezeButton from '@/Components/Button.vue';
                 </form>
             </div>
         </div>
-        <Modal :modalType="'lg'" :showModal="show_progress_report" @hideModal="show_progress_report = false">
+        <Modal :modalType="'lg'" :showModal="show_progress_report" @hideModal="show_progress_report = false"  ref="progress_report">
             <template v-slot:header>
                 <h3 class="text-gray-900 text-xl font-semibold">                
                     Update Progress Report
@@ -106,110 +106,162 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                         </div>
                         <div class="grid grid-cols-1">
-                            <hr class="my-4">
+                            <hr class="mb-10 mt-5 border border-dashed border-gray-400">
                         </div>
-                        <div class="grid grid-cols-4 gap-4">
-                            <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Term / Book </label>
-                                <div class="mt-1 flex rounded-md.shadow-sm">
-                                    <Multiselect 
-                                        @select="getUnits(search.term_book_id)"
-                                        v-model="search.term_book_id"
-                                        valueProp="id"
-                                        :appendNewOption="false"
-                                        :searchable="true"
-                                        :options="$page.props.math_terms_books"
-                                        :clearOnSelect="false"
-                                        :canClear="false"
-                                        :canDeselect="false"
-                                        trackBy="name"
-                                        label="name"
-                                        :loading="loading.terms_books"
-                                        placeholder="Please Select"
-                                        :classes="{
-                                            container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer rounded-sm bg-white text-base leading-snug border-gray-300' ,
-                                            containerDisabled: 'cursor-not_allowed bg-gray-100 border focus:border-gray-200 h-10',
-                                            containerOpen: 'rounded-b-none',
-                                            containerOpenTop: 'rounded-t-none',
-                                            containerActive: 'border border-gray-300',
-                                            search: 'w-full absolute inset-0 border-gray-300 focus:outline-none focus:border-transparent focus:ring-0 appearance-none text-base font-sans bg-white rounded-sm',
-                                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                            dropdownHidden: 'hidden',
-                                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                                            optionsTop: 'flex-col-reverse',
-                                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3 text-sm',
-                                            optionPointed: 'text-gray-800 bg-gray-100',
-                                            optionSelected: 'text-white bg-indigo-500',
-                                            optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                        }"
-                                    />
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="mb-3">
+                                        <label for="title" class="block text-sm font-bold text-gray-700"> Theme </label>
+                                        <div class="mt-1 flex rounded-md.shadow-sm">
+                                            <Multiselect 
+                                                @select="getLessons(search.theme_id)"
+                                                v-model="search.theme_id"
+                                                valueProp="id"
+                                                :appendNewOption="false"
+                                                :searchable="true"
+                                                :options="$page.props.art_themes"
+                                                :clearOnSelect="false"
+                                                :canClear="false"
+                                                :canDeselect="false"
+                                                trackBy="name"
+                                                label="name"
+                                                :loading="loading.themes"
+                                                placeholder="Please Select"
+                                                :classes="{
+                                                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer rounded-sm bg-white text-base leading-snug border-gray-300' ,
+                                                    containerDisabled: 'cursor-not_allowed bg-gray-100 border focus:border-gray-200 h-10',
+                                                    containerOpen: 'rounded-b-none',
+                                                    containerOpenTop: 'rounded-t-none',
+                                                    containerActive: 'border border-gray-300',
+                                                    search: 'w-full absolute inset-0 border-gray-300 focus:outline-none focus:border-transparent focus:ring-0 appearance-none text-base font-sans bg-white rounded-sm',
+                                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                                    dropdownHidden: 'hidden',
+                                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                                    optionsTop: 'flex-col-reverse',
+                                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3 text-sm',
+                                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                                    optionSelected: 'text-white bg-indigo-500',
+                                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                                }"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="title" class="block text-sm font-bold text-gray-700"> Lesson </label>
+                                        <div class="mt-1 flex rounded-md.shadow-sm">
+                                            <Multiselect 
+                                                @select="getActivity(search.lesson_id)"
+                                                v-model="search.lesson_id"
+                                                valueProp="id"
+                                                :appendNewOption="false"
+                                                :searchable="true"
+                                                :options="options.lessons"
+                                                :disabled="disabled.lessons"
+                                                :clearOnSelect="false"
+                                                :canClear="false"
+                                                :canDeselect="false"
+                                                trackBy="name"
+                                                label="name"
+                                                :loading="loading.lessons"
+                                                placeholder="Please Select"
+                                                :classes="{
+                                                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer rounded-sm bg-white text-base leading-snug border-gray-300' ,
+                                                    containerDisabled: 'cursor-not_allowed bg-gray-100 border focus:border-gray-200 h-10',
+                                                    containerOpen: 'rounded-b-none',
+                                                    containerOpenTop: 'rounded-t-none',
+                                                    containerActive: 'border border-gray-300',
+                                                    search: 'w-full absolute inset-0 border-gray-300 focus:outline-none focus:border-transparent focus:ring-0 appearance-none text-base font-sans bg-white rounded-sm',
+                                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                                    dropdownHidden: 'hidden',
+                                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                                    optionsTop: 'flex-col-reverse',
+                                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3 text-sm',
+                                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                                    optionSelected: 'text-white bg-indigo-500',
+                                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                                }"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 gap-2">
+                                    <div class="mb-3">
+                                        <label for="title" class="block text-sm font-bold text-gray-700"> Activity </label>
+                                        <div class="mt-1 flex rounded-md.shadow-sm">
+                                            <Multiselect 
+                                                @select="getOutcomes(search.activity_id)"
+                                                :option-height="104" :custom-label="customLabel"
+                                                v-model="search.activity_id"
+                                                valueProp="id"
+                                                :appendNewOption="false"
+                                                :searchable="true"
+                                                :options="options.activities"
+                                                :clearOnSelect="false"
+                                                :canClear="false"
+                                                :canDeselect="false"
+                                                trackBy="name"
+                                                label="name"
+                                                :disabled="disabled.activities"
+                                                placeholder="Please Select"
+                                                :loading="loading.activities"
+                                                :classes="{
+                                                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer rounded-sm bg-white text-base leading-snug border-gray-300' ,
+                                                    containerDisabled: 'cursor-not-allowed bg-gray-100 border focus:border-gray-200 h-10',
+                                                    containerOpen: 'rounded-b-none',
+                                                    containerOpenTop: 'rounded-t-none',
+                                                    containerActive: 'border border-gray-300',
+                                                    search: 'w-full absolute inset-0 border-gray-300 focus:outline-none focus:border-transparent focus:ring-0 appearance-none text-base font-sans bg-white rounded-sm',
+                                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                                    dropdownHidden: 'hidden',
+                                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                                    optionsTop: 'flex-col-reverse',
+                                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3 text-sm',
+                                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                                    optionSelected: 'text-white bg-indigo-500',
+                                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                                }"
+                                            >
+                                            </Multiselect>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
                             <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Unit </label>
-                                <div class="mt-1 flex rounded-md.shadow-sm">
-                                    <Multiselect 
-                                        @select="getLessons(search.unit_id)"
-                                        v-model="search.unit_id"
-                                        valueProp="id"
-                                        :appendNewOption="false"
-                                        :searchable="true"
-                                        :options="options.units"
-                                        :disabled="disabled.units"
-                                        :clearOnSelect="false"
-                                        :canClear="false"
-                                        :canDeselect="false"
-                                        trackBy="name"
-                                        label="name"
-                                        :loading="loading.units"
-                                        placeholder="Please Select"
-                                        :classes="{
-                                            container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer rounded-sm bg-white text-base leading-snug border-gray-300' ,
-                                            containerDisabled: 'cursor-not_allowed bg-gray-100 border focus:border-gray-200 h-10',
-                                            containerOpen: 'rounded-b-none',
-                                            containerOpenTop: 'rounded-t-none',
-                                            containerActive: 'border border-gray-300',
-                                            search: 'w-full absolute inset-0 border-gray-300 focus:outline-none focus:border-transparent focus:ring-0 appearance-none text-base font-sans bg-white rounded-sm',
-                                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                            dropdownHidden: 'hidden',
-                                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                                            optionsTop: 'flex-col-reverse',
-                                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3 text-sm',
-                                            optionPointed: 'text-gray-800 bg-gray-100',
-                                            optionSelected: 'text-white bg-indigo-500',
-                                            optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                        }"
-                                    />
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Lesson </label>
+                                <label for="title" class="block text-sm font-bold text-gray-700"> Learning Outcome </label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
                                     <Multiselect 
                                         :option-height="104" :custom-label="customLabel"
-                                        v-model="search.lesson_id"
+                                        v-model="search.outcome_id"  
                                         valueProp="id"
                                         :appendNewOption="false"
                                         :searchable="true"
-                                        :options="options.lessons"
+                                        :options="options.outcomes"
                                         :clearOnSelect="false"
                                         :canClear="false"
                                         :canDeselect="false"
                                         trackBy="name"
                                         label="name"
-                                        :disabled="disabled.lessons"
+                                        :disabled="disabled.outcomes"
                                         placeholder="Please Select"
-                                        :loading="loading.lessons"
+                                        :loading="loading.outcomes"
                                         :classes="{
                                             container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer rounded-sm bg-white text-base leading-snug border-gray-300' ,
                                             containerDisabled: 'cursor-not-allowed bg-gray-100 border focus:border-gray-200 h-10',
@@ -266,15 +318,18 @@ import BreezeButton from '@/Components/Button.vue';
                                         <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
                                             <div class="space-y-2 ml-2 text-sm">
                                                 <div class="flex space-x-4 items-center justify-between">
-                                                    <span class="text-slate-700 font-bold font-sans">{{ data.term_book_name }}</span>
+                                                    <span class="text-slate-700 font-bold font-sans">{{ data.theme_name }}</span>
                                                     <label class="text-red-500 hover:text-red-600 cursor-pointer uppercase font-bold hover:underline" @click="deleteItem(index)">Delete</label>
                                                 </div>
                                                 <div class="border border-b-black border-dashed"></div>
-                                                <div class="flex space-x-2">
-                                                    <span class="focus:outline-none text-[12px] bg-indigo-100 text-indigo-700 border border-indigo-500 rounded font-medium py-1 px-2 select-none">Unit {{ data.unit_name }}</span>
+                                                <div class="flex space-x-2 pt-2">
+                                                    <span class="focus:outline-none text-[12px] bg-indigo-100 text-indigo-700 border border-indigo-500 rounded font-medium py-1 px-2 select-none">{{ data.lesson_name }}</span>
                                                     <!-- <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded uppercase font-sans"></span> -->
-                                                    <span class="focus:outline-none text-[12px] bg-gray-100 text-gray-700 border border-gray-500 rounded font-medium py-1 px-2 select-none">Lesson {{ data.lesson_name }}</span>
+                                                    <span class="focus:outline-none text-[12px] bg-gray-100 text-gray-700 border border-gray-500 rounded font-medium py-1 px-2 select-none">Activity: {{ data.activity_name }}</span>
                                                     <!-- <span class="bg-gray-300 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded border border-gray-400 uppercase font-sans"></span> -->
+                                                </div>
+                                                <div class="flex">
+                                                    <span class="focus:outline-none text-[14px] text-gray-700 font-medium py-1 select-none">Learning Outcome: {{ data.outcome_name }}</span>
                                                 </div>
                                                 <!-- <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500">Lesson {{ data.lesson_name }}</p> -->
                                             </div>
@@ -294,6 +349,9 @@ import BreezeButton from '@/Components/Button.vue';
                                     </details>
                                 </div>
                             </div>
+                        </div>
+                        <div class="grid grid-cols-1">
+                            <hr class="mb-8 mt-8 border border-dashed border-gray-400">
                         </div>
                         <div class="grid grid-cols-1">
                             <div class="mb-3">
@@ -347,26 +405,29 @@ export default {
             searching: false,
             progress_report_list: {},
             disabled:{
-                terms_books: true,
-                units: true,
+                themes: true,
                 lessons: true,
+                activities: true,
+                outcomes: true,
             },
             options: {
-                terms_books: [],
-                units: [],
+                themes: [],
                 lessons: [],
+                activities: [],
+                outcomes: [],
                 objectives: [],
             },
             loading: {
-                terms_books: false,
-                units: false,
+                themes: false,
                 lessons: false,
-                objectives: false,
+                activities: false,
+                outcomes: false,
             },
             search: {
-                term_book_id: '',
-                unit_id: '',
+                theme_id: '',
                 lesson_id: '',
+                activity_id: '',
+                outcome_id: '',
             },
             form: {
                 date: '',
@@ -395,63 +456,85 @@ export default {
             preserveState: false,
             });
         },
-        getUnits(term_book_id) {
-            this.loading.units = true;
-
-            this.disabled.units = true;
-            this.disabled.lessons = true;
-
-            this.options.units = [];
-            this.options.lessons = [];
-            
-            this.search.unit_id = '';
-            this.search.lesson_id = '';
-
-            axios.get(route('progress_report.get_math_units', term_book_id))
-            .then(response => {
-                this.options.units  =   response.data
-                this.disabled.units = false;
-                this.loading.units = false;
-            });
-        },
-        getLessons(unit_id) {
+        getLessons(theme_id) {
             this.loading.lessons = true;
-            
+
             this.disabled.lessons = true;
+            this.disabled.activities = true;
+            this.disabled.outcomes = true;
 
             this.options.lessons = [];
-
+            this.options.activities = [];
+            this.options.outcomes = [];
+            
             this.search.lesson_id = '';
+            this.search.activity_id = '';
+            this.search.outcome_id = '';
 
-            axios.get(route('progress_report.get_math_lessons', unit_id))
+            axios.get(route('progress_report.get_art_lessons', theme_id))
             .then(response => {
-                this.options.lessons = response.data;
+                this.options.lessons  =   response.data
                 this.disabled.lessons = false;
                 this.loading.lessons = false;
+            });
+        },
+        getActivity(lesson_id) {
+            this.loading.activities = true;
+            
+            this.disabled.activities = true;
+            this.disabled.outcomes = true;
+
+            this.options.activities = [];
+            this.options.outcomes = [];
+
+            this.search.activity_id = '';
+            this.search.outcome_id = '';
+
+            axios.get(route('progress_report.get_art_activities', lesson_id))
+            .then(response => {
+                this.options.activities = response.data;
+                this.disabled.activities = false;
+                this.loading.activities = false;
+            });
+        },
+        getOutcomes(activity_id) {
+            this.loading.outcomes = true;
+            
+            this.disabled.outcomes = true;
+
+            this.options.outcomes = [];
+
+            this.search.outcome_id = '';
+
+            axios.get(route('progress_report.get_art_learning_outcomes', activity_id))
+            .then(response => {
+                this.options.outcomes = response.data;
+                this.disabled.outcomes = false;
+                this.loading.outcomes = false;
             });
         },
         addItem() {
             if(this.searching){
                 return
             }
-            if(this.search.term_book_id && this.search.unit_id && this.search.lesson_id) {
-                const lessonIdExists = this.form.report_data.some(item => item.lesson_id === this.search.lesson_id);
-                if(lessonIdExists){
-                    console.log(lessonIdExists)
-                    return false
-                    // alert('Objectives exists!')
+            if(this.search.theme_id && this.search.lesson_id && this.search.activity_id && this.search.outcome_id) {
+                const itemExists = this.form.report_data.some(item => item.outcome_id === this.search.outcome_id);
+                if(itemExists){
+                    alert('Item exists!')
                 }
                 else{
                     this.searching = true
-                    axios.get(route('progress_report.get_math_objectives', this.search.lesson_id))
+                    axios.get(route('progress_report.get_art_objectives', this.search.outcome_id))
                     .then(response => {
                         const new_item  =   {
-                            term_book_id: this.search.term_book_id,
-                            term_book_name: this.$page.props.math_terms_books.find(item => item.id === this.search.term_book_id)?.name,
-                            unit_id: this.search.unit_id,
-                            unit_name: this.options.units.find(item => item.id === this.search.unit_id)?.name,
+                            theme_id: this.search.theme_id,
+                            theme_name: this.$page.props.art_themes.find(item => item.id === this.search.theme_id)?.name,
                             lesson_id: this.search.lesson_id,
                             lesson_name: this.options.lessons.find(item => item.id === this.search.lesson_id)?.name,
+                            activity_id: this.search.activity_id,
+                            activity_name: this.options.activities.find(item => item.id === this.search.activity_id)?.name,
+                            outcome_id: this.search.outcome_id,
+                            outcome_name: this.options.outcomes.find(item => item.id === this.search.outcome_id)?.name,
                             objectives: []
                         }
                         const initialLength     =   this.form.report_data.length
@@ -476,9 +559,18 @@ export default {
         },
         clearSearch(){
             this.search.term_book_id = ''
-            this.search.unit_id = ''
             this.search.lesson_id = ''
-        }
+            this.search.activity_id = ''
+        },
+        scrollToTop() {
+            const modalContent = this.$refs.progress_report
+            if (modalContent) {
+                modalContent.scrollTop = 0;
+            }
+        },
+    },
+    updated(){
+        this.scrollToTop()
     },
 }
 </script>

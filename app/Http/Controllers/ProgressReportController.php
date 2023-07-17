@@ -88,6 +88,7 @@ class ProgressReportController extends Controller
         $coding_lessons     =   $this->getCodingLessons($student_info->level);
 
         /* Digital Art Init Selection */
+        $art_themes     =   $this->getArtThemes($student_info->level);
 
         $attendance_status  =   DB::table('progress_report_status')->get();
         $report_details     =   DB::table('progress_reports')->where('id', $request->progress_report_id)->first();   
@@ -103,6 +104,7 @@ class ProgressReportController extends Controller
             'student_info'          => $student_info,
             'math_terms_books'      => $math_terms_books,
             'coding_lessons'        => $coding_lessons,
+            'art_themes'            => $art_themes,
             'progress_reports'      => $progress_reports,
             'attendance_status'     => $attendance_status,
         ]);
@@ -124,6 +126,18 @@ class ProgressReportController extends Controller
         ]);
 
         return back()->with(['type'=>'success', 'message'=>'Progress report updated successfully !']);
+    }
+    
+    public function getFullProgressReports($report_id)
+    {
+        $progress_reports   =   DB::table('progress_reports')
+                                    ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
+                                    // ->select('progress_report_details.progress_report_id', 'progress_report_details.id', 'progress_report_details.date', 
+                                    //         'progress_report_details.report_data', 'progress_report_details.comments', 'progress_report_details.attendance_status',
+                                    //         'progress_report_status.class as attendance_status_class_name', 'progress_report_status.name as attendance_status_name')
+                                    ->where('progress_report_id', $report_id)->get();
+
+        return $progress_reports;
     }
 
     /* Math */
@@ -194,7 +208,7 @@ class ProgressReportController extends Controller
     }
 
     public function getArtLearningOutcomes($activity_id){
-        $learning_outcomes   =   DB::table('pr_art_learning_outcomes')->where('activity_id', $activity_id)->get();
+        $learning_outcomes   =   DB::table('pr_art_outcomes')->where('activity_id', $activity_id)->get();
 
         return $learning_outcomes;
     }

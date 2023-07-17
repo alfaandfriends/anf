@@ -282,11 +282,8 @@ Route::middleware(['auth'])->group(function(){
     /* Progress Report */
     Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');
     Route::get('/progress-report/details', [ProgressReportController::class, 'details'])->name('progress_report.details');
-    // Route::get('/progress-report/create', [ProgressReportController::class, 'create'])->name('progress_report.create');
-    // Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store');
-    // Route::get('/progress-report/edit', [ProgressReportController::class, 'edit'])->name('progress_report.edit');
-    // Route::post('/progress-report/update', [ProgressReportController::class, 'update'])->name('progress_report.update');
-    // Route::delete('/progress-report/destroy/{id}', [ProgressReportController::class, 'destroy'])->name('progress_report.destroy');
+    Route::get('/progress-report/full-reports/{report_id}', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports');
+    
 
     Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store');
 });

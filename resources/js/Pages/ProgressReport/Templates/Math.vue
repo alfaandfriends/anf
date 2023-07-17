@@ -64,7 +64,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                             <span class="inline-flex items-center justify-center px-2 py-1 text-xs rounded" :class="result.attendance_status_class_name">{{ result.attendance_status_name }}</span>
-                                                            
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                             <BreezeButton buttonType="blue" @click="viewProgressReport(index)">View / Update</BreezeButton>
@@ -437,9 +436,7 @@ export default {
             if(this.search.term_book_id && this.search.unit_id && this.search.lesson_id) {
                 const lessonIdExists = this.form.report_data.some(item => item.lesson_id === this.search.lesson_id);
                 if(lessonIdExists){
-                    console.log(lessonIdExists)
-                    return false
-                    // alert('Objectives exists!')
+                    alert('Item Exists!')
                 }
                 else{
                     this.searching = true
