@@ -6,7 +6,7 @@ import UploadPreview from '@/Components/UploadPreview.vue';
 import Modal from '@/Components/Modal.vue';
 import Variation from './Components/Variation.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 
 const props = defineProps({
     product: {
@@ -25,6 +25,7 @@ const props = defineProps({
 
 const currentStep = ref(1);
 const addCategory = ref(false);
+
 const previewUrl = ref([
     {label: 'Cover Image', name: 'product_cover_image', value: null},
     {label: 'Image 1', name: 'product_image_1', value: null},
@@ -70,7 +71,7 @@ const productForm = useForm({
     product_image_4: '',
     product_image_5: '',
     product_image_6: '',
-    product_variation: (props.product) ? 'enabled' : 'disabled',
+    product_variation: 'disabled',
     product_variation_items: [],
 });
 

@@ -100,17 +100,17 @@ class ProductController extends Controller
                         'product_id' => $product->id,
                     ]);
                 } else {
-                    foreach($request->product_variation_items[0]['options'] as $key => $variation) {
+                    foreach($request->product_variation_items['options'] as $key => $variation) {
                         $path = null;
                         if($variation['image']){
                             $path = 'products/'.$product->id.'/' . $variation['image']->getClientOriginalName();
                             Storage::put($path, file_get_contents($variation['image']));
                         }
-                        if(count($variation['row']) == 1) {
-                            foreach($variation['row'] as $row){
+                        if(count($variation['rows']) == 1) {
+                            foreach($variation['rows'] as $row){
                                 ProductVariation::create([
                                     'image' => $path,
-                                    'variation1' => $request->product_variation_items[0]['name'],
+                                    'variation1' => $request->product_variation_items['name'],
                                     'option1' => $variation['name'],
                                     'price' => $row['price'],
                                     'stock' => $row['stock'],
@@ -119,13 +119,13 @@ class ProductController extends Controller
                                 ]);
                             }
                         }else{
-                            foreach($variation['row'] as $row){
+                            foreach($variation['rows'] as $row){
                                 ProductVariation::create([
                                     'image' => $path,
-                                    'variation1' => $request->product_variation_items[0]['name'],
+                                    'variation1' => $request->product_variation_items['name'],
                                     'option1' => $variation['name'],
-                                    'variation2' => $request->product_variation_items[1]['name'],
-                                    'option2' => $row['name'],
+                                    'variation2' => $request->product_variation_items['name2'],
+                                    'option2' => $row['name']['name'],
                                     'price' => $row['price'],
                                     'stock' => $row['stock'],
                                     'sku' => $row['sku'],
