@@ -180,7 +180,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
                                             <BreezeButton buttonType="blue" @click="viewProgressReport(result.progress_report_id)">View Details</BreezeButton>
-                                            <BreezeButton class="py-1 px-2" @click="showProgressReport(result.progress_report_id)">Show / Print</BreezeButton>
+                                            <BreezeButton class="py-1 px-2" @click="showProgressReport(result.progress_report_id)">{{ generate.id == result.progress_report_id && generate.running ? 'Generating...'  : 'Show / Print'}}</BreezeButton>
                                         </div>
                                     </td>
                                 </tr>
@@ -203,22 +203,23 @@ import BreezeButton from '@/Components/Button.vue';
                 :confirmationData="confirmationData"
             />
         </div>
-        <Modal :modalType="'lg'" :showModal="show_progress_report" @hideModal="show_progress_report = false">
-            <template v-slot:header>
+        <Modal :modalType="'md'" :showModal="show_progress_report" @hideModal="show_progress_report = false">
+            <!-- <template v-slot:header>
                 <h3 class="text-gray-900 text-xl font-semibold">                
-                    Update Progress Report
+                    Progress Report
                 </h3>                
-            </template>
+            </template> -->
             <template v-slot:content>
                 <div class="p-6 overflow-y-auto no-scrollbar">
                     <div class="grid grid-rows-1">
+                        <component :is="component.file" v-if="component.file" :data="component.data"/>
                     </div>
                 </div>
             </template>
             <template v-slot:footer>
-                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="gray" @click="show_progress_report = false">Cancel</BreezeButton>
-                    <BreezeButton @click="">Save</BreezeButton>
+                <div class="flex justify-between space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                    <BreezeButton buttonType="info" @click="print">Print</BreezeButton>
+                    <BreezeButton buttonType="gray" @click="show_progress_report = false">Close</BreezeButton>
                 </div>
             </template>
         </Modal>
@@ -236,13 +237,38 @@ import Multiselect from '@vueform/multiselect'
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Modal from '@/Components/Modal.vue'
+import MathReport from '@/Pages/ProgressReport/Reports/Math.vue'
+
+const printOptions = {
+    name: '_blank',
+    specs: [
+        'fullscreen=yes',
+        'titlebar=yes',
+        'scrollbars=yes'
+    ],
+    styles: [
+        'http://127.0.0.1:8000/css/app.css',
+    ],
+    timeout: 1000, // default timeout before the print window appears
+    autoClose: true, // if false, the window will not close after printing
+    windowTitle: window.document.title, // override the window title
+}
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal, Multiselect, Datepicker, Modal
+        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal, Multiselect, Datepicker, Modal, MathReport
     },
     data(){
         return{
+            component: {
+                file: null,
+                data: ''
+            },
+            generate: {
+                id: '',
+                running: false,
+            },
+            printing: false,
             show_progress_report: false,
             isOpen: false,
             confirmationData: '',
@@ -258,29 +284,42 @@ export default {
         }
     },
     watch: {
-        // params: {
-        //     handler(){
-        //         if(this.params){
-        //             this.$inertia.get(this.route('progress_report'), this.params, { replace: true, preserveState: true})
-        //         }
-        //     },
-        //     deep: true
-        // }
+        params: {
+            handler(){
+                if(this.params){
+                    this.$inertia.get(this.route('progress_report'), this.params, { replace: true, preserveState: true})
+                }
+            },
+            deep: true
+        }
     },
     methods: {
         viewProgressReport(progress_report_id){
             this.$inertia.get(this.route('progress_report.details'), {'progress_report_id': progress_report_id}, { })
         },
         showProgressReport(progress_report_id){
-            console.log(progress_report_id)
-            // axios.get(route('progress_report.full_reports', progress_report_id))
-            // .then(response => {
-            //     console.log(response)
-            //     // this.options.topics  =   response.data
-            //     // this.disabled.topics = false;
-            //     // this.loading.topics = false;
-            // });
-            // this.show_progress_report = true
+            if(this.generate.running){
+                return
+            }
+            this.generate.id = progress_report_id
+            this.generate.running = true
+            axios.get(route('progress_report.full_reports', progress_report_id))
+            .then(response => {
+                import(`./Reports/${response.data.report_template}.vue`)
+                .then(module => {
+                    this.component.file = module.default;
+                })
+                this.component.data = response.data.report_data;
+                this.generate.id = ''
+                this.generate.running = false
+                this.show_progress_report = true
+            });
+        },
+        print(){
+            this.printing = true
+            this.$htmlToPaper('progress_report', printOptions, () => {
+                this.printing = false
+            })
         },
     }
 }

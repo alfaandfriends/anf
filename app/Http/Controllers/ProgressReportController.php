@@ -80,7 +80,7 @@ class ProgressReportController extends Controller
                                 ->where('progress_reports.id', $request->progress_report_id)
                                 ->select('children.name as name', 'students.created_at as joined_date', 'programmes.name as programme', 'programme_levels.level as level')
                                 ->first();
-        // dd($student_info);
+                                
         /* Math Init Selection */
         $math_terms_books   =   $this->getMathTermBooks($student_info->level);
 
@@ -130,14 +130,19 @@ class ProgressReportController extends Controller
     
     public function getFullProgressReports($report_id)
     {
-        $progress_reports   =   DB::table('progress_reports')
-                                    ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
-                                    // ->select('progress_report_details.progress_report_id', 'progress_report_details.id', 'progress_report_details.date', 
-                                    //         'progress_report_details.report_data', 'progress_report_details.comments', 'progress_report_details.attendance_status',
-                                    //         'progress_report_status.class as attendance_status_class_name', 'progress_report_status.name as attendance_status_name')
-                                    ->where('progress_report_id', $report_id)->get();
+        $data['report_data']        =   DB::table('progress_reports')
+                                            ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
+                                            ->join('progress_report_status', 'progress_report_details.attendance_status', '=', 'progress_report_status.id')
+                                            ->select('progress_report_details.date', 'progress_report_details.report_data', 'progress_report_details.comments', 
+                                                    'progress_report_status.name as attendance_status_name')
+                                            ->where('progress_report_id', $report_id)->get();
 
-        return $progress_reports;
+        $data['report_template']    =    DB::table('progress_reports')
+                                            ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
+                                            ->where('progress_reports.id', $report_id)->pluck('progress_report_configs.vue_template')
+                                            ->first();
+
+        return $data;
     }
 
     /* Math */
