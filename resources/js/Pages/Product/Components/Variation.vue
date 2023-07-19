@@ -99,7 +99,6 @@ const addVariationOption2 = () => {
             name: '',
         }
     );
-    console.log(variation2.value.options.length - 1);
     variation1.value.options.forEach(option => {
         option.rows.push({ name: '', price: '',  stock: '',  sku: '' })
         option.rows[variation2.value.options.length - 1].name = variation2.value.options[variation2.value.options.length - 1];
@@ -143,37 +142,42 @@ watch(variation2.value, (newVal, oldVal) => {
 
 onMounted(() => {
     if(props.productVariations) {
+        const productVariations = props.productVariations;
+        console.log(productVariations);
         variation1.value = {
-            name: props.productVariations[0].variation1,
+            name: productVariations[0].variation,
             options: []
         };
-        if(props.productVariations[0].variation2){
-            variation2.value = {
-                show: true,
-                name: props.productVariations[0].variation2,
-                options: []
-            };
-        }
-        Object(props.productVariations).forEach((item, index) => {
-            console.log(item);
+        Object(productVariations).forEach((item, index) => {
             variation1.value.options.push(
                 {
-                    name: '',
-                    image: '',
-                    url: '',
-                    rows: [
-                        { name: '', price: '',  stock: '',  sku: '' }
-                    ]
+                    name: item.option,
+                    image: null,
+                    url: '../../storage/'+item.image,
+                    rows: []
                 }
             );
-            variation2.value.options.push(
-                {
-                    name: '',
-                }
-            );
-            console.log(variation1.value);
-            console.log(variation1.value.options[index].rows[index]);
+            if(item.variations){
+                variation2.value = {
+                    show: true,
+                    name: item.variations[0].variation,
+                    options: []
+                };
+                Object(item.variations).forEach((item2, index2) => {
+                    variation2.value.options.push(
+                        {
+                            name: item2.option,
+                        }
+                    );
+                    variation1.value.options[index].rows.push(
+                        { name: '', price: item2.price,  stock: item2.stock,  sku: item2.sku }
+                    );
+                    variation1.value.options[index].rows[variation2.value.options.length - 1].name = variation2.value.options[variation2.value.options.length - 1];
+                });
+            }
         });
+        console.log(variation1.value);
+        console.log(variation2.value);
     }
 });
 
@@ -263,7 +267,7 @@ onMounted(() => {
                     </td>
                     <td v-if="variation2.show" class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col items-center p-2 m-2" v-for="(variation_2, variation_2_index) in variation_1.rows" :key="variation_2_index">
-                            <label :for="variation_2.name" class="text-sm text-gray-500 text-center"> {{ variation_2.name }} </label>
+                            <label :for="variation_2.name" class="text-sm text-gray-500 text-center"> {{ variation_2.name.name }} </label>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">

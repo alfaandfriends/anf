@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductVariation extends Model
+class ProductSecondVariation extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -19,10 +19,5 @@ class ProductVariation extends Model
             get: fn ($value) => $value / 100,
             set: fn ($value) => $value * 100,
         );
-    }
-
-    public function variations()
-    {
-        return $this->hasMany(ProductSecondVariation::class);
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductImage;
+use App\Models\ProductSecondVariation;
 use App\Models\ProductVariation;
 use App\Models\ProductVariationItem;
 use Exception;
@@ -27,7 +28,8 @@ class ProductController extends Controller
     {
         $data['products'] = Product::with(
             'images:id,product_id,name,path',
-            'variations:id,product_id,variation1,variation2,option1,option2,price,stock,sku,sales',
+            'variations:id,product_id,variation,option,price,stock,sku,sales',
+            'variations.variations:id,product_variation_id,variation,option,price,stock,sku,sales',
         )->when($request->search, function ($query, $search) {
             return $query->where('name', 'like', '%' . $search . '%');
         })->when($request->filter, function ($query, $filter) {
@@ -110,8 +112,8 @@ class ProductController extends Controller
                             foreach($variation['rows'] as $row){
                                 ProductVariation::create([
                                     'image' => $path,
-                                    'variation1' => $request->product_variation_items['name'],
-                                    'option1' => $variation['name'],
+                                    'variation' => $request->product_variation_items['name'],
+                                    'option' => $variation['name'],
                                     'price' => $row['price'],
                                     'stock' => $row['stock'],
                                     'sku' => $row['sku'],
@@ -119,18 +121,24 @@ class ProductController extends Controller
                                 ]);
                             }
                         }else{
-                            foreach($variation['rows'] as $row){
-                                ProductVariation::create([
+                            if($request->product_variation_items['name2']) {
+                                $productVariation = ProductVariation::create([
                                     'image' => $path,
-                                    'variation1' => $request->product_variation_items['name'],
-                                    'option1' => $variation['name'],
-                                    'variation2' => $request->product_variation_items['name2'],
-                                    'option2' => $row['name']['name'],
-                                    'price' => $row['price'],
-                                    'stock' => $row['stock'],
-                                    'sku' => $row['sku'],
+                                    'variation' => $request->product_variation_items['name'],
+                                    'option' => $variation['name'],
                                     'product_id' => $product->id,
                                 ]);
+                                foreach($variation['rows'] as $row){
+                                    ProductSecondVariation::create([
+                                        'image' => $path,
+                                        'variation' => $request->product_variation_items['name2'],
+                                        'option' => $row['name']['name'],
+                                        'price' => $row['price'],
+                                        'stock' => $row['stock'],
+                                        'sku' => $row['sku'],
+                                        'product_variation_id' => $productVariation->id,
+                                    ]);
+                                }
                             }
                         }
                     }
@@ -167,7 +175,7 @@ class ProductController extends Controller
     {
         $productImages = ProductImage::select('id', 'name', 'path')->where('product_id', $product->id)->get();
         $categories = ProductCategory::select('id', 'name')->get();
-        $productVariatons = ProductVariation::select('id','image','variation1','variation2','option1','option2','price','stock','sku','sales',)->where('product_id', $product->id)->get();
+        $productVariatons = ProductVariation::with('variations:id,product_variation_id,variation,option,price,stock,sku,sales')->select('id','image','variation','option','price','stock','sku','sales',)->where('product_id', $product->id)->get();
         return Inertia::render('Product/Create', [
             'product' => $product,
             'productVariations' => $productVariatons,
@@ -185,6 +193,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+        dd($request);
         try {
             DB::transaction(function () use ($request, $product) {
                 $product->name = $request->product_name;

@@ -13,19 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('product_variations', function (Blueprint $table) {
+        Schema::create('product_second_variations', function (Blueprint $table) {
             $table->id();
-            $table->string('image')->nullable();
             $table->string('variation', 50)->nullable();
             $table->string('option', 50)->nullable();
             $table->bigInteger('price')->nullable();
             $table->integer('stock')->nullable();
             $table->string('sku')->nullable();
             $table->integer('sales')->default(0);
-            $table->unsignedBigInteger('product_id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->unsignedBigInteger('product_variation_id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_variation_id')->references('id')->on('product_variations');
         });
     }
 
@@ -36,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_variations');
+        Schema::dropIfExists('product_second_variations');
     }
 };
