@@ -11,20 +11,20 @@ import BreezeButton from '@/Components/Button.vue';
         <div class="flex justify-center mb-5">
             <span class="font-bold text-2xl">Monthly Progress Report</span>
         </div>
-        <dl class="divide-y divide-gray-300 border-2 border-gray-600 px-10 mb-5">
-            <div class="px-4 py-2 grid grid-cols-3 gap-4">
+        <dl class="divide-y divide-gray-300 border-2 border-gray-600 px-5 py-2 mb-3">
+            <div class="px-4 py-2 grid grid-cols-3 gap-4 items-center">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Child's Name:</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 col-span-2">Dhiya Rania Alayna Binti Muhammad Eqbal (8)</dd>
             </div>
-            <div class="px-4 py-2 grid grid-cols-3 gap-4">
+            <div class="px-4 py-2 grid grid-cols-3 gap-4 items-center">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Date Joined:</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 col-span-2">May 2022</dd>
             </div>
-            <div class="px-4 py-2 grid grid-cols-3 gap-4">
+            <div class="px-4 py-2 grid grid-cols-3 gap-4 items-center">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Class Type / level:</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 col-span-2">ANF Maths (Level 2)</dd>
             </div>
-            <div class="px-4 py-2 grid grid-cols-3 gap-4">
+            <div class="px-4 py-2 grid grid-cols-3 gap-4 items-center">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Teacher:</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 col-span-2">Hazma Syarihan binti Mohamed Rafique</dd>
             </div>
@@ -50,17 +50,17 @@ import BreezeButton from '@/Components/Button.vue';
                                 {{report.attendance_status_name}}
                             </div>
                         </td>
-                        <td class="border-2 border-gray-600 py-2 px-4">
-                            <div class="flex justify-center text-sm" v-for="item, item_index in JSON.parse(report.report_data)">
+                        <td class="border-2 border-gray-600 py-2 px-4 align-top">
+                            <div class="flex justify-center text-sm preserve-line-breaks" v-for="item, item_index in JSON.parse(report.report_data)">
                                 {{ item.term_book_name }}
                             </div>
                         </td>
-                        <td class="border-2 border-gray-600 py-2 px-4">
-                            <div class="flex justify-start text-sm" v-for="item, item_index in JSON.parse(report.report_data)">
+                        <td class="border-2 border-gray-600 py-2 px-4 align-top">
+                            <div class="flex justify-start text-sm preserve-line-breaks" v-for="item, item_index in JSON.parse(report.report_data)">
                                 {{ item.lesson_name }}
                             </div>
                         </td>
-                        <td class="border-2 border-gray-600 py-2 px-4 text-sm">{{report.comments}}</td>
+                        <td class="border-2 border-gray-600 py-2 px-4 text-sm">{{ report.comments }}</td>
                     </tr>
                 </tbody>
             </table>
