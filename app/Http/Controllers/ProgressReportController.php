@@ -15,22 +15,31 @@ class ProgressReportController extends Controller
     public function index(Request $request){
 
         $allowed_centres    =   (object)Inertia::getShared('allowed_centres');
-        $can_access_centre = $allowed_centres->search(function ($value) { 
+        $can_access_centre = $allowed_centres->search(function ($value) {
             return $value->ID == request('centre_id');
         });
 
         $programmes =   ProgrammeHelper::programmes();
+        $levels     =   ProgrammeHelper::distinctLevels();
         
         $query  =   DB::table('progress_report_details')
                         ->join('progress_reports', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
                         ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
                         ->join('student_fees', 'progress_reports.student_fee_id', '=' ,'student_fees.id')
+                        ->join('centres', 'student_fees.centre_id', '=' ,'centres.id')
+                        ->join('programme_level_fees', 'student_fees.fee_id', '=' ,'programme_level_fees.id')
+                        ->join('programme_levels', 'programme_level_fees.programme_level_id', '=' ,'programme_levels.id')
+                        ->join('programmes', 'programme_levels.programme_id', '=' ,'programmes.id')
                         ->join('students', 'student_fees.student_id', '=' ,'students.id')
                         ->join('children', 'students.children_id', '=' ,'children.id')
-                        ->select(   'progress_reports.id as progress_report_id',
-                                    'students.id as student_id', 
-                                    'children.name as student_name', 
-                                    DB::raw('count(progress_reports.id) as total_class'), 
+                        ->select(   'progress_reports.student_fee_id as student_fee',
+                                    'progress_reports.id as progress_report_id',
+                                    'programmes.name as programme_name',
+                                    'centres.label as centre_name',
+                                    'programme_levels.level as programme_level',
+                                    'students.id as student_id',
+                                    'children.name as student_name',
+                                    DB::raw('count(progress_reports.id) as total_class'),
                                     DB::raw('count(CASE WHEN progress_report_details.attendance_status = 1 THEN 1 END) as total_present'), 
                                     DB::raw('count(CASE WHEN progress_report_details.attendance_status = 2 THEN 1 END) as total_absent'), 
                         );
@@ -64,7 +73,8 @@ class ProgressReportController extends Controller
         return Inertia::render('ProgressReport/Index', [
             'filter'            =>  request()->all('search', 'centre_id', 'programme_id', 'date'),
             'progress_reports'  =>  $query->groupBy('progress_reports.id')->paginate(10),
-            'programmes'        =>  $programmes
+            'programmes'        =>  $programmes,
+            'levels'            =>  $levels
         ]);
     }
 
@@ -128,18 +138,31 @@ class ProgressReportController extends Controller
         return back()->with(['type'=>'success', 'message'=>'Progress report updated successfully !']);
     }
     
-    public function getFullProgressReports($report_id)
+    public function getFullProgressReports(Request $request)
     {
+        $data['student_data']        =   DB::table('progress_reports')
+                                            ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
+                                            ->join('student_fees', 'progress_reports.student_fee_id', '=', 'student_fees.id')
+                                            ->join('students', 'student_fees.student_id', '=', 'students.id')
+                                            ->join('children', 'students.children_id', '=', 'children.id')
+                                            ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                            ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                            ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                            ->select('children.name as student_name', 'students.created_at as date_joined','programmes.name as programme_name', 
+                                                    'programme_levels.level as programme_level')
+                                            ->where('progress_report_id', $request->report_id)->first();
+
         $data['report_data']        =   DB::table('progress_reports')
                                             ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
+                                            ->join('student_fees', 'progress_reports.student_fee_id', '=', 'student_fees.id')
                                             ->join('progress_report_status', 'progress_report_details.attendance_status', '=', 'progress_report_status.id')
                                             ->select('progress_report_details.date', 'progress_report_details.report_data', 'progress_report_details.comments', 
                                                     'progress_report_status.name as attendance_status_name')
-                                            ->where('progress_report_id', $report_id)->get();
+                                            ->where('student_fees.student_id', $request->studnet_id)->get();
 
         $data['report_template']    =    DB::table('progress_reports')
                                             ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
-                                            ->where('progress_reports.id', $report_id)->pluck('progress_report_configs.vue_template')
+                                            ->where('progress_reports.id', $request->report_id)->pluck('progress_report_configs.vue_template')
                                             ->first();
 
         return $data;
