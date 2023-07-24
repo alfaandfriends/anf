@@ -83,6 +83,8 @@ class OrderController extends Controller
                     'shipping_provider_id' => $request->order_shipping_provider,
                     'tracking_no' => $request->order_shipping_no,
                 ]);
+
+                //TODO: send out invoice
             });
 
             return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Order added successfully !']);
