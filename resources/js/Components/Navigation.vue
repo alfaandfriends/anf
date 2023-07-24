@@ -10,19 +10,25 @@
                 </div>
                 <span class="text-lg font-semibold md:text-base">HOME</span>
             </Link>
-            <Link :href="route('parent.notice.index')" :class="(route().current('parent.notice.index')) ? 'underline text-gray-800' : ''" class="flex md:mr-10 cursor-pointer">
+            <!-- <Link :href="route('parent.notice.index')" :class="(route().current('parent.notice.index')) ? 'underline text-gray-800' : ''" class="flex md:mr-10 cursor-pointer">
                 <div class="flex mr-2 md:mr-3">
                     <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
                 </div>
                 <span class="text-lg font-semibold md:text-base">NOTICE BOARD</span>
-            </Link>
+            </Link> -->
             <Link :href="route('parent.invoices.index')" :class="(route().current('parent.invoices.index')) ? 'underline text-gray-800' : ''" class="hidden text-lg font-semibold md:text-base md:flex md:mr-10 cursor-pointer">
                 <div class="flex mr-2 md:mr-3">
                     <ion-icon name="storefront-outline"></ion-icon>
                 </div>
                 <span class="text-lg font-semibold md:text-base">FEE INVOICES</span>
             </Link>
-            <Menu as="div" class="relative">
+            <Link :href="route('parent.art_galleries.index')" :class="(route().current('parent.art_galleries.index')) ? 'underline text-gray-800' : ''" class="hidden text-lg font-semibold md:text-base md:flex md:mr-10 cursor-pointer">
+                <div class="flex mr-2 md:mr-3">
+                    <ion-icon name="storefront-outline"></ion-icon>
+                </div>
+                <span class="text-lg font-semibold md:text-base">ART GALLERY</span>
+            </Link>
+            <!-- <Menu as="div" class="relative">
                 <MenuButton class="flex font-semibold place-items-center">
                     <div class="mt-1.5 mr-2 md:mr-3">
                         <ion-icon name="ellipsis-horizontal-circle-outline"></ion-icon>
@@ -87,7 +93,7 @@
                         </MenuItem>
                     </MenuItems>
                 </transition>
-            </Menu>
+            </Menu> -->
         </div>
     </nav>
 </template>

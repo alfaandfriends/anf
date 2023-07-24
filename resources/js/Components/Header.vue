@@ -14,10 +14,10 @@
                     <div class="flex">
                         <div class="flex items-center">
                             <!-- Notification -->
-                            <Notification />
+                            <!-- <Notification /> -->
 
                             <!-- Cart -->
-                            <Cart />
+                            <!-- <Cart /> -->
 
                             <!-- Profile Menu -->
                             <Menu as="div" class="relative">
