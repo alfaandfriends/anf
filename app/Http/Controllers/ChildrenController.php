@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\ProgrammeHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class ChildrenController extends Controller
                                     ->orderBy('children.date_of_birth')
                                     ->get();
         $gender_list        =   DB::table('genders')->get();
-        $programme_list     =   DB::table('programmes')->get();
+        $programme_list     =   ProgrammeHelper::programmes();
 
         return Inertia::render('Children/Create', [
             'gender_list'       => $gender_list,
@@ -72,5 +73,22 @@ class ChildrenController extends Controller
     public function destroy($id)
     {
         DB::table('children')->where('id', $id)->delete();
+    }
+
+    public function findChildren(Request $request){
+        $children   =   DB::table('children')
+                            ->leftJoin('user_basic_information', 'children.parent_id', '=', 'user_basic_information.user_id')
+                            ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
+                            ->whereNotExists(function ($query) {
+                                $query->select(DB::raw(1))
+                                      ->from('students')
+                                      ->whereColumn('students.children_id', 'children.id');
+                            })
+                            ->select(['children.id', 'children.name'])->get();
+                            // ->select(['children.id', 
+                            //             DB::Raw("CONCAT(children.name, ' - ( ', user_basic_information.user_first_name, ' ', user_basic_information.user_last_name, ' )') AS name")
+                            //         ])->get();
+
+        return $children;
     }
 }

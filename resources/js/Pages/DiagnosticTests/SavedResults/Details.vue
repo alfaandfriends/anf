@@ -76,8 +76,10 @@ import BreezeButton from '@/Components/Button.vue';
                                 </h3>                
                             </template>
                             <template v-slot:content>
-                                <div class="flex justify-center bg-gray-200 py-4 rounded max-h-[90%] overflow-y-auto no-scrollbar" id="report">
-                                    <div class="bg-white w-[210mm] h-[297mm] space-y-6 py-4">
+                                <div class="h-[297mm] overflow-y-auto no-scrollbar" id="report">
+                                    <div class="flex flex-col justify-between p-8 space-y-2">
+                                <!-- <div class="flex justify-center bg-gray-200 py-4 rounded max-h-[90%] overflow-y-auto no-scrollbar" id="report">
+                                    <div class="bg-white w-[210mm] h-[297mm] space-y-6 py-4"> -->
                                         <div class="grid grid-rows-1">
                                             <div class="flex justify-center">
                                                 <h1 class="font-bold text-slate-800 text-2xl py-4 uppercase">Diagnostic Test {{ report.title }}</h1>
@@ -253,9 +255,11 @@ export default {
         print() {
             if(this.current_chart_type == 1){
                 document.getElementById('bar-chart').style.display = 'none'
+                document.getElementById('chart_image').style.display = 'block'
             }
             else{
                 document.getElementById('scatter-chart').style.display = 'none'
+                document.getElementById('chart_image').style.display = 'block'
             }
             this.$htmlToPaper('report', printOptions, () => {
                 if(this.current_chart_type == 1){

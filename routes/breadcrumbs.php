@@ -4,6 +4,8 @@
 // this import. This is nice for IDE syntax and refactoring.
 
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\ProductCategory;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 
 // This import is also not required, and you could replace `BreadcrumbTrail $trail`
@@ -233,4 +235,39 @@ Breadcrumbs::for('orders.create', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('orders.edit', function (BreadcrumbTrail $trail, Order $order) {
     $trail->parent('orders');
     $trail->push('Edit Order', route('orders.edit', $order));
+});
+
+/* Products */
+Breadcrumbs::for('products', function (BreadcrumbTrail $trail) {
+    $trail->push('Products', route('products'));
+});
+
+Breadcrumbs::for('products.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('products');
+    $trail->push('Add New Product', route('products.create'));
+});
+
+Breadcrumbs::for('products.trash', function (BreadcrumbTrail $trail) {
+    $trail->parent('products');
+    $trail->push('Trash', route('products.trash'));
+});
+
+Breadcrumbs::for('products.edit', function (BreadcrumbTrail $trail, Product $product) {
+    $trail->parent('products');
+    $trail->push('Edit Product', route('products.edit', $product));
+});
+
+/* Product Categories */
+Breadcrumbs::for('product-categories', function (BreadcrumbTrail $trail) {
+    $trail->push('Product Categories', route('product-categories'));
+});
+
+Breadcrumbs::for('product-categories.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('product-categories');
+    $trail->push('Add New Product Category', route('product-categories.create'));
+});
+
+Breadcrumbs::for('product-categories.edit', function (BreadcrumbTrail $trail, ProductCategory $product_category) {
+    $trail->parent('product-categories');
+    $trail->push('Edit Product Category', route('product-categories.edit', $product_category));
 });

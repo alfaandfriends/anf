@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\ProgrammeHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +28,7 @@ class TeacherResourcesController extends Controller
             $query->where('programmes.id', $request->programme_id);
         }                   
 
-        $programmes     =   DB::table('programmes')->get();
+        $programmes     =   ProgrammeHelper::programmes();
         
         return Inertia::render('TeacherResources/Index', [
             'filter'            =>  request()->all('search', 'programme_id'),
@@ -38,7 +39,7 @@ class TeacherResourcesController extends Controller
 
     public function create()
     {
-        $programmes     =   DB::table('programmes')->get();
+        $programmes     =   ProgrammeHelper::programmes();
         $languages      =   DB::table('languages')->get();
         $media_types    =   DB::table('teacher_resource_media_types')->get();
 
@@ -86,7 +87,7 @@ class TeacherResourcesController extends Controller
 
     public function edit(Request $request)
     {
-        $programmes     =   DB::table('programmes')->get();
+        $programmes     =   ProgrammeHelper::programmes();
         $languages      =   DB::table('languages')->get();
         $media_types    =   DB::table('teacher_resource_media_types')->get();
         $resource_info  =   DB::table('teacher_resources')->where('id', $request->resource_id)->first();

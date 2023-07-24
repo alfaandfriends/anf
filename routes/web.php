@@ -17,13 +17,18 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ExternalUserManagementController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductVariationItemController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\ProgressReportController;
 use App\Http\Controllers\TeacherResources;
 use App\Http\Controllers\TeacherResourcesController;
+use App\Models\ProductCategory;
 
 /* Authorized Only */
 Route::middleware(['auth'])->group(function(){
@@ -148,7 +153,6 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/students/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:student_edit_access');
         Route::post('/students/update', [StudentController::class, 'update'])->name('students.update')->middleware('permission:student_edit_access');
         Route::delete('/students/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:student_delete_access');
-        Route::get('/students/find', [StudentController::class, 'findStudents'])->name('students.find')->middleware('permission:student_view_access|student_create_access|student_edit_access');
         Route::post('/students/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class')->middleware('permission:student_view_access|student_create_access|student_edit_access');
 
         /* Settings */
@@ -226,6 +230,18 @@ Route::middleware(['auth'])->group(function(){
         Route::resource('orders', OrderController::class)->names([
             'index' => 'orders'
         ]);
+        Route::get('/products/trash', [ProductController::class, 'trash'])->name('products.trash');
+        Route::patch('products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
+        Route::resource('products', ProductController::class)->names([
+            'index' => 'products'
+        ]);
+        Route::resource('product-variation-item', ProductVariationItemController::class)->only(
+            'update', 'destroy'
+        );
+        Route::patch('product-variation-item/restore/{id}', [ProductVariationItemController::class, 'restore'])->name('product-variation-item.restore');
+        Route::resource('product-categories', ProductCategoryController::class)->names([
+            'index' => 'product-categories'
+        ]);
     });
 
     /* Notifications */
@@ -260,23 +276,20 @@ Route::middleware(['auth'])->group(function(){
     Route::delete('/teacher-resources/destroy/{id}', [TeacherResourcesController::class, 'destroy'])->name('teacher_resources.destroy');
     Route::get('/teacher-resources/get-resource', [TeacherResourcesController::class, 'getResource'])->name('teacher_resources.get_resource');
 
+    /* Invoices */
+    Route::get('/invoices/fee', [InvoiceController::class, 'feeInvoiceIndex'])->name('fee.invoices');
+    Route::get('/invoices/fee/create', [InvoiceController::class, 'feeInvoiceCreate'])->name('fee.invoices.create');
+    Route::post('/invoices/fee/store', [InvoiceController::class, 'feeInvoiceStore'])->name('fee.invoices.store');
+    Route::get('/invoices/fee/edit', [InvoiceController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit');
+    Route::post('/invoices/fee/update', [InvoiceController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update');
+
     /* Progress Report */
     Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');
     Route::get('/progress-report/details', [ProgressReportController::class, 'details'])->name('progress_report.details');
-    // Route::get('/progress-report/create', [ProgressReportController::class, 'create'])->name('progress_report.create');
-    // Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store');
-    // Route::get('/progress-report/edit', [ProgressReportController::class, 'edit'])->name('progress_report.edit');
-    // Route::post('/progress-report/update', [ProgressReportController::class, 'update'])->name('progress_report.update');
-    // Route::delete('/progress-report/destroy/{id}', [ProgressReportController::class, 'destroy'])->name('progress_report.destroy');
+    Route::get('/progress-report/full-reports/{report_id}', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports');
 
-    /* Maths select options */
-    Route::post('/progress-report/math/store', [ProgressReportController::class, 'storeMath'])->name('progress_report.store_math');
-    Route::get('/progress-report/math/get-units-lessons/{report_id}', [ProgressReportController::class, 'getMathUnitsLessons'])->name('progress_report.get_math_units_lessons');
-    Route::get('/progress-report/math/get-units-lessons-objectives/{report_id}', [ProgressReportController::class, 'getMathUnitsLessonsObjectives'])->name('progress_report.get_math_units_lessons_objectives');
-    Route::get('/progress-report/math/get-terms-books/{report_id}', [ProgressReportController::class, 'getMathTermsBooks'])->name('progress_report.get_math_terms_books');
-    Route::get('/progress-report/math/get-units/{term_book_id}', [ProgressReportController::class, 'getMathUnits'])->name('progress_report.get_math_units');
-    Route::get('/progress-report/math/get-lessons/{unit_id}', [ProgressReportController::class, 'getMathLessons'])->name('progress_report.get_math_lessons');
-    Route::get('/progress-report/math/get-objectives/{lesson_id}', [ProgressReportController::class, 'getMathObjectives'])->name('progress_report.get_math_objectives');
+
+    Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store');
 });
 
 

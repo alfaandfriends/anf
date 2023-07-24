@@ -105,6 +105,20 @@ export default {
                     },
                 })
             }
+            if(this.confirmationMethod == 'patch'){
+                this.$inertia.patch(this.route(this.confirmationRoute, this.confirmationData), {
+                    preserveScroll: true,
+                    onStart: () => this.processing = true,
+                    onSuccess: ()  =>  {
+                        this.$emit('close'),
+                        this.processing = false
+                    },
+                    onFinished: ()  =>  {
+                        this.$emit('close'),
+                        this.processing = false
+                    },
+                })
+            }
         }
     }
 }
