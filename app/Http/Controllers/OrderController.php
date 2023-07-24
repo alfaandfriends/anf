@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderStatus as ModelsOrderStatus;
 use App\Models\Shipping;
 use App\Models\ShippingProvider;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -28,30 +29,15 @@ class OrderController extends Controller
         $data['orders'] = Order::select(
             'id', 'product_id', 'customer_id'
         )->with(
-            'shippings:id,order_id,shipping_provider_id,tracking_no',
-            'shippings.provider:id,name',
+            'user:id,user_email',
+            'shipping:id,order_id,shipping_provider_id,tracking_no',
+            'shipping.provider:id,name',
             'status:id,order_id,status'
         )->when($request->search, function ($query, $search) {
             return $query->where('name', 'like', '%' . $search . '%');
         })->when($request->filter, function ($query, $filter) {
             return $query->where('name', 'like', '%' . $filter . '%');
         })->paginate(10);
-
-        $items = $data['orders']->flatMap(function ($order) {
-            return $order->shippings->map(function ($shipping) use ($order) {
-                return [
-                    'id' => $order->id,
-                    'invoice_number' => $order->id,
-                    'email' => $order->id,
-                    'phone' => $order->id,
-                    'provider' => $shipping->provider->name,
-                    'tracking' => $shipping->tracking_no,
-                    'status' => $order->status->status,
-                ];
-            });
-        });
-
-        $data['orders']->setCollection($items);
 
         return Inertia::render('Order/Index', $data);
     }
@@ -67,6 +53,7 @@ class OrderController extends Controller
         $data['statuses']['processing'] = OrderStatus::PROCESSING;
         $data['statuses']['completed'] = OrderStatus::COMPLETED;
         $data['providers'] = ShippingProvider::get();
+        $data['users'] = User::select('id', 'display_name')->where('first_time_login', 1)->where('is_admin', 0)->limit(1000)->get();
 
         return Inertia::render('Order/Create', $data);
     }
@@ -129,6 +116,7 @@ class OrderController extends Controller
         $data['statuses']['processing'] = OrderStatus::PROCESSING;
         $data['statuses']['completed'] = OrderStatus::COMPLETED;
         $data['providers'] = ShippingProvider::get();
+        $data['users'] = User::select('id', 'display_name')->where('first_time_login', 1)->where('is_admin', 0)->limit(1000)->get();
 
         $shipping = Shipping::where('order_id', $order->id)->latest()->first();
         $orderStatus = ModelsOrderStatus::where('order_id', $order->id)->latest()->first();

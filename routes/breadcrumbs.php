@@ -227,10 +227,10 @@ Breadcrumbs::for('orders', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('orders.create', function (BreadcrumbTrail $trail) {
     $trail->parent('orders');
-    $trail->push('Add New Product', route('orders.create'));
+    $trail->push('Add New Order', route('orders.create'));
 });
 
 Breadcrumbs::for('orders.edit', function (BreadcrumbTrail $trail, Order $order) {
     $trail->parent('orders');
-    $trail->push('Edit Product', route('orders.edit', $order));
+    $trail->push('Edit Order', route('orders.edit', $order));
 });

@@ -14,6 +14,9 @@ const props = defineProps({
     providers: {
         type: Object,
     },
+    users: {
+        type: Object,
+    },
 });
 
 const form = useForm({
@@ -59,8 +62,7 @@ const submit = () => {
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <select name="product_category" id="product_category" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.order_customer">
                                                     <option value="">Please Select</option>
-                                                    <option value="1">Dummy</option>
-                                                    <!-- <option v-for="(category, index) in categories" :key="index" :value="category.id"> {{ category.name }} </option> -->
+                                                    <option v-for="(user, index) in users" :key="index" :value="user.id"> {{ user.display_name }} </option>
                                                 </select>
                                             </div>
                                         </div>

@@ -12,9 +12,14 @@ class Order extends Model
     use SoftDeletes;
     protected $guarded = ['id'];
 
-    public function shippings()
+    public function shipping()
     {
-        return $this->hasMany(Shipping::class);
+        return $this->hasOne(Shipping::class)->latest();
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'customer_id');
     }
 
     public function status()
