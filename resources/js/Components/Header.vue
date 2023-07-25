@@ -5,11 +5,13 @@
                 <div class="flex items-center justify-between h-20 md:h-16">
                     <div class="flex items-center">
                         <!-- Logo -->
-                        <div class="text-xl font-bold select-none">
-                            <div to="/">
-                                <span>ALFA and Friends</span>
+                        <a class="flex items-center space-x-4 font-bold select-none" :href="route('parent.home')">
+                            
+                            <img class="h-12 w-12" src="/images/anf-logo-main-2x.png" alt="">
+                            <div>
+                                <span class="text-md md:text-xl lg:text-xl">ALFA and Friends Centre</span>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="flex">
                         <div class="flex items-center">
@@ -44,7 +46,7 @@
                                 >
                                     <!-- Desktop and Tablet Menu -->
                                     <MenuItems class="absolute w-64 py-3 mt-2 origin-top-right bg-white shadow-md -right-1 rounded-xl focus:outline-none">
-                                        <div class="px-5 pt-2 pb-3 mb-2 border-b">
+                                        <div class="px-5 pt-2 pb-3 border-b">
                                             <!-- Header -->
                                             <div class="font-medium text-gray-700">
                                                 Hey,
@@ -52,12 +54,18 @@
                                             </div>
                                         </div>
                                         <!-- Navigation -->
-                                        <div to="/profile" class="flex items-center px-5 py-2 font-medium text-gray-700 hover:bg-indigo-50"><UserCircleIcon class="w-6 h-6 mr-3" />Profile</div>
-                                        <div to="/settings" class="flex items-center px-5 py-2 font-medium text-gray-700 hover:bg-indigo-50"><CogIcon class="w-6 h-6 mr-3" />Settings</div>
-                                        <div to="/helpdesk" class="flex items-center px-5 py-2 font-medium text-gray-700 hover:bg-indigo-50"><QuestionMarkCircleIcon class="w-6 h-6 mr-3" />Helpdesk</div>
-                                        <div class="pt-2 mt-2 border-t">
-                                            <button class="w-full px-5 py-2 font-medium text-left text-gray-700 hover:bg-indigo-50">Log Out</button>
+                                        <div class="flex items-center px-5 my-1 py-2 font-medium text-gray-700 hover:bg-indigo-50 cursor-pointer">
+                                            <UserCircleIcon class="w-6 h-6 mr-3" />Profile
                                         </div>
+                                        <!-- <div to="/settings" class="flex items-center px-5 py-2 font-medium text-gray-700 hover:bg-indigo-50"><CogIcon class="w-6 h-6 mr-3" />Settings</div>
+                                        <div to="/helpdesk" class="flex items-center px-5 py-2 font-medium text-gray-700 hover:bg-indigo-50"><QuestionMarkCircleIcon class="w-6 h-6 mr-3" />Helpdesk</div> -->
+                                        <hr>
+                                        <button class="flex items-center space-x-3 w-full ml-1 px-5 py-2 mt-3 font-medium text-left text-gray-700 hover:bg-indigo-50">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="currentcolor" viewBox="0 0 512 512">
+                                                <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
+                                            </svg>
+                                            <span>Log Out</span>
+                                        </button>
                                     </MenuItems>
                                 </transition>
                             </Menu>
@@ -75,11 +83,18 @@
                         </div>
                     </div>
                     <!-- Navigation -->
-                    <div to="/profile" class="flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50"><UserCircleIcon class="w-6 h-6 mr-3" />Profile</div>
-                    <div to="/settings" class="flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50"><CogIcon class="w-6 h-6 mr-3" />Settings</div>
-                    <div to="/helpdesk" class="flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50"><QuestionMarkCircleIcon class="w-6 h-6 mr-3" />Helpdesk</div>
+                    <div class="cursor-pointer flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50">
+                        <UserCircleIcon class="w-6 h-6 mr-3" />Profile
+                    </div>
+                    <!-- <div to="/settings" class="flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50"><CogIcon class="w-6 h-6 mr-3" />Settings</div>
+                    <div to="/helpdesk" class="flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50"><QuestionMarkCircleIcon class="w-6 h-6 mr-3" />Helpdesk</div> -->
                     <div class="py-2 mt-2 border-t">
-                        <button class="w-full px-5 py-3 font-medium text-left text-gray-700 hover:bg-indigo-50">Log Out</button>
+                        <button class="flex items-center space-x-3 ml-1 w-full px-5 py-3 font-medium text-left text-gray-700 hover:bg-indigo-50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="currentcolor" viewBox="0 0 512 512">
+                                <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
+                            </svg>
+                            <span>Log Out</span>
+                        </button>
                     </div>
                 </div>
             </DisclosurePanel>

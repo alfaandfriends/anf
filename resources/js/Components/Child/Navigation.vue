@@ -8,14 +8,14 @@
                 <div class="flex mr-2 md:mr-3">
                     <ion-icon name="home-outline"></ion-icon>
                 </div>
-                <span class="text-lg font-semibold md:text-base">HOME</span>
+                <span class="text-lg font-semibold md:text-base">Home</span>
             </router-link>
             <!-- Message -->
             <router-link to="/message" class="flex md:mr-10">
                 <div class="flex mr-2 md:mr-3">
                     <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
                 </div>
-                <span class="text-lg font-semibold md:text-base">MESSAGE</span>
+                <span class="text-lg font-semibold md:text-base">Message</span>
             </router-link>
             <!-- Shop (Desktop and Tablet) -->
             <router-link to="/shop" class="hidden md:flex md:mr-10">
