@@ -150,19 +150,18 @@ class ProgressReportController extends Controller
                                             ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
                                             ->select('children.name as student_name', 'students.created_at as date_joined','programmes.name as programme_name', 
                                                     'programme_levels.level as programme_level')
-                                            ->where('progress_report_id', $request->report_id)->first();
+                                            ->where('progress_report_id', $request->progress_report_id)->first();
 
         $data['report_data']        =   DB::table('progress_reports')
                                             ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
-                                            ->join('student_fees', 'progress_reports.student_fee_id', '=', 'student_fees.id')
                                             ->join('progress_report_status', 'progress_report_details.attendance_status', '=', 'progress_report_status.id')
                                             ->select('progress_report_details.date', 'progress_report_details.report_data', 'progress_report_details.comments', 
                                                     'progress_report_status.name as attendance_status_name')
-                                            ->where('student_fees.student_id', $request->studnet_id)->get();
+                                            ->where('progress_reports.student_fee_id', $request->student_fee)->orderBy('progress_report_details.id')->get();
 
         $data['report_template']    =    DB::table('progress_reports')
                                             ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
-                                            ->where('progress_reports.id', $request->report_id)->pluck('progress_report_configs.vue_template')
+                                            ->where('progress_reports.id', $request->progress_report_id)->pluck('progress_report_configs.vue_template')
                                             ->first();
 
         return $data;

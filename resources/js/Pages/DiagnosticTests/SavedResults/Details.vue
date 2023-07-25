@@ -77,7 +77,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </template>
                             <template v-slot:content>
                                 <div class="h-[297mm] overflow-y-auto no-scrollbar" id="report">
-                                    <div class="flex flex-col justify-between p-8 space-y-2">
+                                    <div class="flex flex-col justify-between space-y-2">
                                 <!-- <div class="flex justify-center bg-gray-200 py-4 rounded max-h-[90%] overflow-y-auto no-scrollbar" id="report">
                                     <div class="bg-white w-[210mm] h-[297mm] space-y-6 py-4"> -->
                                         <div class="grid grid-rows-1">
@@ -193,9 +193,6 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 const printOptions = {
     name: '_blank',
     specs: [
-        'fullscreen=yes',
-        'titlebar=yes',
-        'scrollbars=yes'
     ],
     styles: [
         'http://127.0.0.1:8000/css/app.css',
@@ -252,6 +249,9 @@ export default {
         }
     },
     methods: {
+        async waitTwoSeconds() {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        },
         print() {
             if(this.current_chart_type == 1){
                 document.getElementById('bar-chart').style.display = 'none'
@@ -261,6 +261,7 @@ export default {
                 document.getElementById('scatter-chart').style.display = 'none'
                 document.getElementById('chart_image').style.display = 'block'
             }
+            this.waitTwoSeconds()
             this.$htmlToPaper('report', printOptions, () => {
                 if(this.current_chart_type == 1){
                     document.getElementById('bar-chart').style.display = 'block'

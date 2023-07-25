@@ -282,7 +282,7 @@ Route::middleware(['auth'])->group(function(){
     /* Progress Report */
     Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');
     Route::get('/progress-report/details', [ProgressReportController::class, 'details'])->name('progress_report.details');
-    Route::get('/progress-report/full-reports/{report_id}', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports');
+    Route::get('/progress-report/full-reports', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports');
     
 
     Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store');
