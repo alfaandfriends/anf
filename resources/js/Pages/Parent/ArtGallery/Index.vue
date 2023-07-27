@@ -29,13 +29,13 @@ const images = ref([
                         <h1 class="text-2xl">Art Gallery</h1>
                     </div>
                     <div class="hidden md:block lg:block">
-                        <button type="button" class="flex bg-indigo-500 hover:bg-indigo-600 shadow-sm shadow-slate-400 hover:shadow-slate-600 rounded-lg border-indigo-600 py-2 px-4 items-center justify-center w-full font-semibold text-white" @click="showUpload">
+                        <button type="button" class="flex bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-slate-400 hover:shadow-slate-600 rounded-lg border-indigo-600 py-2 px-4 items-center justify-center w-full font-semibold text-white" @click="showUpload">
                             Upload Artwork
                         </button>
                     </div>
                 </div>
                 <hr class="my-3 border-gray-400">
-                <div class="flex flex-col md:flex-row  md:space-x-2 justify-between items-end">
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 justify-between items-end">
                     <Multiselect 
                         v-model="filter.level_id" 
                         :options="$page.props.levels"
@@ -45,7 +45,7 @@ const images = ref([
                         :closeOnSelect="true"
                         :canDeselect="false"
                         :classes="{
-                            container: 'relative mx-auto w-full flex items-center justify-end box-border rounded-lg border-gray-200 shadow-sm shadow-gray-400 cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none',
+                            container: 'relative mx-auto w-full flex items-center justify-end box-border rounded-lg border-gray-200 shadow-sm shadow-gray-500 cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none',
                             containerDisabled: 'cursor-default bg-gray-100',
                             containerOpen: 'rounded-b-none',
                             containerOpenTop: 'rounded-t-none',
@@ -105,8 +105,9 @@ const images = ref([
                         :closeOnSelect="true"
                         :canDeselect="false"
                         :loading="searching.themes"
+                        noOptionsText="No options available"
                         :classes="{
-                            container: 'relative mx-auto w-full flex items-center justify-end box-border rounded-lg border-gray-200 shadow-sm shadow-gray-400 cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none',
+                            container: 'relative mx-auto w-full flex items-center justify-end box-border rounded-lg border-gray-200 shadow-sm shadow-gray-500 cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none',
                             containerDisabled: 'cursor-default bg-gray-100',
                             containerOpen: 'rounded-b-none',
                             containerOpenTop: 'rounded-t-none',
@@ -128,9 +129,7 @@ const images = ref([
                             caretOpen: 'rotate-180 pointer-events-auto',
                             clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 rtl:pr-0 rtl:pl-3.5',
                             clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0 rtl:mr-0 rtl:ml-3.5',
-                            inifite: 'flex items-center justify-center w-full',
-                            inifiteSpinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 animate-spin flex-shrink-0 flex-grow-0 m-3.5',
+                            spinner: 'animate-spin rounded-full border-t-2 border-indigo-600 h-5 w-5',
                             dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
                             dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
                             dropdownHidden: 'hidden',
@@ -157,7 +156,7 @@ const images = ref([
                             spacer: 'h-9 py-px box-content',
                         }" 
                     />
-                    <div class="w-full mt-1 md:w-14 md:flex md:items-center border rounded-lg bg-indigo-500 text-white p-2.5 cursor-pointer">
+                    <div @click="getArtwork" class="w-full md:w-14 md:flex md:items-center rounded-lg bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-slate-400 hover:shadow-slate-600 text-white p-2.5 cursor-pointer">
                         <div class="flex items-center space-x-4">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -267,6 +266,12 @@ export default {
             this.form.artwork.file  = ''
             this.show_upload = true
         },
+        getArtwork(){
+            axios.get(route('parent.art_gallery.get_themes', this.filter))
+            .then(response => {
+                console.log(response)
+            })
+        }
     }
 }
 </script>

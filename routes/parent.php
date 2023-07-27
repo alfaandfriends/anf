@@ -34,6 +34,10 @@ Route::middleware(['auth'])->group(function(){
         ]);
     });
     
+
+    /* Art Gallery */
+    Route::get('/parent/art-gallery/get-artworks', [ArtGalleryController::class, 'getArtworks'])->name('parent.art_gallery.get_artworks');
+    
     /* Art Gallery Select Options */
     Route::get('/parent/art-gallery/get-levels', [ArtGalleryController::class, 'getLevels'])->name('parent.art_gallery.get_levels');
     Route::get('/parent/art-gallery/get-themes/{level_id}', [ArtGalleryController::class, 'getThemes'])->name('parent.art_gallery.get_themes');

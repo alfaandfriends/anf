@@ -103,4 +103,9 @@ class ArtGalleryController extends Controller
 
         return $themes;
     }
+
+    public function getArtworks(Request $request)
+    {
+        dd($request->all());
+    }
 }
