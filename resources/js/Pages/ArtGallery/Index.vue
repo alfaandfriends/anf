@@ -80,8 +80,10 @@ import BreezeButton from '@/Components/Button.vue';
                                 </h3>                
                             </template>
                             <template v-slot:content>
-                                <div class="self-center aspect-w-1 aspect-h-1">
-                                    <img :src="artwork.file_location" style="max-width: 100%; max-height: 100%;" alt="">
+                                <div class="w-full md:w-[48rem]">
+                                    <!-- <div class=" w-2/12"> -->
+                                        <img :src="artwork.file_location" class="object-scale-down" alt="">
+                                    <!-- </div> -->
                                 </div>
                             </template>
                             <template v-slot:footer>
