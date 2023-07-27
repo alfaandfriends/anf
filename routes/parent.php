@@ -26,11 +26,15 @@ Route::middleware(['auth'])->group(function(){
         Route::resources([
             'payments' => PaymentController::class,
             'invoices' => InvoiceController::class,
-            'art_galleries' => ArtGalleryController::class,
+            'art-gallery' => ArtGalleryController::class,
             'homeworks' => HomeworkController::class,
             'study_materials' => StudyMaterialsController::class,
             'storybooks' => StoryBookController::class,
             'attendances' => AttendanceController::class,
         ]);
     });
+    
+    /* Art Gallery Select Options */
+    Route::get('/parent/art-gallery/get-levels', [ArtGalleryController::class, 'getLevels'])->name('parent.art_gallery.get_levels');
+    Route::get('/parent/art-gallery/get-themes/{level_id}', [ArtGalleryController::class, 'getThemes'])->name('parent.art_gallery.get_themes');
 });

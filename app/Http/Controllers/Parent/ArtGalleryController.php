@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Parent;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,7 +17,11 @@ class ArtGalleryController extends Controller
      */
     public function index() : Response
     {
-        return Inertia::render('Parent/ArtGallery/Index');
+        $levels     =   $this->getLevels();
+
+        return Inertia::render('Parent/ArtGallery/Index',[
+            'levels'    =>  $levels
+        ]);
     }
 
     /**
@@ -83,5 +88,19 @@ class ArtGalleryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getLevels()
+    {
+        $levels =   DB::table('art_levels')->get();
+
+        return $levels;
+    }
+
+    public function getThemes($level_id)
+    {
+        $themes =   DB::table('art_themes')->where('level_id', $level_id)->get();
+
+        return $themes;
     }
 }

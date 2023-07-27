@@ -14,7 +14,7 @@ import Navigation from '@/Components/Navigation.vue'
             <main class="flex flex-col bg-indigo-50 relative h-full justify-between">
                 <Header />
                 <Navigation />
-                <div class="bg-gray-100 flex justify-center min-w-4xl min-h-screen">
+                <div class="bg-gray-100 flex md:justify-center lg:justify-center min-h-screen">
                     <slot/>
                 </div>
                 <Footer />

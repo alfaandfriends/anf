@@ -1,7 +1,7 @@
 <template>
     <div class="modal-wrapper" v-if="open">
         <div class="modal-overlay" @click="emit('close:modal')"></div>
-        <div class="modal-content">
+        <div class="modal-content" :class="class">
             <slot></slot>
         </div>
     </div>
@@ -13,6 +13,10 @@ import { ref } from 'vue';
 const props = defineProps({
     open: {
         type: Boolean,
+    },
+    class: {
+        default: '',
+        type: String,
     },
 });
 const emit = defineEmits(['close:modal']);

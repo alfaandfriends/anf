@@ -1,106 +1,42 @@
 <template>
     <!-- Menu Position Top (Desktop and Tablet) -->
     <!-- Menu Position Bottom (Mobile) -->
-    <nav class="fixed inset-x-0 bottom-0 z-30 text-gray-700 bg-white md:border-gray-200 md:border-b-2 md:top-0 md:sticky">
-        <div class="flex items-center justify-between max-w-4xl px-5 py-3 mx-auto md:justify-center">
-            <!-- Home -->
-            <Link :href="route('parent.home')" :class="(route().current('parent.home')) ? 'underline text-gray-800' : ''" class="flex md:mr-10 cursor-pointer">
-                <div class="flex mr-2 md:mr-3">
-                    <ion-icon name="home-outline"></ion-icon>
-                </div>
-                <span class="text-lg font-semibold md:text-base">Home</span>
+    <nav class="fixed inset-x-0 bottom-0 z-10 text-gray-700 bg-white md:border-gray-200 md:border-b-2 md:top-16 md:sticky">
+        <div class="flex items-center justify-between mx-auto md:justify-center space-x-0 md:space-x-4">
+            <Link :href="route('parent.home')" :class="(route().current('parent.home')) ? 'text-gray-800' : ''" class="flex px-3 py-3 text-gray-500 hover:text-gray-800 cursor-pointer">
+                <span class="text-sm font-semibold md:text-base">Home</span>
             </Link>
-            <!-- <Link :href="route('parent.notice.index')" :class="(route().current('parent.notice.index')) ? 'underline text-gray-800' : ''" class="flex md:mr-10 cursor-pointer">
-                <div class="flex mr-2 md:mr-3">
-                    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-                </div>
-                <span class="text-lg font-semibold md:text-base">NOTICE BOARD</span>
-            </Link> -->
-            <Link :href="route('parent.invoices.index')" :class="(route().current('parent.invoices.index')) ? 'underline text-gray-800' : ''" class="flex md:mr-10 cursor-pointer">
-                <div class="flex mr-2 md:mr-3">
-                    <ion-icon name="storefront-outline"></ion-icon>
-                </div>
-                <span class="text-lg font-semibold md:text-base">Fee Invoices</span>
+            <Link :href="route('parent.invoices.index')" :class="(route().current('parent.invoices.index')) ? 'text-gray-800' : ''" class="flex px-3 py-3 text-gray-500 hover:text-gray-800 cursor-pointer">
+                <span class="text-sm font-semibold md:text-base">Fee Invoices</span>
             </Link>
-            <Link :href="route('parent.art_galleries.index')" :class="(route().current('parent.art_galleries.index')) ? 'underline text-gray-800' : ''" class="flex md:mr-10 cursor-pointer">
-                <div class="flex mr-2 md:mr-3">
-                    <ion-icon name="storefront-outline"></ion-icon>
-                </div>
-                <span class="text-lg font-semibold md:text-base">Art Gallery</span>
+            <Link :href="route('parent.art-gallery.index')" :class="(route().current('parent.art-gallery.index')) ? 'text-gray-800' : ''" class="flex px-3 py-3 text-gray-500 hover:text-gray-800 cursor-pointer">
+                <span class="text-sm font-semibold md:text-base">Art Gallery</span>
             </Link>
-            <!-- <Menu as="div" class="relative">
-                <MenuButton class="flex font-semibold place-items-center">
-                    <div class="mt-1.5 mr-2 md:mr-3">
-                        <ion-icon name="ellipsis-horizontal-circle-outline"></ion-icon>
-                    </div>
-                    <div class="text-lg md:text-base">MORE</div>
-                </MenuButton>
-                <transition
-                    enter-active-class="transition duration-100 ease-out"
-                    enter-from-class="transform scale-95 opacity-0"
-                    enter-to-class="transform scale-100 opacity-100"
-                    leave-active-class="transition duration-75 ease-in"
-                    leave-from-class="transform scale-100 opacity-100"
-                    leave-to-class="transform scale-95 opacity-0">
-                    <MenuItems class="absolute bottom-12 md:bottom-auto w-56 py-2.5 md:w-64 mt-2 origin-top-right bg-white shadow-md -right-1.5 rounded-xl focus:outline-none">
-                        <MenuItem class="px-5 py-2.5 items-center md:hidden">
-                            <Link :href="route('parent.invoices.index')" :class="(route().current('parent.invoices.index')) ? 'underline text-gray-800' : ''" class="flex cursor-pointer">
-                                <div class="mt-1 mr-2 md:mr-3">
-                                    <ion-icon name="storefront-outline"></ion-icon>
-                                </div>
-                                <span class="text-lg font-semibold">FEE INVOICES</span>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem class="px-5 py-2.5 items-center">
-                            <Link :href="route('parent.art_galleries.index')" :class="(route().current('parent.art_galleries.index')) ? 'underline text-gray-800' : ''" class="flex cursor-pointer">
-                                <div class="mt-1 mr-2 md:mr-3">
-                                    <ion-icon name="calendar-outline"></ion-icon>
-                                </div>
-                                <span class="text-lg font-semibold md:text-base">ART GALLERY</span>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem class="px-5 py-2.5 items-center">
-                            <Link :href="route('parent.homeworks.index')" :class="(route().current('parent.homeworks.index')) ? 'underline text-gray-800' : ''" class="flex cursor-pointer">
-                                <div class="mt-1 mr-2 md:mr-3">
-                                    <ion-icon name="calendar-outline"></ion-icon>
-                                </div>
-                                <span class="text-lg font-semibold md:text-base">HOMEWORK</span>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem class="px-5 py-2.5 items-center">
-                            <Link :href="route('parent.study_materials.index')" :class="(route().current('parent.study_materials.index')) ? 'underline text-gray-800' : ''" class="flex cursor-pointer">
-                                <div class="mt-1 mr-2 md:mr-3">
-                                    <ion-icon name="calendar-outline"></ion-icon>
-                                </div>
-                                <span class="text-lg font-semibold md:text-base">STUDY MATERIALS</span>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem class="px-5 py-2.5 items-center">
-                            <Link :href="route('parent.storybooks.index')" :class="(route().current('parent.storybooks.index')) ? 'underline text-gray-800' : ''" class="flex cursor-pointer">
-                                <div class="mt-1 mr-2 md:mr-3">
-                                    <ion-icon name="calendar-outline"></ion-icon>
-                                </div>
-                                <span class="text-lg font-semibold md:text-base">STORYBOOK</span>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem class="px-5 py-2.5 items-center">
-                            <Link :href="route('parent.attendances.index')" :class="(route().current('parent.attendances.index')) ? 'underline text-gray-800' : ''" class="flex cursor-pointer">
-                                <div class="mt-1 mr-2 md:mr-3">
-                                    <ion-icon name="calendar-outline"></ion-icon>
-                                </div>
-                                <span class="text-lg font-semibold md:text-base">ATTENDANCE</span>
-                            </Link>
-                        </MenuItem>
-                    </MenuItems>
-                </transition>
-            </Menu> -->
+          <!-- Add more menu items as needed -->
+    
+          <!-- "More" container for additional menu items -->
+          <div class="relative group flex px-3 py-3 text-gray-500 hover:text-gray-800 cursor-pointer">
+            <button class="text-sm font-semibold md:text-base text-gray-500 hover:text-gray-800" id="moreButton">
+              More
+              <svg class="w-4 h-4 inline-block ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div class="z-30 hidden flex-col absolute border border-gray-200 py-2 px-4 bg-white h-fit w-64 text-slate-600 bottom-10 md:-bottom-0 right-2 md:top-10 md:left-0 rounded-lg shadow-xl group-hover:block">
+              <!-- Additional menu items here -->
+              <a href="#" class="text-sm font-semibold md:text-base block py-2 px-3 text-gray-500 hover:text-gray-800">Story Book</a>
+              <a href="#" class="text-sm font-semibold md:text-base block py-2 px-3 text-gray-500 hover:text-gray-800">Notice</a>
+              <!-- Add more menu items as needed -->
+            </div>
+          </div>
         </div>
-    </nav>
+      </nav>
 </template>
 
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+
 </script>
 
 <style scoped>
