@@ -60,12 +60,12 @@
                                         <!-- <div to="/settings" class="flex items-center px-5 py-2 font-medium text-gray-700 hover:bg-indigo-50"><CogIcon class="w-6 h-6 mr-3" />Settings</div>
                                         <div to="/helpdesk" class="flex items-center px-5 py-2 font-medium text-gray-700 hover:bg-indigo-50"><QuestionMarkCircleIcon class="w-6 h-6 mr-3" />Helpdesk</div> -->
                                         <hr>
-                                        <button class="flex items-center space-x-3 w-full ml-1 px-5 py-2 mt-3 font-medium text-left text-gray-700 hover:bg-indigo-50">
+                                        <BreezeNavLink :href="route('logout')" method="post" as="button" class="flex items-center space-x-3 w-full ml-1 px-5 py-2 mt-3 font-medium text-left text-gray-700 hover:bg-indigo-50">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="currentcolor" viewBox="0 0 512 512">
                                                 <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
                                             </svg>
                                             <span>Log Out</span>
-                                        </button>
+                                        </BreezeNavLink>
                                     </MenuItems>
                                 </transition>
                             </Menu>
@@ -107,6 +107,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { UserCircleIcon, CogIcon, CalendarIcon, QuestionMarkCircleIcon } from '@heroicons/vue/solid'
 import Notification from '@/Components/Notification.vue'
 import Cart from '@/Components/Cart.vue'
+import BreezeNavLink from '@/Components/NavLink.vue'
 
 const user = {
     name: 'Mohd Shazwan Abu Hanipah',
@@ -126,7 +127,8 @@ export default {
         MenuItems,
         UserCircleIcon,
         CogIcon,
-        QuestionMarkCircleIcon,
+        QuestionMarkCircleIcon, 
+        BreezeNavLink,
     },
     setup() {
         return {
