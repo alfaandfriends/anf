@@ -267,7 +267,7 @@ export default {
             this.show_upload = true
         },
         getArtwork(){
-            axios.get(route('parent.art_gallery.get_themes', this.filter))
+            axios.get(route('parent.art_gallery.get_artworks', this.filter))
             .then(response => {
                 console.log(response)
             })

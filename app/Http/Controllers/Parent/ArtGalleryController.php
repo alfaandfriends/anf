@@ -106,6 +106,9 @@ class ArtGalleryController extends Controller
 
     public function getArtworks(Request $request)
     {
-        dd($request->all());
+        $result     =   DB::table('student_art_gallery')->where('level_id', $request->level_id)->where('theme_id', $request->theme_id)->get();
+        $artworks   =   collect($result);
+        dd($artworks->groupBy('lesson_id'));
+        return $artworks;
     }
 }
