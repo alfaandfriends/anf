@@ -7,15 +7,14 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductImage;
-use App\Models\ProductSecondVariation;
 use App\Models\ProductVariation;
-use App\Models\ProductVariationItem;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
@@ -24,12 +23,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request) : Response
     {
         $data['products'] = Product::with(
             'images:id,product_id,name,path',
-            'variations:id,product_id,variation,option,price,stock,sku,sales',
-            'variations.variations:id,product_variation_id,variation,option,price,stock,sku,sales',
         )->when($request->search, function ($query, $search) {
             return $query->where('name', 'like', '%' . $search . '%');
         })->when($request->filter, function ($query, $filter) {
@@ -41,7 +38,7 @@ class ProductController extends Controller
         return Inertia::render('Product/Index', $data);
     }
 
-    public function trash(Request $request)
+    public function trash(Request $request) : Response
     {
         $data['products'] = Product::with(
             [
@@ -62,7 +59,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create() : Response
     {
         $data['categories'] = ProductCategory::select('id', 'name')->get();
         return Inertia::render('Product/Create', $data);
@@ -76,12 +73,15 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+        dd($request->all());
+        $data = [];
         try {
-            DB::transaction(function () use ($request) {
+            DB::transaction(function () use ($request, $data) {
                 $product = Product::create([
                     'name' => $request->product_name,
                     'description' => $request->product_description,
                     'product_category_id' => $request->product_category,
+                    'has_variation' => ($request->product_variation == 'enabled') ? true : false,
                 ]);
 
                 foreach($request->all() as $key => $value) {
@@ -94,12 +94,13 @@ class ProductController extends Controller
                     }
                 }
 
-                if (empty($request->product_variation_items)) {
-                    ProductVariation::create([
-                        'variation1' => $request->product_name,
+                if ($request->product_variation == 'disabled') {
+                    array_push($data, [
+                        'name' => $request->product_name,
                         'price' => $request->product_price,
                         'stock' => $request->product_stock,
-                        'product_id' => $product->id,
+                        'sku' => '',
+                        'sales' => 0
                     ]);
                 } else {
                     foreach($request->product_variation_items['options'] as $key => $variation) {
@@ -108,42 +109,38 @@ class ProductController extends Controller
                             $path = 'products/'.$product->id.'/' . $variation['image']->getClientOriginalName();
                             Storage::put($path, file_get_contents($variation['image']));
                         }
+                        array_push($data, [
+                            'name' => $variation['name'],
+                            'image' => '',
+                            'url' => $path,
+                            'row' => []
+                        ]);
                         if(count($variation['rows']) == 1) {
                             foreach($variation['rows'] as $row){
-                                ProductVariation::create([
-                                    'image' => $path,
-                                    'variation' => $request->product_variation_items['name'],
-                                    'option' => $variation['name'],
+                                array_push($data[$key]['row'], [
+                                    'name' => $row['name'],
                                     'price' => $row['price'],
                                     'stock' => $row['stock'],
                                     'sku' => $row['sku'],
-                                    'product_id' => $product->id,
+                                    'sales' => 0
                                 ]);
                             }
                         }else{
-                            if($request->product_variation_items['name2']) {
-                                $productVariation = ProductVariation::create([
-                                    'image' => $path,
-                                    'variation' => $request->product_variation_items['name'],
-                                    'option' => $variation['name'],
-                                    'product_id' => $product->id,
+                            $product->has_second_variation = true;
+                            foreach($variation['rows'] as $row) {
+                                array_push($data[$key]['row'], [
+                                    'name' => $row['name']['name'],
+                                    'price' => $row['price'],
+                                    'stock' => $row['stock'],
+                                    'sku' => $row['sku'],
+                                    'sales' => 0
                                 ]);
-                                foreach($variation['rows'] as $row){
-                                    ProductSecondVariation::create([
-                                        'image' => $path,
-                                        'variation' => $request->product_variation_items['name2'],
-                                        'option' => $row['name']['name'],
-                                        'price' => $row['price'],
-                                        'stock' => $row['stock'],
-                                        'sku' => $row['sku'],
-                                        'product_variation_id' => $productVariation->id,
-                                    ]);
-                                }
                             }
                         }
                     }
                 }
-
+                $product->details = json_encode($data);
+                $product->save();
             });
 
             return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product added successfully !']);
@@ -171,14 +168,13 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(Product $product) : Response
     {
         $productImages = ProductImage::select('id', 'name', 'path')->where('product_id', $product->id)->get();
         $categories = ProductCategory::select('id', 'name')->get();
-        $productVariatons = ProductVariation::with('variations:id,product_variation_id,variation,option,price,stock,sku,sales')->select('id','image','variation','option','price','stock','sku','sales',)->where('product_id', $product->id)->get();
+
         return Inertia::render('Product/Create', [
             'product' => $product,
-            'productVariations' => $productVariatons,
             'productImages' => $productImages,
             'categories' => $categories
         ]);
@@ -193,7 +189,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        dd($request);
+        dd($request->all());
         try {
             DB::transaction(function () use ($request, $product) {
                 $product->name = $request->product_name;

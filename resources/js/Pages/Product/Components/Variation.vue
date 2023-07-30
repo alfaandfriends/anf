@@ -1,12 +1,17 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import BreezeButton from '@/Components/Button.vue';
 import VariationOption from './VariationOption.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
 
 const props = defineProps({
     productVariations: {
-        type: Object,
+        type: Array,
+        default: []
+    },
+    hasSecondVariation: {
+        type: Boolean,
+        default: false
     },
 });
 
@@ -141,39 +146,38 @@ watch(variation2.value, (newVal, oldVal) => {
 });
 
 onMounted(() => {
-    if(props.productVariations) {
+    console.log(props.productVariations);
+    console.log(variation1.value);
+    console.log(variation2.value);
+    if(props.productVariations.length != 0){
         const productVariations = props.productVariations;
-        console.log(productVariations);
         variation1.value = {
-            name: productVariations[0].variation,
+            name: 'Variation 1',
             options: []
         };
-        Object(productVariations).forEach((item, index) => {
+        if(props.hasSecondVariation){
+            variation2.value = {
+                show: true,
+                name: 'Variation 2',
+                options: []
+            };
+        }
+        productVariations.forEach((item) => {
+            console.log(item);
             variation1.value.options.push(
                 {
-                    name: item.option,
+                    name: item.name,
                     image: null,
-                    url: '../../storage/'+item.image,
-                    rows: []
+                    url: (item.url) ? '../../storage/'+item.url : '',
+                    rows: item.row
                 }
             );
-            if(item.variations){
-                variation2.value = {
-                    show: true,
-                    name: item.variations[0].variation,
-                    options: []
-                };
-                Object(item.variations).forEach((item2, index2) => {
-                    variation2.value.options.push(
-                        {
-                            name: item2.option,
-                        }
-                    );
-                    variation1.value.options[index].rows.push(
-                        { name: '', price: item2.price,  stock: item2.stock,  sku: item2.sku }
-                    );
-                    variation1.value.options[index].rows[variation2.value.options.length - 1].name = variation2.value.options[variation2.value.options.length - 1];
-                });
+            if(props.hasSecondVariation){
+                variation2.value.options.push(
+                    {
+                        name: item.row[0].name,
+                    }
+                );
             }
         });
         console.log(variation1.value);
@@ -267,7 +271,7 @@ onMounted(() => {
                     </td>
                     <td v-if="variation2.show" class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col items-center p-2 m-2" v-for="(variation_2, variation_2_index) in variation_1.rows" :key="variation_2_index">
-                            <label :for="variation_2.name" class="text-sm text-gray-500 text-center"> {{ variation_2.name.name }} </label>
+                            <label :for="variation_2.name" class="text-sm text-gray-500 text-center"> {{ (productVariations) ? variation_2.name : variation_2.name.name }} </label>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">

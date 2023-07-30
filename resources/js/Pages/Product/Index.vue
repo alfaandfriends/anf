@@ -102,13 +102,13 @@ watch(
                                             <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ (product.variations[0].price) ? product.variations[0].price : product.variations[0].variations[0].price }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ (!product.has_variation) ? JSON.parse(product.details)[0].price : JSON.parse(product.details)[0].row[0].price }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ (product.variations[0].stock) ? product.variations[0].stock : product.variations[0].variations[0].stock }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ (!product.has_variation) ? JSON.parse(product.details)[0].price : JSON.parse(product.details)[0].row[0].price }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ (product.variations[0].sales) ? product.variations[0].sales : product.variations[0].variations[0].sales }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ (!product.has_variation) ? JSON.parse(product.details)[0].price : JSON.parse(product.details)[0].row[0].price }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">

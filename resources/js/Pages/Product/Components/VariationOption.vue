@@ -1,21 +1,20 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import BreezeButton from '@/Components/Button.vue';
 
 const props = defineProps({
     options: {
         type: Array,
-        required: true
     },
     variationIndex: {
         type: Number,
-        required: true
     }
 });
 
-const variationOptions = ref(props.options);
+const variationOptions = computed(() => [...props.options]);
 
 const emit = defineEmits(['add:option', 'remove:option', 'update:variation']);
+
 </script>
 
 <template>

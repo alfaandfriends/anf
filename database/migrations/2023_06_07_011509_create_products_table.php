@@ -17,6 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50);
             $table->text('description');
+            $table->json('details')->nullable();
+            $table->boolean('has_variation');
+            $table->boolean('has_second_variation')->default(false);
             $table->unsignedBigInteger('product_category_id')->nullable()->cascadeOnUpdate()->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();

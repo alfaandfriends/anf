@@ -12,9 +12,6 @@ const props = defineProps({
     product: {
         type: Object,
     },
-    productVariations: {
-        type: Object,
-    },
     productImages: {
         type: Object,
     },
@@ -62,8 +59,8 @@ const productForm = useForm({
     product_name: (props.product) ? props.product.name : '',
     product_description: (props.product) ? props.product.description : '',
     product_category: (props.product) ? props.product.product_category_id : '',
-    product_price: (props.product) ? props.product.price : '',
-    product_stock: (props.product) ? props.product.stock : '',
+    product_price: (props.product && !props.product.has_variation) ? JSON.parse(props.product.details)[0].price : '',
+    product_stock: (props.product && !props.product.has_variation) ? JSON.parse(props.product.details)[0].stock : '',
     product_cover_image: '',
     product_image_1: '',
     product_image_2: '',
@@ -71,7 +68,7 @@ const productForm = useForm({
     product_image_4: '',
     product_image_5: '',
     product_image_6: '',
-    product_variation: 'disabled',
+    product_variation: (props.product && props.product.has_variation) ? 'enabled' : 'disabled',
     product_variation_items: [],
 });
 
@@ -114,12 +111,6 @@ const submit = () => {
 };
 
 const submitProductCategoryForm = () => {
-    // productCategoryForm.post(route('product-categories.store'), {
-    //     onSuccess: () => {
-    //         form.reset();
-    //         addCategory.value = false;
-    //     },
-    // });
     axios.post(route('api.product.categories.store'), productCategoryForm).then(response => {
         console.log(response);
         if (response.status == 200) {
@@ -129,14 +120,6 @@ const submitProductCategoryForm = () => {
         console.error(error);
     });
 };
-
-// onMounted(() => {
-//     if(props.productImages) {
-//         Object(props.productImages).forEach((item, index) => {
-//             productForm['product_'+item.name] = item.path;
-//         });
-//     };
-// });
 </script>
 
 <template>
@@ -231,7 +214,12 @@ const submitProductCategoryForm = () => {
                                                 <div v-if="productForm.product_variation === 'enabled'">
                                                     <label class="block text-sm text-gray-700 font-bold"> Variation </label>
                                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                                        <Variation :productVariations="productVariations" @update:variation="productForm.product_variation_items = $event" @delete:variation="productForm.product_variation = 'disabled'" />
+                                                        <Variation
+                                                            :productVariations="(product && product.has_variation) ? JSON.parse(product.details) : []"
+                                                            :hasSecondVariation="(product) ? product.has_second_variation : false"
+                                                            @update:variation="productForm.product_variation_items = $event"
+                                                            @delete:variation="productForm.product_variation = 'disabled'"
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
