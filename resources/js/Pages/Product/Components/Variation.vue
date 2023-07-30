@@ -112,7 +112,11 @@ const addVariationOption2 = () => {
 };
 
 const removeVariationOption = (variationIndex, index) => {
-    variation1.value[variationIndex].options.splice(index, 1);
+    variation1.value.options.splice(index, 1);
+    emit('update:variation', variation1.value);
+};
+const removeVariationOption2 = (variationIndex, index) => {
+    variation2.value.options.splice(index, 1);
     emit('update:variation', variation1.value);
 };
 
@@ -146,24 +150,11 @@ watch(variation2.value, (newVal, oldVal) => {
 });
 
 onMounted(() => {
-    console.log(props.productVariations);
-    console.log(variation1.value);
-    console.log(variation2.value);
     if(props.productVariations.length != 0){
         const productVariations = props.productVariations;
-        variation1.value = {
-            name: 'Variation 1',
-            options: []
-        };
-        if(props.hasSecondVariation){
-            variation2.value = {
-                show: true,
-                name: 'Variation 2',
-                options: []
-            };
-        }
+        variation1.value.options.splice(0, 1);
+        variation2.value.options.splice(0, 1);
         productVariations.forEach((item) => {
-            console.log(item);
             variation1.value.options.push(
                 {
                     name: item.name,
@@ -173,6 +164,7 @@ onMounted(() => {
                 }
             );
             if(props.hasSecondVariation){
+                variation2.value.show = true;
                 variation2.value.options.push(
                     {
                         name: item.row[0].name,
@@ -180,8 +172,7 @@ onMounted(() => {
                 );
             }
         });
-        console.log(variation1.value);
-        console.log(variation2.value);
+        emit('update:variation', variation1.value);
     }
 });
 
@@ -235,7 +226,7 @@ onMounted(() => {
                             :options="variation2.options"
                             :variationIndex="2"
                             @add:option="addVariationOption2"
-                            @remove:option="removeVariationOption"
+                            @remove:option="removeVariationOption2"
                         />
                     </div>
                     <hr class="bg-gray-500 mx-auto my-4" />
