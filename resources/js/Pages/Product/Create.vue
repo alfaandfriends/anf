@@ -1,5 +1,5 @@
 <script setup>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
