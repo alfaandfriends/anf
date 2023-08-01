@@ -7,6 +7,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Models\OrderStatus as ModelsOrderStatus;
+use App\Models\Product;
 use App\Models\Shipping;
 use App\Models\ShippingProvider;
 use App\Models\User;
@@ -54,6 +55,7 @@ class OrderController extends Controller
         $data['statuses']['completed'] = OrderStatus::COMPLETED;
         $data['providers'] = ShippingProvider::get();
         $data['users'] = User::select('id', 'display_name')->where('first_time_login', 1)->where('is_admin', 0)->limit(1000)->get();
+        $data['products'] = Product::get();
 
         return Inertia::render('Order/Create', $data);
     }
