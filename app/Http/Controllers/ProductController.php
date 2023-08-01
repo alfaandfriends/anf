@@ -73,7 +73,6 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        dd($request->all());
         $data = [];
         try {
             DB::transaction(function () use ($request, $data) {
@@ -256,8 +255,6 @@ class ProductController extends Controller
                 }
                 $product->details = json_encode($data);
                 $product->save();
-                // dump($data);
-                // dd($product);
 
             });
 

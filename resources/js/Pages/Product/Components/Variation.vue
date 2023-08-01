@@ -133,12 +133,8 @@ const handleFileChange = (file, index) => {
 };
 
 const updatePreviewUrl = (option, value, file) => {
-    variation1.value.options.forEach((item, index) => {
-        if (index === option) {
-            item.url = value;
-            item.image = file;
-        }
-    });
+    variation1.value.options[option].image = file;
+    variation1.value.options[option].url = value;
 }
 
 watch(variation1.value, (newVal, oldVal) => {
@@ -158,8 +154,8 @@ onMounted(() => {
             variation1.value.options.push(
                 {
                     name: item.name,
-                    image: null,
-                    url: (item.url) ? '../../storage/'+item.url : '',
+                    image: '',
+                    url: (item.url) ? '../../../storage/'+item.url : '',
                     rows: item.row
                 }
             );
@@ -167,7 +163,7 @@ onMounted(() => {
                 variation2.value.show = true;
                 variation2.value.options.push(
                     {
-                        name: item.row[0].name,
+                        name: item.row[0].name.name,
                     }
                 );
             }
@@ -262,7 +258,7 @@ onMounted(() => {
                     </td>
                     <td v-if="variation2.show" class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col items-center p-2 m-2" v-for="(variation_2, variation_2_index) in variation_1.rows" :key="variation_2_index">
-                            <label :for="variation_2.name" class="text-sm text-gray-500 text-center"> {{ (productVariations) ? variation_2.name : variation_2.name.name }} </label>
+                            <label :for="variation_2.name" class="text-sm text-gray-500 text-center"> {{ (variation_2.name.name) ? variation_2.name.name : variation_2.name }} </label>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">

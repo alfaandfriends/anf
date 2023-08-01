@@ -98,7 +98,7 @@ watch(
                                             <div class="text-sm text-gray-700">{{ index + 1 }}</div>
                                         </td>
                                         <td class="flex items-center px-6 py-4 whitespace-nowrap">
-                                            <img class="w-24 h-24 mr-4" :src="'storage/'+product.images[0].path" alt="">
+                                            <img class="w-24 h-24 mr-4" :src="'../storage/'+product.images[0].path" alt="">
                                             <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">

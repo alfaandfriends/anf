@@ -38,7 +38,7 @@ onMounted(() => {
         previewUrl.value.forEach((url) => {
             Object(props.productImages).forEach((item) => {
                 if(url.name == 'product_'+item.name){
-                    url.value = '../../storage/'+item.path;
+                    url.value = '../../../storage/'+item.path;
                 }
             });
         });
@@ -105,10 +105,17 @@ const updatePreviewUrl = (name, value) => {
 }
 
 const submit = () => {
+    console.log(formUrl);
+    console.log(formMethod);
+    console.log(productForm);
     productForm[formMethod](formUrl, {
-        onSuccess: () => productForm.reset(),
+        onFinish: () => productForm.reset(),
     });
 };
+
+watch(productForm, (newVal, oldVal) => {
+    console.log('productForm updated:', newVal);
+});
 
 const submitProductCategoryForm = () => {
     axios.post(route('api.product.categories.store'), productCategoryForm).then(response => {
@@ -259,7 +266,6 @@ const submitProductCategoryForm = () => {
             </template>
             <template v-slot:content>
                 <div class="p-6 grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
-                    <BreezeValidationErrors class="mb-4" />
                     <div class="mb-4">
                         <label for="category_name" class="block text-sm text-gray-700 font-bold"> Product Category Name <span class="text-red-500">*</span></label>
                         <div class="mt-1 flex rounded-md shadow-sm">
