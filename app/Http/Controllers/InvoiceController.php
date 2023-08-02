@@ -22,7 +22,7 @@ class InvoiceController extends Controller
         $query =   DB::table('invoices')
                         ->join('students', 'invoices.student_id', '=', 'students.id')
                         ->join('children', 'students.children_id', '=', 'children.id')
-                        ->leftJoin('user_basic_information', 'children.parent_id', '=', 'user_basic_information.user_id')
+                        ->join('user_basic_information', 'children.parent_id', '=', 'user_basic_information.user_id')
                         ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
                         ->where('invoice_type_id', $this->fee_invoice_id)
                         ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
@@ -93,7 +93,7 @@ class InvoiceController extends Controller
         DB::table('invoices')->insert([
             'invoice_type_id'           => $this->fee_invoice_id,
             'student_id'                => $request->student_id,
-            'invoice_number'            => $invoice_number,
+            'invoice_number'            => Carbon::now()->year.'-'.$invoice_number,
             'invoice_items'             => json_encode($request->invoice_items),
             'date_issued'               => Carbon::parse($request->date_issued)->format('Y-m-d'),
             'due_date'                  => Carbon::parse($request->due_date)->format('Y-m-d'),

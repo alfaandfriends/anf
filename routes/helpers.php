@@ -3,6 +3,7 @@
 use App\Classes\ProgrammeHelper;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\Parent\ArtGalleryController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ProgressReportController;
 use Illuminate\Support\Facades\Request;
@@ -42,4 +43,5 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/progress-report/art/get-activities/{lesson_id}', [ProgressReportController::class, 'getArtActivities'])->name('progress_report.get_art_activities');
     Route::get('/progress-report/art/get-learning-outcomes/{activity_id}', [ProgressReportController::class, 'getArtLearningOutcomes'])->name('progress_report.get_art_learning_outcomes');
     Route::get('/progress-report/art/get-objectives/{outcome_id}', [ProgressReportController::class, 'getArtObjectives'])->name('progress_report.get_art_objectives');
+
 });

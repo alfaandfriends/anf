@@ -121,6 +121,7 @@ class OrderController extends Controller
         $data['statuses']['completed'] = OrderStatus::COMPLETED;
         $data['providers'] = ShippingProvider::get();
         $data['users'] = User::select('id', 'display_name')->where('first_time_login', 1)->where('is_admin', 0)->limit(1000)->get();
+        $data['products'] = Product::get();
 
         $shipping = Shipping::where('order_id', $order->id)->latest()->first();
         $orderStatus = ModelsOrderStatus::where('order_id', $order->id)->latest()->first();

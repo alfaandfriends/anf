@@ -1,5 +1,5 @@
 <script setup>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
@@ -274,9 +274,6 @@ import MonthlyFee from '@/Pages/Invoices/MonthlyFee.vue'
 const printOptions = {
     name: '_blank',
     specs: [
-        'fullscreen=yes',
-        'titlebar=yes',
-        'scrollbars=yes'
     ],
     styles: [
         'http://127.0.0.1:8000/css/app.css',

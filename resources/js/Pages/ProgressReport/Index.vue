@@ -1,5 +1,5 @@
 <script setup>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
@@ -281,7 +281,7 @@ import BreezeButton from '@/Components/Button.vue';
             </template>
             <template v-slot:footer>
                 <div class="flex justify-between space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="info" @click="print">Print</BreezeButton>
+                    <BreezeButton buttonType="info" v-print="'#progress_report'">Print</BreezeButton>
                     <BreezeButton buttonType="gray" @click="show_progress_report = false">Close</BreezeButton>
                 </div>
             </template>
@@ -300,26 +300,11 @@ import Multiselect from '@vueform/multiselect'
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Modal from '@/Components/Modal.vue'
-import MathReport from '@/Pages/ProgressReport/Reports/Math.vue'
-
-const printOptions = {
-    name: '_blank',
-    specs: [
-        'fullscreen=yes',
-        'titlebar=yes',
-        'scrollbars=yes'
-    ],
-    styles: [
-        'http://127.0.0.1:8000/css/app.css',
-    ],
-    timeout: 1000, // default timeout before the print window appears
-    autoClose: true, // if false, the window will not close after printing
-    windowTitle: window.document.title, // override the window title
-}
+import print from 'vue3-print-nb'
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal, Multiselect, Datepicker, Modal, MathReport
+        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal, Multiselect, Datepicker, Modal
     },
     data(){
         return{
@@ -360,31 +345,27 @@ export default {
         viewProgressReport(progress_report_id){
             this.$inertia.get(this.route('progress_report.details'), {'progress_report_id': progress_report_id}, { })
         },
-        showProgressReport(progress_report_id){
+        showProgressReport(progress_report_id, student_fee){
             if(this.generate.running){
                 return
             }
             this.generate.id = progress_report_id
             this.generate.running = true
-            axios.get(route('progress_report.full_reports', progress_report_id))
+            axios.get(route('progress_report.full_reports', {progress_report_id: progress_report_id, student_fee: student_fee}))
             .then(response => {
                 import(`./Reports/${response.data.report_template}.vue`)
                 .then(module => {
                     this.component.file = module.default;
                 })
-                console.log(response)
                 this.component.data = response.data;
                 this.generate.id = ''
                 this.generate.running = false
                 this.show_progress_report = true
             });
         },
-        print(){
-            this.printing = true
-            this.$htmlToPaper('progress_report', printOptions, () => {
-                this.printing = false
-            })
-        },
+    },
+    directives: {
+        print   
     }
 }
 </script>

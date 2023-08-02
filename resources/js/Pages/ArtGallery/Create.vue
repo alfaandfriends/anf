@@ -1,5 +1,5 @@
 <script setup>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
@@ -166,7 +166,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
                                     <div class="flex items-center justify-end">
                                         <div class="flex space-x-2">
-                                            <BreezeButton buttonType="gray" :route="route('classes')">Cancel</BreezeButton>
+                                            <BreezeButton buttonType="gray" :href="route('classes')">Cancel</BreezeButton>
                                             <BreezeButton type="submit">Save</BreezeButton>
                                         </div>
                                     </div>
