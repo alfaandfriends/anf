@@ -49,7 +49,7 @@
                                 <span class="text-xs font-medium px-2 py-1 rounded" :class="[invoice.status_bg_color, invoice.status_text_color]">{{ invoice.status }}</span>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <a v-if="invoice.status_id == 1" @click="pay(invoice.billing_id)" class="cursor-pointer font-medium px-3 py-1 text-red-600 hover:bg-red-200 hover:rounded whitespace-nowrap">Pay Now</a>
+                                <a v-if="invoice.status_id == 1" @click="pay(invoice.bill_id)" class="cursor-pointer font-medium px-3 py-1 text-indigo-600 hover:bg-indigo-200 hover:rounded whitespace-nowrap">Pay Now</a>
                                 <a v-else class="cursor-pointer font-medium px-3 py-1 text-blue-600 hover:bg-blue-200 hover:rounded whitespace-nowrap">View Receipt</a>
                             </td>
                         </tr>

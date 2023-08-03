@@ -7,6 +7,7 @@ use App\Classes\ProgrammeHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class InvoiceController extends Controller
@@ -22,12 +23,22 @@ class InvoiceController extends Controller
 
     public function callback(Request $request)
     {
-        if(!$request->paid){
-            return redirect(route('parent.invoices'))->with(['type'=>'error', 'message'=>'Payment not complete.']);
+        if($request->billplz['paid'] == 'true'){
+            DB::table('invoices')->where('bill_id', $request->billplz['id'])->update([
+                'status'    => 2
+            ]);
+            return redirect(route('parent.invoices'))->with([
+                'type'=>'success',
+                'header'=>'Payment Successful!',
+                'message'=>'Thank you. Your transaction has been completed.'
+            ]);
         }
-    }
-    public function callbackRedirect(Request $request)
-    {
-        dd($request->all());
+        else{
+            return redirect(route('parent.invoices'))->with([
+                'type'=>'error',
+                'header'=>'Payment Unsuccessful!',
+                'message'=>'Sorry, payment process has failed. Please try again.'
+            ]);
+        }
     }
 }

@@ -2,7 +2,7 @@
     <!-- Menu Position Top (Desktop and Tablet) -->
     <!-- Menu Position Bottom (Mobile) -->
     <nav class="fixed inset-x-0 bottom-0 z-10 text-gray-700 bg-white md:border-gray-200 md:border-b-2 md:top-16 md:sticky">
-        <div class="flex items-center justify-center max-w-4xl px-3 md:justify-between mx-auto">
+        <div class="flex items-center justify-center max-w-4xl px-3 mx-auto">
             <div class="flex space-x-0 md:space-x-4">
                 <Link :href="route('parent.home')" :class="(route().current('parent.home')) ? 'text-gray-800' : ''" class="flex px-3 py-3 text-gray-500 hover:text-gray-800 cursor-pointer">
                     <span class="text-sm font-semibold md:text-base">Home</span>

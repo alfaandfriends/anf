@@ -26,7 +26,6 @@ Route::middleware(['auth'])->group(function(){
 
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
         Route::get('/invoices/callback', [InvoiceController::class, 'callback'])->name('invoices.callback');
-        Route::get('/invoices/callback/redirect', [InvoiceController::class, 'callbackRedirect'])->name('invoices.callback.redirect');
 
         Route::resources([
             'payments' => PaymentController::class,
