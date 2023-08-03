@@ -34,7 +34,7 @@ class StudentController extends Controller
                                 ->select([  'students.id as id', 
                                             'children.name as name', 
                                             'wpvt_users.display_name as parent_name', 
-                                            'students.status']);
+                                            'students.status'])->distinct();
 
         if($request->search){
             $query->where('programmes.name', 'LIKE', '%'.$request->search.'%');

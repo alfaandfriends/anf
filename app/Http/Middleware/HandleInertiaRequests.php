@@ -47,6 +47,18 @@ class HandleInertiaRequests extends Middleware
             $user_has_notification  =   $this->userHasNotifications();
             $user_notifications     =   $this->userNotifications();
             $user_has_roles         =   $this->userHasRoles();
+            $user_has_children      =   $this->userHasChildren();
+        }
+
+        if(!empty($user_has_children)){
+            if (!$request->session()->has('current_active_child')) {
+                $child_session_data =   [
+                    'child_id'      =>  $user_has_children->pluck('child_id')->first(),
+                    'child_name'    =>  $user_has_children->pluck('child_name')->first(),
+                    'student_id'    =>  $user_has_children->pluck('student_id')->first()
+                ]; 
+                $request->session()->put('current_active_child', $child_session_data);
+            }
         }
         
         return array_merge(parent::share($request), [
@@ -68,6 +80,8 @@ class HandleInertiaRequests extends Middleware
             'user_has_notifications' => $user_has_notification ?? '',
             'allowed_centres' => $allowed_centres ?? '',
             'user_has_roles' => $user_has_roles ?? '',
+            'user_has_children' => $user_has_children ?? '',
+            'current_active_child' => $request->session()->get('current_active_child') ?? '',
 
         ]);
     }
@@ -169,5 +183,15 @@ class HandleInertiaRequests extends Middleware
         $user_is_admin =   auth()->user()->is_admin;
 
         return $user_is_admin;
+    }
+
+    public function userHasChildren(){
+        $user_has_children =   collect(DB::table('children')
+                                ->leftJoin('students', 'students.children_id', '=', 'children.id')
+                                ->where('parent_id', Auth::id())
+                                ->select('students.id as student_id', 'children.id as child_id', 'children.name as child_name')
+                                ->get());
+
+        return $user_has_children;
     }
 }

@@ -17,7 +17,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 axios.interceptors.response.use(
     response => response,
     error => {
-      if (error.response && error.response.status === 401) {
+      if (error.response && error.response.status === 401 || error.response && error.response.status === 419) {
         // Unauthorized response, perform redirect
         // Example: Redirect to login page
         window.location.href = '/login';

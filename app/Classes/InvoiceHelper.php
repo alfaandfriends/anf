@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 
 class InvoiceHelper {
     
@@ -67,6 +68,19 @@ class InvoiceHelper {
         ]);
 
         return true;
+    }
+
+    public  static function getStudentFeeInvoices($student_id)
+    {
+        $fee_invoices   =   DB::table('invoices')
+                                ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
+                                ->where('invoice_type_id', self::$fee_invoice_id)
+                                ->where('student_id', $student_id)
+                                ->select(   'invoices.id', 'invoices.invoice_number', 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 
+                                            'invoice_status.name as status', 'invoice_status.bg_color as status_bg_color', 
+                                            'invoice_status.text_color as status_text_color')->get();
+
+        return $fee_invoices;
     }
 
     public static function getCurrentYearInvoiceNumber($invoice_config){

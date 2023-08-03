@@ -11,6 +11,7 @@
         "diglactic/laravel-breadcrumbs": "^7.2",
         "guzzlehttp/guzzle": "^7.4.3",
         "inertiajs/inertia-laravel": "^0.6.3",
+        "jomweb/billplz": "^4.1",
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.7",
@@ -66,7 +67,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

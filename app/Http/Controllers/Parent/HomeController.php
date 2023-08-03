@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers\Parent;
 
+use App\Classes\StudentHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class HomeworkController extends Controller
+class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Parent/Home');
+        $student_id =   $request->session()->get('current_active_child.student_id');
+        if($student_id){
+            $academics  =   StudentHelper::studentAcademicDetails($student_id);
+        }
+
+        return Inertia::render('Parent/Home',[
+            'academics'    =>  $academics ?? ''
+        ]);
     }
 
     /**
@@ -77,5 +85,16 @@ class HomeworkController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function switchChild(Request $request){
+        $child_session_data =   [
+            'child_id'      =>  $request->child_id, 
+            'child_name'    =>  $request->child_name, 
+            'student_id'    =>  $request->student_id
+        ]; 
+        $request->session()->put('current_active_child', $child_session_data);
+
+        return true;
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Parent\AttendanceController;
 use App\Http\Controllers\Parent\HomeworkController;
 use App\Http\Controllers\Parent\InvoiceController;
 use App\Http\Controllers\Parent\PaymentController;
+use App\Http\Controllers\Parent\HomeController;
 use App\Http\Controllers\Parent\StoryBookController;
 use App\Http\Controllers\Parent\StudyMaterialsController;
 use Illuminate\Support\Facades\Route;
@@ -12,9 +13,10 @@ use Inertia\Inertia;
 
 Route::middleware(['auth'])->group(function(){
     Route::prefix('/')->name('parent.')->group(function () {
-        Route::get('home', function () {
-            return Inertia::render('Parent/Home');
-        })->name('home');
+        
+        Route::get('home', [HomeController::class, 'index'])->name('home');
+        Route::post('switch_child', [HomeController::class, 'switchChild'])->name('switch_child');
+
         Route::prefix('notice')->name('notice.')->group(function () {
             Route::get('/', function () {
                 return Inertia::render('Parent/Notice/Index');
