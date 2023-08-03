@@ -2,13 +2,13 @@
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
 import Navigation from '@/Components/Navigation.vue'
+import SimpleModal from '@/Components/SimpleModal.vue';
 </script>
 
 <template>
     <div class="flex">
         <div class="min-h-screen bg-gray-100 w-full">
             <VueGuidedTour :steps="steps" @afterEnd="completedTour"></VueGuidedTour>
-            <Toast :toastData="$page.props.flash"></Toast>
 
             <!-- Page Content -->
             <main class="flex flex-col bg-indigo-50 relative h-full justify-between">
@@ -22,7 +22,29 @@ import Navigation from '@/Components/Navigation.vue'
                     </div>
                 </div>
                 <Footer />
+                
+                <SimpleModal :open="show_modal" @close:modal="show_modal = false" width="md:w-2/6">
+                    <div class="text-center flex flex-col items-center justify-start space-y-2 md:p-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-2/12 w-2/12 text-green-500" viewBox="0 0 512 512" fill="currentColor">
+                            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
+                        </svg>
+                        <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">Payment Successful!</h3>
+                        <p class="text-gray-600 my-2">Thank you for completing the payment, have a great day!</p>
+                        <div class="py-6 text-center">
+                            <button @click="show_modal = false" class="rounded px-6 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2">Close</button>
+                        </div>
+                    </div>
+                </SimpleModal>
             </main>
         </div>
     </div>
 </template>
+<script>
+export default {
+    data(){
+        return{
+            show_modal: this.$page.props.flash.type ? true : false
+        }
+    }
+}
+</script>

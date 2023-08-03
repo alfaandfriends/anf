@@ -19,4 +19,15 @@ class InvoiceController extends Controller
             'invoices'      =>  $invoices,
         ]);
     }
+
+    public function callback(Request $request)
+    {
+        if(!$request->paid){
+            return redirect(route('parent.invoices'))->with(['type'=>'error', 'message'=>'Payment not complete.']);
+        }
+    }
+    public function callbackRedirect(Request $request)
+    {
+        dd($request->all());
+    }
 }

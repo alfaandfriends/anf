@@ -116,6 +116,12 @@ class AuthenticatedSessionController extends Controller
         return redirect('/admin/login');
     }
 
+    /**
+     * Destroy an authenticated session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function impersonate($user_name){
         $user   =   User::where('user_login', $user_name)->first();
         if($user){
@@ -125,6 +131,11 @@ class AuthenticatedSessionController extends Controller
             else{
                 $this->leaveImpersonate();
                 auth()->user()->impersonate($user);
+            }
+
+            $request = Request::capture();
+            if($request->segment(1) == 'admin'){
+                return Redirect('/admin/dashboard');
             }
             return Redirect('/');
         }

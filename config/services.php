@@ -29,5 +29,11 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'billplz' => [
+        'key' => env('VITE_BILLPLZ_API_KEY'),
+        'version' => env('VITE_BILLPLZ_VERSION', 'v4'),
+        'x-signature' => env('VITE_BILLPLZ_X_SIGNATURE'),
+        'sandbox' => env('VITE_BILLPLZ_SANDBOX', false),
+    ],
 
 ];

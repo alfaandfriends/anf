@@ -168,6 +168,7 @@ return [
          * Package Service Providers...
          */
         Lab404\Impersonate\ImpersonateServiceProvider::class,
+        Billplz\Laravel\BillplzServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -192,7 +193,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // ...
+        'Billplz' => Billplz\Laravel\Billplz::class,
     ])->toArray(),
 
 ];

@@ -77,8 +77,9 @@ class InvoiceHelper {
                                 ->where('invoice_type_id', self::$fee_invoice_id)
                                 ->where('student_id', $student_id)
                                 ->select(   'invoices.id', 'invoices.invoice_number', 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 
-                                            'invoice_status.name as status', 'invoice_status.bg_color as status_bg_color', 
-                                            'invoice_status.text_color as status_text_color')->get();
+                                            'invoice_status.id as status_id','invoice_status.name as status', 'invoice_status.bg_color as status_bg_color', 
+                                            'invoices.billing_id', 'invoice_status.text_color as status_text_color')
+                                ->get();
 
         return $fee_invoices;
     }
