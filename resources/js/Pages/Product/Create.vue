@@ -164,7 +164,7 @@ const submitProductCategoryForm = () => {
                                             </div>
                                         </div>
                                         <div class="px-10">
-                                            <div v-if="currentStep === 1">
+                                            <div :class="{'hidden': currentStep !== 1}">
                                                 <div class="mb-4">
                                                     <label for="category_name" class="block text-sm text-gray-700 font-bold mb-2"> Product Images <span class="text-red-500">*</span></label>
                                                     <div class="flex flex-wrap justify-center">
@@ -197,7 +197,7 @@ const submitProductCategoryForm = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div v-if="currentStep === 2">
+                                            <div :class="{'hidden': currentStep !== 2}">
                                                 <div v-if="productForm.product_variation === 'disabled'">
                                                     <div class="mb-4">
                                                         <label class="block text-sm text-gray-700 font-bold"> Variation </label>
