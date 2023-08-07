@@ -2,23 +2,52 @@
 import Header from '@/Components/Header.vue'
 import Footer from '@/Components/Footer.vue'
 import Navigation from '@/Components/Navigation.vue'
+import SimpleModal from '@/Components/SimpleModal.vue';
 </script>
 
 <template>
     <div class="flex">
         <div class="min-h-screen bg-gray-100 w-full">
             <VueGuidedTour :steps="steps" @afterEnd="completedTour"></VueGuidedTour>
-            <Toast :toastData="$page.props.flash"></Toast>
 
             <!-- Page Content -->
             <main class="flex flex-col bg-indigo-50 relative h-full justify-between">
                 <Header />
                 <Navigation />
-                <div class="bg-gray-100 flex md:justify-center lg:justify-center min-h-screen">
-                    <slot/>
+                <div class="bg-orange-50 min-h-screen">
+                    <div class="flex justify-center">
+                        <div class="flex-1 max-w-4xl overflow-auto p-3">
+                            <slot/>
+                        </div>
+                    </div>
                 </div>
                 <Footer />
+                <!-- Payment Modal -->
+                <SimpleModal :open="show_modal" @close:modal="show_modal = false" width="md:w-2/6">
+                    <div class="text-center flex flex-col items-center justify-start space-y-2 md:p-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-2/12 w-2/12 text-green-500" viewBox="0 0 512 512" fill="currentColor" v-if="$page.props.flash.type == 'success'">
+                            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-2/12 w-2/12 text-red-500" viewBox="0 0 512 512" fill="currentColor" v-else>
+                            <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
+                        </svg>
+                        <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">{{ $page.props.flash.header }}</h3>
+                        <p class="text-gray-600 my-2">{{ $page.props.flash.message }}</p>
+                        <div class="py-6 text-center">
+                            <button @click="show_modal = false" class="rounded px-6 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2">Close</button>
+                        </div>
+                    </div>
+                </SimpleModal>
             </main>
         </div>
     </div>
 </template>
+<script>
+export default {
+    data(){
+        return{
+            show_modal: this.$page.props.flash.type ? true : false
+        }
+    },
+}
+</script>

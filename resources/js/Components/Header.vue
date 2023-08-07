@@ -1,6 +1,6 @@
 <template>
     <div class="inset-x-0 z-50 text-gray-700 bg-white md:top-0 md:sticky">
-        <Disclosure as="nav" class="text-white bg-yellow-500" v-slot="{ open }">
+        <Disclosure as="nav" class="text-white bg-indigo-600" v-slot="{ open }">
             <div class="max-w-4xl px-5 mx-auto">
                 <div class="flex items-center justify-between h-20 md:h-16">
                     <div class="flex items-center">
@@ -8,9 +8,6 @@
                         <a class="flex items-center space-x-4 font-bold select-none" :href="route('parent.home')">
                             
                             <img class="h-12 w-12" src="/images/anf-logo-main-2x.png" alt="">
-                            <div>
-                                <span class="text-md md:text-xl lg:text-xl">ALFA and Friends Centre</span>
-                            </div>
                         </a>
                     </div>
                     <div class="flex">
@@ -25,15 +22,20 @@
                             <Menu as="div" class="relative">
                                 <!-- Desktop and Tablet Button (Open Menu Items) -->
                                 <div class="hidden md:flex">
-                                    <MenuButton class="flex rounded-full">
-                                        <img class="w-10 h-10 rounded-full" :src="user.imageUrl" />
+                                    <MenuButton class="flex rounded-full pl-5 py-5 space-x-4 items-center">
+                                        <span class="truncate max-w-xs text-lg font-semibold">{{ $page.props.current_active_child.child_name }}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 448 512">
+                                            <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+                                        </svg>
                                     </MenuButton>
                                 </div>
                                 <!-- Mobile Button (Open Disclosure Panel) -->
                                 <div class="flex md:hidden">
-                                    <DisclosureButton>
-                                        <img v-if="!open" class="w-12 h-12 rounded-full" :src="user.imageUrl" aria-hidden="true" />
-                                        <img v-else class="w-12 h-12 rounded-full" :src="user.imageUrl" aria-hidden="true" />
+                                    <DisclosureButton class="flex space-x-2 items-center">
+                                        <span class="truncate max-w-[200px] text-lg font-semibold">{{ $page.props.current_active_child.child_name }}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="currentColor" viewBox="0 0 448 512">
+                                            <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
+                                        </svg>
                                     </DisclosureButton>
                                 </div>
                                 <transition
@@ -45,27 +47,39 @@
                                     leave-to-class="transform scale-95 opacity-0"
                                 >
                                     <!-- Desktop and Tablet Menu -->
-                                    <MenuItems class="absolute w-64 py-3 mt-2 origin-top-right bg-white shadow-md -right-1 rounded-xl focus:outline-none">
+                                    <MenuItems class="absolute w-96 py-3 mt-2 origin-top-right bg-white shadow-md -right-1 rounded-xl focus:outline-none">
                                         <div class="px-5 pt-2 pb-3 border-b">
                                             <!-- Header -->
                                             <div class="font-medium text-gray-700">
-                                                Hey,
-                                                <span class="font-bold">{{ user.name }}</span>
+                                                Hi, <span class="font-bold">{{ $page.props.auth.user.display_name }}</span>
                                             </div>
                                         </div>
                                         <!-- Navigation -->
                                         <div class="flex items-center px-5 my-1 py-2 font-medium text-gray-700 hover:bg-indigo-50 cursor-pointer">
                                             <UserCircleIcon class="w-6 h-6 mr-3" />Profile
                                         </div>
+                                        
                                         <!-- <div to="/settings" class="flex items-center px-5 py-2 font-medium text-gray-700 hover:bg-indigo-50"><CogIcon class="w-6 h-6 mr-3" />Settings</div>
                                         <div to="/helpdesk" class="flex items-center px-5 py-2 font-medium text-gray-700 hover:bg-indigo-50"><QuestionMarkCircleIcon class="w-6 h-6 mr-3" />Helpdesk</div> -->
                                         <hr>
-                                        <BreezeNavLink :href="route('logout')" method="post" as="button" class="flex items-center space-x-3 w-full ml-1 px-5 py-2 mt-3 font-medium text-left text-gray-700 hover:bg-indigo-50">
+                                        <BreezeNavLink :href="route('logout')" method="post" as="button" class="flex items-center space-x-3 w-full ml-1 px-5 py-2 mt-3 font-medium text-left text-gray-700 hover:text-gray-700 hover:bg-indigo-50">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="currentcolor" viewBox="0 0 512 512">
                                                 <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
                                             </svg>
                                             <span>Log Out</span>
                                         </BreezeNavLink>
+                                        <div class="w-full p-4 rounded-lg text-gray-800">
+                                            <div class="px-3 pt-2 mt-2  text-sm font-bold text-left">Child List</div>
+                                            <hr class="my-3">
+                                            <button href="#" class="flex items-center space-x-4 text-sm font-semibold md:text-base py-2 px-3" v-if="$page.props.user_has_children.length" v-for="info in $page.props.user_has_children" @click="switchChild(info.child_id, info.child_name, info.student_id)">
+                                                <span class="text-gray-500 hover:text-gray-800 text-left text-sm">{{ info.child_name }}</span>
+                                                <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded" v-if="!switching && info.child_id == $page.props.current_active_child.child_id">Current</span>
+                                                <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded" v-if="switching && info.child_id == $page.props.current_active_child.child_id">Switching</span>
+                                            </button>
+                                            <div class="flex justify-between items-center w-full px-3" v-else>
+                                                <span class="text-gray-500 font-semibold text-sm">No children added. </span><span class="text-sm text-indigo-600 cursor-pointer font-medium hover:underline">Add child</span>
+                                            </div>
+                                        </div>
                                     </MenuItems>
                                 </transition>
                             </Menu>
@@ -79,13 +93,14 @@
                     <!-- Header -->
                     <div class="flex items-center p-5 mb-2 border-b">
                         <div class="font-medium text-gray-700">
-                            Hey, <span class="font-bold">{{ user.name }}</span>
+                            Hi, <span class="font-bold">{{ $page.props.auth.user.display_name }}</span>
                         </div>
                     </div>
                     <!-- Navigation -->
                     <div class="cursor-pointer flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50">
                         <UserCircleIcon class="w-6 h-6 mr-3" />Profile
                     </div>
+                    
                     <!-- <div to="/settings" class="flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50"><CogIcon class="w-6 h-6 mr-3" />Settings</div>
                     <div to="/helpdesk" class="flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50"><QuestionMarkCircleIcon class="w-6 h-6 mr-3" />Helpdesk</div> -->
                     <div class="py-2 mt-2 border-t">
@@ -95,6 +110,20 @@
                             </svg>
                             <span>Log Out</span>
                         </button>
+                    </div>
+                    <div class="flex justify-center md:hidden">
+                        <div class="w-full p-4 rounded-lg text-gray-800">
+                            <div class="px-3 pt-2 mt-2  text-sm font-bold text-left">Child List</div>
+                            <hr class="my-3">
+                            <button href="#" class="flex items-center space-x-4 text-sm font-semibold md:text-base py-2 px-3" v-if="$page.props.user_has_children.length" v-for="info in $page.props.user_has_children" @click="switchChild(info.child_id, info.student_id)">
+                                <span class="text-gray-500 hover:text-gray-800 text-left">{{ info.child_name }}</span>
+                                <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded" v-if="!switching && info.child_id == $page.props.current_active_child.child_id">Current</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded" v-if="switching && info.child_id == $page.props.current_active_child.child_id">Switching</span>
+                            </button>
+                            <div class="flex justify-between items-center w-full px-3" v-else>
+                                <span class="text-gray-500 font-semibold text-sm">No children added. </span><span class="text-sm text-indigo-600 cursor-pointer font-medium hover:underline">Add child</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </DisclosurePanel>
@@ -135,5 +164,24 @@ export default {
             user,
         }
     },
+    data(){
+        return{
+            switching: false
+        }
+    },
+    methods: {
+        switchChild(child_id, child_name, student_id){
+            if(this.switching || child_id == this.$page.props.current_active_child.child_id){
+                return
+            }
+            this.switching = true
+            axios.post(route('parent.switch_child', {child_id: child_id, child_name: child_name, student_id: student_id}))
+            .then(response => {
+                if(response.data){
+                    location.reload()
+                }
+            });
+        }
+    }
 }
 </script>

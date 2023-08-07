@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onUnmounted, watch } from 'vue';
 
 const props = defineProps({
     open: {
@@ -20,6 +20,36 @@ const props = defineProps({
     },
 });
 const emit = defineEmits(['close:modal']);
+</script>
+
+<script>
+export default {
+    data(){
+        return{
+            modal_open: false
+        }
+    },
+    watch: {
+        open: {
+            deep: true,
+            handler() {
+                if (this.open) {
+                    // Prevent scrolling when modal is open
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    // Restore scrolling when modal is closed
+                    document.body.style.overflow = '';
+                }
+            },
+        },
+    },
+    created(){
+        document.body.style.overflow = 'hidden';
+    },
+    unmounted() {
+        document.body.style.overflow = '';
+    },
+}
 </script>
 
 <style>

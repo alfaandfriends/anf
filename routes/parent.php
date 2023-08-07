@@ -5,6 +5,7 @@ use App\Http\Controllers\Parent\AttendanceController;
 use App\Http\Controllers\Parent\HomeworkController;
 use App\Http\Controllers\Parent\InvoiceController;
 use App\Http\Controllers\Parent\PaymentController;
+use App\Http\Controllers\Parent\HomeController;
 use App\Http\Controllers\Parent\StoryBookController;
 use App\Http\Controllers\Parent\StudyMaterialsController;
 use Illuminate\Support\Facades\Route;
@@ -12,20 +13,22 @@ use Inertia\Inertia;
 
 Route::middleware(['auth'])->group(function(){
     Route::prefix('/')->name('parent.')->group(function () {
-        Route::get('home', function () {
-            return Inertia::render('Parent/Home');
-        })->name('home');
+        
+        /* Home */
+        Route::get('home', [HomeController::class, 'index'])->name('home');
+        Route::post('switch_child', [HomeController::class, 'switchChild'])->name('switch_child');
+
         Route::prefix('notice')->name('notice.')->group(function () {
             Route::get('/', function () {
                 return Inertia::render('Parent/Notice/Index');
             })->name('index');
         });
-        Route::prefix('invoices')->name('invoices.')->group(function () {
-            Route::get('/', [InvoiceController::class, 'index'])->name('index');
-        });
+
+        Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
+        Route::get('/invoices/callback', [InvoiceController::class, 'callback'])->name('invoices.callback');
+
         Route::resources([
             'payments' => PaymentController::class,
-            'invoices' => InvoiceController::class,
             'art-gallery' => ArtGalleryController::class,
             'homeworks' => HomeworkController::class,
             'study_materials' => StudyMaterialsController::class,

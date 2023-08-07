@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\InvoiceHelper;
 use App\Classes\NotificationHelper;
 use App\Classes\ProgrammeHelper;
+use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class StudentController extends Controller
                                 ->select([  'students.id as id', 
                                             'children.name as name', 
                                             'wpvt_users.display_name as parent_name', 
-                                            'students.status']);
+                                            'students.status'])->distinct();
 
         if($request->search){
             $query->where('programmes.name', 'LIKE', '%'.$request->search.'%');
@@ -145,6 +146,7 @@ class StudentController extends Controller
             $invoice_data['student_id']         =   $student_id;
             $invoice_data['student_fee_id']     =   $student_fee_id;
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
+        
             InvoiceHelper::newFeeInvoice($invoice_data);
         
             DB::commit();
@@ -156,9 +158,6 @@ class StudentController extends Controller
             
             return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
         }
-
-        
-
     }
 
     public function edit(Request $request)

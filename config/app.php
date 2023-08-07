@@ -127,6 +127,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Billplz
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'billplz' => [
+        'api_key'           =>  env('VITE_BILLPLZ_API_KEY'),
+        'endpoint'          =>  env('VITE_BILLPLZ_ENDPOINT'),
+        'sandbox'           =>  env('VITE_BILLPLZ_SANDBOX'),
+        'collection_id'     =>  env('VITE_BILLPLZ_COLLECTION_ID')
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
@@ -168,6 +182,7 @@ return [
          * Package Service Providers...
          */
         Lab404\Impersonate\ImpersonateServiceProvider::class,
+        Billplz\Laravel\BillplzServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -192,7 +207,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // ...
+        'Billplz' => Billplz\Laravel\Billplz::class,
     ])->toArray(),
 
 ];

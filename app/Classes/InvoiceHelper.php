@@ -2,8 +2,10 @@
 
 namespace App\Classes;
 
+use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 
 class InvoiceHelper {
     
@@ -17,7 +19,7 @@ class InvoiceHelper {
         return $status;
     }
 
-    public static function newFeeInvoice($data)
+    public static function newFeeInvoice($invoice_data)
     {
         $currentYear        =   Carbon::now()->year;
         $invoice_config     =   DB::table('invoice_config')->whereYear('year', $currentYear)->first();
@@ -30,7 +32,7 @@ class InvoiceHelper {
 
         $invoice_number    =   self::getCurrentYearInvoiceNumber($invoice_config);
 
-        $invoice_data   =   DB::table('student_fees')
+        $result   =   DB::table('student_fees')
                             ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
                             ->join('programme_levels', 'student_fees.fee_id', '=', 'programme_level_fees.id')
                             ->join('programmes', 'student_fees.fee_id', '=', 'programme_level_fees.id')
@@ -39,34 +41,71 @@ class InvoiceHelper {
                             ->select(   'centres.ID as centre_id', 'centres.label as centre_name', 'programme_levels.material_fee', 'programmes.id as programme_id',
                                         'programmes.name as programme_name', 'programme_levels.level as programme_level', 'programme_level_fees.fee_amount as programme_fee', 
                                         'class_types_detail.label as programme_type')
-                            ->where('student_fees.id', $data['student_fee_id'])
+                            ->where('student_fees.id', $invoice_data['student_fee_id'])
                             ->first();
 
         $invoice_items      =   array(
-            "centre_id" => $invoice_data->centre_id,
-            "centre_name" => $invoice_data->centre_name,
-            "material_fee" => $invoice_data->material_fee,
-            "programme_id" => $invoice_data->programme_id,
-            "programme_fee" => $invoice_data->programme_fee,
-            "programme_name" => $invoice_data->programme_name,
-            "programme_type" => $invoice_data->programme_type,
-            "programme_level" => $invoice_data->programme_level,
+            "centre_id" => $result->centre_id,
+            "centre_name" => $result->centre_name,
+            "material_fee" => $result->material_fee,
+            "programme_id" => $result->programme_id,
+            "programme_fee" => $result->programme_fee,
+            "programme_name" => $result->programme_name,
+            "programme_type" => $result->programme_type,
+            "programme_level" => $result->programme_level,
             "include_material_fee" => true,
             "material_fee_discount" => 0,
             "programme_fee_discount" => 0
         );
+        
+        $due_date   =   Carbon::parse($invoice_data['date_admission'])->addDays(7)->toDateString();  
+        $amount     =   $result->material_fee + $result->programme_fee;
+        $student_id     =   $invoice_data['student_id'];
+        $invoice_number     =   Carbon::now()->year.'-'.$invoice_number;
+        $date_admission     =   $invoice_data['date_admission'];
+        
 
-        DB::table('invoices')->insert([
-            'invoice_type_id'           => self::$fee_invoice_id,
-            'student_id'                => $data['student_id'],
-            'invoice_number'            => Carbon::now()->year.'-'.$invoice_number,
-            'invoice_items'             => json_encode([$invoice_items]),
-            'date_issued'               => $data['date_admission'],
-            'due_date'                  => Carbon::parse($data['date_admission'])->addDays(7)->toDateString(),
-            'amount'                    => $invoice_data->material_fee + $invoice_data->programme_fee,
-        ]);
+        $bill_collection_id     =   config('app.billplz.collection_id');
+        $bill_email             =   auth()->user()->user_email;
+        $bill_mobile            =   '';
+        $bill_name              =   auth()->user()->display_name;
+        $bill_amount            =   $amount * 100;
+        $bill_callback          =   route('parent.invoices.callback');
+        $bill_description       =   'Invoice Number: '.$invoice_number;
+        $bill_response          =   Billplz::bill()->create($bill_collection_id, $bill_email, $bill_mobile, $bill_name, $bill_amount, $bill_callback, $bill_description, [
+                                        'due_at'    =>  $due_date,
+                                        'redirect_url' => route('parent.invoices.callback')
+                                    ]); 
+                  
+        if($bill_response->getStatusCode() == 200){
+            DB::table('invoices')->insert([
+                'invoice_type_id'   => self::$fee_invoice_id,
+                'student_id'        => $student_id,
+                'invoice_number'    => $invoice_number,
+                'invoice_items'     => json_encode([$invoice_items]),
+                'date_issued'       => $date_admission,
+                'due_date'          => $due_date,
+                'amount'            => $amount,
+                'bill_id'           => $bill_response->toArray()['id'],
+            ]);
+    
+            return true;
+        }
+        return false;
+    }
 
-        return true;
+    public  static function getStudentFeeInvoices($student_id)
+    {
+        $fee_invoices   =   DB::table('invoices')
+                                ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
+                                ->where('invoice_type_id', self::$fee_invoice_id)
+                                ->where('student_id', $student_id)
+                                ->select(   'invoices.id', 'invoices.invoice_number', 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 
+                                            'invoice_status.id as status_id','invoice_status.name as status', 'invoice_status.bg_color as status_bg_color', 
+                                            'invoices.bill_id', 'invoice_status.text_color as status_text_color')
+                                ->get();
+
+        return $fee_invoices;
     }
 
     public static function getCurrentYearInvoiceNumber($invoice_config){

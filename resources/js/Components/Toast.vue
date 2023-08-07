@@ -18,7 +18,7 @@
         <!-- success message -->
         <Transition name="toast-animate">
             <template v-if="toastData.type == 'success' && visible">
-                <div class="top-10 fixed right-10 z-40 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-green-600 cursor-pointer" @click="closeToast">
+                <div class="top-10 fixed right-10 z-40 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-green-600 cursor-pointer" @click="closeToast" :class="class">
                     <div class="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
@@ -40,7 +40,7 @@
         <!-- info message -->
         <Transition name="toast-animate">
             <template v-if="toastData.type == 'info' && visible">
-                <div class="top-10 fixed right-10 z-40 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-blue-600 cursor-pointer" @click="closeToast">
+                <div class="top-10 fixed right-10 z-40 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-blue-600 cursor-pointer" @click="closeToast" :class="class">
                     <div class="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
@@ -63,7 +63,7 @@
         <!-- warning message -->
         <Transition name="toast-animate">
             <template v-if="toastData.type == 'warning' && visible">
-                <div class="top-10 fixed right-10 z-40 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-yellow-500 cursor-pointer" @click="closeToast">
+                <div class="top-10 fixed right-10 z-40 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-yellow-500 cursor-pointer" @click="closeToast" :class="class">
                     <div class="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
@@ -85,7 +85,7 @@
         <!-- error message -->
         <Transition name="toast-animate">
             <template v-if="toastData.type == 'error' && visible">
-                <div class="top-10 fixed right-10 z-40 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-red-600 cursor-pointer" @click="closeToast">
+                <div class="top-10 fixed right-10 z-40 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-red-600 cursor-pointer" @click="closeToast" :class="class">
                     <div class="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-red-600" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
@@ -111,6 +111,7 @@
 export default {
     props:{
         toastData: Object,
+        class: String,
     },
     data(){
         return{
