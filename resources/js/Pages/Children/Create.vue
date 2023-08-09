@@ -35,7 +35,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="mb-4">
                                         <label for="end_time" class="block text-sm font-bold text-gray-700"> Date of Birth <span class="text-red-500">*</span></label>
-                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.dob ? '--dp-border-color: #fa9e9e' : ''" v-model="form.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" :format="dateFormat"/>
+                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.dob ? '--dp-border-color: #fa9e9e' : ''" v-model="form.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" :format="'dd/MM/yyyy'"/>
                                     </div>
                                     <div class="mb-4 self-end">
                                         <BreezeButton class="py-2.5" @click="addChild">Add Child</BreezeButton>
@@ -199,13 +199,6 @@ export default {
                     this.showEdit   =   false
                 }
             })
-        },
-        dateFormat(date){
-            const day = date.getDate();
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
-
-            return `${day}/${month}/${year}`;
         }
     }
 }

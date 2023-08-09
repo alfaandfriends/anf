@@ -271,6 +271,7 @@ class ClassController extends Controller
         $classes        =   DB::table('classes')
                             ->join('centres', 'classes.centre_id', '=', 'centres.id')
                             ->join('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
+                            ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
                             ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')
                             ->join('class_methods', 'classes.class_method_id', '=', 'class_methods.id')
                             ->where('classes.centre_id', $request->centre_id)
@@ -278,8 +279,8 @@ class ClassController extends Controller
                             ->where('programme_levels.class_type_id', $request->class_type)
                             ->where('programme_levels.level', $request->class_level)
                             ->where('classes.class_method_id', $request->class_method)
-                            ->select(['classes.id as class_id', 'class_days.name as class_day', 'programme_levels.class_type_id as class_type', 'classes.start_time', 'classes.end_time', 'classes.capacity'])
-                            ->paginate(10);
+                            ->select(['classes.id as class_id', 'class_days.name as class_day', 'programme_levels.class_type_id as class_type', 'classes.start_time', 'classes.end_time', 'classes.capacity', 'programmes.id as programme_id'])
+                            ->get();
         return $classes;
     }
 }

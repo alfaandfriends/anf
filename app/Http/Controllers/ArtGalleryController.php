@@ -16,8 +16,8 @@ class ArtGalleryController extends Controller
                         ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
                         ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
                         ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
-                        ->leftJoin('students', 'student_art_gallery.student_id', '=', 'students.id')
-                        ->leftJoin('children', 'students.children_id', '=', 'children.id')
+                        ->join('students', 'student_art_gallery.student_id', '=', 'students.id')
+                        ->join('children', 'students.children_id', '=', 'children.id')
                         ->select(
                             'student_art_gallery.id as artwork_id',
                             'students.id as student_id',

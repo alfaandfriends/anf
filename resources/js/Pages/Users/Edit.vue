@@ -204,17 +204,15 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                         <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
-                                                <label :for="role.id" class="rounded bg-indigo-100 hover:bg-indigo-200 drop-shadow-sm hover:drop-shadow-md px-2 py-1 w-full inline-block text-gray-800 select-none text-lg" v-for="role in roles" :key="role.id">
-                                                    <input :id="role.id" class="form-check-input h-5 w-5 border border-gray-300 rounded-sm bg-white hover:bg-white focus:ring-transparent text-indigo-500 transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
-                                                            type="checkbox" 
-                                                            :checked="user_roles[role.id]"
-                                                            :value="role.id"
-                                                            v-model="selected_roles"
-                                                    >
-                                                    {{ role.display_name }}
-                                                </label>
-                                            <!-- <div class="form-check "> -->
-                                            <!-- </div> -->
+                                            <label :for="role.id" class="rounded bg-indigo-100 hover:bg-indigo-200 drop-shadow-sm hover:drop-shadow-md px-2 py-1 w-full inline-block text-gray-800 select-none text-lg" v-for="role in roles" :key="role.id">
+                                                <input :id="role.id" class="form-check-input h-5 w-5 border border-gray-300 rounded-sm bg-white hover:bg-white focus:ring-transparent text-indigo-500 transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" 
+                                                        type="checkbox" 
+                                                        :checked="user_roles[role.id]"
+                                                        :value="role.id"
+                                                        v-model="selected_roles"
+                                                >
+                                                {{ role.display_name }}
+                                            </label>
                                         </div>
                                     </div>
                                 </div>

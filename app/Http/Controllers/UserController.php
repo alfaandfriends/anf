@@ -45,10 +45,12 @@ class UserController extends Controller
 
     public function create(){
 
-        $roles      =   Role::get();
+        $roles          =   Role::get();
+        $gender_list    =   DB::table('genders')->get();
 
         return Inertia::render('Users/Create',[
-            'roles'     => $roles,
+            'roles'         => $roles,
+            'gender_list'   => $gender_list,
         ]);
     }
 
@@ -72,9 +74,9 @@ class UserController extends Controller
         
         $random_password        =   Str::random(20);
         $hashed_random_password =   Hash::make($random_password);
-        $first_name             =   Str::of(Str::lower($request->first_name))->title();
-        $last_name              =   Str::of(Str::lower($request->last_name))->title();
-        $address                =   Str::of($request->address)->title();
+        $first_name             =   $request->first_name;
+        $last_name              =   $request->last_name;
+        $address                =   $request->address;
 
         try{
             DB::beginTransaction();
@@ -106,11 +108,6 @@ class UserController extends Controller
                     'user_calling_code'     => $request->calling_code,
                 ]);
             }
-    
-            // DB::table('wpvt_usermeta')->insert([
-            //     ['user_id' => $new_user_id, 'meta_key' => 'first_name', 'meta_value' => $first_name],
-            //     ['user_id' => $new_user_id, 'meta_key' => 'last_name', 'meta_value' => $last_name],
-            // ]);
             
             foreach($request->selected_roles as $key=>$role){
                 DB::table('user_has_roles')->insert([
@@ -127,9 +124,19 @@ class UserController extends Controller
                 'password'  =>  $random_password,
             ];
 
+            foreach($request->children as $key=>$children){
+                DB::table('children')->insert([
+                    'parent_id'     => $new_user_id,
+                    'name'          => $children['name'],
+                    'gender_id'     => $children['gender'],
+                    'date_of_birth' => Carbon::parse($children['dob'])->format('Y-m-d'),
+                ]);
+            }
+        
+
             Notification::sendNow($user, new UserRegistrationCredentials($credentials));
 
-            return redirect(route('users'))->with(['type'=>'success', 'message'=>'Credentials has been sent to the registered email !']);
+            // return redirect(route('users'))->with(['type'=>'success', 'message'=>'Credentials has been sent to the registered email !']);
         }
         catch(Exception $e){
             DB::rollback();

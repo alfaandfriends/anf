@@ -32,35 +32,16 @@ class InvoiceHelper {
 
         $invoice_number    =   self::getCurrentYearInvoiceNumber($invoice_config);
 
-        $result   =   DB::table('student_fees')
-                            ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
-                            ->join('programme_levels', 'student_fees.fee_id', '=', 'programme_level_fees.id')
-                            ->join('programmes', 'student_fees.fee_id', '=', 'programme_level_fees.id')
-                            ->join('centres', 'student_fees.centre_id', '=', 'centres.id')
-                            ->join('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
-                            ->select(   'centres.ID as centre_id', 'centres.label as centre_name', 'programme_levels.material_fee', 'programmes.id as programme_id',
-                                        'programmes.name as programme_name', 'programme_levels.level as programme_level', 'programme_level_fees.fee_amount as programme_fee', 
-                                        'class_types_detail.label as programme_type')
-                            ->where('student_fees.id', $invoice_data['student_fee_id'])
-                            ->first();
+        $invoice_items      =   collect($invoice_data['invoice_items']);
 
-        $invoice_items      =   array(
-            "centre_id" => $result->centre_id,
-            "centre_name" => $result->centre_name,
-            "material_fee" => $result->material_fee,
-            "programme_id" => $result->programme_id,
-            "programme_fee" => $result->programme_fee,
-            "programme_name" => $result->programme_name,
-            "programme_type" => $result->programme_type,
-            "programme_level" => $result->programme_level,
-            "include_material_fee" => true,
-            "material_fee_discount" => 0,
-            "programme_fee_discount" => 0
-        );
+        $totalFee = $invoice_items->sum(function ($item) {
+            return $item['include_material_fee']
+                ? $item['programme_fee'] + $item['material_fee']
+                : $item['programme_fee'];
+        });
         
-        $due_date   =   Carbon::parse($invoice_data['date_admission'])->addDays(7)->toDateString();  
-        $amount     =   $result->material_fee + $result->programme_fee;
-        $student_id     =   $invoice_data['student_id'];
+        $due_date           =   Carbon::parse($invoice_data['date_admission'])->addDays(7)->toDateString();  
+        $student_id         =   $invoice_data['student_id'];
         $invoice_number     =   Carbon::now()->year.'-'.$invoice_number;
         $date_admission     =   $invoice_data['date_admission'];
         
@@ -69,7 +50,7 @@ class InvoiceHelper {
         $bill_email             =   auth()->user()->user_email;
         $bill_mobile            =   '';
         $bill_name              =   auth()->user()->display_name;
-        $bill_amount            =   $amount * 100;
+        $bill_amount            =   $totalFee * 100;
         $bill_callback          =   route('parent.invoices.callback');
         $bill_description       =   'Invoice Number: '.$invoice_number;
         $bill_response          =   Billplz::bill()->create($bill_collection_id, $bill_email, $bill_mobile, $bill_name, $bill_amount, $bill_callback, $bill_description, [
@@ -82,10 +63,10 @@ class InvoiceHelper {
                 'invoice_type_id'   => self::$fee_invoice_id,
                 'student_id'        => $student_id,
                 'invoice_number'    => $invoice_number,
-                'invoice_items'     => json_encode([$invoice_items]),
+                'invoice_items'     => json_encode($invoice_items->toArray()),
                 'date_issued'       => $date_admission,
                 'due_date'          => $due_date,
-                'amount'            => $amount,
+                'amount'            => $totalFee,
                 'bill_id'           => $bill_response->toArray()['id'],
             ]);
     
@@ -94,6 +75,14 @@ class InvoiceHelper {
         return false;
     }
 
+    public  static function updateFeeInvoice($invoice_data)
+    {
+        $latest_fee_invoice     =   DB::table('invoices')->where('student_id', $invoice_data['student_id'])->latest()->first();
+        $invoice_items          =   json_decode($latest_fee_invoice->invoice_items);
+
+        
+        dd();
+    }
     public  static function getStudentFeeInvoices($student_id)
     {
         $fee_invoices   =   DB::table('invoices')

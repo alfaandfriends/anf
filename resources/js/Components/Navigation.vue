@@ -10,7 +10,7 @@
                 <Link :href="route('parent.invoices')" :class="(route().current('parent.invoices')) ? 'text-gray-800' : ''" class="flex px-3 py-3 text-gray-500 hover:text-gray-800 cursor-pointer">
                     <span class="text-sm font-semibold md:text-base">Fee Invoices</span>
                 </Link>
-                <Link :href="route('parent.art-gallery.index')" :class="(route().current('parent.art-gallery.index')) ? 'text-gray-800' : ''" class="flex px-3 py-3 text-gray-500 hover:text-gray-800 cursor-pointer">
+                <Link :href="route('parent.art_gallery')" :class="(route().current('parent.art_gallery')) ? 'text-gray-800' : ''" class="flex px-3 py-3 text-gray-500 hover:text-gray-800 cursor-pointer">
                     <span class="text-sm font-semibold md:text-base">Art Gallery</span>
                 </Link>
                 <div class="relative group flex px-3 py-3 text-gray-500 hover:text-gray-800 cursor-pointer">
@@ -23,7 +23,6 @@
                     <div class="z-30 hidden flex-col absolute border border-gray-200 py-2 px-4 bg-white h-fit w-64 text-slate-600 bottom-10 md:-bottom-0 right-2 md:top-10 md:left-0 rounded-lg shadow-xl group-hover:block">
                         <!-- Additional menu items here -->
                         <a href="#" class="text-sm font-semibold md:text-base block py-2 px-3 text-gray-500 hover:text-gray-800">Story Book</a>
-                        <a href="#" class="text-sm font-semibold md:text-base block py-2 px-3 text-gray-500 hover:text-gray-800">Notice</a>
                         <!-- Add more menu items as needed -->
                     </div>
                 </div>

@@ -74,6 +74,7 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
+        // dd();
         try {
             // Begin the transaction
             DB::beginTransaction();
@@ -83,77 +84,72 @@ class StudentController extends Controller
                 'children_id'    =>  $request->children_id,
             ]);
 
-            /* Create Fee */
-            $student_fee_id     =   DB::table('student_fees')->insertGetId([
-                'student_id'        =>  $student_id,
-                'centre_id'         =>  $request->centre_id,
-                'fee_id'            =>  $request->fee['id'],
-                'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
-            ]);
-
-            /* Create Class */
-            foreach($request->classes as $key => $class_id){
-                DB::table('student_classes')->insert([
-                    'student_fee_id'    =>  $student_fee_id,
-                    'class_id'          =>  $class_id,
+            foreach($request->fee as $fee_index=>$fee){
+                /* Create Fee */
+                $student_fee_id     =   DB::table('student_fees')->insertGetId([
+                    'student_id'        =>  $student_id,
+                    'centre_id'         =>  $request->centre_id,
+                    'fee_id'            =>  $fee['fee_info']['fee_id'],
+                    'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
                 ]);
-            }
 
-            /* Create progress report */
-            $programme_id   =   DB::table('programme_level_fees')
-                                    ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
-                                    ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-                                    ->where('programme_level_fees.id', $request->fee['id'])
-                                    ->pluck('programmes.id')
-                                    ->first();
-
-            $progress_report_config_id  =   DB::table('progress_report_configs')->where('programme_id', $programme_id)->pluck('id')->first();
-
-            $progress_report_id =   DB::table('progress_reports')->insertGetId([
-                'student_fee_id'                =>  $student_fee_id,
-                'progress_report_config_id'     =>  $progress_report_config_id,
-                'month'                         =>  Carbon::parse($request->date_admission)->format('Y-m-d')
-            ]);
-
-            $class_days     =   DB::table('classes')->whereIn('id', $request->classes)->select('class_day_id as class_day')->get();
-            $total_class    =   count($class_days) * 4;
-
-            $total_date_available   =   0;
-            foreach($class_days as $data){
-                $date_available =   $this->getDatesForDayOfWeekFromCustomDate($data->class_day, Carbon::parse($request->date_admission)->format('Y-m-d'));
-                foreach($date_available as $date){
-                    DB::table('progress_report_details')->insert([
-                        'progress_report_id'    => $progress_report_id,
-                        'date'                  => $date,
-                        'report_data'           => json_encode([]),
+                /* Create Class */
+                foreach($fee['classes'] as $class_key => $class){
+                    DB::table('student_classes')->insert([
+                        'student_fee_id'    =>  $student_fee_id,
+                        'class_id'          =>  $class['class_id'],
                     ]);
-                    $total_date_available++;
                 }
-            }
+                
+                /* Create progress report */
+                $progress_report_config_id  =   DB::table('progress_report_configs')->where('programme_id', $fee['fee_info']['programme_id'])->pluck('id')->first();
 
-            $remaining_days =   $total_class - $total_date_available;
-            if($remaining_days != 0){
-                for($i = 1; $i <= $remaining_days; $i++){
-                    DB::table('progress_report_details')->insert([
-                        'progress_report_id'    => $progress_report_id,
-                        'date'                  => now(),
-                        'report_data'           => json_encode([]),
-                    ]);
+                $progress_report_id =   DB::table('progress_reports')->insertGetId([
+                    'student_fee_id'                =>  $student_fee_id,
+                    'progress_report_config_id'     =>  $progress_report_config_id,
+                    'month'                         =>  Carbon::parse($request->date_admission)->format('Y-m-d')
+                ]);
+
+
+                $class_days     =   DB::table('classes')->whereIn('id', collect($fee['classes'])->pluck('class_id'))->select('class_day_id as class_day')->get();
+                $total_class    =   count($class_days) * 4;
+
+                $total_date_available   =   0;
+                foreach($class_days as $data){
+                    $date_available =   $this->getDatesForDayOfWeekFromCustomDate($data->class_day, Carbon::parse($request->date_admission)->format('Y-m-d'));
+                    foreach($date_available as $date){
+                        DB::table('progress_report_details')->insert([
+                            'progress_report_id'    => $progress_report_id,
+                            'date'                  => $date,
+                            'report_data'           => json_encode([]),
+                        ]);
+                        $total_date_available++;
+                    }
+                }
+
+                $remaining_days =   $total_class - $total_date_available;
+                if($remaining_days != 0){
+                    for($i = 1; $i <= $remaining_days; $i++){
+                        DB::table('progress_report_details')->insert([
+                            'progress_report_id'    => $progress_report_id,
+                            'date'                  => now(),
+                            'report_data'           => json_encode([]),
+                        ]);
+                    }
                 }
             }
 
             /* Create Invoice */
             $invoice_data['student_id']         =   $student_id;
-            $invoice_data['student_fee_id']     =   $student_fee_id;
+            $invoice_data['invoice_items']      =   collect($request->fee)->pluck('fee_info')->toArray();
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
         
             InvoiceHelper::newFeeInvoice($invoice_data);
         
-            DB::commit();
+            DB::commit();   
 
-            return redirect(route('students'))->with(['type'=>'success', 'message'=>'Admission success !']);
+            // return redirect(route('students'))->with(['type'=>'success', 'message'=>'Admission success !']);
         } catch (\Exception $e) {
-            // If there was an error or exception, rollback the transaction
             DB::rollback();
             
             return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
@@ -264,62 +260,85 @@ class StudentController extends Controller
             return back()->with(['type'=>'error', 'message'=>'Please select at least 1 class !']);
         }
 
-        $student_fee_id =   DB::table('student_fees')->insertGetId([
-            'student_id'        =>  $request->student_id,
-            'centre_id'         =>  $request->centre_id,
-            'fee_id'            =>  $request->fee['id'],
-            'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
-        ]);
+        // try {
+        //     // Begin the transaction
+        //     DB::beginTransaction();
 
-        foreach($request->classes as $key => $class_id){
-            DB::table('student_classes')->insert([
-                'student_fee_id'    =>  $student_fee_id,
-                'class_id'          =>  $class_id,
+            /* Create Fee */
+            $student_fee_id     =   DB::table('student_fees')->insertGetId([
+                'student_id'        =>  $request->student_id,
+                'centre_id'         =>  $request->centre_id,
+                'fee_id'            =>  $request->fee['id'],
+                'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
             ]);
-        }
+
+            /* Create Class */
+            foreach($request->classes as $key => $class_id){
+                DB::table('student_classes')->insert([
+                    'student_fee_id'    =>  $student_fee_id,
+                    'class_id'          =>  $class_id,
+                ]);
+            }
+
+            /* Create progress report */
+            $programme_id   =   DB::table('programme_level_fees')
+                                    ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                    ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                    ->where('programme_level_fees.id', $request->fee['id'])
+                                    ->pluck('programmes.id')
+                                    ->first();
+
+            $progress_report_config_id  =   DB::table('progress_report_configs')->where('programme_id', $programme_id)->pluck('id')->first();
+
+            $progress_report_id =   DB::table('progress_reports')->insertGetId([
+                'student_fee_id'                =>  $student_fee_id,
+                'progress_report_config_id'     =>  $progress_report_config_id,
+                'month'                         =>  Carbon::parse($request->date_admission)->format('Y-m-d')
+            ]);
+
+            $class_days     =   DB::table('classes')->whereIn('id', $request->classes)->select('class_day_id as class_day')->get();
+            $total_class    =   count($class_days) * 4;
+
+            $total_date_available   =   0;
+            foreach($class_days as $data){
+                $date_available =   $this->getDatesForDayOfWeekFromCustomDate($data->class_day, Carbon::parse($request->date_admission)->format('Y-m-d'));
+                foreach($date_available as $date){
+                    DB::table('progress_report_details')->insert([
+                        'progress_report_id'    => $progress_report_id,
+                        'date'                  => $date,
+                        'report_data'           => json_encode([]),
+                    ]);
+                    $total_date_available++;
+                }
+            }
+
+            $remaining_days =   $total_class - $total_date_available;
+            if($remaining_days != 0){
+                for($i = 1; $i <= $remaining_days; $i++){
+                    DB::table('progress_report_details')->insert([
+                        'progress_report_id'    => $progress_report_id,
+                        'date'                  => now(),
+                        'report_data'           => json_encode([]),
+                    ]);
+                }
+            }
+
+            /* Update Invoice */
+            // $invoice_data['student_id']         =   $request->student_id;
+            // $invoice_data['student_fee_id']     =   $student_fee_id;
         
-        /* Create progress report */
-        $programme_id   =   DB::table('programme_level_fees')
-                                ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
-                                ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-                                ->where('programme_level_fees.id', $request->fee['id'])
-                                ->pluck('programmes.id')
-                                ->first();
+            // InvoiceHelper::updateFeeInvoice($invoice_data);
+        
+        //     DB::commit();
+        
+        //     return redirect()->back()->with(['type'=>'success', 'message'=>'New class added successfully !']);
 
-        $progress_report_id =   DB::table('progress_reports')->insertGetId([
-            'student_id'        =>  $request->student_id,
-            'centre_id'         =>  $request->centre_id,
-            'programme_id'      =>  $programme_id,
-            'month'             =>  Carbon::createFromTimeString($request->date_admission)->month,
-        ]);
-
-        // if(!empty($request->classes)){
-        //     $classes    =   DB::table('classes')
-        //                         ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')
-        //                         ->join('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
-        //                         ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-        //                         ->whereIn('classes.id', $request->classes)
-        //                         ->select('class_days.id', 'class_days.name', 'programmes.table')
-        //                         ->get();
-
-        //     foreach($classes as $key=>$class_info){
-        //         $class_day      =    $class_info->id;
-        //         $table_name     =    $class_info->table;
-
-        //         $daysForMonth   =   $this->getDatesForDayOfWeekFromCustomDate($class_info->id, date('Y-m-d'));
-        //         dd($daysForMonth);
-        //         if(!empty($daysForMonth)){
-        //             foreach($daysForMonth as $key=>$date){
-        //                 DB::table($table_name)->insert([
-        //                     'date'
-        //                 ]);
-        //             }
-        //         }
-
-        //     }
+        // } catch (\Exception $e) {
+        //     // If there was an error or exception, rollback the transaction
+        //     DB::rollback();
+            
+        //     return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
         // }
-        
-        return redirect()->back()->with(['type'=>'success', 'message'=>'New class added successfully !']);
     }
 
     /* Usage: $this->getDatesForDayOfWeekFromCustomDate(1, '2023-05-02') */
@@ -341,3 +360,5 @@ class StudentController extends Controller
         return $dates;
     }
 }
+
+

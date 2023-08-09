@@ -33,9 +33,9 @@ import BreezeButton from '@/Components/Button.vue';
                                                     v-model="form.children_id"
                                                     @close="clearStudents"
                                                     valueProp="id"
-                                                    :loading="searching_students"
+                                                    :loading="searching.student"
                                                     placeholder="Please enter some keywords"
-                                                    :options="students"
+                                                    :options="list.students"
                                                     :searchable="true"
                                                     noOptionsText="Nothing found"
                                                     noResultsText="Nothing found"
@@ -47,7 +47,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     label="name"
                                                     :classes="{
                                                         container: 
-                                                            $page.props.errors.centre_id ? 
+                                                            errors.child ? 
                                                             'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
                                                             'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
                                                         containerDisabled: 'cursor-default bg-gray-100',
@@ -101,7 +101,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     label="label"
                                                     :classes="{
                                                         container: 
-                                                            $page.props.errors.centre_id ? 
+                                                            errors.centre ? 
                                                             'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
                                                             'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
                                                         containerDisabled: 'cursor-default bg-gray-100',
@@ -145,21 +145,22 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="mb-4">
                                                 <label for="programme" class="block text-sm font-bold text-gray-700"> Admission Date <span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <Datepicker :class="'w-full rounded-lg shadow-sm '" 
-                                                        :style="$page.props.errors.end_time ? '--dp-border-color: #fa9e9e;' : '--dp-border-color: rgb(209 213 219 / var(--tw-border-opacity)); --dp-icon-color: black'" 
+                                                    <Datepicker class="w-full rounded-lg shadow-sm" 
+                                                        :class="errors.admission_date ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'" 
                                                         input-class-name="date-picker"
                                                         v-model="form.date_admission" 
                                                         :enable-time-picker="false"
                                                         :auto-apply="true" 
+                                                        :format="'dd/MM/yyyy'"
                                                     />
                                                 </div>
                                             </div>
                                             <div class="mb-4">
                                                 <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
+                                                    <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
                                                         <option value="">-- Select Programme --</option>
-                                                        <option :value="programme.id" v-for="(programme, index) in programme_list" :key="index">{{ programme.name }}</option>
+                                                        <option :value="programme.id" v-for="(programme, index) in $page.props.programme_list" :key="index">{{ programme.name }}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -168,27 +169,27 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="mb-4">
                                                 <label for="class_type" class="block text-sm font-bold text-gray-700"> Class Type <span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_type" autocomplete="off" :disabled="disable_input.class_type">
+                                                    <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="[errors.class_type ? 'border-red-300' : 'border-gray-300', disable.class_type ? 'bg-gray-50' : '']" v-model="search_form.class_type" autocomplete="off" :disabled="disable.class_type">
                                                         <option value="">-- Select Type --</option>
-                                                        <option :value="class_type.id" v-for="(class_type, index) in class_types" :key="index">{{ class_type.name }}</option>
+                                                        <option :value="class_type.id" v-for="(class_type, index) in list.class_types" :key="index">{{ class_type.name }}</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="mb-4">
                                                 <label for="class_level" class="block text-sm font-bold text-gray-700"> Class Level <span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <select name="class_level" id="class_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_level ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_level" autocomplete="off" :disabled="disable_input.class_levels">
+                                                    <select name="class_level" id="class_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="[errors.level ? 'border-red-300' : 'border-gray-300', disable.class_levels ? 'bg-gray-50' : '']" v-model="search_form.class_level" autocomplete="off" :disabled="disable.class_levels">
                                                         <option value="">-- Select Level --</option>
-                                                        <option :value="i.level" v-for="i, index in class_levels" :key="i">{{ i.level }}</option>
+                                                        <option :value="i.level" v-for="i, index in list.class_levels" :key="i">{{ i.level }}</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="mb-4">
                                                 <label for="class_method" class="block text-sm font-bold text-gray-700"> Class Method <span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <select name="class_method" id="class_method" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_method ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_method" autocomplete="off">
+                                                    <select name="class_method" id="class_method" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.class_method ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_method" autocomplete="off">
                                                         <option value="">-- Select Method --</option>
-                                                        <option :value="method.id" v-for="(method, index) in method_list" :key="index">{{ method.name }}</option>
+                                                        <option :value="method.id" v-for="(method, index) in $page.props.method_list" :key="index">{{ method.name }}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -202,8 +203,8 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="available_classes">
-                            <div class="sm:row-span-3" v-if="enable_container.available_classes">
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="available_classes" v-if="enable_container.available_classes">
+                            <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="mb-5">
                                         <h1 class="font-bold text-indigo-800">Classes Available</h1>
@@ -213,7 +214,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mb-4">
                                             <div class="shadow overflow-hidden border-b border-gray-200 rounded-t-sm rounded-b-none">
                                                 <table class="min-w-full divide-y divide-gray-200">
-                                                    <thead class="bg-blue-200">
+                                                    <thead class="bg-gray-300">
                                                         <tr class="px-2">
                                                             <th class="px-2 py-1 text-left">#</th>
                                                             <th class="px-2 py-1 text-left">Day</th>
@@ -223,19 +224,19 @@ import BreezeButton from '@/Components/Button.vue';
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-if="!list.available_classes.data || list.available_classes.total == 0">
+                                                        <tr v-if="!list.available_classes.length">
                                                             <td colspan="10" class="py-2 text-center">
-                                                                <div class="flex justify-center py-4 items-center space-x-2" v-if="searching_classes">
+                                                                <div class="flex justify-center py-4 items-center space-x-2" v-if="searching.class">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat animate-spin" viewBox="0 0 16 16">
                                                                         <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
                                                                         <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
                                                                     </svg>
                                                                     <span>Searching classes...</span>
                                                                 </div>
-                                                                <span v-if="list.available_classes.total == 0">No classes available</span>
+                                                                <span v-if="!searching.class && !list.available_classes.length">No classes available</span>
                                                             </td>
                                                         </tr>
-                                                        <tr v-else class="hover:bg-gray-200" v-for="classes, index in list.available_classes.data">
+                                                        <tr v-else class="hover:bg-gray-200" v-for="classes, index in list.available_classes">
                                                             <td class="px-2 py-2 text-left">{{ index + 1 }}</td>
                                                             <td class="px-2 py-2 text-left">{{ classes.class_day}}</td>
                                                             <td class="px-2 py-2 text-left">
@@ -249,10 +250,13 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <td class="px-2 py-2 text-left">{{ classes.capacity}}</td>
                                                             <td class="px-2 py-2 text-center">
                                                                 <div class="flex justify-center">
-                                                                    <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, index)">Choose</BreezeButton>
-                                                                    <input v-else class="h-5 w-5 border border-indigo-300 rounded-sm bg-white focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
+                                                                    <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id)">Choose</BreezeButton>
+                                                                    <input v-else class="h-5 w-5 border border-indigo-300 rounded-sm focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
                                                                             type="checkbox" 
-                                                                            @click="getPlusFee($event, classes.class_id, index)">
+                                                                            :checked="checkIfClassSelected(classes.class_id, classes.programme_id)"
+                                                                            :disabled="disable_check_box"
+                                                                            :class="disable_check_box ? 'bg-gray-100' : 'bg-white'"
+                                                                            @click="getPlusFee($event, classes.class_id, classes.class_type, classes.programme_id)">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -261,29 +265,95 @@ import BreezeButton from '@/Components/Button.vue';
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee">
-                            <div class="sm:row-span-3" v-if="enable_container.show_fee">
+                            <div class="sm:row-span-3" >
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="mb-5">
                                         <h1 class="font-bold text-indigo-800">Fee Information</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
-                                    <div class="flex p-4 justify-between bg-indigo-100 shadow rounded-md">
-                                        <div class="flex flex-row items-center border-b sm:border-b-0 w-full sm:w-auto pb-4 sm:pb-0 space-x-4">
-                                            <div class="text-green-500">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
-                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                                                    </svg>
-                                            </div>
-                                            <span class="text-gray-700">{{ form.fee.label }} - {{ form.fee.fee_amount }}</span>
-                                        </div>
+                                    <div class="space-y-2 text-left" v-if="!form.fee.length">
+                                        <span class="font-semibold text-gray-500">No classes added.</span>
                                     </div>
-                                    <div class="flex pt-4 justify-end">
-                                        <BreezeButton buttonType="info" @click="addStudent">Admit Student</BreezeButton>
+                                    <div class="space-y-2" v-else>
+                                        <details class="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden" v-for="fee, fee_index in form.fee">
+                                            <summary class="flex cursor-pointer items-center justify-between gap-2 bg-indigo-100 p-4 text-gray-900 transition">
+                                                <span class="text-sm font-medium">
+                                                    <div class="flex items-center space-x-4 text-gray-800">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 640 512" fill="currentColor">
+                                                            <path d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5V291.9c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"/>
+                                                        </svg>
+                                                        <span class="font-bold">{{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }})</span>
+                                                        <span class="text-red-500 hover:underline cursor-pointer font-semibold" @click="deleteFee(fee.fee_info.programme_id, fee.fee_info.class_type_id)">Delete</span>
+                                                    </div>
+                                                </span>
+                                                <span class="transition group-open:-rotate-180">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                                                    </svg>
+                                                </span>
+                                            </summary>
+                                            <div class="border-t border-gray-200 bg-white">
+                                                <div class="flex px-6 py-3 ">
+                                                    <div class="flex items-center justify-center divide-x divide-gray-400">
+                                                        <div class="flex space-x-4 font-medium text-gray-900 px-4">
+                                                            <span>Centre: </span>
+                                                            <dd class="text-indigo-600 sm:col-span-2">{{ fee.fee_info.centre_name }}</dd>
+                                                        </div>
+                                                        <div class="flex space-x-4 font-medium text-gray-900 px-4">
+                                                            <span>Fee Type: </span>
+                                                            <dd class="text-indigo-600 sm:col-span-2">{{ fee.fee_info.programme_type }}</dd>
+                                                        </div>
+                                                        <div class="flex space-x-4 font-medium text-gray-900 px-4">
+                                                            <span>Class Method: </span>
+                                                            <dd class="text-indigo-600 sm:col-span-2">{{ fee.fee_info.class_method }}</dd>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        
+                                                <div class="relative overflow-x-auto px-6 pb-4 w-full">
+                                                    <table class="text-sm text-left text-gray-500 border w-1/2">
+                                                        <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+                                                            <tr>
+                                                                <th scope="col" class="px-6 py-3">Day</th>
+                                                                <th scope="col" class="px-6 py-3">Time</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="bg-white border-b" v-for="classes in fee.classes">
+                                                                <td class="px-6 py-4 text-gray-800 font-semibold">{{ classes.class_day}}</td>
+                                                                <td class="px-6 py-4 text-gray-800 font-semibold">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="flex p-6 border-t justify-between">
+                                                    <div class="flex">
+                                                        <input :id="fee_index" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                        <label :for="fee_index" class="text-sm ml-3 font-medium text-gray-900 select-none cursor-pointer">Include Material Fee</label>
+                                                    </div>
+                                                    <span class="ml-3 text-gray-900 select-none font-semibold">Amount: {{ fee.fee_info.programme_fee }}</span>
+                                                </div>
+                                            </div>
+                                        </details>
+                                    </div>
+                                    <div class="flex justify-end p-6" v-if="form.fee.length">
+                                        <span class="text-right ml-3 text-gray-900 cursor-text font-bold">Total Amount: {{ total_amount }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" v-if="form.fee.length">
+                            <div class="sm:row-span-3" >
+                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                                    <div class="flex pt-4 justify-end space-x-2">
+                                        <BreezeButton buttonType="gray">Cancel</BreezeButton>
+                                        <BreezeButton buttonType="info" @click="admitStudent">Admit</BreezeButton>
                                     </div>
                                 </div>
                             </div>
@@ -310,34 +380,44 @@ export default {
         Head, Link, Datepicker, Toggle, Multiselect, 
     },
     props: {
-        programme_list: Object,
-        method_list: Object,
         centre_id: String,
     },
     data(){
         return{
-            class_types: [],
-            class_levels: [],
-            students: [],
-            fee_info: {
+            disable_check_box: false,
+            total_amount: 0,
+            errors: {
+                child: false,
+                centre: false,
+                admission_date: false,
+                programme: false,
+                class_type: false,
+                programme: false,
+                level: false,
+                class_method: false,
             },
-            selected_class_count: 0,
-            searching_students: false,
-            searching_classes: false,
-            searching_fee: false,
-            disable_input: {
+            disable: {
                 class_type: true,
                 class_levels: true,
             },
+            list: {
+                students: [],
+                class_types: [],
+                class_levels: [],
+                available_classes: [],
+            },
+            searching: {
+                student: false,
+                class: false,
+                fee: false
+            },
+            selected_class_count: 0,
             enable_container:{
                 available_classes: false,
                 show_fee: false,
             },
-            list: {
-                available_classes: [],
-            },
             search_form:{
-                centre_id: this.centre_id ? this.centre_id : '',
+                centre_id: this.$page.props.centre_id ? this.$page.props.centre_id : '',
                 programme_id: '',
                 class_type: '',
                 class_level: '',
@@ -346,18 +426,18 @@ export default {
             form: {
                 date_admission: '',
                 children_id: '',
-                centre_id: this.centre_id ? this.centre_id : '',
+                centre_id: this.$page.props.centre_id ? this.$page.props.centre_id : '',
                 fee: [],
-                classes: [],
-            }
+            },
+            selected_plus_class: {}
         }
     },
     watch: {
         'search_form.programme_id': {
             handler(){
                 if(this.search_form.programme_id){
-                    this.disable_input.class_type = true
-                    this.disable_input.class_levels = true
+                    this.disable.class_type = true
+                    this.disable.class_levels = true
                     this.search_form.class_type = ''
                     this.search_form.class_level = ''
                     axios.get(route('classes.get_class_types'), {
@@ -366,8 +446,8 @@ export default {
                         }
                     })
                     .then((response) => {
-                        this.class_types = response.data
-                        this.disable_input.class_type = false
+                        this.list.class_types = response.data
+                        this.disable.class_type = false
                     })
                 }
             },
@@ -376,7 +456,7 @@ export default {
         'search_form.class_type': {
             handler(){
                 if(this.search_form.programme_id && this.search_form.class_type){
-                    this.disable_input.class_levels = true
+                    this.disable.class_levels = true
                     this.search_form.class_level = ''
                     axios.get(route('classes.get_class_levels'), {
                         params: {
@@ -385,13 +465,32 @@ export default {
                         }
                     })
                     .then((response) => {
-                        this.class_levels = response.data
-                        this.disable_input.class_levels = false
+                        this.list.class_levels = response.data
+                        this.disable.class_levels = false
                     })
                 }
             },
             deep: true
         },
+        'form.fee': {
+            handler(){
+                this.total_amount = 0
+                for (const feeObject of this.form.fee) {
+                    const { include_material_fee, material_fee, programme_fee } = feeObject.fee_info;
+                    this.total_amount += include_material_fee ? programme_fee + material_fee : programme_fee;
+                }
+                // for (const feeObject of this.form.fee) {
+                //     if(feeObject.fee_info.include_material_fee){
+                //         this.total_amount += feeObject.fee_info.material_fee + feeObject.fee_info.programme_fee;
+                //     }
+                //     else{
+                //         this.total_amount += feeObject.fee_info.programme_fee;
+                //     }
+                // }
+                console.log(this.total_amount)
+            },
+            deep: true
+        }
     },
     methods: {
         submit() {
@@ -400,24 +499,31 @@ export default {
         findChildren(query){
             debounce(val => '400ms')(10)
             if(query){
-                this.searching_students = true
+                this.searching.student = true
                 axios.get(route('children.find'), {
                     params: {
                         'keyword': query
                     }
                 })
                 .then((res) => {
-                    this.students = res.data
-                    this.searching_students = false
+                    this.list.students = res.data
+                    this.searching.student = false
                 });
             }
         },
         findClasses(){
+            this.errors.child           =   !this.form.children_id ? true : false
+            this.errors.centre          =   !this.search_form.centre_id ? true : false
+            this.errors.admission_date  =   !this.form.date_admission ? true : false
+            this.errors.programme       =   !this.search_form.programme_id ? true : false
+            this.errors.class_type      =   !this.search_form.class_type ? true : false
+            this.errors.level           =   !this.search_form.class_level ? true : false
+            this.errors.class_method    =   !this.search_form.class_method ? true : false
+
             if(this.form.children_id && this.search_form.centre_id && this.search_form.programme_id && this.search_form.class_level && this.search_form.class_type && this.search_form.class_method){
-                this.searching_classes = true   
+                this.searching.class = true   
                 this.enable_container.show_fee = false
                 this.list.available_classes = []
-                this.selected_class_count = 0
                 axios.get(route('classes.find'), {
                     'params': {
                         'centre_id': this.search_form.centre_id,
@@ -430,56 +536,88 @@ export default {
                 .then((res) => {
                     this.list.available_classes = res.data
                     this.enable_container.available_classes = true,
-                    this.searching_classes = false
-                    this.form.classes = []
+                    this.searching.class = false
                     this.scrollToElement('available_classes')
                 });
             }
         },
-        getNormalFee(class_id, index){
-            this.selected_class_count = 1
-            this.getFee(class_id, index)
-            this.form.classes.push(class_id)
-        },
-        getPlusFee(event, class_id, index){
-            if(event.target.checked){
-                this.selected_class_count += 1
-                this.getFee(class_id, index, true)
-                this.form.classes.splice(index, 0, class_id)
-            }
-            else{
-                this.selected_class_count -= 1
-                this.getFee(class_id, index, true)
-                this.form.classes.splice(index, 1)
-            }
-        },
-        getFee(class_id, index, byClassCount = false){
-            if(this.searching_fee){
+        getNormalFee(class_id, class_type_id, programme_id){
+            const  only_one_class_allowed   = this.form.fee.find(item => item.fee_info.class_type_id === 1 && item.fee_info.class_type_id === class_type_id && item.fee_info.programme_id === programme_id);
+            if(only_one_class_allowed){
+                alert('Only one class is allowed for normal class.')
+                this.searching.fee = false
                 return
             }
-            this.searching_fee = true
+            const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type);
+            if(programme_already_added){
+                alert('This programme already been added. Please remove the previous one first.')
+                this.searching.fee = false
+                return
+            }
             axios.get(route('programmes.get_fee'), {
                 'params': {
-                    'class_id' : !byClassCount ? class_id : '',
-                    'class_type' : this.search_form.class_type,
-                    'class_count':this.selected_class_count
+                    'class_id' : class_id,
                 }
             })
             .then((res) => {
-                this.form.fee = []
-                this.form.fee = res.data
-                if(res.data.id){
-                    this.enable_container.show_fee = true
-                    this.scrollToElement('class_fee')
-                }
-                else{
-                    this.enable_container.show_fee = false
-                }
-                this.searching_fee = false
+                this.form.fee.push(res.data)
+                this.pushMaterialFee(programme_id)
+                this.scrollToElement('class_fee')
+                this.searching.fee = false
             });
         },
+        getPlusFee(event, class_id, class_type, programme_id){
+            if(this.disable_check_box){
+                return
+            }
+            const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type);
+            if(programme_already_added){
+                alert('This programme already been added. Please remove the previous one first.')
+                if(event.target.checked){
+                    event.target.checked = false
+                }
+                this.searching.fee = false
+                return
+            }
+
+            this.disable_check_box = true
+
+            if(event.target.checked){
+                if(!this.selected_plus_class[programme_id]){
+                    this.selected_plus_class[programme_id] = []
+                }
+                this.selected_plus_class[programme_id].push(class_id)
+            }
+            else{
+                this.selected_plus_class[programme_id] = this.selected_plus_class[programme_id].filter(id => id !== class_id);
+            }
+
+            this.form.fee = this.form.fee.filter(item => item.fee_info.programme_id !== programme_id);
+            
+            if(this.selected_plus_class[programme_id].length){
+                axios.get(route('programmes.get_fee'), {
+                    'params': {
+                        'class_type' : this.search_form.class_type,
+                        'class_count': this.selected_plus_class[programme_id].length,
+                        'classes': this.selected_plus_class[programme_id],
+                    }
+                })
+                .then((res) => {
+                    if(res.data.fee_info){
+                        this.form.fee.push(res.data)
+                        this.pushMaterialFee(programme_id)
+                    }
+                    this.scrollToElement('class_fee')
+                    this.searching.fee = false
+                    this.disable_check_box  = false
+                });
+            }
+            else{
+                this.disable_check_box  = false
+            }
+        },
         clearStudents(){
-            this.students = []
+            this.list.students = []
         },
         scrollToElement(element) {
             const el = this.$refs[element];
@@ -487,8 +625,32 @@ export default {
                 el.scrollIntoView({behavior: 'smooth'});
             }
         },
-        addStudent(){
+        deleteFee(programme_id, class_type){
+            this.form.fee           =   this.form.fee.filter(item => item.fee_info.programme_id !== programme_id);
+            if(class_type == 2){
+                if (this.selected_plus_class.hasOwnProperty(programme_id)) {
+                    delete this.selected_plus_class[programme_id];
+                }
+            }
+        },
+        admitStudent(){
             this.$inertia.post(route('students.store'), this.form)
+        },
+        checkIfClassSelected(class_id, programme_id){
+            const classExists = this.selected_plus_class[programme_id] ? this.selected_plus_class[programme_id].includes(class_id) : false
+            return classExists
+        },
+        pushMaterialFee(programme_id){
+            for (const feeObject of this.form.fee) {
+                const classObject = feeObject.fee_info;
+                if (classObject.programme_id === programme_id) {
+                    classObject.include_material_fee = true;
+                    classObject.material_fee_discount = 0;
+                    classObject.programme_fee_discount = 0;
+                    break;
+                }
+                
+            }
         }
     },
     mounted(){
@@ -499,3 +661,11 @@ export default {
 }
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+.dp__input{
+    border-radius: 6px;
+}
+.dp__theme_light {
+    --dp-border-color: rgb(209 213 219 / var(--tw-border-opacity));
+ }
+</style>

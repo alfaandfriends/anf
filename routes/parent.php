@@ -16,25 +16,12 @@ Route::middleware(['auth'])->group(function(){
         
         /* Home */
         Route::get('home', [HomeController::class, 'index'])->name('home');
-        Route::post('switch_child', [HomeController::class, 'switchChild'])->name('switch_child');
-
-        Route::prefix('notice')->name('notice.')->group(function () {
-            Route::get('/', function () {
-                return Inertia::render('Parent/Notice/Index');
-            })->name('index');
-        });
+        Route::post('switch-child', [HomeController::class, 'switchChild'])->name('switch_child');
 
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
         Route::get('/invoices/callback', [InvoiceController::class, 'callback'])->name('invoices.callback');
 
-        Route::resources([
-            'payments' => PaymentController::class,
-            'art-gallery' => ArtGalleryController::class,
-            'homeworks' => HomeworkController::class,
-            'study_materials' => StudyMaterialsController::class,
-            'storybooks' => StoryBookController::class,
-            'attendances' => AttendanceController::class,
-        ]);
+        Route::get('art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery');
     });
     
 

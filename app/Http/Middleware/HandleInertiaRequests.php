@@ -49,13 +49,21 @@ class HandleInertiaRequests extends Middleware
             $user_has_roles         =   $this->userHasRoles();
             $user_has_children      =   $this->userHasChildren();
         }
-
+        
         if(!empty($user_has_children)){
             if (!$request->session()->has('current_active_child')) {
                 $child_session_data =   [
                     'child_id'      =>  $user_has_children->pluck('child_id')->first(),
                     'child_name'    =>  $user_has_children->pluck('child_name')->first(),
                     'student_id'    =>  $user_has_children->pluck('student_id')->first()
+                ]; 
+                $request->session()->put('current_active_child', $child_session_data);
+            }
+            if($request->session()->has('current_active_child')){
+                $child_session_data =   [
+                    'child_id'      =>  $user_has_children->where('child_id', $request->session()->get('current_active_child.child_id'))->pluck('child_id')->first(),
+                    'child_name'    =>  $user_has_children->where('child_id', $request->session()->get('current_active_child.child_id'))->pluck('child_name')->first(),
+                    'student_id'    =>  $user_has_children->where('child_id', $request->session()->get('current_active_child.child_id'))->pluck('student_id')->first()
                 ]; 
                 $request->session()->put('current_active_child', $child_session_data);
             }
@@ -192,7 +200,6 @@ class HandleInertiaRequests extends Middleware
                                 ->where('parent_id', Auth::id())
                                 ->select('students.id as student_id', 'children.id as child_id', 'children.name as child_name')
                                 ->get());
-
         return $user_has_children;
     }
 }

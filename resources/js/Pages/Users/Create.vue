@@ -1,5 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -10,32 +11,33 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
-                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                        <div class="grid grid-rows-2 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
+                    <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
+                        <div class="grid grid-rows-1 grid-cols-2 gap-4">
+                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <div class="mb-5">
                                     <h1 class="text-indigo-800 font-bold">User Information</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
+                                <div class="grid grid-cols-2 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <div class="flex justify-between">
                                             <label for="email" class="block text-sm text-gray-700 font-bold"> Email <span class="text-red-500">*</span> </label>
-                                            <label for="" class="font-medium text-sm" v-if="form.email" :class="email_exist ? 'text-red-700' : 'text-green-700'"> {{ email_exist ? 'Email address has been used.' : 'Email address available.'}} </label>
+                                            <label for="" class="font-medium text-sm text-indigo-600" v-if="checking_email"> Checking Email...</label>
+                                            <label for="" class="font-medium text-sm text-red-600" v-if="form.email != '' & !email_valid"> Invalid Email </label>
+                                            <label for="" class="font-medium text-sm" v-if="!checking_email && form.email !='' & email_valid" :class="email_exist ? 'text-red-700' : 'text-green-700'"> {{ email_exist ? 'Email address has been used.' : 'Email address is available.'}} </label>
                                         </div>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="email" name="email" id="email" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="email_exist || $page.props.errors.email ? 'border-red-300' : 'border-gray-300'" v-model="form.email" autocomplete="off"/>
+                                            <input type="email" name="username" id="username" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="email_exist || $page.props.errors.email ? 'border-red-300' : 'border-gray-300'" v-debounce:1s="checkEmailExist" @keyup="checkEmail()" v-model="form.email" autocomplete="none"/>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                     <div class="mb-4">
                                         <div class="flex justify-between">
                                             <label for="username" class="block text-sm text-gray-700 font-bold"> Username <span class="text-red-500">*</span> </label>
-                                            <label for="" class="font-medium text-sm" v-if="form.username" :class="username_exist ? 'text-red-700' : 'text-green-700'"> {{ username_exist ? 'Username has been taken.' : 'Username available.'}} </label>
+                                            <label for="" class="font-medium text-sm text-indigo-600" v-if="checking_username"> Checking Username...</label>
+                                            <label for="" class="font-medium text-sm" v-if="!checking_username && form.username !=''" :class="username_exist ? 'text-red-700' : 'text-green-700'"> {{ username_exist ? 'Username has been taken.' : 'Username is available.'}} </label>
                                         </div>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="username" id="username" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="username_exist || $page.props.errors.email ? 'border-red-300' : 'border-gray-300'" v-model="form.username" autocomplete="off"/>
+                                            <input type="text" name="username" id="username" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="username_exist || $page.props.errors.email ? 'border-red-300' : 'border-gray-300'" v-debounce:1s="checkUsernameExist" @keyup="checkUsername()"  v-model="form.username" autocomplete="none"/>
                                         </div>
                                     </div>
                                 </div>
@@ -43,13 +45,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                     <div class="mb-4">
                                         <label for="first_name" class="block text-sm text-gray-700 font-bold"> First Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="first_name" id="first_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.first_name ? 'border-red-300' : 'border-gray-300'" v-model="form.first_name" autocomplete="off"/>
+                                            <input type="text" name="first_name" id="first_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.first_name ? 'border-red-300' : 'border-gray-300'" v-model="form.first_name" autocomplete="none"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
                                         <label for="last_name" class="block text-sm text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="last_name" id="last_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.last_name ? 'border-red-300' : 'border-gray-300'" v-model="form.last_name" autocomplete="off"/>
+                                            <input type="text" name="last_name" id="last_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.last_name ? 'border-red-300' : 'border-gray-300'" v-model="form.last_name" autocomplete="none"/>
                                         </div>
                                     </div>
                                 </div>
@@ -58,11 +60,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                         <label for="country" class="block text-sm text-gray-700 font-bold"> Country <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <Multiselect 
-                                                autocomplete="off"
+                                                autocomplete="none"
                                                 placeholder="Please select a country"
                                                 v-model="form.country_code"
                                                 :min-chars="1"
-                                                :delay="1"
+                                                :delay="500"
+                                                :canDeselect="false"
                                                 :searchable="true"
                                                 :noOptionsText="'Please enter at least 1 character'"
                                                 :options="async function(query) {
@@ -128,7 +131,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                         <label for="contact_number" class="block text-sm text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input class="text-center inline-flex items-center px-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-500 text-sm" v-model="form.calling_code" size="5" disabled>
-                                            <input type="number" name="contact_number" id="contact_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm" :class="$page.props.errors.contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.contact_number" autocomplete="off"/>
+                                            <input type="number" name="contact_number" id="contact_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm" :class="$page.props.errors.contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.contact_number" autocomplete="none"/>
                                         </div>
                                     </div>
                                 </div>
@@ -138,8 +141,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <Multiselect
                                                 v-model="form.state"
+                                                :searchable="true"
                                                 placeholder="Please select a state"
-                                                :noOptionsText="'Please select a state'"
+                                                autocomplete="none"
                                                 :options="state_list"
                                                 :classes="{
                                                 container:
@@ -201,12 +205,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                     <div class="mb-4">
                                         <label for="address" class="block text-sm text-gray-700 font-bold"> Address <span class="text-red-500">*</span></label>
                                         <div class="mt-1">
-                                            <textarea id="address" name="address" rows="3" class="capitalize shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.address ? 'border-red-300' : 'border-gray-300'" v-model="form.address" autocomplete="off"/>
+                                            <textarea id="address" name="address" rows="3" class="capitalize shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.address ? 'border-red-300' : 'border-gray-300'" v-model="form.address" autocomplete="none"/>
                                         </div>  
                                     </div>
                                 </div>
                             </div>
-                            <div class="sm:row-span-3">
+                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <div class="mb-5">
                                     <h1 class="text-indigo-800 font-bold">User Roles</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
@@ -219,7 +223,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                         <div class="block">
                                             <div class="mt-2">
                                                 <div class="mb-2" v-for="role in roles" :key="role.id">
-                                                    <label class="inline-flex items-center text-gray-800 select-none text-md" :for="role.id">
+                                                    <label class="inline-flex items-center text-gray-800 select-none text-md cursor-pointer" :for="role.id">
                                                         <input type="checkbox" class="h-5 w-5 border border-gray-300 rounded-sm bg-white focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer"
                                                                 :id="role.id" 
                                                                 :value="role.id"
@@ -234,12 +238,86 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                 </div>
                             </div>
                         </div>
-                        <div class="flex">
-                            <div class="flex pr-1">
-                                <button class="py-2 px-6 bg-green-500 rounded text-white hover:bg-green-600 border">Save</button>
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                                <div class="mb-5">
+                                    <h1 class="text-indigo-800 font-bold">Children Information</h1>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-4 gap-0 sm:gap-4">
+                                    <div class="mb-4">
+                                        <label for="first_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <input type="text" name="first_name" id="first_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="child_form.name" autocomplete="none"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="gender" class="block text-sm font-bold text-gray-700"> Gender <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <select name="gender" id="gender" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.gender ? 'border-red-300' : 'border-gray-300'" v-model="child_form.gender" autocomplete="none">
+                                                <option value="">-- Select Gender --</option>
+                                                <option :value="gender.id" v-for="(gender, index) in $page.props.gender_list" :key="index">{{ gender.name }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="end_time" class="block text-sm font-bold text-gray-700"> Date of Birth <span class="text-red-500">*</span></label>
+                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.dob ? '--dp-border-color: #fa9e9e' : ''" v-model="child_form.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" :format="'dd/MM/yyyy'"/>
+                                    </div>
+                                    <div class="mb-4 self-end">
+                                        <BreezeButton class="py-2.5 px-4" @click="addChild">Add Child</BreezeButton>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 gap-0 sm:gap-4">
+                                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-gray-300">
+                                                <tr>
+                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+                                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Date of Birth</th>
+                                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                <tr v-if="!form.children.length">
+                                                    <td class="text-center" colspan="10">
+                                                        <div class="p-3">
+                                                            No Record Found! 
+                                                        </div>
+                                                    </td>
+                                                </tr> 
+                                                <tr class="hover:bg-gray-200" v-for="children, index in form.children">
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                        {{ children.name }}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                        {{ $page.props.gender_list.find((item) => item.id == children.gender).name }}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                                        {{ moment(children.dob).format('DD/MM/Y') }}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                                        <div class="flex justify-center space-x-2">
+                                                            <!-- <BreezeButton buttonType="blue" @click="manageUser(user.ID)" v-if="$page.props.can.cp_users_edit_access">Manage User</BreezeButton> -->
+                                                            <BreezeButton buttonType="danger" @click="deleteChild(index)">Delete</BreezeButton>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex pr-1">
-                                <Link :href="route('users')" class="py-2 px-6 bg-gray-400 rounded text-white hover:bg-gray-500 border">Cancel</Link>
+                        </div>
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                            <div class="row-span-3">
+                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                                    <div class="flex space-x-2">
+                                        <BreezeButton buttonType="info" type="submit">Register</BreezeButton>
+                                        <BreezeButton buttonType="gray" :route="route('users')">Cancel</BreezeButton>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -252,6 +330,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Multiselect from '@vueform/multiselect'
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import moment from 'moment'
+import { debounce } from 'vue-debounce'
 
 const fetchCountries = async (query) => {
 
@@ -283,6 +365,7 @@ export default {
         return{
             state_list: [],
             email_exist: false,
+            email_valid: false,
             checking_email: false,
             username_exist: false,
             checking_username: false,
@@ -297,43 +380,17 @@ export default {
                 contact_number: '',
                 state: '',
                 address: '',
-                selected_roles: []
+                selected_roles: [],
+                children: []
+            },
+            child_form: {
+                name: '',
+                gender: '',
+                dob: ''
             }
         }
     },
     watch:{
-        'form.email': {
-            handler(email){
-                if (!this.checking_email) {
-                    if(email !=  ''){
-                        setTimeout(() => {
-                            this.checkEmailExist(this.form.email)
-                            this.checking_email = false;
-                        }, 2000); // 2 sec delay
-                    }
-                }
-                if(email != ''){
-                    this.checking_email = true;
-                }
-            },
-            immediate: true
-        },
-        'form.username': {
-            handler(username){
-                if (!this.checking_username) {
-                    if(username !=  ''){
-                        setTimeout(() => {
-                            this.checkUsernameExist(this.form.username)
-                            this.checking_username = false;
-                        }, 2000); // 2 sec delay
-                    }
-                }
-                if(username != ''){
-                    this.checking_username = true;
-                }
-            },
-            immediate: true
-        },
         'form.country_code': {
             handler(country_code){
                 /* Clear data */
@@ -350,9 +407,25 @@ export default {
         }
     },
     methods: {
-        checkEmailExist(email){
-            axios
-                .get('/api/find-email/' + email)
+        checkEmail(){
+            if(this.form.email){
+                this.isValidEmail()
+                if(this.email_valid){
+                    this.checking_email = true
+                }
+            }
+        },
+        checkUsername(){
+            if(this.form.username){
+                this.checking_username = true
+            }
+        },
+        isValidEmail() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            this.email_valid = emailRegex.test(this.form.email);
+        },
+        checkEmailExist(){
+            axios.get('/api/find-email/' + this.form.email)
                 .then(response => {
                     if(response.data.length != 0){
                         this.email_exist = true
@@ -360,14 +433,11 @@ export default {
                     else{
                         this.email_exist = false
                     }
-                })
-                .catch(error => {
-                    this.errored = true
+                    this.checking_email = false
                 })
         },
-        checkUsernameExist(username){
-            axios
-                .get('/api/find-username/' + username)
+        checkUsernameExist(){
+            axios.get('/api/find-username/' + this.form.username)
                 .then(response => {
                     if(response.data.length != 0){
                         this.username_exist = true
@@ -375,9 +445,7 @@ export default {
                     else{
                         this.username_exist = false
                     }
-                })
-                .catch(error => {
-                    this.errored = true
+                    this.checking_username = false
                 })
         },
         setCallingCode(country_code){
@@ -386,9 +454,6 @@ export default {
                 .then(response => {
                     this.form.country       =   response.data[0].name.official
                     this.form.calling_code  =   response.data[0].idd.root + response.data[0].idd.suffixes[0]
-                })
-                .catch(error => {
-                    this.errored = true
                 })
         },
         setStateList(country_code){
@@ -401,9 +466,10 @@ export default {
                     "Content-Type": "application/json"
                 }, 
                 data: {
-                        "iso2": country_code, 
+                    "iso2": country_code, 
                 }
             }).then(response => {
+                console.log(response)
                 response.data.data.states.forEach(function(state) {
                     state_list.push(state.name)
                 });
@@ -412,6 +478,19 @@ export default {
         submit() {
             this.$inertia.post(route('users.store'), this.form, { preserveState: true})
         },
+        addChild(){
+            this.form.children.push({
+                name: this.child_form.name,
+                gender: this.child_form.gender,
+                dob: this.child_form.dob
+            })
+            this.child_form.name = ''
+            this.child_form.gender = ''
+            this.child_form.dob = ''
+        },
+        deleteChild(index){
+            this.form.children.splice(index, 1)
+        }
     }
 
 }
