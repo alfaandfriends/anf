@@ -49,13 +49,8 @@ class CentreController extends Controller
             'centre_contact_number'     => 'required|max:50',
             'centre_email'              => 'required|max:50',
             'centre_address'            => 'required|max:50',
-            'principal_email'           => 'required|max:50',
-            'principal_contact'         => 'required|max:50',
         ]);
-
-        $email_exist  =   User::where('user_email', $request->principal_email)->count();
-
-        if($email_exist < 1){
+        if(!$request->principal_user_id){
             return redirect()->back()->with(['type'=>'error', 'message'=>'Please enter a valid principal email address!']);
         }
 
@@ -69,20 +64,13 @@ class CentreController extends Controller
                                 'email' => $request->centre_email,
                                 'address' => $request->centre_address,
                                 'is_active' => $request->centre_active,
+                                'principal_user_id' => $request->principal_user_id,
                                 'last_enrollment_count' => 0,
                                 'last_invoice_count' => 0,
                                 'last_payment_count' => 0,
                                 'last_admission_count' => 0,
                                 'last_certificate_count' => 0,
                             ]);
-
-        DB::table('centre_principals')->insert([
-            'centre_id'         => $new_centre_id,
-            'first_name'        => $request->principal_first_name,
-            'last_name'         => $request->principal_last_name,
-            'email'             => $request->principal_email,
-            'contact_number'    => $request->principal_contact,
-        ]);
         
         $images =   $request->file('image_list');
 
@@ -93,7 +81,7 @@ class CentreController extends Controller
 
             DB::table('centre_images')->insert([
                 'centre_id'     => $new_centre_id,
-                'image_path'    => $image_path,
+                'image_path'    => '/storage/'.$image_path,
                 'image_size'    => $image_size,
                 'image_type'    => $image_type,
             ]);
@@ -103,26 +91,24 @@ class CentreController extends Controller
 
     public function edit(Request $request)
     {
-        if(in_array($request->centre_id, $this->getAllowedCentres())){
-            if($request->principal_email){
-                $email_exist    =   User::where('user_email', $request->principal_email)->first();
-                if(!empty($email_exist)){
-                    $email_exist      =   DB::table('user_basic_information')->where('user_id', $email_exist->ID)->first();
-                }
-            }
-            else{
-                $email_exist    =   null;
-            }
+        if(in_array($request->centre_id, $this->getAllowedCentres()) || auth()->user()->is_admin){
     
-            $centre_info        =   DB::table('centres')->where('ID', $request->centre_id)->first();
+            $centre_info        =   DB::table('centres')
+                                        ->join('wpvt_users', 'centres.principal_user_id', '=', 'wpvt_users.ID')
+                                        ->where('centres.ID', $request->centre_id)
+                                        ->select('centres.*')
+                                        ->first();
+            $email_exist        =   DB::table('centres')
+                                        ->join('wpvt_users', 'centres.principal_user_id', '=', 'wpvt_users.ID')
+                                        ->where('centres.ID', $request->centre_id)
+                                        ->select('wpvt_users.*')
+                                        ->first();          
             $centre_images      =   DB::table('centre_images')->where('centre_id', $request->centre_id)->get();
-            $centre_principal   =   DB::table('centre_principals')->where('centre_id', $request->centre_id)->first();
     
             return Inertia::render('CentreManagement/Centres/Edit', [
-                'email_exist'=>$email_exist,
                 'centre_info' => $centre_info,
                 'centre_images' => $centre_images,
-                'centre_principal' => $centre_principal,
+                'email_exist' => $email_exist,
             ]);
         }
         return redirect(route('centres'))->with(['type'=>'error', 'message'=>"You are not allowed to perform that action!"]);
@@ -135,15 +121,10 @@ class CentreController extends Controller
             'centre_contact_number'     => 'required|max:50',
             'centre_email'              => 'required|max:50',
             'centre_address'            => 'required|max:100',
-            'principal_email'           => 'required|max:50',
-            'principal_contact'         => 'required|max:50',
         ]);
 
-        /* Check principal details */
-        $email_exist  =   User::where('user_email', $request->principal_email)->count();
-
-        if($email_exist < 1){
-            return redirect()->back()->with(['type'=>'error', 'message'=>'Please enter a valid principal email address !']);
+        if(!$request->principal_user_id){
+            return redirect()->back()->with(['type'=>'error', 'message'=>'Please enter a valid principal email address!']);
         }
 
         /* Check images */
@@ -170,35 +151,16 @@ class CentreController extends Controller
         }
         
         /* Update centre info */
-        DB::table('centres')->where('ID', $request->centre_id)->update([
-                    'label' => $request->centre_name,
-                    'phone' => $request->centre_contact_number,
-                    'email' => $request->centre_email,
-                    'address' => $request->centre_address,
-                    'is_active' => $request->centre_active,
-                ]);
-            
-        /* Update principal info */
-        $principal_exist    =   DB::table('centre_principals')->where('centre_id', $request->centre_id)->exists();
-
-        if($principal_exist){
-            DB::table('centre_principals')->where('centre_id', $request->centre_id)->update([
-                'first_name'        => $request->principal_first_name,
-                'last_name'         => $request->principal_last_name,
-                'email'             => $request->principal_email,
-                'contact_number'    => $request->principal_contact,
-                'updated_at'        => Carbon::now(),
+        DB::table('centres')
+            ->where('ID', $request->centre_id)
+            ->update([
+                'label' => $request->centre_name,
+                'phone' => $request->centre_contact_number,
+                'email' => $request->centre_email,
+                'address' => $request->centre_address,
+                'is_active' => $request->centre_active,
+                'principal_user_id' => $request->principal_user_id,
             ]);
-        }
-        else{
-            DB::table('centre_principals')->insert([
-                'centre_id'         => $request->centre_id,
-                'first_name'        => $request->principal_first_name,
-                'last_name'         => $request->principal_last_name,
-                'email'             => $request->principal_email,
-                'contact_number'    => $request->principal_contact,
-            ]);
-        }
 
         /* Delete selected images */
         if(!empty($request->images_to_delete)){
@@ -231,7 +193,6 @@ class CentreController extends Controller
         }
 
         DB::table('centres')->where('ID', $id)->delete();
-        DB::table('centre_principals')->where('centre_id', $id)->delete();
 
         $images  =   DB::table('centre_images')->where('centre_id', $id)->get();
         foreach($images as $key=>$image){
@@ -282,7 +243,7 @@ class CentreController extends Controller
         if($request->principal_email){
             $email_exist    =   User::where('user_email', $request->principal_email)->first();
             if(!empty($email_exist)){
-                $email_exist      =   DB::table('user_basic_information')->where('user_id', $email_exist->ID)->first();
+                $email_exist      =   User::where('ID', $email_exist->ID)->first();
             }
         }
         else{

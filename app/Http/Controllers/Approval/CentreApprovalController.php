@@ -55,29 +55,8 @@ class CentreApprovalController extends Controller
                     'email' => $request->centre_email,
                     'address' => $request->centre_address,
                     'is_active' => $request->centre_active,
+                    'principal_user_id' => $request->principal_user_id,
                 ]);
-            
-        /* Update principal info */
-        $principal_exist    =   DB::table('centre_principals')->where('centre_id', $request->centre_id)->exists();
-
-        if($principal_exist){
-            DB::table('centre_principals')->where('centre_id', $request->centre_id)->update([
-                'first_name'        => $request->principal_first_name,
-                'last_name'         => $request->principal_last_name,
-                'email'             => $request->principal_email,
-                'contact_number'    => $request->principal_contact,
-                'updated_at'        => Carbon::now(),
-            ]);
-        }
-        else{
-            DB::table('centre_principals')->insert([
-                'centre_id'         => $request->centre_id,
-                'first_name'        => $request->principal_first_name,
-                'last_name'         => $request->principal_last_name,
-                'email'             => $request->principal_email,
-                'contact_number'    => $request->principal_contact,
-            ]);
-        }
 
         /* Add images */
         if(!empty($request->images_to_add)){

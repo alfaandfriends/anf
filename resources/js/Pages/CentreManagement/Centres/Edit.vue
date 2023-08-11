@@ -36,8 +36,7 @@
                                         <div class="mb-4">
                                             <label for="centre_name" class="block text-sm text-gray-700 font-bold"> Centre Name <span class="text-red-500">*</span> </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-500 text-sm"> ANFC </span>
-                                                <input type="text" name="centre_name" id="centre_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm" :class="$page.props.errors.centre_name ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_name" autocomplete="off"/>
+                                                <input type="text" name="centre_name" id="centre_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_name ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_name" autocomplete="off"/>
                                             </div>
                                         </div>
                                     </div>
@@ -77,32 +76,30 @@
                                         <div class="mb-4">
                                             <div class="flex justify-between">
                                                 <label for="about" class="block text-sm text-gray-700 font-bold"> Email <span class="text-red-500">*</span></label>
-                                                <label for="about" class="font-medium text-sm" v-if="form.principal_email" :class="email_exist ? 'text-green-700' : 'text-red-700'"> {{ email_exist ? 'Email found!' : 'Email not found!'}} </label>
+                                                <label for="" class="font-medium text-sm text-indigo-600" v-if="search.email && checking_email"> Checking Email...</label>
+                                                <label for="about" class="font-medium text-sm" v-if="search.email && !checking_email" :class="email_exist ? 'text-green-700' : 'text-red-700'"> {{ email_exist ? 'Email found!' : 'Email not found!'}} </label>
                                             </div>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="email" v-debounce="findUser" name="company-website" id="company-website" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" :class="[($page.props.errors.principal_email ? 'border-red-300' : 'border-gray-300'), ((email_exist == null && form.principal_email) ? 'border-red-300' : 'border-gray-300'), ((email_exist != null && form.principal_email) ? 'border-green-500' : 'border-gray-300')]" v-model="form.principal_email" autocomplete="none"/>
+                                                <input type="email" 
+                                                    v-debounce:1s="findUser" 
+                                                    @keyup="checkEmail" 
+                                                    class="focus:ring-0 focus:border-gray-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" 
+                                                    :class="[($page.props.errors.principal_user_email ? 'border-red-300' : 'border-gray-300'), ((search.email && !email_exist && !checking_email) ? 'border-red-300' : 'border-gray-300'), ((search.email && email_exist) ? 'border-green-400' : 'border-gray-300')]" 
+                                                    v-model="search.email" autocomplete="none"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="mb-4">
-                                            <label for="principal_first_name" class="block text-sm text-gray-700 font-bold"> First Name <span class="text-red-500">*</span> </label>
+                                            <label for="full_name" class="block text-sm text-gray-700 font-bold"> Full Name <span class="text-red-500">*</span> </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="principal_first_name" id="principal_first_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? form.principal_first_name = (centre_principal ? centre_principal.first_name : email_exist.user_first_name) : ''" autocomplete="off"/>
+                                                <input type="text" name="full_name" id="full_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.display_name : ''" autocomplete="none"/>
                                             </div>
                                         </div>
-                                        <div class="mb-4">
-                                            <label for="pricipal_last_name" class="block text-sm text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="pricipal_last_name" id="pricipal_last_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? form.principal_last_name = (centre_principal ? centre_principal.last_name : email_exist.user_last_name) : ''" autocomplete="off"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                         <div class="mb-4">
                                             <label for="principal_contact" class="block text-sm text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="principal_contact" id="principal_contact" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" :class="$page.props.errors.principal_contact ? 'border-red-300' : 'border-gray-300'" v-model="form.principal_contact" autocomplete="off"/>
+                                                <input type="text" name="principal_contact" id="principal_contact" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.user_contact : ''" autocomplete="none"/>
                                             </div>
                                         </div>
                                     </div>
@@ -243,36 +240,32 @@ export default {
     components: {
         Link, Toggle, Cropper
     },
-    props:{
-        centre_info: Object,
-        centre_images: Object,
-        centre_principal: Object,
-    },
     data() {
         return {
             data:  {
                 type: Object,
                 default: () => ({}),
             },
+            checking_email: false,
             show_front_upload: true,
             show_inside_upload: true,
             show_image: false,
             image: '',
-            email_exist: [],
+            email_exist: this.$page.props.email_exist ? this.$page.props.email_exist : '',
             form: {
-                centre_id: this.centre_info.ID,
-                centre_name: this.centre_info ? this.centre_info.label.replace('ANFC ', '').replace('ANF ', '') : '',
-                centre_contact_number: this.centre_info ? this.centre_info.phone : '',
-                centre_email: this.centre_info ? this.centre_info.email : '',
-                centre_address: this.centre_info ? this.centre_info.address : '',
-                centre_active: this.centre_info.is_active,
-                principal_first_name: this.centre_principal ? this.centre_principal.principal_first_name : '',
-                principal_last_name: this.centre_principal ? this.centre_principal.principal_last_name : '',
-                principal_email: this.centre_principal ? this.centre_principal.email : '',
-                principal_contact: this.centre_principal ? this.centre_principal.contact_number : '',
-                image_list: this.centre_images ? this.centre_images : [],
+                centre_id: this.$page.props.centre_info.ID,
+                centre_name: this.$page.props.centre_info ? this.$page.props.centre_info.label.replace('ANFC ', '').replace('ANF ', '') : '',
+                centre_contact_number: this.$page.props.centre_info ? this.$page.props.centre_info.phone : '',
+                centre_email: this.$page.props.centre_info ? this.$page.props.centre_info.email : '',
+                centre_address: this.$page.props.centre_info ? this.$page.props.centre_info.address : '',
+                centre_active: this.$page.props.centre_info.is_active,
+                principal_user_id: this.$page.props.centre_info ? this.$page.props.centre_info.principal_user_id : '',
+                image_list: this.$page.props.centre_images ? this.$page.props.centre_images : [],
                 images_to_delete: []
             },
+            search: {
+                email: this.$page.props.email_exist ? this.$page.props.email_exist.user_email : '',
+            }
         }
     },
     mounted(){
@@ -467,20 +460,23 @@ export default {
             blob.name = fileName;
             return blob;
         },
-        findUser(query){
-            debounce(val => console.log('normal format', val), '400ms')(10)
-            if(query){
-                this.searching_students = true
-                axios.get(route('centres.find_user'), {
-                    params: {
-                        'principal_email': query
-                    }
-                })
-                .then((res) => {
-                    this.email_exist = res.data
-                });
-            }
+        findUser(){
+            axios.get(route('centres.find_user'), {
+                params: {
+                    'principal_email': this.search.email
+                }
+            })
+            .then((res) => {
+                this.email_exist = res.data
+                this.form.principal_user_id = res.data.ID
+                this.checking_email = false
+            });
         },
+        checkEmail(){
+            this.checking_email = true
+            this.email_exist = ''
+            this.form.principal_user_id = ''
+        }
     },
 }
 </script>

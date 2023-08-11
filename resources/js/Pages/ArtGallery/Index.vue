@@ -171,23 +171,6 @@ export default {
                 }
                 this.open_modal         = true
             })
-            // const image = new Image()
-            // var image_exist = true
-            // image.src = window.location.origin+'/storage/art_gallery/'+artwork_file_location;
-            // image.onload = () => {
-            //     image_exist = true
-            // };
-            // image.onerror = () => {
-            //     image_exist = false
-            // };
-            // console.log(image.src)
-            // console.log(image_exist)
-            // if(image_exist){
-            //     
-            // }
-            // else{
-            //     this.artwork.file_location = window.location.origin+'/images/no_image.jpg'
-            // }
         },
         deleteArtwork(artwork_id){
             this.confirmationRoute = 'art_gallery.destroy'

@@ -139,10 +139,10 @@ class DiagnosticTestController extends Controller
             return $value->ID == request('centre_id');
         });
 
-        $query  =   DB::table('wpvt_10_wlsm_student_records')
-                        ->rightJoin('diagnostic_test_result', 'diagnostic_test_result.child_id', '=', 'wpvt_10_wlsm_student_records.user_id')
+        $query  =   DB::table('children')
+                        ->rightJoin('diagnostic_test_result', 'diagnostic_test_result.child_id', '=', 'children.id')
                         ->leftJoin('diagnostic_test_ages', 'diagnostic_test_result.child_age', '=', 'diagnostic_test_ages.id')
-                        ->leftJoin('wpvt_10_wlsm_schools', 'diagnostic_test_result.centre_id', '=', 'wpvt_10_wlsm_schools.ID');
+                        ->leftJoin('centres', 'diagnostic_test_result.centre_id', '=', 'centres.ID');
 
         if($request->search){
             $query->where('child_name', 'LIKE', '%'.$request->search.'%');
@@ -155,7 +155,7 @@ class DiagnosticTestController extends Controller
         $query->select(['diagnostic_test_result.id', 
                         'diagnostic_test_result.child_id', 
                         'diagnostic_test_result.centre_id', 
-                        'wpvt_10_wlsm_schools.label as centre_name', 
+                        'centres.label as centre_name', 
                         'diagnostic_test_result.child_name', 
                         'diagnostic_test_ages.age as child_age', 
                         'diagnostic_test_result.child_school', 
@@ -167,8 +167,8 @@ class DiagnosticTestController extends Controller
                         'diagnostic_test_result.admitted', 
                         'diagnostic_test_result.notes', 
                         'diagnostic_test_result.eligible_level', 
-                        'wpvt_10_wlsm_student_records.name as student_name', 
-                        'wpvt_10_wlsm_student_records.dob as student_dob'])->get();
+                        'children.name as student_name', 
+                        'children.date_of_birth as student_dob'])->get();
 
         return Inertia::render('DiagnosticTests/SavedResults/Index', [
             'filter'        => request()->all('search', 'centre_id'),

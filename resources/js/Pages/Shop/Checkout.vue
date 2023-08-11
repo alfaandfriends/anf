@@ -180,7 +180,6 @@ export default {
             if(this.activePayment.cc){
                 loadScript({ "client-id": "test" })
                     .then((paypal) => {
-                        console.log(paypal)
                         paypal
                             .Buttons({
                                 style: {
@@ -219,16 +218,8 @@ export default {
                                 }
                             })
                             .then(function (response) {
-                                console.log(response.data.url)
                                 window.location.href = response.data.url+'?auto_submit=true'
                             })
-                            .catch(function (error) {
-                                // handle error
-                                console.log(error);
-                            })
-                            .then(function () {
-                                // always executed
-                            });
             }
         }
     }

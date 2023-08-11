@@ -17,7 +17,7 @@ class CentreHelper {
     public static function getCentreInfo($centre_id)
     {
         $centre_info                =   collect(DB::table('centres')
-                                            ->join('centre_principals', 'centres.id', '=', 'centre_principals.centre_id')
+                                            ->join('wpvt_users', 'centres.principal_user_id', '=', 'wpvt_users.ID')
                                             ->join('centre_images', 'centres.id', '=', 'centre_images.centre_id')
                                             ->where('centres.id', $centre_id)
                                             ->select([  'centres.ID as centre_id', 
@@ -26,10 +26,9 @@ class CentreHelper {
                                                         'centres.email as centre_email', 
                                                         'centres.address as centre_address', 
                                                         'centres.is_active as centre_active', 
-                                                        'centre_principals.first_name as principal_firstname', 
-                                                        'centre_principals.last_name as principal_lastname', 
-                                                        'centre_principals.email as principal_email', 
-                                                        'centre_principals.contact_number as principal_contact'])
+                                                        'wpvt_users.display_name as principal_fullname', 
+                                                        'wpvt_users.user_email as principal_email', 
+                                                        'wpvt_users.user_contact as principal_contact'])
                                             ->first())
                                         ->toArray();
 

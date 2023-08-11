@@ -48,7 +48,6 @@ const form = useForm({
 });
 
 watch(() => props.item, (newValue) => {
-    console.log(newValue);
     form.name = newValue.name;
     form.description = newValue.description;
     form.category = newValue.product_category_id;

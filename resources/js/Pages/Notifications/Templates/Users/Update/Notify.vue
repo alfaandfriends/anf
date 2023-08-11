@@ -44,7 +44,7 @@
     </NotificationLayout>
 </template>
 <script>
-    export default{
+    export default {
         props:{
             request_data: Object,
         },
@@ -56,7 +56,6 @@
         mounted(){
             axios.get(route('users.get_info', this.request_data.user_id))
             .then((res) => {
-                console.log(res)
                 this.user_info = res.data
             });
         },

@@ -59,8 +59,7 @@ class UserController extends Controller
         $request->validate([
             'email' => 'required',
             'username' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'full_name' => 'required',
             'country' => 'required',
             'calling_code' => 'required',
             'contact_number' => 'required',
@@ -74,41 +73,30 @@ class UserController extends Controller
         
         $random_password        =   Str::random(20);
         $hashed_random_password =   Hash::make($random_password);
-        $first_name             =   $request->first_name;
-        $last_name              =   $request->last_name;
-        $address                =   $request->address;
 
         try{
             DB::beginTransaction();
-            $new_user_id    =   DB::table('wpvt_users')->insertGetId([
+            $new_user_id    =   User::insertGetId([
                                     'user_login'            => $request->username,
                                     'user_pass'             => $hashed_random_password,
                                     'user_nicename'         => $request->username,
                                     'user_email'            => $request->email,
+                                    'user_address'          => $request->address,
+                                    'user_country'          => $request->country,
+                                    'user_country_code'     => $request->country_code,
+                                    'user_contact'          => $request->contact_number,
+                                    'user_state'            => $request->state,
+                                    'user_calling_code'     => $request->calling_code,
                                     'user_url'              => '',
                                     'user_registered'       => now(),
                                     'user_activation_key'   => '',
                                     'user_status'           => 0,
-                                    'display_name'          => $first_name.' '.$last_name,
+                                    'display_name'          => $request->full_name,
                                     'spam'                  => 0,
                                     'deleted'               => 0,
                                     'remember_token'        => '',
                                 ]);   
 
-            if($new_user_id){ 
-                DB::table('user_basic_information')->insert([
-                    'user_id'               => $new_user_id,
-                    'user_first_name'       => $first_name,
-                    'user_last_name'        => $last_name,
-                    'user_address'          => $address,
-                    'user_country'          => $request->country,
-                    'user_country_code'     => $request->country_code,
-                    'user_contact'          => $request->contact_number,
-                    'user_state'            => $request->state,
-                    'user_calling_code'     => $request->calling_code,
-                ]);
-            }
-            
             foreach($request->selected_roles as $key=>$role){
                 DB::table('user_has_roles')->insert([
                     'user_id' => $new_user_id, 
@@ -146,55 +134,30 @@ class UserController extends Controller
 
     public function edit(Request $request)
     {
-        $info = DB::table('user_basic_information')->where('user_id', $request->user_id)->first();
+        $user_info      = User::where('ID', $request->user_id)->first();
         
         $roles          =   Role::get();
         $user_roles     =   UserHasRoles::where('user_id', $request->user_id)->get('role_id')->keyBy('role_id');
+        $gender_list    =   DB::table('genders')->get();
+        $children       =   DB::table('children')->where('parent_id', $request->user_id)->get();
 
         return Inertia::render('Users/Edit', [
-            'info'          => $info,
-            'user_id'       => $request->user_id,
+            'user_info'     => $user_info,
             'roles'         => $roles,
             'user_roles'    => $user_roles,
+            'gender_list'   => $gender_list,
+            'children'      => $children,
         ]);
     }
 
-    public function manageRolesStore(Request $request)
+    public function update(Request $request)
     {
-        // $user_exist =   $this->checkUserExist($request->user_id);
-        
-        // /* If user exists */
-        // if(!$user_exist){
-        //     DB::table('user_basic_information')
-        //         ->insert([
-        //             'user_id'           => $request->user_id,
-        //             'user_first_name'   => $request->form['first_name'],
-        //             'user_last_name'    => $request->form['last_name'],
-        //             'user_calling_code' => $request->form['calling_code'],
-        //             'user_contact'      => $request->form['contact_number'],
-        //             'user_address'      => $request->form['address'],
-        //             'user_country'      => $request->form['country'],
-        //             'user_state'        => $request->form['country_state'],
-        //             'user_country_code' => $request->form['country_code'],
-        //         ]);
-        // }
-        // /* If user not exists */
-        // else{
-        //     DB::table('user_basic_information')
-        //     ->where('user_id', $request->user_id)
-        //     ->update([
-        //         'user_first_name'   => $request->form['first_name'],
-        //         'user_last_name'    => $request->form['last_name'],
-        //         'user_calling_code' => $request->form['calling_code'],
-        //         'user_contact'      => $request->form['contact_number'],
-        //         'user_address'      => $request->form['address'],
-        //         'user_country'      => $request->form['country'],
-        //         'user_state'        => $request->form['country_state'],
-        //         'user_country_code' => $request->form['country_code'],
-        //         'updated_at'        => Carbon::now(),
-        //     ]);
-        // }
-
+        if(!$request->form['valid']['email']){
+            return back()->with(['type'=>'error', 'message'=>'Email is invalid or has been used!']);
+        }
+        if(!$request->form['valid']['username']){
+            return back()->with(['type'=>'error', 'message'=>'Username has been taken!']);
+        }
         $user                           =   User::find($request->user_id);
 
         $admin_role                     =   array(1, 2);
@@ -227,6 +190,19 @@ class UserController extends Controller
             $data  =   array('approval_data' => $request->all());
             NotificationHelper::sendApprovalNotifications($this->update_user_config, $data);
         }
+        
+        User::where('ID', $request->user_id)->update([
+            'user_login'            => $request['form']['username'],
+            'user_nicename'         => $request['form']['username'],
+            'user_email'            => $request['form']['email'],
+            'user_address'          => $request['form']['address'],
+            'user_country'          => $request['form']['country'],
+            'user_country_code'     => $request['form']['country_code'],
+            'user_contact'          => $request['form']['contact_number'],
+            'user_state'            => $request['form']['country_state'],
+            'user_calling_code'     => $request['form']['calling_code'],
+            'display_name'          => $request['form']['full_name'],
+        ]);   
 
         return redirect(route('users'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
 
@@ -234,7 +210,6 @@ class UserController extends Controller
 
     public function destroy($user_id){
         User::where('ID', $user_id)->delete();
-        DB::table('user_basic_information')->where('user_id', $user_id)->delete();
         DB::table('user_has_roles')->where('user_id', $user_id)->delete();
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'User deleted successfully !']);

@@ -479,15 +479,6 @@ export default {
                     const { include_material_fee, material_fee, programme_fee } = feeObject.fee_info;
                     this.total_amount += include_material_fee ? programme_fee + material_fee : programme_fee;
                 }
-                // for (const feeObject of this.form.fee) {
-                //     if(feeObject.fee_info.include_material_fee){
-                //         this.total_amount += feeObject.fee_info.material_fee + feeObject.fee_info.programme_fee;
-                //     }
-                //     else{
-                //         this.total_amount += feeObject.fee_info.programme_fee;
-                //     }
-                // }
-                console.log(this.total_amount)
             },
             deep: true
         }

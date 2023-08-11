@@ -36,12 +36,9 @@
       },
     },
     methods: {
-      handleClick(item) {
-        console.log('Clicked:', item.title);
-      },
         toggleSubmenu(index) {
-      this.menuItems[index].expanded = !this.menuItems[index].expanded;
-    }
+            this.menuItems[index].expanded = !this.menuItems[index].expanded;
+        }
     },
   };
   </script>

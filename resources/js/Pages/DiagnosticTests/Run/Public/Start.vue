@@ -210,7 +210,7 @@ import { VueDraggableNext  } from 'vue-draggable-next'
 import Chart from 'chart.js/auto'
 import axios from 'axios'
 
-export default{
+export default {
     components: {
         Head, Link, draggable: VueDraggableNext
     },
@@ -509,7 +509,6 @@ export default{
                 const category = this.dt_list.find(c => c.id === q.question_id);
                 return { ...q, category_id: category ? category.category_id : null };
             });
-            console.log(combined)
 
             const correctAnswers    = combined.filter(answer => answer.correct);
             const splittedAnswers   = correctAnswers.reduce((acc, item) => {

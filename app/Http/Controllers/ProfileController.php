@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Corcel\Model\User;
 use Corcel\Services\PasswordService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -14,18 +15,17 @@ class ProfileController extends Controller
 {
     public function create()
     {
-        $info = DB::table('user_basic_information')->where('user_id', auth()->user()->ID)->first();
+        $user_info = User::where('ID', auth()->user()->ID)->first();
         
         return Inertia::render('Profile/Create', [
-            'info' => $info
+            'user_info' => $user_info
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'first_name'        => 'required',
-            'last_name'         => 'required',
+            'full_name'         => 'required',
             'country'           => 'required',
             'calling_code'      => 'required',
             'contact_number'    => 'required',
@@ -33,57 +33,27 @@ class ProfileController extends Controller
             'address'           => 'required',
         ]);
 
-        $user_info    =   DB::table('user_basic_information')->where('user_id', auth()->user()->ID)->first();
+        $user_info    =   User::where('ID', auth()->user()->ID)->first();
 
-        if(empty($user_info)){
-            $path   = Storage::putFile('profile_photo', $request->file('profile_photo'));
-            DB::table('user_basic_information')
-                ->insert([
-                    'user_id'           => auth()->user()->ID,
-                    'user_first_name'   => $request->first_name,
-                    'user_last_name'    => $request->last_name,
-                    'user_calling_code' => $request->calling_code,
-                    'user_contact'      => $request->contact_number,
-                    'user_address'      => $request->address,
-                    'user_country'      => $request->country,
-                    'user_state'        => $request->country_state,
-                    'user_country_code' => $request->country_code,
-                    'user_photo'        => $path,
-                ]);
-        }
-
-        if(!empty($user_info) && $request->file('profile_photo')){
-            if($user_info->user_photo){
-                Storage::delete($user_info->user_photo);
-            }
+        if($request->file('profile_photo')){
+            Storage::delete($user_info->user_photo);
             $path = Storage::putFile('profile_photo', $request->file('profile_photo'));
-            DB::table('user_basic_information')
-                ->where('user_id', auth()->user()->ID)
+            User::where('ID', auth()->user()->ID)
                 ->update([
                     'user_photo'        => $path,
-                    'updated_at'        => Carbon::now(),
                 ]);
         }
         
-        DB::table('wpvt_users')
-            ->where('ID', auth()->user()->ID)
+        User::where('ID', auth()->user()->ID)
             ->update([
-                'display_name' => $request->first_name.' '.$request->last_name,
-                'profile_updated' => true,
-            ]);
-
-        DB::table('user_basic_information')
-            ->where('user_id', auth()->user()->ID)
-            ->update([
-                'user_first_name'   => $request->first_name,
-                'user_last_name'    => $request->last_name,
+                'display_name'      => $request->full_name,
                 'user_calling_code' => $request->calling_code,
                 'user_contact'      => $request->contact_number,
                 'user_address'      => $request->address,
                 'user_country'      => $request->country,
                 'user_state'        => $request->country_state,
                 'user_country_code' => $request->country_code,
-                'updated_at'        => Carbon::now(),
+                'profile_updated'   => true,
             ]);
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'Profile has been saved !']);

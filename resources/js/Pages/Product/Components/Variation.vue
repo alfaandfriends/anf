@@ -170,7 +170,6 @@ onMounted(() => {
         });
     }
     emit('update:variation', variations.value)
-    console.log(variations.value);
 });
 </script>
 

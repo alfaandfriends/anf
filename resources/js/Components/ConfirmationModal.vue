@@ -30,14 +30,16 @@
               </div>
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed" :class="confirmationClass" :disabled="processing" @click="submit">
+                <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed" :class="confirmationClass" :disabled="processing" @click="$emit('close')">
+                    Cancel
+                </button>
+                <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-offset-2 focus:ring-0 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed" :disabled="processing" @click="submit">
                     <svg v-if="processing == true" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     {{ processing == false ? confirmationButton : 'Processing'}}
                 </button>
-              <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-offset-2 focus:ring-0 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed" :disabled="processing" @click="$emit('close')">Cancel</button>
             </div>
           </div>
         </TransitionChild>
@@ -72,7 +74,7 @@ export default {
         processing: false
       }
     },
-    created(){
+    updated(){
       if(this.confirmationAlert == 'info'){
         this.confirmationClass = 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
       }
@@ -88,6 +90,7 @@ export default {
             if(this.confirmationMethod == 'delete'){
                 this.$inertia.delete(this.route(this.confirmationRoute, this.confirmationData), {
                     preserveScroll: true,
+                    preserveState: false,
                     onStart: () => this.processing = true,
                     onSuccess: ()  =>  {
                         this.$emit('close'),
@@ -98,22 +101,9 @@ export default {
             if(this.confirmationMethod == 'post'){
                 this.$inertia.post(this.route(this.confirmationRoute), {data: this.confirmationData},{
                     preserveScroll: true,
+                    preserveState: false,
                     onStart: () => this.processing = true,
                     onSuccess: ()  =>  {
-                        this.$emit('close'),
-                        this.processing = false
-                    },
-                })
-            }
-            if(this.confirmationMethod == 'patch'){
-                this.$inertia.patch(this.route(this.confirmationRoute, this.confirmationData), {
-                    preserveScroll: true,
-                    onStart: () => this.processing = true,
-                    onSuccess: ()  =>  {
-                        this.$emit('close'),
-                        this.processing = false
-                    },
-                    onFinished: ()  =>  {
                         this.$emit('close'),
                         this.processing = false
                     },

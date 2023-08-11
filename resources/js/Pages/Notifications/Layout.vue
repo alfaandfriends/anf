@@ -120,9 +120,6 @@
         UserAddIcon,
         XIcon,
         },
-        created(){
-            console.log(route().current())
-        },
         setup() {
             const open = ref(false)
         
@@ -168,10 +165,6 @@
                     axios.get(route('show_more_notifications'), { params: { data_count: this.current_data_count += 10}})
                     .then((res) => {
                         this.$page.props.notifications = res.data
-                    })
-                    .finally(()=>{
-                        // this.current_data_count += 10
-                        console.log(this.current_data_count)
                     })
                 }
             }

@@ -43,10 +43,10 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/profile/security/store', [ProfileController::class, 'storeSecurity'])->name('profile.security.store')->middleware('permission:profile_access');
 
         /* Children */
-        Route::get('/children', [ChildrenController::class, 'create'])->name('children')->middleware('permission:children_view_access');
         Route::post('/children/store', [ChildrenController::class, 'store'])->name('children.store')->middleware('permission:children_create_access');
         Route::get('/children/edit', [ChildrenController::class, 'edit'])->name('children.edit')->middleware('permission:children_edit_access');
         Route::post('/children/update', [ChildrenController::class, 'update'])->name('children.update')->middleware('permission:children_edit_access');
+        Route::delete('/children/delete/{id}', [ChildrenController::class, 'destroy'])->name('children.destroy')->middleware('permission:children_delete_access');
 
         /* Control Panel */
         Route::prefix('control-panel')->group(function () {
@@ -55,7 +55,7 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/users/create', [UserController::class, 'create'])->name('users.create')->middleware('permission:cp_users_create_access');
             Route::post('/users/store', [UserController::class, 'store'])->name('users.store')->middleware('permission:cp_users_create_access');
             Route::get('/users/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('permission:cp_users_edit_access');
-            Route::post('/users/manage-roles/store', [UserController::class, 'manageRolesStore'])->name('users.manage_roles.store')->middleware('permission:cp_users_edit_access');
+            Route::post('/users/update', [UserController::class, 'update'])->name('users.update')->middleware('permission:cp_users_edit_access');
             Route::post('/users/reset-user-password', [UserController::class, 'resetUserPassword'])->name('users.reset_user_password')->middleware('permission:cp_users_edit_access');
             Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:cp_users_delete_access');
             Route::post('/users/completed-tour', [UserController::class, 'completedTour'])->name('users.completed_tour');

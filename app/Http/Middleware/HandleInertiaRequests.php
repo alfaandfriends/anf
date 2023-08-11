@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use App\Models\Menu;
@@ -123,7 +124,7 @@ class HandleInertiaRequests extends Middleware
 
     public function userProfilePicture()
     {
-        $profile_picture    =   DB::table('user_basic_information')->where('user_id', Auth::id())->pluck('user_photo')->first();
+        $profile_picture    =   User::where('ID', Auth::id())->pluck('user_photo')->first();
 
         return $profile_picture;
     }
@@ -131,14 +132,14 @@ class HandleInertiaRequests extends Middleware
     public function userAllowedCentres()
     {
         if(auth()->user()->can_view_all_centres){
-            $allowed_centres    =   DB::table('wpvt_10_wlsm_schools')->orderBy('id')->get(['wpvt_10_wlsm_schools.ID', 'wpvt_10_wlsm_schools.label']);
+            $allowed_centres    =   DB::table('centres')->orderBy('id')->get(['centres.ID', 'centres.label']);
         }
         else{
             $allowed_centres    =   DB::table('user_has_centres')
-                ->join('wpvt_10_wlsm_schools', 'user_has_centres.centre_id', '=', 'wpvt_10_wlsm_schools.ID')
+                ->join('centres', 'user_has_centres.centre_id', '=', 'centres.ID')
                 ->where('user_id', Auth::id())->orderBy('id')
                 ->orderBy('id')
-                ->get(['wpvt_10_wlsm_schools.ID', 'wpvt_10_wlsm_schools.label']);
+                ->get(['centres.ID', 'centres.label']);
         }
 
         return $allowed_centres;

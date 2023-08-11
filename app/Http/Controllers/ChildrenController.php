@@ -31,13 +31,13 @@ class ChildrenController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'             => 'required',
-            'gender'          => 'required',
-            'dob'            => 'required',
+            'name'          => 'required',
+            'gender'        => 'required',
+            'dob'           => 'required',
         ]);
 
         DB::table('children')->insert([
-            'parent_id'     => auth()->id(),
+            'parent_id'     => $request->parent_id,
             'name'          => $request->name,
             'gender_id'        => $request->gender,
             'date_of_birth' => Carbon::parse($request->dob)->format('Y-m-d'),
@@ -73,11 +73,13 @@ class ChildrenController extends Controller
     public function destroy($id)
     {
         DB::table('children')->where('id', $id)->delete();
+
+        return back()->with(['type'=>'success', 'message'=>'Child deleted successfully !']);
     }
 
     public function findChildren(Request $request){
         $children   =   DB::table('children')
-                            ->leftJoin('user_basic_information', 'children.parent_id', '=', 'user_basic_information.user_id')
+                            ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
                             ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
                             ->whereNotExists(function ($query) {
                                 $query->select(DB::raw(1))
@@ -85,9 +87,6 @@ class ChildrenController extends Controller
                                       ->whereColumn('students.children_id', 'children.id');
                             })
                             ->select(['children.id', 'children.name'])->get();
-                            // ->select(['children.id', 
-                            //             DB::Raw("CONCAT(children.name, ' - ( ', user_basic_information.user_first_name, ' ', user_basic_information.user_last_name, ' )') AS name")
-                            //         ])->get();
 
         return $children;
     }

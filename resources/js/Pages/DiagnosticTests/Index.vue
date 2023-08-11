@@ -126,7 +126,6 @@ export default {
     },
     methods: {
         handleClick(event){
-            console.log(event)
             event.preventDefault()
         },
         viewDiagnosticTest(dt_id){

@@ -41,17 +41,11 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="first_name" class="block text-sm text-gray-700 font-bold"> First Name <span class="text-red-500">*</span></label>
+                                        <label for="full_name" class="block text-sm text-gray-700 font-bold"> Full Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="first_name" id="first_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.first_name ? 'border-red-300' : 'border-gray-300'" v-model="form.first_name" autocomplete="none"/>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="last_name" class="block text-sm text-gray-700 font-bold"> Last Name <span class="text-red-500">*</span> </label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="last_name" id="last_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.last_name ? 'border-red-300' : 'border-gray-300'" v-model="form.last_name" autocomplete="none"/>
+                                            <input type="text" name="full_name" id="full_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.full_name ? 'border-red-300' : 'border-gray-300'" v-model="form.full_name" autocomplete="none"/>
                                         </div>
                                     </div>
                                 </div>
@@ -246,9 +240,9 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <label for="first_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
+                                        <label for="child_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="first_name" id="first_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="child_form.name" autocomplete="none"/>
+                                            <input type="text" name="child_name" id="child_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.child_name ? 'border-red-300' : 'border-gray-300'" v-model="child_form.name" autocomplete="none"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
@@ -372,8 +366,7 @@ export default {
             form: {
                 email: '',
                 username: '',
-                first_name: '',
-                last_name: '',
+                full_name: '',
                 country: '',
                 country_code: '',
                 calling_code: '+60',
@@ -469,7 +462,6 @@ export default {
                     "iso2": country_code, 
                 }
             }).then(response => {
-                console.log(response)
                 response.data.data.states.forEach(function(state) {
                     state_list.push(state.name)
                 });

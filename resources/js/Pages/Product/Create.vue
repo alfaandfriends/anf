@@ -120,7 +120,6 @@ const submitProductCategoryForm = () => {
     //     },
     // });
     axios.post(route('api.product.categories.store'), productCategoryForm).then(response => {
-        console.log(response);
         if (response.status == 200) {
             addCategory.value = false;
         }
