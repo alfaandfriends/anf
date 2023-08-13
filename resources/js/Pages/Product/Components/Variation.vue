@@ -51,8 +51,6 @@ const addVariation = () => {
     variation1.value.options.forEach(option => {
         option.rows[0].name = variation2.value.options[0];
     });
-
-    emit('update:variation', variation1.value);
 };
 
 const removeVariation1 = () => {
@@ -95,7 +93,6 @@ const addVariationOption1 = () => {
             ]
         }
     );
-    emit('update:variation', variation1.value);
 };
 
 const addVariationOption2 = () => {
@@ -108,19 +105,17 @@ const addVariationOption2 = () => {
         option.rows.push({ name: '', price: '',  stock: '',  sku: '' })
         option.rows[variation2.value.options.length - 1].name = variation2.value.options[variation2.value.options.length - 1];
     });
-    emit('update:variation', variation1.value);
 };
 
 const removeVariationOption = (variationIndex, index) => {
     variation1.value.options.splice(index, 1);
-    emit('update:variation', variation1.value);
 };
 const removeVariationOption2 = (variationIndex, index) => {
     variation2.value.options.splice(index, 1);
-    emit('update:variation', variation1.value);
 };
 
 const handleFileChange = (file, index) => {
+    console.log(file);
     if (file) {
         const reader = new FileReader();
         reader.onload = () => {
@@ -138,19 +133,19 @@ const updatePreviewUrl = (option, value, file) => {
 }
 
 watch(variation1.value, (newVal, oldVal) => {
-    console.log('variation 1 updated:', newVal);
-});
-
-watch(variation2.value, (newVal, oldVal) => {
-    console.log('variation 2 updated:', newVal);
+    emit('update:variation', newVal);
+    console.log(newVal);
 });
 
 onMounted(() => {
     if(props.productVariations.length != 0){
         const productVariations = props.productVariations;
+        variation1.value.name = productVariations[0].variation_1;
+        variation1.value.name2 = productVariations[0].variation_2;
+        variation2.value.name = productVariations[0].variation_2;
         variation1.value.options.splice(0, 1);
         variation2.value.options.splice(0, 1);
-        productVariations.forEach((item) => {
+        productVariations.forEach((item, index) => {
             variation1.value.options.push(
                 {
                     name: item.name,
@@ -163,13 +158,14 @@ onMounted(() => {
                 variation2.value.show = true;
                 variation2.value.options.push(
                     {
-                        name: item.row[0].name.name,
+                        name: item.row[index].name,
                     }
                 );
             }
         });
-        emit('update:variation', variation1.value);
     }
+    console.log(variation1.value);
+    console.log(variation2.value);
 });
 
 </script>
@@ -187,7 +183,6 @@ onMounted(() => {
                                 :name="'variation_'+1"
                                 :id="'variation_'+1"
                                 v-model="variation1.name"
-                                @input="emit('update:variation', variation1)"
                                 class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" />
                         </div>
                     </div>
@@ -212,8 +207,7 @@ onMounted(() => {
                                 type="text"
                                 :name="'variation_'+2"
                                 :id="'variation_'+2"
-                                v-model="variation2.name"
-                                @input="emit('update:variation', variation2)"
+                                v-model="variation1.name2"
                                 class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" />
                         </div>
                     </div>
@@ -242,7 +236,7 @@ onMounted(() => {
             <thead class="bg-gray-300">
                 <tr>
                     <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">{{ variation1.name }}</th>
-                    <th v-if="variation2.show" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">{{ variation2.name }}</th>
+                    <th v-if="variation2.show" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">{{ variation1.name2 }}</th>
                     <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Price</th>
                     <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Stock</th>
                     <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">SKU</th>
@@ -258,7 +252,7 @@ onMounted(() => {
                     </td>
                     <td v-if="variation2.show" class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col items-center p-2 m-2" v-for="(variation_2, variation_2_index) in variation_1.rows" :key="variation_2_index">
-                            <label :for="variation_2.name" class="text-sm text-gray-500 text-center"> {{ (variation_2.name.name) ? variation_2.name.name : variation_2.name }} </label>
+                            <label :for="variation_2.name" class="text-sm text-gray-500 text-center"> {{ (variation_2.name.name || variation_2.name.name == '') ? variation_2.name.name : variation_2.name }} </label>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">

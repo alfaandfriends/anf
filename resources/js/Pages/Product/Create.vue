@@ -108,9 +108,7 @@ const submit = () => {
     console.log(formUrl);
     console.log(formMethod);
     console.log(productForm);
-    productForm[formMethod](formUrl, {
-        onFinish: () => productForm.reset(),
-    });
+    productForm[formMethod](formUrl);
 };
 
 watch(productForm, (newVal, oldVal) => {

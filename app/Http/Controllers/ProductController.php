@@ -226,9 +226,11 @@ class ProductController extends Controller
                             Storage::put($path, file_get_contents($variation['image']));
                         }
                         array_push($data, [
+                            'variation_1' => $request->product_variation_items['name'],
+                            'variation_2' => $request->product_variation_items['name2'] ?? '',
                             'name' => $variation['name'],
                             'image' => '',
-                            'url' => $path,
+                            'url' => ($path) ?? json_decode($product->details)[$key]->url,
                             'row' => [],
                         ]);
                         if(count($variation['rows']) == 1) {
