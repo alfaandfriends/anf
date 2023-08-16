@@ -225,12 +225,15 @@ class ProductController extends Controller
                             $path = 'products/'.$product->id.'/' . $variation['image']->getClientOriginalName();
                             Storage::put($path, file_get_contents($variation['image']));
                         }
+                        if (isset(json_decode($product->details)[$key]->url)) {
+                            $path = json_decode($product->details)[$key]->url;
+                        }
                         array_push($data, [
                             'variation_1' => $request->product_variation_items['name'],
                             'variation_2' => $request->product_variation_items['name2'] ?? '',
                             'name' => $variation['name'],
                             'image' => '',
-                            'url' => ($path) ?? json_decode($product->details)[$key]->url,
+                            'url' => $path,
                             'row' => [],
                         ]);
                         if(count($variation['rows']) == 1) {

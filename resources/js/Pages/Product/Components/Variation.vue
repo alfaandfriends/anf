@@ -115,7 +115,6 @@ const removeVariationOption2 = (variationIndex, index) => {
 };
 
 const handleFileChange = (file, index) => {
-    console.log(file);
     if (file) {
         const reader = new FileReader();
         reader.onload = () => {
@@ -134,7 +133,6 @@ const updatePreviewUrl = (option, value, file) => {
 
 watch(variation1.value, (newVal, oldVal) => {
     emit('update:variation', newVal);
-    console.log(newVal);
 });
 
 onMounted(() => {
@@ -164,8 +162,6 @@ onMounted(() => {
             }
         });
     }
-    console.log(variation1.value);
-    console.log(variation2.value);
 });
 
 </script>

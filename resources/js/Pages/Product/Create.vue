@@ -56,6 +56,7 @@ const productTypeOptions = [
 ];
 
 const productForm = useForm({
+    _method: 'patch',
     product_name: (props.product) ? props.product.name : '',
     product_description: (props.product) ? props.product.description : '',
     product_category: (props.product) ? props.product.product_category_id : '',
@@ -76,7 +77,7 @@ const productCategoryForm = useForm({
     category_name: '',
 });
 
-const formUrl = (props.product) ? route('products.update', props.product.id): route('products.store');
+const formUrl = (props.product) ? route('products.update', props.product.id) : route('products.store');
 const formMethod = (props.product) ? 'put' : 'post';
 
 const setStep = (step) => {
@@ -105,19 +106,11 @@ const updatePreviewUrl = (name, value) => {
 }
 
 const submit = () => {
-    console.log(formUrl);
-    console.log(formMethod);
-    console.log(productForm);
-    productForm[formMethod](formUrl);
+    productForm.post(formUrl);
 };
-
-watch(productForm, (newVal, oldVal) => {
-    console.log('productForm updated:', newVal);
-});
 
 const submitProductCategoryForm = () => {
     axios.post(route('api.product.categories.store'), productCategoryForm).then(response => {
-        console.log(response);
         if (response.status == 200) {
             addCategory.value = false;
         }
