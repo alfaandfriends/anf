@@ -146,6 +146,7 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/students/update', [StudentController::class, 'update'])->name('students.update')->middleware('permission:student_edit_access');
             Route::delete('/students/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:student_delete_access');
             Route::post('/students/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class')->middleware('permission:student_view_access|student_create_access|student_edit_access');
+            Route::post('/students/set-fee-status', [StudentController::class, 'setFeeStatus'])->name('students.set_fee_status')->middleware('permission:student_view_access||student_edit_access');
 
             /* Settings */
             Route::get('/settings', [SettingController::class, 'classTypeList'])->name('settings')->middleware('permission:setting_view_access');

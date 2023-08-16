@@ -1,8 +1,7 @@
 
 <script setup>
 import Authenticated from '@/Layouts/Parent/Authenticated.vue';
-import ListBox from '@/Components/ListBox.vue';
-import SimpleModal from '@/Components/SimpleModal.vue';
+import SimpleModal from '@/Components/Parent/SimpleModal.vue';
 import BreezeButton from '@/Components/Button.vue';
 import { ref } from 'vue';
 
@@ -28,7 +27,7 @@ const images = ref([
                 <div class="p-3 mt-auto">
                     <h1 class="text-2xl">Art Gallery</h1>
                 </div>
-                <div class="hidden md:block lg:block">
+                <div class="hidden md:block lg:block" v-if="this.$page.props.current_active_child.student_id">
                     <button type="button" class="flex bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-slate-400 hover:shadow-slate-600 rounded-lg border-indigo-600 py-2 px-4 items-center justify-center w-full font-semibold text-white" @click="showUpload">
                         Upload Artwork
                     </button>
@@ -158,10 +157,13 @@ const images = ref([
                 />
                 <div @click="getArtwork" class="w-full md:w-14 md:flex md:items-center rounded-lg bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-slate-400 hover:shadow-slate-600 text-white p-2.5 cursor-pointer">
                     <div class="flex items-center space-x-4">
-                        <svg v-if="searching_artworks" class="w-5 h-5 text-gray-200 animate-spin fill-indigo-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg v-if="searching.artworks" class="inline w-5 h-5 text-gray-200 animate-spin fill-indigo-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
                             <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
                         </svg>
+                        <!-- <svg v-if="searching.artworks" class="w-4 h-4 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                        </svg> -->
                         <svg v-else xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                         </svg>
@@ -182,7 +184,7 @@ const images = ref([
                     <div class="flex space-x-4">
                         <div v-for="(image, index) in artwork" :key="index" class="relative w-52 h-52 flex flex-col justify-center">
                             <img :src="'/storage/art_gallery/'+image.filename" class="object-fill w-52 h-52 rounded-lg cursor-pointer" alt="Click to view larger image" @click="showImage(image.filename, image.activity)"/>
-                            <button @click="deleteImage(index)" class="absolute bottom-0 w-full bg-red-600 py-2 text-white">
+                            <button @click="promptDelete(image.id)" class="absolute bottom-0 w-full bg-red-600 py-2 text-white">
                                 Delete
                             </button>
                         </div>
@@ -202,33 +204,74 @@ const images = ref([
             </div>
         </div>
     </Authenticated>
-    <SimpleModal :open="show_upload" @close:modal="show_upload = false" width="md:w-2/6">
+    <SimpleModal v-if="show_upload" :open="show_upload" @close:modal="show_upload = false" class="md:w-2/6 p-4" :disable_overlay="disable_overlay">
         <form class="p-4">
-            <h1>Upload Artwork</h1>
+            <h1 class="md:font-semibold md:text-xl">Upload Artwork</h1>
             <hr class="my-4 border-gray-600">
-            <select class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm mb-4">
-                <option value="">Level 1</option>
+            <label class="font-medium text-gray-900 text-sm md:text-md">Level</label>
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.level_id ? 'border-gray-300' : 'border-red-300'" v-model="form.level_id">
+                <option value="">Please Select</option>
+                <option :value="level.id" v-for="(level, index) in list.levels" :key="index">{{ level.name }}</option>
             </select>
-            <select class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm mb-4">
-                <option value="">ArtVenture to the beach</option>
+            <label class="font-medium text-gray-900 text-sm md:text-md">Theme</label>
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.theme_id ? 'border-gray-300' : 'border-red-300'" v-model="form.theme_id">
+                <option value="">Please Select</option>
+                <option :value="theme.id" v-for="theme, index in list.themes" :key="theme.id">{{ theme.name }}</option>
             </select>
-            <select class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm mb-4">
-                <option value="">Lesson 2: Painting the Boat and Lighthouse</option>
+            <label class="font-medium text-gray-900 text-sm md:text-md">Lesson</label>
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.lesson_id ? 'border-gray-300' : 'border-red-300'" v-model="form.lesson_id">
+                <option value="">Please Select</option>
+                <option :value="lesson.id" v-for="lesson, index in list.lessons" :key="lesson.id">{{ lesson.name }}</option>
             </select>
-            <select class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm mb-4">
-                <option value="">Activity 1: Boat</option>
+            <label class="font-medium text-gray-900 text-sm md:text-md">Activity</label>
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.activity_id ? 'border-gray-300' : 'border-red-300'" v-model="form.activity_id">
+                <option value="">Please Select</option>
+                <option :value="activity.id" v-for="activity, index in list.activities" :key="activity.id">{{ activity.name }}</option>
             </select>
-            <input type="file" name="" id="" class="mb-4">
+            <label class="font-medium text-gray-900 text-sm md:text-md">File</label>
+            <div class="mb-3">
+                <input class="w-full flex-auto rounded border px-3 py-[0.32rem] text-base font-normal text-neutral-700 cursor-pointer transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
+                :class="!this.errors.artwork_file ? 'border-gray-300' : 'border-red-300'"
+                type="file" accept="image/png, image/jpeg" ref="artwork_file" @change="handleArtwork"/>
+              </div>
+            <hr class="my-5">
             <div class="flex items-center space-x-2">
-                <BreezeButton type="submit" buttonType="blue" class="px-4 py-2">Upload</BreezeButton>
-                <BreezeButton type="button" buttonType="gray" @click="show_upload = false">Cancel</BreezeButton>
+                <BreezeButton @click="upload" buttonType="info" class="px-4 py-2">
+                    <div v-if="uploading" class="flex space-x-2">
+                        <svg aria-hidden="true" class="inline w-4 h-4 text-gray-200 animate-spin fill-indigo-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                        </svg>
+                        <span>Uploading</span>
+                    </div>
+                    <span v-else>Upload</span>
+                </BreezeButton>
+                <BreezeButton type="button" buttonType="gray" @click="show_upload = false" v-if="!uploading">Cancel</BreezeButton>
             </div>
         </form>
     </SimpleModal>
-    <SimpleModal :open="image.show" @close:modal="image.show = false" width="md:w-2/6">
-        <div class="flex flex-col justify-center items-center w-full md:w-[720px] space-y-4">
+    <SimpleModal v-if="image.show" :open="image.show" @close:modal="image.show = false" class="md:w-2/6 p-4">
+        <div class="flex flex-col justify-center items-center w-full space-y-4">
             <span class="md:text-xl">{{image.activity}}</span>
             <img :src="this.image.file" class="object-scale-down rounded-lg" alt="">
+        </div>
+    </SimpleModal>
+    <SimpleModal v-if="show_confirmation" :open="show_confirmation" @close:modal="show_confirmation = false" class="md:w-3/12">
+        <div class="relative text-center p-6">
+            <button @click="show_confirmation = false" type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <svg class="text-gray-400 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+            <p class="mb-4 text-gray-500">Are you sure you want to delete this artwork?</p>
+            <div class="flex justify-center items-center space-x-4">
+                <button @click="deleteImage" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
+                    Confirm
+                </button>
+                <button @click="show_confirmation = false" class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300">
+                    Cancel
+                </button>
+            </div>
         </div>
     </SimpleModal>
 </template>
@@ -247,18 +290,21 @@ export default {
                 file: '',
                 activity: ''
             },
-            searching_artworks: false,
             init: true,
             artworks: [],
+            list: {
+                students: [],
+                levels: this.$page.props.levels,
+                themes: [],
+                lessons: [],
+                activities: []
+            },
             form: {
                 level_id: '',
                 theme_id: '',
                 lesson_id: '',
                 activity_id: '',
-                artwork: {
-                    name: '',
-                    file: ''
-                }
+                artwork_file: ''
             },
             filter: {
                 level_id: '',
@@ -268,8 +314,15 @@ export default {
                 themes: []
             },
             searching: {
-                themes: false
-            }
+                themes: false,
+                artworks: false
+            },
+            errors: {},
+            uploading: false,
+            disable_overlay: false,
+            show_confirmation: false,
+            deleting_image: false,
+            artwork_to_delete: ''
         }
     },
     watch: {
@@ -282,31 +335,70 @@ export default {
                     this.option.themes = response.data;
                     this.searching.themes = false
                 })
-            }
+            },
+            deep: true
         },
-        deep: true
+        'form.level_id': {
+            handler(){
+                if(this.form.level_id != ''){
+                    axios.get(route('art_gallery.get_themes', this.form.level_id))
+                    .then((response) => {
+                        this.list.themes = response.data
+                        this.form.theme_id  =   ''
+                        this.form.lesson_id  =   ''
+                        this.form.activity_id  =   ''
+                    })
+                }
+            },
+            immediate: true
+        },
+        'form.theme_id': {
+            handler(){
+                if(this.form.level_id != '' && this.form.theme_id != ''){
+                    axios.get(route('art_gallery.get_lessons', this.form.theme_id))
+                    .then((response) => {
+                        this.list.lessons = response.data
+                        this.form.lesson_id  =   ''
+                        this.form.activity_id  =   ''
+                    })
+                }
+            },
+            immediate: true
+        },
+        'form.lesson_id': {
+            handler(){
+                if(this.form.level_id != '' && this.form.theme_id != '' && this.form.lesson_id != ''){
+                    axios.get(route('art_gallery.get_activities', this.form.lesson_id))
+                    .then((response) => {
+                        this.list.activities = response.data
+                        this.form.activity_id  =   ''
+                    })
+                }
+            },
+            immediate: true
+        },
     },
     methods: {
         showUpload(){
-            this.form.level_id  = ''
-            this.form.theme_id  = ''
-            this.form.lesson_id  = ''
-            this.form.activity_id  = ''
-            this.form.artwork.name  = ''
-            this.form.artwork.file  = ''
+            for (let key in this.form) {
+                if (this.form.hasOwnProperty(key)) {
+                    this.form[key] = '';
+                }
+            }
+            this.errors = {}
             this.show_upload = true
         },
         getArtwork(){
             if(this.filter.level_id && this.filter.theme_id){
-                if(this.searching_artworks){
+                if(this.searching.artworks){
                     return
                 }
-                this.searching_artworks = true
+                this.searching.artworks = true
                 axios.get(route('parent.art_gallery.get_artworks', this.filter))
                 .then(response => {
                     this.init       = false
                     this.artworks   =   response.data
-                    this.searching_artworks  = false
+                    this.searching.artworks  = false
                 })
             }
         },
@@ -314,6 +406,58 @@ export default {
             this.image.file = '/storage/art_gallery/' +  filename
             this.image.activity = activity
             this.image.show = true
+        },
+        handleArtwork(){
+            this.form.artwork_file  =   this.$refs.artwork_file.files[0]
+        },
+        upload(){
+            if(this.uploading){
+                return
+            }
+            for (let key in this.form) {
+                if (this.form[key] == '') {
+                    this.errors[key] = true
+                }
+                else{
+                    this.errors[key] = false
+                }
+            }
+            const proceed = Object.values(this.form).some(value => value);
+            if (proceed) {
+                this.$inertia.post(route('parent.art_gallery.store'), this.form, {
+                    preserveState: false,
+                    preserveScroll: true,
+                    onBefore: (visit) => {
+                        this.uploading = true
+                        this.disable_overlay = true
+                    },
+                    onFinish: (visit) => {
+                        this.uploading = false
+                        this.disable_overlay = false
+                        this.show_upload = false
+                    },
+                })
+            }
+        },
+        promptDelete(artwork_id){
+            this.artwork_to_delete = artwork_id
+            this.show_confirmation = true
+        },
+        deleteImage(){
+            if(this.deleting_image){
+                return
+            }
+            this.$inertia.delete(route('parent.art_gallery.destroy', this.artwork_to_delete), {
+                preserveState: false,
+                preserveScroll: true,
+                onBefore: (visit) => {
+                    this.deleting_image = true
+                },
+                onFinish: (visit) => {
+                    this.uploading = false
+                    this.show_confirmation = false
+                },
+            })
         }
     }
 }

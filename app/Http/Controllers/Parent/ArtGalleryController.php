@@ -7,87 +7,51 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
+use Storage;
 
 class ArtGalleryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index() : Response
+    public function index()
     {
         $levels     =   $this->getLevels();
+        $themes     =   DB::table('art_themes')->where('level_id', 1)->get();
 
         return Inertia::render('Parent/ArtGallery/Index',[
-            'levels'    =>  $levels
+            'levels'    =>  $levels,
+            'themes'    =>  $themes
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $file = $request->file('artwork_file');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        DB::table('student_art_gallery')->insert([
+            'student_id'    => $request->session()->get('current_active_child.student_id'),
+            'level_id'      => $request->level_id,
+            'theme_id'      => $request->theme_id,
+            'lesson_id'     => $request->lesson_id,
+            'activity_id'   => $request->activity_id,
+            'filename'      => $filename,
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        Storage::putFileAs('art_gallery',$file, $filename);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        return redirect()->route('parent.art_gallery')->with(['type'=>'success', 'header'=>'Success', 'message'=>'Artwork uploaded successfully !']);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        $artwork_info   =   DB::table('student_art_gallery')->where('id', $id)->first();
+        $file_deleted   =   Storage::delete('art_gallery/'.$artwork_info->filename);
+        $record_deleted =   DB::table('student_art_gallery')->where('id', $id)->delete();
+
+        if($record_deleted){
+            return redirect(route('parent.art_gallery'))->with(['type'=>'success', 'header'=>'Success', 'message'=>'Artwork deleted successfully !']);
+        }
+
+        return redirect(route('parent.art_gallery'))->with(['type'=>'danger', 'header'=>'Failed', 'message'=>'An error occured, please try again !']);
     }
 
     public function getLevels()
@@ -114,7 +78,7 @@ class ArtGalleryController extends Controller
                             ->where('student_art_gallery.level_id', $request->level_id)
                             ->where('student_art_gallery.theme_id', $request->theme_id)
                             ->where('student_art_gallery.student_id', $request->session()->get('current_active_child.student_id'))
-                            ->select('art_levels.name as level', 'art_themes.name as theme', 'art_lessons.name as lesson', 'art_activities.name as activity', 'student_art_gallery.filename')
+                            ->select('student_art_gallery.id', 'art_levels.name as level', 'art_themes.name as theme', 'art_lessons.name as lesson', 'art_activities.name as activity', 'student_art_gallery.filename')
                             ->get();
         $artworks   =   collect($result)->groupBy('lesson');
         

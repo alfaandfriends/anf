@@ -248,18 +248,9 @@ class UserController extends Controller
         return redirect()->back()->with(['type'=>'success', 'message'=>"User's password has been reset successfully! New password will be sent to their email."]);
     }
 
-    public function checkUserExist($user_id)
-    {
-        $user_exist    =   DB::table('user_basic_information')
-                            ->where('user_id', $user_id)
-                            ->exists();
-
-        return $user_exist;
-    }
-
     public function getUserInfo($user_id)
     {
-        $user_info  =   DB::table('user_basic_information')->where('user_id', $user_id)->first();
+        $user_info  =   User::where('ID', $user_id)->first();
 
         return $user_info;
     }

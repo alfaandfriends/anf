@@ -1,6 +1,6 @@
 <template>
     <div class="modal-wrapper" v-if="open">
-        <div class="modal-overlay" @click="emit('close:modal')"></div>
+        <div class="modal-overlay" @click="disable_overlay ? '' : emit('close:modal')"></div>
         <div class="modal-content" :class="class">
             <slot></slot>
         </div>
@@ -11,6 +11,9 @@
 import { ref, onUnmounted, watch } from 'vue';
 
 const props = defineProps({
+    disable_overlay: {
+        type: Boolean,
+    },
     open: {
         type: Boolean,
     },
@@ -77,7 +80,6 @@ export default {
 
 .modal-content {
     background-color: #fff;
-    padding: 20px;
     border-radius: 8px;
     z-index: 9100;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);

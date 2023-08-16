@@ -323,7 +323,8 @@ export default {
     },
     methods: {
         viewInvoice(invoice_index){
-            this.invoice_data.parent_name       = this.$page.props.invoices.data[invoice_index].parent_first_name + ' ' + this.$page.props.invoices.data[invoice_index].parent_last_name
+            this.invoice_data.student_name      = this.$page.props.invoices.data[invoice_index].student_name
+            this.invoice_data.parent_name       = this.$page.props.invoices.data[invoice_index].parent_full_name
             this.invoice_data.parent_address    = this.$page.props.invoices.data[invoice_index].parent_address
             this.invoice_data.invoice_number    = this.$page.props.invoices.data[invoice_index].invoice_number
             this.invoice_data.invoice_items     = JSON.parse(this.$page.props.invoices.data[invoice_index].invoice_items)

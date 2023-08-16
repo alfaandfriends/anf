@@ -32,6 +32,7 @@ class ProgressReportController extends Controller
                         ->join('programmes', 'programme_levels.programme_id', '=' ,'programmes.id')
                         ->join('students', 'student_fees.student_id', '=' ,'students.id')
                         ->join('children', 'students.children_id', '=' ,'children.id')
+                        ->where('student_fees.status', null)
                         ->select(   'progress_reports.student_fee_id as student_fee',
                                     'progress_reports.id as progress_report_id',
                                     'programmes.name as programme_name',

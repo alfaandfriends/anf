@@ -16,6 +16,7 @@ class StudentHelper {
                             ->join('class_types', 'programme_levels.class_type_id' ,'=', 'class_types.id')
                             ->join('programmes', 'programme_levels.programme_id' ,'=', 'programmes.id')
                             ->where('students.id', $student_id)
+                            ->where('student_fees.status', null)
                             ->select(   'programmes.name as programme_name', 'programme_levels.level as programme_level', 'class_types.name as class_type',
                                         'centres.label as centre_name')
                             ->get()->collect();

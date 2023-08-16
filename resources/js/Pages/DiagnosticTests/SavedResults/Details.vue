@@ -10,7 +10,7 @@ import BreezeButton from '@/Components/Button.vue';
         <template #header></template>
         <div class="py-4 px-4">
             <div class="mx-auto">
-                <div class="align-middle inline-block min-w-full px-2">
+                <div class="align-middle inline-block min-w-full">
                     <div class="flex justify-between mb-4">
                         <div class="flex space-x-2">
                             <div class="flex relative text-gray-400 focus-within:text-gray-600">

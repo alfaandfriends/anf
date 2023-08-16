@@ -59,18 +59,18 @@ class InvoiceHelper {
                                     ]); 
                   
         if($bill_response->getStatusCode() == 200){
-            DB::table('invoices')->insert([
-                'invoice_type_id'   => self::$fee_invoice_id,
-                'student_id'        => $student_id,
-                'invoice_number'    => $invoice_number,
-                'invoice_items'     => json_encode($invoice_items->toArray()),
-                'date_issued'       => $date_admission,
-                'due_date'          => $due_date,
-                'amount'            => $totalFee,
-                'bill_id'           => $bill_response->toArray()['id'],
-            ]);
+            $invoice_id =   DB::table('invoices')->insertGetId([
+                                'invoice_type_id'   => self::$fee_invoice_id,
+                                'student_id'        => $student_id,
+                                'invoice_number'    => $invoice_number,
+                                'invoice_items'     => json_encode($invoice_items->toArray()),
+                                'date_issued'       => $date_admission,
+                                'due_date'          => $due_date,
+                                'amount'            => $totalFee,
+                                'bill_id'           => $bill_response->toArray()['id'],
+                            ]);
     
-            return true;
+            return $invoice_id;
         }
         return false;
     }

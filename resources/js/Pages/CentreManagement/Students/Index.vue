@@ -11,15 +11,18 @@ import BreezeButton from '@/Components/Button.vue';
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
                 <div class="mx-auto">
-                    <div class="align-middle inline-block min-w-full px-2">
-                        <div class="flex justify-between mb-4">
+                    <div class="align-middle inline-block min-w-full">
+                        <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
                             <div class="flex space-x-2">
-                                <div class="flex relative text-gray-400 focus-within:text-gray-600">
-                                    <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3" :style="'top:30%'"></SearchIcon>
-                                    <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
-                                            type="text" v-model="params.search" placeholder="Search">
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none">
+                                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </span>
+                                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-model="params.search">
                                 </div>
-                                <div class="flex">
+                                <!-- <div class="flex">
                                     <Multiselect 
                                         v-model="params.centre_id"
                                         valueProp="ID"
@@ -68,7 +71,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                                         }"
                                     />
-                                </div>
+                                </div> -->
                             </div>
                             <BreezeButton @click="newAdmission(params.centre_id)">New Admission</BreezeButton>
                         </div>
@@ -92,7 +95,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr class="hover:bg-gray-200" v-for="(students, index) in $page.props.students.data" :key="students.ID">
+                                    <tr class="hover:bg-gray-200" v-for="(students, index) in $page.props.students.data">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-700">{{ ++index }}</div>
                                         </td>
@@ -106,7 +109,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="text-sm font-medium text-gray-900">{{ students.parent_name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="students.status == true ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ students.status == true ? 'Active' : 'Not Active' }} </span>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="students.status == true ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ students.status == true ? 'Active' : 'Inactive' }} </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">

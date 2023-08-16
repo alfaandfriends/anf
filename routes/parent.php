@@ -22,6 +22,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/invoices/callback', [InvoiceController::class, 'callback'])->name('invoices.callback');
 
         Route::get('art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery');
+        Route::post('art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store');
+        Route::delete('art-gallery/delete/{id}', [ArtGalleryController::class, 'destroy'])->name('art_gallery.destroy');
     });
     
 

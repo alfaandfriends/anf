@@ -3,11 +3,6 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
-<style>
-.date-picker{
-    color: black;
-}
-</style>
 <template>
     <Head title="Students" />
 
@@ -21,7 +16,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="mb-5">
-                                        <h1 class="font-bold text-indigo-800">Admission Information</h1>
+                                        <h1 class="font-bold text-indigo-800">Search Information</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
@@ -90,7 +85,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <label for="centre" class="block text-sm font-bold text-gray-700"> Centre <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md.shadow-sm">
                                                 <Multiselect 
-                                                    v-model="search_form.centre_id"
+                                                    v-model="form.centre_id"
                                                     valueProp="ID"
                                                     :searchable="true"
                                                     :options="$page.props.allowed_centres"
@@ -411,13 +406,11 @@ export default {
                 class: false,
                 fee: false
             },
-            selected_class_count: 0,
             enable_container:{
                 available_classes: false,
                 show_fee: false,
             },
             search_form:{
-                centre_id: this.$page.props.centre_id ? this.$page.props.centre_id : '',
                 programme_id: '',
                 class_type: '',
                 class_level: '',
@@ -426,7 +419,7 @@ export default {
             form: {
                 date_admission: '',
                 children_id: '',
-                centre_id: this.$page.props.centre_id ? this.$page.props.centre_id : '',
+                centre_id: '',
                 fee: [],
             },
             selected_plus_class: {}
@@ -504,20 +497,20 @@ export default {
         },
         findClasses(){
             this.errors.child           =   !this.form.children_id ? true : false
-            this.errors.centre          =   !this.search_form.centre_id ? true : false
+            this.errors.centre          =   !this.form.centre_id ? true : false
             this.errors.admission_date  =   !this.form.date_admission ? true : false
             this.errors.programme       =   !this.search_form.programme_id ? true : false
             this.errors.class_type      =   !this.search_form.class_type ? true : false
             this.errors.level           =   !this.search_form.class_level ? true : false
             this.errors.class_method    =   !this.search_form.class_method ? true : false
 
-            if(this.form.children_id && this.search_form.centre_id && this.search_form.programme_id && this.search_form.class_level && this.search_form.class_type && this.search_form.class_method){
+            if(this.form.children_id && this.form.centre_id && this.search_form.programme_id && this.search_form.class_level && this.search_form.class_type && this.search_form.class_method){
                 this.searching.class = true   
                 this.enable_container.show_fee = false
                 this.list.available_classes = []
                 axios.get(route('classes.find'), {
                     'params': {
-                        'centre_id': this.search_form.centre_id,
+                        'centre_id': this.form.centre_id,
                         'programme_id':  this.search_form.programme_id,
                         'class_method':  this.search_form.class_method,
                         'class_level':  this.search_form.class_level,
@@ -539,7 +532,7 @@ export default {
                 this.searching.fee = false
                 return
             }
-            const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type);
+            const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type_id);
             if(programme_already_added){
                 alert('This programme already been added. Please remove the previous one first.')
                 this.searching.fee = false

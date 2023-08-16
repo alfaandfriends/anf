@@ -1,8 +1,8 @@
 <script setup>
-import Header from '@/Components/Header.vue'
-import Footer from '@/Components/Footer.vue'
-import Navigation from '@/Components/Navigation.vue'
-import SimpleModal from '@/Components/SimpleModal.vue';
+import Header from '@/Components/Parent/Header.vue'
+import Footer from '@/Components/Parent/Footer.vue'
+import Navigation from '@/Components/Parent/Navigation.vue'
+import SimpleModal from '@/Components/Parent/SimpleModal.vue';
 </script>
 
 <template>
@@ -23,8 +23,8 @@ import SimpleModal from '@/Components/SimpleModal.vue';
                 </div>
                 <Footer />
                 <!-- Payment Modal -->
-                <SimpleModal :open="show_modal" @close:modal="show_modal = false" width="md:w-2/6">
-                    <div class="text-center flex flex-col items-center justify-start space-y-2 md:p-8">
+                <SimpleModal :open="show_modal" @close:modal="show_modal = false" class="md:w-2/6">
+                    <div class="text-center flex flex-col items-center justify-start space-y-2 p-6">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-2/12 w-2/12 text-green-500" viewBox="0 0 512 512" fill="currentColor" v-if="$page.props.flash.type == 'success'">
                             <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
                         </svg>
@@ -33,8 +33,8 @@ import SimpleModal from '@/Components/SimpleModal.vue';
                         </svg>
                         <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">{{ $page.props.flash.header }}</h3>
                         <p class="text-gray-600 my-2">{{ $page.props.flash.message }}</p>
-                        <div class="py-6 text-center">
-                            <button @click="show_modal = false" class="rounded px-6 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2">Close</button>
+                        <div class="py-2 text-center">
+                            <button @click="show_modal = false" class="rounded px-6 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-1.5">Close</button>
                         </div>
                     </div>
                 </SimpleModal>

@@ -24,10 +24,10 @@ import BreezeButton from '@/Components/Button.vue';
                     <h3 class="mt-8 text-md font-semibold text-gray-800">To:</h3>
                 </div>
                 <div class="flex flex-row justify-between items-start space-y-0">
-                    <span class="not-italic text-gray-700 text-md">
+                    <span class="not-italic text-gray-700 text-md space-y-2">
                         <span class="font-bold">{{ invoice_data.parent_name }}</span><br>
                         <div class="w-64">
-                            <span>{{ invoice_data.parent_address }}</span>
+                            <span class="">{{ invoice_data.parent_address }}</span>
                         </div>
                     </span>
                     <div class="space-y-2">
@@ -48,7 +48,7 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                 </div>
                 <div class="mt-8 grid sm:grid-cols-2 gap-3">
-                    <h4 class="text-md font-semibold text-gray-800">Student: {{ invoice_data.student_name }}</h4>
+                    <h4 class="text-md font-semibold text-gray-800 underline">Student: {{ invoice_data.student_name }}</h4>
                 </div>
                 <!-- <div class="mt-6 sm:hidden md:hidden lg:hidden">
                     <div class="border border-gray-200 p-4 rounded-lg space-y-4">

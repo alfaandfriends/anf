@@ -31,7 +31,7 @@ const handleDelete = (id) => {
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
                 <div class="mx-auto">
-                    <div class="align-middle inline-block min-w-full px-2">
+                    <div class="align-middle inline-block min-w-full">
                         <div class="flex justify-between mb-4">
                             <div class="flex space-x-2">
                                 <!-- <div class="flex relative text-gray-400 focus-within:text-gray-600">
