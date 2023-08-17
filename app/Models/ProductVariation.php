@@ -20,4 +20,9 @@ class ProductVariation extends Model
             set: fn ($value) => $value * 100,
         );
     }
+
+    public function variations()
+    {
+        return $this->hasMany(ProductSecondVariation::class);
+    }
 }
