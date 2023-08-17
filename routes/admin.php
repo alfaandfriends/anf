@@ -13,6 +13,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariationItemController;
@@ -230,6 +231,10 @@ Route::middleware(['auth'])->group(function(){
         Route::patch('product-variation-item/restore/{id}', [ProductVariationItemController::class, 'restore'])->name('product-variation-item.restore');
         Route::resource('product-categories', ProductCategoryController::class)->names([
             'index' => 'product-categories'
+        ]);
+
+        Route::resource('orders', OrderController::class)->names([
+            'index' => 'orders'
         ]);
 
         /* Notifications */
