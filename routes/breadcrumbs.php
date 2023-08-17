@@ -3,6 +3,7 @@
 // Note: Laravel will automatically resolve `Breadcrumbs::` without
 // this import. This is nice for IDE syntax and refactoring.
 
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -219,6 +220,21 @@ Breadcrumbs::for('dt.settings.details.create', function (BreadcrumbTrail $trail)
 Breadcrumbs::for('dt.settings.details.edit', function (BreadcrumbTrail $trail) {
     $trail->parent('dt.settings');
     $trail->push('Edit Question', route('dt.settings.details.edit'));
+});
+
+/* Orders */
+Breadcrumbs::for('orders', function (BreadcrumbTrail $trail) {
+    $trail->push('Orders', route('orders'));
+});
+
+Breadcrumbs::for('orders.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('orders');
+    $trail->push('Add New Order', route('orders.create'));
+});
+
+Breadcrumbs::for('orders.edit', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('orders');
+    $trail->push('Edit Order', route('orders.edit', $order));
 });
 
 /* Products */
