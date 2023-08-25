@@ -2,12 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProductVariationItemRequest;
-use App\Http\Requests\UpdateProductVariationItemRequest;
-use App\Models\Product;
-use App\Models\ProductImage;
-use App\Models\ProductVariation;
-use App\Models\ProductVariationItem;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

@@ -24,7 +24,7 @@
                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                   <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> {{ confirmationTitle }} </DialogTitle>
                   <div class="mt-2">
-                    <p class="text-sm text-gray-500">{{ confirmationText }}</p>
+                    <p class="text-sm text-gray-500" v-html="confirmationText"></p>
                   </div>
                 </div>
               </div>
@@ -67,6 +67,14 @@ export default {
         confirmationMethod: String,
         confirmationRoute: String,
         confirmationData: [String, Number],
+        preserveScroll: {
+            type: Boolean,
+            default: true,
+        },
+        preserveState: {
+            type: Boolean,
+            default: false,
+        },
     },
     data(){
       return{
@@ -89,8 +97,8 @@ export default {
         submit(){
             if(this.confirmationMethod == 'delete'){
                 this.$inertia.delete(this.route(this.confirmationRoute, this.confirmationData), {
-                    preserveScroll: true,
-                    preserveState: false,
+                    preserveScroll: this.preserveScroll,
+                    preserveState: this.preserveState,
                     onStart: () => this.processing = true,
                     onSuccess: ()  =>  {
                         this.$emit('close'),
@@ -100,8 +108,8 @@ export default {
             }
             if(this.confirmationMethod == 'post'){
                 this.$inertia.post(this.route(this.confirmationRoute), {data: this.confirmationData},{
-                    preserveScroll: true,
-                    preserveState: false,
+                    preserveScroll: this.preserveScroll,
+                    preserveState: this.preserveState,
                     onStart: () => this.processing = true,
                     onSuccess: ()  =>  {
                         this.$emit('close'),

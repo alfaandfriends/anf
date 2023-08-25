@@ -253,12 +253,12 @@ export default {
             image: '',
             email_exist: this.$page.props.email_exist ? this.$page.props.email_exist : '',
             form: {
-                centre_id: this.$page.props.centre_info.ID,
+                centre_id: this.$page.props.centre_info ? this.$page.props.centre_info.ID : '',
                 centre_name: this.$page.props.centre_info ? this.$page.props.centre_info.label.replace('ANFC ', '').replace('ANF ', '') : '',
                 centre_contact_number: this.$page.props.centre_info ? this.$page.props.centre_info.phone : '',
                 centre_email: this.$page.props.centre_info ? this.$page.props.centre_info.email : '',
                 centre_address: this.$page.props.centre_info ? this.$page.props.centre_info.address : '',
-                centre_active: this.$page.props.centre_info.is_active,
+                centre_active: this.$page.props.centre_info ? this.$page.props.centre_info.is_active : false,
                 principal_user_id: this.$page.props.centre_info ? this.$page.props.centre_info.principal_user_id : '',
                 image_list: this.$page.props.centre_images ? this.$page.props.centre_images : [],
                 images_to_delete: []
