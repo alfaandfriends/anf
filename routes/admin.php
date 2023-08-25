@@ -220,19 +220,17 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/shop/payment', [ShopController::class, 'shopPayment'])->name('shop.payment');
         Route::get('/shop/payment/status', [ShopController::class, 'shopPaymentStatus'])->name('shop.payment.status');
 
-        Route::get('/products/trash', [ProductController::class, 'trash'])->name('products.trash');
-        Route::patch('products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
-        Route::resource('products', ProductController::class)->names([
-            'index' => 'products'
-        ]);
-        Route::resource('product-variation-item', ProductVariationItemController::class)->only(
-            'update', 'destroy'
-        );
-        Route::patch('product-variation-item/restore/{id}', [ProductVariationItemController::class, 'restore'])->name('product-variation-item.restore');
-        Route::resource('product-categories', ProductCategoryController::class)->names([
-            'index' => 'product-categories'
-        ]);
+        /* Products */
+        Route::get('/products', [ProductController::class, 'index'])->name('products');
+        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/products/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::post('/products/update', [ProductController::class, 'update'])->name('products.update');
+        Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+        Route::delete('/products/variation/delete/{id}', [ProductController::class, 'deleteVariation'])->name('products.delete_variation');
+        Route::delete('/products/sub-variation/delete', [ProductController::class, 'deleteSubVariation'])->name('products.delete_sub_variation');
 
+        /* Orders */
         Route::resource('orders', OrderController::class)->names([
             'index' => 'orders'
         ]);
