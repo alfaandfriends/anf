@@ -1,0 +1,1 @@
+import{_ as o}from"./_plugin-vue_export-helper-c27b6911.js";import{c as e,o as r}from"./app-2b133d7b.js";const t={name:"Profile"},s={class:"bg-gray-100"};function c(a,n,_,f,i,p){return r(),e("div",s,"Profile")}const d=o(t,[["render",c]]);export{d as default};

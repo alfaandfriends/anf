@@ -67,7 +67,7 @@
                                     </div>
                                     <div class="flex flex-col">
                                         <div class="flex h-[74vh] justify-center items-center bg-white" v-if="!$page.props.user_notifications.length">
-                                            <img src="images/no_notification_yet.png" class="h-1/3 w-1/5" alt="">
+                                            <img src="/images/no_notification_yet.png" class="h-1/3 w-1/5" alt="">
                                         </div>
                                         <div class="flex justify-center h-[74vh] overflow-y-auto no-scrollbar" v-else>
                                             <slot>

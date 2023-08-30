@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ProductCategoryController;
+use App\Classes\ProductHelper;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,14 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('find-users', [UserController::class, 'getUsers'])->name('users.find');
 Route::get('find-email/{email}', [UserController::class, 'emailExist']);
 Route::get('find-username/{username}', [UserController::class, 'usernameExist']);
-
-//TODO: define middleware
-Route::prefix('api')->name('api.')->group(function () {
-    Route::prefix('product')->name('product.')->group(function () {
-        Route::apiResources([
-            'categories' => ProductCategoryController::class,
-        ]);
-    });
-});
+Route::get('find-products', [ProductHelper::class, 'getProducts'])->name('products.find_products');
+Route::get('find-product-variations', [ProductHelper::class, 'getProductVariations'])->name('products.find_product_variations');
+Route::get('find-product-sub-variations', [ProductHelper::class, 'getProductSubVariations'])->name('products.find_product_sub_variations');
