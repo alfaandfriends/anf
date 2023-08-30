@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "api/index.php": { "runtime": "vercel-php@0.4.1" }
+    "api/index.php": { "runtime": "vercel-php@0.5.3" }
   },
   "routes": [
     {
@@ -16,7 +16,7 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
-    "APP_KEY": "base64:QBZO0pZefMxR+27Xbv3a8z9HKEpkdkmMG1Q6EtxN0so=",
+    "APP_KEY": "base64:ofuI+b7Mdp2v786eZrYvr6aMGGDZ2t4qeZJC1YO7sCs=",
     "APP_URL": "https://www.laravel-example.vercel.app"
   }
 }
