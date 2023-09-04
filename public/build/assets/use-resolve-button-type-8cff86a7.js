@@ -1,5 +1,0 @@
-<<<<<<< HEAD:public/build/assets/use-resolve-button-type-e83ab285.js
-import{o as u}from"./transition-c0edfab6.js";import{q as r,s as l,Z as f}from"./app-05a13f32.js";function a(t,n){if(t)return t;let e=n??"button";if(typeof e=="string"&&e.toLowerCase()==="button")return"button"}function v(t,n){let e=r(a(t.value.type,t.value.as));return l(()=>{e.value=a(t.value.type,t.value.as)}),f(()=>{var o;e.value||u(n)&&u(n)instanceof HTMLButtonElement&&!((o=u(n))!=null&&o.hasAttribute("type"))&&(e.value="button")}),e}export{v as b};
-=======
-import{o as u}from"./transition-0f063a1d.js";import{q as r,s as l,Z as f}from"./app-5b70941e.js";function a(t,n){if(t)return t;let e=n??"button";if(typeof e=="string"&&e.toLowerCase()==="button")return"button"}function v(t,n){let e=r(a(t.value.type,t.value.as));return l(()=>{e.value=a(t.value.type,t.value.as)}),f(()=>{var o;e.value||u(n)&&u(n)instanceof HTMLButtonElement&&!((o=u(n))!=null&&o.hasAttribute("type"))&&(e.value="button")}),e}export{v as b};
->>>>>>> c2a0a3e40d6ac2430ee69da9f02369948867e972:public/build/assets/use-resolve-button-type-8cff86a7.js

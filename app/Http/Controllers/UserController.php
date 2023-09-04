@@ -254,4 +254,10 @@ class UserController extends Controller
 
         return $user_info;
     }
+
+    public function getUsers(Request $request){
+        $users  =   User::where('display_name', 'LIKE', '%'.$request->keyword.'%')->limit(10)->get();
+
+        return $users;
+    }
 }

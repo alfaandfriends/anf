@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import ChildAvatar from '../../../Components/Child/Avatar.vue'
 
 export default {
     name: 'Child Home',
