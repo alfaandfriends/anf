@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\ArtGalleryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CentreController;
@@ -231,9 +230,12 @@ Route::middleware(['auth'])->group(function(){
         Route::delete('/products/sub-variation/delete', [ProductController::class, 'deleteSubVariation'])->name('products.delete_sub_variation');
 
         /* Orders */
-        Route::resource('orders', OrderController::class)->names([
-            'index' => 'orders'
-        ]);
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+        Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+        Route::post('/orders/store', [OrderController::class, 'store'])->name('orders.store');
+        Route::get('/orders/edit', [OrderController::class, 'edit'])->name('orders.edit');
+        Route::post('/orders/update', [OrderController::class, 'update'])->name('orders.update');
+        Route::delete('/orders/delete/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
         /* Notifications */
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
