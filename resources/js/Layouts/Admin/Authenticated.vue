@@ -366,9 +366,9 @@ export default {
                         <div class="px-6 py-3 bg-blue bg-red-500 space-y-4 lg:flex lg:space-y-0 justify-between items-center" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
                             <span class="text-white text-sm italic">Warning: use with caution, any changes will reflect to user that being impersonated.</span>
                             <form @submit.prevent="impersonate" class="flex flex-col lg:flex-row w-full space-x-2 items-center md:justify-end lg:justify-end">
-                                <label for="" class="text-white lg:text-sm sm:text-md font-bold">Username</label>
+                                <label for="impersonate_username" class="text-white lg:text-sm sm:text-md font-bold">Username</label>
                                 <div class="flex space-x-2 items-center">
-                                    <input type="text" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username">
+                                    <input type="text" id="impersonate_username" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username" autocomplete="none">
                                     <BreezeButton @click="impersonate" class="hidden sm:block bg-blue-600 hover:bg-blue-700 py-2 px-4">Change User</BreezeButton>
                                     <BreezeButton @click="impersonate" class="sm:hidden bg-blue-600 hover:bg-blue-700 p-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">

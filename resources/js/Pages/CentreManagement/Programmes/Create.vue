@@ -50,7 +50,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-5">
                                         <div class="flex justify-between items-end">
                                             <h1 class="text-indigo-800 font-bold">Programme Levels and Fees</h1>
-                                            <BreezeButton buttonType="info" @click="showAddFee">Add Level & Fee</BreezeButton>
+                                            <BreezeButton buttonType="info" @click="showAddFee">Add Fee</BreezeButton>
                                         </div>  
                                         <div class="border-b border-dashed border-indigo-900 mt-3"></div>
                                     </div>
@@ -87,8 +87,8 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                             <div class="flex justify-between items-center">
                                 <div class="flex space-x-2">
-                                    <label for="" class="block font-bold text-gray-700">Active</label>
-                                    <Toggle v-model="form.programme_active" 
+                                    <label for="programme_status" class="block font-bold text-gray-700">Active</label>
+                                    <Toggle v-model="form.programme_active" id="programme_status"
                                         :classes="{
                                             container: 'inline-block',
                                             toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
@@ -110,48 +110,66 @@ import BreezeButton from '@/Components/Button.vue';
         <Modal :showModal="show_add_fee" modalType="sm" @hideModal="show_add_fee = false">
             <template v-slot:header>
                 <h3 class="text-gray-900 text-xl font-semibold">                
-                    Add new level and fee   
+                    Add New Fee   
                 </h3>                
             </template>
             <template v-slot:content>
                 <div class="overflow-y-auto p-6">
-                    <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4 items-end mb-3">
-                        <div class="grow">
-                            <label for="programme_level" class="block text-sm text-gray-700 font-bold"> Level <span class="text-red-500">*</span></label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <select name="" id="" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_level ? 'border-red-300' : 'border-gray-300'" v-model="level" autocomplete="off">
-                                    <option value="">Please select a level</option>
-                                    <option :value="level" v-for="level in 10">Level {{ level }}</option>
-                                </select>
+                    <div class="flex flex-col space-y-4">
+                        <div class="">
+                            <div class="mb-5">
+                                <h1 class="text-indigo-800 font-bold">Fee Information</h1>
+                                <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4 items-end mb-3">
+                                <div class="grow">
+                                    <label for="programme_level" class="block text-sm text-gray-700 font-bold"> Level <span class="text-red-500">*</span></label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <select name="programme_level" id="programme_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_level ? 'border-red-300' : 'border-gray-300'" v-model="fee_form.level" autocomplete="off">
+                                            <option value="">Please select a level</option>
+                                            <option :value="level" v-for="level in 10">Level {{ level }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grow">
+                                    <label for="programme_material_fee" class="block text-sm text-gray-700 font-bold"> Material Fee <span class="text-red-500">*</span></label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="number" min="1" name="programme_material_fee" id="programme_material_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_material_fee ? 'border-red-300' : 'border-gray-300'" v-model="material_fee" autocomplete="off"/>
+                                    </div>
+                                </div>
+                                <div class="grow">
+                                    <label for="class_type" class="block text-sm text-gray-700 font-bold"> Class Type <span class="text-red-500">*</span></label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="class_type" autocomplete="off">
+                                            <option value="">-- Select Type --</option>
+                                            <option :value="class_type.id" v-for="(class_type, index) in $page.props.class_types" :key="index">{{ class_type.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grow" v-for="class_type in class_types_detail">
+                                    <label for="class_type_detail" class="block text-sm text-gray-700 font-bold"> {{ class_type.label }} <span class="text-red-500">*</span></label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="number" min="1" name="class_type_detail" id="class_type_detail" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type_detail ? 'border-red-300' : 'border-gray-300'" v-model="fee[class_type.id]" autocomplete="off"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="grow">
-                            <label for="programme_material_fee" class="block text-sm text-gray-700 font-bold"> Material Fee <span class="text-red-500">*</span></label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input type="number" min="1" name="programme_material_fee" id="programme_material_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_material_fee ? 'border-red-300' : 'border-gray-300'" v-model="material_fee" autocomplete="off"/>
+                        <div class="">
+                            <div class="mb-5">
+                                <h1 class="text-indigo-800 font-bold">Material Information</h1>
+                                <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                             </div>
-                        </div>
-                        <div class="grow">
-                            <label for="class_type" class="block text-sm text-gray-700 font-bold"> Class Type <span class="text-red-500">*</span></label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type ? 'border-red-300' : 'border-gray-300'" v-model="class_type" autocomplete="off">
-                                    <option value="">-- Select Type --</option>
-                                    <option :value="class_type.id" v-for="(class_type, index) in $page.props.class_types" :key="index">{{ class_type.name }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="grow" v-for="class_type in class_types_detail">
-                            <label for="class_type_detail" class="block text-sm text-gray-700 font-bold"> {{ class_type.label }} <span class="text-red-500">*</span></label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input type="number" min="1" name="class_type_detail" id="class_type_detail" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type_detail ? 'border-red-300' : 'border-gray-300'" v-model="fee[class_type.id]" autocomplete="off"/>
+                            <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4 items-end mb-3">
+                                <div class="grow">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </template>
             <template v-slot:footer>
-                <div class="flex justify-between space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="gray" @click="addFee">Add Fee</BreezeButton>
+                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                    <BreezeButton buttonType="info" @click="addFee">Add Fee</BreezeButton>
                 </div>
             </template>
         </Modal>
@@ -171,7 +189,6 @@ export default {
         return {
             show_add_fee: false,
             class_types_detail: [],
-            level: '',
             material_fee: '',
             class_type: '',
             fee: [],
@@ -179,6 +196,9 @@ export default {
                 programme_name: '',
                 programme_info: [],
                 programme_active: true,
+            },
+            fee_form: {
+                level: ''
             },
             selected: {
                 product: [],
@@ -188,7 +208,7 @@ export default {
         }
     },
     watch: {
-        'class_type': {
+        class_type: {
             handler(){
                 this.class_types_detail = []
                 this.$page.props.class_types_detail.forEach((class_type_detail)=>{
@@ -196,8 +216,10 @@ export default {
                         this.class_types_detail.push(class_type_detail)
                     }
                 })
-            }
-        }
+            },
+            deep: true
+        },
+
     },  
     methods: {
         submit() {
@@ -207,9 +229,9 @@ export default {
             this.show_add_fee   =   true
         },
         addFee(){
-            if(this.level && this.level != 0 && this.material_fee && this.material_fee != 0 && this.class_type && this.fee.length > 0 ){
+            if(this.fee_form.level && this.fee_form.level != 0 && this.material_fee && this.material_fee != 0 && this.class_type && this.fee.length > 0 ){
                 this.form.programme_info.push({
-                    'level': this.level,
+                    'level': this.fee_form.level,
                     'material_fee': this.material_fee,
                     'class_type': this.class_type,
                     'fees': this.fee,
@@ -219,6 +241,7 @@ export default {
                 })
                 this.form.programme_info.sort((firstItem, secondItem)=>firstItem.level - secondItem.level)
                 this.clearForm()
+                this.show_add_fee = false
             }
         },
         deleteLevel(index){
@@ -234,7 +257,7 @@ export default {
             }
         },
         clearForm(){
-            this.level = ''
+            this.fee_form.level = ''
             this.material_fee = ''
             this.class_type = ''
             this.fee = []
