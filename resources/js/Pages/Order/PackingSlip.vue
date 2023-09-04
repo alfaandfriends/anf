@@ -32,13 +32,17 @@ import BreezeButton from '@/Components/Button.vue';
                     </span>
                     <div class="space-y-2">
                         <div class="grid grid-cols-1 gap-2">
-                            <dl class="grid grid-cols-5">
+                            <dl class="grid grid-cols-5" v-if="packing_slip_data.invoice_number">
                                 <dt class="col-span-3 font-semibold text-gray-800">Invoice Number:</dt>
                                 <dd class="col-span-2 text-gray-500">{{ packing_slip_data.invoice_number }}</dd>
                             </dl>
+                            <dl class="grid grid-cols-5">
+                                <dt class="col-span-3 font-semibold text-gray-800">Order Number:</dt>
+                                <dd class="col-span-2 text-gray-500">{{ packing_slip_data.order_number }}</dd>
+                            </dl>
                             <dl class="grid grid-cols-5 gap-x-3">
                                 <dt class="col-span-3 font-semibold text-gray-800">Order Date:</dt>
-                                <dd class="col-span-2 text-gray-500">{{ moment(packing_slip_data.date_issued).format('DD MMM Y') }}</dd>
+                                <dd class="col-span-2 text-gray-500">{{ moment(packing_slip_data.created_at).format('DD MMM Y') }}</dd>
                             </dl>
                         </div>
                     </div>

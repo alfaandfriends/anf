@@ -28,16 +28,16 @@ class OrderController extends Controller
     {
         
         $query  =   DB::table('orders')
-                        ->join('invoices', 'orders.invoice_id', '=', 'invoices.id')
-                        ->join('students', 'invoices.student_id', '=', 'students.id')
-                        ->join('children', 'students.children_id', '=', 'children.id')
-                        ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
-                        ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
+                        ->leftJoin('invoices', 'orders.invoice_id', '=', 'invoices.id')
+                        ->leftJoin('students', 'orders.student_id', '=', 'students.id')
+                        ->leftJoin('children', 'students.children_id', '=', 'children.id')
+                        ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
+                        ->leftJoin('invoice_status', 'invoices.status', '=', 'invoice_status.id')
                         ->leftJoin('order_shipping_providers', 'orders.shipping_provider', '=', 'order_shipping_providers.id')
                         ->join('order_status', 'orders.status', '=', 'order_status.id')
-                        ->select('orders.id', 'orders.products', 'orders.tracking_number', 'orders.created_at', 'order_status.name as status_name', 
+                        ->select('orders.id', 'orders.order_number', 'orders.products', 'orders.tracking_number', 'orders.created_at', 'order_status.name as status_name', 
                                 'orders.tracking_status as tracking_status', 'order_shipping_providers.name as shipping_provider_name',
-                                 'order_status.class_name as class_name', 'invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 
+                                 'order_status.class_name as class_name', 'invoices.id as invoice_id', 'invoices.invoice_number', 'invoices.invoice_items', 
                                  'children.name as student_name', 'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
                                  'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 
                                  'invoice_status.bg_color as status_bg_color', 'invoice_status.text_color as status_text_color');
@@ -69,7 +69,7 @@ class OrderController extends Controller
         }
         
         DB::table('orders')->insert([
-            'user_id'               =>  $request->user_id,
+            'student_id'            =>  $request->student_id,
             'products'              =>  json_encode($request->products),
             'shipping_provider'     =>  $request->shipping_provider,
             'tracking_number'       =>  $request->tracking_number,
@@ -86,15 +86,17 @@ class OrderController extends Controller
         $shipping_providers =   OrderHelper::getShippingProviders();
 
         $order_info     =   DB::table('orders')
-                                ->join('wpvt_users', 'orders.user_id', '=', 'wpvt_users.id')
+                                ->leftJoin('students', 'orders.student_id', '=', 'students.id')
+                                ->leftJoin('children', 'students.children_id', '=', 'children.id')
+                                ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
                                 ->leftJoin('order_shipping_providers', 'orders.shipping_provider', '=', 'order_shipping_providers.id')
                                 ->join('order_status', 'orders.status', '=', 'order_status.id')
-                                ->select('orders.id as order_id', 'orders.products', 'orders.user_id', 'orders.tracking_number', 'orders.status as status_id', 
-                                        'orders.shipping_provider as shipping_provider_id', 'orders.tracking_status as tracking_status', 'wpvt_users.display_name as user_name', 
+                                ->select('orders.id as order_id', 'orders.products', 'orders.student_id', 'orders.tracking_number', 'orders.status as status_id', 
+                                        'orders.shipping_provider as shipping_provider_id', 'orders.tracking_status as tracking_status', 'children.name as student_name', 
                                         'order_shipping_providers.name as shipping_provider_name', 'order_status.name as status_name')
                                 ->where('orders.id', $request->order_id)
                                 ->first();
-
+        // dd($order_info);
         return Inertia::render('Order/Edit', [
             'order_info'            =>  $order_info,
             'status'                =>  $status,
@@ -109,7 +111,7 @@ class OrderController extends Controller
         }
 
         DB::table('orders')->where('id', $request->order_id)->update([
-            'user_id'               =>  $request->user_id,
+            'student_id'            =>  $request->student_id,
             'products'              =>  json_encode($request->products),
             'shipping_provider'     =>  $request->shipping_provider,
             'tracking_number'       =>  $request->tracking_number,

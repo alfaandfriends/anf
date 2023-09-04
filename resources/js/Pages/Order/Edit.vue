@@ -23,17 +23,17 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                     <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                         <div class="grid grid-cols-2 sm:grid-cols-0 gap-0 sm:gap-4">
                                             <div class="">
-                                                <label class="block text-sm text-gray-700 font-bold mb-2"> User's Name <span class="text-red-500">*</span></label>
+                                                <label class="block text-sm text-gray-700 font-bold mb-2"> Student's Name <span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <Multiselect 
                                                         :disabled="true"
-                                                        v-debounce:1s="findUsers"
-                                                        v-model="form.user_id"
-                                                        @close="clearUsers"
-                                                        valueProp="ID"
-                                                        :loading="loading.users"
-                                                        :placeholder="$page.props.order_info.user_name"
-                                                        :options="list.users"
+                                                        v-debounce:1s="findStudents"
+                                                        v-model="form.student_id"
+                                                        @close="clearStudents"
+                                                        valueProp="id"
+                                                        :loading="loading.students"
+                                                        :placeholder="$page.props.order_info.student_name"
+                                                        :options="list.students"
                                                         :searchable="true"
                                                         noOptionsText="Nothing found"
                                                         noResultsText="Nothing found"
@@ -41,11 +41,11 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                                         :canClear="false"
                                                         :canDeselect="false"
                                                         :internal-search="false"
-                                                        trackBy="display_name"
-                                                        label="display_name"
+                                                        trackBy="name"
+                                                        label="name"
                                                         :classes="{
                                                             container: 
-                                                                $page.props.errors.user_id ? 
+                                                                $page.props.errors.student_id ? 
                                                                 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md sm:text-sm leading-snug outline-none h-10':
                                                                 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md sm:text-sm leading-snug outline-none h-10',
                                                             containerDisabled: 'cursor-default bg-gray-200',
@@ -492,20 +492,20 @@ export default {
                 product_sub_variations: false
             },
             list:{
-                users: [],
+                students: [],
                 products: [],
                 product_variations: [],
                 product_sub_variations: [],
             },
             loading:{
-                users: false,
+                students: false,
                 products: false,
                 product_variations: false,
                 product_sub_variations: false,
             },
             form:{
                 order_id: this.$page.props.order_info ? this.$page.props.order_info.order_id : '',
-                user_id: this.$page.props.order_info ? this.$page.props.order_info.user_id : '',
+                student_id: this.$page.props.order_info ? this.$page.props.order_info.student_id : '',
                 shipping_provider: this.$page.props.order_info && this.$page.props.order_info.shipping_provider_id ? this.$page.props.order_info.shipping_provider_id : '',
                 tracking_number: this.$page.props.order_info ? this.$page.props.order_info.tracking_number : '',
                 status: this.$page.props.order_info ? this.$page.props.order_info.status_id : '',
@@ -604,22 +604,22 @@ export default {
             this.tracking_status_input = ''
             this.show.add_tracking_status = true
         },
-        findUsers(query){
+        findStudents(query){
             if(query){
-                this.loading.users = true
-                axios.get(route('users.find'), {
+                this.loading.students = true
+                axios.get(route('students.find'), {
                     params: {
                         'keyword': query
                     }
                 })
                 .then((res) => {
-                    this.list.users = res.data
-                    this.loading.users = false
+                    this.list.students = res.data
+                    this.loading.students = false
                 });
             }
         },
-        clearUsers(){
-            this.list.users = []
+        clearStudents(){
+            this.list.students = []
         },
         findProducts(query){
             if(query){

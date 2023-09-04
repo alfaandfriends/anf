@@ -57,7 +57,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                             <div class="text-sm font-medium text-gray-900">{{ order.parent_full_name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ moment(order.created_at).format('D/MM/Y') }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ moment(order.created_at).format('DD/MM/Y') }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap space-x-2">
                                             <span @click="viewInvoice(index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">Invoice</span>
