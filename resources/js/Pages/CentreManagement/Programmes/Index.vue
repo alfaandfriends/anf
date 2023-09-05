@@ -15,11 +15,11 @@
                         <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <svg class="h-10 w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none">
+                                    <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none">
                                         <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                     </svg>
                                 </span>
-                                <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white border rounded-md" placeholder="Search" v-model="params.search">
+                                <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-model="params.search">
                             </div>
                             <div class="flex" v-if="$page.props.can.centre_create_access">
                                 <BreezeButton :route="route('programmes.create')">New Programme</BreezeButton>
@@ -72,6 +72,17 @@
                 </div>
             </div>
         </div>
+        <ConfirmationModal 
+            :show="isOpen" 
+            @close="isOpen = false"
+            confirmationAlert="danger"
+            confirmationTitle="Delete Programme"
+            confirmationText="Are you sure want to delete this programme?"
+            confirmationButton="Delete"
+            confirmationMethod="delete"
+            :confirmationRoute="confirmationRoute"
+            :confirmationData="confirmationData"
+        />
     </BreezeAuthenticatedLayout>
 </template>
 <script>
