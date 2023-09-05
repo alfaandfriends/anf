@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="flex items-center">
         <ol class="inline-flex items-center space-x-1" v-if="breadcrumbs">
             <li class="inline-flex items-center" v-for="(breadcrumb, index) in breadcrumbs" :key="index">
                 <svg v-if="index >= 1" class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

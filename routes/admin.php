@@ -126,6 +126,7 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/programmes/update', [ProgrammeController::class, 'updateProgramme'])->name('programmes.update')->middleware('permission:programme_edit_access');
             Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:programme_delete_access');
             Route::get('/programmes/get-fee', [ProgrammeController::class, 'getFee'])->name('programmes.get_fee')->middleware('permission:programme_view_access|programme_create_access|programme_edit_access');
+            Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:programme_delete_access');
 
             /* Classes */
             Route::get('/classes', [ClassController::class, 'index'])->name('classes')->middleware('permission:class_view_access');
