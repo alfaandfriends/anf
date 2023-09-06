@@ -14,8 +14,6 @@ use Inertia\Inertia;
 
 class InvoiceController extends Controller
 {
-    private $fee_invoice_id   =   1;
-    private $product_invoice_id   =   2;
 
     public function feeInvoiceIndex(Request $request)
     {
@@ -24,7 +22,6 @@ class InvoiceController extends Controller
                         ->join('children', 'students.children_id', '=', 'children.id')
                         ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
                         ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
-                        ->where('invoice_type_id', $this->fee_invoice_id)
                         ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                     'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
                                     'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 

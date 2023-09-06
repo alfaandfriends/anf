@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 
 class InvoiceHelper {
-    
-    public static $fee_invoice_id   =   1;
-    public static  $product_invoice_id   =   2;
 
     public static function invoiceStatus()
     {
@@ -60,7 +57,6 @@ class InvoiceHelper {
                   
         if($bill_response->getStatusCode() == 200){
             $invoice_id =   DB::table('invoices')->insertGetId([
-                                'invoice_type_id'   => self::$fee_invoice_id,
                                 'student_id'        => $student_id,
                                 'invoice_number'    => $invoice_number,
                                 'invoice_items'     => json_encode($invoice_items->toArray()),
@@ -87,7 +83,6 @@ class InvoiceHelper {
     {
         $fee_invoices   =   DB::table('invoices')
                                 ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
-                                ->where('invoice_type_id', self::$fee_invoice_id)
                                 ->where('student_id', $student_id)
                                 ->select(   'invoices.id', 'invoices.invoice_number', 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 
                                             'invoice_status.id as status_id','invoice_status.name as status', 'invoice_status.bg_color as status_bg_color', 

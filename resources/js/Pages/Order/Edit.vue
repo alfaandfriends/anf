@@ -200,7 +200,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                                     </tr>
                                                 </thead>
                                                 <tbody class="text-sm divide-y divide-gray-100">
-                                                    <tr class="border" v-if="!form.tracking_status.length">
+                                                    <tr class="border" v-if="!form.tracking_status || !form.tracking_status.length">
                                                         <td colspan="10" class="border border-gray-400 py-6 px-4 whitespace-nowrap text-center">
                                                             No status added.
                                                         </td>
@@ -510,7 +510,7 @@ export default {
                 tracking_number: this.$page.props.order_info ? this.$page.props.order_info.tracking_number : '',
                 status: this.$page.props.order_info ? this.$page.props.order_info.status_id : '',
                 products: this.$page.props.order_info ? JSON.parse(this.$page.props.order_info.products) : [],
-                tracking_status: this.$page.props.order_info ? JSON.parse(this.$page.props.order_info.tracking_status) : []
+                tracking_status: this.$page.props.order_info.tracking_status ? JSON.parse(this.$page.props.order_info.tracking_status) : []
             },
             selected:{
                 product: [],

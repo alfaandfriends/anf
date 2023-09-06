@@ -401,7 +401,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <td class="px-2 py-2 text-left">{{ classes.capacity}}</td>
                                                         <td class="px-2 py-2 text-center">
                                                             <div class="flex justify-center">
-                                                                <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id)">Choose</BreezeButton>
+                                                                <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id)">Choose</BreezeButton>
                                                                 <input v-else class="h-5 w-5 border border-indigo-300 rounded-sm focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
                                                                         type="checkbox" 
                                                                         :checked="checkIfClassSelected(classes.class_id, classes.programme_id)"
@@ -482,9 +482,9 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="flex p-6 border-t justify-between">
                                                 <div class="flex">
                                                     <input :id="fee_index" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                    <label :for="fee_index" class="text-sm ml-3 font-medium text-gray-900 select-none cursor-pointer">Include Material Fee</label>
+                                                    <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-700 select-none cursor-pointer">Material Fee : {{ fee.fee_info.material_fee }}</label>
                                                 </div>
-                                                <span class="ml-3 text-gray-900 select-none font-semibold">Amount: {{ fee.fee_info.programme_fee }}</span>
+                                                <span class="ml-3 text-gray-900 select-none font-semibold">Fee: {{ fee.fee_info.include_material_fee ? fee.fee_info.material_fee + fee.fee_info.programme_fee : fee.fee_info.programme_fee }}</span>
                                             </div>
                                         </div>
                                     </details>
@@ -682,7 +682,7 @@ export default {
                 });
             }
         },
-        getNormalFee(class_id, class_type_id, programme_id){
+        getNormalFee(class_id, class_type_id, programme_id, programme_level_id){
             const  only_one_class_allowed_form      = this.form.fee.find(item => item.fee_info.class_type_id === 1 && item.fee_info.class_type_id === class_type_id && item.fee_info.programme_id === programme_id);
             const  only_one_class_allowed_current   = this.current_fee.find(item => item.fee_info.class_type_id === 1 && item.fee_info.class_type_id === class_type_id && item.fee_info.programme_id === programme_id);
             if(only_one_class_allowed_form || only_one_class_allowed_current){
@@ -702,6 +702,7 @@ export default {
             axios.get(route('programmes.get_fee'), {
                 'params': {
                     'class_id' : class_id,
+                    'programme_level_id' : programme_level_id,
                 }
             })
             .then((res) => {
@@ -711,7 +712,7 @@ export default {
                 this.searching.fee = false
             });
         },
-        getPlusFee(event, class_id, class_type, programme_id){
+        getPlusFee(event, class_id, class_type, programme_id, programme_level_id){
             if(this.disable_check_box){
                 return
             }
@@ -746,6 +747,7 @@ export default {
                         'class_type' : this.search_form.class_type,
                         'class_count': this.selected_plus_class[programme_id].length,
                         'classes': this.selected_plus_class[programme_id],
+                        'programme_level_id': programme_level_id,
                     }
                 })
                 .then((res) => {

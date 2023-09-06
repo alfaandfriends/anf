@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\InvoiceHelper;
 use App\Classes\NotificationHelper;
+use App\Classes\OrderHelper;
 use App\Classes\ProgrammeHelper;
 use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
@@ -58,6 +59,7 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         try {
             // Begin the transaction
             DB::beginTransaction();
@@ -83,6 +85,12 @@ class StudentController extends Controller
                     'invoice_id'        =>  $new_invoice_id,
                     'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
                 ]);
+
+                /* Create Order */
+                $order_data['student_id']   =   $student_id;
+                $order_data['invoice_id']   =   $new_invoice_id;
+                $order_data['products']     =   $fee['material'];
+                OrderHelper::newOrder($order_data);
 
                 /* Create Class */
                 foreach($fee['classes'] as $class_key => $class){
