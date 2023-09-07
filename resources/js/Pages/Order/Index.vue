@@ -42,7 +42,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-if="!this.$page.props.orders.data.length">
+                                    <tr v-if="!$page.props.orders.data || !$page.props.orders.data.length">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
                                                 No Record Found!

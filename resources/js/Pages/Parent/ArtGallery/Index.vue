@@ -27,7 +27,7 @@ const images = ref([
                 <div class="p-3 mt-auto">
                     <h1 class="text-2xl">Art Gallery</h1>
                 </div>
-                <div class="hidden md:block lg:block" v-if="this.$page.props.current_active_child.student_id">
+                <div class="hidden md:block lg:block" v-if="$page.props.current_active_child.student_id">
                     <button type="button" class="flex bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-slate-400 hover:shadow-slate-600 rounded-lg border-indigo-600 py-2 px-4 items-center justify-center w-full font-semibold text-white" @click="showUpload">
                         Upload Artwork
                     </button>
