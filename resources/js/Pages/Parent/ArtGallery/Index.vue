@@ -210,29 +210,29 @@ const images = ref([
             <h1 class="md:font-semibold md:text-xl">Upload Artwork</h1>
             <hr class="my-4 border-gray-600">
             <label class="font-medium text-gray-900 text-sm md:text-md">Level</label>
-            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.level_id ? 'border-gray-300' : 'border-red-300'" v-model="form.level_id">
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!errors.level_id ? 'border-gray-300' : 'border-red-300'" v-model="form.level_id">
                 <option value="">Please Select</option>
                 <option :value="level.id" v-for="(level, index) in list.levels" :key="index">{{ level.name }}</option>
             </select>
             <label class="font-medium text-gray-900 text-sm md:text-md">Theme</label>
-            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.theme_id ? 'border-gray-300' : 'border-red-300'" v-model="form.theme_id">
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!errors.theme_id ? 'border-gray-300' : 'border-red-300'" v-model="form.theme_id">
                 <option value="">Please Select</option>
                 <option :value="theme.id" v-for="theme, index in list.themes" :key="theme.id">{{ theme.name }}</option>
             </select>
             <label class="font-medium text-gray-900 text-sm md:text-md">Lesson</label>
-            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.lesson_id ? 'border-gray-300' : 'border-red-300'" v-model="form.lesson_id">
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!errors.lesson_id ? 'border-gray-300' : 'border-red-300'" v-model="form.lesson_id">
                 <option value="">Please Select</option>
                 <option :value="lesson.id" v-for="lesson, index in list.lessons" :key="lesson.id">{{ lesson.name }}</option>
             </select>
             <label class="font-medium text-gray-900 text-sm md:text-md">Activity</label>
-            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.activity_id ? 'border-gray-300' : 'border-red-300'" v-model="form.activity_id">
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!errors.activity_id ? 'border-gray-300' : 'border-red-300'" v-model="form.activity_id">
                 <option value="">Please Select</option>
                 <option :value="activity.id" v-for="activity, index in list.activities" :key="activity.id">{{ activity.name }}</option>
             </select>
             <label class="font-medium text-gray-900 text-sm md:text-md">File</label>
             <div class="mb-3">
                 <input class="w-full flex-auto rounded border px-3 py-[0.32rem] text-base font-normal text-neutral-700 cursor-pointer transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
-                :class="!this.errors.artwork_file ? 'border-gray-300' : 'border-red-300'"
+                :class="!errors.artwork_file ? 'border-gray-300' : 'border-red-300'"
                 type="file" accept="image/png, image/jpeg" ref="artwork_file" @change="handleArtwork"/>
               </div>
             <hr class="my-5">
@@ -254,7 +254,7 @@ const images = ref([
     <SimpleModal v-if="image.show" :open="image.show" @close:modal="image.show = false" class="md:w-2/6 p-4">
         <div class="flex flex-col justify-center items-center w-full space-y-4">
             <span class="md:text-xl">{{image.activity}}</span>
-            <img :src="this.image.file" class="object-scale-down rounded-lg" alt="">
+            <img :src="image.file" class="object-scale-down rounded-lg" alt="">
         </div>
     </SimpleModal>
     <SimpleModal v-if="show_confirmation" :open="show_confirmation" @close:modal="show_confirmation = false" class="md:w-3/12">
