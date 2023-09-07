@@ -22,18 +22,18 @@ import BreezeButton from '@/Components/Button.vue';
                                     </span>
                                     <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-model="params.search">
                                 </div>
-                                <button @click="show_filter = !show_filter" class="text-indigo-600 flex space-x-2 items-center bg-white hover:bg-indigo-50 border border-indigo-600 px-4 py-1.5 rounded-md">
+                                <!-- <button @click="show_filter = !show_filter" class="text-indigo-600 flex space-x-2 items-center bg-white hover:bg-indigo-50 border border-indigo-600 px-4 py-1.5 rounded-md">
                                     <span>Filters</span> 
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 512 512">
                                         <path d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"/>
                                     </svg>
-                                </button>
+                                </button> -->
                             </div>
                             <div class="flex">
                                 <BreezeButton :route="route('products.create')">Add New Product</BreezeButton>
                             </div>
                         </div>
-                        <div class="w-full shadow p-5 rounded-lg bg-white mb-3" v-if="show_filter">
+                        <!-- <div class="w-full shadow p-5 rounded-lg bg-white mb-3" v-if="show_filter">
                             <div class="flex items-center justify-between">
                                 <p class="font-medium">
                                     Filters
@@ -98,7 +98,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </select>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-300">

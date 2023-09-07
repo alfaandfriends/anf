@@ -16,7 +16,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="mb-5">
-                                        <h1 class="font-bold text-indigo-800">Add New Resource</h1>
+                                        <h1 class="font-bold text-indigo-800">Resource Information</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
                                     <div class="mb-4">

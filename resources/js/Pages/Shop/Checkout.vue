@@ -139,7 +139,6 @@ export default {
         //     handler(){
         //         if(this.activePayment.cc){
         //             const paypal_container = document.getElementById("paypal-button-container")
-        //             console.log(paypal_container)
         //             loadScript({ "client-id": "test" })
         //                 .then((paypal) => {
         //                     paypal

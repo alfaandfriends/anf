@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\ProductCategoryController;
 use App\Http\Controllers\ArtGalleryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CentreController;
@@ -127,6 +126,7 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/programmes/update', [ProgrammeController::class, 'updateProgramme'])->name('programmes.update')->middleware('permission:programme_edit_access');
             Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:programme_delete_access');
             Route::get('/programmes/get-fee', [ProgrammeController::class, 'getFee'])->name('programmes.get_fee')->middleware('permission:programme_view_access|programme_create_access|programme_edit_access');
+            Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:programme_delete_access');
 
             /* Classes */
             Route::get('/classes', [ClassController::class, 'index'])->name('classes')->middleware('permission:class_view_access');
@@ -231,9 +231,12 @@ Route::middleware(['auth'])->group(function(){
         Route::delete('/products/sub-variation/delete', [ProductController::class, 'deleteSubVariation'])->name('products.delete_sub_variation');
 
         /* Orders */
-        Route::resource('orders', OrderController::class)->names([
-            'index' => 'orders'
-        ]);
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+        Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+        Route::post('/orders/store', [OrderController::class, 'store'])->name('orders.store');
+        Route::get('/orders/edit', [OrderController::class, 'edit'])->name('orders.edit');
+        Route::post('/orders/update', [OrderController::class, 'update'])->name('orders.update');
+        Route::delete('/orders/delete/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
         /* Notifications */
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');

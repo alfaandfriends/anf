@@ -49,7 +49,6 @@ class ProgrammeController extends Controller
         if(empty($request->programme_info)){
             return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level !']);
         }
-
         $programme_id    =   DB::table('programmes')->insertGetId([
             'name'              =>  $request->programme_name,
             'status'            =>  $request->programme_active,
@@ -57,24 +56,24 @@ class ProgrammeController extends Controller
 
         foreach($request->programme_info as $key=>$info){
             $programme_level_id =   DB::table('programme_levels')->insertGetId([
-                'programme_id'      =>  $programme_id,
-                'class_type_id'     =>  $info['class_type'],
-                'level'             =>  $info['level'],
-                'material_fee'      =>  $info['material_fee'],
+                'programme_id'                      =>  $programme_id,
+                'class_type_id'                     =>  $info['class_type'],
+                'level'                             =>  $info['level'],
+                'material_fee'                      =>  $info['material_fee'],
+                'material_product_id'               =>  !empty($info['product']) ? $info['product']['id'] : null,
+                'material_product_variation_id'     =>  !empty($info['product_variation']) ? $info['product_variation']['id'] : null,
+                'material_product_sub_variation_id' =>  !empty($info['product_sub_variation']) ? $info['product_sub_variation']['id'] : null,
             ]);
-            foreach($info['fees'] as $class_type_detail_id=>$fee){
-                if($fee != null || $fee != 0){
-                    DB::table('programme_level_fees')->insert([
-                        'programme_level_id'    =>  $programme_level_id,
-                        'class_type_detail_id'  =>  $class_type_detail_id,
-                        'fee_amount'            =>  $fee,
-                    ]);
-                    
-                }
+            foreach($info['fees'] as $fee_key=>$fee){
+                DB::table('programme_level_fees')->insert([
+                    'programme_level_id'    =>  $programme_level_id,
+                    'class_type_detail_id'  =>  $fee['class_type_detail_id'],
+                    'fee_amount'            =>  $fee['value'],
+                ]);
             }
         }
 
-        return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme added successfully !']);
+        return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'New programme added successfully!']);
     }
 
     public function editProgramme(Request $request){
@@ -82,31 +81,50 @@ class ProgrammeController extends Controller
         $class_types        =   DB::table('class_types')->get()->keyBy('id');
         $class_type_details =   DB::table('class_types_detail')->get();
 
-        $programme_name         =   DB::table('programmes')->where('id', $request->programme_id)->pluck('name')->first();
-        $programme_levels       =   DB::table('programme_levels')
-                                        ->where('programme_id', $request->programme_id)
-                                        ->select(['id as programme_level_id', 'level', 'class_type_id', 'material_fee'])
+        $programme_data         =   DB::table('programmes')->where('id', $request->programme_id)->first();
+        $programme_info         =   DB::table('programme_levels')
+                                        ->leftJoin('products', 'programme_levels.material_product_id', '=', 'products.id')
+                                        ->leftJoin('product_variations', 'programme_levels.material_product_variation_id', '=', 'product_variations.id')
+                                        ->leftJoin('product_sub_variations', 'programme_levels.material_product_sub_variation_id', '=', 'product_sub_variations.id')
+                                        ->where('programme_levels.programme_id', $request->programme_id)
+                                        ->select('programme_levels.id as programme_level_id', 'programme_levels.level', 'programme_levels.class_type_id as class_type', 
+                                                'programme_levels.material_fee', 'products.id as product_id', 'products.name as product_name', 
+                                                'products.has_variation as has_variation', 'products.has_sub_variation as has_sub_variation', 
+                                                'product_variations.id as product_variation_id', 'product_variations.option_name as product_variation_name', 
+                                                'product_sub_variations.id as product_sub_variation_id', 'product_sub_variations.option_name as product_sub_variation_name')
+                                        ->orderBy('programme_levels.level')
+                                        ->orderBy('programme_levels.class_type_id')
                                         ->get();
-
+                                        
         $programme_level_fees   =   DB::table('programme_level_fees')
-                                        ->whereIn('programme_level_id', $programme_levels->pluck('programme_level_id'))
-                                        ->select(['programme_level_id', 'class_type_detail_id', 'fee_amount'])
+                                        ->whereIn('programme_level_id', $programme_info->pluck('programme_level_id'))
+                                        ->select('programme_level_id', 'class_type_detail_id', 'fee_amount')
                                         ->get();
-
-        foreach($programme_levels as $programme_level){
+                                        
+        foreach($programme_info as $programme_level){
             foreach($programme_level_fees as $programme_level_fee){
                 if($programme_level_fee->programme_level_id == $programme_level->programme_level_id){
-                    $programme_level->fees[$programme_level_fee->class_type_detail_id]  =   $programme_level_fee->fee_amount;
+                    $info['class_type_detail_id']   =   $programme_level_fee->class_type_detail_id;
+                    $info['value']                  =   $programme_level_fee->fee_amount;
+                    $programme_level->fees[]        =   $info;
                 }
             }
+            $programme_level->product['id']                         =   $programme_level->product_id;
+            $programme_level->product['name']                       =   $programme_level->product_name;
+            $programme_level->product['has_variation']              =   $programme_level->has_variation;
+            $programme_level->product['has_sub_variation']          =   $programme_level->has_sub_variation;
+            $programme_level->product_variation['id']               =   $programme_level->product_variation_id;
+            $programme_level->product_variation['option_name']      =   $programme_level->product_variation_name;
+            $programme_level->product_sub_variation['id']           =   $programme_level->product_sub_variation_id;
+            $programme_level->product_sub_variation['option_name']  =   $programme_level->product_sub_variation_name;
         }
+        // dd($programme_info);
                                     
         return Inertia::render('CentreManagement/Programmes/Edit', [
-            'programme_id'          => $request->programme_id,
-            'programme_name'        => $programme_name,
-            'programme_levels'      => $programme_levels,
+            'programme_data'        => $programme_data,
+            'programme_info'        => $programme_info,
             'class_types'           => $class_types,
-            'class_types_detail'     => $class_type_details,
+            'class_types_detail'    => $class_type_details,
         ]);
     }
 
@@ -117,10 +135,6 @@ class ProgrammeController extends Controller
 
         if(empty($request->programme_info)){
             return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level !']);
-        }
-
-        if(empty($request->programme_level_to_add) && empty($request->programme_level_to_delete)){
-            return redirect(route('programmes'))->with(['type' => 'success', 'message' => 'No changes has been made!']);
         }
 
         if(auth()->user()->is_admin == false){
@@ -165,48 +179,33 @@ class ProgrammeController extends Controller
 
             return redirect(route('programmes'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
         }
-        
-        foreach($request->programme_level_to_delete as $key=>$programme_level_id){
 
-            DB::beginTransaction();
-
-            try{
-                DB::table('programme_level_fees')->where('id', $programme_level_id)->delete();
-                DB::table('programme_levels')->where('id', $programme_level_id)->delete();
-                DB::commit();
-            }
-            catch (Exception $e) {
-                DB::rollBack();
-                return back()->with(['type'=>'error', 'message'=>"Error when changing level or fee, it's being used by class or student."]);
-            }
-        }
-
-        foreach($request->programme_level_to_add as $key=>$info){
-            $programme_level_id =   DB::table('programme_levels')->insertGetId([
-                'programme_id'      =>  $request->programme_id,
-                'class_type_id'     =>  $info['class_type'],
-                'level'             =>  $info['level'],
-                'material_fee'      =>  $info['material_fee'],
-            ]);
-            foreach($info['fees'] as $class_type_detail_id=>$fee){
-                if($fee != null || $fee != 0){
-                    DB::table('programme_level_fees')->insert([
-                        'programme_level_id'    =>  $programme_level_id,
-                        'class_type_detail_id'  =>  $class_type_detail_id,
-                        'fee_amount'            =>  $fee,
-                    ]);
-                    
-                }
-            }
-        }
-    
         DB::table('programmes')->where('id', $request->programme_id)->update([
             'name'              =>  $request->programme_name,
             'status'            =>  $request->programme_active,
             'updated_at'        =>  Carbon::now(),
         ]);
 
-
+        foreach($request->programme_info as $key=>$info){
+            if(!isset($info['programme_level_id'])){
+                $programme_level_id =   DB::table('programme_levels')->insertGetId([
+                    'programme_id'                      =>  $request->programme_id,
+                    'class_type_id'                     =>  $info['class_type'],
+                    'level'                             =>  $info['level'],
+                    'material_fee'                      =>  $info['material_fee'],
+                    'material_product_id'               =>  !empty($info['product']) ? $info['product']['id'] : null,
+                    'material_product_variation_id'     =>  !empty($info['product_variation']) ? $info['product_variation']['id'] : null,
+                    'material_product_sub_variation_id' =>  !empty($info['product_sub_variation']) ? $info['product_sub_variation']['id'] : null,
+                ]);
+                foreach($info['fees'] as $fee_key=>$fee){
+                    DB::table('programme_level_fees')->insert([
+                        'programme_level_id'    =>  $programme_level_id,
+                        'class_type_detail_id'  =>  $fee['class_type_detail_id'],
+                        'fee_amount'            =>  $fee['value'],
+                    ]);
+                }
+            }
+        }
         return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme updated successfully !']);
     }
 
@@ -241,6 +240,26 @@ class ProgrammeController extends Controller
             ->where('programmes.id', $id)->delete();
 
         return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme deleted successfully !']);
+    }
+
+    public function destroyFee($id){
+        try {
+            $programme_id   =   DB::table('programme_levels')->where('programme_levels.id', $id)->pluck('programme_id')->first();
+            $fee_count      =   DB::table('programme_levels')->where('programme_levels.programme_id', $programme_id)->count();
+            
+            if($fee_count < 2){
+                return back()->with(['type'=>'error', 'message'=>'Please add new fee before deleting the last one.']);
+            }
+            
+            DB::table('programme_levels')
+                ->join('programme_level_fees','programme_level_fees.programme_level_id','=','programme_levels.id')
+                ->where('programme_levels.id', $id)->delete();
+
+            return back()->with(['type'=>'success', 'message'=>'Fee deleted successfully !']);
+        } catch (\Throwable $th) {
+            return back()->with(['type'=>'error', 'message'=>'Deletion failed. The fee might be in used. Please try again.']);
+        }
+
     }
 
     public function getFee(Request $request){
@@ -278,6 +297,30 @@ class ProgrammeController extends Controller
         }
         
         $data['classes']    =   $classes_query->get();
+
+        $material_query     =   DB::table('programme_levels')
+                                    ->leftJoin('products', 'programme_levels.material_product_id', '=', 'products.id')
+                                    ->leftJoin('product_variations', 'programme_levels.material_product_variation_id', '=', 'product_variations.id')
+                                    ->leftJoin('product_sub_variations', 'programme_levels.material_product_sub_variation_id', '=', 'product_sub_variations.id')
+                                    ->select('products.id as product_id', 'products.name as product_name', 'products.name as product_name', 'products.has_variation as has_variation', 
+                                            'products.has_sub_variation as has_sub_variation', 'product_variations.id as product_variation_id', 
+                                            'product_variations.option_name as product_variation_name', 'product_sub_variations.id as product_sub_variation_id', 
+                                            'product_sub_variations.option_name as product_sub_variation_name')
+                                    ->where('programme_levels.id', $request->programme_level_id)->first();
+                                  
+        $material['product']['id']                          =   $material_query->product_id;
+        $material['product']['name']                        =   $material_query->product_name;
+        $material['product']['has_variation']               =   $material_query->has_variation;
+        $material['product']['has_sub_variation']           =   $material_query->has_sub_variation;
+        $material['product_variation']['id']                =   $material_query->product_variation_id;
+        $material['product_variation']['option_name']       =   $material_query->product_variation_name;
+        $material['product_sub_variation']['id']            =   $material_query->product_sub_variation_id;
+        $material['product_sub_variation']['option_name']   =   $material_query->product_sub_variation_name; 
+        $material['quantity']                               =   1; 
+
+        $data['material']    =   $material;
+        
+                        
 
         return $data;
     }
