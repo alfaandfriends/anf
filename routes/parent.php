@@ -12,15 +12,19 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware(['auth'])->group(function(){
-    Route::prefix('/')->name('parent.')->group(function () {
-        
+    /* Onboard */
+    Route::get('onboarding', [HomeController::class, 'onboarding'])->name('onboarding');
+    Route::middleware(['onboard'])->prefix('/')->name('parent.')->group(function () {
+
         /* Home */
         Route::get('home', [HomeController::class, 'index'])->name('home');
         Route::post('switch-child', [HomeController::class, 'switchChild'])->name('switch_child');
 
+        /* Invoices */
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
         Route::get('/invoices/callback', [InvoiceController::class, 'callback'])->name('invoices.callback');
 
+        /* Art Gallery */
         Route::get('art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery');
         Route::post('art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store');
         Route::delete('art-gallery/delete/{id}', [ArtGalleryController::class, 'destroy'])->name('art_gallery.destroy');

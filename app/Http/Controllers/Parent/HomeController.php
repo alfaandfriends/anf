@@ -9,6 +9,14 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
+    public function onboarding()
+    {
+        if(auth()->user()->profile_updated){
+            return redirect(route('parent.home'));
+        }
+        return Inertia::render('Parent/Onboard');
+    }
+
     public function index(Request $request)
     {
         $student_id =   $request->session()->get('current_active_child.student_id');

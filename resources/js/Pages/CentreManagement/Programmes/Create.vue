@@ -460,7 +460,6 @@ export default {
         // },
         'fee_form.class_type': {
             handler(){
-                console.log('test')
                 this.list.class_types_detail = []
                 this.fee_form.fees = []
                 this.$page.props.class_types_detail.forEach((class_type_detail)=>{
