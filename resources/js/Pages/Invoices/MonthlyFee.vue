@@ -176,7 +176,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <p class="font-medium text-lg text-gray-800">Total :</p>
                                 </td>
                                 <td class="pt-5 py-2 px-4 text-center">
-                                    <p class="font-medium text-lg text-gray-800">{{ this.invoice_data.total_amount }}</p>
+                                    <p class="font-medium text-lg text-gray-800">{{ invoice_data.total_amount }}</p>
                                 </td>
                             </tr>
                         </tfoot>
