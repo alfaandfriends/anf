@@ -210,7 +210,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton>
+                                            <!-- <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton> -->
                                             <BreezeButton buttonType="warning" @click="editInvoice(result.id)">Edit / Collect Payment</BreezeButton>
                                             <!-- <BreezeButton buttonType="danger" @click="deleteResource(result.id)">Delete</BreezeButton> -->
                                         </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Parent\HomeworkController;
 use App\Http\Controllers\Parent\InvoiceController;
 use App\Http\Controllers\Parent\PaymentController;
 use App\Http\Controllers\Parent\HomeController;
+use App\Http\Controllers\Parent\ProfileController;
 use App\Http\Controllers\Parent\StoryBookController;
 use App\Http\Controllers\Parent\StudyMaterialsController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,9 @@ Route::middleware(['auth'])->group(function(){
     /* Onboard */
     Route::get('onboarding', [HomeController::class, 'onboarding'])->name('onboarding');
     Route::middleware(['onboard'])->prefix('/')->name('parent.')->group(function () {
+        
+        /* Profile */
+        Route::get('profile', [ProfileController::class, 'create'])->name('profile');
 
         /* Home */
         Route::get('home', [HomeController::class, 'index'])->name('home');

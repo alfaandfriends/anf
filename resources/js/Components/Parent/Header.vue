@@ -55,7 +55,7 @@
                                             </div>
                                         </div>
                                         <!-- Navigation -->
-                                        <div class="flex items-center px-5 my-1 py-2 font-medium text-gray-700 hover:bg-indigo-50 cursor-pointer">
+                                        <div class="flex items-center px-5 my-1 py-2 font-medium text-gray-700 hover:bg-indigo-50 cursor-pointer" @click="viewProfile">
                                             <UserCircleIcon class="w-6 h-6 mr-3" />Profile
                                         </div>
                                         
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <!-- Navigation -->
-                    <div class="cursor-pointer flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50">
+                    <div class="cursor-pointer flex items-center px-5 py-3 font-medium text-gray-700 hover:bg-indigo-50" @click="viewProfile">
                         <UserCircleIcon class="w-6 h-6 mr-3" />Profile
                     </div>
                     
@@ -181,6 +181,9 @@ export default {
                     location.reload()
                 }
             });
+        },
+        viewProfile(){
+            this.$inertia.get(route('parent.profile'))
         }
     }
 }

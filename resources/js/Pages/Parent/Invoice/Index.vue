@@ -32,7 +32,7 @@
                                 No record found.
                             </td>
                         </tr>
-                        <tr class="bg-white border-b hover:bg-gray-50" v-else v-for="invoice in $page.props.invoices">
+                        <tr class="bg-white border-b hover:bg-gray-50" v-else v-for="invoice, invoice_index in $page.props.invoices">
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ invoice.invoice_number }}
                             </td>
@@ -50,24 +50,118 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <a v-if="invoice.status_id == 1" @click="pay(invoice.bill_id)" class="cursor-pointer font-medium px-3 py-1 text-indigo-600 hover:bg-indigo-200 hover:rounded whitespace-nowrap">Pay Now</a>
-                                <a v-else class="cursor-pointer font-medium px-3 py-1 text-blue-600 hover:bg-blue-200 hover:rounded whitespace-nowrap">View</a>
+                                <a v-else class="cursor-pointer font-medium px-3 py-1 text-blue-600 hover:bg-blue-200 hover:rounded whitespace-nowrap" @click="viewInvoice(invoice_index)">View</a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <Modal :showModal="open_modal" modalType="md" @hideModal="open_modal = false">
+            <template v-slot:header>
+                <h3 class="text-gray-900 text-xl font-semibold">                
+                    Invoice
+                </h3>                
+            </template>
+            <template v-slot:content>
+                <MonthlyFee :invoice_data="invoice_data"></MonthlyFee>
+            </template>
+            <template v-slot:footer>
+                <div class="flex justify-between space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                    <BreezeButton buttonType="blue" class="px-4 py-2 space-x-2" @click="print">
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                            <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                        </svg>
+                        <span>Print</span>
+                    </BreezeButton>
+                    <BreezeButton buttonType="gray" @click="open_modal = false">Close</BreezeButton>
+                </div>
+            </template>
+        </Modal>
     </Authenticated>
 </template>
 
 <script setup>
 import Authenticated from '@/Layouts/Parent/Authenticated.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
+import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <script>
+import Modal from '@/Components/Modal.vue'
+import MonthlyFee from '@/Pages/Invoices/MonthlyFee.vue'
+
+const printOptions = {
+    name: '_blank',
+    specs: [
+    ],
+    styles: [
+        'http://127.0.0.1:8000/css/app.css',
+    ],
+    timeout: 1000, // default timeout before the print window appears
+    autoClose: true, // if false, the window will not close after printing
+    windowTitle: window.document.title, // override the window title
+}
+
 export default {
+    components: {
+        Head, Link, Modal, MonthlyFee
+    },
+    data(){
+        return{
+            open_modal: false,
+            invoice_data: {
+                parent_name: '',
+                parent_address: 'No 27, Jalan Kap Empat, 17/17D, Seksyen 17, Shah Alam',
+                invoice_number: '',
+                invoice_items: [],
+                date_issued: '',
+                due_date: '',
+                total_amount: ''
+            }
+        }
+    },
     methods: {
+        viewInvoice(invoice_index){
+            this.invoice_data.student_name      = this.$page.props.invoices[invoice_index].student_name
+            this.invoice_data.parent_name       = this.$page.props.invoices[invoice_index].parent_full_name
+            this.invoice_data.parent_address    = this.$page.props.invoices[invoice_index].parent_address
+            this.invoice_data.invoice_number    = this.$page.props.invoices[invoice_index].invoice_number
+            this.invoice_data.invoice_items     = JSON.parse(this.$page.props.invoices[invoice_index].invoice_items)
+            this.invoice_data.date_issued       = this.$page.props.invoices[invoice_index].date_issued
+            this.invoice_data.due_date          = this.$page.props.invoices[invoice_index].due_date
+            this.invoice_data.total_amount      = this.totalFee(this.$page.props.invoices[invoice_index].invoice_items)
+            
+            this.open_modal = true
+        },
+        totalFee(invoice_items) {
+            let total = 0;
+            const parsed_invoice_items =   JSON.parse(invoice_items)
+            for (const item of parsed_invoice_items) {
+                // Parse fees and discounts as numbers
+                const programmeFee = parseFloat(item.programme_fee);
+                const programmeDiscount = parseFloat(item.programme_fee_discount);
+                const materialFee = parseFloat(item.material_fee);
+                const materialDiscount = parseFloat(item.material_fee_discount);
+
+                // Add programme fee and subtract programme discount
+                total += programmeFee - programmeDiscount;
+
+                // Check if material fee should be included
+                if (item.include_material_fee) {
+                // Add material fee and subtract material discount
+                total += materialFee - materialDiscount;
+                }
+            }
+            return total;
+        },
+        print(){
+            this.printing = true
+            this.$htmlToPaper('invoice', printOptions, () => {
+                this.printing = false
+            })
+        },
         pay(billing_id){
             window.location.href = import.meta.env.VITE_BILLPLZ_ENDPOINT+billing_id
         }

@@ -84,7 +84,7 @@ class InvoiceHelper {
         $fee_invoices   =   DB::table('invoices')
                                 ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
                                 ->where('student_id', $student_id)
-                                ->select(   'invoices.id', 'invoices.invoice_number', 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 
+                                ->select(   'invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 
                                             'invoice_status.id as status_id','invoice_status.name as status', 'invoice_status.bg_color as status_bg_color', 
                                             'invoices.bill_id', 'invoice_status.text_color as status_text_color')
                                 ->get();
