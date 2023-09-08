@@ -47,7 +47,12 @@ export default {
         },
     },
     created(){
-        document.body.style.overflow = 'hidden';
+        if (this.open) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Restore scrolling when modal is closed
+            document.body.style.overflow = '';
+        }
     },
     unmounted() {
         document.body.style.overflow = '';

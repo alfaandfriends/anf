@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(function(){
         
         /* Profile */
         Route::get('profile', [ProfileController::class, 'create'])->name('profile');
+        Route::get('profile/security', [ProfileController::class, 'security'])->name('profile.security');
 
         /* Home */
         Route::get('home', [HomeController::class, 'index'])->name('home');
