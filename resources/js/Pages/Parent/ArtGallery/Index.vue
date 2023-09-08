@@ -205,7 +205,7 @@ const images = ref([
             </div>
         </div>
     </Authenticated>
-    <SimpleModal v-if="show_upload" :open="show_upload" @close:modal="show_upload = false" class="md:w-2/6 p-4" :disable_overlay="disable_overlay">
+    <SimpleModal v-if="show_upload" :open="show_upload" @close:modal="show_upload = false" class="h-screen w-full sm:w-4/6 md:h-auto md:w-2/6 p-4 overflow-y-auto" :disable_overlay="disable_overlay">
         <form class="p-4">
             <h1 class="md:font-semibold md:text-xl">Upload Artwork</h1>
             <hr class="my-4 border-gray-600">

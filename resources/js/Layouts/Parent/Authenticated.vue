@@ -16,7 +16,7 @@ import SimpleModal from '@/Components/Parent/SimpleModal.vue';
                 <Navigation />
                 <div class="bg-orange-50 min-h-screen">
                     <div class="flex justify-center">
-                        <div class="flex-1 max-w-4xl overflow-y-auto p-3">
+                        <div class="flex-1 max-w-4xl overflow-y-auto p-3 mb-10">
                             <slot/>
                         </div>
                     </div>
