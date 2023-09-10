@@ -244,14 +244,17 @@ export default {
                 }
             })
             .then(response => {
-                // Create a Blob object from the response data
                 const blob = new Blob([response.data], { type: 'application/pdf' });
 
-                // Create a URL for the Blob object
-                const pdfUrl = URL.createObjectURL(blob);
+                // Use FileReader to read the Blob and create a data URL
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const dataUrl = reader.result;
 
-                // Open the PDF in a new tab
-                window.open(pdfUrl, '_blank');
+                    // Open the data URL in a new tab
+                    window.open(dataUrl, '_blank');
+                };
+                reader.readAsDataURL(blob);
                 this.generating.invoice = false
             })
             .catch(error => {
