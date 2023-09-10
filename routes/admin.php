@@ -38,9 +38,9 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard_access');
 
         /* Profile */
-        Route::get('/profile', [ProfileController::class, 'create'])->name('profile')->middleware('permission:profile_access');
-        Route::post('/profile/store', [ProfileController::class, 'store'])->name('profile.store')->middleware('permission:profile_access');
-        Route::post('/profile/security/store', [ProfileController::class, 'storeSecurity'])->name('profile.security.store')->middleware('permission:profile_access');
+        Route::get('/profile', [ProfileController::class, 'create'])->name('profile');
+        Route::post('/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+        Route::post('/profile/security/store', [ProfileController::class, 'storeSecurity'])->name('profile.security.store');
 
         /* Children */
         Route::post('/children/store', [ChildrenController::class, 'store'])->name('children.store')->middleware('permission:children_create_access');
