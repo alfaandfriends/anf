@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Invoice#{{ $data['invoice_number'] }}</title>
+<title>Order#{{ $data['order_number'] }}</title>
 
 <style type="text/css">
     * {
@@ -112,7 +112,7 @@
                 </td>
                 <td align="right" style="border-top: 1px solid; border-bottom: 1px solid;">
                     <div style="padding-top: 5px; padding-bottom: 5px; font-size: 13px; padding-left:1rem; padding-right:1rem;">
-                        {{ $data['amount'] }}.00
+                        0.00
                     </div>
                 </td>
             </tr>

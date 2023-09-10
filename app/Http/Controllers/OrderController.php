@@ -158,7 +158,7 @@ class OrderController extends Controller
         ];
         
         $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.order_invoice', compact('data'));
-        return $pdf->stream();
+        return $pdf->stream($invoice_data->invoice_number.'.pdf');
     }
 
     public function generatePackingSlip(Request $request){
@@ -189,6 +189,6 @@ class OrderController extends Controller
         ];
         
         $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.packing_slip', compact('data'));
-        return $pdf->stream();
+        return $pdf->stream($invoice_data->order_number.'.pdf');
     }
 }
