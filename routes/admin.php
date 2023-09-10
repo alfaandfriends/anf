@@ -237,6 +237,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/orders/edit', [OrderController::class, 'edit'])->name('orders.edit');
         Route::post('/orders/update', [OrderController::class, 'update'])->name('orders.update');
         Route::delete('/orders/delete/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
+        Route::get('/orders/invoice/generate', [OrderController::class, 'generateInvoice'])->name('orders.invoice.generate');
+        Route::get('/orders/packing-slip/generate', [OrderController::class, 'generatePackingSlip'])->name('orders.packing_slip.generate');
 
         /* Notifications */
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
@@ -276,6 +278,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/invoices/fee/store', [InvoiceController::class, 'feeInvoiceStore'])->name('fee.invoices.store');
         Route::get('/invoices/fee/edit', [InvoiceController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit');
         Route::post('/invoices/fee/update', [InvoiceController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update');
+        Route::get('/invoices/fee_invoice/generate', [InvoiceController::class, 'feeInvoiceGenerate'])->name('fee.invoices.generate');
 
         /* Progress Report */
         Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');

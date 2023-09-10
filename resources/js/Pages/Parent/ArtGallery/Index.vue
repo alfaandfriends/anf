@@ -318,7 +318,9 @@ export default {
                 themes: false,
                 artworks: false
             },
-            errors: {},
+            errors: {
+
+            },
             uploading: false,
             disable_overlay: false,
             show_confirmation: false,
@@ -423,7 +425,7 @@ export default {
                     this.errors[key] = false
                 }
             }
-            const proceed = Object.values(this.form).some(value => value);
+            const proceed = Object.values(this.errors).every(value => value === false);
             if (proceed) {
                 this.$inertia.post(route('parent.art_gallery.store'), this.form, {
                     preserveState: false,

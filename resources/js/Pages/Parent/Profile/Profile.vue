@@ -92,7 +92,6 @@
                                         <Multiselect
                                             :id="'country'"
                                             :autocomplete="'none'"
-                                            @change="clearState"
                                             :min-chars="1"
                                             :delay="1"
                                             :loading="loading.state"
