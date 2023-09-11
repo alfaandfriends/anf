@@ -43,10 +43,10 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/profile/security/store', [ProfileController::class, 'storeSecurity'])->name('profile.security.store');
 
         /* Children */
-        Route::post('/children/store', [ChildrenController::class, 'store'])->name('children.store')->middleware('permission:children_create_access');
-        Route::get('/children/edit', [ChildrenController::class, 'edit'])->name('children.edit')->middleware('permission:children_edit_access');
-        Route::post('/children/update', [ChildrenController::class, 'update'])->name('children.update')->middleware('permission:children_edit_access');
-        Route::delete('/children/delete/{id}', [ChildrenController::class, 'destroy'])->name('children.destroy')->middleware('permission:children_delete_access');
+        Route::post('/children/store', [ChildrenController::class, 'store'])->name('children.store');
+        Route::get('/children/edit', [ChildrenController::class, 'edit'])->name('children.edit');
+        Route::post('/children/update', [ChildrenController::class, 'update'])->name('children.update');
+        Route::delete('/children/delete/{id}', [ChildrenController::class, 'destroy'])->name('children.destroy');
 
         /* Control Panel */
         Route::prefix('control-panel')->group(function () {
