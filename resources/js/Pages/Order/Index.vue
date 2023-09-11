@@ -246,13 +246,17 @@ export default {
             .then(response => {
                 const blob = new Blob([response.data], { type: 'application/pdf' });
 
-                // Use FileReader to read the Blob and create a data URL
+                // Create a FileReader to read the Blob data as a data URL
                 const reader = new FileReader();
                 reader.onload = () => {
                     const dataUrl = reader.result;
 
                     // Open the data URL in a new tab
-                    window.open(dataUrl, '_blank');
+                    const a = document.createElement('a');
+                    a.href = dataUrl;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.click();
                 };
                 reader.readAsDataURL(blob);
                 this.generating.invoice = false

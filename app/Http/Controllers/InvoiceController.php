@@ -196,6 +196,6 @@ class InvoiceController extends Controller
         ];
         
         $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.fee_invoice', compact('data'));
-        return $pdf->download($invoice_data->invoice_number.'.pdf');
+        return $pdf->stream($invoice_data->invoice_number.'.pdf');
     }
 }
