@@ -72,7 +72,7 @@
             :confirmationData="confirmationData"
         >
         </ConfirmationModal>
-        <SimpleModal v-if="show_add_child" :open="show_add_child" @close:modal="show_add_child = false" class="h-screen w-full sm:w-4/6 md:h-auto md:w-2/6 p-4 overflow-y-auto" :disable_overlay="disable_overlay">
+        <SimpleModal v-if="show_add_child" :open="show_add_child" @close:modal="show_add_child = false" class="w-full sm:h-auto sm:w-4/6 md:h-auto md:w-2/6 p-4 overflow-y-auto" :disable_overlay="disable_overlay">
             <form class="p-4">
                 <h1 class="md:font-semibold md:text-xl">Add Child</h1>
                 <hr class="my-4 border-gray-600">
