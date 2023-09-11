@@ -7,7 +7,7 @@
                         <!-- Logo -->
                         <a class="flex items-center space-x-4 font-bold select-none" :href="route('parent.home')">
                             
-                            <img class="h-12 w-12" src="/images/anf-logo-main-2x.png" alt="">
+                            <img class="object-scale-down h-12" src="/images/anf-logo-main-2x.png" alt="">
                         </a>
                     </div>
                     <div class="flex">
