@@ -50,7 +50,7 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <a v-if="invoice.status_id == 1" @click="pay(invoice.bill_id)" class="cursor-pointer font-medium px-3 py-1 text-indigo-600 hover:bg-indigo-200 hover:rounded whitespace-nowrap">Pay Now</a>
-                                <a v-else class="cursor-pointer font-medium px-3 py-1 text-blue-600 bg-blue-100 hover:bg-blue-200 rounded whitespace-nowrap" @click="viewInvoice(invoice.id)">View / Download</a>
+                                <a v-else class="cursor-pointer font-medium px-3 py-1 text-blue-600 bg-blue-100 hover:bg-blue-200 rounded whitespace-nowrap" @click="generating ? '' : viewInvoice(invoice.id)">{{ generating ? 'Generating...' : 'View / Download' }}</a>
                             </td>
                         </tr>
                     </tbody>
@@ -90,28 +90,16 @@ import BreezeButton from '@/Components/Button.vue';
 
 <script>
 import Modal from '@/Components/Modal.vue'
-import MonthlyFee from '@/Pages/Invoices/MonthlyFee.vue'
 import axios from 'axios'
-
-const printOptions = {
-    name: '_blank',
-    specs: [
-    ],
-    styles: [
-        'http://127.0.0.1:8000/css/app.css',
-    ],
-    timeout: 1000, // default timeout before the print window appears
-    autoClose: true, // if false, the window will not close after printing
-    windowTitle: window.document.title, // override the window title
-}
 
 export default {
     components: {
-        Head, Link, Modal, MonthlyFee
+        Head, Link, Modal
     },
     data(){
         return{
             open_modal: false,
+            generating: false,
             invoice_data: {
                 parent_name: '',
                 parent_address: 'No 27, Jalan Kap Empat, 17/17D, Seksyen 17, Shah Alam',
@@ -125,6 +113,10 @@ export default {
     },
     methods: {
         viewInvoice(invoice_id){
+            if(this.generating){
+                return
+            }
+            this.generating = true
             axios.get(route('fee.invoices.generate'), {
                 responseType: 'blob', // Set the response type to 'blob' to handle binary data
                 params: {
@@ -140,9 +132,11 @@ export default {
 
                 // Open the PDF in a new tab
                 window.open(pdfUrl, '_blank');
+                this.generating = false
             })
             .catch(error => {
                 console.error('Error fetching PDF:', error);
+                this.generating = false
             });
         },
         totalFee(invoice_items) {
@@ -165,12 +159,6 @@ export default {
                 }
             }
             return total;
-        },
-        print(){
-            this.printing = true
-            this.$htmlToPaper('invoice', printOptions, () => {
-                this.printing = false
-            })
         },
         pay(billing_id){
             window.location.href = import.meta.env.VITE_BILLPLZ_ENDPOINT+billing_id
