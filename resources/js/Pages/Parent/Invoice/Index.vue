@@ -132,21 +132,14 @@ export default {
                 }
             })
             .then(response => {
+                // Create a Blob object from the response data
                 const blob = new Blob([response.data], { type: 'application/pdf' });
 
-                // Create a FileReader to read the Blob data as a data URL
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const dataUrl = reader.result;
+                // Create a URL for the Blob object
+                const pdfUrl = URL.createObjectURL(blob);
 
-                    // Open the data URL in a new tab
-                    const a = document.createElement('a');
-                    a.href = dataUrl;
-                    a.target = '_blank';
-                    a.rel = 'noopener noreferrer';
-                    a.click();
-                };
-                reader.readAsDataURL(blob);
+                // Open the PDF in a new tab
+                window.open(pdfUrl, '_blank');
             })
             .catch(error => {
                 console.error('Error fetching PDF:', error);
