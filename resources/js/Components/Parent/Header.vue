@@ -135,7 +135,7 @@
                                 <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded" v-if="switching && info.child_id == $page.props.current_active_child.child_id">Switching</span>
                             </button>
                             <div class="flex justify-between items-center w-full px-3" v-else>
-                                <span class="text-gray-500 font-semibold text-sm">No children added. </span><span class="text-sm text-indigo-600 cursor-pointer font-medium hover:underline">Add child</span>
+                                <span class="text-gray-500 font-semibold text-sm">No children added. </span>
                             </div>
                         </div>
                     </div>
