@@ -8,12 +8,10 @@ import SimpleModal from '@/Components/Parent/SimpleModal.vue';
 <template>
     <div class="flex">
         <div class="min-h-screen bg-gray-100 w-full">
-            <VueGuidedTour :steps="steps" @afterEnd="completedTour"></VueGuidedTour>
-
             <!-- Page Content -->
-            <main class="flex flex-col bg-indigo-50 relative h-full justify-between">
-                <Header />
-                <Navigation />
+            <Header />
+            <Navigation />
+            <main class="flex flex-col bg-indigo-50 relative h-full justify-between mt-20">
                 <div class="bg-orange-50 min-h-screen">
                     <div class="flex justify-center">
                         <div class="flex-1 max-w-4xl overflow-y-auto p-3 mb-10">
