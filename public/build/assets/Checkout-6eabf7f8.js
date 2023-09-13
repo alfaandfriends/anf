@@ -1,4 +1,12 @@
+<<<<<<< HEAD:public/build/assets/Checkout-8bb6aa21.js
+<<<<<<< HEAD:public/build/assets/Checkout-705d79c4.js
+import{c as d,b as h,u as S,w as b,F as E,H as y,L as B,ac as j,o as u,d as t,n as f,k as c,f as m,i as g,j as p}from"./app-7fa9d0bc.js";import{B as C}from"./Authenticated-2913fd23.js";import"./ApplicationLogo-f91fd4fa.js";import"./_plugin-vue_export-helper-c27b6911.js";import"./Button-9bb99ef6.js";import"./XIcon-bdcdbbe9.js";import"./default.css_vue_type_style_index_0_src_true_lang-5871727b.js";import"./moment-fbc5633a.js";/*!
+=======
+import{c as d,b as h,u as S,w as b,F as E,H as y,L as B,ac as j,o as u,d as t,n as f,k as c,f as m,i as g,j as p}from"./app-2b133d7b.js";import{B as C}from"./Authenticated-90cb91c3.js";import"./ApplicationLogo-43dea6bb.js";import"./_plugin-vue_export-helper-c27b6911.js";import"./Button-17cde4f9.js";import"./XIcon-73e31157.js";import"./default.css_vue_type_style_index_0_src_true_lang-b3de7b5e.js";import"./moment-fbc5633a.js";/*!
+>>>>>>> e021fff8827e20a2b2f1efc58884a595c2e43e6c:public/build/assets/Checkout-8bb6aa21.js
+=======
 import{c as d,b as h,u as S,w as b,F as E,H as y,L as B,ac as j,o as u,d as t,n as f,k as c,f as m,i as g,j as p}from"./app-19257f11.js";import{B as C}from"./Authenticated-fa2924f2.js";import"./ApplicationLogo-80d7c111.js";import"./_plugin-vue_export-helper-c27b6911.js";import"./Button-6276b1a4.js";import"./XIcon-e0656083.js";import"./default.css_vue_type_style_index_0_src_true_lang-581d9e65.js";import"./moment-fbc5633a.js";/*!
+>>>>>>> eb20307741858021449bf314741ca3426e71fbde:public/build/assets/Checkout-6eabf7f8.js
  * paypal-js v5.1.6 (2023-03-27T20:51:02.623Z)
  * Copyright 2020-present, PayPal, Inc. All rights reserved.
  *

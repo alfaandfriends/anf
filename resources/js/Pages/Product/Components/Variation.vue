@@ -284,7 +284,7 @@ export default {
                     <thead class="bg-gray-300">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">{{ detailed_info.main_variation_name}}</th>
-                            <th v-if="detailed_info.has_sub_variation && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">{{ sub_variations.name}}</th>
+                            <th v-if="detailed_info.has_sub_variation && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">{{ detailed_info.sub_variation_name}}</th>
                             <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Price</th>
                             <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Stock</th>
                         </tr>

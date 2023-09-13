@@ -1,4 +1,12 @@
+<<<<<<< HEAD:public/build/assets/vue-draggable-next.esm-bundler-67104923.js
+<<<<<<< HEAD:public/build/assets/vue-draggable-next.esm-bundler-1f3d8075.js
+import{A as Rt,X as ct,r as Yt}from"./app-7fa9d0bc.js";/*!
+=======
+import{B as Rt,Y as ct,r as Yt}from"./app-2b133d7b.js";/*!
+>>>>>>> e021fff8827e20a2b2f1efc58884a595c2e43e6c:public/build/assets/vue-draggable-next.esm-bundler-67104923.js
+=======
 import{B as Rt,Y as ct,r as Yt}from"./app-19257f11.js";/*!
+>>>>>>> eb20307741858021449bf314741ca3426e71fbde:public/build/assets/vue-draggable-next.esm-bundler-37d9b8e9.js
   * vue-draggable-next v2.2.0
   * (c) 2023 Anish George
   * @license MIT
