@@ -42,7 +42,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-if="!this.$page.props.orders.data.length">
+                                    <tr v-if="!$page.props.orders.data || !$page.props.orders.data.length">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
                                                 No Record Found!
@@ -60,8 +60,12 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                             <div class="text-sm font-medium text-gray-900">{{ moment(order.created_at).format('DD/MM/Y') }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap space-x-2">
-                                            <span @click="viewInvoice(index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">Invoice</span>
-                                            <span @click="viewPackingSlip(index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">Packing Slip</span>
+                                            <span @click="viewInvoice(order.id)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
+                                                {{ generating.invoice ? 'Generating...' : 'Invoice'}}
+                                            </span>
+                                            <span @click="viewPackingSlip(order.id)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
+                                                {{ generating.packing_slip ? 'Generating...' : 'Packing Slip'}}
+                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex flex-col text-sm font-medium text-gray-900" v-if="order.shipping_provider_name">
@@ -209,7 +213,11 @@ export default {
                 search: this.$page.props.filter.search ? this.$page.props.filter.search : '',
             },
             invoice_data: [],
-            packing_slip_data: []
+            packing_slip_data: [],
+            generating: {
+                invoice: false,
+                packing_slip: false
+            }
         }
     },
     methods: {
@@ -224,13 +232,63 @@ export default {
             this.confirmation_data = order_id
             this.show_delete_order = true
         },
-        viewInvoice(index){
-            this.invoice_data = this.$page.props.orders.data[index]
-            this.show_invoice = true
+        viewInvoice(order_id){
+            if(this.generating.invoice){
+                return
+            }
+            this.generating.invoice = true
+            axios.get(route('orders.invoice.generate'), {
+                responseType: 'blob', // Set the response type to 'blob' to handle binary data
+                params: {
+                    'order_id': order_id
+                }
+            })
+            .then(response => {
+                // Create a Blob object from the response data
+                const blob = new Blob([response.data], { type: 'application/pdf' });
+
+                // Create a URL for the Blob object
+                const pdfUrl = URL.createObjectURL(blob);
+
+                // Open the PDF in a new tab
+                window.open(pdfUrl, '_blank');
+                this.generating.invoice = false
+            })
+            .catch(error => {
+                console.error('Error fetching PDF:', error);
+                this.generating.invoice = false
+            });
+            // this.invoice_data = this.$page.props.orders.data[index]
+            // this.show_invoice = true
         },
-        viewPackingSlip(index){
-            this.packing_slip_data = this.$page.props.orders.data[index]
-            this.show_packing_slip = true
+        viewPackingSlip(order_id){
+            if(this.generating.packing_slip){
+                return
+            }
+            this.generating.packing_slip = true
+            axios.get(route('orders.packing_slip.generate'), {
+                responseType: 'blob', // Set the response type to 'blob' to handle binary data
+                params: {
+                    'order_id': order_id
+                }
+            })
+            .then(response => {
+                // Create a Blob object from the response data
+                const blob = new Blob([response.data], { type: 'application/pdf' });
+
+                // Create a URL for the Blob object
+                const pdfUrl = URL.createObjectURL(blob);
+
+                // Open the PDF in a new tab
+                window.open(pdfUrl, '_blank');
+                this.generating.packing_slip = false
+            })
+            .catch(error => {
+                console.error('Error fetching PDF:', error);
+                this.generating.packing_slip = false
+            });
+            // this.packing_slip_data = this.$page.props.orders.data[index]
+            // this.show_packing_slip = true
         }
     }
 }

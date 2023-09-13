@@ -10,7 +10,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
+use Inertia\Inertia; 
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InvoiceController extends Controller
 {
@@ -88,7 +89,6 @@ class InvoiceController extends Controller
         }
 
         DB::table('invoices')->insert([
-            'invoice_type_id'           => $this->fee_invoice_id,
             'student_id'                => $request->student_id,
             'invoice_number'            => Carbon::now()->year.'-'.$invoice_number,
             'invoice_items'             => json_encode($request->invoice_items),
@@ -170,5 +170,32 @@ class InvoiceController extends Controller
         $quota_exceeded     =   $quota < 1 ? true : false;
 
         return  $quota_exceeded;
+    }
+
+    public function feeInvoiceGenerate(Request $request){
+        $invoice_data   =   DB::table('invoices')
+                                ->join('students', 'invoices.student_id', '=', 'students.id')
+                                ->join('children', 'students.children_id', '=', 'children.id')
+                                ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
+                                ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
+                                ->select('invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
+                                            'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
+                                            'invoices.date_issued', 'invoices.due_date', 'invoices.amount')
+                                ->where('invoices.id', $request->invoice_id)
+                                ->first();
+                                
+        $data   =   [
+            'parent_full_name'  => $invoice_data->parent_full_name,
+            'parent_address'    => $invoice_data->parent_address,
+            'student_name'      => $invoice_data->student_name,
+            'invoice_number'    => $invoice_data->invoice_number,
+            'date_issued'       => Carbon::parse($invoice_data->date_issued)->format('d M Y'),
+            'due_date'          => Carbon::parse($invoice_data->due_date)->format('d M Y'),
+            'invoice_items'     => json_decode($invoice_data->invoice_items),
+            'amount'            => $invoice_data->amount,
+        ];
+        
+        $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.fee_invoice', compact('data'));
+        return $pdf->download($invoice_data->invoice_number.'.pdf');
     }
 }

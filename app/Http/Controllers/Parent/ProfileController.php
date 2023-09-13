@@ -13,7 +13,15 @@ class ProfileController extends Controller
     {
         $user_info = User::where('ID', auth()->user()->ID)->first();
         
-        return Inertia::render('Parent/Profile', [
+        return Inertia::render('Parent/Profile/Profile', [
+            'user_info' => $user_info
+        ]);
+    }
+    public function security()
+    {
+        $user_info = User::where('ID', auth()->user()->ID)->first();
+        
+        return Inertia::render('Parent/Profile/Security', [
             'user_info' => $user_info
         ]);
     }

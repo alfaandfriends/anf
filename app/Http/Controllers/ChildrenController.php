@@ -39,7 +39,7 @@ class ChildrenController extends Controller
         DB::table('children')->insert([
             'parent_id'     => $request->parent_id,
             'name'          => $request->name,
-            'gender_id'        => $request->gender,
+            'gender_id'     => $request->gender,
             'date_of_birth' => Carbon::parse($request->dob)->format('Y-m-d'),
         ]);
         

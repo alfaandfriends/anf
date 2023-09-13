@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Corcel\Model\User;
 use Corcel\Services\PasswordService;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -37,7 +38,8 @@ class ProfileController extends Controller
 
         if($request->file('profile_photo')){
             Storage::delete($user_info->user_photo);
-            $path = Storage::putFile('profile_photo', $request->file('profile_photo'));
+            $file   =   $request->profile_photo['file'] ? $request->profile_photo['file'] : $request->file('profile_photo');
+            $path   =   Storage::putFileAs('profile_photo', $file, $file->getClientOriginalName());
             User::where('ID', auth()->user()->ID)
                 ->update([
                     'user_photo'        => $path,
@@ -56,31 +58,35 @@ class ProfileController extends Controller
                 'profile_updated'   => true,
             ]);
 
-        return redirect()->back()->with(['type'=>'success', 'message'=>'Profile has been saved !']);
+        return back()->with(['type'=>'success', 'message'=>'Profile has been saved !']);
     }
 
     public function storeSecurity(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'current_password'     => 'required',
             'new_password'         => 'required',
             'confirm_new_password' => 'required',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput()->with(['type'=>'error', 'message'=>'Please fill in all the required fields']);
+        }
+
         $password_service           =   new PasswordService();
         $current_password_match     =   $password_service->check($request->current_password, auth()->user()->user_pass);
 
         if(!$current_password_match){
-            throw ValidationException::withMessages([
-                'current_password' => 'Current password does not match!'
-            ]);
+            return  redirect()->back()
+                    ->withErrors(['current_password'=>'Current password does not match']) 
+                    ->withInput()->with(['type'=>'error', 'message'=>'Current password does not match']);
         }
 
         if($request->new_password != $request->confirm_new_password){
-            throw ValidationException::withMessages([
-                'new_password'=> 'New password does not match.',
-                'confirm_new_password'=> 'New password does not match.'
-            ]);
+            
+            return  redirect()->back()
+                    ->withErrors(['new_password'=> 'New password does not match.', 'confirm_new_password'=> 'New password does not match'])
+                    ->withInput()->with(['type'=>'error', 'message'=>'New password does not match']);
         }
 
         $request->user()->fill([
@@ -88,7 +94,7 @@ class ProfileController extends Controller
         ])->save();
 
 
-        return redirect(route('profile'))->with(['type'=>'success', 'message'=>'New Password changed successfully !']);
+        return back()->with(['type'=>'success', 'message'=>'New Password changed successfully !']);
 
     }
 }

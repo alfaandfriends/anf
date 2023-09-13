@@ -27,7 +27,7 @@ const images = ref([
                 <div class="p-3 mt-auto">
                     <h1 class="text-2xl">Art Gallery</h1>
                 </div>
-                <div class="hidden md:block lg:block" v-if="this.$page.props.current_active_child.student_id">
+                <div class="hidden md:block lg:block" v-if="$page.props.current_active_child.student_id">
                     <button type="button" class="flex bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-slate-400 hover:shadow-slate-600 rounded-lg border-indigo-600 py-2 px-4 items-center justify-center w-full font-semibold text-white" @click="showUpload">
                         Upload Artwork
                     </button>
@@ -196,8 +196,8 @@ const images = ref([
                     </div>
                 </div>
             </template>
-            <div class="flex items-end justify-end fixed bottom-20 right-4 md:hidden lg:hidden">
-                <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold p-3 rounded-full shadow-lg" @click="showUpload">
+            <div class="flex items-end justify-end fixed bottom-24 right-4 md:hidden lg:hidden">
+                <button class="bg-indigo-600 hover:bg-indigo-600 text-white font-semibold p-3 rounded-full shadow-lg" @click="showUpload">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
                     </svg>
@@ -205,34 +205,34 @@ const images = ref([
             </div>
         </div>
     </Authenticated>
-    <SimpleModal v-if="show_upload" :open="show_upload" @close:modal="show_upload = false" class="md:w-2/6 p-4" :disable_overlay="disable_overlay">
+    <SimpleModal v-if="show_upload" :open="show_upload" @close:modal="show_upload = false" class="h-screen w-full sm:w-4/6 md:h-auto md:w-2/6 p-4 overflow-y-auto" :disable_overlay="disable_overlay">
         <form class="p-4">
             <h1 class="md:font-semibold md:text-xl">Upload Artwork</h1>
             <hr class="my-4 border-gray-600">
             <label class="font-medium text-gray-900 text-sm md:text-md">Level</label>
-            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.level_id ? 'border-gray-300' : 'border-red-300'" v-model="form.level_id">
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!errors.level_id ? 'border-gray-300' : 'border-red-300'" v-model="form.level_id">
                 <option value="">Please Select</option>
                 <option :value="level.id" v-for="(level, index) in list.levels" :key="index">{{ level.name }}</option>
             </select>
             <label class="font-medium text-gray-900 text-sm md:text-md">Theme</label>
-            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.theme_id ? 'border-gray-300' : 'border-red-300'" v-model="form.theme_id">
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!errors.theme_id ? 'border-gray-300' : 'border-red-300'" v-model="form.theme_id">
                 <option value="">Please Select</option>
                 <option :value="theme.id" v-for="theme, index in list.themes" :key="theme.id">{{ theme.name }}</option>
             </select>
             <label class="font-medium text-gray-900 text-sm md:text-md">Lesson</label>
-            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.lesson_id ? 'border-gray-300' : 'border-red-300'" v-model="form.lesson_id">
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!errors.lesson_id ? 'border-gray-300' : 'border-red-300'" v-model="form.lesson_id">
                 <option value="">Please Select</option>
                 <option :value="lesson.id" v-for="lesson, index in list.lessons" :key="lesson.id">{{ lesson.name }}</option>
             </select>
             <label class="font-medium text-gray-900 text-sm md:text-md">Activity</label>
-            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!this.errors.activity_id ? 'border-gray-300' : 'border-red-300'" v-model="form.activity_id">
+            <select class="mt-1 focus:ring-0 focus:border-gray-500 flex-1 block w-full rounded-md mb-4 cursor-pointer text-sm md:text-md" :class="!errors.activity_id ? 'border-gray-300' : 'border-red-300'" v-model="form.activity_id">
                 <option value="">Please Select</option>
                 <option :value="activity.id" v-for="activity, index in list.activities" :key="activity.id">{{ activity.name }}</option>
             </select>
             <label class="font-medium text-gray-900 text-sm md:text-md">File</label>
             <div class="mb-3">
                 <input class="w-full flex-auto rounded border px-3 py-[0.32rem] text-base font-normal text-neutral-700 cursor-pointer transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
-                :class="!this.errors.artwork_file ? 'border-gray-300' : 'border-red-300'"
+                :class="!errors.artwork_file ? 'border-gray-300' : 'border-red-300'"
                 type="file" accept="image/png, image/jpeg" ref="artwork_file" @change="handleArtwork"/>
               </div>
             <hr class="my-5">
@@ -254,7 +254,7 @@ const images = ref([
     <SimpleModal v-if="image.show" :open="image.show" @close:modal="image.show = false" class="md:w-2/6 p-4">
         <div class="flex flex-col justify-center items-center w-full space-y-4">
             <span class="md:text-xl">{{image.activity}}</span>
-            <img :src="this.image.file" class="object-scale-down rounded-lg" alt="">
+            <img :src="image.file" class="object-scale-down rounded-lg" alt="">
         </div>
     </SimpleModal>
     <SimpleModal v-if="show_confirmation" :open="show_confirmation" @close:modal="show_confirmation = false" class="md:w-3/12">
@@ -318,7 +318,9 @@ export default {
                 themes: false,
                 artworks: false
             },
-            errors: {},
+            errors: {
+
+            },
             uploading: false,
             disable_overlay: false,
             show_confirmation: false,
@@ -423,7 +425,7 @@ export default {
                     this.errors[key] = false
                 }
             }
-            const proceed = Object.values(this.form).some(value => value);
+            const proceed = Object.values(this.errors).every(value => value === false);
             if (proceed) {
                 this.$inertia.post(route('parent.art_gallery.store'), this.form, {
                     preserveState: false,

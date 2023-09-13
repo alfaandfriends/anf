@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Parent\ChildrenController;
 use App\Http\Controllers\Parent\ArtGalleryController;
 use App\Http\Controllers\Parent\AttendanceController;
 use App\Http\Controllers\Parent\HomeworkController;
@@ -19,6 +20,8 @@ Route::middleware(['auth'])->group(function(){
         
         /* Profile */
         Route::get('profile', [ProfileController::class, 'create'])->name('profile');
+        Route::get('profile/security', [ProfileController::class, 'security'])->name('profile.security');
+        Route::get('children', [ChildrenController::class, 'create'])->name('children');
 
         /* Home */
         Route::get('home', [HomeController::class, 'index'])->name('home');

@@ -38,15 +38,15 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard_access');
 
         /* Profile */
-        Route::get('/profile', [ProfileController::class, 'create'])->name('profile')->middleware('permission:profile_access');
-        Route::post('/profile/store', [ProfileController::class, 'store'])->name('profile.store')->middleware('permission:profile_access');
-        Route::post('/profile/security/store', [ProfileController::class, 'storeSecurity'])->name('profile.security.store')->middleware('permission:profile_access');
+        Route::get('/profile', [ProfileController::class, 'create'])->name('profile');
+        Route::post('/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+        Route::post('/profile/security/store', [ProfileController::class, 'storeSecurity'])->name('profile.security.store');
 
         /* Children */
-        Route::post('/children/store', [ChildrenController::class, 'store'])->name('children.store')->middleware('permission:children_create_access');
-        Route::get('/children/edit', [ChildrenController::class, 'edit'])->name('children.edit')->middleware('permission:children_edit_access');
-        Route::post('/children/update', [ChildrenController::class, 'update'])->name('children.update')->middleware('permission:children_edit_access');
-        Route::delete('/children/delete/{id}', [ChildrenController::class, 'destroy'])->name('children.destroy')->middleware('permission:children_delete_access');
+        Route::post('/children/store', [ChildrenController::class, 'store'])->name('children.store');
+        Route::get('/children/edit', [ChildrenController::class, 'edit'])->name('children.edit');
+        Route::post('/children/update', [ChildrenController::class, 'update'])->name('children.update');
+        Route::delete('/children/delete/{id}', [ChildrenController::class, 'destroy'])->name('children.destroy');
 
         /* Control Panel */
         Route::prefix('control-panel')->group(function () {
@@ -237,6 +237,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/orders/edit', [OrderController::class, 'edit'])->name('orders.edit');
         Route::post('/orders/update', [OrderController::class, 'update'])->name('orders.update');
         Route::delete('/orders/delete/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
+        Route::get('/orders/invoice/generate', [OrderController::class, 'generateInvoice'])->name('orders.invoice.generate');
+        Route::get('/orders/packing-slip/generate', [OrderController::class, 'generatePackingSlip'])->name('orders.packing_slip.generate');
 
         /* Notifications */
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
@@ -276,6 +278,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/invoices/fee/store', [InvoiceController::class, 'feeInvoiceStore'])->name('fee.invoices.store');
         Route::get('/invoices/fee/edit', [InvoiceController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit');
         Route::post('/invoices/fee/update', [InvoiceController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update');
+        Route::get('/invoices/fee_invoice/generate', [InvoiceController::class, 'feeInvoiceGenerate'])->name('fee.invoices.generate');
 
         /* Progress Report */
         Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report');

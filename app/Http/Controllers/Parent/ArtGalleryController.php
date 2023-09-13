@@ -24,6 +24,12 @@ class ArtGalleryController extends Controller
 
     public function store(Request $request)
     {
+        if(!$request->session()->get('current_active_child.child_id')){
+            return back()->with(['type'=>'error', 'header'=>'Sorry', 'message'=>'Please select a child first before proceed.']);
+        }
+        if(!$request->session()->get('current_active_child.student_id')){
+            return back()->with(['type'=>'error', 'header'=>'Sorry', 'message'=>'Only students are allowed to upload artwork.']);
+        }
         $file = $request->file('artwork_file');
         $extension = $file->getClientOriginalExtension();
         $filename = time() . '.' . $extension;

@@ -28,6 +28,9 @@
                     </div>
                 </template>
             </ul>
+            <div class="border-t border-gray-200 px-6 py-4" v-else-if="$page.props.user_has_children.length && !$page.props.current_active_child.child_id">
+                <span class="italic">Please select a child to view their information.</span>
+            </div>
             <div class="border-t border-gray-200 px-6 py-4" v-else>
                 <span class="italic">Sorry, this little cutie is not a student.</span>
             </div>

@@ -13,7 +13,7 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                     <div class="text-right">
                         <span class="mt-4 not-italic text-gray-800 text-md">
-                            <span class="font-bold text-lg">ALFA and Friends Sdn Bhd</span><br>
+                            <span class="strong">ALFA and Friends Sdn Bhd</span><br>
                             36, Jalan BP 7/8, Bandar Bukit Puchong,<br>
                             47120 Puchong, Selangor Darul Ehsan,<br>
                             Malaysia<br>
@@ -50,99 +50,6 @@ import BreezeButton from '@/Components/Button.vue';
                 <div class="mt-8 grid sm:grid-cols-2 gap-3">
                     <h4 class="text-md font-semibold text-gray-800 underline">Student: {{ invoice_data.student_name }}</h4>
                 </div>
-                <!-- <div class="mt-6 sm:hidden md:hidden lg:hidden">
-                    <div class="border border-gray-200 p-4 rounded-lg space-y-4">
-                        <div class="hidden sm:grid sm:grid-cols-6">
-                            <div class="sm:col-span-4 text-xs font-medium text-gray-500 uppercase">Item</div>
-                            <div class="text-center sm:col-span-1  text-xs font-medium text-gray-500 uppercase">Discount</div>
-                            <div class="text-right text-xs font-medium text-gray-500 uppercase">Amount</div>
-                        </div>
-                        <div class="hidden sm:block border-b border-gray-200"></div>
-                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                            <div class="col-span-full sm:col-span-4">
-                                <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">Programme</h5>
-                                <p class="font-bold text-sm text-gray-800">ALFA and Friends Math ( Level 2 ) </p>
-                                <div class="pl-5">
-                                    <ul class="list-disc">
-                                        <li>
-                                            <p class="font-medium text-xs text-gray-800">Plus Fee (2 per week)</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div>
-                                <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">Discount</h5>
-                                <p class="sm:text-center text-gray-800">0</p>
-                            </div>
-                            <div>
-                                <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">Amount</h5>
-                                <p class="sm:text-right text-gray-800">100.00</p>
-                            </div>
-                        </div>
-                        <div class="sm:hidden border-b border-gray-200"></div>
-                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                            <div class="col-span-full sm:col-span-4">
-                                <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">Programme</h5>
-                                <p class="font-bold text-sm text-gray-800">ALFA and Friends Coding & Robotic ( Level 1 )</p>
-                                <div class="pl-5">
-                                    <ul class="list-disc">
-                                        <li>
-                                            <p class="font-medium text-xs text-gray-800">Normal Fee</p>
-                                        </li>
-                                        <li>
-                                            <p class="font-medium text-xs text-gray-800">Material Fee</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div>
-                                <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">Discount</h5>
-                                <p class="sm:text-center text-gray-800">0</p>
-                            </div>
-                            <div>
-                                <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">Amount</h5>
-                                <p class="sm:text-right text-gray-800">200.00</p>
-                            </div>
-                        </div>
-                        <div class="sm:hidden border-b border-gray-200"></div>
-                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                            <div class="col-span-full sm:col-span-4">
-                                <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">Programme</h5>
-                                <p class="font-bold text-sm text-gray-800">ALFA and Friends Digital Arts ( Level 1 )</p>
-                                <div class="pl-5">
-                                    <ul class="list-disc">
-                                        <li class="">
-                                            <p class="font-medium text-xs text-gray-800">Normal Fee</p>
-                                        </li>
-                                        <li>
-                                            <p class="font-medium text-xs text-gray-800">Material Fee</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div>
-                                <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">Discount</h5>
-                                <p class="sm:text-center text-gray-800">0</p>
-                            </div>
-                            <div>
-                                <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase">Amount</h5>
-                                <p class="sm:text-right text-gray-800">200.00</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-8 flex sm:justify-end sm:hidden md:hidden lg:hidden">
-                    <div class="w-full max-w-2xl sm:text-right space-y-2">
-                        <div class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2 px-4">
-                            <dl class="grid sm:grid-cols-6 gap-x-3">
-                                <dt class="col-span-5 font-semibold text-gray-800">Total:</dt>
-                                <dd class="text-gray-800">300.00</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div> -->
-    
-                <!-- Desktop View or Print View -->
                 <div class="mt-6">
                     <table class="w-full">
                         <thead class="bg-gray-800">
@@ -176,7 +83,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <p class="font-medium text-lg text-gray-800">Total :</p>
                                 </td>
                                 <td class="pt-5 py-2 px-4 text-center">
-                                    <p class="font-medium text-lg text-gray-800">{{ this.invoice_data.total_amount }}</p>
+                                    <p class="font-medium text-lg text-gray-800">{{ invoice_data.total_amount }}</p>
                                 </td>
                             </tr>
                         </tfoot>
