@@ -22,7 +22,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </span>
                                     <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-model="params.search">
                                 </div>
-                                <!-- <div class="flex">
+                                <div class="flex">
                                     <Multiselect 
                                         v-model="params.centre_id"
                                         valueProp="ID"
@@ -71,7 +71,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                                         }"
                                     />
-                                </div> -->
+                                </div>
                             </div>
                             <BreezeButton @click="newAdmission(params.centre_id)">New Admission</BreezeButton>
                         </div>
