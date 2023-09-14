@@ -50,21 +50,17 @@ class CentreController extends Controller
             'centre_email'              => 'required|max:50',
             'centre_address'            => 'required|max:50',
         ]);
-        if(!$request->principal_user_id){
-            return redirect()->back()->with(['type'=>'error', 'message'=>'Please enter a valid principal email address!']);
-        }
 
         if(empty($request->image_list) || count(collect($request->image_list)->where('type', 'front')) < 1 || count(collect($request->image_list)->where('type', 'inside')) < 1){
-            return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload required image !']);
+            return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload at least 1 image from the front and 1 image from inside the centre!']);
         }
-
+        
         $new_centre_id   =   DB::table('centres')->insertGetId([
                                 'label' => $request->centre_name,
                                 'phone' => $request->centre_contact_number,
                                 'email' => $request->centre_email,
                                 'address' => $request->centre_address,
                                 'is_active' => $request->centre_active,
-                                'principal_user_id' => $request->principal_user_id,
                                 'last_enrollment_count' => 0,
                                 'last_invoice_count' => 0,
                                 'last_payment_count' => 0,
@@ -94,21 +90,14 @@ class CentreController extends Controller
         if(in_array($request->centre_id, $this->getAllowedCentres()) || auth()->user()->is_admin){
     
             $centre_info        =   DB::table('centres')
-                                        ->join('wpvt_users', 'centres.principal_user_id', '=', 'wpvt_users.ID')
                                         ->where('centres.ID', $request->centre_id)
                                         ->select('centres.*')
-                                        ->first();
-            $email_exist        =   DB::table('centres')
-                                        ->join('wpvt_users', 'centres.principal_user_id', '=', 'wpvt_users.ID')
-                                        ->where('centres.ID', $request->centre_id)
-                                        ->select('wpvt_users.*')
-                                        ->first();          
+                                        ->first();         
             $centre_images      =   DB::table('centre_images')->where('centre_id', $request->centre_id)->get();
     
             return Inertia::render('CentreManagement/Centres/Edit', [
                 'centre_info' => $centre_info,
                 'centre_images' => $centre_images,
-                'email_exist' => $email_exist,
             ]);
         }
         return redirect(route('centres'))->with(['type'=>'error', 'message'=>"You are not allowed to perform that action!"]);
@@ -122,11 +111,6 @@ class CentreController extends Controller
             'centre_email'              => 'required|max:50',
             'centre_address'            => 'required|max:100',
         ]);
-
-        if(!$request->principal_user_id){
-            return redirect()->back()->with(['type'=>'error', 'message'=>'Please enter a valid principal email address!']);
-        }
-
         /* Check images */
         $images_count           = DB::table('centre_images')->where('centre_id', $request->centre_id)->count();
         
@@ -136,19 +120,19 @@ class CentreController extends Controller
             return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload required image !']);
         }
 
-        if(auth()->user()->is_admin == false){
-            $approval_data      =   $request->all();
-            $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($request->centre_id, $this->update_centre_config);
+        // if(auth()->user()->is_admin == false){
+        //     $approval_data      =   $request->all();
+        //     $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($request->centre_id, $this->update_centre_config);
 
-            if($pending_approval){
-                return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
-            }
+        //     if($pending_approval){
+        //         return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
+        //     }
 
-            $approval   =   new CentreApprovalController();
-            $approval->sendCentreUpdateRequest($approval_data);
+        //     $approval   =   new CentreApprovalController();
+        //     $approval->sendCentreUpdateRequest($approval_data);
 
-            return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
+        //     return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        // }
         
         /* Update centre info */
         DB::table('centres')
@@ -159,7 +143,6 @@ class CentreController extends Controller
                 'email' => $request->centre_email,
                 'address' => $request->centre_address,
                 'is_active' => $request->centre_active,
-                'principal_user_id' => $request->principal_user_id,
             ]);
 
         /* Delete selected images */
@@ -178,19 +161,19 @@ class CentreController extends Controller
     public function destroy($id)
     {
 
-        if(auth()->user()->is_admin == false){
-            $centre_to_delete   =   $id;
-            $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($id, $this->delete_centre_config);
+        // if(auth()->user()->is_admin == false){
+        //     $centre_to_delete   =   $id;
+        //     $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($id, $this->delete_centre_config);
 
-            if($pending_approval){
-                return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
-            }
+        //     if($pending_approval){
+        //         return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
+        //     }
 
-            $approval   =   new CentreApprovalController();
-            $approval->sendCentreDeleteRequest($centre_to_delete);
+        //     $approval   =   new CentreApprovalController();
+        //     $approval->sendCentreDeleteRequest($centre_to_delete);
 
-            return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
+        //     return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        // }
 
         DB::table('centres')->where('ID', $id)->delete();
 
