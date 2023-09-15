@@ -228,20 +228,20 @@ class ProgrammeController extends Controller
         }
 
         /* Check if user is admin */
-        if(auth()->user()->is_admin == false){
+        // if(auth()->user()->is_admin == false){
 
-            /* Check if delete request on this programme is still pending */
-            $pending_approval   =   ProgrammeHelper::checkProgrammePreviousApprovals($id, $this->delete_programme_config);
-            if($pending_approval){
-                return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'This programme is on pending approval!']);
-            }
+        //     /* Check if delete request on this programme is still pending */
+        //     $pending_approval   =   ProgrammeHelper::checkProgrammePreviousApprovals($id, $this->delete_programme_config);
+        //     if($pending_approval){
+        //         return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'This programme is on pending approval!']);
+        //     }
 
-            /* Send programme delete request */
-            $approval   =   new ProgrammeApprovalController();
-            $approval->sendProgrammeDeleteRequest($id);
+        //     /* Send programme delete request */
+        //     $approval   =   new ProgrammeApprovalController();
+        //     $approval->sendProgrammeDeleteRequest($id);
 
-            return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
+        //     return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        // }
 
         /* proceed with programme delete */
         DB::table('programmes')
