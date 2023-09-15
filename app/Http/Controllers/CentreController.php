@@ -22,14 +22,17 @@ class CentreController extends Controller
 
     public function index()
     {
-        $query  =   Centre::query();
+        $query  =   DB::table('centres')
+                        ->leftJoin('countries', 'centres.country_id', '=', 'countries.id')
+                        ->select('centres.id as centre_id', 'centres.label as centre_name', 'centres.address as centre_address', 
+                                'centres.is_active as centre_status', 'countries.name as country_name');
         
         if(request('search')){
-            $query  ->where('label', 'LIKE', '%'.request('search').'%')
-                    ->orWhere('email', 'LIKE', '%'.request('search').'%');
+            $query  ->where('centres.label', 'LIKE', '%'.request('search').'%')
+                    ->orWhere('centres.email', 'LIKE', '%'.request('search').'%');
         }
         
-        $results    =   $query->whereIn('ID', $this->getAllowedCentres())->orderBy('id')->paginate(10);
+        $results    =   $query->whereIn('centres.id', $this->getAllowedCentres())->orderBy('centres.id')->paginate(10);
 
         return Inertia::render('CentreManagement/Centres/Index', [
             'filter'=>request()->all('search', 'centre_id'),
@@ -39,13 +42,17 @@ class CentreController extends Controller
 
     public function create(Request $request)
     {
-        return Inertia::render('CentreManagement/Centres/Create');
+        $countries  =   DB::table('countries')->get();
+        return Inertia::render('CentreManagement/Centres/Create', [
+            'countries' => $countries
+        ]);
     }
 
     public function store(Request $request)
     {   
         $request->validate([
             'centre_name'               => 'required|max:20',
+            'centre_country'            => 'required',
             'centre_contact_number'     => 'required|max:50',
             'centre_email'              => 'required|max:50',
             'centre_address'            => 'required|max:50',
@@ -56,6 +63,7 @@ class CentreController extends Controller
         }
         
         $new_centre_id   =   DB::table('centres')->insertGetId([
+                                'country_id' => $request->centre_country,
                                 'label' => $request->centre_name,
                                 'phone' => $request->centre_contact_number,
                                 'email' => $request->centre_email,
@@ -88,7 +96,8 @@ class CentreController extends Controller
     public function edit(Request $request)
     {
         if(in_array($request->centre_id, $this->getAllowedCentres()) || auth()->user()->is_admin){
-    
+            
+            $countries  =   DB::table('countries')->get();
             $centre_info        =   DB::table('centres')
                                         ->where('centres.ID', $request->centre_id)
                                         ->select('centres.*')
@@ -98,6 +107,7 @@ class CentreController extends Controller
             return Inertia::render('CentreManagement/Centres/Edit', [
                 'centre_info' => $centre_info,
                 'centre_images' => $centre_images,
+                'countries' => $countries,
             ]);
         }
         return redirect(route('centres'))->with(['type'=>'error', 'message'=>"You are not allowed to perform that action!"]);
@@ -107,6 +117,7 @@ class CentreController extends Controller
     {
         $request->validate([
             'centre_name'               => 'required|max:20',
+            'centre_country'            => 'required',
             'centre_contact_number'     => 'required|max:50',
             'centre_email'              => 'required|max:50',
             'centre_address'            => 'required|max:100',
@@ -138,6 +149,7 @@ class CentreController extends Controller
         DB::table('centres')
             ->where('ID', $request->centre_id)
             ->update([
+                'country_id' => $request->centre_country,
                 'label' => $request->centre_name,
                 'phone' => $request->centre_contact_number,
                 'email' => $request->centre_email,

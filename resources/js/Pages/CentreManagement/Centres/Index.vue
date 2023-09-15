@@ -29,10 +29,12 @@ import BreezeButton from '@/Components/Button.vue';
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-300">
                                     <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="1%">#</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Name</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="3%">Address</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="3%">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="3%">Action</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="7%">Address</th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Country</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -43,12 +45,13 @@ import BreezeButton from '@/Components/Button.vue';
                                             </div>
                                         </td>
                                     </tr> 
-                                    <tr class="hover:bg-gray-200" v-for="centre in $page.props.centres.data" :key="centre.ID">
-                                        <td class="px-2 py-3">
-                                            <div class="flex items-center">
-                                                <div class="ml-4">
-                                                    <div class="text-md font-bold text-indigo-900 uppercase mb-1">{{ centre.label }}</div>
-                                                    <div class="flex items-center text-sm text-black-500">
+                                    <tr class="hover:bg-gray-200" v-for="centre, index in $page.props.centres.data">
+                                        <td class="px-6 py-3">
+                                            <span class="text-black text-sm font-semibold">{{ index+1 }}</span>
+                                        </td>
+                                        <td class="px-6 py-3">
+                                            <span class="text-md font-bold text-indigo-900 uppercase mb-1">{{ centre.centre_name }}</span>
+                                                    <!-- <div class="flex items-center text-sm text-black-500">
                                                         <span>
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -61,37 +64,33 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                                         </svg>
                                                         <span class="pl-2">{{ centre.phone ? centre.phone : '-' }}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                    </div> -->
                                         </td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
-                                            <div class="flex">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                                </svg>
-                                                <span class="pl-2 capitalize text-sm break-all">{{ centre.address ? centre.address : 'Not Available'}}</span>
-                                            </div>
+                                        <td class="px-6 py-3 whitespace-nowrap">
+                                            <span class="capitalize text-sm whitespace-pre-line font-semibold">{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</span>
+                                        </td>
+                                        <td class="px-6 py-3 whitespace-nowrap text-center">
+                                            <span class="capitalize text-sm whitespace-pre-line font-semibold">{{ centre.country_name ? centre.country_name : 'Not Set' }}</span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="centre.is_active == true ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.is_active == true ? 'Active' : 'Not Active' }} </span>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="centre.centre_status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.centre_status ? 'Active' : 'Not Active' }} </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex mr-1">
-                                                    <BreezeButton :buttonType="'blue'" title="View Images" @click="viewImages(centre.ID)" v-if="$page.props.can.centre_view_access">
+                                                    <BreezeButton :buttonType="'blue'" title="View Images" @click="viewImages(centre.centre_id)" v-if="$page.props.can.centre_view_access">
                                                         <!-- <PhotographIcon class="text-white-600 h-4 w-4 fill-current"></PhotographIcon> -->
                                                         View Images
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="flex mr-1" >
-                                                    <BreezeButton :buttonType="'warning'" title="Edit School" @click="editCentre(centre.ID)" v-if="$page.props.can.centre_edit_access">
+                                                    <BreezeButton :buttonType="'warning'" title="Edit School" @click="editCentre(centre.centre_id)" v-if="$page.props.can.centre_edit_access">
                                                         <!-- <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon> -->
                                                         Edit
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="flex">
-                                                    <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.ID)" v-if="$page.props.can.centre_delete_access">
+                                                    <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.centre_id)" v-if="$page.props.can.centre_delete_access">
                                                         <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
                                                         Delete
                                                     </BreezeButton>

@@ -39,6 +39,15 @@
                                                 <input type="text" name="centre_name" id="centre_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_name ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_name" autocomplete="none"/>
                                             </div>
                                         </div>
+                                        <div class="mb-4">
+                                            <label for="centre_country" class="block text-sm text-gray-700 font-bold"> Centre Country <span class="text-red-500">*</span> </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select type="text" name="centre_country" id="centre_country" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_country ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_country" autocomplete="none">
+                                                    <option value="">Select a country</option>
+                                                    <option :value="country.id" v-for="country in $page.props.countries">{{ country.name }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                         <div class="mb-4">
@@ -254,6 +263,7 @@ export default {
             email_exist: '',
             form: {
                 centre_name: '',
+                centre_country: '',
                 centre_contact_number: '',
                 centre_email: '',
                 centre_address: '',

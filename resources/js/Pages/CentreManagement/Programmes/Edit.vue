@@ -33,11 +33,20 @@ import BreezeButton from '@/Components/Button.vue';
                                         <h1 class="text-indigo-800 font-bold">Programme Information</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
+                                    <div class="grid grid-cols-2 sm:grid-cols-0 gap-0 sm:gap-4">
                                         <div class="mb-4">
                                             <label for="programme_name" class="block text-sm text-gray-700 font-bold"> Programme Name <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <input type="text" name="programme_name" id="programme_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_name ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_name" autocomplete="off"/>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="programme_country" class="block text-sm text-gray-700 font-bold"> Centre Country <span class="text-red-500">*</span> </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select type="text" name="programme_country" id="programme_country" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_country ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_country" autocomplete="none">
+                                                    <option value="">Select a country</option>
+                                                    <option :value="country.id" v-for="country in $page.props.countries">{{ country.name }}</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -408,6 +417,7 @@ export default {
             confirmationRoute: '',
             form: {
                 programme_id: this.$page.props.programme_data ? this.$page.props.programme_data.id  : '',
+                programme_country: this.$page.props.programme_data ? this.$page.props.programme_data.country_id : '',
                 programme_name: this.$page.props.programme_data ? this.$page.props.programme_data.name  : '',
                 programme_info: [],
                 programme_active: this.$page.props.programme_data ? this.$page.props.programme_data.status  : false,
