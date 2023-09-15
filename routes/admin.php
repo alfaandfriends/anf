@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CentreController;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiagnosticTestController;
 use App\Http\Controllers\ExternalUserManagementController;
@@ -48,6 +49,14 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/children/update', [ChildrenController::class, 'update'])->name('children.update');
         Route::delete('/children/delete/{id}', [ChildrenController::class, 'destroy'])->name('children.destroy');
 
+        /* Countries */
+        Route::get('/country', [CountryController::class, 'index'])->name('country');
+        Route::get('/country/create', [CountryController::class, 'create'])->name('country.create');
+        Route::post('/country/store', [CountryController::class, 'store'])->name('country.store');
+        Route::get('/country/edit', [CountryController::class, 'edit'])->name('country.edit');
+        Route::post('/country/update', [CountryController::class, 'update'])->name('country.update');
+        Route::delete('/country/destroy/{id}', [CountryController::class, 'destroy'])->name('country.destroy');
+        
         /* Control Panel */
         Route::prefix('control-panel')->group(function () {
             /* Users */
@@ -95,14 +104,6 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/permissions/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
             Route::post('/permissions/update', [PermissionController::class, 'update'])->name('permissions.update');
             Route::delete('/permissions/destroy/{id}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
-
-            /* Countries */
-            Route::get('/general/countries', [SettingController::class, 'countryList'])->name('settings.countries');
-            Route::get('/general/countries/create', [SettingController::class, 'addCountry'])->name('settings.countries.create');
-            Route::post('/general/countries/store', [SettingController::class, 'storeCountry'])->name('settings.countries.store');
-            Route::get('/general/countries/edit', [SettingController::class, 'editCountry'])->name('settings.countries.edit');
-            Route::post('/general/countries/update', [SettingController::class, 'updateCountry'])->name('settings.countries.update');
-            Route::delete('/general/countries/destroy/{id}', [SettingController::class, 'destroyCountry'])->name('settings.countries.destroy');
         });
 
         /* Centre Management */
