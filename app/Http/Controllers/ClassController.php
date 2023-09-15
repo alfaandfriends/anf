@@ -160,47 +160,47 @@ class ClassController extends Controller
             'end_time'              => 'required',
         ]);
         
-        if(auth()->user()->is_admin == false){
-            $approval_data      =   $request->all();
-            $pending_approval   =   ClassHelper::checkClassPreviousApprovals($request->class_id, $this->update_class_config);
+        // if(auth()->user()->is_admin == false){
+        //     $approval_data      =   $request->all();
+        //     $pending_approval   =   ClassHelper::checkClassPreviousApprovals($request->class_id, $this->update_class_config);
         
-            if($pending_approval){
-                return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'This programme is on pending approval!']);
-            }
-            $approval_data['class_info']    =   DB::table('classes')
-                                                    ->join('programme_levels','classes.programme_level_id','=','programme_levels.id')
-                                                    ->join('programmes','programme_levels.programme_id','=','programmes.id')
-                                                    ->where('classes.id', $request->class_id)
-                                                    ->select([  'classes.id as class_id','programmes.id as programme_id','programmes.name','programme_levels.id as programme_level_id',
-                                                                'programme_levels.level','classes.centre_id','classes.class_day_id',
-                                                                'programme_levels.class_type_id','classes.class_method_id','classes.start_time','classes.end_time','classes.capacity'
-                                                                ,'classes.status'])->first();
+        //     if($pending_approval){
+        //         return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'This programme is on pending approval!']);
+        //     }
+        //     $approval_data['class_info']    =   DB::table('classes')
+        //                                             ->join('programme_levels','classes.programme_level_id','=','programme_levels.id')
+        //                                             ->join('programmes','programme_levels.programme_id','=','programmes.id')
+        //                                             ->where('classes.id', $request->class_id)
+        //                                             ->select([  'classes.id as class_id','programmes.id as programme_id','programmes.name','programme_levels.id as programme_level_id',
+        //                                                         'programme_levels.level','classes.centre_id','classes.class_day_id',
+        //                                                         'programme_levels.class_type_id','classes.class_method_id','classes.start_time','classes.end_time','classes.capacity'
+        //                                                         ,'classes.status'])->first();
 
-            $approval_data['class_types']   =   DB::table('programme_levels')
-                                                    ->join('class_types','programme_levels.class_type_id','=','class_types.id')
-                                                    ->select(['class_types.id', 'class_types.name'])
-                                                    ->distinct('class_types.id')
-                                                    ->where('programme_levels.programme_id', $approval_data['class_info']->programme_id)
-                                                    ->orderBy('class_types.id')
-                                                    ->get();
+        //     $approval_data['class_types']   =   DB::table('programme_levels')
+        //                                             ->join('class_types','programme_levels.class_type_id','=','class_types.id')
+        //                                             ->select(['class_types.id', 'class_types.name'])
+        //                                             ->distinct('class_types.id')
+        //                                             ->where('programme_levels.programme_id', $approval_data['class_info']->programme_id)
+        //                                             ->orderBy('class_types.id')
+        //                                             ->get();
 
-            $approval_data['class_levels']  =   DB::table('programme_levels')
-                                                    ->select(['id', 'level'])
-                                                    ->where('programme_id', $approval_data['class_info']->programme_id)
-                                                    ->where('class_type_id', $approval_data['class_info']->class_type_id)
-                                                    ->orderBy('level')
-                                                    ->get();
+        //     $approval_data['class_levels']  =   DB::table('programme_levels')
+        //                                             ->select(['id', 'level'])
+        //                                             ->where('programme_id', $approval_data['class_info']->programme_id)
+        //                                             ->where('class_type_id', $approval_data['class_info']->class_type_id)
+        //                                             ->orderBy('level')
+        //                                             ->get();
 
-            $approval_data['programme_list']    =   ProgrammeHelper::programmes();
-            $approval_data['day_list']          =   DB::table('class_days')->get();
-            $approval_data['type_list']         =   DB::table('class_types')->get();
-            $approval_data['method_list']       =   DB::table('class_methods')->get();
+        //     $approval_data['programme_list']    =   ProgrammeHelper::programmes();
+        //     $approval_data['day_list']          =   DB::table('class_days')->get();
+        //     $approval_data['type_list']         =   DB::table('class_types')->get();
+        //     $approval_data['method_list']       =   DB::table('class_methods')->get();
 
-            $approval   =   new ClassApprovalController();
-            $approval->sendClassUpdateRequest($approval_data);
+        //     $approval   =   new ClassApprovalController();
+        //     $approval->sendClassUpdateRequest($approval_data);
 
-            return redirect(route('classes'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
+        //     return redirect(route('classes'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        // }
         DB::table('classes')->where('id', $request->class_id)->update([
             'centre_id'             =>  $request->centre_id,
             'programme_level_id'    =>  $request->programme_level_id,
@@ -225,20 +225,20 @@ class ClassController extends Controller
         }
 
         /* Check if user is admin */
-        if(auth()->user()->is_admin == false){
+        // if(auth()->user()->is_admin == false){
 
-            /* Check if delete request on this programme is still pending */
-            $pending_approval   =   ClassHelper::checkClassPreviousApprovals($id, $this->delete_class_config);
-            if($pending_approval){
-                return redirect(route('classes'))->with(['type' => 'error', 'message' => 'This class is on pending approval!']);
-            }
+        //     /* Check if delete request on this programme is still pending */
+        //     $pending_approval   =   ClassHelper::checkClassPreviousApprovals($id, $this->delete_class_config);
+        //     if($pending_approval){
+        //         return redirect(route('classes'))->with(['type' => 'error', 'message' => 'This class is on pending approval!']);
+        //     }
 
-            /* Send programme delete request */
-            $approval   =   new ClassApprovalController();
-            $approval->sendClassDeleteRequest($id);
+        //     /* Send programme delete request */
+        //     $approval   =   new ClassApprovalController();
+        //     $approval->sendClassDeleteRequest($id);
 
-            return redirect(route('classes'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
+        //     return redirect(route('classes'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        // }
 
         DB::table('classes')->where('id', $id)->delete();
 

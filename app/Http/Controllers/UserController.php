@@ -186,10 +186,10 @@ class UserController extends Controller
         $user_can_view_all_centres ? $user->update(['can_view_all_centres' => true]) : $user->update(['can_view_all_centres' => false]);
 
         /* Send notification on user update */
-        if(auth()->user()->is_admin == false){
-            $data  =   array('approval_data' => $request->all());
-            NotificationHelper::sendApprovalNotifications($this->update_user_config, $data);
-        }
+        // if(auth()->user()->is_admin == false){
+        //     $data  =   array('approval_data' => $request->all());
+        //     NotificationHelper::sendApprovalNotifications($this->update_user_config, $data);
+        // }
         
         User::where('ID', $request->user_id)->update([
             'user_login'            => $request['form']['username'],

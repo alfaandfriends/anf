@@ -257,10 +257,10 @@ class StudentController extends Controller
         ]);
 
         
-        if(auth()->user()->is_admin == false){
-            $data  =   array('approval_data' => $request->all());
-            NotificationHelper::sendApprovalNotifications($this->update_student_config, $data);
-        }
+        // if(auth()->user()->is_admin == false){
+        //     $data  =   array('approval_data' => $request->all());
+        //     NotificationHelper::sendApprovalNotifications($this->update_student_config, $data);
+        // }
 
         return redirect(route('students'))->with(['type'=>'success', 'message'=>'Student details updated !']);
     }

@@ -137,48 +137,48 @@ class ProgrammeController extends Controller
             return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level !']);
         }
 
-        if(auth()->user()->is_admin == false){
-            $approval_data      =   $request->all();
-            $pending_approval   =   ProgrammeHelper::checkProgrammePreviousApprovals($request->programme_id, $this->update_programme_config);
+        // if(auth()->user()->is_admin == false){
+        //     $approval_data      =   $request->all();
+        //     $pending_approval   =   ProgrammeHelper::checkProgrammePreviousApprovals($request->programme_id, $this->update_programme_config);
 
-            if($pending_approval){
-                return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'This programme is on pending approval!']);
-            }
+        //     if($pending_approval){
+        //         return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'This programme is on pending approval!']);
+        //     }
             
-            /* Approval Data */
-            $class_types            =   DB::table('class_types')->get()->keyBy('id')->toArray();
-            $class_type_details     =   DB::table('class_types_detail')->get()->toArray();
+        //     /* Approval Data */
+        //     $class_types            =   DB::table('class_types')->get()->keyBy('id')->toArray();
+        //     $class_type_details     =   DB::table('class_types_detail')->get()->toArray();
 
-            $programme_name         =   DB::table('programmes')->where('id', $request->programme_id)->pluck('name')->first();
-            $programme_levels       =   DB::table('programme_levels')
-                                            ->where('programme_id', $request->programme_id)
-                                            ->select(['id as programme_level_id', 'level', 'class_type_id', 'material_fee'])
-                                            ->get();
+        //     $programme_name         =   DB::table('programmes')->where('id', $request->programme_id)->pluck('name')->first();
+        //     $programme_levels       =   DB::table('programme_levels')
+        //                                     ->where('programme_id', $request->programme_id)
+        //                                     ->select(['id as programme_level_id', 'level', 'class_type_id', 'material_fee'])
+        //                                     ->get();
 
-            $programme_level_fees   =   DB::table('programme_level_fees')
-                                            ->whereIn('programme_level_id', $programme_levels->pluck('programme_level_id'))
-                                            ->select(['programme_level_id', 'class_type_detail_id', 'fee_amount'])
-                                            ->get()->toArray();
+        //     $programme_level_fees   =   DB::table('programme_level_fees')
+        //                                     ->whereIn('programme_level_id', $programme_levels->pluck('programme_level_id'))
+        //                                     ->select(['programme_level_id', 'class_type_detail_id', 'fee_amount'])
+        //                                     ->get()->toArray();
 
-            foreach($programme_levels as $programme_level){
-                foreach($programme_level_fees as $programme_level_fee){
-                    if($programme_level_fee->programme_level_id == $programme_level->programme_level_id){
-                        $programme_level->fees[$programme_level_fee->class_type_detail_id]  =   $programme_level_fee->fee_amount;
-                    }
-                }
-            }
+        //     foreach($programme_levels as $programme_level){
+        //         foreach($programme_level_fees as $programme_level_fee){
+        //             if($programme_level_fee->programme_level_id == $programme_level->programme_level_id){
+        //                 $programme_level->fees[$programme_level_fee->class_type_detail_id]  =   $programme_level_fee->fee_amount;
+        //             }
+        //         }
+        //     }
             
-            $approval_data['class_types']                   =   $class_types;
-            $approval_data['class_type_details']            =   $class_type_details;
-            $approval_data['current_programme_levels']      =   $programme_levels;
-            $approval_data['programme_level_to_add']        =   $request->programme_level_to_add;
-            $approval_data['programme_level_to_delete']     =   $programme_levels->whereIn('programme_level_id', $request->programme_level_to_delete);
+        //     $approval_data['class_types']                   =   $class_types;
+        //     $approval_data['class_type_details']            =   $class_type_details;
+        //     $approval_data['current_programme_levels']      =   $programme_levels;
+        //     $approval_data['programme_level_to_add']        =   $request->programme_level_to_add;
+        //     $approval_data['programme_level_to_delete']     =   $programme_levels->whereIn('programme_level_id', $request->programme_level_to_delete);
 
-            $approval   =   new ProgrammeApprovalController();
-            $approval->sendProgrammeUpdateRequest($approval_data);
+        //     $approval   =   new ProgrammeApprovalController();
+        //     $approval->sendProgrammeUpdateRequest($approval_data);
 
-            return redirect(route('programmes'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
+        //     return redirect(route('programmes'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        // }
 
         DB::table('programmes')->where('id', $request->programme_id)->update([
             'name'              =>  $request->programme_name,
@@ -218,20 +218,20 @@ class ProgrammeController extends Controller
         }
 
         /* Check if user is admin */
-        if(auth()->user()->is_admin == false){
+        // if(auth()->user()->is_admin == false){
 
-            /* Check if delete request on this programme is still pending */
-            $pending_approval   =   ProgrammeHelper::checkProgrammePreviousApprovals($id, $this->delete_programme_config);
-            if($pending_approval){
-                return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'This programme is on pending approval!']);
-            }
+        //     /* Check if delete request on this programme is still pending */
+        //     $pending_approval   =   ProgrammeHelper::checkProgrammePreviousApprovals($id, $this->delete_programme_config);
+        //     if($pending_approval){
+        //         return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'This programme is on pending approval!']);
+        //     }
 
-            /* Send programme delete request */
-            $approval   =   new ProgrammeApprovalController();
-            $approval->sendProgrammeDeleteRequest($id);
+        //     /* Send programme delete request */
+        //     $approval   =   new ProgrammeApprovalController();
+        //     $approval->sendProgrammeDeleteRequest($id);
 
-            return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
+        //     return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        // }
 
         /* proceed with programme delete */
         DB::table('programmes')

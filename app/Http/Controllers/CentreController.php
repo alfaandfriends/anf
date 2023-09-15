@@ -136,19 +136,19 @@ class CentreController extends Controller
             return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload required image !']);
         }
 
-        if(auth()->user()->is_admin == false){
-            $approval_data      =   $request->all();
-            $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($request->centre_id, $this->update_centre_config);
+        // if(auth()->user()->is_admin == false){
+        //     $approval_data      =   $request->all();
+        //     $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($request->centre_id, $this->update_centre_config);
 
-            if($pending_approval){
-                return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
-            }
+        //     if($pending_approval){
+        //         return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
+        //     }
 
-            $approval   =   new CentreApprovalController();
-            $approval->sendCentreUpdateRequest($approval_data);
+        //     $approval   =   new CentreApprovalController();
+        //     $approval->sendCentreUpdateRequest($approval_data);
 
-            return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
+        //     return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        // }
         
         /* Update centre info */
         DB::table('centres')
@@ -178,19 +178,19 @@ class CentreController extends Controller
     public function destroy($id)
     {
 
-        if(auth()->user()->is_admin == false){
-            $centre_to_delete   =   $id;
-            $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($id, $this->delete_centre_config);
+        // if(auth()->user()->is_admin == false){
+        //     $centre_to_delete   =   $id;
+        //     $pending_approval   =   CentreHelper::checkCentrePreviousApprovals($id, $this->delete_centre_config);
 
-            if($pending_approval){
-                return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
-            }
+        //     if($pending_approval){
+        //         return redirect(route('centres'))->with(['type' => 'error', 'message' => 'This centre is on pending approval!']);
+        //     }
 
-            $approval   =   new CentreApprovalController();
-            $approval->sendCentreDeleteRequest($centre_to_delete);
+        //     $approval   =   new CentreApprovalController();
+        //     $approval->sendCentreDeleteRequest($centre_to_delete);
 
-            return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
-        }
+        //     return redirect(route('centres'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
+        // }
 
         DB::table('centres')->where('ID', $id)->delete();
 
