@@ -2,6 +2,7 @@
 
 use App\Classes\ProgrammeHelper;
 use App\Http\Controllers\ChildrenController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Parent\ArtGalleryController;
 use App\Http\Controllers\StudentController;
@@ -10,6 +11,11 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function(){
+
+    /* Country */
+    Route::get('country/list', [CountryController::class, 'getCountries'])->name('country.list');
+    Route::get('country/find/{id}', [CountryController::class, 'getCountry'])->name('country.find');
+
     /* File Download */
     Route::get('teacher_resources/{filename}', [DownloadController::class, 'teacherResources'])->name('download.teacher_resources');
 

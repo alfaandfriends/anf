@@ -37,15 +37,16 @@
                                                 @change="clearState"
                                                 :canDeselect="false"
                                                 :loading="loading.country"
-                                                v-model="form.country_code"
+                                                v-model="form.country_id"
                                                 :min-chars="1"
                                                 :delay="1"
                                                 :searchable="true"
                                                 :noOptionsText="'Please enter at least 1 character'"
-                                                :placeholder="form.country"
-                                                :options="async function(query) {
-                                                    return await fetchCountries(query) 
-                                                }"
+                                                :placeholder="form.country_name"
+                                                trackBy="name"
+                                                label="name"
+                                                valueProp="id"
+                                                :options="$page.props.countries"
                                                 :classes="{
                                                     container: 
                                                     errors.country_code ? 
@@ -204,15 +205,16 @@
                                             @change="clearState"
                                             :canDeselect="false"
                                             :loading="loading.country"
-                                            v-model="form.country_code"
+                                            v-model="form.country_id"
                                             :min-chars="1"
                                             :delay="1"
                                             :searchable="true"
                                             :noOptionsText="'Please enter at least 1 character'"
-                                            :placeholder="form.country"
-                                            :options="async function(query) {
-                                                return await fetchCountries(query) 
-                                            }"
+                                            :placeholder="form.country_name"
+                                            trackBy="name"
+                                            label="name"
+                                            valueProp="id"
+                                            :options="$page.props.countries"
                                             :classes="{
                                                 container: 
                                                 errors.country_code ? 
@@ -366,13 +368,14 @@ export default {
                     file: '',
                     value: this.$page.props.auth.profile_photo != '' ? '/storage/'+this.$page.props.auth.profile_photo : 'http://www.gravatar.com/avatar/?d=mp'
                 },
-                full_name: this.$page.props.auth.user.display_name ? this.$page.props.auth.user.display_name : '',
-                country_code: this.$page.props.auth.user.user_country_code ? this.$page.props.auth.user.user_country_code : '',
-                country: this.$page.props.auth.user.user_country ? this.$page.props.auth.user.user_country : '',
-                calling_code: this.$page.props.auth.user.user_calling_code ? this.$page.props.auth.user.user_calling_code : '',
-                country_state: this.$page.props.auth.user.user_state ? this.$page.props.auth.user.user_state : '',
-                contact_number: this.$page.props.auth.user.user_contact ? this.$page.props.auth.user.user_contact : '',
-                address: this.$page.props.auth.user.user_address ? this.$page.props.auth.user.user_address : ''
+                full_name: this.$page.props.user_info ? this.$page.props.user_info.display_name : '',
+                calling_code: this.$page.props.user_info ? this.$page.props.user_info.user_calling_code : '',
+                contact_number: this.$page.props.user_info ? this.$page.props.user_info.user_contact : '',
+                address: this.$page.props.user_info ? this.$page.props.user_info.user_address : '',
+                country_id: this.$page.props.user_info ? this.$page.props.user_info.user_country_id : '',
+                country_name: this.$page.props.user_info ? this.$page.props.user_info.name : '',
+                country_state: this.$page.props.user_info ? this.$page.props.user_info.user_state : '',
+                country_code: this.$page.props.user_info ? this.$page.props.user_info.user_country_code : '',
             },
             errors: {
                 full_name: false,
@@ -384,12 +387,10 @@ export default {
         }
     },
     watch: {
-        'form.country_code': {
-            handler(country_code){
-                if(country_code){
-                    /* Set calling code and state list*/
-                    this.setCallingCode(country_code)
-                    this.setStateList(country_code)
+        'form.country_id': {
+            handler(){
+                if(this.form.country_id){
+                    this.setCountryData(this.form.country_id)
 
                 }
             },
@@ -397,40 +398,21 @@ export default {
         }
     },
     methods: {
-        async fetchCountries(query){
-            if(query){
-                this.loading.country = true
-                const response = await fetch(
-                    'https://restcountries.com/v2/name/' + query
-                );
-
-                if (response.status === 200) {
-                    const data = await response.json(); 
-                    this.loading.country = false
-                    return data.map((item) => {
-                        return { 
-                            value: item.alpha2Code, 
-                            label: item.name 
-                        }
-                    })
-                } else {
-                    throw new Error('Failed to fetch data');
-                }
-            }
-        },
-        setCallingCode(country_code){
+        setCountryData(country_id){
+            this.loading.state = true
             axios
-                .get('https://restcountries.com/v3.1/alpha/' + country_code)
+                .get(route('country.find', country_id))
                 .then(response => {
-                    this.form.country       =   response.data[0].name.official
-                    this.form.calling_code  =   response.data[0].idd.root + response.data[0].idd.suffixes[0]
+                    this.setStateList(response.data.country_code)
+                    this.form.calling_code  =   response.data.calling_code
+                    this.form.country_name  =   response.data.name
+                    this.form.country_code  =   response.data.country_code
                 })
                 .catch(error => {
                     this.errored = true
                 })
         },
         setStateList(country_code){
-            this.loading.state = true
             var state_list  =   this.state_list
             state_list.splice(0)
             axios({

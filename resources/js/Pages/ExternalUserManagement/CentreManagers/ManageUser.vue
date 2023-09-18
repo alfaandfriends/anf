@@ -49,8 +49,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                 :classes="{
                                                     container: 
                                                         $page.props.errors.centre_id ? 
-                                                        'relative mt-1 mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
-                                                        'relative mt-1 mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-[38px]',
+                                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]':
+                                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]',
                                                     containerDisabled: 'cursor-default bg-gray-100',
                                                     containerOpen: 'rounded-b-none',
                                                     containerOpenTop: 'rounded-t-none',
@@ -58,8 +58,16 @@ import BreezeButton from '@/Components/Button.vue';
                                                     singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
                                                     singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                                     multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                    search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5',
-                                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
+                                                    search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5 h-9',
+                                                    tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2',
+                                                    tag: 'bg-green-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap',
+                                                    tagDisabled: 'pr-2 opacity-50',
+                                                    tagRemove: 'flex items-center justify-center p-1 mx-0.5 rounded-sm hover:bg-black hover:bg-opacity-10 group',
+                                                    tagRemoveIcon: 'bg-multiselect-remove bg-center bg-no-repeat opacity-30 inline-block w-3 h-3 group-hover:opacity-60',
+                                                    tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full',
+                                                    tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                                                    tagsSearchCopy: 'invisible whitespace-pre-wrap inline-block h-px',
+                                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-black',
                                                     clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
                                                     clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
                                                     dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
@@ -74,6 +82,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     groupLabelSelected: 'bg-gray-100 text-black',
                                                     groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
                                                     groupOptions: 'p-0 m-0',
+                                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                                     option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
                                                     optionPointed: 'text-gray-800 bg-gray-100',
                                                     optionSelected: 'text-white bg-indigo-500',
@@ -82,8 +91,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                     optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
                                                     fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                                                     spacer: 'h-9 py-px box-content',
-                                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                                 }"
                                             />
                                         </div>

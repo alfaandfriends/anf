@@ -138,21 +138,23 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <Multiselect 
                                                         autocomplete="off"
                                                         @change="clearState"
-                                                        :placeholder="form.country"
+                                                        :placeholder="form.country_name"
                                                         :canDeselect="false"
-                                                        v-model="form.country_code"
+                                                        v-model="form.country_id"
+                                                        :loading="loading.country"
                                                         :min-chars="1"
                                                         :delay="1"
                                                         :searchable="true"
                                                         :noOptionsText="'Please enter at least 1 character'"
-                                                        :options="async function(query) {
-                                                            return await fetchCountries(query) 
-                                                        }"
+                                                        :options="$page.props.countries"
+                                                        trackBy="name"
+                                                        label="name"
+                                                        valueProp="id"
                                                         :classes="{
                                                             container: 
                                                                 $page.props.errors.country ? 
-                                                                'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded bg-white text-base leading-snug outline-none':
-                                                                'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none',
+                                                                'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]':
+                                                                'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]',
                                                             containerDisabled: 'cursor-default bg-gray-100',
                                                             containerOpen: 'rounded-b-none',
                                                             containerOpenTop: 'rounded-t-none',
@@ -160,7 +162,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                             singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
                                                             singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                                             multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                            search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded pl-3.5',
+                                                            search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5 h-9',
                                                             tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2',
                                                             tag: 'bg-green-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap',
                                                             tagDisabled: 'pr-2 opacity-50',
@@ -170,24 +172,19 @@ import BreezeButton from '@/Components/Button.vue';
                                                             tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
                                                             tagsSearchCopy: 'invisible whitespace-pre-wrap inline-block h-px',
                                                             placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-black',
-                                                            caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none',
-                                                            caretOpen: 'rotate-180 pointer-events-auto',
                                                             clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
                                                             clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
                                                             dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
                                                             dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
                                                             dropdownHidden: 'hidden',
                                                             options: 'flex flex-col p-0 m-0 list-none w-full',
                                                             optionsTop: 'flex-col-reverse',
                                                             group: 'p-0 m-0',
-                                                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-1 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
                                                             groupLabelPointable: 'cursor-pointer',
-                                                            groupLabelPointed: 'bg-gray-300 text-gray-700',
-                                                            groupLabelSelected: 'bg-green-600 text-white',
-                                                            groupLabelDisabled: 'bg-gray-100 text-gray-300 cursor-not-allowed',
-                                                            groupLabelSelectedPointed: 'bg-green-600 text-white opacity-90',
-                                                            groupLabelSelectedDisabled: 'text-green-100 bg-green-600 bg-opacity-50 cursor-not-allowed',
+                                                            groupLabelPointed: 'bg-gray-300 text-black-700',
+                                                            groupLabelSelected: 'bg-gray-100 text-black',
+                                                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
                                                             groupOptions: 'p-0 m-0',
                                                             option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
                                                             optionPointed: 'text-gray-800 bg-gray-100',
@@ -195,8 +192,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                             optionDisabled: 'text-gray-300 cursor-not-allowed',
                                                             optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
                                                             optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                                                             spacer: 'h-9 py-px box-content',
                                                         }"
@@ -211,10 +206,10 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <Multiselect
                                                     autocomplete="off"
-                                                    @change="clearState"
                                                     :min-chars="1"
                                                     :delay="1"
                                                     :searchable="true"
+                                                    :loading="loading.state"
                                                     v-model="form.country_state"
                                                     :placeholder="form.country_state"
                                                     :noOptionsText="'Please select a state'"
@@ -222,9 +217,9 @@ import BreezeButton from '@/Components/Button.vue';
                                                     :canDeselect="false"
                                                     :classes="{
                                                         container: 
-                                                            $page.props.errors.country ? 
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded bg-white text-base leading-snug outline-none':
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none',
+                                                            $page.props.errors.country_state ? 
+                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]':
+                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]',
                                                         containerDisabled: 'cursor-default bg-gray-100',
                                                         containerOpen: 'rounded-b-none',
                                                         containerOpenTop: 'rounded-t-none',
@@ -232,7 +227,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
                                                         singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                                         multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded pl-3.5',
+                                                        search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5 h-9',
                                                         tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2',
                                                         tag: 'bg-green-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap',
                                                         tagDisabled: 'pr-2 opacity-50',
@@ -242,24 +237,19 @@ import BreezeButton from '@/Components/Button.vue';
                                                         tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
                                                         tagsSearchCopy: 'invisible whitespace-pre-wrap inline-block h-px',
                                                         placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-black',
-                                                        caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none',
-                                                        caretOpen: 'rotate-180 pointer-events-auto',
                                                         clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
                                                         clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                                        spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
                                                         dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
                                                         dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
                                                         dropdownHidden: 'hidden',
                                                         options: 'flex flex-col p-0 m-0 list-none w-full',
                                                         optionsTop: 'flex-col-reverse',
                                                         group: 'p-0 m-0',
-                                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-1 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
                                                         groupLabelPointable: 'cursor-pointer',
-                                                        groupLabelPointed: 'bg-gray-300 text-gray-700',
-                                                        groupLabelSelected: 'bg-green-600 text-white',
-                                                        groupLabelDisabled: 'bg-gray-100 text-gray-300 cursor-not-allowed',
-                                                        groupLabelSelectedPointed: 'bg-green-600 text-white opacity-90',
-                                                        groupLabelSelectedDisabled: 'text-green-100 bg-green-600 bg-opacity-50 cursor-not-allowed',
+                                                        groupLabelPointed: 'bg-gray-300 text-black-700',
+                                                        groupLabelSelected: 'bg-gray-100 text-black',
+                                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
                                                         groupOptions: 'p-0 m-0',
                                                         option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
                                                         optionPointed: 'text-gray-800 bg-gray-100',
@@ -267,8 +257,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                         optionDisabled: 'text-gray-300 cursor-not-allowed',
                                                         optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
                                                         optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                                         fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                                                         spacer: 'h-9 py-px box-content',
                                                     }"
@@ -314,24 +302,6 @@ const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
 
 let cropper = null
 
-const fetchCountries = async (query) => {
-
-    if(query){
-        const response = await fetch(
-            'https://restcountries.com/v2/name/' + query
-        );
-
-        const data = await response.json(); 
-        
-        return data.map((item) => {
-            return { 
-                value: item.alpha2Code, 
-                label: item.name 
-            }
-        })
-    }
-}
-
 export default {
     components: {
         Head, Link, Multiselect
@@ -356,6 +326,10 @@ export default {
                 type: Object,
                 default: () => ({}),
             },
+            loading:{
+                country: false,
+                state: false
+            },
             state_list: [],
             show_profile_photo: true,
             show_image: false,
@@ -368,7 +342,8 @@ export default {
                 calling_code: this.$page.props.user_info ? this.$page.props.user_info.user_calling_code : '',
                 contact_number: this.$page.props.user_info ? this.$page.props.user_info.user_contact : '',
                 address: this.$page.props.user_info ? this.$page.props.user_info.user_address : '',
-                country: this.$page.props.user_info ? this.$page.props.user_info.user_country : '',
+                country_id: this.$page.props.user_info ? this.$page.props.user_info.user_country_id : '',
+                country_name: this.$page.props.user_info ? this.$page.props.user_info.user_country : '',
                 country_state: this.$page.props.user_info ? this.$page.props.user_info.user_state : '',
                 country_code: this.$page.props.user_info ? this.$page.props.user_info.user_country_code : '',
             },
@@ -386,12 +361,11 @@ export default {
             },
             deep: true
         },
-        'form.country_code': {
-            handler(country_code){
-                if(country_code){
+        'form.country_id': {
+            handler(){
+                if(this.form.country_id){
                     /* Set calling code and state list*/
-                    this.setCallingCode(country_code)
-                    this.setStateList(country_code)
+                    this.setCountryData(this.form.country_id)
 
                 }
             },
@@ -411,12 +385,15 @@ export default {
                 }
             })
         },
-        setCallingCode(country_code){
+        setCountryData(country_id){
+            this.loading.state = true
             axios
-                .get('https://restcountries.com/v3.1/alpha/' + country_code)
+                .get(route('country.find', country_id))
                 .then(response => {
-                    this.form.country       =   response.data[0].name.official
-                    this.form.calling_code  =   response.data[0].idd.root + response.data[0].idd.suffixes[0]
+                    this.setStateList(response.data.country_code)
+                    this.form.calling_code  =   response.data.calling_code
+                    this.form.country_name  =   response.data.name
+                    this.form.country_code  =   response.data.country_code
                 })
                 .catch(error => {
                     this.errored = true
@@ -438,6 +415,7 @@ export default {
                 response.data.data.states.forEach(function(state) {
                     state_list.push(state.name)
                 });
+                this.loading.state = false
             })
         },
         clearState(){
@@ -508,3 +486,4 @@ export default {
     }
 }
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>

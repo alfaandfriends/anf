@@ -2,7 +2,7 @@
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
-
+<style src="@vueform/multiselect/themes/default.css"></style>
 <template>
     <Head title="Classes" />
 
@@ -84,7 +84,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Level</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Day</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Time</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Capacity</th>
+                                        <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Capacity</th> -->
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Type</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
@@ -119,11 +119,11 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <span class="pl-2">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <!-- <td class="px-6 py-4 whitespace-nowrap">
                                             <BreezeButton buttonType="blue" @click="viewStudents(classes.id)">
                                                 <div class="text-sm font-medium text-white">{{ classes.capacity }}</div>
                                             </BreezeButton>
-                                        </td>
+                                        </td> -->
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">{{ classes.type }}</div>
                                         </td>

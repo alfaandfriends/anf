@@ -67,14 +67,11 @@
                                 @change="clearState"
                                 :canDeselect="false"
                                 :loading="loading.country"
-                                v-model="form.country_code"
-                                :min-chars="1"
-                                :delay="1"
-                                :searchable="true"
-                                :noOptionsText="'Please enter at least 1 character'"
-                                :options="async function(query) {
-                                    return await fetchCountries(query) 
-                                }"
+                                v-model="form.country_id"
+                                trackBy="name"
+                                label="name"
+                                valueProp="id"
+                                :options="$page.props.countries"
                                 :classes="{
                                     container: 
                                         errors.country_code ? 
@@ -214,12 +211,13 @@ export default {
             },
             form: {
                 full_name: this.$page.props.auth.user.display_name,
-                country_code: '',
-                country: '',
                 calling_code: '',
-                country_state: '',
                 contact_number: '',
-                address: ''
+                address: '',
+                country_id: '',
+                country_name: '',
+                country_state: '',
+                country_code: '',
             },
             errors: {
                 full_name: false,
@@ -231,12 +229,11 @@ export default {
         }
     },
     watch: {
-        'form.country_code': {
-            handler(country_code){
-                if(country_code){
+        'form.country_id': {
+            handler(){
+                if(this.form.country_id){
                     /* Set calling code and state list*/
-                    this.setCallingCode(country_code)
-                    this.setStateList(country_code)
+                    this.setCountryData(this.form.country_id)
 
                 }
             },
@@ -250,40 +247,21 @@ export default {
         previous(){
             this.current_step -= 1
         },
-        async fetchCountries(query){
-            if(query){
-                this.loading.country = true
-                const response = await fetch(
-                    'https://restcountries.com/v2/name/' + query
-                );
-
-                if (response.status === 200) {
-                    const data = await response.json(); 
-                    this.loading.country = false
-                    return data.map((item) => {
-                        return { 
-                            value: item.alpha2Code, 
-                            label: item.name 
-                        }
-                    })
-                } else {
-                    throw new Error('Failed to fetch data');
-                }
-            }
-        },
-        setCallingCode(country_code){
+        setCountryData(country_id){
+            this.loading.state = true
             axios
-                .get('https://restcountries.com/v3.1/alpha/' + country_code)
+                .get(route('country.find', country_id))
                 .then(response => {
-                    this.form.country       =   response.data[0].name.official
-                    this.form.calling_code  =   response.data[0].idd.root + response.data[0].idd.suffixes[0]
+                    this.setStateList(response.data.country_code)
+                    this.form.calling_code  =   response.data.calling_code
+                    this.form.country_name  =   response.data.name
+                    this.form.country_code  =   response.data.country_code
                 })
                 .catch(error => {
                     this.errored = true
                 })
         },
         setStateList(country_code){
-            this.loading.state = true
             var state_list  =   this.state_list
             state_list.splice(0)
             axios({

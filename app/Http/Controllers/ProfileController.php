@@ -16,19 +16,28 @@ class ProfileController extends Controller
 {
     public function create()
     {
-        $user_info = User::where('ID', auth()->user()->ID)->first();
+        $user_info  =   DB::table('wpvt_users')
+                            ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
+                            ->where('wpvt_users.id', auth()->user()->ID)
+                            ->select('wpvt_users.id', 'wpvt_users.display_name', 'wpvt_users.user_country_id', 'wpvt_users.user_state', 'wpvt_users.user_address', 
+                                    'wpvt_users.user_contact', 'wpvt_users.user_photo', 'countries.name', 'countries.country_code', 'countries.currency_name', 
+                                    'countries.currency_code', 'countries.currency_symbol', 'countries.calling_code')
+                            ->first();
+                            
+        $countries = DB::table('countries')->get();
         
         return Inertia::render('Profile/Create', [
-            'user_info' => $user_info
+            'user_info' => $user_info,
+            'countries' => $countries
         ]);
     }
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'full_name'         => 'required',
-            'country'           => 'required',
-            'calling_code'      => 'required',
+            'country_id'        => 'required',
             'contact_number'    => 'required',
             'country_state'     => 'required',
             'address'           => 'required',
@@ -38,7 +47,7 @@ class ProfileController extends Controller
 
         if($request->file('profile_photo')){
             Storage::delete($user_info->user_photo);
-            $file   =   $request->profile_photo['file'] ? $request->profile_photo['file'] : $request->file('profile_photo');
+            $file   =   $request->file('profile_photo') ? $request->file('profile_photo') : $request->profile_photo['file'];
             $path   =   Storage::putFileAs('profile_photo', $file, $file->getClientOriginalName());
             User::where('ID', auth()->user()->ID)
                 ->update([
@@ -49,12 +58,10 @@ class ProfileController extends Controller
         User::where('ID', auth()->user()->ID)
             ->update([
                 'display_name'      => $request->full_name,
-                'user_calling_code' => $request->calling_code,
+                'user_country_id'   => $request->country_id,
                 'user_contact'      => $request->contact_number,
                 'user_address'      => $request->address,
-                'user_country'      => $request->country,
                 'user_state'        => $request->country_state,
-                'user_country_code' => $request->country_code,
                 'profile_updated'   => true,
             ]);
 

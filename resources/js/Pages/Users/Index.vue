@@ -12,11 +12,20 @@ import BreezeButton from '@/Components/Button.vue';
             <div class="overflow-x-auto">
                 <div class="mx-auto">
                     <div class="align-middle inline-block min-w-full">
-                        <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600 justify-between">
-                            <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3" :style="'top:21%'"></SearchIcon>
-                            <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
-                                    type="text" v-model="params.search" placeholder="Search" v-debounce="search">
-                            <Link :href="route('users.create')" class="py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold" v-if="$page.props.can.cp_users_create_access">User Registration</Link>
+                        <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
+                            <div class="flex space-x-2">
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none">
+                                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </span>
+                                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-model="params.search">
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <BreezeButton :route="route('users.create')">User Registration</BreezeButton>
+                            </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">

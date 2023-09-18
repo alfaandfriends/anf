@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Parent;
 
 use App\Classes\StudentHelper;
 use App\Http\Controllers\Controller;
+use DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,7 +15,12 @@ class HomeController extends Controller
         if(auth()->user()->profile_updated){
             return redirect(route('parent.home'));
         }
-        return Inertia::render('Parent/Onboard');
+
+        $countries = DB::table('countries')->get();
+
+        return Inertia::render('Parent/Onboard', [
+            'countries' => $countries
+        ]);
     }
 
     public function index(Request $request)

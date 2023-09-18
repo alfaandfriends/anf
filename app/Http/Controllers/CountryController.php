@@ -48,4 +48,14 @@ class CountryController extends Controller
 
             return back()->with(['type'=>'success', 'message'=>'Country deleted successfully ! ']);
         }
+
+        public function getCountries(){
+            $countries  =   DB::table('countries')->get();
+            return $countries;
+        }
+
+        public function getCountry($id){
+            $country  =   DB::table('countries')->where('id', $id)->first();
+            return $country;
+        }
 }

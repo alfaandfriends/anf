@@ -22,6 +22,11 @@ class StudentController extends Controller
 
     public function index(Request $request)
     {
+        $allowed_centres    =   (object)Inertia::getShared('allowed_centres');
+        $can_access_centre = $allowed_centres->search(function ($value) { 
+            return $value->ID == request('centre_id');
+        });
+
         $query          =   DB::table('students')
                                 ->join('children', 'students.children_id', '=', 'children.id')
                                 ->leftJoin('student_fees', 'students.id', '=', 'student_fees.student_id')
@@ -39,8 +44,20 @@ class StudentController extends Controller
             $query->where('programmes.name', 'LIKE', '%'.$request->search.'%');
         }
 
+        if($request->centre_id){
+            $request->merge([
+                'centre_id' => !$can_access_centre ? $allowed_centres[0]->ID : $request->centre_id,
+            ]);
+        }
+        else{
+            $request->merge([
+                'centre_id' => $allowed_centres[0]->ID
+            ]);
+        }
+        $query->where('student_fees.centre_id', '=', $request->centre_id);
+
         return Inertia::render('CentreManagement/Students/Index', [
-            'filter'        => request()->all('search'),
+            'filter'        => request()->all('search', 'centre_id'),
             'students'       => $query->paginate(10),
         ]);
     }
@@ -153,6 +170,7 @@ class StudentController extends Controller
                                     ->join('children', 'students.children_id', '=', 'children.id')
                                     ->join('genders', 'children.gender_id', '=', 'genders.id')
                                     ->rightJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                    ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
                                     ->where('students.id', $request->student_id)
                                     ->select([  
                                                 'students.id as id', 
@@ -161,7 +179,7 @@ class StudentController extends Controller
                                                 'children.date_of_birth as dob', 
                                                 'genders.id as gender', 
                                                 'wpvt_users.display_name as parent_full_name', 
-                                                'wpvt_users.user_calling_code as parent_calling_code', 
+                                                'countries.calling_code as parent_calling_code', 
                                                 'wpvt_users.user_contact as parent_contact', 
                                                 'wpvt_users.user_address as parent_address', 
                                                 'wpvt_users.user_email as parent_email'])
