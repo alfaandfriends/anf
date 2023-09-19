@@ -32,11 +32,9 @@
                                         <ChevronRightIcon :class="{ 'rotate-90': expandAccordion && index === selected }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                     </div>
                                     <div class="flex flex-none items-center px-4 py-1 transition cursor-pointer group border border-indigo-200 border-l-0 text-gray-800" role="button">
-                                        <div class="flex items-center">
-                                            <div class="space-x-2">
-                                                <BreezeButton buttonType="warning" @click="editPermission(permission.id)">Edit</BreezeButton>
-                                                <BreezeButton buttonType="danger" @click="deletePermission(permission.id)">Delete</BreezeButton>
-                                            </div>
+                                        <div class="flex items-center space-x-2">
+                                            <BreezeButton buttonType="warning" @click="editPermission(permission.id)">Edit</BreezeButton>
+                                            <BreezeButton buttonType="danger" @click="deletePermission(permission.id)">Delete</BreezeButton>
                                         </div>
                                     </div>
                                 </div>

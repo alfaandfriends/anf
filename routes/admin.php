@@ -71,12 +71,12 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/get-user-info/{id}', [UserController::class, 'getUserInfo'])->name('users.get_info');
 
             /* Roles */
-            Route::get('/roles', [RoleController::class, 'index'])->name('roles')->middleware('permission:cp_roles_view_access');
-            Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create')->middleware('permission:cp_roles_create_access');
-            Route::post('/roles/store', [RoleController::class, 'store'])->name('roles.store')->middleware('permission:cp_roles_create_access');
-            Route::get('/roles/edit', [RoleController::class, 'edit'])->name('roles.edit')->middleware('permission:cp_roles_edit_access');
-            Route::post('/roles/update', [RoleController::class, 'update'])->name('roles.update')->middleware('permission:cp_roles_edit_access');
-            Route::delete('/roles/destroy/{role}', [RoleController::class, 'destroy'])->name('roles.destroy')->middleware('permission:cp_roles_delete_access');
+            Route::get('/roles', [RoleController::class, 'index'])->name('roles');
+            Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+            Route::post('/roles/store', [RoleController::class, 'store'])->name('roles.store');
+            Route::get('/roles/edit', [RoleController::class, 'edit'])->name('roles.edit');
+            Route::post('/roles/update', [RoleController::class, 'update'])->name('roles.update');
+            Route::delete('/roles/destroy/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
             Route::get('/roles/assign-permissions', [RoleController::class, 'assignPermissions'])->name('roles.assign_pemissions');
             Route::post('/roles/assign-permissions/store', [RoleController::class, 'assignPermissionsStore'])->name('roles.assign_permissions.store');
 
