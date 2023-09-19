@@ -48,7 +48,6 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import { TrashIcon } from '@heroicons/vue/solid'
 import { VueDraggableNext } from 'vue-draggable-next'
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
-import TabPage from '@/Pages/Settings/General/Tab.vue'
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;

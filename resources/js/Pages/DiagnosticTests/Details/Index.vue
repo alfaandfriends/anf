@@ -162,7 +162,6 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import { TrashIcon } from '@heroicons/vue/solid'
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import TabPage from '@/Pages/Settings/General/Tab.vue'
 import Tooltip from '@/Components/Tooltip.vue'
 
 export default defineComponent({
