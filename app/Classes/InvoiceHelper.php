@@ -41,6 +41,7 @@ class InvoiceHelper {
         $student_id         =   $invoice_data['student_id'];
         $invoice_number     =   Carbon::now()->year.'-'.$invoice_number;
         $date_admission     =   $invoice_data['date_admission'];
+        $currency           =   $invoice_data['currency'];
         
 
         $bill_collection_id     =   config('app.billplz.collection_id');
@@ -63,6 +64,7 @@ class InvoiceHelper {
                                 'date_issued'       => $date_admission,
                                 'due_date'          => $due_date,
                                 'amount'            => $totalFee,
+                                'currency'          => $currency,
                                 'bill_id'           => $bill_response->toArray()['id'],
                             ]);
     
