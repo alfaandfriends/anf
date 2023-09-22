@@ -96,7 +96,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         </div>
                                                     </td>
                                                     <td class="px-4 py-2 text-center border border-gray-400">
-                                                        <BreezeButton buttonType="danger" @click="deleteLevel(info.programme_level_id, index)">Delete</BreezeButton>
+                                                        <BreezeButton buttonType="danger" @click="deleteLevel(info.programme_level_id, index)" v-if="$page.props.can.delete_programmes">Delete</BreezeButton>
                                                     </td>
                                                 </tr>
                                             </tbody>

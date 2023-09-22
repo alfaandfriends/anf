@@ -308,27 +308,36 @@ class ProgrammeController extends Controller
         
         $data['classes']    =   $classes_query->get();
 
-        $material_query     =   DB::table('programme_levels')
-                                    ->leftJoin('products', 'programme_levels.material_product_id', '=', 'products.id')
-                                    ->leftJoin('product_variations', 'programme_levels.material_product_variation_id', '=', 'product_variations.id')
-                                    ->leftJoin('product_sub_variations', 'programme_levels.material_product_sub_variation_id', '=', 'product_sub_variations.id')
-                                    ->select('products.id as product_id', 'products.name as product_name', 'products.name as product_name', 'products.has_variation as has_variation', 
-                                            'products.has_sub_variation as has_sub_variation', 'product_variations.id as product_variation_id', 
-                                            'product_variations.option_name as product_variation_name', 'product_sub_variations.id as product_sub_variation_id', 
-                                            'product_sub_variations.option_name as product_sub_variation_name')
-                                    ->where('programme_levels.id', $request->programme_level_id)->first();
-                                  
-        $material['product']['id']                          =   $material_query->product_id;
-        $material['product']['name']                        =   $material_query->product_name;
-        $material['product']['has_variation']               =   $material_query->has_variation;
-        $material['product']['has_sub_variation']           =   $material_query->has_sub_variation;
-        $material['product_variation']['id']                =   $material_query->product_variation_id;
-        $material['product_variation']['option_name']       =   $material_query->product_variation_name;
-        $material['product_sub_variation']['id']            =   $material_query->product_sub_variation_id;
-        $material['product_sub_variation']['option_name']   =   $material_query->product_sub_variation_name; 
-        $material['quantity']                               =   1; 
-
-        $data['material']    =   $material;
+        if(!empty($fee_info_query)){
+            $product_result     =   DB::table('programme_levels')
+                                        ->join('programme_level_fees', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                        ->leftJoin('products', 'programme_levels.material_product_id', '=', 'products.id')
+                                        ->leftJoin('product_variations', 'programme_levels.material_product_variation_id', '=', 'product_variations.id')
+                                        ->leftJoin('product_sub_variations', 'programme_levels.material_product_sub_variation_id', '=', 'product_sub_variations.id')
+                                        ->select('products.id as product_id', 'products.name as product_name', 'products.name as product_name', 'products.has_variation as has_variation', 
+                                                'products.has_sub_variation as has_sub_variation', 'product_variations.id as product_variation_id', 
+                                                'product_variations.option_name as product_variation_name', 'product_sub_variations.id as product_sub_variation_id', 
+                                                'product_sub_variations.option_name as product_sub_variation_name')
+                                        ->where('programme_level_fees.id', $fee_info_query->pluck('fee_id'))
+                                        ->get();  
+                                                      
+            $material                                       =   [];
+            foreach($product_result as $product){
+                $info['product']['id']                          =   $product->product_id;
+                $info['product']['name']                        =   $product->product_name;
+                $info['product']['has_variation']               =   $product->has_variation;
+                $info['product']['has_sub_variation']           =   $product->has_sub_variation;
+                $info['product_variation']['id']                =   $product->product_variation_id;
+                $info['product_variation']['option_name']       =   $product->product_variation_name;
+                $info['product_sub_variation']['id']            =   $product->product_sub_variation_id;
+                $info['product_sub_variation']['option_name']   =   $product->product_sub_variation_name; 
+                $info['quantity']                               =   1; 
+                $material[]                                     =   $info; 
+            }
+    
+            $data['material']    =   $material;
+        }
+                  
         
                         
 

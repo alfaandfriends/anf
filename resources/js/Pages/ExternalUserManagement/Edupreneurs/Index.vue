@@ -57,7 +57,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex pr-1">
-                                                    <BreezeButton buttonType="blue" title="Manage User" @click="manageEdupreneur(user.id)">Manage</BreezeButton>
+                                                    <BreezeButton buttonType="blue" title="Manage User" @click="manageEdupreneur(user.id)" v-if="$page.props.can.manage_edupreneurs">Manage</BreezeButton>
                                                 </div>
                                             </div>
                                         </td>

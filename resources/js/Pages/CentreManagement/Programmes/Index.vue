@@ -21,7 +21,7 @@
                                 </span>
                                 <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-model="params.search">
                             </div>
-                            <div class="flex" v-if="$page.props.can.centre_create_access">
+                            <div class="flex" v-if="$page.props.can.create_programmes">
                                 <BreezeButton :route="route('programmes.create')">New Programme</BreezeButton>
                             </div>
                         </div>
@@ -59,10 +59,10 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center space-x-2">
-                                                <BreezeButton  buttonType="warning" @click="editProgramme(programme.id)" v-if="$page.props.can.setting_programme_edit_access">
+                                                <BreezeButton  buttonType="warning" @click="editProgramme(programme.id)" v-if="$page.props.can.edit_programmes">
                                                     Edit
                                                 </BreezeButton>
-                                                <BreezeButton buttonType="danger" @click="deleteProgramme(programme.id)" v-if="$page.props.can.setting_programme_delete_access">
+                                                <BreezeButton buttonType="danger" @click="deleteProgramme(programme.id)" v-if="$page.props.can.delete_programmes">
                                                     Delete
                                                 </BreezeButton>
                                             </div>
