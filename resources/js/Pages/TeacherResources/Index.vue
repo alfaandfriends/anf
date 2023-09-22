@@ -72,7 +72,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                             <div class="flex">
-                                <BreezeButton :route="route('teacher_resources.create')">New Resource</BreezeButton>
+                                <BreezeButton :route="route('teacher_resources.create')" v-if="$page.props.can.create_teacher_resources">New Resource</BreezeButton>
                             </div>
                         </div>
                         <table class="table-auto min-w-full divide-y divide-gray-200">
@@ -108,9 +108,9 @@ import BreezeButton from '@/Components/Button.vue';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="blue" @click="viewResource(result.id)">View / Download</BreezeButton>
-                                            <BreezeButton buttonType="warning" @click="editResource(result.id)">Edit</BreezeButton>
-                                            <BreezeButton buttonType="danger" @click="deleteResource(result.id)">Delete</BreezeButton>
+                                            <BreezeButton buttonType="blue" @click="viewResource(result.id)" v-if="$page.props.can.view_teacher_resources">View / Download</BreezeButton>
+                                            <BreezeButton buttonType="warning" @click="editResource(result.id)" v-if="$page.props.can.edit_teacher_resources">Edit</BreezeButton>
+                                            <BreezeButton buttonType="danger" @click="deleteResource(result.id)" v-if="$page.props.can.delete_teacher_resources">Delete</BreezeButton>
                                         </div>
                                     </td>
                                 </tr>

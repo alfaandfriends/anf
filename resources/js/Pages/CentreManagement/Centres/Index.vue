@@ -21,7 +21,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </span>
                                 <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white border rounded-md" placeholder="Search" v-model="params.search">
                             </div>
-                            <div class="flex" v-if="$page.props.can.centre_create_access">
+                            <div class="flex" v-if="$page.props.can.create_centres">
                                 <BreezeButton :route="route('centres.create')">New Centre</BreezeButton>
                             </div>
                         </div>
@@ -78,19 +78,19 @@ import BreezeButton from '@/Components/Button.vue';
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
                                                 <div class="flex mr-1">
-                                                    <BreezeButton :buttonType="'blue'" title="View Images" @click="viewImages(centre.centre_id)" v-if="$page.props.can.centre_view_access">
+                                                    <BreezeButton :buttonType="'blue'" title="View Images" @click="viewImages(centre.centre_id)" v-if="$page.props.can.view_centres">
                                                         <!-- <PhotographIcon class="text-white-600 h-4 w-4 fill-current"></PhotographIcon> -->
                                                         View Images
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="flex mr-1" >
-                                                    <BreezeButton :buttonType="'warning'" title="Edit School" @click="editCentre(centre.centre_id)" v-if="$page.props.can.centre_edit_access">
+                                                    <BreezeButton :buttonType="'warning'" title="Edit School" @click="editCentre(centre.centre_id)" v-if="$page.props.can.edit_centres">
                                                         <!-- <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon> -->
                                                         Edit
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="flex">
-                                                    <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.centre_id)" v-if="$page.props.can.centre_delete_access">
+                                                    <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.centre_id)" v-if="$page.props.can.delete_centres">
                                                         <!-- <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon> -->
                                                         Delete
                                                     </BreezeButton>

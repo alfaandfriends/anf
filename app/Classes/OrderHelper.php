@@ -36,7 +36,7 @@ class OrderHelper {
             'student_id'    =>  $order_data['student_id'],
             'invoice_id'    =>  isset($order_data['invoice_id']) ? $order_data['invoice_id'] : null,
             'order_number'  =>  Carbon::now()->year.'-'.$order_number,
-            'products'      =>  json_encode([$order_data['products']]),
+            'products'      =>  json_encode($order_data['products']),
         ]);
 
         return $order_id;

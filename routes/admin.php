@@ -31,12 +31,86 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function(){
     Route::prefix('admin')->group(function () {
         /* User Impersonation */
-        Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate');
-        Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate');;
+        Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate')->middleware('permission:impersonate_access');
+        Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate')->middleware('permission:impersonate_access');
 
         /* Dashboard */
-        /* User */
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard_access');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:view_dashboard');
+        
+        /* Administration */
+        Route::prefix('administration')->middleware('permission:administration_access')->group(function () {
+            /* Centres */
+            Route::get('/centres', [CentreController::class, 'index'])->name('centres')->middleware('permission:view_centres');
+            Route::get('/centres/create', [CentreController::class, 'create'])->name('centres.create')->middleware('permission:create_centres');
+            Route::post('/centres/store', [CentreController::class, 'store'])->name('centres.store')->middleware('permission:create_centres');
+            Route::get('/centres/edit', [CentreController::class, 'edit'])->name('centres.edit')->middleware('permission:edit_centres');
+            Route::post('/centres/update', [CentreController::class, 'update'])->name('centres.update')->middleware('permission:edit_centres');
+            Route::delete('/centres/destroy/{id}', [CentreController::class, 'destroy'])->name('centres.destroy')->middleware('permission:delete_centres');
+            Route::delete('/centres/image/destroy/{id}', [CentreController::class, 'destroyImage'])->name('centres.destroy_image')->middleware('permission:delete_centres');
+            Route::get('/centres/images', [CentreController::class, 'getCentreImages'])->name('centres.get_images')->middleware('permission:view_centres');
+            // Route::get('/centres/find-user', [CentreController::class, 'findUser'])->name('centres.find_user')->middleware('permission:view_centres');
+
+            /* Division Manager */
+            Route::get('/division-manager', [ExternalUserManagementController::class, 'divisionManagerList'])->name('division_manager')->middleware('permission:view_division_manager');
+            Route::get('/division-manager/manage', [ExternalUserManagementController::class, 'manageDivisionManager'])->name('division_manager.manage')->middleware('permission:manage_division_manager');
+            Route::post('/division-manager/manage/store', [ExternalUserManagementController::class, 'manageDivisionManagerStore'])->name('division_manager.store')->middleware('permission:manage_division_manager');
+
+            /* Centre Manager */
+            Route::get('/centre-manager', [ExternalUserManagementController::class, 'centreManagerList'])->name('centre_manager')->middleware('permission:view_centre_manager');
+            Route::get('/centre-manager/manage', [ExternalUserManagementController::class, 'manageCentreManager'])->name('centre_manager.manage')->middleware('permission:manage_centre_manager');
+            Route::post('/centre-manager/manage/store', [ExternalUserManagementController::class, 'manageCentreManagerStore'])->name('centre_manager.store')->middleware('permission:manage_centre_manager');
+
+            /* Edupreneurs */
+            Route::get('/edupreneurs', [ExternalUserManagementController::class, 'edupreneurList'])->name('edupreneurs')->middleware('permission:view_edupreneurs');
+            Route::get('/edupreneurs/manage', [ExternalUserManagementController::class, 'manageEdupreneur'])->name('edupreneurs.manage')->middleware('permission:manage_edupreneurs');
+            Route::post('/edupreneurs/manage/store', [ExternalUserManagementController::class, 'manageEdupreneurStore'])->name('edupreneurs.store')->middleware('permission:manage_edupreneurs');
+        });
+
+        /* Academic */
+        Route::prefix('academic')->middleware('permission:academic_access')->group(function () {
+            /* Programmes*/
+            Route::get('/programmes', [ProgrammeController::class, 'programmeList'])->name('programmes')->middleware('permission:view_programmes');
+            Route::get('/programmes/create', [ProgrammeController::class, 'addProgramme'])->name('programmes.create')->middleware('permission:create_programmes');
+            Route::post('/programmes/store', [ProgrammeController::class, 'storeProgramme'])->name('programmes.store')->middleware('permission:create_programmes');
+            Route::get('/programmes/edit', [ProgrammeController::class, 'editProgramme'])->name('programmes.edit')->middleware('permission:edit_programmes');
+            Route::post('/programmes/update', [ProgrammeController::class, 'updateProgramme'])->name('programmes.update')->middleware('permission:edit_programmes');
+            Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:delete_programmes');
+            Route::get('/programmes/get-fee', [ProgrammeController::class, 'getFee'])->name('programmes.get_fee')->middleware('permission:view_programmes|create_programmes|delete_programmes');
+            Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:edit_programmes|delete_programmes');
+
+            /* Classes */
+            Route::get('/classes', [ClassController::class, 'index'])->name('classes')->middleware('permission:view_classes');
+            Route::get('/classes/create', [ClassController::class, 'create'])->name('classes.create')->middleware('permission:create_classes');
+            Route::post('/classes/store', [ClassController::class, 'store'])->name('classes.store')->middleware('permission:create_classes');
+            Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:edit_classes');
+            Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:edit_classes');
+            Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:delete_classes');
+            Route::get('/classes/get-class-types', [ClassController::class, 'getClassTypes'])->name('classes.get_class_types')->middleware('permission:view_classes|create_classes|create_classes');
+            Route::get('/classes/get-class-levels', [ClassController::class, 'getClassLevels'])->name('classes.get_class_levels')->middleware('permission:view_classes|create_classes|create_classes');
+            Route::get('/classes/find', [ClassController::class, 'findClasses'])->name('classes.find')->middleware('permission:view_classes|create_classes|create_classes');
+
+            /* Students */
+            Route::get('/students', [StudentController::class, 'index'])->name('students')->middleware('permission:view_students');
+            Route::get('/students/create', [StudentController::class, 'create'])->name('students.create')->middleware('permission:create_students');
+            Route::post('/students/store', [StudentController::class, 'store'])->name('students.store')->middleware('permission:create_students');
+            Route::get('/students/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:edit_students');
+            Route::post('/students/update', [StudentController::class, 'update'])->name('students.update')->middleware('permission:edit_students');
+            Route::delete('/students/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:delete_students');
+            Route::post('/students/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class')->middleware('permission:view_students|create_students|edit_students');
+            Route::post('/students/set-fee-status', [StudentController::class, 'setFeeStatus'])->name('students.set_fee_status')->middleware('permission:view_students|create_students|edit_students');
+            Route::post('/students/transfer', [StudentController::class, 'transferStudent'])->name('students.transfer')->middleware('permission:view_students|create_students|edit_students');
+
+            /* Settings */
+            Route::get('/settings', [SettingController::class, 'classTypeList'])->name('settings')->middleware('permission:setting_view_access');
+                /* Class Types */
+                Route::get('/settings/class_types', [SettingController::class, 'classTypeList'])->name('settings.class_types')->middleware('permission:setting_class_type_view_access');
+                Route::get('/settings/class_types/create', [SettingController::class, 'addClassType'])->name('settings.class_types.create')->middleware('permission:setting_class_type_create_access');
+                Route::post('/settings/class_types/store', [SettingController::class, 'storeClassType'])->name('settings.class_types.store')->middleware('permission:setting_class_type_create_access');
+                Route::get('/settings/class_types/edit', [SettingController::class, 'editClassType'])->name('settings.class_types.edit')->middleware('permission:setting_class_type_edit_access');
+                Route::post('/settings/class_types/update', [SettingController::class, 'updateClassType'])->name('settings.class_types.update')->middleware('permission:setting_class_type_edit_access');
+                Route::delete('/settings/class_types/destroy/{id}', [SettingController::class, 'destroyClassType'])->name('settings.class_types.destroy')->middleware('permission:setting_class_type_delete_access');
+
+        });
 
         /* Profile */
         Route::get('/profile', [ProfileController::class, 'create'])->name('profile');
@@ -106,78 +180,6 @@ Route::middleware(['auth'])->group(function(){
             Route::delete('/permissions/destroy/{id}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
         });
 
-        /* Centre Management */
-        Route::prefix('centre-management')->group(function () {
-            /* Centres */
-            Route::get('/centres', [CentreController::class, 'index'])->name('centres')->middleware('permission:centre_view_access');
-            Route::get('/centres/create', [CentreController::class, 'create'])->name('centres.create')->middleware('permission:centre_create_access');
-            Route::post('/centres/store', [CentreController::class, 'store'])->name('centres.store')->middleware('permission:centre_create_access');
-            Route::get('/centres/edit', [CentreController::class, 'edit'])->name('centres.edit')->middleware('permission:centre_edit_access');
-            Route::post('/centres/update', [CentreController::class, 'update'])->name('centres.update')->middleware('permission:centre_edit_access');
-            Route::delete('/centres/destroy/{id}', [CentreController::class, 'destroy'])->name('centres.destroy')->middleware('permission:centre_delete_access');
-            Route::delete('/centres/image/destroy/{id}', [CentreController::class, 'destroyImage'])->name('centres.destroy_image')->middleware('permission:centre_delete_access');
-            Route::get('/centres/images', [CentreController::class, 'getCentreImages'])->name('centres.get_images')->middleware('permission:centre_view_access');
-            Route::get('/centres/find-user', [CentreController::class, 'findUser'])->name('centres.find_user')->middleware('permission:centre_view_access');
-
-            /* Programmes*/
-            Route::get('/programmes', [ProgrammeController::class, 'programmeList'])->name('programmes')->middleware('permission:programme_view_access');
-            Route::get('/programmes/create', [ProgrammeController::class, 'addProgramme'])->name('programmes.create')->middleware('permission:programme_create_access');
-            Route::post('/programmes/store', [ProgrammeController::class, 'storeProgramme'])->name('programmes.store')->middleware('permission:programme_create_access');
-            Route::get('/programmes/edit', [ProgrammeController::class, 'editProgramme'])->name('programmes.edit')->middleware('permission:programme_edit_access');
-            Route::post('/programmes/update', [ProgrammeController::class, 'updateProgramme'])->name('programmes.update')->middleware('permission:programme_edit_access');
-            Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:programme_delete_access');
-            Route::get('/programmes/get-fee', [ProgrammeController::class, 'getFee'])->name('programmes.get_fee')->middleware('permission:programme_view_access|programme_create_access|programme_edit_access');
-            Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:programme_delete_access');
-
-            /* Classes */
-            Route::get('/classes', [ClassController::class, 'index'])->name('classes')->middleware('permission:class_view_access');
-            Route::get('/classes/create', [ClassController::class, 'create'])->name('classes.create')->middleware('permission:class_create_access');
-            Route::post('/classes/store', [ClassController::class, 'store'])->name('classes.store')->middleware('permission:class_create_access');
-            Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:class_edit_access');
-            Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:class_edit_access');
-            Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:class_delete_access');
-            Route::get('/classes/get-class-types', [ClassController::class, 'getClassTypes'])->name('classes.get_class_types')->middleware('permission:class_view_access|class_create_access|class_edit_access');
-            Route::get('/classes/get-class-levels', [ClassController::class, 'getClassLevels'])->name('classes.get_class_levels')->middleware('permission:class_view_access|class_create_access|class_edit_access');
-            Route::get('/classes/find', [ClassController::class, 'findClasses'])->name('classes.find')->middleware('permission:class_view_access|class_create_access|class_edit_access');
-
-            /* Students */
-            Route::get('/students', [StudentController::class, 'index'])->name('students')->middleware('permission:student_view_access');
-            Route::get('/students/create', [StudentController::class, 'create'])->name('students.create')->middleware('permission:student_create_access');
-            Route::post('/students/store', [StudentController::class, 'store'])->name('students.store')->middleware('permission:student_create_access');
-            Route::get('/students/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:student_edit_access');
-            Route::post('/students/update', [StudentController::class, 'update'])->name('students.update')->middleware('permission:student_edit_access');
-            Route::delete('/students/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:student_delete_access');
-            Route::post('/students/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class')->middleware('permission:student_view_access|student_create_access|student_edit_access');
-            Route::post('/students/set-fee-status', [StudentController::class, 'setFeeStatus'])->name('students.set_fee_status')->middleware('permission:student_view_access||student_edit_access');
-
-            /* Settings */
-            Route::get('/settings', [SettingController::class, 'classTypeList'])->name('settings')->middleware('permission:setting_view_access');
-                /* Class Types */
-                Route::get('/settings/class_types', [SettingController::class, 'classTypeList'])->name('settings.class_types')->middleware('permission:setting_class_type_view_access');
-                Route::get('/settings/class_types/create', [SettingController::class, 'addClassType'])->name('settings.class_types.create')->middleware('permission:setting_class_type_create_access');
-                Route::post('/settings/class_types/store', [SettingController::class, 'storeClassType'])->name('settings.class_types.store')->middleware('permission:setting_class_type_create_access');
-                Route::get('/settings/class_types/edit', [SettingController::class, 'editClassType'])->name('settings.class_types.edit')->middleware('permission:setting_class_type_edit_access');
-                Route::post('/settings/class_types/update', [SettingController::class, 'updateClassType'])->name('settings.class_types.update')->middleware('permission:setting_class_type_edit_access');
-                Route::delete('/settings/class_types/destroy/{id}', [SettingController::class, 'destroyClassType'])->name('settings.class_types.destroy')->middleware('permission:setting_class_type_delete_access');
-
-        });
-
-        /* External User Management */
-        Route::prefix('external-user-management')->group(function () {
-            Route::get('/division-manager', [ExternalUserManagementController::class, 'divisionManagerList'])->name('division_manager');
-            Route::get('/division-manager/manage', [ExternalUserManagementController::class, 'manageDivisionManager'])->name('division_manager.manage');
-            Route::post('/division-manager/manage/store', [ExternalUserManagementController::class, 'manageDivisionManagerStore'])->name('division_manager.store');
-
-            Route::get('/centre-manager', [ExternalUserManagementController::class, 'centreManagerList'])->name('centre_manager');
-            Route::get('/centre-manager/manage', [ExternalUserManagementController::class, 'manageCentreManager'])->name('centre_manager.manage');
-            Route::post('/centre-manager/manage/store', [ExternalUserManagementController::class, 'manageCentreManagerStore'])->name('centre_manager.store');
-
-            Route::get('/edupreneurs', [ExternalUserManagementController::class, 'edupreneurList'])->name('edupreneurs');
-            Route::get('/edupreneurs/manage', [ExternalUserManagementController::class, 'manageEdupreneur'])->name('edupreneurs.manage');
-            Route::post('/edupreneurs/manage/store', [ExternalUserManagementController::class, 'manageEdupreneurStore'])->name('edupreneurs.store');
-
-        });
-
 
         /* Diagnostic Test Setting*/
         Route::prefix('diagnostic-test')->group(function () {
@@ -230,6 +232,7 @@ Route::middleware(['auth'])->group(function(){
         Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
         Route::delete('/products/variation/delete/{id}', [ProductController::class, 'deleteVariation'])->name('products.delete_variation');
         Route::delete('/products/sub-variation/delete', [ProductController::class, 'deleteSubVariation'])->name('products.delete_sub_variation');
+        Route::get('/products/get-product-data-by-fee', [ProductHelper::class, 'getProductDataByFee'])->name('products.get_product_data_by_fee');
 
         /* Orders */
         Route::get('/orders', [OrderController::class, 'index'])->name('orders');

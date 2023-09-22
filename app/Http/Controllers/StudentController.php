@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\InvoiceHelper;
 use App\Classes\NotificationHelper;
 use App\Classes\OrderHelper;
+use App\Classes\ProductHelper;
 use App\Classes\ProgrammeHelper;
 use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
@@ -28,12 +29,12 @@ class StudentController extends Controller
         });
 
         $query          =   DB::table('students')
-                                ->join('children', 'students.children_id', '=', 'children.id')
+                                ->leftJoin('children', 'students.children_id', '=', 'children.id')
                                 ->leftJoin('student_fees', 'students.id', '=', 'student_fees.student_id')
                                 ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
                                 ->leftJoin('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                                 ->leftJoin('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-                                ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
                                 ->select([  'students.id as id', 
                                             'children.name as name', 
                                             'wpvt_users.display_name as parent_name', 
@@ -55,6 +56,9 @@ class StudentController extends Controller
             ]);
         }
         $query->where('student_fees.centre_id', '=', $request->centre_id);
+        $query->orWhere(function($query){
+            $query->orWhereNull('student_fees.id');
+        });
 
         return Inertia::render('CentreManagement/Students/Index', [
             'filter'        => request()->all('search', 'centre_id'),
@@ -64,6 +68,11 @@ class StudentController extends Controller
 
     public function create(Request $request)
     {
+        $user_currenct_currency =   DB::table('wpvt_users')
+                                        ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
+                                        ->where('wpvt_users.id', auth()->user()->ID)
+                                        ->pluck('countries.currency_symbol')
+                                        ->first();
         $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
 
@@ -79,16 +88,23 @@ class StudentController extends Controller
         try {
             // Begin the transaction
             DB::beginTransaction();
-            
+
             /* Create student */
             $student_id         =   DB::table('students')->insertGetId([
                 'children_id'    =>  $request->children_id,
             ]);
 
+            $user_currenct_currency =   DB::table('wpvt_users')
+                                            ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
+                                            ->where('wpvt_users.id', auth()->user()->ID)
+                                            ->pluck('countries.currency_symbol')
+                                            ->first();
+                                            
             /* Create Invoice */
             $invoice_data['student_id']         =   $student_id;
             $invoice_data['invoice_items']      =   collect($request->fee)->pluck('fee_info')->toArray();
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
+            $invoice_data['currency']           =   $user_currenct_currency;
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
 
@@ -101,12 +117,6 @@ class StudentController extends Controller
                     'invoice_id'        =>  $new_invoice_id,
                     'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
                 ]);
-
-                /* Create Order */
-                $order_data['student_id']   =   $student_id;
-                $order_data['invoice_id']   =   $new_invoice_id;
-                $order_data['products']     =   $fee['material'];
-                OrderHelper::newOrder($order_data);
 
                 /* Create Class */
                 foreach($fee['classes'] as $class_key => $class){
@@ -153,6 +163,12 @@ class StudentController extends Controller
                     }
                 }
             }
+            
+            /* Create Orders */
+            $order_data['student_id']   =   $student_id;
+            $order_data['invoice_id']   =   $new_invoice_id;
+            $order_data['products']     =   array_merge(...collect($request->fee)->pluck('material')->toArray());
+            OrderHelper::newOrder($order_data);
         
             DB::commit();   
 
@@ -217,8 +233,10 @@ class StudentController extends Controller
                                                 'student_fees.id as student_fee_id', 
                                                 'student_fees.status as student_fee_status')
                                     ->where('student_fees.student_id', $request->student_id)
+                                    ->whereNull('student_fees.status')
+                                    ->orWhere('student_fees.status', 2)
                                     ->get();
-
+                                    
         $student_academics = collect($result)->groupBy('fee_id')->map(function ($group) {
             $fee_info = [
                 "centre_id" => $group->first()->centre_id,
@@ -285,17 +303,15 @@ class StudentController extends Controller
 
     public function destroy(Request $request)
     {
-        $invoice_data   =  DB::table('invoices')->where('id', $request->invoice_id)->first();
-
+        $invoice_data       =  DB::table('invoices')->where('id', $request->invoice_id)->first();
         $invoice_items      =   collect(json_decode($invoice_data->invoice_items, true));
-
         
         /* Check if paid */ 
         $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
         if(!$bill['paid']){
             Billplz::bill()->destroy($invoice_data->bill_id);
         }
-
+        /* Delete related records */
         if($invoice_items->count() <= 1){
             DB::table('invoices')->where('id', $request->invoice_id)->delete();
             DB::table('student_fees')
@@ -303,6 +319,7 @@ class StudentController extends Controller
                 ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
                 ->where('student_fees.invoice_id', $request->invoice_id)->delete();
         }
+        /* Recreate new record */
         else{
             $fee_to_delete          = intval($request->fee_to_delete); // Assuming you get the fee_id from the request
             $filtered_invoice_items = $invoice_items->reject(function ($item) use ($fee_to_delete) {
@@ -321,11 +338,21 @@ class StudentController extends Controller
             $new_invoice_data['date_admission']     =   Carbon::parse($request->admission_date)->format('Y-m-d');
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($new_invoice_data);
-            DB::table('student_fees')->where('id', $request->student_fee_id)->update([
+            
+            DB::table('student_fees')->where('invoice_id', $request->invoice_id)->update([
                 'invoice_id'    =>  $new_invoice_id
             ]);
+            
+            $fee_ids            =   $filtered_invoice_items->pluck('fee_id')->toArray();
+            $produce_items      =   ProductHelper::getProductDataByFee($fee_ids);
+
+            /* Create Order */
+            $order_data['student_id']   =   $invoice_data->student_id;
+            $order_data['invoice_id']   =   $new_invoice_id;
+            $order_data['products']     =   $produce_items;
+            OrderHelper::newOrder($order_data);
         }
-        
+
         return redirect()->back()->with(['type'=>'success', 'message'=>'Class deleted successfully!']);
     }
 
@@ -409,6 +436,12 @@ class StudentController extends Controller
                     }
                 }
             }
+            
+            /* Create Orders */
+            $order_data['student_id']   =   $student_id;
+            $order_data['invoice_id']   =   $new_invoice_id;
+            $order_data['products']     =   array_merge(...collect($request->fee)->pluck('material')->toArray());
+            OrderHelper::newOrder($order_data);
         
             DB::commit();   
 
@@ -422,11 +455,32 @@ class StudentController extends Controller
 
     public function setFeeStatus(Request $request)
     {
-        DB::table('student_fees')->where('id', $request->data)->update([
-            'status' => $request['data']['student_fee_status']
+        $status     =   $request['data']['student_fee_status'];
+        DB::table('student_fees')->where('id', $request['data']['student_fee_id'])->update([
+            'status'    => $status,
         ]);
 
-        return back()->with(['type'=>'success', 'message' => 'Fee status changed successfully!']);
+        return back()->with(['type'=>'success', 'message' => 'Status has been changed successfully!']);
+    }
+
+    public function transferStudent(Request $request){
+        DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->update([
+            'centre_id'    => $request->centre_id,
+        ]);
+
+        DB::table('student_classes')->where('student_fee_id', $request->student_fee_id)->delete();
+        foreach ($request->fee as $fee) {
+            if ($fee["fee_info"]["fee_id"] === $request->fee_id) {
+                foreach($fee["classes"] as $class_key => $class){
+                    DB::table('student_classes')->insert([
+                        'student_fee_id'    =>  $request->student_fee_id,
+                        'class_id'          =>  $class['class_id'],
+                    ]);
+                }
+            }
+        }
+
+        return back()->with(['type'=>'success', 'message' => 'Student has been transferred successfully.']);
     }
 
     /* Usage: $this->getDatesForDayOfWeekFromCustomDate(1, '2023-05-02') */

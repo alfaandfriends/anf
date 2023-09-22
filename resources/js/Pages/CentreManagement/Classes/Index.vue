@@ -72,7 +72,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                             <div class="flex">
-                                <BreezeButton @click="addClass(params.centre_id)">New Class</BreezeButton>
+                                <BreezeButton @click="addClass(params.centre_id)" v-if="$page.props.can.create_classes">New Class</BreezeButton>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -132,10 +132,10 @@ import BreezeButton from '@/Components/Button.vue';
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center">
-                                                <div class="flex pr-1">
+                                                <div class="flex pr-1" v-if="$page.props.can.edit_classes">
                                                     <BreezeButton buttonType="warning" title="Edit Class" @click="editClass(classes.id)">Edit</BreezeButton>
                                                 </div>
-                                                <div class="flex">
+                                                <div class="flex" v-if="$page.props.can.delete_classes">
                                                     <BreezeButton buttonType="danger" title="Delete Class" @click="deleteClass(classes.id)">Delete</BreezeButton>
                                                 </div>
                                             </div>

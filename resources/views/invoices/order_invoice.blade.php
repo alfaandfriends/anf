@@ -87,7 +87,7 @@
             <tr style="border: 1px solid black">
                 <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
                     <div style="margin-bottom: 10px; font-weight: bold;">
-                    {{ $product->product->name }} {{ $product->product_variation->option_name ? '- ' + $product->product_variation->option_name : '' }} {{ $product->product_sub_variation->option_name ? '(' + $product->product_sub_variation->option_name + ')': '' }}
+                    {{ $product->product->name }} {{ $product->product_variation->option_name ? '- ' . $product->product_variation->option_name : '' }} {{ $product->product_sub_variation->option_name ? '(' . $product->product_sub_variation->option_name . ')': '' }}
                     </div>
                 </td>
                 <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">

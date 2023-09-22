@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Invoice#2023-000001</title>
+<title>Invoice#{{ $data['invoice_number'] }}</title>
 
 <style type="text/css">
     * {

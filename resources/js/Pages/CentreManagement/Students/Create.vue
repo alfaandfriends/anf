@@ -596,6 +596,10 @@ export default {
                     this.scrollToElement('class_fee')
                     this.searching.fee = false
                     this.disable_check_box  = false
+                })
+                .catch((error) => {
+                    this.searching.fee = false
+                    this.disable_check_box  = false
                 });
             }
             else{
