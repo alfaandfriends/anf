@@ -7,6 +7,7 @@ use App\Classes\NotificationHelper;
 use App\Classes\OrderHelper;
 use App\Classes\ProductHelper;
 use App\Classes\ProgrammeHelper;
+use App\Classes\UserHelper;
 use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
 use DateTime;
@@ -94,17 +95,12 @@ class StudentController extends Controller
                 'children_id'    =>  $request->children_id,
             ]);
 
-            $user_currenct_currency =   DB::table('wpvt_users')
-                                            ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
-                                            ->where('wpvt_users.id', auth()->user()->ID)
-                                            ->pluck('countries.currency_symbol')
-                                            ->first();
                                             
             /* Create Invoice */
             $invoice_data['student_id']         =   $student_id;
             $invoice_data['invoice_items']      =   collect($request->fee)->pluck('fee_info')->toArray();
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
-            $invoice_data['currency']           =   $user_currenct_currency;
+            $invoice_data['currency']           =   UserHelper::getCurrentUserCurrency();
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
 
@@ -336,6 +332,7 @@ class StudentController extends Controller
             $new_invoice_data['student_id']         =   $invoice_data->student_id;
             $new_invoice_data['invoice_items']      =   $filtered_invoice_items;
             $new_invoice_data['date_admission']     =   Carbon::parse($request->admission_date)->format('Y-m-d');
+            $invoice_data['currency']               =   UserHelper::getCurrentUserCurrency();
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($new_invoice_data);
             
@@ -379,6 +376,7 @@ class StudentController extends Controller
             $invoice_data['student_id']         =   $student_id;
             $invoice_data['invoice_items']      =   collect($request->fee)->pluck('fee_info')->toArray();
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
+            $invoice_data['currency']           =   UserHelper::getCurrentUserCurrency();
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
             

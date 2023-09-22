@@ -141,7 +141,7 @@ class OrderController extends Controller
                                         'orders.tracking_status as tracking_status', 'order_shipping_providers.name as shipping_provider_name',
                                         'invoices.id as invoice_id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                         'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
-                                        'invoices.date_issued', 'invoices.due_date', 'invoices.amount')
+                                        'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.currency')
                                 ->where('orders.id', $request->order_id)
                                 ->first();
                                 
@@ -155,6 +155,7 @@ class OrderController extends Controller
             'created_at'        => Carbon::parse($invoice_data->created_at)->format('d M Y'),
             'products'          => json_decode($invoice_data->products),
             'amount'            => $invoice_data->amount,
+            'currency'          => $invoice_data->currency,
         ];
         
         $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.order_invoice', compact('data'));
@@ -172,7 +173,7 @@ class OrderController extends Controller
                                         'orders.tracking_status as tracking_status', 'order_shipping_providers.name as shipping_provider_name',
                                         'invoices.id as invoice_id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                         'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
-                                        'invoices.date_issued', 'invoices.due_date', 'invoices.amount')
+                                        'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.currency')
                                 ->where('orders.id', $request->order_id)
                                 ->first();
                                 
@@ -186,6 +187,7 @@ class OrderController extends Controller
             'created_at'        => Carbon::parse($invoice_data->created_at)->format('d M Y'),
             'products'          => json_decode($invoice_data->products),
             'amount'            => $invoice_data->amount,
+            'currency'          => $invoice_data->currency,
         ];
         
         $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.packing_slip', compact('data'));

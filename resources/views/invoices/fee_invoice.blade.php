@@ -77,8 +77,8 @@
         <thead style="background-color: black; color: white;">
             <tr style="border: 1px solid black">
                 <th style="padding-top:0.5rem; padding-bottom:0.5rem; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">Item</th>
-                <th style="padding-top:0.5rem; padding-bottom:0.5rem; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">Discount</th>
-                <th style="padding-top:0.5rem; padding-bottom:0.5rem; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">Amount</th>
+                <th style="padding-top:0.5rem; padding-bottom:0.5rem; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">Discount ({{ $data['currency'] }})</th>
+                <th style="padding-top:0.5rem; padding-bottom:0.5rem; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">Amount ({{ $data['currency'] }})</th>
             </tr>
         </thead>
         <tbody>
@@ -130,7 +130,7 @@
                 </td>
                 <td align="right" style="border-top: 1px solid; border-bottom: 1px solid;">
                     <div style="padding-top: 5px; padding-bottom: 5px; font-size: 13px; padding-left:1rem; padding-right:1rem;">
-                        {{ $data['amount'] }}.00
+                    {{ $data['currency'] }} {{ $data['amount'] }}.00
                     </div>
                 </td>
             </tr>

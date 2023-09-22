@@ -180,7 +180,7 @@ class InvoiceController extends Controller
                                 ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
                                 ->select('invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                             'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
-                                            'invoices.date_issued', 'invoices.due_date', 'invoices.amount')
+                                            'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.currency')
                                 ->where('invoices.id', $request->invoice_id)
                                 ->first();
                                 
@@ -193,6 +193,7 @@ class InvoiceController extends Controller
             'due_date'          => Carbon::parse($invoice_data->due_date)->format('d M Y'),
             'invoice_items'     => json_decode($invoice_data->invoice_items),
             'amount'            => $invoice_data->amount,
+            'currency'          => $invoice_data->currency,
         ];
         
         $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.fee_invoice', compact('data'));
