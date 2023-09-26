@@ -389,10 +389,7 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-            DB::table('products')->where('products.id', $id)
-                ->join('product_variations', 'product_variations.product_id', '=', 'products.id')
-                ->join('product_sub_variations', 'product_sub_variations.product_variation_id', '=', 'product_variations.id')
-                ->delete();
+            DB::table('products')->where('products.id', $id)->delete();
             DB::commit();
 
             return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product has been deleted!']); 
