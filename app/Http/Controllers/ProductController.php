@@ -387,12 +387,21 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        DB::table('products')->where('products.id', $id)
-            ->join('product_variations', 'product_variations.product_id', '=', 'products.id')
-            ->join('product_sub_variations', 'product_sub_variations.product_variation_id', '=', 'product_variations.id')
-            ->delete();
+        try {
+            DB::beginTransaction();
+            DB::table('products')->where('products.id', $id)
+                ->join('product_variations', 'product_variations.product_id', '=', 'products.id')
+                ->join('product_sub_variations', 'product_sub_variations.product_variation_id', '=', 'product_variations.id')
+                ->delete();
+            DB::commit();
 
-        return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product has been deleted!']);
+            return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product has been deleted!']); 
+        } catch (\Exception $e) {
+            // Something went wrong, rollback the transaction
+            DB::rollBack();
+        
+            return back()->with(['type'=>'error', 'message'=>'Failed to delete. The product is being used.']);
+        }
     }
 
     public function deleteVariation($id){
