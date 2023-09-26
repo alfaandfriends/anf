@@ -37,10 +37,10 @@
                                 {{ invoice.invoice_number }}
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ invoice.date_issued }}
+                                {{ moment(invoice.date_issued).format('DD MMM Y') }}
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ invoice.due_date }}
+                                {{ moment(invoice.due_date).format('DD MMM Y') }}
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center">
                                 {{ invoice.amount }}
@@ -91,6 +91,7 @@ import BreezeButton from '@/Components/Button.vue';
 <script>
 import Modal from '@/Components/Modal.vue'
 import axios from 'axios'
+import moment from 'moment';
 
 export default {
     components: {

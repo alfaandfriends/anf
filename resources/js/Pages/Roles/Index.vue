@@ -13,7 +13,7 @@
                 <div class="mx-auto">
                     <div class="align-middle inline-block w-full lg:w-1/2 px-2">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
-                            <BreezeButton @click="addRole()"> 
+                            <BreezeButton @click="addRole()" v-if="$page.props.can.create_roles"> 
                                 Add Role
                             </BreezeButton>
                             <!-- <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3"></SearchIcon>
@@ -59,9 +59,9 @@
                                         </td>
                                         <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center space-x-2">
-                                                <BreezeButton buttonType="warning" @click="editRole(role.id)" title="Edit Role" > Edit </BreezeButton>
-                                                <BreezeButton buttonType="danger" @click="deleteRole(role.id)" title="Delete"> Delete </BreezeButton>
-                                                <BreezeButton buttonType="blue" title="Assign Permissions" @click="assignPermissions(role.id)"> Permissions </BreezeButton>
+                                                <BreezeButton buttonType="warning" @click="editRole(role.id)" title="Edit Role" v-if="$page.props.can.edit_roles"> Edit </BreezeButton>
+                                                <BreezeButton buttonType="danger" @click="deleteRole(role.id)" title="Delete" v-if="$page.props.can.delete_roles"> Delete </BreezeButton>
+                                                <BreezeButton buttonType="blue" title="Assign Permissions" @click="assignPermissions(role.id)" v-if="$page.props.can.manage_roles"> Permissions </BreezeButton>
                                             </div>
                                         </td>
                                     </tr>

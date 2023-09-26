@@ -24,7 +24,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                             <div class="flex">
-                                <BreezeButton :route="route('users.create')">User Registration</BreezeButton>
+                                <BreezeButton :route="route('users.create')" v-if="$page.props.can.create_users">User Registration</BreezeButton>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -61,8 +61,8 @@ import BreezeButton from '@/Components/Button.vue';
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center space-x-2">
-                                                <BreezeButton buttonType="blue" @click="manageUser(user.ID)" v-if="$page.props.can.cp_users_edit_access">Manage User</BreezeButton>
-                                                <BreezeButton buttonType="danger" @click="deleteUser(user.ID)" v-if="$page.props.can.cp_users_delete_access">Delete</BreezeButton>
+                                                <BreezeButton buttonType="blue" @click="manageUser(user.ID)" v-if="$page.props.can.edit_users">Manage User</BreezeButton>
+                                                <BreezeButton buttonType="danger" @click="deleteUser(user.ID)" v-if="$page.props.can.delete_users">Delete</BreezeButton>
                                             </div>
                                         </td>
                                     </tr>

@@ -12,7 +12,7 @@ import BreezeButton from '@/Components/Button.vue';
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
                     <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
-                        <div class="grid grid-rows-1 grid-cols-2 gap-4">
+                        <div class="grid grid-rows-1 grid-cols-1 gap-4">
                             <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <div class="mb-5">
                                     <h1 class="text-indigo-800 font-bold">User Information</h1>
@@ -210,7 +210,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                 </div>
                             </div>
-                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md" v-if="$page.props.can.manage_roles">
                                 <div class="mb-5">
                                     <h1 class="text-indigo-800 font-bold">User Roles</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>

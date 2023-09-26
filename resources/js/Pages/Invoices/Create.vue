@@ -81,14 +81,26 @@ import BreezeButton from '@/Components/Button.vue';
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-1 gap-4">
+                                        <div class="mb-4">
+                                            <label for="student_id" class="block text-sm font-bold text-gray-700"> Create Bulk (Multiple Invoices) </label>
+                                            <Toggle v-model="form.create_bulk" 
+                                                :classes="{
+                                                    container: 'mt-1 inline-block',
+                                                    toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
+                                                    toggleOn: 'bg-indigo-500 border-indigo-500 justify-start text-white',
+                                                    toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
+                                                }
+                                            "/>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4" v-if="!form.create_bulk">
                                         <div class="mb-4">
                                             <label for="date_issued" class="block text-sm font-bold text-gray-700"> Date Issued </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <Datepicker 
                                                     :class="'focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm'" 
                                                     :style="formError.date_issued ? '--dp-border-color: #fa9e9e' : ''" 
-                                                    input-class-name="date-picker"
                                                     v-model="form.date_issued" 
                                                     :enableTimePicker="false"
                                                     :format="'dd/MM/yyyy'"
@@ -102,11 +114,41 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <Datepicker 
                                                     :class="'focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm'" 
                                                     :style="formError.due_date ? '--dp-border-color: #fa9e9e' : ''" 
-                                                    input-class-name="date-picker"
                                                     v-model="form.due_date" 
                                                     :enableTimePicker="false"
                                                     :format="'dd/MM/yyyy'"
                                                     :auto-apply="true" 
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4" v-else>
+                                        <div class="mb-4">
+                                            <label for="from_date" class="block text-sm font-bold text-gray-700"> From </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <Datepicker 
+                                                    :class="'focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm'" 
+                                                    :style="formError.from_date ? '--dp-border-color: #fa9e9e' : ''" 
+                                                    v-model="form.from_date" 
+                                                    :enableTimePicker="false"
+                                                    :month-picker="true"
+                                                    :format="'dd/MM/yyyy'"
+                                                    :auto-apply="true" 
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="to_date" class="block text-sm font-bold text-gray-700"> To </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <Datepicker no-today
+                                                    :class="'focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm'" 
+                                                    :style="formError.to_date ? '--dp-border-color: #fa9e9e' : ''" 
+                                                    v-model="form.to_date" 
+                                                    :enableTimePicker="false"
+                                                    :format="'dd/MM/yyyy'"
+                                                    :auto-apply="true" 
+                                                    :month-picker="true"
+                                                    :min-date="`${form.from_date.year}-${form.from_date.month+1}`"
                                                 />
                                             </div>
                                         </div>
@@ -204,8 +246,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                 
                                                 <Datepicker 
                                                     :class="'focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm'" 
-                                                    :style="$page.props.errors.date ? '--dp-border-color: #fa9e9e' : ''" 
-                                                    input-class-name="date-picker"
                                                     v-model="form.payment.date" 
                                                     :enableTimePicker="false"
                                                     :auto-apply="true" 
@@ -386,15 +426,20 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import Multiselect from '@vueform/multiselect'
 import { debounce } from 'vue-debounce'
 import Modal from '@/Components/Modal.vue'
+import Toggle from '@vueform/toggle';
 
 export default {
     components: {
-        Head, Link, Multiselect, Modal
+        Head, Link, Multiselect, Modal, Toggle
     },
     data(){
         return{
             open_modal: false,
             form: {
+                create_bulk: false,
+                from_date: '',
+                to_date: '',
+                formatted_to_date: '',
                 student_id: '',
                 invoice_items: [],
                 date_issued: '',
@@ -437,6 +482,8 @@ export default {
                 student_id: false,
                 date_issued: false,
                 due_date: false,
+                from_date: false,
+                to_date: false,
             }
         }
     },
@@ -451,13 +498,34 @@ export default {
                 });
             },
             deep: true,
+        },
+        'form.create_bulk': {
+            handler() {
+                this.formError.date_issued = false,
+                this.formError.due_date = false,
+                this.formError.from_date = false,
+                this.formError.to_date = false,
+                this.form.from_date = '',
+                this.form.to_date = '',
+                this.form.date_issued = '',
+                this.form.due_date = ''
+            },
+            deep: true,
+        },
+        'form.from_date': {
+            handler() {
+                this.form.to_date = ''
+            },
+            deep: true,
         }
     },
     methods: {
         submit() {
             this.formError.student_id   = !this.form.student_id ? true : false
-            this.formError.date_issued  = !this.form.date_issued ? true : false
-            this.formError.due_date     = !this.form.due_date ? true : false
+            this.formError.date_issued  = !this.form.create_bulk && !this.form.date_issued ? true : false
+            this.formError.due_date     = !this.form.create_bulk && !this.form.due_date ? true : false
+            this.formError.from_date    = this.form.create_bulk && !this.form.from_date ? true : false
+            this.formError.to_date      = this.form.create_bulk && !this.form.to_date ? true : false
             
             const hasError    =   Object.values(this.formError).some(value => value === true)
             if(!hasError){

@@ -24,7 +24,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                             <div class="flex">
-                                <BreezeButton :route="route('country.create')">New Country</BreezeButton>
+                                <BreezeButton :route="route('country.create')" v-if="$page.props.can.create_country">New Country</BreezeButton>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -72,7 +72,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="text-sm text-gray-900 font-semibold">{{ country_list.calling_code }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                            <BreezeButton buttonType="danger" @click="deleteCountry(country_list.id)">
+                                            <BreezeButton buttonType="danger" @click="deleteCountry(country_list.id)" v-if="$page.props.can.delete_country">
                                                 Delete
                                             </BreezeButton>
                                         </td>

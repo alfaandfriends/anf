@@ -13,7 +13,7 @@ import BreezeButton from '@/Components/Button.vue';
                 <div class="mx-auto">
                     <div class="align-middle inline-block min-w-full p-2 space-y-6">
                         <div class="flex lg:grow  sm:justify-end">
-                            <BreezeButton buttonType="info" class="px-4 py-3" @click="$inertia.get(route('math_manipulatives.configuration'))">Configuration</BreezeButton>
+                            <BreezeButton buttonType="info" class="px-4 py-3" @click="$inertia.get(route('math_manipulatives.configuration'))" v-if="$page.props.can.create_math_manipulatives">Configuration</BreezeButton>
                         </div>
                         <div class="bg-gray-50 rounded shadow p-6" v-if="$page.props.math_manipulatives.length">
                             <div class="p-4">

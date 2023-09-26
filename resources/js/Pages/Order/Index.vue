@@ -25,7 +25,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                 </div>
                             </div>
                             <div class="flex">
-                                <BreezeButton :route="route('orders.create')">Add New Order</BreezeButton>
+                                <BreezeButton :route="route('orders.create')" v-if="$page.props.can.create_orders">Add New Order</BreezeButton>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -81,8 +81,8 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex space-x-2 justify-center">
-                                                <BreezeButton @click="editOrder(order.id)" buttonType="warning">Edit</BreezeButton>
-                                                <BreezeButton @click="deleteOrder(order.id)" buttonType="danger">Delete</BreezeButton>
+                                                <BreezeButton @click="editOrder(order.id)" buttonType="warning" v-if="$page.props.can.edit_orders">Edit</BreezeButton>
+                                                <BreezeButton @click="deleteOrder(order.id)" buttonType="danger" v-if="$page.props.can.delete_orders">Delete</BreezeButton>
                                             </div>
                                         </td>
                                     </tr>

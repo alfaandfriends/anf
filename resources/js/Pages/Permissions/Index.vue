@@ -14,7 +14,7 @@
                 <div class="mx-auto">
                     <div class="align-middle inline-block w-full lg:w-1/2 px-2">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
-                            <BreezeButton @click="addPermission()"> 
+                            <BreezeButton @click="addPermission()" v-if="$page.props.can.create_permissions"> 
                                 Add Permission
                             </BreezeButton>
                         </div>
@@ -33,8 +33,8 @@
                                     </div>
                                     <div class="flex flex-none items-center px-4 py-1 transition cursor-pointer group border border-indigo-200 border-l-0 text-gray-800" role="button">
                                         <div class="flex items-center space-x-2">
-                                            <BreezeButton buttonType="warning" @click="editPermission(permission.id)">Edit</BreezeButton>
-                                            <BreezeButton buttonType="danger" @click="deletePermission(permission.id)">Delete</BreezeButton>
+                                            <BreezeButton buttonType="warning" @click="editPermission(permission.id)" v-if="$page.props.can.edit_permissions">Edit</BreezeButton>
+                                            <BreezeButton buttonType="danger" @click="deletePermission(permission.id)" v-if="$page.props.can.delete_permissions">Delete</BreezeButton>
                                         </div>
                                     </div>
                                 </div>

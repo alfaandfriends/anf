@@ -140,7 +140,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 />
                             </div>
                         </div>
-                        <div class="flex">
+                        <div class="flex" v-if="$page.props.can.create_fee_invoices">
                             <BreezeButton :route="route('fee.invoices.create')">New invoice</BreezeButton>
                         </div>
                     </div>
@@ -207,11 +207,9 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        <div class="flex justify-center space-x-2">
-                                            <!-- <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton> -->
-                                            <BreezeButton buttonType="warning" @click="editInvoice(result.id)">Edit / Collect Payment</BreezeButton>
-                                            <!-- <BreezeButton buttonType="danger" @click="deleteResource(result.id)">Delete</BreezeButton> -->
-                                        </div>
+                                        <!-- <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton> -->
+                                        <BreezeButton buttonType="warning" @click="editInvoice(result.id)" v-if="$page.props.can.edit_fee_invoices">Edit / Collect Payment</BreezeButton>
+                                        <!-- <BreezeButton buttonType="danger" @click="deleteResource(result.id)">Delete</BreezeButton> -->
                                     </td>
                                 </tr>
                             </tbody>

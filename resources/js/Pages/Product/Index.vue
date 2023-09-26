@@ -30,7 +30,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </button> -->
                             </div>
                             <div class="flex">
-                                <BreezeButton :route="route('products.create')">Add New Product</BreezeButton>
+                                <BreezeButton :route="route('products.create')" v-if="$page.props.can.create_products">Add New Product</BreezeButton>
                             </div>
                         </div>
                         <!-- <div class="w-full shadow p-5 rounded-lg bg-white mb-3" v-if="show_filter">
@@ -127,19 +127,13 @@ import BreezeButton from '@/Components/Button.vue';
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">{{ product.description }}</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                            <div class="flex justify-center">
-                                                <div class="flex pr-1">
-                                                    <BreezeButton @click="editProduct(product.id)" buttonType="warning" title="Edit Category">
-                                                        Edit
-                                                    </BreezeButton>
-                                                </div>
-                                                <div class="flex">
-                                                    <BreezeButton @click="deleteProduct(product.id)" buttonType="danger" title="Delete Product">
-                                                        Delete
-                                                    </BreezeButton>
-                                                </div>
-                                            </div>
+                                        <td class="flex px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-2">
+                                            <BreezeButton @click="editProduct(product.id)" buttonType="warning" title="Edit Category" v-if="$page.props.can.edit_products">
+                                                Edit
+                                            </BreezeButton>
+                                            <BreezeButton @click="deleteProduct(product.id)" buttonType="danger" title="Delete Product" v-if="$page.props.can.delete_products">
+                                                Delete
+                                            </BreezeButton>
                                         </td>
                                     </tr>
                                 </tbody>

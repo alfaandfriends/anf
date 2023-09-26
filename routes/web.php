@@ -4,7 +4,7 @@ use App\Http\Controllers\DiagnosticTestController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('diagnostic-test')->group(function () {
-    Route::get('/', [DiagnosticTestController::class, 'dtMain'])->middleware('auth')->name('diagnostic_test.authenticated')->middleware('permission:view_test_access');
+    Route::get('/', [DiagnosticTestController::class, 'dtMain'])->middleware('auth')->name('diagnostic_test.authenticated');
     Route::get('/public', [DiagnosticTestController::class, 'dtMain'])->name('public.diagnostic_test');
     Route::post('/start', [DiagnosticTestController::class, 'dtStart'])->name('diagnostic_test.run');
     Route::get('/new-level', [DiagnosticTestController::class, 'dtNewLevel'])->name('diagnostic_test.new_level');

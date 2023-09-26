@@ -22,7 +22,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-model="params.search">
                             </div>
                             <div class="flex">
-                                <BreezeButton :route="route('art_gallery.create')">Upload Artwork</BreezeButton>
+                                <BreezeButton :route="route('art_gallery.create')" v-if="$page.props.can.create_art_gallery">Upload Artwork</BreezeButton>
                             </div>
                         </div>
                         <table class="table-auto min-w-full divide-y divide-gray-200">
@@ -66,8 +66,8 @@ import BreezeButton from '@/Components/Button.vue';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="blue" class="py-1 px-2" @click="viewArtwork(result.art_file_location)">View</BreezeButton>
-                                            <BreezeButton buttonType="danger" @click="deleteArtwork(result.artwork_id)">Delete</BreezeButton>
+                                            <BreezeButton buttonType="blue" class="py-1 px-2" @click="viewArtwork(result.art_file_location)" v-if="$page.props.can.edit_art_gallery">View</BreezeButton>
+                                            <BreezeButton buttonType="danger" @click="deleteArtwork(result.artwork_id)" v-if="$page.props.can.delete_art_gallery">Delete</BreezeButton>
                                         </div>
                                     </td>
                                 </tr>

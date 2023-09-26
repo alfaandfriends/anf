@@ -13,7 +13,7 @@
                 <div class="mx-auto">
                     <div class="align-top inline-block w-full lg:w-1/2 px-2 mb-3">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
-                            <BreezeButton :route="route('menus.add_menu')">
+                            <BreezeButton :route="route('menus.add_menu')" v-if="$page.props.can.create_menu_editor">
                                 Add Menu
                             </BreezeButton>
                         </div>
@@ -42,10 +42,10 @@
                                         <td class="px-2 py-2 whitespace-nowrap">
                                             <div class="flex justify-center">
                                                 <div class="px-0.5" :class="menuID > 1 ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-blue-200 cursor-not-allowed'" title="Sort">
-                                                    <svg-icon :fa-icon="faCaretSquareUp" :size="25" flip="horizontal" @click="menuID > 1 ? swapMenuUp(menu.id) : ''"></svg-icon>
+                                                    <svg-icon :fa-icon="faCaretSquareUp" :size="25" flip="horizontal" @click="menuID > 1 ? swapMenuUp(menu.id) : ''" v-if="$page.props.can.edit_menu_editor"></svg-icon>
                                                 </div>
                                                 <div class="px-0.5≈" :class="menuID < $page.props.menus.length ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-blue-200 cursor-not-allowed'" title="Sort">
-                                                    <svg-icon :fa-icon="faCaretSquareDown" :size="25" flip="horizontal" @click="menuID < $page.props.menus.length ? swapMenuDown(menu.id) : ''"></svg-icon>
+                                                    <svg-icon :fa-icon="faCaretSquareDown" :size="25" flip="horizontal" @click="menuID < $page.props.menus.length ? swapMenuDown(menu.id) : ''" v-if="$page.props.can.edit_menu_editor"></svg-icon>
                                                 </div>
                                             </div>
                                         </td>
@@ -67,22 +67,16 @@
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="menu.menu_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ menu.menu_status == 1 ? 'Active' : 'Not Active'}} </span>
                                         </td>
                                         <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
-                                            <div class="flex">
-                                                <div class="pr-1">
-                                                    <BreezeButton class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" @click="editMenu(menu.id)" title="Edit">
-                                                        <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
-                                                    </BreezeButton>
-                                                </div>
-                                                <div class="pr-1">
-                                                    <BreezeButton class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteMenu(menu.id)" title="Delete">
-                                                        <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
-                                                    </BreezeButton>
-                                                </div>
-                                                <div class="pr-1">
-                                                    <BreezeButton class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-1 border border-blue-700 rounded" @click="showSubMenu(menu.id)" title="View Sub Menu">
-                                                        <ChevronRightIcon class="text-white-600 h-4 w-4 fill-current"></ChevronRightIcon>
-                                                    </BreezeButton>
-                                                </div>
+                                            <div class="flex space-x-2">
+                                                <BreezeButton class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" @click="editMenu(menu.id)" title="Edit" v-if="$page.props.can.edit_menu_editor">
+                                                    <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
+                                                </BreezeButton>
+                                                <BreezeButton class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteMenu(menu.id)" title="Delete" v-if="$page.props.can.delete_menu_editor">
+                                                    <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
+                                                </BreezeButton>
+                                                <BreezeButton class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-1 border border-blue-700 rounded" @click="showSubMenu(menu.id)" title="View Sub Menu" v-if="$page.props.can.edit_menu_editor">
+                                                    <ChevronRightIcon class="text-white-600 h-4 w-4 fill-current"></ChevronRightIcon>
+                                                </BreezeButton>
                                             </div>
                                         </td>
                                     </tr>
@@ -125,10 +119,10 @@
                                         <td class="px-2 py-2 whitespace-nowrap">
                                             <div class="flex justify-center">
                                                 <div class="px-0.5" :class="menuID > 1 ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-blue-200 cursor-not-allowed'" title="Sort">
-                                                    <svg-icon :fa-icon="faCaretSquareUp" :size="25" flip="horizontal" @click="menuID > 1 ? swapSubMenuUp(menu_id, sub_menu.id) : ''"></svg-icon>
+                                                    <svg-icon :fa-icon="faCaretSquareUp" :size="25" flip="horizontal" @click="menuID > 1 ? swapSubMenuUp(menu_id, sub_menu.id) : ''" v-if="$page.props.can.edit_menu_editor"></svg-icon>
                                                 </div>
                                                 <div class="px-0.5≈" :class="menuID < $page.props.sub_menus.length ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-blue-200 cursor-not-allowed'" title="Sort">
-                                                    <svg-icon :fa-icon="faCaretSquareDown" :size="25" flip="horizontal" @click="menuID < $page.props.sub_menus.length ? swapSubMenuDown(menu_id, sub_menu.id) : ''"></svg-icon>
+                                                    <svg-icon :fa-icon="faCaretSquareDown" :size="25" flip="horizontal" @click="menuID < $page.props.sub_menus.length ? swapSubMenuDown(menu_id, sub_menu.id) : ''" v-if="$page.props.can.edit_menu_editor"></svg-icon>
                                                 </div>
                                             </div>
                                         </td>
@@ -153,12 +147,12 @@
                                         <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex">
                                                 <div class="pr-1">
-                                                    <BreezeButton class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" @click="editSubMenu(sub_menu.id)" title="Delete">
+                                                    <BreezeButton class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" @click="editSubMenu(sub_menu.id)" title="Delete" v-if="$page.props.can.edit_menu_editor">
                                                         <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="pr-1">
-                                                    <BreezeButton class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteSubMenu(sub_menu.id)" title="Delete">
+                                                    <BreezeButton class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteSubMenu(sub_menu.id)" title="Delete" v-if="$page.props.can.delete_menu_editor">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </BreezeButton>
                                                 </div>
