@@ -17,7 +17,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="flex relative text-gray-400 focus-within:text-gray-600">
                                     <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3" :style="'top:30%'"></SearchIcon>
                                     <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
-                                            type="text" v-model="params.search" placeholder="Search">
+                                            type="text" v-debounce:800ms="search" v-model="params.search" placeholder="Search">
                                 </div>
                                 <div class="flex">
                                     <Multiselect 
@@ -213,6 +213,7 @@ import moment from 'moment';
 import Multiselect from '@vueform/multiselect'
 import axios from 'axios'
 import Modal from '@/Components/Modal.vue'
+import { debounce } from 'vue-debounce'
 
 export default {
     components: {
@@ -240,16 +241,6 @@ export default {
             }
         }
     },
-    watch: {
-        params: {
-            handler(){
-                if(this.params){
-                    this.$inertia.get(this.route('diagnostic_test.saved_result'), this.params, { replace: true, preserveState: true});
-                }
-            },
-            deep: true
-        }
-    },
     methods: {
         viewDetails(result_id){
             this.$inertia.get(this.route('diagnostic_test.saved_result.details'), {'result_id': result_id});
@@ -265,6 +256,9 @@ export default {
             this.$inertia.post(this.route('diagnostic_test.saved_result.save_status'), this.form, { onSuccess: page => {            
                 this.open_modal = false
             }});
+        },
+        search(){
+            this.$inertia.get(this.route('diagnostic_test.saved_result'), this.params, { replace: true, preserveState: true});
         }
     }
 }

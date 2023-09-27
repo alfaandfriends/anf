@@ -17,9 +17,9 @@
         </style>
     </head>
     <body class="antialiased">
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
+        <div class="relative flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
             <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex justify-center ">
+                <div class="flex justify-center">
                     <img src="{{ asset('images/anf-logo-main-2x.png') }}" class="flex text-center" alt="">
                 </div>
                 <div class="flex flex-col items-center pt-8 sm:justify-start">

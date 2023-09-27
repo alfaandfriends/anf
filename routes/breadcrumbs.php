@@ -321,7 +321,7 @@ Breadcrumbs::for('roles.assign_pemissions', function (BreadcrumbTrail $trail) {
     $trail->push('Manage Permission', route('roles'));
 });
 
-/* Centres */
+/* Permissions */
 Breadcrumbs::for('permissions', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Permissions', route('permissions'));
@@ -361,40 +361,4 @@ Breadcrumbs::for('menus.add_sub_menu', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('menus.edit_sub_menu', function (BreadcrumbTrail $trail) {
     $trail->parent('menus');
     $trail->push('Edit Sub Menu', route('menus'));
-});
-
-/* Settings */
-Breadcrumbs::for('settings', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Class Types Settings', route('settings.class_types'));
-});
-
-Breadcrumbs::for('settings.class_types', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Class Types Settings', route('settings.class_types'));
-});
-
-Breadcrumbs::for('settings.class_types.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('settings.class_types');
-    $trail->push('Add Class Type', route('settings.class_types'));
-});
-
-Breadcrumbs::for('settings.class_types.edit', function (BreadcrumbTrail $trail) {
-    $trail->parent('settings.class_types');
-    $trail->push('Edit Class Type', route('settings.class_types'));
-});
-
-Breadcrumbs::for('settings.countries', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Countries', route('settings.countries'));
-});
-
-Breadcrumbs::for('settings.diagnostic_test', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Diagnostic Test', route('settings.diagnostic_test'));
-});
-
-Breadcrumbs::for('settings.diagnostic_test.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('settings.diagnostic_test');
-    $trail->push('Add Diagnostic Test', route('settings.diagnostic_test'));
 });

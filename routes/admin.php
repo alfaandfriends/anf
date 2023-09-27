@@ -28,7 +28,7 @@ use App\Http\Controllers\TeacherResourcesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth', 'device'])->group(function(){
     Route::prefix('admin')->group(function () {
         /* User Impersonation */
         Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate')->middleware('permission:impersonate_access');
