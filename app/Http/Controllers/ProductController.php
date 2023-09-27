@@ -393,7 +393,7 @@ class ProductController extends Controller
             DB::commit();
 
             return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product has been deleted!']); 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Something went wrong, rollback the transaction
             DB::rollBack();
         
@@ -410,7 +410,7 @@ class ProductController extends Controller
             DB::commit();
         
             return back()->with(['type'=>'success', 'message'=>'Variation has been deleted!']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Something went wrong, rollback the transaction
             DB::rollBack();
         
@@ -427,7 +427,7 @@ class ProductController extends Controller
             DB::commit();
         
             return back()->with(['type'=>'success', 'message'=>'Sub variation has been deleted!']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Something went wrong, rollback the transaction
             DB::rollBack();
         

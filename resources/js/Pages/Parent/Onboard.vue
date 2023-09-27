@@ -204,7 +204,7 @@ export default {
         return{
             search_query: false,
             state_list: [],
-            current_step: 1,
+            current_step: 3,
             loading:{
                 country: false,
                 state: false
