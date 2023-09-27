@@ -250,7 +250,7 @@ export default {
         setCountryData(country_id){
             this.loading.state = true
             axios
-                .get(route('country.find', country_id))
+                .get(route('countries.find', country_id))
                 .then(response => {
                     this.setStateList(response.data.country_code)
                     this.form.calling_code  =   response.data.calling_code

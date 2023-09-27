@@ -35,6 +35,9 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate')->middleware('permission:impersonate_access');
 
         /* Dashboard */
+        Route::get('/', function () {
+            return redirect(route('dashboard'));
+        });
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:view_dashboard');
         
         /* Administration */
@@ -220,10 +223,10 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/get-user-info/{id}', [UserController::class, 'getUserInfo'])->name('users.get_info')->middleware('permission:view_users');
 
         /* Countries */
-        Route::get('/country', [CountryController::class, 'index'])->name('country')->middleware('permission:view_country');
-        Route::get('/country/create', [CountryController::class, 'create'])->name('country.create')->middleware('permission:create_country');
-        Route::post('/country/store', [CountryController::class, 'store'])->name('country.store')->middleware('permission:create_country');
-        Route::delete('/country/destroy/{id}', [CountryController::class, 'destroy'])->name('country.destroy')->middleware('permission:delete_country');
+        Route::get('/countries', [CountryController::class, 'index'])->name('countries')->middleware('permission:view_country');
+        Route::get('/countries/create', [CountryController::class, 'create'])->name('countries.create')->middleware('permission:create_country');
+        Route::post('/countries/store', [CountryController::class, 'store'])->name('countries.store')->middleware('permission:create_country');
+        Route::delete('/countries/destroy/{id}', [CountryController::class, 'destroy'])->name('countries.destroy')->middleware('permission:delete_country');
 
         /* Control Panel */
         Route::prefix('control-panel')->middleware('permission:control_panel_access')->group(function () {

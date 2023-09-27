@@ -24,7 +24,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                             <div class="flex">
-                                <BreezeButton :route="route('country.create')" v-if="$page.props.can.create_country">New Country</BreezeButton>
+                                <BreezeButton :route="route('countries.create')" v-if="$page.props.can.create_country">New Country</BreezeButton>
                             </div>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -130,7 +130,7 @@ export default {
         params: {
             handler(){
                 if(this.params){
-                    this.$inertia.get(this.route('country'), this.params, { replace: true, preserveState: true});
+                    this.$inertia.get(this.route('countries'), this.params, { replace: true, preserveState: true});
                 }
             },
             deep: true
@@ -141,7 +141,7 @@ export default {
     },
     methods: {
         editCountry(country_id){
-            this.$inertia.get(route('country.edit'), {'country_id': country_id})
+            this.$inertia.get(route('countries.edit'), {'country_id': country_id})
         },
         deleteCountry(country_id){
             this.confirmationTitle="Delete Country"
@@ -149,7 +149,7 @@ export default {
             this.confirmationAlert="danger"
             this.confirmationButton="Delete"
             this.confirmationMethod="delete"
-            this.confirmationRoute = 'country.destroy'
+            this.confirmationRoute = 'countries.destroy'
             this.confirmationData = country_id
             this.isOpen = true
         },

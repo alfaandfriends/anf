@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function(){
 
     /* Country */
-    Route::get('country/list', [CountryController::class, 'getCountries'])->name('country.list');
-    Route::get('country/find/{id}', [CountryController::class, 'getCountry'])->name('country.find');
+    Route::get('countries', [CountryController::class, 'getCountries'])->name('countries.list');
+    Route::get('countries/find/{id}', [CountryController::class, 'getCountry'])->name('countries.find');
 
     /* File Download */
     Route::get('teacher_resources/{filename}', [DownloadController::class, 'teacherResources'])->name('download.teacher_resources');

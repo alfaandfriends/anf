@@ -40,7 +40,7 @@ class CountryController extends Controller
                 'calling_code'      =>  $request->calling_code,
             ]);
 
-            return redirect(route('country'))->with(['type'=>'success', 'message'=>'New country added!']);
+            return redirect(route('countries'))->with(['type'=>'success', 'message'=>'New country added!']);
         }
 
         public function destroy($id){

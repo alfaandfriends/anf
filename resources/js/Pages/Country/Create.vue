@@ -47,7 +47,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
                                                         singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                                         multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5',
+                                                        search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5 h-9',
                                                         tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2',
                                                         tag: 'bg-green-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap',
                                                         tagDisabled: 'pr-2 opacity-50',
@@ -128,7 +128,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex items-end justify-end space-x-2">
-                                        <BreezeButton buttonType="gray" :route="route('country')">Cancel</BreezeButton>
+                                        <BreezeButton buttonType="gray" :route="route('countries')">Cancel</BreezeButton>
                                         <BreezeButton type="submit">Save </BreezeButton>
                                     </div>
                                 </div>
@@ -192,7 +192,7 @@ export default {
     },
     methods: {
         submit() {
-            this.$inertia.post(route('country.store'), this.form, { preserveState: true})
+            this.$inertia.post(route('countries.store'), this.form, { preserveState: true})
         },
         setCountryData(country_name){
             axios
