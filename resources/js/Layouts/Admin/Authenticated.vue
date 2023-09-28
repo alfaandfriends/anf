@@ -151,86 +151,81 @@ export default {
 }
 </script>
 
-<style src="@vueform/toggle/themes/default.css"></style>
-
 
 <template>
     <div class="flex">
         <!-- Sidebar -->
-        <div class="min-h-screen bg-gray-50 step-1 lg:w-[21rem]">
-            <div class="flex">
-                <nav class="fixed top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 w-[18rem] sm:translate-x-0"
-                     :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
-                >
-                    <span class="flex justify-center items-center border-b border-dashed px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
-                    <nav class="text-sm font-medium text-gray-500 p-3 space-y-4 my-3">
-                        <div class="space-y-1" v-for="section, section_key in $page.props.menu">
-                            <p class="uppercase text-gray-100 text-xs mb-3 tracking-wide">{{ section.name }}</p>
-                            <template v-for="menu, menu_key in section.menus">
-                                <template v-if="menu.menu_route">
-                                    <div class="flex space-x-1">
-                                        <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(menu.menu_route)"></div>
-                                        <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current() && route().current().startsWith(menu.menu_route)" class="rounded-lg flex-auto">
+        <div class="flex min-h-screen bg-gray-50 step-1">
+            <!-- Sidebar Menu -->
+            <nav class="fixed w-[16rem] md:w-[18rem] top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 sm:translate-x-0"
+                    :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
+            >
+                <span class="flex justify-center items-center border-b border-dashed px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
+                <nav class="text-sm font-medium text-gray-500 p-3 space-y-4 my-3">
+                    <div class="space-y-1" v-for="section, section_key in $page.props.menu">
+                        <p class="uppercase text-gray-100 text-xs mb-3 tracking-wide">{{ section.name }}</p>
+                        <template v-for="menu, menu_key in section.menus">
+                            <template v-if="menu.menu_route">
+                                <div class="flex space-x-1">
+                                    <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(menu.menu_route)"></div>
+                                    <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current() && route().current().startsWith(menu.menu_route)" class="rounded-lg flex-auto">
+                                        <span class="mr-2" v-html="menu.menu_icon"></span>
+                                        <span class="select-none tracking-wide">{{ menu.menu_name }}</span>
+                                    </BreezeNavLink>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="space-y-1" v-if="$page.props.can[menu.menu_permission]">
+                                    <div class="flex items-center justify-between px-4 py-2 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200 rounded-lg" :class="menu_opened.section_key == section_key && menu_opened.menu_key == menu_key ? 'text-white tracking-wide bg-gray-800' : ''" role="button" @click="toggleMenu(section_key, menu_key)">
+                                        <div class="flex items-center">
                                             <span class="mr-2" v-html="menu.menu_icon"></span>
                                             <span class="select-none tracking-wide">{{ menu.menu_name }}</span>
-                                        </BreezeNavLink>
+                                        </div>
+                                        <ChevronRightIcon :class="{ 'rotate-90': checkMenuIsOpen(section_key, menu_key) }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                     </div>
-                                </template>
-                                <template v-else>
-                                    <div class="space-y-1" v-if="$page.props.can[menu.menu_permission]">
-                                        <div class="flex items-center justify-between px-4 py-2 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200 rounded-lg" :class="menu_opened.section_key == section_key && menu_opened.menu_key == menu_key ? 'text-white tracking-wide bg-gray-800' : ''" role="button" @click="toggleMenu(section_key, menu_key)">
-                                            <div class="flex items-center">
-                                                <span class="mr-2" v-html="menu.menu_icon"></span>
-                                                <span class="select-none tracking-wide">{{ menu.menu_name }}</span>
+                                    <div class="mb-3 ml-3 space-y-1 pb-3" v-if="checkMenuIsOpen(section_key, menu_key)">
+                                        <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
+                                            <div class="flex space-x-1">
+                                                <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(sub_menu.sub_menu_route)"></div>
+                                                <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''"
+                                                                :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg flex-auto"
+                                                >
+                                                <span class="select-none tracking-normal">{{ sub_menu.sub_menu_name }}</span>
+                                                </BreezeNavSubLink>
                                             </div>
-                                            <ChevronRightIcon :class="{ 'rotate-90': checkMenuIsOpen(section_key, menu_key) }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
-                                        </div>
-                                        <div class="mb-3 ml-3 space-y-1 pb-3" v-if="checkMenuIsOpen(section_key, menu_key)">
-                                            <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
-                                                <div class="flex space-x-1">
-                                                    <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(sub_menu.sub_menu_route)"></div>
-                                                    <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''"
-                                                                    :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg flex-auto"
-                                                    >
-                                                    <span class="select-none tracking-normal">{{ sub_menu.sub_menu_name }}</span>
-                                                    </BreezeNavSubLink>
-                                                </div>
-                                            </template>
-                                        </div>
+                                        </template>
                                     </div>
-                                </template>
+                                </div>
                             </template>
+                        </template>
+                    </div>
+                    <BreezeNavLink class="w-full sm:hidden" :href="route('admin.logout')" method="post" as="button">
+                        <LogoutIcon class="h-6 w-6 mr-2"></LogoutIcon>
+                        Log Out
+                    </BreezeNavLink>
+                    <BreezeNavLink class="w-full sticky sm:hidden bg-blue-900 text-white" :href="route('profile')">
+                        <div class="w-8 h-8 rounded-full overflow-hidden border-2 dark:border-white border-gray-900 mr-2">
+                            <img v-if="$page.props.auth.profile_photo" :src="'/storage/'+$page.props.auth.profile_photo" alt="" class="w-full h-full object-cover select-none"/>
+                            <svg v-else class="h-full w-full text-gray-300 border rounded-full" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
                         </div>
-                        <BreezeNavLink class="w-full sm:hidden" :href="route('admin.logout')" method="post" as="button">
-                            <LogoutIcon class="h-6 w-6 mr-2"></LogoutIcon>
-                            Log Out
-                        </BreezeNavLink>
-                        <BreezeNavLink class="w-full sticky sm:hidden bg-blue-900 text-white" :href="route('profile')">
-                            <div class="w-8 h-8 rounded-full overflow-hidden border-2 dark:border-white border-gray-900 mr-2">
-                                <img v-if="$page.props.auth.profile_photo" :src="'/storage/'+$page.props.auth.profile_photo" alt="" class="w-full h-full object-cover select-none"/>
-                                <svg v-else class="h-full w-full text-gray-300 border rounded-full" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                            </div>
-                            My Account
-                        </BreezeNavLink>
-                    </nav>
+                        My Account
+                    </BreezeNavLink>
                 </nav>
-                <div class="fixed top-0 left-0 z-10 h-full pb-10 overflow-x-hidden overflow-y-auto transition origin-left transform w-full sm:translate-x-0 sm:hidden"
-                    :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
-                    @click="showingNavigationDropdown = !showingNavigationDropdown, sideBar = !sideBar">
-                </div>
-                <div class="ml-0 transition md:ml-60 bg-indigo-100">
-                </div>
+            </nav>
+            <!-- Sidebar Outer Layer -->
+            <div class="fixed w-full md:w-[18rem] top-0 left-0 z-10 h-full overflow-x-hidden overflow-y-auto transition origin-left transform sm:translate-x-0 sm:hidden"
+                :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
+                @click="showingNavigationDropdown = !showingNavigationDropdown, sideBar = !sideBar">
             </div>
         </div>
-        <div class="min-h-screen bg-gray-100 w-full">
+        <!-- Page Content -->
+        <div class="flex-1 flex flex-col bg-indigo-50 justify-between w-screen sm:pl-64 md:pl-72 lg:pl-72 xl:pl-72">
             <VueGuidedTour :steps="steps" @afterEnd="completedTour"></VueGuidedTour>
             <Toast :toastData="$page.props.flash"></Toast>
-
-            <!-- Page Content -->
-            <main class="flex flex-col bg-indigo-50 relative h-full justify-between">
-                <div class="">
+            <main class="flex-grow">
+                <div class="flex flex-col">
                     <nav class="bg-white border-b border-gray-100 sticky top-0 z-20">
                         <!-- Primary Navigation Menu -->
                         <div class="mx-auto px-4 sm:px-6 lg:px-8 shadow-md">
@@ -243,7 +238,7 @@ export default {
                                         </Link>
                                     </div>
                                 </div>
-
+    
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                                 <!-- Settings Dropdown -->
                                     <div class="ml-3 relative">
@@ -328,7 +323,7 @@ export default {
                                                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
                                                         </svg>
                                                         <span>Profile</span>
-
+    
                                                     </BreezeDropdownLink>
                                                     <BreezeDropdownLink class="flex space-x-2 border-t" :href="route('admin.logout')" method="post" as="button">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
@@ -342,7 +337,7 @@ export default {
                                         </BreezeDropdown>
                                     </div>
                                 </div>
-
+    
                                 <!-- Hamburger -->
                                 <div class="-mr-2 flex items-center sm:hidden">
                                     <button class=" inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
@@ -355,7 +350,7 @@ export default {
                             </div>
                         </div>
                     </nav>
-
+    
                     <!-- Page Heading -->
                     <header class="bg-indigo-600 shadow" v-if="$slots.header">
                         <div class="flex mx-auto py-3 px-4 sm:px-6 lg:px-6 justify-between">
@@ -363,27 +358,28 @@ export default {
                             <Breadcrumbs :breadcrumbs="$page.props.breadcrumbs"/>
                         </div>
                     </header>
-                        <div class="px-6 py-3 bg-blue bg-red-500 space-y-4 lg:flex lg:space-y-0 justify-between items-center" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
-                            <span class="text-white text-sm italic">Warning: use with caution, any changes will reflect to user that being impersonated.</span>
-                            <form @submit.prevent="impersonate" class="flex flex-col lg:flex-row w-full space-x-2 items-center md:justify-end lg:justify-end">
-                                <label for="impersonate_username" class="text-white lg:text-sm sm:text-md font-bold">Username</label>
-                                <div class="flex space-x-2 items-center">
-                                    <input type="text" id="impersonate_username" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username" autocomplete="none">
-                                    <BreezeButton @click="impersonate" class="hidden sm:block bg-blue-600 hover:bg-blue-700 py-2 px-4">Change User</BreezeButton>
-                                    <BreezeButton @click="impersonate" class="sm:hidden bg-blue-600 hover:bg-blue-700 p-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
-                                        </svg>
-                                    </BreezeButton>
-                                </div>
-                            </form>
-                        </div>
+                    <div class="px-6 py-3 bg-blue bg-red-500 space-y-4 lg:flex lg:space-y-0 justify-between items-center" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
+                        <span class="text-white text-sm italic">Warning: use with caution, any changes will reflect to user that being impersonated.</span>
+                        <form @submit.prevent="impersonate" class="flex flex-col lg:flex-row w-full space-x-2 items-center md:justify-end lg:justify-end">
+                            <label for="impersonate_username" class="text-white lg:text-sm sm:text-md font-bold">Username</label>
+                            <div class="flex space-x-2 items-center">
+                                <input type="text" id="impersonate_username" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username" autocomplete="none">
+                                <BreezeButton @click="impersonate" class="hidden sm:block bg-blue-600 hover:bg-blue-700 py-2 px-4">Change User</BreezeButton>
+                                <BreezeButton @click="impersonate" class="sm:hidden bg-blue-600 hover:bg-blue-700 p-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                    </svg>
+                                </BreezeButton>
+                            </div>
+                        </form>
+                    </div>
                     <slot/>
                 </div>
-                <div class="py-5 px-6 bg-slate-700 text-white bottom-0">
-                    <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{ new Date().getFullYear() + ' ' + $page.props.app_name }}</span>
-                </div>
             </main>
+            <!-- Footer -->
+            <div class="py-5 px-6 bg-slate-700 text-white">
+                <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{ new Date().getFullYear() + ' ' + $page.props.app_name }}</span>
+            </div>
         </div>
     </div>
 </template>

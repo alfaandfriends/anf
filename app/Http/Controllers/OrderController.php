@@ -42,9 +42,9 @@ class OrderController extends Controller
                                  'children.name as student_name', 'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
                                  'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 
                                  'invoice_status.bg_color as status_bg_color', 'invoice_status.text_color as status_text_color');
-        // if($request->search){
-        //     $query->where('orders.name', 'LIKE', '%'.request('search').'%');
-        // }   
+        if($request->search){
+            $query->where('wpvt_users.display_name', 'LIKE', '%'.request('search').'%');
+        }   
 
         return Inertia::render('Order/Index', [
             'filter'        =>  request()->all('search'),

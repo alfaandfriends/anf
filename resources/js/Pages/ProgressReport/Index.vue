@@ -27,14 +27,15 @@ import BreezeButton from '@/Components/Button.vue';
                     <div class="flex space-x-2 pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                <svg class="h-10 w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none">
+                                <svg class="h-10 w-4 text-gray-400" viewBox="0 0 24 24" fill="none">
                                     <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                 </svg>
                             </span>
-                            <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white border rounded-md" placeholder="Search" v-model="params.search">
+                            <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-debounce:800ms="search" v-model="params.search">
                         </div>
                         <div class="flex">
                             <Multiselect 
+                                @select="search"
                                 v-model="params.centre_id"
                                 valueProp="ID"
                                 :appendNewOption="false"
@@ -47,7 +48,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 label="label"
                                 placeholder="Centre"
                                     :classes="{
-                                        container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
+                                        container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
                                         containerDisabled: 'cursor-default bg-gray-100',
                                         containerOpen: 'rounded-b-none',
                                         containerActive: 'border-2 border-gray-300',
@@ -83,6 +84,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="flex">
                             <Multiselect 
+                                @select="search"
                                 v-model="params.programme_id"
                                 valueProp="id"
                                 :appendNewOption="false"
@@ -95,7 +97,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 label="name"
                                 placeholder="Programme"
                                     :classes="{
-                                        container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
+                                        container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
                                         containerDisabled: 'cursor-default bg-gray-100',
                                         containerOpen: 'rounded-b-none',
                                         containerActive: 'border-2 border-gray-300',
@@ -131,6 +133,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="flex">
                             <Multiselect 
+                                @select="search"
                                 v-model="params.programme_level"
                                 valueProp="level"
                                 :appendNewOption="false"
@@ -143,7 +146,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 label="level"
                                 placeholder="Level"
                                     :classes="{
-                                        container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
+                                        container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
                                         containerDisabled: 'cursor-default bg-gray-100',
                                         containerOpen: 'rounded-b-none',
                                         containerActive: 'border-2 border-gray-300',
@@ -188,8 +191,8 @@ import BreezeButton from '@/Components/Button.vue';
                             />
                         </div>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="table-auto min-w-full divide-y divide-gray-200">
+                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-300">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">#</th>
@@ -294,6 +297,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Modal from '@/Components/Modal.vue'
 import print from 'vue3-print-nb'
+import { debounce } from 'vue-debounce'
 
 export default {
     components: {
@@ -324,12 +328,10 @@ export default {
             }
         }
     },
-    watch: {
-        params: {
+    watch:{
+        'params.date': {
             handler(){
-                if(this.params){
-                    this.$inertia.get(this.route('progress_report'), this.params, { replace: true, preserveState: true})
-                }
+                this.search()
             },
             deep: true
         }
@@ -356,6 +358,9 @@ export default {
                 this.show_progress_report = true
             });
         },
+        search(){
+            this.$inertia.get(this.route('progress_report'), this.params, { replace: true, preserveState: true})
+        }
     },
     directives: {
         print   

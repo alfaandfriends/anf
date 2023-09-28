@@ -12,15 +12,19 @@ import BreezeButton from '@/Components/Button.vue';
             <div class="overflow-x-auto">
                 <div class="mx-auto">
                     <div class="align-middle inline-block min-w-full">
-                        <div class="flex justify-between mb-4">
+                        <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
                             <div class="flex space-x-2">
-                                <div class="flex relative text-gray-400 focus-within:text-gray-600">
-                                    <SearchIcon class="text-gray-600 h-4 w-4 fill-current pointer-events-none absolute top-1/4 left-3" :style="'top:30%'"></SearchIcon>
-                                    <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
-                                            type="text" v-debounce:800ms="search" v-model="params.search" placeholder="Search">
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg class="h-10 w-4 text-gray-400" viewBox="0 0 24 24" fill="none">
+                                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </span>
+                                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-debounce:800ms="search" v-model="params.search">
                                 </div>
                                 <div class="flex">
                                     <Multiselect 
+                                        @select="search"
                                         v-model="params.centre_id"
                                         valueProp="ID"
                                         :appendNewOption="false"
@@ -33,7 +37,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         label="label"
                                         placeholder="Centre"
                                         :classes="{
-                                            container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
+                                            container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
                                             containerDisabled: 'cursor-default bg-gray-100',
                                             containerOpen: 'rounded-b-none',
                                             containerActive: 'border-2 border-gray-300',

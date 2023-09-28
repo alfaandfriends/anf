@@ -29,21 +29,24 @@ class InvoiceController extends Controller
                                     'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 
                                     'invoice_status.bg_color as status_bg_color', 'invoice_status.text_color as status_text_color');
         if($request->search){
-            $query->where('children.name', 'LIKE', '%'.request('search').'%')
+            $query->where(function ($query){
+                $query->where('children.name', 'LIKE', '%'.request('search').'%')
                 ->orWhere('invoices.invoice_number', 'LIKE', '%'.request('search').'%')
                 ->orWhere('invoice_status.name', 'LIKE', '%'.request('search').'%');
+            });
         }   
         
         if($request->centre_id){
-            $query->where('invoices.invoice_items', 'LIKE', '%centre_id": "'.$request->centre_id.'%');
+            $query->where('invoices.invoice_items', 'LIKE', '%centre_id": '.$request->centre_id.'%');
         }     
         
         if($request->programme_id){
-            $query->where('invoices.invoice_items', 'LIKE', '%programme_id": "'.$request->programme_id.'%');
+            $query->where('invoices.invoice_items', 'LIKE', '%programme_id": '.$request->programme_id.'%');
         }     
         
         if($request->date){
-            $query->where('invoices.date_issued', 'LIKE', '%'.$request->date['year'].'-0'.$request->date['month']  + 1 .'%');
+            $month  =   $request->date['month'] + 1  < 10 ? '-0'.$request->date['month'] + 1 : '-'.$request->date['month'] + 1;
+            $query->where('invoices.date_issued', 'LIKE', '%'.$request->date['year'].$month.'%');
         }         
 
         $programmes =   ProgrammeHelper::programmes();

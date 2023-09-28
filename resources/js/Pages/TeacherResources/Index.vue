@@ -16,14 +16,15 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="flex space-x-2">
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <svg class="h-10 w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none">
+                                        <svg class="h-10 w-4 text-gray-400" viewBox="0 0 24 24" fill="none">
                                             <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                         </svg>
                                     </span>
-                                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white border rounded-md" placeholder="Search" v-model="params.search">
+                                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-debounce:800ms="search" v-model="params.search">
                                 </div>
                                 <div class="flex">
-                                    <Multiselect 
+                                    <Multiselect  
+                                        @select="search"
                                         v-model="params.programme_id"
                                         valueProp="id"
                                         :appendNewOption="false"
@@ -36,7 +37,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         label="name"
                                         placeholder="Programme"
                                         :classes="{
-                                            container: 'relative mx-auto w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
+                                            container: 'relative mx-auto w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
                                             containerDisabled: 'cursor-default bg-gray-100',
                                             containerOpen: 'rounded-b-none',
                                             containerActive: 'border-2 border-gray-300',
@@ -75,7 +76,8 @@ import BreezeButton from '@/Components/Button.vue';
                                 <BreezeButton :route="route('teacher_resources.create')" v-if="$page.props.can.create_teacher_resources">New Resource</BreezeButton>
                             </div>
                         </div>
-                        <table class="table-auto min-w-full divide-y divide-gray-200">
+                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-300">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
@@ -85,37 +87,38 @@ import BreezeButton from '@/Components/Button.vue';
                                     <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-if="!$page.props.teacher_resources.data.length">
-                                    <td class="text-center" colspan="10">
-                                        <div class="p-3">
-                                            No Record Found! 
-                                        </div>
-                                    </td>
-                                </tr> 
-                                <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.teacher_resources.data" :key="result.id">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-700">{{ ++index }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ result.title }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ result.programme }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ result.level }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="blue" @click="viewResource(result.id)" v-if="$page.props.can.view_teacher_resources">View / Download</BreezeButton>
-                                            <BreezeButton buttonType="warning" @click="editResource(result.id)" v-if="$page.props.can.edit_teacher_resources">Edit</BreezeButton>
-                                            <BreezeButton buttonType="danger" @click="deleteResource(result.id)" v-if="$page.props.can.delete_teacher_resources">Delete</BreezeButton>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr v-if="!$page.props.teacher_resources.data.length">
+                                        <td class="text-center" colspan="10">
+                                            <div class="p-3">
+                                                No Record Found! 
+                                            </div>
+                                        </td>
+                                    </tr> 
+                                    <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.teacher_resources.data" :key="result.id">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-700">{{ ++index }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ result.title }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ result.programme }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ result.level }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                            <div class="flex justify-center space-x-2">
+                                                <BreezeButton buttonType="blue" @click="viewResource(result.id)" v-if="$page.props.can.view_teacher_resources">View / Download</BreezeButton>
+                                                <BreezeButton buttonType="warning" @click="editResource(result.id)" v-if="$page.props.can.edit_teacher_resources">Edit</BreezeButton>
+                                                <BreezeButton buttonType="danger" @click="deleteResource(result.id)" v-if="$page.props.can.delete_teacher_resources">Delete</BreezeButton>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <Pagination :page_data="$page.props.teacher_resources"></Pagination>
                     </div>
                 </div>
@@ -215,6 +218,7 @@ import Pagination from '@/Components/Pagination.vue'
 import moment from 'moment';
 import Modal from '@/Components/Modal.vue'
 import Multiselect from '@vueform/multiselect'
+import { debounce } from 'vue-debounce'
 
 export default {
     components: {
@@ -233,14 +237,6 @@ export default {
                 programme_id: this.$page.props.filter ? this.$page.props.filter.programme_id : '',
             },
             resource_data: [],
-        }
-    },
-    watch: {
-        params: {
-            handler(){
-                this.$inertia.get(route('teacher_resources'), this.params)
-            },
-            deep: true
         }
     },
     methods: {
@@ -285,6 +281,9 @@ export default {
             .catch(error => {
                 console.error(error);
             });
+        },
+        search(){
+            this.$inertia.get(route('teacher_resources'), this.params)
         }
     },
 }

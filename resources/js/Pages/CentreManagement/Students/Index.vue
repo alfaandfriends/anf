@@ -24,6 +24,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 <div class="flex">
                                     <Multiselect 
+                                        @select="search"
                                         v-model="params.centre_id"
                                         valueProp="ID"
                                         :appendNewOption="false"
@@ -36,7 +37,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         label="label"
                                         placeholder="Centre"
                                         :classes="{
-                                            container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
+                                            container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
                                             containerDisabled: 'cursor-default bg-gray-100',
                                             containerOpen: 'rounded-b-none',
                                             containerActive: 'border-2 border-gray-300',

@@ -20,7 +20,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                         </svg>
                                     </span>
-                                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-model="params.search">
+                                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-debounce:800ms="search" v-model="params.search">
                                 </div>
                                 <!-- <button @click="show_filter = !show_filter" class="text-indigo-600 flex space-x-2 items-center bg-white hover:bg-indigo-50 border border-indigo-600 px-4 py-1.5 rounded-md">
                                     <span>Filters</span> 
@@ -163,6 +163,7 @@ import { Head } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid';
+import { debounce } from 'vue-debounce'
 
 export default {
     components: {
@@ -178,16 +179,6 @@ export default {
             },
         }
     },
-    watch: {
-        params: {
-            handler(){
-                if(this.params){
-                    this.$inertia.get(this.route('products'), this.params, { replace: true, preserveState: true});
-                }
-            },
-            deep: true
-        }
-    },
     methods: {
         editProduct(product_id){
             this.$inertia.get(this.route('products.edit'), {'product_id': product_id}, { replace: true, preserveState: true});
@@ -196,6 +187,9 @@ export default {
             this.product_id =   product_id
             this.show_confirmation = true
         },
+        search(){
+            this.$inertia.get(this.route('products'), this.params, { replace: true, preserveState: true});
+        }
     }
 }
 </script>
