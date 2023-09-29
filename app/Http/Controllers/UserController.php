@@ -82,11 +82,9 @@ class UserController extends Controller
                                     'user_nicename'         => $request->username,
                                     'user_email'            => $request->email,
                                     'user_address'          => $request->address,
-                                    'user_country'          => $request->country,
-                                    'user_country_code'     => $request->country_code,
+                                    'user_country_id'       => $request->country,
                                     'user_contact'          => $request->contact_number,
                                     'user_state'            => $request->state,
-                                    'user_calling_code'     => $request->calling_code,
                                     'user_url'              => '',
                                     'user_registered'       => now(),
                                     'user_activation_key'   => '',
@@ -95,6 +93,7 @@ class UserController extends Controller
                                     'spam'                  => 0,
                                     'deleted'               => 0,
                                     'remember_token'        => '',
+                                    'profile_updated'        => 1,
                                 ]);   
 
             foreach($request->selected_roles as $key=>$role){
@@ -196,11 +195,9 @@ class UserController extends Controller
             'user_nicename'         => $request['form']['username'],
             'user_email'            => $request['form']['email'],
             'user_address'          => $request['form']['address'],
-            'user_country'          => $request['form']['country'],
-            'user_country_code'     => $request['form']['country_code'],
+            'user_country_id'       => $request['form']['country'],
             'user_contact'          => $request['form']['contact_number'],
             'user_state'            => $request['form']['country_state'],
-            'user_calling_code'     => $request['form']['calling_code'],
             'display_name'          => $request['form']['full_name'],
         ]);   
 
