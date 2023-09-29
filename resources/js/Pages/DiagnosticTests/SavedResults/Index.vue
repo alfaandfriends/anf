@@ -108,7 +108,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="text-sm font-medium text-gray-900">{{ result.centre_name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="result.admitted ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ result.admitted ? 'Yes' : 'No' }} </span>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="result.admitted == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ result.admitted == 1 ? 'Yes' : 'No' }} </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">{{ result.notes }}</div>
@@ -251,7 +251,7 @@ export default {
         },
         updateStatus(result_id, admitted, centre_id, notes){
             this.form.result_id     = result_id
-            this.form.admitted      = admitted == true ? true : false
+            this.form.admitted      = admitted == 1 ? true : false
             this.form.centre_id     = centre_id ? centre_id : ''
             this.form.notes         = notes
             this.open_modal         = true
