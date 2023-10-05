@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\DTNotifyPIC;
+use App\Notifications\DTNotifyUser;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Spatie\Browsershot\Browsershot;
+use Str;
+use Symfony\Component\Panther\PantherTestCase;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class DiagnosticTestController extends Controller
 {
@@ -20,7 +31,7 @@ class DiagnosticTestController extends Controller
         $template               =   'Public/Main';
         
         $diagnostic_test_list   =   DB::table('diagnostic_test')->get();
-        $languages              =   DB::table('languages')->get();
+        $languages              =   DB::table('diagnostic_test_languages')->get();
         $ages                   =   DB::table('diagnostic_test_ages')->get();
         $children               =   auth()->check() ?  DB::table('children')->where('parent_id', auth()->user()->ID)->get() : [];
 
@@ -117,6 +128,7 @@ class DiagnosticTestController extends Controller
         foreach($request->answer_record as $answer){
             $info['question']               = $answer['question'];
             $info['question_category_id']   = $answer['question_category_id'];
+            $info['answer']                 = $answer['answer'];
             $info['correct']                = $answer['correct'];
             $data[$answer['dt_id']][]       = $info;
         }
@@ -128,6 +140,36 @@ class DiagnosticTestController extends Controller
                 'answer_record' => serialize($dt_data),
             ]);
         }
+
+        /* Send Email to User*/
+        $parent_email   =   $request->parent_email;
+        $result_id      =   encrypt($result_id);
+        $info    =   [
+            'result_id'  =>  $result_id
+        ];
+
+        $parentNotification = new DTNotifyUser($info);
+        Notification::route('mail', $parent_email)->notify($parentNotification);
+
+        /* Send Email to PIC */
+        $emails     =   ['nurezzati_sallihin@alfaandfriends.com', 'suetli_tan@alfaandfriends.com'];
+        $users      =   User::whereIn('user_email', $emails)->get();
+        $result_id  =   encrypt($result_id);
+
+        
+        foreach ($users as $user) {
+            $info    =   [
+                'result_id'     =>  $result_id,
+                'user_name'     =>  $user->display_name,
+                'student_name'  =>  $request->student_name,
+                'student_age'   =>  $request->student_age,
+                'dt_title'      =>  $request->dt_title,
+                'test_date'     =>  Carbon::now()->format('d/m/Y')
+            ];
+            $picNotification = new DTNotifyPIC($info);
+            Notification::route('mail', $user->user_email)->notify($picNotification);
+        }
+
         return true;
 
     }
@@ -248,13 +290,13 @@ class DiagnosticTestController extends Controller
         /* Diagnostic Test List */
         public function dtList(){
             $diagnostic_test_list   =   DB::table('diagnostic_test')
-                                            ->join('languages', 'diagnostic_test.language_id', '=', 'languages.id')
+                                            ->join('diagnostic_test_languages', 'diagnostic_test.language_id', '=', 'diagnostic_test_languages.id')
                                             ->join('diagnostic_test_ages', 'diagnostic_test.age_id', '=', 'diagnostic_test_ages.id')
                                             ->select([
                                                 'diagnostic_test.id',
                                                 'diagnostic_test.name',
                                                 'diagnostic_test_ages.name as age',
-                                                'languages.name as language',
+                                                'diagnostic_test_languages.name as language',
                                             ])
                                             ->paginate(10);
 
@@ -264,7 +306,7 @@ class DiagnosticTestController extends Controller
         }
 
         public function dtCreate(){
-            $languages      =   DB::table('languages')->get();
+            $languages      =   DB::table('diagnostic_test_languages')->get();
             $ages           =   DB::table('diagnostic_test_ages')->get();
             $dt_list        =   DB::table('diagnostic_test')->get();
             $chart_types    =   DB::table('chart_types')->get();
@@ -306,7 +348,7 @@ class DiagnosticTestController extends Controller
         public function dtEdit(Request $request){
             $diagnostic_test_info   =   DB::table('diagnostic_test')->where('id', $request->dt_id)->first();
             $dt_list                =   DB::table('diagnostic_test')->get();
-            $languages              =   DB::table('languages')->get();
+            $languages              =   DB::table('diagnostic_test_languages')->get();
             $ages                   =   DB::table('diagnostic_test_ages')->get();
             $chart_types    =   DB::table('chart_types')->get();
             
@@ -731,5 +773,29 @@ class DiagnosticTestController extends Controller
             DB::table('diagnostic_test_categories')->where('id', $id)->delete();
 
             return redirect()->route('dt.settings.details', ['dt_id'=>$dtInfo->dt_id])->with(['type' => 'success', 'message' => 'Category deleted successfully !']);
+        }
+
+    /* Diagnostic Test Generate Report */
+        public function report($id){
+            $result_id      =   decrypt($id);
+            $answer_record  =   DB::table('diagnostic_test_result_details')
+                                    ->join('diagnostic_test', 'diagnostic_test_result_details.dt_id', '=', 'diagnostic_test.id')
+                                    ->where('result_id', $result_id)
+                                    ->select([
+                                        'diagnostic_test.id as dt_id',
+                                        'diagnostic_test.name as dt_name',
+                                        'diagnostic_test.chart_id as chart_type',
+                                        'diagnostic_test_result_details.answer_record as answer_record',
+                                        'diagnostic_test_result_details.created_at',
+                                    ])->orderBy('diagnostic_test_result_details.id')->first();
+                                    
+            $answer_record->answer_record           =   unserialize($answer_record->answer_record);
+            $answer_record->total_correct_answers   =   collect($answer_record->answer_record)->where('correct', true)->count();
+            $answer_record->total_answers           =   count($answer_record->answer_record);
+    
+            return Inertia::render('DiagnosticTests/SavedResults/Report', [
+                'result_id'     =>  $result_id,
+                'answer_record' =>  $answer_record
+            ]);
         }
 }

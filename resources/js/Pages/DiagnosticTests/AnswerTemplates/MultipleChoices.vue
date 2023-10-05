@@ -48,7 +48,7 @@ import BreezeButton from '@/Components/Button.vue';
 </template>
 
 <script>
-export default{
+export default {
     props:{
         action: String,
         prop_answers: Object
@@ -108,9 +108,10 @@ export default{
         },
         handleFile(event, index) {
             if (event.target.files[0] && event.target.files[0].type.match(/^image\/(jpeg|png)$/)) {
-                const file_ext      =   event.target.files[0].name.split(".").pop()
-                const unique_id     =   Date.now().toString() + Math.floor(Math.random() * 100000).toString()
-                const new_file_name =   unique_id + '.' + file_ext
+                const file_ext              =   event.target.files[0].name.split(".").pop()
+                const timestampInSeconds    =   Math.floor(Date.now() / 1000);
+                const unique_id             =   timestampInSeconds.toString()
+                const new_file_name         =   unique_id + '.' + file_ext
 
                 this.answers[index].image_file = new File([event.target.files[0]], new_file_name, { type: event.target.files[0].type });
                 this.answers[index].image_name = this.answers[index].image_file.name

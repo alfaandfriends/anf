@@ -28,173 +28,172 @@ import BreezeButton from '@/Components/Button.vue';
 </style>
 <template>
     <Head title="Diagnostic Test" />
-    <div class="h-screen" v-show="show_chart">
-        <div class=" items-center flex flex-col justify-center bg-blue-100">
-            <div class="flex-1 bg-gray-200">
-                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md w-[80%] self-center" v-show="show_scatter_chart">
-                    <canvas id="scatter-chart" class="hidden m-0" width="250" height="120" ></canvas>
+    <div class="flex flex-col h-screen">
+        <div class="flex-grow flex flex-col items-center justify-center py-6 bg-indigo-500 overflow-x-auto sm:overflow-x-clip">
+            <div class="flex flex-col items-center justify-center w-full h-full max-w-4xl" v-show="show_chart" style="display:hidden">
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md overflow-x-auto w-[350px] sm:w-full h-[200px] sm:h-auto" v-show="show_scatter_chart">
+                    <canvas id="scatter-chart" class="hidden m-0"></canvas>
                 </div>
-                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md w-[80%] self-center" v-show="show_bar_chart">
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md overflow-x-auto w-[350px] sm:w-full h-[200px] sm:h-auto" v-show="show_bar_chart">
                     <canvas id="bar-chart" class="hidden m-0"></canvas>
                 </div>
-                <div class="p-6">
+                <div class="p-6 text-center">
                     <button class="py-2 px-4 rounded shadow-md bg-gray-800 text-white hover:bg-gray-700" @click="parentDetails">Next Step</button>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="h-screen items-center flex flex-col justify-center bg-blue-100" v-if="show_parent_details">
-        <div class="flex-col border bg-white px-6 py-8 shadow-md rounded-[4px] min-w-[25%] space-y-4">
-            <div class="flex flex-col">
-                <div class="font-semibold leading-5 text-xl">Final step</div>
-                <div class="mt-1 leading-5 text-slate-500 text-sm">Please fill in below details.</div>
-            </div>
-            <hr>
-            <div class="flex flex-col text-sm rounded-md space-y-1">
-                <label class="block text-sm text-gray-700 font-bold" for="">Parent's Name <span class="text-red-500">*</span></label>
-                <input class="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_name ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_name" autocomplete="off"/>
-            </div>
-            <div class="flex flex-col text-sm rounded-md space-y-1">
-                <label class="block text-sm text-gray-700 font-bold" for="">Contact Number <span class="text-red-500">*</span></label>
-                <input class="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_contact ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_contact" autocomplete="off"/>
-            </div>
-            <div class="flex flex-col text-sm rounded-md space-y-1">    
-                <label class="block text-sm text-gray-700 font-bold" for="">Address <span class="text-red-500">*</span></label>
-                <input class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_address ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_address" autocomplete="off"/>
-            </div>
-            <div class="flex flex-col text-sm rounded-md space-y-1">    
-                <label class="block text-sm text-gray-700 font-bold" for="">Email <span class="text-red-500">*</span></label>
-                <input class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_email ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_email" autocomplete="off"/>
-            </div>
-            <button type="submit" class="mt-5 w-full border p-2 bg-gray-800 text-white rounded-[4px] hover:bg-gray-700" @click="saveResult()">Submit</button>
-        </div>
-    </div>
-    <div class="h-screen items-center flex flex-col justify-center bg-blue-100" v-if="show_thank_you">
-        <div class="flex-col border bg-white px-6 py-8 shadow-md rounded-[4px] min-w-[25%] space-y-8">
-            <div class="flex flex-col items-center space-y-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="text-green-600 w-28 h-28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <h1 class="font-mono text-4xl font-bold">Thank You!</h1>
-                <h3 class="font-sans text-xl">{{ dt_details.final_message }}</h3>
-            </div>
-            <button type="submit" class="mt-5 w-full border p-2 bg-gray-800 text-white rounded-[4px] hover:bg-gray-700" @click="returnHome">Return Home</button>
-        </div>
-    </div>
-    <div class="h-screen items-center flex justify-center bg-blue-100" v-if="show_quiz">
-        <div class="flex flex-col bg-white rounded-lg shadow min-w-[70%]">
-            <div class="flex flex-col min-w-full rounded text-center p-16 space-y-10">
-                <div class="px-6">
-                    <span class="text-2xl font-bold uppercase">{{ dt_details.name }}</span>
-                </div>
-                <nav class="flex items-center justify-center" aria-label="Progress">
-                    <p class="text-sm font-medium">Question {{ dt_index + 1 }} of {{ dt_list.length }}</p>
-                    <ol role="list" class="ml-8 flex items-center space-x-5">
-                        <li v-for="(data, key) in dt_list" :key="key">
-                            <div v-if="current.answer_records[key] && current.answer_records[key].correct" class="block w-2.5 h-2.5 bg-green-400 rounded-full">
-                                <span class="sr-only">{{ key }}</span>
-                            </div>
-                            <div v-else-if="dt_index == key" class="relative flex items-center justify-center">
-                                <span class="absolute w-5 h-5 p-px flex">
-                                <span class="w-full h-full rounded-full bg-indigo-500" />
-                                </span>
-                                <span class="relative block w-2.5 h-2.5 bg-white rounded-full" />
-                                <span class="sr-only">{{ key }}</span>
-                            </div>
-                            <div v-else-if="current.answer_records[key] && !current.answer_records[key].correct" class="block w-2.5 h-2.5 bg-red-500 rounded-full">
-                                <span class="sr-only">{{ key }}</span>
-                            </div>
-                            <div v-else class="block w-2.5 h-2.5 bg-gray-300 rounded-full">
-                                <span class="sr-only">{{ key }}</span>
-                            </div>
-                        </li>
-                    </ol>
-                </nav>
-                <div v-if="current.question != '' && current.question_type != 4">
-                    <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5">
-                        <h1 class="text-center font-mono font-bold text-2xl whitespace-pre-wrap">{{ current.question }}</h1>
+            <div class="w-full max-w-2xl mt-32 sm:mt-0" v-if="show_parent_details">
+                <div class="flex-1 flex-grow flex flex-col w-full border bg-white px-6 py-8 shadow-md rounded-[4px] min-w-[25%] space-y-4">
+                    <div class="flex flex-col">
+                        <div class="font-semibold leading-5 text-xl">Final step</div>
+                        <div class="mt-1 leading-5 text-slate-500 text-sm">Please fill in parent details.</div>
+                    </div>
+                    <hr>
+                    <div class="flex flex-col text-sm rounded-md space-y-1">
+                        <label class="block text-sm text-gray-700 font-bold" for="">Name <span class="text-red-500">*</span></label>
+                        <input type="text" class="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_name ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_name" autocomplete="off" required/>
+                    </div>
+                    <div class="flex flex-col text-sm rounded-md space-y-1">
+                        <label class="block text-sm text-gray-700 font-bold" for="">Contact Number <span class="text-red-500">*</span></label>
+                        <input type="number" class="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_contact ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_contact" autocomplete="off" required/>
+                    </div>
+                    <div class="flex flex-col text-sm rounded-md space-y-1">    
+                        <label class="block text-sm text-gray-700 font-bold" for="">Address <span class="text-red-500">*</span></label>
+                        <input type="text" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_address ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_address" autocomplete="off" required/>
+                    </div>
+                    <div class="flex flex-col text-sm rounded-md space-y-1">    
+                        <label class="block text-sm text-gray-700 font-bold" for="">Email <span class="text-red-500">*</span></label>
+                        <input type="email" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_email ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_email" autocomplete="off" required/>
+                    </div>
+                    <button type="submit" class="mt-5 w-full border p-2 bg-gray-800 text-white rounded-[4px] hover:bg-gray-700" @click="!submitting ? saveResult() : ''">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
+                    <div class="text-center">
+                        <span class="italic text-center text-sm text-gray-700 font-semibold" v-if="submitting">Please do not close your browser or current tab</span>
                     </div>
                 </div>
-                <div class="px-6" v-if="current.remarks">
-                    <span class="font-bold uppercase italic text-red-500">* {{ current.remarks }} *</span>
-                </div>
-                <div class="flex container justify-center" v-if="current.question_image">
-                    <div class="flex flex-col justify-center w-64 h-64">
-                        <img :src="'https://dt.alfaandfriends.com/storage/' + current.question_image" class="select-none rounded-lg" alt="">
+            </div>
+            <div class="w-full max-w-2xl" v-if="show_thank_you">
+                <div class="flex-col border bg-white px-6 py-8 shadow-md rounded-[4px] min-w-[25%] space-y-8">
+                    <div class="flex flex-col items-center space-y-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-green-600 w-28 h-28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <h1 class="font-mono text-xl sm:text-3xl font-bold">Thank You!</h1>
+                        <h3 class="font-sans text-sm sm:text-xl">{{ dt_details.final_message }}</h3>
                     </div>
+                    <button type="submit" class="mt-5 w-full border p-2 bg-gray-800 text-white rounded-[4px] hover:bg-gray-700" @click="returnHome">Return Home</button>
                 </div>
-                <div class="flex flex-row justify-center space-x-10" v-if="current.question_type == 1">
-                    <div class="select-none flex justify-center items-center rounded bg-indigo-300 hover:bg-indigo-500 hover:text-white cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="saveSingleChoice(index)">
-                        <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
-                        </div>
-                        <div class="py-5 px-6" v-else>
-                            <span v-html="answer_info.answer"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex flex-col space-y-10" v-if="current.question_type == 2">
-                    <div class="select-none flex flex-row justify-center space-x-10">
-                        <div class="flex justify-center items-center rounded cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="selectMultipleChoices(index)" :class="checkSingleValueExistsInArray(index) ? 'text-white bg-indigo-500' : 'bg-indigo-300'">
-                            <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
-                            </div>
-                            <div class="py-5 px-6" v-else>
-                                <span v-html="answer_info.answer"></span>
+            </div>
+            <div class="w-full max-w-2xl mt-16 sm:mt-0" v-if="show_quiz">
+                <div class="flex flex-col bg-white rounded-lg shadow min-w-[70%]">
+                    <div class="flex flex-col min-w-full rounded text-center p-8 sm:p-16 space-y-6 sm:space-y-10">
+                        <span class="text-xl sm:text-3xl font-bold uppercase">{{ dt_details.name }}</span>
+                        <nav class="flex flex-col items-center space-y-4 m-0">
+                            <p class="text-sm sm:text-lg font-medium">Question {{ dt_index + 1 }} of {{ dt_list.length }}</p>
+                            <ol role="list" class="flex items-center space-x-2 sm:space-x-4">
+                                <li v-for="(data, key) in dt_list" :key="key">
+                                    <div v-if="current.answer_records[key] && current.answer_records[key].correct" class="block w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full">
+                                        <span class="sr-only">{{ key }}</span>
+                                    </div>
+                                    <div v-else-if="dt_index == key" class="relative flex items-center justify-center">
+                                        <span class="absolute w-4 h-4 sm:w-5 sm:h-5 p-px flex">
+                                            <span class="w-full h-full rounded-full bg-indigo-500" />
+                                        </span>
+                                        <span class="relative block w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 bg-white rounded-full" />
+                                        <span class="sr-only">{{ key }}</span>
+                                    </div>
+                                    <div v-else-if="current.answer_records[key] && !current.answer_records[key].correct" class="block w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full">
+                                        <span class="sr-only">{{ key }}</span>
+                                    </div>
+                                    <div v-else class="block w-3 h-3 sm:w-4 sm:h-4 bg-gray-300 rounded-full">
+                                        <span class="sr-only">{{ key }}</span>
+                                    </div>
+                                </li>
+                            </ol>
+                        </nav>
+                        <div v-if="current.question != '' && current.question_type != 4">
+                            <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5">
+                                <h1 class="text-center font-mono font-bold text-sm sm:text-xl whitespace-pre-wrap">{{ current.question }}</h1>
                             </div>
                         </div>
-                    </div>
-                    <div class="flex flex-row justify-center">
-                        <BreezeButton @click="saveMultipleChoices()">Confirm Answers</BreezeButton>
-                    </div>
-                </div>
-                <div class="flex flex-col space-y-2" v-if="current.question_type == 3">
-                    <div class="text-left space-y-2">
-                        <h3 class="font-semibold text-xl">Elements</h3>
-                        <draggable class="flex flex-wrap gap-4 border-2 p-3 rounded border-gray-300 min-h-[30px]" :list="current.matrix_items" group="matrix_sorting" @change="log">
-                            <template v-for="element in current.matrix_items">
-                                <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab criterion_image" v-html="element"></div>
-                            </template>
-                        </draggable>
-                    </div>
-                    <div class="flex justify-start" v-for="answer, index in current.answers">
-                        <div class="flex flex-col space-y-6 justify-center">
-                            <div class="flex items-center justify-center border-2 border-indigo-400 w-[5rem] h-[5rem] rounded-lg">
-                                <div class="p-1 w-[5rem]" v-if="answer.criterion.image_name != null" v-html="answer.criterion.value">
+                        <div class="px-6" v-if="current.remarks">
+                            <span class="font-bold uppercase italic text-red-500">* {{ current.remarks }} *</span>
+                        </div>
+                        <div class="flex items-center justify-center" v-if="current.question_image">
+                            <img :src="'/storage/' + current.question_image" class="select-none rounded-lg" alt="">
+                        </div>
+                        <div class="flex flex-col sm:flex-row justify-center sm:space-x-10 space-y-2 sm:space-y-0" v-if="current.question_type == 1">
+                            <div class="select-none text-white flex justify-center items-center rounded bg-indigo-600 hover:bg-indigo-500 hover:text-white cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="saveSingleChoice(index)">
+                                <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
                                 </div>
                                 <div class="py-5 px-6" v-else>
-                                    <span v-html="answer.criterion.value"></span>
+                                    <span v-html="answer_info.answer"></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-col space-y-28 justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-                                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                            </svg>
+                        <div class="flex flex-col space-y-10" v-if="current.question_type == 2">
+                            <div class="grid grid-cols-4 gap-4 mx-auto">
+                                <div class="flex justify-center items-center rounded cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="selectMultipleChoices(index)" :class="checkSingleValueExistsInArray(index) ? 'text-white bg-indigo-600' : 'text-white bg-indigo-400'">
+                                    <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
+                                    </div>
+                                    <div class="py-5 px-6" v-else>
+                                        <span v-html="answer_info.answer"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-row justify-center">
+                                <BreezeButton @click="saveMultipleChoices()">Confirm Answers</BreezeButton>
+                            </div>
                         </div>
-                        <div class="flex flex-col space-y-6 justify-center">
-                            <draggable class="flex flex-wrap items-center border-2 border-indigo-400 min-h-[5rem] min-w-[12rem] rounded-lg space-x-2 p-3" :list="selected_answer.matrix_sorting[index]" group="matrix_sorting" @change="log">
-                                <template v-for="element in selected_answer.matrix_sorting[index]">
-                                    <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab criterion_image" v-html="element"></div>
-                                </template>
-                            </draggable>
+                        <div class="flex flex-col space-y-2" v-if="current.question_type == 3">
+                            <div class="text-left space-y-2">
+                                <h3 class="font-semibold text-xl">Elements</h3>
+                                <draggable class="flex flex-wrap gap-4 border-2 p-3 rounded border-gray-300 min-h-[30px]" :list="current.matrix_items" group="matrix_sorting" @change="log">
+                                    <template v-for="element in current.matrix_items">
+                                        <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab criterion_image" v-html="element"></div>
+                                    </template>
+                                </draggable>
+                            </div>
+                            <div class="flex justify-start" v-for="answer, index in current.answers">
+                                <div class="flex flex-col space-y-6 justify-center">
+                                    <div class="flex items-center justify-center border-2 border-indigo-400 w-[5rem] h-[5rem] rounded-lg">
+                                        <div class="p-1 w-[5rem]" v-if="answer.criterion.image_name != null" v-html="answer.criterion.value">
+                                        </div>
+                                        <div class="py-5 px-6" v-else>
+                                            <span v-html="answer.criterion.value"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col space-y-28 justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex flex-col space-y-6 justify-center">
+                                    <draggable class="flex flex-wrap items-center border-2 border-indigo-400 min-h-[5rem] min-w-[12rem] rounded-lg space-x-2 p-3" :list="selected_answer.matrix_sorting[index]" group="matrix_sorting" @change="log">
+                                        <template v-for="element in selected_answer.matrix_sorting[index]">
+                                            <div class="flex items-center border px-2 py-1 rounded border-indigo-400 bg-indigo-300 cursor-grab focus:cursor-grab criterion_image" v-html="element"></div>
+                                        </template>
+                                    </draggable>
+                                </div>
+                            </div>
+                            <div class="flex flex-row justify-center">
+                                <BreezeButton @click="saveMatrixSorting()">Confirm Answers</BreezeButton>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex flex-row justify-center">
-                        <BreezeButton @click="saveMatrixSorting()">Confirm Answers</BreezeButton>
-                    </div>
-                </div>
-                <div class="flex flex-col space-y-10" v-if="current.question_type == 4">
-                    <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex flex-wrap items-center justify-center md:p-5">
-                        <h1 class="text-left font-mono font-bold text-2xl space-y-2 leading-loose whitespace-pre-line">
-                            <template v-for="(part, index) in sentence_parts" :key="index">
-                                <input v-if="part.input" type="text" v-model="part.answer" :style="[part.answer.length < 2 ? 'width: 2.6rem': 'width: ' + (part.answer.length * 1 + 2) + 'rem']" class="text-center h-10 focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-2xl border-gray-300 tracking-widest">
-                                <template v-else>
-                                    {{ part.text }}
-                                </template>
-                            </template>
-                        </h1>
-                    </div>
-                    <div class="flex flex-row justify-center">
-                        <BreezeButton @click="saveFillInBlankAnswers()">Confirm Answers</BreezeButton>
+                        <div class="flex flex-col space-y-10" v-if="current.question_type == 4">
+                            <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex flex-wrap items-center justify-center md:p-5">
+                                <h1 class="text-left font-mono font-bold text-sm sm:text-lg space-y-2 leading-loose whitespace-pre-line">
+                                    <template v-for="(part, index) in sentence_parts" :key="index">
+                                        <input v-if="part.input" type="text" v-model="part.answer" :style="[part.answer.length < 2 ? 'width: 2.6rem': 'width: ' + (part.answer.length * 1 + 2) + 'rem']" class="text-center h-8 sm:h-10 focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-sm sm:text-lg border-gray-300 tracking-widest">
+                                        <template v-else>
+                                            {{ part.text }}
+                                        </template>
+                                    </template>
+                                </h1>
+                            </div>
+                            <div class="flex flex-row justify-center">
+                                <BreezeButton @click="saveFillInBlankAnswers()">Confirm Answers</BreezeButton>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -223,6 +222,7 @@ export default {
     },
     data() {
         return {
+            submitting: false,
             can_go_higher: true,
             can_go_lower: true,
             bar_chart: '',
@@ -235,6 +235,7 @@ export default {
             show_thank_you: false,
             count: 1,
             dt_index: 0,
+            answer: '',
             correct: false,
             current: {
                 question: '',
@@ -270,6 +271,7 @@ export default {
             },
             sentence_parts: [],
             form:{
+                dt_title: '',
                 student_name: this.form_data.name,
                 student_age: this.form_data.age,
                 student_school: this.form_data.school,
@@ -294,6 +296,7 @@ export default {
             this.selected_answer.single_choice = '',
             this.selected_answer.multiple_choices = []
             this.resetFillInBlank()
+            this.answer = ''
             this.correct = false
         },
         pushAnswer(){
@@ -303,20 +306,23 @@ export default {
                     'question_id' : this.dt_list[this.dt_index].id,
                     'question_category_id' : this.dt_list[this.dt_index].category_id,
                     'question' : this.dt_list[this.dt_index].question,
-                    'correct' : this.correct
+                    'correct' : this.correct,
+                    'answer' : this.answer
                 })
                 this.current.answer_records.push({
                     'dt_id' : this.dt_list[this.dt_index].dt_id,
                     'question_id' : this.dt_list[this.dt_index].id,
                     'question_category_id' : this.dt_list[this.dt_index].category_id,
                     'question' : this.dt_list[this.dt_index].question,
-                    'correct' : this.correct
+                    'correct' : this.correct,
+                    'answer' : this.answer
                 })
                 this.dt_index += 1
             }
         },
         saveSingleChoice(selected_answer){
             this.selected_answer.single_choice  =   selected_answer
+            this.answer                         =   selected_answer
             if(this.selected_answer.single_choice == this.dt_list[this.dt_index].correct_answer){
                 this.current.score += 1
                 this.correct = true
@@ -343,6 +349,7 @@ export default {
                     this.current.score += 1
                     this.correct = true
                 }
+                this.answer = this.selected_answer.multiple_choices
                 this.pushAnswer()
             }
         },
@@ -414,6 +421,13 @@ export default {
             return array;
         },
         saveFillInBlankAnswers(){
+            const answer    =   []
+            this.sentence_parts.forEach((items)=>{
+                if(items.input){
+                    answer.push(items.answer)
+                }
+            })
+            this.answer = answer
             if(this.sentence_parts.every(this.partIsCorrect)){
                 this.current.score += 1
                 this.correct = true
@@ -488,6 +502,19 @@ export default {
             });
         },
         saveResult(){
+            this.error.parent_name = this.form.parent_name != '' ? false : true
+            this.error.parent_contact = this.form.parent_contact != '' ? false : true
+            this.error.parent_address = this.form.parent_address != '' ? false : true
+            this.error.parent_email = this.form.parent_email != '' ? false : true
+
+            for (const key in this.error) {
+                if (this.error[key] === true) {
+                    return;
+                }
+            }
+
+            this.submitting = true
+            this.form.dt_title = this.$page.props.dt_details.name
             axios.post(route('diagnostic_test.save_result'), this.form)
             .then(response => {
                 if(response){
@@ -821,12 +848,6 @@ export default {
             immediate: true
         }
     },
-    beforeDestroy() {
-        window.removeEventListener('beforeunload', this.handleBeforeUnload);
-    },
-    mounted(){
-        window.addEventListener('beforeunload', this.handleBeforeUnload);
-    }
 }
 </script>
                                 
