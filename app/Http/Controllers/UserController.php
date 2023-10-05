@@ -133,12 +133,19 @@ class UserController extends Controller
 
     public function edit(Request $request)
     {
-        $user_info      = User::where('ID', $request->user_id)->first();
+        $user_info  =   DB::table('wpvt_users')
+                            ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
+                            ->where('wpvt_users.id', $request->user_id)
+                            ->select('wpvt_users.id', 'wpvt_users.user_email', 'wpvt_users.user_login', 'wpvt_users.display_name', 'wpvt_users.user_country_id', 'wpvt_users.user_state', 'wpvt_users.user_address', 
+                                    'wpvt_users.user_contact', 'wpvt_users.user_photo', 'countries.name', 'countries.country_code', 'countries.currency_name', 
+                                    'countries.currency_code', 'countries.currency_symbol', 'countries.calling_code')
+                            ->first();
         
         $roles          =   Role::get();
         $user_roles     =   UserHasRoles::where('user_id', $request->user_id)->get('role_id')->keyBy('role_id');
         $gender_list    =   DB::table('genders')->get();
         $children       =   DB::table('children')->where('parent_id', $request->user_id)->get();
+        $countries      =   DB::table('countries')->get();
 
         return Inertia::render('Users/Edit', [
             'user_info'     => $user_info,
@@ -146,6 +153,7 @@ class UserController extends Controller
             'user_roles'    => $user_roles,
             'gender_list'   => $gender_list,
             'children'      => $children,
+            'countries'     => $countries,
         ]);
     }
 
@@ -195,7 +203,7 @@ class UserController extends Controller
             'user_nicename'         => $request['form']['username'],
             'user_email'            => $request['form']['email'],
             'user_address'          => $request['form']['address'],
-            'user_country_id'       => $request['form']['country'],
+            'user_country_id'       => $request['form']['country_id'],
             'user_contact'          => $request['form']['contact_number'],
             'user_state'            => $request['form']['country_state'],
             'display_name'          => $request['form']['full_name'],

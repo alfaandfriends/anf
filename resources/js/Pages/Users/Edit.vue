@@ -56,16 +56,18 @@ import BreezeButton from '@/Components/Button.vue';
                                             <Multiselect 
                                                 autocomplete="off"
                                                 @change="clearState"
-                                                :placeholder="form.country"
+                                                :placeholder="$page.props.user_info.name"
                                                 :canDeselect="false"
-                                                v-model="form.country_code"
+                                                v-model="form.country_id"
+                                                :loading="loading.country"
                                                 :min-chars="1"
                                                 :delay="1"
                                                 :searchable="true"
                                                 :noOptionsText="'Please enter at least 1 character'"
-                                                :options="async function(query) {
-                                                    return await fetchCountries(query) 
-                                                }"
+                                                :options="$page.props.countries"
+                                                trackBy="name"
+                                                label="name"
+                                                valueProp="id"
                                                 :classes="{
                                                     container: 
                                                         $page.props.errors.country ? 
@@ -136,10 +138,10 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <Multiselect
                                                 autocomplete="off"
-                                                @change="clearState"
                                                 :min-chars="1"
                                                 :delay="1"
                                                 :searchable="true"
+                                                :loading="loading.state"
                                                 v-model="form.country_state"
                                                 :placeholder="form.country_state"
                                                 :noOptionsText="'Please select a state'"
@@ -451,7 +453,7 @@ export default {
                 email: this.$page.props.user_info ? this.$page.props.user_info.user_email : '',
                 username: this.$page.props.user_info ? this.$page.props.user_info.user_login : '',
                 full_name: this.$page.props.user_info ? this.$page.props.user_info.display_name : '',
-                calling_code: this.$page.props.user_info ? this.$page.props.user_info.user_calling_code : '',
+                calling_code: this.$page.props.user_info ? this.$page.props.user_info.calling_code : '',
                 contact_number: this.$page.props.user_info ? this.$page.props.user_info.user_contact : '',
                 address: this.$page.props.user_info ? this.$page.props.user_info.user_address : '',
                 country: this.$page.props.user_info ? this.$page.props.user_info.user_country : '',
@@ -474,16 +476,19 @@ export default {
                 edit_name: '',
                 edit_gender: '',
                 edit_dob: '',
-            }
+            },
+            loading:{
+                country: false,
+                state: false
+            },
         }
     },
     watch: {
-        'form.country_code': {
-            handler(country_code){
-                if(country_code){
+        'form.country_id': {
+            handler(){
+                if(this.form.country_id){
                     /* Set calling code and state list*/
-                    this.setCallingCode(country_code)
-                    this.setStateList(country_code)
+                    this.setCountryData(this.form.country_id)
 
                 }
             },
@@ -556,12 +561,15 @@ export default {
             this.confirmationData =  userID
             this.isOpen = true
         },
-        setCallingCode(country_code){
+        setCountryData(country_id){
+            this.loading.state = true
             axios
-                .get('https://restcountries.com/v3.1/alpha/' + country_code)
+                .get(route('countries.find', country_id))
                 .then(response => {
-                    this.form.country       =   response.data[0].name.official
-                    this.form.calling_code  =   response.data[0].idd.root + response.data[0].idd.suffixes[0]
+                    this.setStateList(response.data.country_code)
+                    this.form.calling_code  =   response.data.calling_code
+                    this.form.country_name  =   response.data.name
+                    this.form.country_code  =   response.data.country_code
                 })
                 .catch(error => {
                     this.errored = true
@@ -583,6 +591,7 @@ export default {
                 response.data.data.states.forEach(function(state) {
                     state_list.push(state.name)
                 });
+                this.loading.state = false
             })
         },
         clearState(){
