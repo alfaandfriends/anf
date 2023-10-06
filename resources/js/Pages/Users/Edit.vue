@@ -322,7 +322,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <BreezeButton type="submit">Save</BreezeButton>
                                         </div>
                                         <div class="flex">
-                                            <BreezeButton :class="'px-4 py-2 bg-red-600 hover:bg-red-700 drop-shadow-sm'" @click="resetPassword($page.props.user_info.ID)">Reset Password</BreezeButton>
+                                            <BreezeButton :class="'px-4 py-2 bg-red-600 hover:bg-red-700 drop-shadow-sm'" @click="resetPassword($page.props.user_info.user_id)">Reset Password</BreezeButton>
                                         </div>
                                     </div>
                                 </div>
@@ -456,9 +456,9 @@ export default {
                 calling_code: this.$page.props.user_info ? this.$page.props.user_info.calling_code : '',
                 contact_number: this.$page.props.user_info ? this.$page.props.user_info.user_contact : '',
                 address: this.$page.props.user_info ? this.$page.props.user_info.user_address : '',
-                country: this.$page.props.user_info ? this.$page.props.user_info.user_country : '',
+                country_id: this.$page.props.user_info ? this.$page.props.user_info.user_country_id : '',
                 country_state: this.$page.props.user_info ? this.$page.props.user_info.user_state : '',
-                country_code: this.$page.props.user_info ? this.$page.props.user_info.user_country_code : '',
+                country_code: this.$page.props.user_info ? this.$page.props.user_info.country_code : '',
                 children: this.$page.props.children ? this.$page.props.children : [],
                 valid: {
                     email: true,
@@ -497,7 +497,7 @@ export default {
     },
     methods: {
         submit(){
-            this.$inertia.post(this.route('users.update'), {'user_id': this.$page.props.user_info.ID, 'selected_roles': this.selected_roles, 'form': this.form});
+            this.$inertia.post(this.route('users.update'), {'user_id': this.$page.props.user_info.user_id, 'selected_roles': this.selected_roles, 'form': this.form});
         },
         checkEmail(){
             if(this.form.email){
@@ -606,7 +606,7 @@ export default {
             }
         },
         addChild() {
-            this.child_form.parent_id = this.$page.props.user_info.ID
+            this.child_form.parent_id = this.$page.props.user_info.user_id
             this.$inertia.post(route('children.store'), this.child_form, {
                 preserveScroll: true,
                 preserveState: false

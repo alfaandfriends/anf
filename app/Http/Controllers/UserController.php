@@ -136,7 +136,7 @@ class UserController extends Controller
         $user_info  =   DB::table('wpvt_users')
                             ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
                             ->where('wpvt_users.id', $request->user_id)
-                            ->select('wpvt_users.id', 'wpvt_users.user_email', 'wpvt_users.user_login', 'wpvt_users.display_name', 'wpvt_users.user_country_id', 'wpvt_users.user_state', 'wpvt_users.user_address', 
+                            ->select('wpvt_users.id as user_id', 'wpvt_users.user_email', 'wpvt_users.user_login', 'wpvt_users.display_name', 'wpvt_users.user_country_id', 'wpvt_users.user_state', 'wpvt_users.user_address', 
                                     'wpvt_users.user_contact', 'wpvt_users.user_photo', 'countries.name', 'countries.country_code', 'countries.currency_name', 
                                     'countries.currency_code', 'countries.currency_symbol', 'countries.calling_code')
                             ->first();
