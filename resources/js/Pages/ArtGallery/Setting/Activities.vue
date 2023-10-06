@@ -14,7 +14,7 @@ import BreezeButton from '@/Components/Button.vue';
                     <div class="grid grid-cols-2 gap-4">
                         <div class="align-middle inline-block min-w-full">
                             <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
-                                <BreezeButton buttonType="gray" class="py-2 px-4" :route="route('art_gallery.setting.lessons', {'level_id' : this.$page.props.level_id, 'theme_id' : this.$page.props.theme_id, 'lesson_id' : lesson_id})">Back</BreezeButton>
+                                <BreezeButton buttonType="gray" class="py-2 px-4" :route="route('art_gallery.setting.lessons', {'level_id' : $page.props.level_id, 'theme_id' : $page.props.theme_id, 'lesson_id' : lesson_id})">Back</BreezeButton>
                                 <BreezeButton class="py-2 px-4" @click="create">New Activity</BreezeButton>
                             </div>
                             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
