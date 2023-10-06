@@ -142,6 +142,8 @@ class HandleInertiaRequests extends Middleware
                 ->get(['centres.ID', 'centres.label']);
         }
 
+        $allowed_centres    =   !empty($allowed_centres) ? $allowed_centres : [];
+
         return $allowed_centres;
     }
 
