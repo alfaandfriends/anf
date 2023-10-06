@@ -19,6 +19,7 @@ class ClassController extends Controller
     public function index(Request $request)
     {
         $allowed_centres    =   Inertia::getShared('allowed_centres');
+        dd($allowed_centres);
         if(empty($allowed_centres)){
             return back()->with(['type'=>'error', 'message'=>'Sorry, you cannot access this page. Please contact support to gain access for centres']);
         }
