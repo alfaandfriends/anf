@@ -137,10 +137,12 @@ class HandleInertiaRequests extends Middleware
         else{
             $allowed_centres    =   DB::table('user_has_centres')
                                     ->join('centres', 'user_has_centres.centre_id', '=', 'centres.ID')
-                                    ->where('user_id', Auth::id())->orderBy('id')
+                                    ->where('user_id', 0)->orderBy('id')
                                     ->orderBy('id')
                                     ->get(['centres.ID', 'centres.label']);
         }
+        
+        $allowed_centres    =   !empty($allowed_centres) ? $allowed_centres : [];
 
         return $allowed_centres;
     }
