@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -16,8 +17,8 @@ class ArtGalleryController extends Controller
                         ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
                         ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
                         ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
-                        ->join('students', 'student_art_gallery.student_id', '=', 'students.id')
-                        ->join('children', 'students.children_id', '=', 'children.id')
+                        ->leftJoin('students', 'student_art_gallery.student_id', '=', 'students.id')
+                        ->leftJoin('children', 'students.children_id', '=', 'children.id')
                         ->select(
                             'student_art_gallery.id as artwork_id',
                             'students.id as student_id',
@@ -104,6 +105,52 @@ class ArtGalleryController extends Controller
 
     }
 
+    public function levels(){
+        $levels = $this->getLevels();
+
+        return Inertia::render('ArtGallery/Setting/Levels', [
+            'levels' => $levels,
+        ]);
+    }
+
+    public function themes(Request $request){
+        $themes = $this->getThemes($request->level_id);
+
+        return Inertia::render('ArtGallery/Setting/Themes', [
+            'level_id'  => $request->level_id,
+            'themes'    => $themes,
+        ]);
+    }
+
+    public function lessons(Request $request){
+        $lessons = $this->getLessons($request->theme_id);
+
+        return Inertia::render('ArtGallery/Setting/Lessons', [
+            'level_id'  => $request->level_id,
+            'theme_id'  => $request->theme_id,
+            'lessons'   => $lessons,
+        ]);
+    }
+
+    public function activities(Request $request){
+        $activities = $this->getActivities($request->lesson_id);
+
+        return Inertia::render('ArtGallery/Setting/Activities', [
+            'level_id'      => $request->level_id,
+            'theme_id'      => $request->theme_id,
+            'lesson_id'     => $request->lesson_id,
+            'activities'    => $activities,
+        ]);
+    }
+
+    /* Get Level, Theme, Lesson, Activity List */
+    public function getLevels()
+    {
+        $levels =   DB::table('art_levels')->get();
+
+        return $levels;
+    }
+
     public function getThemes($level_id)
     {
         $themes =   DB::table('art_themes')->where('level_id', $level_id)->get();
@@ -123,5 +170,145 @@ class ArtGalleryController extends Controller
         $activities =   DB::table('art_activities')->where('lesson_id', $lesson_id)->get();
 
         return  $activities;
+    }
+
+    /* Store Level, Theme, Lesson, Activity */
+    public function levelStore(Request $request)
+    {
+        DB::table('art_levels')->insert([
+            'name'  => $request->level_name
+        ]);
+
+        return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
+    }
+
+    public function themeStore(Request $request)
+    {
+        DB::table('art_themes')->insert([
+            'level_id'  => $request->level_id,
+            'name'      => $request->theme_name
+        ]);
+
+        return back()->with(['type'=>'success', 'message'=>'New theme has been added!']);
+    }
+
+    public function lessonStore(Request $request)
+    {
+        DB::table('art_lessons')->insert([
+            'theme_id'  => $request->theme_id,
+            'name'      => $request->lesson_name
+        ]);
+
+        return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
+    }
+
+    public function activityStore(Request $request)
+    {
+        DB::table('art_activities')->insert([
+            'lesson_id' => $request->lesson_id,
+            'name'      => $request->activity_name
+        ]);
+
+        return back()->with(['type'=>'success', 'message'=>'New activity has been added!']);
+    }
+
+    /* Update Level, Theme, Lesson, Activity */
+    public function levelUpdate(Request $request)
+    {
+        DB::table('art_levels')->where('id', $request->id)->update([
+            'name'  => $request->level_name
+        ]);
+
+        return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
+    }
+
+    public function themeUpdate(Request $request)
+    {
+        DB::table('art_themes')->where('id', $request->id)->update([
+            'name'      => $request->theme_name
+        ]);
+
+        return back()->with(['type'=>'success', 'message'=>'Theme has been updated!']);
+    }
+
+    public function lessonUpdate(Request $request)
+    {
+        DB::table('art_lessons')->where('id', $request->id)->update([
+            'name'      => $request->lesson_name
+        ]);
+
+        return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
+    }
+
+    public function activityUpdate(Request $request)
+    {
+        DB::table('art_activities')->where('id', $request->id)->update([
+            'name'      => $request->activity_name
+        ]);
+
+        return back()->with(['type'=>'success', 'message'=>'Activity has been updated!']);
+    }
+
+    /* Delete Level, Theme, Lesson, Activity */
+    public function levelDelete($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            DB::table('art_levels')->where('id', $id)->delete();
+
+            DB::commit();
+
+            return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
+        } 
+        catch (Exception $e) {
+            DB::rollBack();
+            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this level!']);
+        }
+    }
+
+    public function themeDelete($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            DB::table('art_themes')->where('id', $id)->delete();
+
+            return back()->with(['type'=>'success', 'message'=>'Theme has been deleted!']);
+        } 
+        catch (Exception $e) {
+            DB::rollBack();
+            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this theme!']);
+        }
+    }
+
+    public function lessonDelete($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            DB::table('art_lessons')->where('id', $id)->delete();
+
+            return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
+        } 
+        catch (Exception $e) {
+            DB::rollBack();
+            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this lesson!']);
+        }
+    }
+
+    public function activityDelete($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            DB::table('art_activities')->where('id', $id)->delete();
+
+            return back()->with(['type'=>'success', 'message'=>'Activity has been deleted!']);
+        } 
+        catch (Exception $e) {
+            DB::rollBack();
+            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this activity!']);
+        }
     }
 }
