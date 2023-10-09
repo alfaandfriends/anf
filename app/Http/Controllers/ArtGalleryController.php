@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DatabaseTransactionEvent;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -88,6 +89,9 @@ class ArtGalleryController extends Controller
 
         Storage::putFileAs('art_gallery',$file, $filename);
 
+        $log_data =   'Added artwork for student ID '.$request->student_id;
+        event(new DatabaseTransactionEvent($log_data));
+
         return redirect(route('art_gallery'))->with(['type'=>'success', 'message'=>'Artwork uploaded successfully !']);
     }
 
@@ -100,6 +104,8 @@ class ArtGalleryController extends Controller
         if($record_deleted){
             return redirect(route('art_gallery'))->with(['type'=>'success', 'message'=>'Artwork deleted successfully !']);
         }
+        $log_data =   'Deleted artwork ID '.$id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('art_gallery'))->with(['type'=>'danger', 'message'=>'An error occured, please try again !']);
 
@@ -175,39 +181,47 @@ class ArtGalleryController extends Controller
     /* Store Level, Theme, Lesson, Activity */
     public function levelStore(Request $request)
     {
-        DB::table('art_levels')->insert([
+        $level_id   =   DB::table('art_levels')->insertGetId([
             'name'  => $request->level_name
         ]);
+        $log_data =   'Added art level ID '.$level_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
     }
 
     public function themeStore(Request $request)
     {
-        DB::table('art_themes')->insert([
+        $theme_id   =   DB::table('art_themes')->insertGetId([
             'level_id'  => $request->level_id,
             'name'      => $request->theme_name
         ]);
+        $log_data =   'Added art theme ID '.$theme_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message'=>'New theme has been added!']);
     }
 
     public function lessonStore(Request $request)
     {
-        DB::table('art_lessons')->insert([
+        $lesson_id   =   DB::table('art_lessons')->insertGetId([
             'theme_id'  => $request->theme_id,
             'name'      => $request->lesson_name
         ]);
+        $log_data =   'Added art lesson ID '.$lesson_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
     }
 
     public function activityStore(Request $request)
     {
-        DB::table('art_activities')->insert([
+        $activity_id   =   DB::table('art_activities')->insertGetId([
             'lesson_id' => $request->lesson_id,
             'name'      => $request->activity_name
         ]);
+        $log_data =   'Added art activity ID '.$activity_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message'=>'New activity has been added!']);
     }
@@ -218,6 +232,8 @@ class ArtGalleryController extends Controller
         DB::table('art_levels')->where('id', $request->id)->update([
             'name'  => $request->level_name
         ]);
+        $log_data =   'Updated art level ID '.$request->id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
     }
@@ -227,6 +243,8 @@ class ArtGalleryController extends Controller
         DB::table('art_themes')->where('id', $request->id)->update([
             'name'      => $request->theme_name
         ]);
+        $log_data =   'Updated art theme ID '.$request->id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message'=>'Theme has been updated!']);
     }
@@ -236,6 +254,8 @@ class ArtGalleryController extends Controller
         DB::table('art_lessons')->where('id', $request->id)->update([
             'name'      => $request->lesson_name
         ]);
+        $log_data =   'Updated art lesson ID '.$request->id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
     }
@@ -245,6 +265,8 @@ class ArtGalleryController extends Controller
         DB::table('art_activities')->where('id', $request->id)->update([
             'name'      => $request->activity_name
         ]);
+        $log_data =   'Updated art activity ID '.$request->id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message'=>'Activity has been updated!']);
     }
@@ -258,6 +280,9 @@ class ArtGalleryController extends Controller
             DB::table('art_levels')->where('id', $id)->delete();
 
             DB::commit();
+
+            $log_data =   'Deleted art level ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
         } 
@@ -274,6 +299,11 @@ class ArtGalleryController extends Controller
 
             DB::table('art_themes')->where('id', $id)->delete();
 
+            DB::commit();
+
+            $log_data =   'Deleted art theme ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
+
             return back()->with(['type'=>'success', 'message'=>'Theme has been deleted!']);
         } 
         catch (Exception $e) {
@@ -288,6 +318,12 @@ class ArtGalleryController extends Controller
             DB::beginTransaction();
 
             DB::table('art_lessons')->where('id', $id)->delete();
+            
+            DB::commit();
+
+            $log_data =   'Deleted art lesson ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
+
 
             return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
         } 
@@ -303,6 +339,12 @@ class ArtGalleryController extends Controller
             DB::beginTransaction();
 
             DB::table('art_activities')->where('id', $id)->delete();
+            
+            DB::commit();
+
+            $log_data =   'Deleted art activity ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
+
 
             return back()->with(['type'=>'success', 'message'=>'Activity has been deleted!']);
         } 

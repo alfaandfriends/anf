@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ProgrammeHelper;
+use App\Events\DatabaseTransactionEvent;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -134,6 +135,8 @@ class ProgressReportController extends Controller
             'comments'              => $request->comments,
             'attendance_status'     => $request->attendance_status,
         ]);
+        $log_data =   'Updated progress report ID '.$request->report_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message'=>'Progress report updated successfully !']);
     }

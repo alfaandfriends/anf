@@ -8,6 +8,7 @@ use App\Classes\OrderHelper;
 use App\Classes\ProductHelper;
 use App\Classes\ProgrammeHelper;
 use App\Classes\UserHelper;
+use App\Events\DatabaseTransactionEvent;
 use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
 use DateTime;
@@ -169,6 +170,9 @@ class StudentController extends Controller
         
             DB::commit();   
 
+            $log_data =   'Created student ID '.$student_id;
+            event(new DatabaseTransactionEvent($log_data));
+
             return redirect(route('students'))->with(['type'=>'success', 'message'=>'Admission success !']);
         } catch (\Exception $e) {
             DB::rollback();
@@ -288,6 +292,8 @@ class StudentController extends Controller
         DB::table('students')->where('id', $request->student_id)->update([
             'status' => $request->student_status
         ]);
+        $log_data =   'Updated student ID '.$request->student_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         
         // if(auth()->user()->is_admin == false){
@@ -333,7 +339,7 @@ class StudentController extends Controller
             $new_invoice_data['student_id']         =   $invoice_data->student_id;
             $new_invoice_data['invoice_items']      =   $filtered_invoice_items;
             $new_invoice_data['date_admission']     =   Carbon::parse($request->admission_date)->format('Y-m-d');
-            $invoice_data['currency']               =   UserHelper::getCurrentUserCurrency();
+            $new_invoice_data['currency']           =   UserHelper::getCurrentUserCurrency();
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($new_invoice_data);
             
@@ -350,8 +356,10 @@ class StudentController extends Controller
             $order_data['products']     =   $produce_items;
             OrderHelper::newOrder($order_data);
         }
+        $log_data =   'Deleted student data';
+        event(new DatabaseTransactionEvent($log_data));
 
-        return redirect()->back()->with(['type'=>'success', 'message'=>'Class deleted successfully!']);
+        return redirect()->back()->with(['type'=>'success', 'message'=>'Student data deleted successfully!']);
     }
 
     public function findStudents(Request $request){
@@ -442,6 +450,9 @@ class StudentController extends Controller
             $order_data['products']     =   array_merge(...collect($request->fee)->pluck('material')->toArray());
             OrderHelper::newOrder($order_data);
         
+            $log_data =   'Added class for student ID '.$student_id;
+            event(new DatabaseTransactionEvent($log_data));
+
             DB::commit();   
 
             return redirect()->back()->with(['type'=>'success', 'message'=>'New class added!']);
@@ -458,6 +469,8 @@ class StudentController extends Controller
         DB::table('student_fees')->where('id', $request['data']['student_fee_id'])->update([
             'status'    => $status,
         ]);
+        $log_data =   "Updated fee status for student's fee ID ".$request['data']['student_fee_id'];
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message' => 'Status has been changed successfully!']);
     }
@@ -478,6 +491,8 @@ class StudentController extends Controller
                 }
             }
         }
+        $log_data =   'Transferred student ID '.$request->student_fee_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message' => 'Student has been transferred successfully.']);
     }

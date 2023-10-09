@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DatabaseTransactionEvent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,6 +69,8 @@ class ExternalUserManagementController extends Controller
                 'centre_id'   =>  $centre_id
             ]);
         }
+        $log_data =   "Updated division manager's centre access for user ID ".$request->user_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('division_manager'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
     }
@@ -116,6 +119,8 @@ class ExternalUserManagementController extends Controller
             'user_id'   =>  $request->user_id,
             'centre_id'   =>  $request->centre_id
         ]);
+        $log_data =   "Updated centre manager's centre access for user ID ".$request->user_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('centre_manager'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
     }
@@ -164,6 +169,8 @@ class ExternalUserManagementController extends Controller
             'user_id'   =>  $request->user_id,
             'centre_id'   =>  $request->centre_id
         ]);
+        $log_data =   "Updated edupreneurs's centre access for user ID ".$request->user_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('centre_manager'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\CentreHelper;
+use App\Events\DatabaseTransactionEvent;
 use App\Http\Controllers\Approval\CentreApprovalController;
 use App\Models\Centre;
 use Corcel\Model\User;
@@ -75,20 +76,26 @@ class CentreController extends Controller
                                 'last_admission_count' => 0,
                                 'last_certificate_count' => 0,
                             ]);
+        $log_data =   'Created centre ID '.$request->centre_id;
+        event(new DatabaseTransactionEvent($log_data));
         
         $images =   $request->file('image_list');
 
-        foreach($images as $key=>$image){
-            $image_path     =   Storage::putFile('centre_photo', $image['image_file']);
-            $image_size     =   Storage::size($image_path);
-            $image_type     =   $request->image_list[$key]['type'];
-
-            DB::table('centre_images')->insert([
-                'centre_id'     => $new_centre_id,
-                'image_path'    => '/storage/'.$image_path,
-                'image_size'    => $image_size,
-                'image_type'    => $image_type,
-            ]);
+        if(!empty($images)){
+            foreach($images as $key=>$image){
+                $image_path     =   Storage::putFile('centre_photo', $image['image_file']);
+                $image_size     =   Storage::size($image_path);
+                $image_type     =   $request->image_list[$key]['type'];
+    
+                DB::table('centre_images')->insert([
+                    'centre_id'     => $new_centre_id,
+                    'image_path'    => '/storage/'.$image_path,
+                    'image_size'    => $image_size,
+                    'image_type'    => $image_type,
+                ]);
+            }
+            $log_data =   'Uploaded images for centre ID '.$request->centre_id;
+            event(new DatabaseTransactionEvent($log_data));
         }
         return redirect(route('centres'))->with(['type'=>'success', 'message'=>'School added successfully !']);
     }
@@ -96,7 +103,6 @@ class CentreController extends Controller
     public function edit(Request $request)
     {
         if(in_array($request->centre_id, $this->getAllowedCentres()) || auth()->user()->is_admin){
-            
             $countries  =   DB::table('countries')->get();
             $centre_info        =   DB::table('centres')
                                         ->where('centres.ID', $request->centre_id)
@@ -156,12 +162,16 @@ class CentreController extends Controller
                 'address' => $request->centre_address,
                 'is_active' => $request->centre_active,
             ]);
+        $log_data =   'Updated centre ID '.$request->centre_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         /* Delete selected images */
         if(!empty($request->images_to_delete)){
             foreach($request->images_to_delete as $key=>$image_to_delete){
                 $this->destroyImage($image_to_delete['image_id']);
             }
+            $log_data =   'Deleted images for centre ID '.$request->centre_id;
+            event(new DatabaseTransactionEvent($log_data));
         }
         
         /* Upload new images */
@@ -195,6 +205,9 @@ class CentreController extends Controller
             Storage::delete($image_path);
         }
         DB::table('centre_images')->where('centre_id', $id)->delete();
+
+        $log_data =   'Deleted centre ID '.$id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre deleted successfully !']);
     }
@@ -271,6 +284,8 @@ class CentreController extends Controller
                         'image_type'    => $image_type,
                         'updated_at'    => Carbon::now(),
                     ]);
+                    $log_data =   'Uploaded images for centre ID '.$centre_id;
+                    event(new DatabaseTransactionEvent($log_data));
                 }
             }
         }

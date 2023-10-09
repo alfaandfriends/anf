@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ProgrammeHelper;
+use App\Events\DatabaseTransactionEvent;
 use App\Http\Controllers\Approval\ProgrammeApprovalController;
 use Exception;
 use Illuminate\Http\Request;
@@ -78,6 +79,8 @@ class ProgrammeController extends Controller
                 ]);
             }
         }
+        $log_data =   'Created programme ID '.$programme_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'New programme added successfully!']);
     }
@@ -214,8 +217,13 @@ class ProgrammeController extends Controller
                         'fee_amount'            =>  $fee['value'],
                     ]);
                 }
+                $log_data =   'Added fees for programme ID '.$request->programme_id;
+                event(new DatabaseTransactionEvent($log_data));
             }
         }
+        
+        $log_data =   'Updated programme ID '.$request->programme_id;
+        event(new DatabaseTransactionEvent($log_data));
         return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme updated successfully !']);
     }
 
@@ -249,6 +257,9 @@ class ProgrammeController extends Controller
             ->join('programme_level_fees','programme_level_fees.programme_level_id','=','programme_levels.id')
             ->where('programmes.id', $id)->delete();
 
+        $log_data =   'Deleted programme ID '.$id;
+        event(new DatabaseTransactionEvent($log_data));
+
         return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme deleted successfully !']);
     }
 
@@ -264,6 +275,10 @@ class ProgrammeController extends Controller
             DB::table('programme_levels')
                 ->join('programme_level_fees','programme_level_fees.programme_level_id','=','programme_levels.id')
                 ->where('programme_levels.id', $id)->delete();
+
+            $log_data =   'Deleted fee ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
+        
 
             return back()->with(['type'=>'success', 'message'=>'Fee deleted successfully !']);
         } catch (\Throwable $th) {

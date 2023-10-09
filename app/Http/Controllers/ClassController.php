@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\ClassHelper;
 use App\Classes\ProgrammeHelper;
+use App\Events\DatabaseTransactionEvent;
 use App\Http\Controllers\Approval\ClassApprovalController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -91,7 +92,7 @@ class ClassController extends Controller
             'end_time'              => 'required',
         ]);
 
-        DB::table('classes')->insert([
+        $class_id   =   DB::table('classes')->insertGetId([
             'centre_id'             =>  $request->centre_id,
             'programme_level_id'    =>  $request->programme_level_id,
             'class_day_id'          =>  $request->class_day,
@@ -101,6 +102,9 @@ class ClassController extends Controller
             'capacity'              =>  $request->class_capacity,
             'status'                =>  $request->class_status,
         ]);
+        
+        $log_data =   'Create class ID '.$class_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class added successfully !']);
     }
@@ -214,6 +218,9 @@ class ClassController extends Controller
             'updated_at'            =>  Carbon::now(),
         ]);
 
+        $log_data =   'Updated class ID '.$request->class_id;
+        event(new DatabaseTransactionEvent($log_data));
+
         return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class updated successfully !']);
     }
 
@@ -242,6 +249,9 @@ class ClassController extends Controller
         // }
 
         DB::table('classes')->where('id', $id)->delete();
+
+        $log_data =   'Deleted class ID '.$id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class deleted successfully !']);
     }
