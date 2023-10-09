@@ -15,10 +15,6 @@ class ProgressReportController extends Controller
     public function index(Request $request){
 
         $allowed_centres    =   Inertia::getShared('allowed_centres');
-        if(empty($allowed_centres)){
-            return back()->with(['type'=>'error', 'message'=>'Sorry, you cannot access this page. Please contact support to gain access for centres']);
-        }
-
         $can_access_centre = (object)$allowed_centres->search(function ($value) { 
             return $value->ID == request('centre_id');
         });

@@ -403,22 +403,6 @@ import moment from 'moment'
 import { debounce } from 'vue-debounce'
 import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'
 
-const fetchCountries = async (query) => {
-    if(query){
-        const response = await fetch(
-            'https://restcountries.com/v2/name/' + query
-        );
-
-        const data = await response.json(); 
-        
-        return data.map((item) => {
-            return { 
-                value: item.alpha2Code, 
-                label: item.name 
-            }
-        })
-    }
-}
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,

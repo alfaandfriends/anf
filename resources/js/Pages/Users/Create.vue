@@ -54,20 +54,21 @@ import BreezeButton from '@/Components/Button.vue';
                                         <label for="country" class="block text-sm text-gray-700 font-bold"> Country <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <Multiselect 
-                                                autocomplete="none"
-                                                placeholder="Please select a country"
-                                                v-model="form.country_code"
-                                                :min-chars="1"
-                                                :delay="500"
+                                                autocomplete="off"
+                                                @change="clearState"
                                                 :canDeselect="false"
+                                                v-model="form.country_id"
+                                                :loading="loading.country"
+                                                :min-chars="1"
+                                                :delay="1"
                                                 :searchable="true"
-                                                :noOptionsText="'Please enter at least 1 character'"
-                                                :options="async function(query) {
-                                                    return await fetchCountries(query) 
-                                                }"
+                                                :options="$page.props.countries"
+                                                trackBy="name"
+                                                label="name"
+                                                valueProp="id"
                                                 :classes="{
                                                     container: 
-                                                        $page.props.errors.country ? 
+                                                        $page.props.errors.country_id ? 
                                                         'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded bg-white text-base leading-snug outline-none':
                                                         'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none',
                                                     containerDisabled: 'cursor-default bg-gray-100',
@@ -134,14 +135,18 @@ import BreezeButton from '@/Components/Button.vue';
                                         <label for="state" class="block text-sm text-gray-700 font-bold"> State <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <Multiselect
-                                                v-model="form.state"
+                                                autocomplete="off"
+                                                :min-chars="1"
+                                                :delay="1"
                                                 :searchable="true"
-                                                placeholder="Please select a state"
-                                                autocomplete="none"
+                                                :loading="loading.state"
+                                                v-model="form.country_state"
+                                                :noOptionsText="'Please select a state'"
                                                 :options="state_list"
+                                                :canDeselect="false"
                                                 :classes="{
                                                 container:
-                                                    $page.props.errors.country ? 
+                                                    $page.props.errors.country_state ? 
                                                     'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded bg-white text-base leading-snug outline-none':
                                                     'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none',
                                                 containerDisabled: 'cursor-default bg-gray-100',
@@ -329,24 +334,6 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import moment from 'moment'
 import { debounce } from 'vue-debounce'
 
-const fetchCountries = async (query) => {
-
-    if(query){
-        const response = await fetch(
-            'https://restcountries.com/v2/name/' + query
-        );
-
-        const data = await response.json(); 
-        
-        return data.map((item) => {
-            return { 
-                value: item.alpha2Code, 
-                label: item.name 
-            }
-        })
-    }
-}
-
 export default {
     components: {
         Head, Link,
@@ -367,9 +354,9 @@ export default {
                 email: '',
                 username: '',
                 full_name: '',
-                country: '',
+                country_id: '',
                 country_code: '',
-                calling_code: '+60',
+                calling_code: '',
                 contact_number: '',
                 state: '',
                 address: '',
@@ -380,19 +367,19 @@ export default {
                 name: '',
                 gender: '',
                 dob: ''
-            }
+            },
+            loading:{
+                country: false,
+                state: false
+            },
         }
     },
-    watch:{
-        'form.country_code': {
-            handler(country_code){
-                /* Clear data */
-                this.form.state = ''
-
-                if(country_code){
+    watch: {
+        'form.country_id': {
+            handler(){
+                if(this.form.country_id){
                     /* Set calling code and state list*/
-                    this.setCallingCode(country_code)
-                    this.setStateList(country_code)
+                    this.setCountryData(this.form.country_id)
 
                 }
             },
@@ -441,12 +428,18 @@ export default {
                     this.checking_username = false
                 })
         },
-        setCallingCode(country_code){
+        setCountryData(country_id){
+            this.loading.state = true
             axios
-                .get('https://restcountries.com/v3.1/alpha/' + country_code)
+                .get(route('countries.find', country_id))
                 .then(response => {
-                    this.form.country       =   response.data[0].name.official
-                    this.form.calling_code  =   response.data[0].idd.root + response.data[0].idd.suffixes[0]
+                    this.setStateList(response.data.country_code)
+                    this.form.calling_code  =   response.data.calling_code
+                    this.form.country_name  =   response.data.name
+                    this.form.country_code  =   response.data.country_code
+                })
+                .catch(error => {
+                    this.errored = true
                 })
         },
         setStateList(country_code){
@@ -459,13 +452,17 @@ export default {
                     "Content-Type": "application/json"
                 }, 
                 data: {
-                    "iso2": country_code, 
+                        "iso2": country_code, 
                 }
             }).then(response => {
                 response.data.data.states.forEach(function(state) {
                     state_list.push(state.name)
                 });
+                this.loading.state = false
             })
+        },
+        clearState(){
+            this.form.country_state = '';
         },
         submit() {
             this.$inertia.post(route('users.store'), this.form, { preserveState: true})

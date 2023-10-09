@@ -47,10 +47,12 @@ class UserController extends Controller
 
         $roles          =   Role::get();
         $gender_list    =   DB::table('genders')->get();
+        $countries      =   DB::table('countries')->get();
 
         return Inertia::render('Users/Create',[
             'roles'         => $roles,
             'gender_list'   => $gender_list,
+            'countries' => $countries,
         ]);
     }
 
@@ -60,15 +62,11 @@ class UserController extends Controller
             'email' => 'required',
             'username' => 'required',
             'full_name' => 'required',
-            'country' => 'required',
+            'country_id' => 'required',
             'calling_code' => 'required',
             'contact_number' => 'required',
-            'state' => 'required',
+            'country_state' => 'required',
             'address' => 'required',
-            'selected_roles' => 'required',
-        ],
-        [
-            'selected_roles.required' => 'Please assign at least 1 role.'
         ]);
         
         $random_password        =   Str::random(20);
@@ -96,13 +94,14 @@ class UserController extends Controller
                                     'profile_updated'        => 1,
                                 ]);   
 
-            foreach($request->selected_roles as $key=>$role){
-                DB::table('user_has_roles')->insert([
-                    'user_id' => $new_user_id, 
-                    'role_id' => $role, 
-                ]);
+            if($request->selected_roles){
+                foreach($request->selected_roles as $key=>$role){
+                    DB::table('user_has_roles')->insert([
+                        'user_id' => $new_user_id, 
+                        'role_id' => $role, 
+                    ]);
+                }
             }
-            DB::commit();
 
             $user           =   User::where('ID', $new_user_id)->first();
             $credentials    =   [
@@ -119,11 +118,12 @@ class UserController extends Controller
                     'date_of_birth' => Carbon::parse($children['dob'])->format('Y-m-d'),
                 ]);
             }
-        
 
             Notification::sendNow($user, new UserRegistrationCredentials($credentials));
 
-            return redirect(route('users'))->with(['type'=>'success', 'message'=>'Credentials has been sent to the registered email !']);
+            DB::commit();
+
+            return redirect(route('users'))->with(['type'=>'success', 'message'=>'Login details has been sent to the registered email !']);
         }
         catch(Exception $e){
             DB::rollback();
