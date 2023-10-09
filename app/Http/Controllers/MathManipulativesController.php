@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DatabaseTransactionEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -57,11 +58,14 @@ class MathManipulativesController extends Controller
 
         $this->uploadFolder($request->folder, 'math_manipulatives');
 
-        DB::table('math_manipulatives')->insert([
+        $math_manipulative_id = DB::table('math_manipulatives')->insertGetId([
             'name'          => $request->title,
             'thumbnail'     => $thumbnail,
             'folder_name'   => key($request->folder),
         ]);
+
+        $log_data =   'Added math manipulative ID '.$math_manipulative_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'New math manipulative added successfully !']);
     }
@@ -74,6 +78,9 @@ class MathManipulativesController extends Controller
         Storage::delete('math_manipulatives/thumbnails'.$info->thumbnail);
 
         DB::table('math_manipulatives')->where('id', $id)->delete();
+
+        $log_data =   'Deleted math manipulative ID '.$id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'Math manipulative deleted successfully !']);
     }

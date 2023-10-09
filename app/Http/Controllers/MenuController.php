@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DatabaseTransactionEvent;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -57,7 +58,7 @@ class MenuController extends Controller
         $current_rank   =   Menu::orderBy('menu_rank', 'desc')->pluck('menu_rank')->first();
         $next_rank      =   $current_rank + 1;
 
-        DB::table('menus')->insert([
+        $menu_id    =   DB::table('menus')->insertGetId([
             'menu_label'        => $request->menu_label,
             'section_id'        => $request->menu_section,
             'menu_route'        => $request->menu_route,
@@ -66,6 +67,9 @@ class MenuController extends Controller
             'menu_rank'         => $next_rank,
             'menu_status'       => $request->menu_status,
         ]);
+
+        $log_data =   'Added menu ID '.$menu_id;
+        event(new DatabaseTransactionEvent($log_data));
         
         return redirect(route('menus'))->with(['type'=>'success', 'message'=>'Menu added successfully !']);
     }
@@ -89,7 +93,7 @@ class MenuController extends Controller
         $current_rank   =   DB::table('menus_sub')->where('menu_id', $request->menu_id)->orderBy('menu_sub_rank', 'desc')->pluck('menu_sub_rank')->first();
         $next_rank      =   $current_rank ? $current_rank + 1 : 1;
 
-        DB::table('menus_sub')->insert([
+        $sub_menu_id    =   DB::table('menus_sub')->insertGetId([
             'menu_id'           => $request->menu_id,
             'menu_sub_label'    => $request->menu_sub_label,
             'menu_sub_route'    => $request->menu_sub_route,
@@ -97,6 +101,9 @@ class MenuController extends Controller
             'menu_sub_status'   => $request->menu_sub_status,
             'permission_name' => $request->menu_sub_permission_name,
         ]);
+
+        $log_data =   'Added sub menu ID '.$sub_menu_id;
+        event(new DatabaseTransactionEvent($log_data));
         
         return redirect($request->url_redirect)->with(['type'=>'success', 'message'=>'Sub menu added successfully !']);
     }
@@ -136,6 +143,9 @@ class MenuController extends Controller
                 'updated_at'        => Carbon::now(),
             ]);
 
+        $log_data =   'Updated menu ID '.$request->menu_id;
+        event(new DatabaseTransactionEvent($log_data));
+
         return redirect(route('menus'))->with(['type'=>'success', 'message'=>'Menu updated successfully !']);
     }
 
@@ -168,6 +178,9 @@ class MenuController extends Controller
                 'updated_at'        => Carbon::now(),
             ]);
 
+        $log_data =   'Updated sub menu ID '.$request->menu_id;
+        event(new DatabaseTransactionEvent($log_data));
+
         return redirect($request->url_redirect)->with(['type'=>'success', 'message'=>'Menu updated successfully !']);
     }
 
@@ -175,12 +188,18 @@ class MenuController extends Controller
     {
         Menu::deleteMenu($menu_id);
 
+        $log_data =   'Deleted menu ID '.$menu_id;
+        event(new DatabaseTransactionEvent($log_data));
+
         return redirect(route('menus'))->with(['type'=>'success', 'message'=>'Menu deleted successfully !']);
     }
 
     public function destroySubMenu($sub_menu_id)
     {   
         Menu::deleteSubMenu($sub_menu_id);
+
+        $log_data =   'Deleted sub menu ID '.$sub_menu_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'Sub Menu deleted successfully !']);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DatabaseTransactionEvent;
 use App\Notifications\DTNotifyPIC;
 use App\Notifications\DTNotifyUser;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -227,6 +228,9 @@ class DiagnosticTestController extends Controller
             'updated_at'    =>  Carbon::now(),
         ]);
 
+        $log_data =   'Updated DT status ID '.$request->result_id;
+        event(new DatabaseTransactionEvent($log_data));
+
         return back()->with(['type' => 'success', 'message' => 'Status has been updated !']);
     }
 
@@ -330,7 +334,7 @@ class DiagnosticTestController extends Controller
                 'final_message'             => 'required',
             ]);
             
-            DB::table('diagnostic_test')->insert([
+            $dt_id  =   DB::table('diagnostic_test')->insertGetId([
                 'name'                      =>  $request->name,
                 'age_id'                    =>  $request->age,
                 'language_id'               =>  $request->language,
@@ -341,6 +345,9 @@ class DiagnosticTestController extends Controller
                 'higher_score_direction'    =>  $request->higher_score_direction,
                 'final_message'             =>  $request->final_message,
             ]);
+        
+            $log_data =   'Added DT ID '.$dt_id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'New diagnostic test added successfully !']);
         }
@@ -384,6 +391,9 @@ class DiagnosticTestController extends Controller
                 'final_message'             =>  $request->final_message,
                 'updated_at'                =>  Carbon::now(),
             ]);
+        
+            $log_data =   'Updated DT ID '.$request->dt_id;
+            event(new DatabaseTransactionEvent($log_data));
             
             return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Diagnostic test updated successfully !']);
         }
@@ -434,6 +444,9 @@ class DiagnosticTestController extends Controller
             DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->delete();
             DB::table('diagnostic_test_questions')->where('diagnostic_test_questions.dt_id', $dt_id)->delete();
             DB::table('diagnostic_test')->where('id', $dt_id)->delete();
+        
+            $log_data =   'Deleted DT ID '.$dt_id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Diagnostic deleted successfully !']);
         }
@@ -537,6 +550,9 @@ class DiagnosticTestController extends Controller
                     'question_image'    => $file_path,
                 ]);
             }
+        
+            $log_data =   'Added DT Question ID '.$question_id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'New Item added successfully !']);
         }
@@ -668,6 +684,9 @@ class DiagnosticTestController extends Controller
             DB::table('diagnostic_test_answers')->where('question_id', $diagnostic_test_info->id)->update([
                 'answer_data'   => serialize($question_answer_data),
             ]);
+        
+            $log_data =   'Updated DT Question ID '.$request->id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect()->route('dt.settings.details', ['dt_id' => $request->dt_id])->with(['type' => 'success', 'message' => 'Item updated successfully !']);
         }
@@ -707,6 +726,9 @@ class DiagnosticTestController extends Controller
             
             DB::table('diagnostic_test_answers')->where('question_id', $id)->delete();
             DB::table('diagnostic_test_questions')->where('id', $id)->delete();
+        
+            $log_data =   'Deleted DT Question ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect()->route('dt.settings.details', ['dt_id'=>$diagnostic_test_info->dt_id])->with(['type' => 'success', 'message' => 'Item deleted successfully !']);
         }
@@ -717,6 +739,9 @@ class DiagnosticTestController extends Controller
                     'ordering' => $key+1
                 ]);
             }
+        
+            $log_data =   'Sorted DT Question';
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect()->back()->with(['type' => 'success', 'message' => 'Item sorted successfully !']);
         }
@@ -733,10 +758,13 @@ class DiagnosticTestController extends Controller
                 'category_name'          => 'required',
             ]);
 
-            DB::table('diagnostic_test_categories')->insert([
+            $category_id    =   DB::table('diagnostic_test_categories')->insertGetId([
                 'dt_id' =>  $request->dt_id,
                 'name' =>  $request->category_name,
             ]);
+        
+            $log_data =   'Added DT category ID '.$category_id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Categories added successfully !']);
         }
@@ -758,6 +786,9 @@ class DiagnosticTestController extends Controller
                 'name'          =>  $request->category_name,
                 'updated_at'    =>  Carbon::now(),
             ]); 
+        
+            $log_data =   'Updated DT category ID '.$request->category_id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Category updated successfully !']);
         }
@@ -771,6 +802,9 @@ class DiagnosticTestController extends Controller
 
             $dtInfo = DB::table('diagnostic_test_categories')->where('id', $id)->first();
             DB::table('diagnostic_test_categories')->where('id', $id)->delete();
+        
+            $log_data =   'Deleted DT category ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect()->route('dt.settings.details', ['dt_id'=>$dtInfo->dt_id])->with(['type' => 'success', 'message' => 'Category deleted successfully !']);
         }

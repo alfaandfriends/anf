@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DatabaseTransactionEvent;
 use App\Models\Permission;
 use App\Models\RoleHasPermissions;
 use App\Models\SubPermission;
@@ -54,6 +55,9 @@ class PermissionController extends Controller
                             'name'          => $data,
                         ]);
         }
+
+        $log_data =   'Added permission ID '.$permission->id;
+        event(new DatabaseTransactionEvent($log_data));
         
         return redirect(route('permissions'))->with(['type'=>'success', 'message'=>'Permission added successfully !']);
     }
@@ -94,6 +98,9 @@ class PermissionController extends Controller
             }
         }
 
+        $log_data =   'Updated permission ID '.$request->permission_id;
+        event(new DatabaseTransactionEvent($log_data));
+
         return redirect(route('permissions'))->with(['type'=>'success', 'message'=>'Permission updated successfully !']);
     }
 
@@ -101,6 +108,9 @@ class PermissionController extends Controller
 
         Permission::where('id', $id)->orWhere('parent_id', $id)->delete();
         RoleHasPermissions::where('permission_id', $id)->delete();
+
+        $log_data =   'Deleted permission ID '.$id;
+        event(new DatabaseTransactionEvent($log_data));
         
         return redirect(route('permissions'))->with(['type'=>'success', 'message'=>'Permission deleted successfully !']);
     }

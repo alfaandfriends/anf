@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DatabaseTransactionEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -31,7 +32,7 @@ class CountryController extends Controller
                 'calling_code'      => 'required'
             ]);
 
-            DB::table('countries')->insert([
+            $country_id =   DB::table('countries')->insertGetId([
                 'name'              =>  $request->country_name,
                 'country_code'      =>  $request->country_code,
                 'currency_name'     =>  $request->currency_name,
@@ -39,12 +40,18 @@ class CountryController extends Controller
                 'currency_symbol'   =>  $request->currency_symbol,
                 'calling_code'      =>  $request->calling_code,
             ]);
+            
+            $log_data =   'Added country ID '.$country_id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect(route('countries'))->with(['type'=>'success', 'message'=>'New country added!']);
         }
 
         public function destroy($id){
             DB::table('countries')->where('id', $id)->delete();
+            
+            $log_data =   'Deleted country ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return back()->with(['type'=>'success', 'message'=>'Country deleted successfully ! ']);
         }

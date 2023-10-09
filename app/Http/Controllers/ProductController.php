@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DatabaseTransactionEvent;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -133,6 +134,9 @@ class ProductController extends Controller
             'sub_variation_name'    =>  $request->detailed_info['sub_variation_name'],
             'has_sub_variation'     =>  $request->detailed_info['has_sub_variation'],  
         ]);
+                
+        $log_data =   'Added product ID '.$product_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         /* Check if variation enabled */
         if($request->detailed_info['has_variation']){
@@ -382,6 +386,10 @@ class ProductController extends Controller
                 }
             }
         }
+                
+        $log_data =   'Updated product ID '.$request->basic_info['product_id'];
+        event(new DatabaseTransactionEvent($log_data));
+
         return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product updated successfully!']);
     } 
 
@@ -391,6 +399,9 @@ class ProductController extends Controller
             DB::beginTransaction();
             DB::table('products')->where('products.id', $id)->delete();
             DB::commit();
+                
+            $log_data =   'Deleted product ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product has been deleted!']); 
         } catch (Exception $e) {
@@ -408,6 +419,9 @@ class ProductController extends Controller
             DB::table('product_variations')->where('id', $id)->delete();
         
             DB::commit();
+                
+            $log_data =   'Deleted variation for product ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
         
             return back()->with(['type'=>'success', 'message'=>'Variation has been deleted!']);
         } catch (Exception $e) {
@@ -425,6 +439,9 @@ class ProductController extends Controller
             DB::table('product_sub_variations')->whereIn('id', $request->to_delete)->delete();
         
             DB::commit();
+                
+            $log_data =   'Deleted sub variation ID '.$request->to_delete;
+            event(new DatabaseTransactionEvent($log_data));
         
             return back()->with(['type'=>'success', 'message'=>'Sub variation has been deleted!']);
         } catch (Exception $e) {

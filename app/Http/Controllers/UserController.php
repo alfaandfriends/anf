@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\NotificationHelper;
+use App\Events\DatabaseTransactionEvent;
 use App\Models\Role;
 use App\Models\UserHasRoles;
 use App\Notifications\ResetUserPassword;
@@ -122,6 +123,9 @@ class UserController extends Controller
             Notification::sendNow($user, new UserRegistrationCredentials($credentials));
 
             DB::commit();
+                
+            $log_data =   'Created user ID '.$new_user_id;
+            event(new DatabaseTransactionEvent($log_data));
 
             return redirect(route('users'))->with(['type'=>'success', 'message'=>'Login details has been sent to the registered email !']);
         }
@@ -208,6 +212,9 @@ class UserController extends Controller
             'user_state'            => $request['form']['country_state'],
             'display_name'          => $request['form']['full_name'],
         ]);   
+                
+        $log_data =   'Updated user ID '.$request->user_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('users'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
 
@@ -216,6 +223,9 @@ class UserController extends Controller
     public function destroy($user_id){
         User::where('ID', $user_id)->delete();
         DB::table('user_has_roles')->where('user_id', $user_id)->delete();
+                
+        $log_data =   'Deleted user ID '.$user_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'User deleted successfully !']);
     }
@@ -249,6 +259,9 @@ class UserController extends Controller
         ];
 
         Notification::sendNow($user, new ResetUserPassword($credentials));
+                
+        $log_data =   'Resetted password for user ID '.$request->data['user_id'];
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect()->back()->with(['type'=>'success', 'message'=>"User's password has been reset successfully! New password will be sent to their email."]);
     }

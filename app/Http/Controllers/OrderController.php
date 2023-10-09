@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\InvoiceHelper;
 use App\Classes\OrderHelper;
 use App\Enums\OrderStatus;
+use App\Events\DatabaseTransactionEvent;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
@@ -69,7 +70,7 @@ class OrderController extends Controller
             return back()->with(['type'=>'error', 'message'=>'Please add some products.']);
         }
         
-        DB::table('orders')->insert([
+        $order_id   =   DB::table('orders')->insertGetId([
             'student_id'            =>  $request->student_id,
             'products'              =>  json_encode($request->products),
             'shipping_provider'     =>  $request->shipping_provider,
@@ -77,6 +78,9 @@ class OrderController extends Controller
             'tracking_status'       =>  json_encode($request->tracking_status),
             'status'                =>  $request->status,
         ]);
+                
+        $log_data =   'Added order ID '.$order_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('orders'))->with(['type'=>'success', 'message'=>'New order has been created!']);
     }
@@ -119,6 +123,9 @@ class OrderController extends Controller
             'tracking_status'       =>  json_encode($request->tracking_status),
             'status'                =>  $request->status,
         ]);
+                
+        $log_data =   'Updated order ID '.$request->order_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Order has been updated!']);
     }
@@ -126,6 +133,9 @@ class OrderController extends Controller
     public function destroy($id)
     {
         DB::table('orders')->where('id', $id)->delete();
+                
+        $log_data =   'Deleted order ID '.$id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Order has been deleted.']);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DatabaseTransactionEvent;
 use App\Models\Permission;
 use App\Models\RoleHasPermissions;
 use App\Models\User;
@@ -44,11 +45,14 @@ class RoleController extends Controller
             'role_group'    => 'required',
         ]);
 
-        DB::table('roles')->insert([
+        $role_id    =   DB::table('roles')->insertGetId([
             'display_name' => $request->display_name, 
             'role_group_id' => $request->role_group, 
             'status' => $request->status
         ]);
+
+        $log_data =   'Added role ID '.$role_id;
+        event(new DatabaseTransactionEvent($log_data));
         
         return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Role added successfully !']);
     }
@@ -86,6 +90,9 @@ class RoleController extends Controller
                 'updated_at'    => Carbon::now()
             ]);
 
+        $log_data =   'Updated role ID '.$request->role_id;
+        event(new DatabaseTransactionEvent($log_data));
+
         return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Role updated successfully !']);
     }
 
@@ -93,6 +100,9 @@ class RoleController extends Controller
         
         DB::table('roles')->where('id', $id)->delete();
         UserHasRoles::where('role_id', $id)->delete();
+
+        $log_data =   'Delete role ID '.$id;
+        event(new DatabaseTransactionEvent($log_data));
         
         return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Role deleted successfully !']);
     }
@@ -131,6 +141,9 @@ class RoleController extends Controller
                 'permission_id' =>  $permission_id,
             ]);
         }
+
+        $log_data =   'Updated role ID '.$request->role_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('roles'))->with(['type'=>'success', 'message'=>'Permissions assigned successfully !']);
 

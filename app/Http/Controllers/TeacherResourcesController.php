@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ProgrammeHelper;
+use App\Events\DatabaseTransactionEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -68,7 +69,7 @@ class TeacherResourcesController extends Controller
             $filename = time() . '.' . $extension;
         }
 
-        DB::table('teacher_resources')->insert([
+        $teacher_resource_id    =   DB::table('teacher_resources')->insertGetId([
             'programme_id'  => $request->programme_id,
             'level'         => $request->level_id,
             'language_id'   => $request->language_id,
@@ -81,6 +82,9 @@ class TeacherResourcesController extends Controller
         if($request->file('embed_file')){
             Storage::putFileAs('teacher_resources', $request->file('embed_file'), $filename);
         }
+
+        $log_data =   'Added teacher resources ID '.$teacher_resource_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Teacher resource added successfully !']);
     }
@@ -122,6 +126,9 @@ class TeacherResourcesController extends Controller
         if($request->delete_previous_file){
             $previous_file  =   DB::table('teacher_resources')->where('id', $request->id)->pluck('content')->first();
             $file_deleted   =   Storage::delete('teacher_resources/'.$previous_file);
+        
+            $log_data =   'Deleted files for teacher resources ID '.$request->id;
+            event(new DatabaseTransactionEvent($log_data));
         }
 
         if($request->file('embed_file')){
@@ -139,9 +146,15 @@ class TeacherResourcesController extends Controller
             'content'       => $request->file('embed_file') ? $filename : $request->embed_link,
             'file_size'     => $request->file('embed_file') ? $request->file('embed_file')->getSize() : null,
         ]);
+            
+        $log_data =   'Updated teacher resources ID '.$request->id;
+        event(new DatabaseTransactionEvent($log_data));
 
         if($request->file('embed_file')){
             Storage::putFileAs('teacher_resources', $request->file('embed_file'), $filename);
+
+            $log_data =   'Added files for teacher resources ID '.$request->id;
+            event(new DatabaseTransactionEvent($log_data));
         }
 
         return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Teacher resource updated successfully !']);

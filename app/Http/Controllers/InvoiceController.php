@@ -7,6 +7,7 @@ use App\Classes\ClassHelper;
 use App\Classes\InvoiceHelper;
 use App\Classes\ProgrammeHelper;
 use App\Classes\UserHelper;
+use App\Events\DatabaseTransactionEvent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -111,7 +112,7 @@ class InvoiceController extends Controller
                     $filename = time() . '.' . $extension;
                     Storage::putFileAs('proof_of_payment', $request->file('payment.proof.file'), $filename);
                 }
-                DB::table('invoices')->insert([
+                $invoice_id =   DB::table('invoices')->insertGetId([
                     'student_id'                => $request->student_id,
                     'invoice_number'            => Carbon::now()->year.'-'.$invoice_number,
                     'invoice_items'             => json_encode($request->invoice_items),
@@ -127,6 +128,9 @@ class InvoiceController extends Controller
                 $start_month->addMonths(1);
                 $invoice_config->quota -= 1;
                 $invoice_config->current_count += 1;
+                
+                $log_data =   'Added invoice ID '.$invoice_id;
+                event(new DatabaseTransactionEvent($log_data));
             }
             DB::commit();
     
@@ -177,6 +181,9 @@ class InvoiceController extends Controller
             'payment_transaction_id'    =>  $request->payment['transaction_id'],
             'payment_proof'             =>  $request->file('payment.proof') ? $filename : $previous_file,
         ]);
+                
+        $log_data =   'Updated invoice ID '.$request->invoice_id;
+        event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('fee.invoices'))->with(['type'=>'success', 'message'=>'Invoice updated successfully !']);
     }
