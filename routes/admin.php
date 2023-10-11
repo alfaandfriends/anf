@@ -162,7 +162,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             
             /* Math Manipulatives */
             Route::get('/math-manipulatives', [MathManipulativesController::class, 'index'])->name('math_manipulatives')->middleware('permission:view_math_manipulatives');
-            Route::get('/math-manipulatives/play', [MathManipulativesController::class, 'play'])->name('math_manipulatives.play')->middleware('permission:create_math_manipulatives');
+            Route::get('/math-manipulatives/play', [MathManipulativesController::class, 'play'])->name('math_manipulatives.play')->middleware('permission:view_math_manipulatives');
             Route::get('/math-manipulatives/configuration', [MathManipulativesController::class, 'configuration'])->name('math_manipulatives.configuration')->middleware('permission:create_math_manipulatives');
             Route::get('/math-manipulatives/configuration/create', [MathManipulativesController::class, 'configurationCreate'])->name('math_manipulatives.configuration.create')->middleware('permission:create_math_manipulatives');
             Route::post('/math-manipulatives/configuration/store', [MathManipulativesController::class, 'configurationStore'])->name('math_manipulatives.configuration.store')->middleware('permission:create_math_manipulatives');
