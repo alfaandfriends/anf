@@ -13,13 +13,13 @@ use Inertia\Inertia;
 
 class ProgressReportController extends Controller
 {
-    public function index(Request $request){
-
+    public function index(Request $request)
+    {
         $allowed_centres    =   Inertia::getShared('allowed_centres');
         if($allowed_centres->isEmpty()){
             return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
         }
-        $can_access_centre = (object)$allowed_centres->search(function ($value) { 
+        $can_access_centre = $allowed_centres->search(function ($value) {
             return $value->ID == request('centre_id');
         });
 
@@ -52,16 +52,11 @@ class ProgressReportController extends Controller
             $query->where('children.name', 'LIKE', '%'.$request->search.'%');
         }
         
-        if($request->centre_id){
-            $request->merge([
-                'centre_id' => !$can_access_centre ? $allowed_centres[0]->ID : $request->centre_id,
-            ]);
-        }
-        else{
-            $request->merge([
-                'centre_id' => $allowed_centres[0]->ID
-            ]);
-        }
+
+
+        $request->merge([
+            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
+        ]);
 
         if($request->programme_id){
             $query->where('progress_report_configs.programme_id', 'LIKE', '%'.$request->programme_id.'%');

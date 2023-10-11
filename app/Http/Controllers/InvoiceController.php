@@ -20,6 +20,13 @@ class InvoiceController extends Controller
 
     public function feeInvoiceIndex(Request $request)
     {
+        $allowed_centres    =   Inertia::getShared('allowed_centres');
+        if($allowed_centres->isEmpty()){
+            return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
+        }
+        $can_access_centre = $allowed_centres->search(function ($value) {
+            return $value->ID == request('centre_id');
+        });
         $query =   DB::table('invoices')
                         ->join('students', 'invoices.student_id', '=', 'students.id')
                         ->join('children', 'students.children_id', '=', 'children.id')
@@ -29,13 +36,18 @@ class InvoiceController extends Controller
                                     'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
                                     'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 
                                     'invoice_status.bg_color as status_bg_color', 'invoice_status.text_color as status_text_color');
+        
+        $request->merge([
+            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
+        ]);  
+        
         if($request->search){
             $query->where(function ($query){
                 $query->where('children.name', 'LIKE', '%'.request('search').'%')
                 ->orWhere('invoices.invoice_number', 'LIKE', '%'.request('search').'%')
                 ->orWhere('invoice_status.name', 'LIKE', '%'.request('search').'%');
             });
-        }   
+        }    
         
         if($request->centre_id){
             $query->where('invoices.invoice_items', 'LIKE', '%centre_id": '.$request->centre_id.'%');
@@ -48,7 +60,7 @@ class InvoiceController extends Controller
         if($request->date){
             $month  =   $request->date['month'] + 1  < 10 ? '-0'.$request->date['month'] + 1 : '-'.$request->date['month'] + 1;
             $query->where('invoices.date_issued', 'LIKE', '%'.$request->date['year'].$month.'%');
-        }         
+        }      
 
         $programmes =   ProgrammeHelper::programmes();
         
