@@ -79,7 +79,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :page_data="$page.props.country_list"></Pagination>
+                            <Pagination :page_data="$page.props.country_list" :params="params"></Pagination>
                         </div>
                     </div>
                 </div>

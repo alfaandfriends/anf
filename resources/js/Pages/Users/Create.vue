@@ -330,7 +330,6 @@ import BreezeButton from '@/Components/Button.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Multiselect from '@vueform/multiselect'
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import moment from 'moment'
 import { debounce } from 'vue-debounce'
 

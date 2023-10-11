@@ -118,7 +118,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :page_data="$page.props.students"></Pagination>
+                            <Pagination :page_data="$page.props.students" :params="params"></Pagination>
                         </div>
                     </div>
                 </div>
@@ -180,6 +180,8 @@ import BreezeButton from '@/Components/Button.vue';
         </div>
     </BreezeAuthenticatedLayout>
 </template>
+
+
 
 <script>
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'

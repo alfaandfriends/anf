@@ -70,7 +70,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :page_data="$page.props.programme_list"></Pagination>
+                            <Pagination :page_data="$page.props.programme_list" :params="params"></Pagination>
                         </div>
                     </div>
                 </div>

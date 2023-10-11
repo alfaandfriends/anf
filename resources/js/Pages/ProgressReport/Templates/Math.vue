@@ -330,7 +330,6 @@ import BreezeButton from '@/Components/Button.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import StudentInformation from '@/Pages/ProgressReport/Templates/StudentInformation.vue';
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import Modal from '@/Components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
@@ -479,4 +478,3 @@ export default {
     },
 }
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>

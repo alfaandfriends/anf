@@ -64,7 +64,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :page_data="$page.props.centre_managers"></Pagination>
+                            <Pagination :page_data="$page.props.centre_managers" :params="params"></Pagination>
                         </div>
                     </div>
                 </div>

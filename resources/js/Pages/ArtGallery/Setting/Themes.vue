@@ -76,7 +76,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="space-y-2" v-if="show_edit">
                             <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <div class="mb-5 border-b-indigo-500 border-b border-dashed">
-                                    <h2 class="font-display font-bold text-indigo-600">Add Theme</h2>
+                                    <h2 class="font-display font-bold text-indigo-600">Edit Theme</h2>
                                 </div>
                                 <div class="grid grid-cols-1 gap-0 sm:gap-4">
                                     <div class="mb-4">

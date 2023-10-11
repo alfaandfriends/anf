@@ -398,7 +398,6 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import Multiselect from '@vueform/multiselect'
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import moment from 'moment'
 import { debounce } from 'vue-debounce'
 import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'

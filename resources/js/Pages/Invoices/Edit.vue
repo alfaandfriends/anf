@@ -110,7 +110,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                         <div class="mb-4 text-right pr-5">
                                             <label for="amount" class="block text-md font-bold text-gray-700"> Total Amount</label>
-                                            <span class="text-2xl font-bold text-indigo-500">{{ totalFee(this.form.invoice_items) }}</span>
+                                            <span class="text-2xl font-bold text-indigo-500">{{ form.invoice_amount }}</span>
                                             
                                         </div>
                                     </div>
@@ -198,9 +198,6 @@ import BreezeButton from '@/Components/Button.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import moment from 'moment';
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
-import 'viewerjs/dist/viewer.css'
-import { component as Viewer } from "v-viewer"
 
 export default {
     components: {

@@ -128,7 +128,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :page_data="$page.props.saved_results"></Pagination>
+                            <Pagination :page_data="$page.props.saved_results" :params="params"></Pagination>
                             <Modal :showModal="open_modal" modalType="sm" @hideModal="open_modal = false">
                                 <template v-slot:header>
                                     <h3 class="text-gray-900 text-xl font-semibold">                

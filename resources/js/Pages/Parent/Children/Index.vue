@@ -126,7 +126,6 @@ import SimpleModal from '@/Components/Parent/SimpleModal.vue';
 import moment from 'moment';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
     components: {

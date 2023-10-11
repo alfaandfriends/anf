@@ -23,12 +23,14 @@ class UserController extends Controller
 {
     public $update_user_config = 8;
 
-    public function index()
+    public function index(Request $request)
     {
+        // dd($request->all());
         $query  =   User::query();
         
         if(request('search')){
             $query  ->where('user_email', 'LIKE', '%'.request('search').'%')
+                    ->orWhere('user_login', 'LIKE', '%'.request('search').'%')
                     ->orWhere('display_name', 'LIKE', '%'.request('search').'%');
         }
         $results    =   $query->orderBy('ID')->paginate(10);

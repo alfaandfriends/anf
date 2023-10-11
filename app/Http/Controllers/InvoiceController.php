@@ -150,6 +150,8 @@ class InvoiceController extends Controller
                                             'invoices.payment_date', 'invoices.payment_transaction_id', 'invoices.payment_proof')
                                 ->where('invoices.id', $request->invoice_id)->first();
 
+        // dd($invoice_data);
+
         $invoice_status  =   InvoiceHelper::invoiceStatus();
 
         return Inertia::render('Invoices/Edit', [

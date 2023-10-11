@@ -2,7 +2,7 @@
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>
+
 <template>
     <Head title="Classes" />
 
@@ -144,7 +144,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :page_data="$page.props.classes"></Pagination>
+                            <Pagination :page_data="$page.props.classes" :params="params"></Pagination>
                         </div>
                     </div>
                 </div>
@@ -197,6 +197,8 @@ import BreezeButton from '@/Components/Button.vue';
         </div>
     </BreezeAuthenticatedLayout>
 </template>
+
+
 
 <script>
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'

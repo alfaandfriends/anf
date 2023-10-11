@@ -221,7 +221,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </tr>
                             </tbody>
                         </table>
-                        <Pagination :page_data="$page.props.invoices"></Pagination>
+                        <Pagination :page_data="$page.props.invoices" :params="params"></Pagination>
                     </div>
                 </div>
             </div>
@@ -270,7 +270,6 @@ import Pagination from '@/Components/Pagination.vue'
 import moment from 'moment';
 import Multiselect from '@vueform/multiselect'
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import Modal from '@/Components/Modal.vue'
 import MonthlyFee from '@/Pages/Invoices/MonthlyFee.vue'
 import { debounce } from 'vue-debounce'

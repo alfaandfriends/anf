@@ -3,7 +3,6 @@
     import BreezeButton from '@/Components/Button.vue';
     import Multiselect from '@vueform/multiselect'
     import Datepicker from '@vuepic/vue-datepicker';
-    import '@vuepic/vue-datepicker/dist/main.css';
     import moment from 'moment';
 </script>
 <template>
@@ -156,7 +155,7 @@
     </NotificationLayout>
 </template>
 <script>
-    export default{
+    export default {
         props:{
             request_data: Object,
             created_by: String,

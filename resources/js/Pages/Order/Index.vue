@@ -88,7 +88,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination v-if="$page.props.orders.length" :page_data="$page.props.orders"></Pagination>
+                            <Pagination v-if="$page.props.orders.length" :page_data="$page.props.orders" :params="params"></Pagination>
                         </div>
                     </div>
                 </div>

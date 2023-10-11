@@ -131,6 +131,26 @@ Breadcrumbs::for('art_gallery.create', function (BreadcrumbTrail $trail) {
     $trail->push('Add Artwork', route('art_gallery'));
 });
 
+Breadcrumbs::for('art_gallery.setting.levels', function (BreadcrumbTrail $trail) {
+    $trail->parent('art_gallery');
+    $trail->push('Level Setting', route('art_gallery.setting.levels'));
+});
+
+Breadcrumbs::for('art_gallery.setting.themes', function (BreadcrumbTrail $trail) {
+    $trail->parent('art_gallery');
+    $trail->push('Theme setting', route('art_gallery.setting.themes'));
+});
+
+Breadcrumbs::for('art_gallery.setting.lessons', function (BreadcrumbTrail $trail) {
+    $trail->parent('art_gallery');
+    $trail->push('Lesson Setting', route('art_gallery.setting.lessons'));
+});
+
+Breadcrumbs::for('art_gallery.setting.activities', function (BreadcrumbTrail $trail) {
+    $trail->parent('art_gallery');
+    $trail->push('Activity Setting', route('art_gallery.setting.activities'));
+});
+
 /* Progress report */
 Breadcrumbs::for('progress_report', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

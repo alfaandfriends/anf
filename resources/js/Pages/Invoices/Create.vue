@@ -422,7 +422,6 @@ import BreezeButton from '@/Components/Button.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import moment from 'moment';
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import Multiselect from '@vueform/multiselect'
 import { debounce } from 'vue-debounce'
 import Modal from '@/Components/Modal.vue'
@@ -660,4 +659,3 @@ export default {
     },
 }
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>

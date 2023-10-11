@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\DatabaseTransactionEvent;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -48,12 +49,22 @@ class CountryController extends Controller
         }
 
         public function destroy($id){
-            DB::table('countries')->where('id', $id)->delete();
-            
-            $log_data =   'Deleted country ID '.$id;
-            event(new DatabaseTransactionEvent($log_data));
+            try {
+                DB::beginTransaction();
 
-            return back()->with(['type'=>'success', 'message'=>'Country deleted successfully ! ']);
+                DB::table('countries')->where('id', $id)->delete();
+
+                DB::commit();
+
+                $log_data =   'Deleted country ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'Country deleted successfully! ']);
+            } catch (Exception $e) {
+                DB::rollback();
+                return back()->with(['type'=>'error', 'message'=>'Error occurred, this country is being used! ']);
+            }
+            
         }
 
         public function getCountries(){
