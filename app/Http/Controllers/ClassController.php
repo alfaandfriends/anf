@@ -23,7 +23,7 @@ class ClassController extends Controller
         if($allowed_centres->isEmpty()){
             return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
         }
-        $can_access_centre = (object)$allowed_centres->search(function ($value) { 
+        $can_access_centre = $allowed_centres->search(function ($value) {
             return $value->ID == request('centre_id');
         });
 
@@ -48,16 +48,9 @@ class ClassController extends Controller
             $query->where('programmes.name', 'LIKE', '%'.$request->search.'%');
         }
 
-        if($request->centre_id){
-            $request->merge([
-                'centre_id' => !$can_access_centre ? $allowed_centres[0]->ID : $request->centre_id,
-            ]);
-        }
-        else{
-            $request->merge([
-                'centre_id' => $allowed_centres[0]->ID
-            ]);
-        }
+        $request->merge([
+            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
+        ]);
         
         $query->where('classes.centre_id', '=', $request->centre_id);
 

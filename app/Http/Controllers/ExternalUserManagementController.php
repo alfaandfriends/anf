@@ -25,6 +25,11 @@ class ExternalUserManagementController extends Controller
 
     public function divisionManagerList(Request $request)
     {
+        $allowed_centres    =   collect(Inertia::getShared('allowed_centres'))->pluck('ID');
+        if($allowed_centres->isEmpty()){
+            return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to any centre. Please contact support to gain access for centres."]);
+        }
+
         $query          =   DB::table('wpvt_users')
                                 ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
                                 ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
@@ -38,7 +43,7 @@ class ExternalUserManagementController extends Controller
         }
 
         return Inertia::render('ExternalUserManagement/DivisionManagers/Index', [
-            'filter'                => request()->all('search'),
+            'filter'                => request()->all('search', 'centre_id'),
             'division_managers'     => $query->paginate(10),
         ]);
     }
@@ -77,6 +82,11 @@ class ExternalUserManagementController extends Controller
 
     public function centreManagerList(Request $request)
     {
+        $allowed_centres    =   collect(Inertia::getShared('allowed_centres'))->pluck('ID');
+        if($allowed_centres->isEmpty()){
+            return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to any centre. Please contact support to gain access for centres."]);
+        }
+        
         $query          =   DB::table('wpvt_users')
                                 ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
                                 ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
@@ -84,6 +94,11 @@ class ExternalUserManagementController extends Controller
                                             'wpvt_users.display_name as name', 
                                             'wpvt_users.user_email as email', 
                                             'roles.display_name as role'])->where('user_has_roles.role_id', $this->centre_manager_role_id);
+
+        if(!auth()->user()->is_admin && !auth()->user()->can_view_all_centres){
+            $query->join('user_has_centres', 'wpvt_users.id', '=', 'user_has_centres.user_id')
+                    ->whereIn('user_has_centres.centre_id', $allowed_centres);
+        }
 
         if($request->search){
             $query->where('wpvt_users.display_name', 'LIKE', '%'.$request->search.'%');
@@ -127,13 +142,24 @@ class ExternalUserManagementController extends Controller
 
     public function edupreneurList(Request $request)
     {
+        $allowed_centres    =   collect(Inertia::getShared('allowed_centres'))->pluck('ID');
+        if($allowed_centres->isEmpty()){
+            return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to any centre. Please contact support to gain access for centres."]);
+        }
+        
         $query          =   DB::table('wpvt_users')
                                 ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
                                 ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
+                                ->distinct()
                                 ->select([  'wpvt_users.id as id', 
                                             'wpvt_users.display_name as name', 
                                             'wpvt_users.user_email as email', 
                                             'roles.display_name as role'])->where('user_has_roles.role_id', $this->edupreneur_role_id);
+
+        if(!auth()->user()->is_admin && !auth()->user()->can_view_all_centres){
+            $query->join('user_has_centres', 'wpvt_users.id', '=', 'user_has_centres.user_id')
+                    ->whereIn('user_has_centres.centre_id', $allowed_centres);
+        }
 
         if($request->search){
             $query->where('wpvt_users.display_name', 'LIKE', '%'.$request->search.'%');
@@ -151,7 +177,7 @@ class ExternalUserManagementController extends Controller
             $user_info      =   DB::table('wpvt_users')->where('id', $request->user_id)->first();
             $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
 
-            return Inertia::render('ExternalUserManagement/DivisionManagers/ManageUser',[
+            return Inertia::render('ExternalUserManagement/Edupreneurs/ManageUser',[
                 'user_id'       => $request->user_id,
                 'user_info'     => $user_info,
                 'user_centres'  => $user_centres,
@@ -165,10 +191,12 @@ class ExternalUserManagementController extends Controller
     {
         DB::table('user_has_centres')->where('user_id', $request->user_id)->delete();
 
-        DB::table('user_has_centres')->insert([
-            'user_id'   =>  $request->user_id,
-            'centre_id'   =>  $request->centre_id
-        ]);
+        foreach($request->selected_centres as $key=>$centre_id){
+            DB::table('user_has_centres')->insert([
+                'user_id'   =>  $request->user_id,
+                'centre_id'   =>  $centre_id
+            ]);
+        }
         $log_data =   "Updated edupreneurs's centre access for user ID ".$request->user_id;
         event(new DatabaseTransactionEvent($log_data));
 
