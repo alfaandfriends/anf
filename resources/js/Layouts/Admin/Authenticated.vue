@@ -9,13 +9,12 @@ import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
 import { Link } from '@inertiajs/inertia-vue3'
 import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } from '@heroicons/vue/solid'
 import Toast from '@/Components/Toast.vue'
-import VueGuidedTour from "@alfaandfriends/vue-guided-tour/src/components/vueGuidedTour.vue"
 import Breadcrumbs from '@/Components/Breadcrumbs.vue'
 import TimeAgo from '@/Components/TimeAgo.vue'
 
 export default {
     components: {
-        BreezeApplicationLogo, Link, Toast, VueGuidedTour, BreezeButton,
+        BreezeApplicationLogo, Link, Toast, BreezeButton,
         BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink, Breadcrumbs, TimeAgo,
         CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon
     },
@@ -185,7 +184,7 @@ export default {
                                     </div>
                                     <div class="mb-3 ml-3 space-y-1 pb-3" v-if="checkMenuIsOpen(section_key, menu_key)">
                                         <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
-                                            <div class="flex space-x-1">
+                                            <div class="flex space-x-1" v-if="$page.props.can[sub_menu.sub_menu_permission]">
                                                 <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(sub_menu.sub_menu_route)"></div>
                                                 <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''"
                                                                 :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg flex-auto"
@@ -222,7 +221,6 @@ export default {
         </div>
         <!-- Page Content -->
         <div class="flex-1 flex flex-col bg-indigo-50 justify-between w-screen sm:pl-64 md:pl-72 lg:pl-72 xl:pl-72">
-            <VueGuidedTour :steps="steps" @afterEnd="completedTour"></VueGuidedTour>
             <Toast :toastData="$page.props.flash"></Toast>
             <main class="flex-grow">
                 <div class="flex flex-col">

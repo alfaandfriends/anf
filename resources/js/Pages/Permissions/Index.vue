@@ -3,7 +3,6 @@
     import BreezeButton from '@/Components/Button.vue';
 </script>
 
-<style src="@vueform/toggle/themes/default.css"></style>
 <template>
     <Head title="Permissions" />
 

@@ -334,7 +334,7 @@
         </div>
     </Authenticated>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+
 
 <script setup>
 import Authenticated from '@/Layouts/Parent/Authenticated.vue';

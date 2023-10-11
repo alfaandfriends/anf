@@ -180,9 +180,10 @@ import BreezeButton from '@/Components/Button.vue';
     </BreezeAuthenticatedLayout>
 </template>
 
+
+
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Toggle from '@vueform/toggle';
 import Multiselect from '@vueform/multiselect'
 import { debounce } from 'vue-debounce'
 
@@ -191,7 +192,7 @@ const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
 
 export default {
     components: {
-        Head, Link, Toggle, Multiselect
+        Head, Link, Multiselect
     },
     data(){
         return{
@@ -342,4 +343,3 @@ export default {
     }
 }
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>

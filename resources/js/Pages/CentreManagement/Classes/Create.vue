@@ -178,10 +178,11 @@ import BreezeButton from '@/Components/Button.vue';
     </BreezeAuthenticatedLayout>
 </template>
 
+
+
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import Toggle from '@vueform/toggle';
 import Multiselect from '@vueform/multiselect'
 

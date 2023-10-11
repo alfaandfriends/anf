@@ -3,6 +3,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
+<style>
+.multiselect-assistive-text{
+    display: none;
+}
+</style>
+
 <template>
     <Head title="Country" />
 
@@ -32,14 +38,15 @@ import BreezeButton from '@/Components/Button.vue';
                                                     :delay="1"
                                                     :searchable="true"
                                                     :noOptionsText="'Please enter at least 1 character'"
+                                                    :noResultsText="'No result found'"
                                                     :options="async function(query) {
                                                         return await fetchCountries(query) 
                                                     }"
                                                     :classes="{
                                                         container: 
-                                                            $page.props.errors.country ? 
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-lg bg-white text-base leading-snug outline-none h-10':
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
+                                                            $page.props.errors.country_name ? 
+                                                            'relative mx-auto w-full flex flex-col items-center box-border cursor-pointer border border-red-300 rounded-lg bg-white text-base leading-snug outline-none h-10':
+                                                            'relative mx-auto w-full flex flex-col items-center box-border cursor-pointer border border-gray-300 rounded-lg bg-white text-base leading-snug outline-none h-10',
                                                         containerDisabled: 'cursor-default bg-gray-100',
                                                         containerOpen: 'rounded-b-none',
                                                         containerOpenTop: 'rounded-t-none',
@@ -47,7 +54,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
                                                         singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                                         multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                        search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5 h-9',
+                                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5 h-9',
                                                         tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2',
                                                         tag: 'bg-green-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap',
                                                         tagDisabled: 'pr-2 opacity-50',
@@ -141,6 +148,8 @@ import BreezeButton from '@/Components/Button.vue';
     </BreezeAuthenticatedLayout>
 </template>
 
+
+
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Multiselect from '@vueform/multiselect'
@@ -153,12 +162,17 @@ const fetchCountries = async (query) => {
 
         const data = await response.json(); 
         
-        return data.map((item) => {
-            return { 
-                value: item.name, 
-                label: item.name 
-            }
-        })
+        if(!data.status){
+            return data.map((item) => {
+                return { 
+                    value: item.name, 
+                    label: item.name 
+                }
+            })
+        }
+        else{
+            return ['']
+        }
     }
 }
 

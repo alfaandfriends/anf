@@ -79,7 +79,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tbody>
                                 </table>
                             </div>
-                            <Pagination :page_data="diagnostic_test_list"></Pagination>
+                            <Pagination :page_data="diagnostic_test_list" :params="params"></Pagination>
                             <ConfirmationModal 
                                 :show="isOpen" 
                                 @close="isOpen = false"

@@ -16,6 +16,9 @@ class ProgressReportController extends Controller
     public function index(Request $request){
 
         $allowed_centres    =   Inertia::getShared('allowed_centres');
+        if($allowed_centres->isEmpty()){
+            return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
+        }
         $can_access_centre = (object)$allowed_centres->search(function ($value) { 
             return $value->ID == request('centre_id');
         });
@@ -68,11 +71,15 @@ class ProgressReportController extends Controller
             $query->whereMonth('progress_reports.month', $request->date['month']+1);
             $query->whereYear('progress_reports.month', $request->date['year']);
         }
+
+        if($request->programme_level){
+            $query->where('programme_levels.level', $request->programme_level);
+        }
         
         $query->where('student_fees.centre_id', '=', $request->centre_id);
-
+        
         return Inertia::render('ProgressReport/Index', [
-            'filter'            =>  request()->all('search', 'centre_id', 'programme_id', 'date'),
+            'filter'            =>  request()->all('search', 'centre_id', 'programme_id', 'date', 'programme_level'),
             'progress_reports'  =>  $query->groupBy('progress_reports.id')->paginate(10),
             'programmes'        =>  $programmes,
             'levels'            =>  $levels

@@ -50,7 +50,7 @@
                 </tr>
             </tbody>
         </table>
-        <Pagination :page_data="$page.props.class_types"></Pagination>
+        <Pagination :page_data="$page.props.class_types" :params="params"></Pagination>
     </div>
 </template>
 <script>

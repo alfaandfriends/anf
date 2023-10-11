@@ -64,7 +64,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination :page_data="$page.props.math_manipulatives"></Pagination>
+                        <Pagination :page_data="$page.props.math_manipulatives" :params="params"></Pagination>
                         <!-- <BreezeButton buttonType="info" @click="openNewTab()">Open MM</BreezeButton> -->
                     </div>
                 </div>

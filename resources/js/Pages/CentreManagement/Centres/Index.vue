@@ -100,7 +100,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </tr>
                                 </tbody>
                             </table>
-                            <Pagination :page_data="$page.props.centres"></Pagination>
+                            <Pagination :page_data="$page.props.centres" :params="params"></Pagination>
                         </div>
                     </div>
                 </div>

@@ -59,7 +59,6 @@ import BreezeButton from '@/Components/Button.vue';
                                 </tr>
                             </tbody>
                         </table>
-                        <Pagination :page_data="$page.props.answer_record" :params="'&result_id='+$page.props.result_id"></Pagination>
                         <div class="relative overflow-hidden w-[210mm]">
                             <div class="absolute flex flex-col justify-between space-y-2 bg-white p-3 py-5" id="report" ref="report">
                         <!-- <div class="flex justify-center bg-gray-200 py-4 rounded max-h-[90%] overflow-y-auto no-scrollbar" id="report">
@@ -166,6 +165,8 @@ import BreezeButton from '@/Components/Button.vue';
         <canvas id="canvas" ref="canvas" style="display: none;"></canvas>
     </BreezeAuthenticatedLayout>
 </template>
+
+
 
 <script>
 import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'

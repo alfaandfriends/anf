@@ -1,15 +1,15 @@
 import './bootstrap';
-import '../css/app.css';
-import 'viewerjs/dist/viewer.css'
+// import '../css/app.css';
+import '@vueform/toggle/themes/default.css'
+import '@vueform/multiselect/themes/default.css'
+import '@vuepic/vue-datepicker/dist/main.css';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
-import VueGuidedTour from "@alfaandfriends/vue-guided-tour";
 import { vue3Debounce } from 'vue-debounce';
 import  VueHtmlToPaper from './Plugins/VueHtmlToPaper'
 import axios from 'axios';
-import VueViewer from 'v-viewer'
 
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
@@ -44,9 +44,7 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
             .use(plugin)
-            .use(VueGuidedTour)
             .use(VueHtmlToPaper)
-            .use(VueViewer)
             .directive('debounce', vue3Debounce({
                 lock: true,
             }))

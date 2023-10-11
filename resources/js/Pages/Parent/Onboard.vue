@@ -189,7 +189,7 @@
         </div>
     </div>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';

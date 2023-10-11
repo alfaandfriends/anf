@@ -104,12 +104,11 @@ import BreezeButton from '@/Components/Button.vue';
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Toggle from '@vueform/toggle';
 import Multiselect from '@vueform/multiselect'
 
 export default {
     components: {
-        Head, Link, Toggle, Multiselect
+        Head, Link, Multiselect
     },
     data(){
         return{

@@ -474,7 +474,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
         </Modal>
     </BreezeAuthenticatedLayout>
 </template>
-<style src="@vueform/multiselect/themes/default.css"></style>
+
 
 <script>
 import Multiselect from '@vueform/multiselect'

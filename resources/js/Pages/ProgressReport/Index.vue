@@ -245,7 +245,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </tr>
                             </tbody>
                         </table>
-                        <Pagination :page_data="$page.props.progress_reports"></Pagination>
+                        <Pagination :page_data="$page.props.progress_reports" :params="params"></Pagination>
                     </div>
                 </div>
             </div>
@@ -294,7 +294,6 @@ import moment from 'moment';
 import axios from 'axios';
 import Multiselect from '@vueform/multiselect'
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import Modal from '@/Components/Modal.vue'
 import print from 'vue3-print-nb'
 import { debounce } from 'vue-debounce'
