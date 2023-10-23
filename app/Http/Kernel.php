@@ -70,8 +70,7 @@ class Kernel extends HttpKernel
         'device' => \App\Http\Middleware\CheckDeviceType::class,
     ];
 
-        protected function schedule(Schedule $schedule)
-    {
-        $schedule->command('insert:generate_invoice')->everyMinute();
-    }
+    protected $commands = [
+        \App\Console\Commands\GenerateInvoices::class
+    ];
 }
