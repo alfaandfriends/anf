@@ -72,6 +72,6 @@ class Kernel extends HttpKernel
 
         protected function schedule(Schedule $schedule)
     {
-        $schedule->command('insert:generate_invoice')->monthly();
+        $schedule->command('insert:generate_invoice')->everyMinute();
     }
 }
