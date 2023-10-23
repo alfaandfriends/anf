@@ -25,3 +25,6 @@ Route::prefix('diagnostic-test')->group(function () {
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/parent.php';
+require __DIR__.'/docs.php';
+require __DIR__.'/approvals.php';
+require __DIR__.'/helpers.php';

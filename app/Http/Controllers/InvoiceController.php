@@ -8,9 +8,11 @@ use App\Classes\InvoiceHelper;
 use App\Classes\ProgrammeHelper;
 use App\Classes\UserHelper;
 use App\Events\DatabaseTransactionEvent;
+use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia; 
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -248,5 +250,55 @@ class InvoiceController extends Controller
         
         $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.fee_invoice', compact('data'));
         return $pdf->download($invoice_data->invoice_number.'.pdf');
+    }
+
+    
+    public function callbackMy(Request $request)
+    {
+        return response('OK', 200)->header('Content-Type', 'text/plain');
+    }
+
+    public function callbackId(Request $request){
+        $client_id              = $request->header('Client-Id');
+        $request_id             = $request->header('Request-Id');
+        $request_timestamp      = $request->header('Request-Timestamp');
+        $header_signature       = $request->header('Signature');
+        
+        $request_body           = $request->getContent();
+        $decoded_request_body   = json_decode($request->getContent(), true);
+        
+        $notification_path  = '/api/fee_invoices/callback/id'; // Adjust according to your notification path
+        $secretKey          = env('VITE_DOKU_SECRET_KEY'); // Adjust according to your secret key
+    
+        $digest = base64_encode(hash('sha256', $request_body, true));
+
+        $raw_signature = "Client-Id:" . $client_id . "\n"
+            . "Request-Id:" . $request_id . "\n"
+            . "Request-Timestamp:" . $request_timestamp . "\n"
+            . "Request-Target:" . $notification_path . "\n"
+            . "Digest:" . $digest;
+    
+        $signature = base64_encode(hash_hmac('sha256', $raw_signature, $secretKey, true));
+        
+        $finalSignature = 'HMACSHA256=' . $signature;
+
+        if ($finalSignature == $header_signature) {
+            if($decoded_request_body['transaction']['status'] == 'SUCCESS'){
+                DB::table('invoices')->where('invoice_number', $decoded_request_body['order']['invoice_number'])->update([
+                    'status'    => 2
+                ]);
+                return response('OK', 200)->header('Content-Type', 'text/plain');
+            }
+        }
+    }
+
+    public function checkStatus(Request $request){
+        $data = Billplz::bill()->get($request->billplz['id'])->getContent();
+        if($data['paid']){
+            DB::table('invoices')->where('bill_id', $request->billplz['id'])->update([
+                'status'    => 2
+            ]);
+        }
+        return redirect()->route('parent.invoices');
     }
 }

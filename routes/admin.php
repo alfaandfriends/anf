@@ -8,6 +8,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiagnosticTestController;
+use App\Http\Controllers\DokuController;
 use App\Http\Controllers\ExternalUserManagementController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MathManipulativesController;
@@ -26,6 +27,9 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherResourcesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+
 
 Route::middleware(['auth', 'device'])->group(function(){
     Route::prefix('admin')->group(function () {
@@ -306,17 +310,6 @@ Route::middleware(['auth', 'device'])->group(function(){
         Route::post('/children/update', [ChildrenController::class, 'update'])->name('children.update');
         Route::delete('/children/delete/{id}', [ChildrenController::class, 'destroy'])->name('children.destroy');
 
-        
-
-
-        /* Shop */
-        Route::get('/shop', [ShopController::class, 'index'])->name('shop');
-        Route::get('/shop/cart', [ShopController::class, 'shopCart'])->name('shop.cart');
-        Route::get('/shop/checkout', [ShopController::class, 'shopCheckout'])->name('shop.checkout');
-        Route::post('/shop/payment', [ShopController::class, 'shopPayment'])->name('shop.payment');
-        Route::get('/shop/payment/status', [ShopController::class, 'shopPaymentStatus'])->name('shop.payment.status');
-
-
         /* Notifications */
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
         Route::get('/notifications/view', [NotificationController::class, 'viewNotification'])->name('view_notification');
@@ -331,5 +324,8 @@ Route::middleware(['auth', 'device'])->group(function(){
         Route::post('/settings/class_types/update', [SettingController::class, 'updateClassType'])->name('settings.class_types.update');
         Route::delete('/settings/class_types/destroy/{id}', [SettingController::class, 'destroyClassType'])->name('settings.class_types.destroy');
 
+
+        /* Doku */
+        Route::get('/doku/generate-signature', [DokuController::class, 'generatePayment'])->name('doku.generate_signature');
     });
 });

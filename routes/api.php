@@ -1,6 +1,7 @@
 <?php
 
 use App\Classes\ProductHelper;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,3 +27,8 @@ Route::get('find-username/{username}', [UserController::class, 'usernameExist'])
 Route::get('find-products', [ProductHelper::class, 'getProducts'])->name('products.find_products');
 Route::get('find-product-variations', [ProductHelper::class, 'getProductVariations'])->name('products.find_product_variations');
 Route::get('find-product-sub-variations', [ProductHelper::class, 'getProductSubVariations'])->name('products.find_product_sub_variations');
+
+
+Route::post('fee_invoices/callback/my', [InvoiceController::class, 'callbackMy'])->name('fee.invoices.callback.my');
+Route::any('fee_invoices/callback/id', [InvoiceController::class, 'callbackId'])->name('fee.invoices.callback.id');
+Route::get('fee_invoices/check-status', [InvoiceController::class, 'checkStatus'])->name('fee.invoices.check_status');

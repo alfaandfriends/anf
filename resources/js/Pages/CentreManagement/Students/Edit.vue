@@ -803,6 +803,7 @@ export default {
             },
             form: {
                 date_admission: '',
+                children_id: this.$page.props.student_info ? this.$page.props.student_info.children_id  : '',
                 student_id: this.$page.props.student_info ? this.$page.props.student_info.id  : '',
                 centre_id: '',
                 fee: [],
@@ -929,6 +930,11 @@ export default {
                 if(programme_already_added_form || programme_already_added_current){
                     alert('This programme already been added. Please remove the previous one first.')
                     this.searching.fee = false
+                    return
+                }
+            }else{
+                if(this.form.fee.length > 0){
+                    alert('You can only select 1 class to transfer student.')
                     return
                 }
             }
@@ -1073,12 +1079,12 @@ export default {
             this.show_transfer_student = true
         },
         transferStudent(){
-            if(this.selected_plus_class[this.search_form.programme_id].length){
+            if(this.selected_plus_class.length && this.selected_plus_class[this.search_form.programme_id].length){
                 const class_count   = this.current_fee
                                         .filter(fee => fee.fee_info.programme_id === this.search_form.programme_id)
                                         .map(fee => fee.classes.length)
                                         .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                if(this.selected_plus_class[this.search_form.programme_id].length < class_count){
+                if(this.selected_plus_class[this.search_form.programme_id].length != class_count){
                     alert('You will have to select ' + class_count + ' classes to proceed.')
                     return
                 }

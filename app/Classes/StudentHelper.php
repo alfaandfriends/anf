@@ -23,4 +23,38 @@ class StudentHelper {
 
         return $academics;
     }
+
+    public static function getStudentCountryId($student_id)
+    {
+        $student_country_id =   DB::table('students')
+                                    ->join('children', 'students.children_id', '=', 'children.id')
+                                    ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                    ->where('students.id', $student_id)
+                                    ->pluck('wpvt_users.user_country_id')
+                                    ->first();
+        return $student_country_id;
+    }
+
+    public static function getStudentCurrency($student_id)
+    {
+        $user_currenct_currency =   DB::table('students')
+                                        ->join('children', 'students.children_id', '=', 'children.id')
+                                        ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                        ->join('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
+                                        ->where('students.id', $student_id)
+                                        ->pluck('countries.currency_symbol')
+                                        ->first();
+
+        return $user_currenct_currency;
+    }
+
+    public static function getChildId($student_id)
+    {
+        $child_id =   DB::table('students')
+                                    ->join('children', 'students.children_id', '=', 'children.id')
+                                    ->where('students.id', $student_id)
+                                    ->pluck('children.id')
+                                    ->first();
+        return $child_id;
+    }
 }

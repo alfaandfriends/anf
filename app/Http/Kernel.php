@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,4 +69,9 @@ class Kernel extends HttpKernel
         'onboard' => \App\Http\Middleware\Onboard::class,
         'device' => \App\Http\Middleware\CheckDeviceType::class,
     ];
+
+        protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('insert:generate_invoice')->monthly();
+    }
 }

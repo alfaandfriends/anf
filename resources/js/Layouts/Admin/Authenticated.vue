@@ -159,7 +159,7 @@ export default {
             <nav class="fixed w-[16rem] md:w-[18rem] top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 sm:translate-x-0"
                     :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
             >
-                <span class="flex justify-center items-center border-b border-dashed px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
+                <span class="flex justify-center items-center border-b border-dotted px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
                 <nav class="text-sm font-medium text-gray-500 p-3 space-y-4 my-3">
                     <div class="space-y-1" v-for="section, section_key in $page.props.menu">
                         <p class="uppercase text-gray-100 text-xs mb-3 tracking-wide">{{ section.name }}</p>
@@ -198,6 +198,7 @@ export default {
                             </template>
                         </template>
                     </div>
+                    
                     <BreezeNavLink class="w-full sm:hidden" :href="route('admin.logout')" method="post" as="button">
                         <LogoutIcon class="h-6 w-6 mr-2"></LogoutIcon>
                         Log Out
@@ -212,6 +213,14 @@ export default {
                         My Account
                     </BreezeNavLink>
                 </nav>
+                <span class="flex justify-center items-center border-t border-dotted px-4 py-5 text-sm text-white font-semibold">
+                    <div class="flex space-x-2 items-center cursor-pointer hover:underline text-gray-300 hover:text-gray-200" @click="$inertia.get(route('docs.workflow'))">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                            <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
+                        </svg>
+                        <span>Documentation</span>
+                    </div>
+                </span>
             </nav>
             <!-- Sidebar Outer Layer -->
             <div class="fixed w-full md:w-[18rem] top-0 left-0 z-10 h-full overflow-x-hidden overflow-y-auto transition origin-left transform sm:translate-x-0 sm:hidden"
@@ -375,9 +384,35 @@ export default {
                 </div>
             </main>
             <!-- Footer -->
-            <div class="py-5 px-6 bg-slate-700 text-white">
-                <span class="text-sm font-extrabold">&copy; </span><span class="text-sm">{{ new Date().getFullYear() + ' ' + $page.props.app_name }}</span>
+            <div class="flex justify-between items-center py-5 px-6 bg-slate-700 text-white">
+                <div class="">
+                    <span class="text-sm font-extrabold">&copy; </span>
+                    <span class="text-sm">{{ new Date().getFullYear() + ' ' + $page.props.app_name }}</span>
+                </div>
             </div>
+            <!-- component -->
+            <!-- <div class="group fixed bottom-0 right-0 p-5  flex items-end justify-end w-24 h-24"> -->
+                <!-- <div class="text-white shadow-xl flex items-center justify-center p-3 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-600 z-50 absolute cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 448 512">
+                        <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
+                    </svg>
+                </div> -->
+                <!-- <div class="absolute rounded-full transition-all duration-[0.2s] ease-out scale-y-0 group-hover:scale-y-100 group-hover:-translate-x-16   flex  p-2 hover:p-3 bg-green-300 scale-100 hover:bg-green-400 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 10.5h.375c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125H21M3.75 18h15A2.25 2.25 0 0021 15.75v-6a2.25 2.25 0 00-2.25-2.25h-15A2.25 2.25 0 001.5 9.75v6A2.25 2.25 0 003.75 18z" />
+                    </svg>
+                </div>
+                <div class="absolute rounded-full transition-all duration-[0.2s] ease-out scale-x-0 group-hover:scale-x-100 group-hover:-translate-y-16  flex  p-2 hover:p-3 bg-blue-300 hover:bg-blue-400  text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.143 17.082a24.248 24.248 0 003.844.148m-3.844-.148a23.856 23.856 0 01-5.455-1.31 8.964 8.964 0 002.3-5.542m3.155 6.852a3 3 0 005.667 1.97m1.965-2.277L21 21m-4.225-4.225a23.81 23.81 0 003.536-1.003A8.967 8.967 0 0118 9.75V9A6 6 0 006.53 6.53m10.245 10.245L6.53 6.53M3 3l3.53 3.53" />
+                    </svg>
+                </div>
+                <div class="absolute rounded-full transition-all duration-[0.2s] ease-out scale-x-0 group-hover:scale-x-100 group-hover:-translate-y-14 group-hover:-translate-x-14   flex  p-2 hover:p-3 bg-yellow-300 hover:bg-yellow-400 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+                    </svg>
+                </div> -->
+            <!-- </div> -->
         </div>
     </div>
 </template>
