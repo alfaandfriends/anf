@@ -71,6 +71,6 @@ class Kernel extends HttpKernel
     ];
 
     protected $commands = [
-        \App\Console\Commands\GenerateInvoices
+        \App\Console\Commands\GenerateInvoices::class
     ];
 }

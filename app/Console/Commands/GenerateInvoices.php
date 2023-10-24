@@ -12,7 +12,7 @@ class GenerateInvoices extends Command
      *
      * @var string
      */
-    protected $signature = 'command:generate_invoice';
+    protected $signature = 'invoice:generate';
 
     /**
      * The console command description.
