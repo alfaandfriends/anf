@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('invoice:generate')->monthlyOn(1);
+        $schedule->command('invoice:generate')->everyTwoMinutes();
     }
 
     /**
