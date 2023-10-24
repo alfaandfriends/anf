@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('invoice:generate')->everyFiveMinutes();
+        $schedule->command('invoice:generate')->cron('*/30 * * * *');
     }
 
     /**
