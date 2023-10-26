@@ -48,6 +48,29 @@ class StudentHelper {
         return $user_currenct_currency;
     }
 
+    public static function getStudentName($student_id)
+    {
+        $child_name     =   DB::table('students')
+                                ->join('children', 'students.children_id', '=', 'children.id')
+                                ->where('students.id', $student_id)
+                                ->pluck('children.name')
+                                ->first();
+
+        return $child_name;
+    }
+
+    public static function getStudentEmail($student_id)
+    {
+        $student_email =   DB::table('students')
+                                        ->join('children', 'students.children_id', '=', 'children.id')
+                                        ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                        ->where('students.id', $student_id)
+                                        ->pluck('wpvt_users.user_email')
+                                        ->first();
+
+        return $student_email;
+    }
+
     public static function getChildId($student_id)
     {
         $child_id =   DB::table('students')

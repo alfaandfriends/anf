@@ -55,9 +55,9 @@ class InvoiceHelper {
 
         if($student_country == self::$malaysia){
             $bill_collection_id     =   config('app.billplz.collection_id');
-            $bill_email             =   auth()->user()->user_email;
+            $bill_email             =   StudentHelper::getStudentEmail($invoice_data['student_id']);
             $bill_mobile            =   '';
-            $bill_name              =   auth()->user()->display_name;
+            $bill_name              =   StudentHelper::getStudentName($invoice_data['student_id']);
             $bill_amount            =   $totalFee * 100;
             $bill_callback          =   route('fee.invoices.callback.my');
             $bill_description       =   'Invoice Number: '.$invoice_number;

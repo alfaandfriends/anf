@@ -25,7 +25,6 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        // dd($request->all());
         $query  =   User::query();
         
         if(request('search')){

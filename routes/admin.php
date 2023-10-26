@@ -323,9 +323,5 @@ Route::middleware(['auth', 'device'])->group(function(){
         Route::get('/settings/class_types/edit', [SettingController::class, 'editClassType'])->name('settings.class_types.edit');
         Route::post('/settings/class_types/update', [SettingController::class, 'updateClassType'])->name('settings.class_types.update');
         Route::delete('/settings/class_types/destroy/{id}', [SettingController::class, 'destroyClassType'])->name('settings.class_types.destroy');
-
-
-        /* Doku */
-        Route::get('/doku/generate-signature', [DokuController::class, 'generatePayment'])->name('doku.generate_signature');
     });
 });

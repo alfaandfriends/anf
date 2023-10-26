@@ -34,7 +34,6 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'full_name'         => 'required',
             'country_id'        => 'required',

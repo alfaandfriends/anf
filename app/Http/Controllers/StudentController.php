@@ -175,7 +175,6 @@ class StudentController extends Controller
             return redirect(route('students'))->with(['type'=>'success', 'message'=>'Admission success !']);
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
             
             return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
         }
@@ -464,7 +463,7 @@ class StudentController extends Controller
             return redirect()->back()->with(['type'=>'success', 'message'=>'New class added!']);
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
+            event(new DatabaseTransactionEvent($e));
             
             return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
         }
