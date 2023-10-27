@@ -213,14 +213,14 @@ export default {
                         My Account
                     </BreezeNavLink>
                 </nav>
-                <span class="flex justify-center items-center border-t border-dotted px-4 py-5 text-sm text-white font-semibold">
+                <!-- <span class="flex justify-center items-center border-t border-dotted px-4 py-5 text-sm text-white font-semibold">
                     <div class="flex space-x-2 items-center cursor-pointer hover:underline text-gray-300 hover:text-gray-200" @click="$inertia.get(route('docs.workflow'))">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
                             <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
                         </svg>
                         <span>Documentation</span>
                     </div>
-                </span>
+                </span> -->
             </nav>
             <!-- Sidebar Outer Layer -->
             <div class="fixed w-full md:w-[18rem] top-0 left-0 z-10 h-full overflow-x-hidden overflow-y-auto transition origin-left transform sm:translate-x-0 sm:hidden"
