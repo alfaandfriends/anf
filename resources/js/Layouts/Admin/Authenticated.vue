@@ -366,7 +366,7 @@ export default {
                         </div>
                     </header>
                     <div class="px-6 py-3 bg-blue bg-red-500 space-y-4 lg:flex lg:space-y-0 justify-between items-center" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
-                        <span class="text-white text-sm italic">Warning: use with caution, any changes will reflect to user that being impersonated.</span>
+                        <span class="text-white text-md font-semibold italic whitespace-nowrap">Warning: Please use this feature with caution!</span>
                         <form @submit.prevent="impersonate" class="flex flex-col lg:flex-row w-full space-x-2 items-center md:justify-end lg:justify-end">
                             <label for="impersonate_username" class="text-white lg:text-sm sm:text-md font-bold">Username</label>
                             <div class="flex space-x-2 items-center">
