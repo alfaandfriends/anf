@@ -15,8 +15,8 @@ use Ramsey\Uuid\Rfc4122\FieldsInterface;
 
 class InvoiceHelper {
     /* Change accordingly to created country id */
-    public static $malaysia    =   2;
-    public static $indonesia   =   6;
+    public static $malaysia    =   1;
+    public static $indonesia   =   2;
 
     public static function invoiceStatus()
     {

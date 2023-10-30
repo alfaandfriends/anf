@@ -22,7 +22,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="mb-5">
-                                        <h1 class="text-indigo-800 font-bold">Programme Information</h1>
+                                        <h1 class="text-indigo-800 font-bold">Country Information</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
                                     <div class="grid grid-cols-2 sm:grid-cols-0 gap-0 sm:gap-4">
