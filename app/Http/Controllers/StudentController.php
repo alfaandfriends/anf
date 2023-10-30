@@ -7,7 +7,7 @@ use App\Classes\NotificationHelper;
 use App\Classes\OrderHelper;
 use App\Classes\ProductHelper;
 use App\Classes\ProgrammeHelper;
-use App\Classes\UserHelper;
+use App\Classes\StudentHelper;
 use App\Events\DatabaseTransactionEvent;
 use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
@@ -22,6 +22,8 @@ use Inertia\Inertia;
 class StudentController extends Controller
 {
     public $update_student_config = 7;
+    public $malaysia    =   2;
+    public $indonesia   =   6;
 
     public function index(Request $request)
     {
@@ -96,9 +98,10 @@ class StudentController extends Controller
                                             
             /* Create Invoice */
             $invoice_data['student_id']         =   $student_id;
+            $invoice_data['children_id']        =   $request->children_id;
             $invoice_data['invoice_items']      =   collect($request->fee)->pluck('fee_info')->toArray();
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
-            $invoice_data['currency']           =   UserHelper::getCurrentUserCurrency();
+            $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
 
@@ -188,6 +191,7 @@ class StudentController extends Controller
                                     ->select([  
                                                 'students.id as id', 
                                                 'students.status as status', 
+                                                'children.id as children_id', 
                                                 'children.name as name', 
                                                 'children.date_of_birth as dob', 
                                                 'genders.id as gender', 
@@ -304,19 +308,22 @@ class StudentController extends Controller
     {
         $invoice_data       =  DB::table('invoices')->where('id', $request->invoice_id)->first();
         $invoice_items      =   collect(json_decode($invoice_data->invoice_items, true));
-        
+        $student_country    =   StudentHelper::getStudentCountryId($invoice_data->student_id);
+
         /* Check if paid */ 
-        $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
-        if(!$bill['paid']){
-            Billplz::bill()->destroy($invoice_data->bill_id);
+        if($student_country == $this->malaysia){
+            $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
+            if(!$bill['paid']){
+                Billplz::bill()->destroy($invoice_data->bill_id);
+            }
         }
         /* Delete related records */
         if($invoice_items->count() <= 1){
-            DB::table('invoices')->where('id', $request->invoice_id)->delete();
             DB::table('student_fees')
                 ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
                 ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
                 ->where('student_fees.invoice_id', $request->invoice_id)->delete();
+            DB::table('invoices')->where('id', $request->invoice_id)->delete();
         }
         /* Recreate new record */
         else{
@@ -333,9 +340,10 @@ class StudentController extends Controller
             
             /* Create Invoice */
             $new_invoice_data['student_id']         =   $invoice_data->student_id;
+            $new_invoice_data['children_id']        =   StudentHelper::getChildId($invoice_data->student_id);
             $new_invoice_data['invoice_items']      =   $filtered_invoice_items;
             $new_invoice_data['date_admission']     =   Carbon::parse($request->admission_date)->format('Y-m-d');
-            $new_invoice_data['currency']           =   UserHelper::getCurrentUserCurrency();
+            $new_invoice_data['currency']           =   StudentHelper::getStudentCurrency($invoice_data->student_id);
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($new_invoice_data);
             
@@ -352,7 +360,7 @@ class StudentController extends Controller
             $order_data['products']     =   $produce_items;
             OrderHelper::newOrder($order_data);
         }
-        $log_data =   'Deleted student data';
+        $log_data =   'Deleted student ID ' . $invoice_data->student_id . ' data';
         event(new DatabaseTransactionEvent($log_data));
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'Student data deleted successfully!']);
@@ -379,9 +387,10 @@ class StudentController extends Controller
 
             /* Create Invoice */
             $invoice_data['student_id']         =   $student_id;
+            $invoice_data['children_id']        =   $request->children_id;
             $invoice_data['invoice_items']      =   collect($request->fee)->pluck('fee_info')->toArray();
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
-            $invoice_data['currency']           =   UserHelper::getCurrentUserCurrency();
+            $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
             
@@ -454,6 +463,7 @@ class StudentController extends Controller
             return redirect()->back()->with(['type'=>'success', 'message'=>'New class added!']);
         } catch (\Exception $e) {
             DB::rollback();
+            event(new DatabaseTransactionEvent($e));
             
             return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
         }

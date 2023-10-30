@@ -53,7 +53,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="text-sm font-medium text-gray-900">{{ result.folder_name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ moment(result.created_at, "HH:mm:ss").format('d/m/Y') }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ moment(result.created_at, "HH:mm:ss").format('DD/MM/Y') }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center space-x-2">

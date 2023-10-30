@@ -128,7 +128,6 @@ class ProgrammeController extends Controller
             $programme_level->product_sub_variation['id']           =   $programme_level->product_sub_variation_id;
             $programme_level->product_sub_variation['option_name']  =   $programme_level->product_sub_variation_name;
         }
-        // dd($programme_info);
                                     
         return Inertia::render('CentreManagement/Programmes/Edit', [
             'programme_data'        => $programme_data,

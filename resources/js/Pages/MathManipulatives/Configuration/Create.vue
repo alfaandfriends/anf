@@ -44,7 +44,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </div>
                                     <div class="mb-4 space-y-2" v-show="form.thumbnail.image_url == ''">
-                                        <label class="block text-sm text-gray-700 font-bold"> Thumbnail </label>
+                                        <label class="block text-sm text-gray-700 font-bold"> Thumbnail <span class="text-red-500">*</span></label>
                                         <div class="rounded-md bg-red-100 p-4" v-if="$page.props.errors['artwork.file']">
                                             <div class="flex">
                                                 <div class="flex-shrink-0">

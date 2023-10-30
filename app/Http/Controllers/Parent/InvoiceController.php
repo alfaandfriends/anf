@@ -20,25 +20,4 @@ class InvoiceController extends Controller
             'invoices'      =>  $invoices,
         ]);
     }
-
-    public function callback(Request $request)
-    {
-        if($request->billplz['paid'] == 'true'){
-            DB::table('invoices')->where('bill_id', $request->billplz['id'])->update([
-                'status'    => 2
-            ]);
-            return redirect(route('parent.invoices'))->with([
-                'type'=>'success',
-                'header'=>'Payment Successful!',
-                'message'=>'Thank you. Your transaction has been completed.'
-            ]);
-        }
-        else{
-            return redirect(route('parent.invoices'))->with([
-                'type'=>'error',
-                'header'=>'Payment Unsuccessful!',
-                'message'=>'Sorry, payment process has failed. Please try again.'
-            ]);
-        }
-    }
 }

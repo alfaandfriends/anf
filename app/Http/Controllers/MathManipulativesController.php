@@ -44,6 +44,15 @@ class MathManipulativesController extends Controller
 
     public function configurationStore(Request $request)
     {
+        $request->validate([
+            'title'             =>  'required',
+            'thumbnail'         =>  'required',
+        ]);
+
+        if(!$request->file('thumbnail.file')){
+            return back()->with(['type'=>'error', 'message'=>'Thumbnail is required!']);
+        }
+
         /* Thumbnail */
         $file = $request->file('thumbnail.file');
         $extension = $file->getClientOriginalExtension();

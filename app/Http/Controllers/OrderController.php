@@ -101,7 +101,7 @@ class OrderController extends Controller
                                         'order_shipping_providers.name as shipping_provider_name', 'order_status.name as status_name')
                                 ->where('orders.id', $request->order_id)
                                 ->first();
-        // dd($order_info);
+                                
         return Inertia::render('Order/Edit', [
             'order_info'            =>  $order_info,
             'status'                =>  $status,

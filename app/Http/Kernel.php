@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -67,5 +68,9 @@ class Kernel extends HttpKernel
         'permission' => \App\Http\Middleware\Permission::class,
         'onboard' => \App\Http\Middleware\Onboard::class,
         'device' => \App\Http\Middleware\CheckDeviceType::class,
+    ];
+
+    protected $commands = [
+        \App\Console\Commands\GenerateInvoices::class
     ];
 }

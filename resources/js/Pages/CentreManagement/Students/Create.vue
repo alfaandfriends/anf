@@ -138,7 +138,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
                                             <div class="mb-4">
-                                                <label for="programme" class="block text-sm font-bold text-gray-700"> Admission Date <span class="text-red-500">*</span></label>
+                                                <label for="programme" class="block text-sm font-bold text-gray-700"> Start Date <span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <Datepicker class="w-full rounded-lg shadow-sm" 
                                                         :class="errors.admission_date ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'" 

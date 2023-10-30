@@ -84,8 +84,6 @@ class ProductController extends Controller
         $filename['image_5']    =   '';
         $filename['image_6']    =   '';
 
-        // dd($request->all());
-
         /* Upload Images */
         if($request->file('basic_info.product_images.cover')){
             $filename['cover_image']  =   $request->file('basic_info.product_images.cover.file')->getClientOriginalName();

@@ -49,8 +49,8 @@
                                 <span class="text-xs font-medium px-2 py-1 rounded" :class="[invoice.status_bg_color, invoice.status_text_color]">{{ invoice.status }}</span>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <a v-if="invoice.status_id == 1" @click="pay(invoice.bill_id)" class="cursor-pointer font-medium px-3 py-1 text-indigo-600 hover:bg-indigo-200 hover:rounded whitespace-nowrap">Pay Now</a>
-                                <a v-else class="cursor-pointer font-medium px-3 py-1 text-blue-600 bg-blue-100 hover:bg-blue-200 rounded whitespace-nowrap" @click="generating ? '' : viewInvoice(invoice.id)">{{ generating ? 'Generating...' : 'View / Download' }}</a>
+                                <a v-if="invoice.status_id == 1" :href="invoice.payment_url" class="cursor-pointer font-medium px-3 py-1 text-indigo-600 hover:bg-indigo-200 hover:rounded whitespace-nowrap">Pay Now</a>
+                                <a v-else class="cursor-pointer font-medium px-3 py-1 text-blue-600 bg-blue-100 hover:bg-blue-200 rounded whitespace-nowrap" @click="generating[invoice_index] ? '' : viewInvoice(invoice.id, invoice_index)">{{ generating[invoice_index] ? 'Generating...' : 'View / Download' }}</a>
                             </td>
                         </tr>
                     </tbody>
@@ -100,7 +100,7 @@ export default {
     data(){
         return{
             open_modal: false,
-            generating: false,
+            generating: [],
             invoice_data: {
                 parent_name: '',
                 parent_address: 'No 27, Jalan Kap Empat, 17/17D, Seksyen 17, Shah Alam',
@@ -113,11 +113,11 @@ export default {
         }
     },
     methods: {
-        viewInvoice(invoice_id){
-            if(this.generating){
+        viewInvoice(invoice_id, index){
+            if(this.generating[index]){
                 return
             }
-            this.generating = true
+            this.generating[index] = true
             axios.get(route('fee.invoices.generate'), {
                 responseType: 'blob', // Set the response type to 'blob' to handle binary data
                 params: {
@@ -133,11 +133,11 @@ export default {
 
                 // Open the PDF in a new tab
                 window.open(pdfUrl, '_blank');
-                this.generating = false
+                this.generating[index] = false
             })
             .catch(error => {
                 console.error('Error fetching PDF:', error);
-                this.generating = false
+                this.generating[index] = false
             });
         },
         totalFee(invoice_items) {
@@ -164,6 +164,11 @@ export default {
         pay(billing_id){
             window.location.href = import.meta.env.VITE_BILLPLZ_ENDPOINT+billing_id
         },
+    },
+    mounted(){
+        this.$page.props.invoices.forEach(element => {
+            this.generating.push(false)
+        });
     }
 }
 </script>
