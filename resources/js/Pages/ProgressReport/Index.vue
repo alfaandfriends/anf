@@ -7,13 +7,15 @@ import BreezeButton from '@/Components/Button.vue';
 .multiselect-assistive-text{
     display: none;
 }
-.date-picker{
-    border-width: 2px; 
-    border-color: #D1D5DB;
-    border-radius: 0.5rem;  
+.progress-report-date-picker{
+    border: 2px solid #D1D5DB; /* Default border color and thickness */
+    border-radius: 0.35rem;
 }
-:hover.date-picker  {
-    border-color: #D1D5DB; 
+:hover.progress-report-date-picker  {
+    border: 2px solid #D1D5DB; /* Highlighted border color and thickness */
+}
+:focus.progress-report-date-picker  {
+    border: 2px solid #D1D5DB; /* Highlighted border color and thickness */
 }
 </style>
 <template>
@@ -41,7 +43,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 :appendNewOption="false"
                                 :searchable="true"
                                 :options="$page.props.allowed_centres"
-                                :clearOnSelect="false"
+                                :clearOnSelect="true"
                                 :canClear="false"
                                 :canDeselect="false"
                                 trackBy="label"
@@ -90,7 +92,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 :appendNewOption="false"
                                 :searchable="true"
                                 :options="$page.props.programmes"
-                                :clearOnSelect="false"
+                                :clearOnSelect="true"
                                 :canClear="false"
                                 :canDeselect="true"
                                 trackBy="name"
@@ -182,11 +184,11 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="flex">
                             <Datepicker :class="'w-full rounded-lg shadow-sm'" 
-                                        :style="$page.props.errors.end_time ? '--dp-border-color: #fa9e9e' : ''" 
-                                        input-class-name="date-picker"
+                                        input-class-name="progress-report-date-picker focus:ring-0"
                                         v-model="params.date" 
                                         :month-picker="true" 
                                         :auto-apply="true" 
+                                        :input-class-name="'hover:border-red-300'"
                                         :placeholder="'Month / Year'" 
                             />
                         </div>

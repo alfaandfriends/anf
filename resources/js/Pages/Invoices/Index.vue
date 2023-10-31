@@ -7,15 +7,18 @@ import BreezeButton from '@/Components/Button.vue';
 .multiselect-assistive-text{
     display: none;
 }
-.date-picker{
-    border-width: 2px; 
-    border-color: #D1D5DB;
-    border-radius: 0.5rem;  
+.invoices-date-picker{
+    border: 2px solid #D1D5DB; /* Default border color and thickness */
+    border-radius: 0.35rem;
 }
-:hover.date-picker  {
-    border-color: #D1D5DB; 
+:hover.invoices-date-picker  {
+    border: 2px solid #D1D5DB; /* Highlighted border color and thickness */
+}
+:focus.invoices-date-picker  {
+    border: 2px solid #D1D5DB; /* Highlighted border color and thickness */
 }
 </style>
+
 <template>
     <Head title="Fee Invoices" />
 
@@ -138,7 +141,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="flex">
                                     <Datepicker :class="'w-full md:w-64 lg:w-64 rounded-lg shadow-sm'" 
                                                 :style="$page.props.errors.end_time ? '--dp-border-color: #fa9e9e' : ''" 
-                                                input-class-name="date-picker"
+                                                input-class-name="invoices-date-picker focus:ring-0"
                                                 v-model="params.date" 
                                                 :month-picker="true" 
                                                 :auto-apply="true" 

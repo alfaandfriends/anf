@@ -4,8 +4,18 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <style>
-.date-picker{
-    color: black;
+.multiselect-assistive-text{
+    display: none;
+}
+.student-date-picker{
+    border: 1px solid #D1D5DB; /* Default border color and thickness */
+    border-radius: 0.5rem;
+}
+:hover.student-date-picker  {
+    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
+}
+:focus.student-date-picker  {
+    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
 }
 </style>
 <template>
@@ -46,7 +56,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <Datepicker class="w-full rounded-lg shadow-sm" 
                                                         :class="errors.dob ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'" 
-                                                        input-class-name="date-picker"
+                                                        input-class-name="student-date-picker focus:ring-0"
                                                         v-model="form.basic_info.dob" 
                                                         :enable-time-picker="false"
                                                         :auto-apply="true" 
@@ -250,7 +260,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 valueProp="ID"
                                                 :searchable="true"
                                                 :options="$page.props.allowed_centres"
-                                                :clearOnSelect="false"
+                                                :clearOnSelect="true"
                                                 :canClear="false"
                                                 :canDeselect="false"
                                                 trackBy="label"
@@ -310,10 +320,10 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mb-4">
                                             <label for="programme" class="block text-sm font-bold text-gray-700"> Start Date <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <Datepicker class="w-full rounded-lg shadow-sm focus:border-indigo-300" 
-                                                    :class="errors.admission_date ? 'border-red-300' : ' border-gray-300'" 
-                                                    input-class-name="date-picker"
-                                                    v-model="form.date_admission" 
+                                                <Datepicker class="w-full rounded-lg shadow-sm focus:border-indigo-300"
+                                                    :class="errors.admission_date ? 'border-red-300' : ' border-gray-300'"
+                                                    input-class-name="student-date-picker focus:ring-0"
+                                                    v-model="form.date_admission"
                                                     :enable-time-picker="false"
                                                     :auto-apply="true" 
                                                     :format="'dd/MM/yyyy'"
