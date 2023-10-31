@@ -3,6 +3,19 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
+<style>
+.invoices-input-date-picker{
+    border: 1px solid #D1D5DB; /* Default border color and thickness */
+    border-radius: 0.35rem;
+}
+:hover.invoices-input-date-picker  {
+    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
+}
+:focus.invoices-input-date-picker  {
+    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
+}
+</style>
+
 <template>
     <Head title="Fee Invoices" />
 
@@ -130,10 +143,11 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <Datepicker 
                                                     :class="'focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm'" 
                                                     :style="$page.props.errors.date ? '--dp-border-color: #fa9e9e' : ''" 
-                                                    input-class-name="date-picker"
+                                                    input-class-name="invoices-input-date-picker focus:ring-0"
                                                     v-model="form.payment.date" 
                                                     :enableTimePicker="false"
                                                     :auto-apply="true" 
+                                                    :format="'dd/MM/yyyy'"
                                                 />
                                             </div>
                                         </div>

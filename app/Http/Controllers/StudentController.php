@@ -22,8 +22,8 @@ use Inertia\Inertia;
 class StudentController extends Controller
 {
     public $update_student_config = 7;
-    public $malaysia    =   2;
-    public $indonesia   =   6;
+    public $malaysia    =   1;
+    public $indonesia   =   2;
 
     public function index(Request $request)
     {

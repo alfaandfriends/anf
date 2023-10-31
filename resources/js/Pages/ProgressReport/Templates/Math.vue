@@ -7,13 +7,15 @@ import BreezeButton from '@/Components/Button.vue';
 .multiselect-assistive-text{
     display: none;
 }
-.date-picker{
-    border-width: 1px; 
-    border-color: #D1D5DB;
-    border-radius: 0.4rem;  
+.math-report-date-picker{
+    border: 1px solid #D1D5DB; /* Default border color and thickness */
+    border-radius: 0.35rem;
 }
-:hover.date-picker  {
-    border-color: #D1D5DB; 
+:hover.math-report-date-picker  {
+    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
+}
+:focus.math-report-date-picker  {
+    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
 }
 </style>
 
@@ -94,6 +96,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <label for="title" class="block text-sm font-bold text-gray-700"> Date </label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
                                     <Datepicker :class="'w-full rounded-lg shadow-sm'" 
+                                                input-class-name="math-report-date-picker focus:ring-0"
                                                 :style="$page.props.errors.date ? '--dp-border-color: #fa9e9e' : '--dp-border-color: #cccccc'" 
                                                 :enableTimePicker="false"
                                                 :auto-apply="true" 

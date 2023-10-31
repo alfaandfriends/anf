@@ -30,7 +30,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         :appendNewOption="false"
                                         :searchable="true"
                                         :options="$page.props.allowed_centres"
-                                        :clearOnSelect="false"
+                                        :clearOnSelect="true"
                                         :canClear="false"
                                         :canDeselect="false"
                                         trackBy="label"

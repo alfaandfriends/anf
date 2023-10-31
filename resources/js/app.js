@@ -3,6 +3,8 @@ import './bootstrap';
 import '@vueform/toggle/themes/default.css'
 import '@vueform/multiselect/themes/default.css'
 import '@vuepic/vue-datepicker/dist/main.css';
+import 'cropperjs/dist/cropper.js';
+import 'cropperjs/dist/cropper.css';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
