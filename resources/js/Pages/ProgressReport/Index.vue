@@ -87,6 +87,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="flex">
                             <Multiselect 
                                 @select="search"
+                                @deselect="search"
                                 v-model="params.programme_id"
                                 valueProp="id"
                                 :appendNewOption="false"
@@ -136,6 +137,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="flex">
                             <Multiselect 
                                 @select="search"
+                                @deselect="search"
                                 v-model="params.programme_level"
                                 valueProp="level"
                                 :appendNewOption="false"
@@ -335,7 +337,7 @@ export default {
                 this.search()
             },
             deep: true
-        }
+        },
     },
     methods: {
         viewProgressReport(progress_report_id){

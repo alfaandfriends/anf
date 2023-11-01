@@ -95,6 +95,7 @@ class InvoiceHelper {
                     "amount"            =>  $totalFee,
                     "invoice_number"    =>  $invoice_number,
                     "callback_url"      =>  route('parent.invoices'),
+                    "auto_redirect"     =>  true,
                 ),
                 "payment" => array(
                     "payment_due_date" => 43800 // 1 month

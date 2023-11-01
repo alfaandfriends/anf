@@ -240,8 +240,8 @@ export default {
                                 <div class="flex">
                                 <!-- Logo -->
                                     <div class="shrink-0 flex items-center">
-                                        <Link :href="route('dashboard')">
-                                            <BreezeApplicationLogo class="block h-9 w-auto" />
+                                        <Link href="/admin">
+                                            <BreezeApplicationLogo class="h-11 fill-current text-gray-500" />
                                         </Link>
                                     </div>
                                 </div>

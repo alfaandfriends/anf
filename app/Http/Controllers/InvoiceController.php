@@ -6,6 +6,7 @@ use App\Classes\CentreHelper;
 use App\Classes\ClassHelper;
 use App\Classes\InvoiceHelper;
 use App\Classes\ProgrammeHelper;
+use App\Classes\StudentHelper;
 use App\Classes\UserHelper;
 use App\Events\DatabaseTransactionEvent;
 use Billplz\Laravel\Billplz;
@@ -111,7 +112,7 @@ class InvoiceController extends Controller
             return redirect(route('fee.invoices'))->with(['type'=>'error', 'message'=>'Invoice quota exceeded, please contact technical support!']);
         }
 
-        $user_currency  =   UserHelper::getCurrentUserCurrency();
+        $currency  =   StudentHelper::getStudentCurrency($request->student_id);
         
         try {
             DB::beginTransaction();
@@ -133,7 +134,7 @@ class InvoiceController extends Controller
                     'date_issued'               => $start_month->format('Y-m-d'),
                     'due_date'                  => $start_month->copy()->addDays(7)->format('Y-m-d'),
                     'amount'                    => $request->invoice_amount,
-                    'currency'                  => $user_currency,
+                    'currency'                  => $currency,
                     'status'                    => $request->status,
                     'payment_date'              => Carbon::parse($request->payment['date'])->format('Y-m-d'),
                     'payment_transaction_id'    => $request->payment['transaction_id'],
