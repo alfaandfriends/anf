@@ -5,12 +5,16 @@ import '@vueform/multiselect/themes/default.css'
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'cropperjs/dist/cropper.js';
 import 'cropperjs/dist/cropper.css';
+import 'vue-loading-overlay/dist/css/index.css';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
+import { Inertia } from '@inertiajs/inertia'
 import { vue3Debounce } from 'vue-debounce';
 import  VueHtmlToPaper from './Plugins/VueHtmlToPaper'
+import {useLoading} from 'vue-loading-overlay'
+import {LoadingPlugin} from 'vue-loading-overlay';
 import axios from 'axios';
 
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -47,6 +51,7 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(VueHtmlToPaper)
+            .use(LoadingPlugin)
             .directive('debounce', vue3Debounce({
                 lock: true,
             }))
@@ -58,5 +63,20 @@ createInertiaApp({
 /* Progress bar color */
 InertiaProgress.init({
     color: '#9E7BFF',
-    showSpinner: true,
 });
+
+/* Loading */
+const $loading = useLoading({
+    container: null,
+    loader: 'bars',
+    lockScroll: false,
+    zIndex: 9999,
+    opacity: 0.2,
+    color: '#4f46e5',
+    backgroundColor: 'black'
+});
+
+var loader
+
+Inertia.on('start', () => loader = $loading.show() )
+Inertia.on('finish', () => loader.hide() )

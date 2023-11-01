@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\CentreHelper;
 use App\Classes\InvoiceHelper;
 use App\Classes\NotificationHelper;
 use App\Classes\OrderHelper;
@@ -482,8 +483,24 @@ class StudentController extends Controller
     }
 
     public function transferStudent(Request $request){
+        // dd($request->all());
+        $centre_info    =   CentreHelper::getCentreInfo($request->centre_id);
+        $fee_info       =   DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->first();
+        $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info->invoice_id)->pluck('invoice_items')->first());
+
+        $new_invoice_items  =   collect($invoice_info)->each(function ($item) use ($request, $centre_info) {
+            if ($item->fee_id === $request->fee_id) {
+                $item->centre_id = $centre_info['centre_id'] ? $centre_info['centre_id'] : '';
+                $item->centre_name = $centre_info['centre_name'] ? $centre_info['centre_name'] : '';
+            }
+        })->toArray();
+        
         DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->update([
             'centre_id'    => $request->centre_id,
+        ]);
+
+        DB::table('invoices')->where('id', $fee_info->invoice_id)->update([
+            'invoice_items'    => $new_invoice_items,
         ]);
 
         DB::table('student_classes')->where('student_fee_id', $request->student_fee_id)->delete();

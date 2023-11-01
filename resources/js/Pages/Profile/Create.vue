@@ -296,6 +296,7 @@ import BreezeButton from '@/Components/Button.vue';
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Multiselect from '@vueform/multiselect'
+import Cropper from 'cropperjs';
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;

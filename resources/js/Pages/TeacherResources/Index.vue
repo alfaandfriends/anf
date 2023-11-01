@@ -25,6 +25,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="flex">
                                     <Multiselect  
                                         @select="search"
+                                        @deselect="search"
                                         v-model="params.programme_id"
                                         valueProp="id"
                                         :appendNewOption="false"
