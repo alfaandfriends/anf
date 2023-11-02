@@ -34,7 +34,7 @@ import Main from '@/Pages/Docs/Layouts/Main.vue'
                         </summary>
                         <div class="border border-dashed border-gray-400 mt-5"></div>
                         <p class="mt-4 leading-relaxed text-gray-700">
-                            The product might be in used in 
+                            The product might be in use in 
                             <ul class="px-5 list-disc">
                                 <li><Link ::href="route('docs.programmes')" class="hover:underline text-sm text-indigo-800 font-semibold">Programmes</Link></li>
                             </ul>

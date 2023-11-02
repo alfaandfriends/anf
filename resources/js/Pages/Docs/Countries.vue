@@ -34,7 +34,7 @@ import Main from '@/Pages/Docs/Layouts/Main.vue'
                         </summary>
                         <div class="border border-dashed border-gray-400 mt-5"></div>
                         <p class="mt-4 leading-relaxed text-gray-700">
-                            The country might be in used in 
+                            The country might be in use in 
                             <ul class="px-5 list-disc">
                                 <li><Link ::href="route('docs.centres')" class="hover:underline text-sm text-indigo-800 font-semibold">Centres</Link></li>
                                 <li><Link ::href="route('docs.users')" class="hover:underline text-sm text-indigo-800 font-semibold">Users</Link></li>

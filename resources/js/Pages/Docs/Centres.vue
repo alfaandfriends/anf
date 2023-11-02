@@ -36,7 +36,7 @@ import Main from '@/Pages/Docs/Layouts/Main.vue'
                         </summary>
                         <div class="border border-dashed border-gray-400 mt-5"></div>
                         <p class="mt-4 leading-relaxed text-gray-700">
-                            The centre might be in used in 
+                            The centre might be in use in 
                             <ul class="px-5 list-disc">
                                 <li><Link ::href="route('docs.centre_manager')" class="hover:underline text-sm text-indigo-800 font-semibold">Centre Manager</Link></li>
                                 <li><Link ::href="route('docs.division_manager')" class="hover:underline text-sm text-indigo-800 font-semibold">Division Manager</Link></li>
