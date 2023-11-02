@@ -30,14 +30,14 @@ import Main from '@/Pages/Docs/Layouts/Main.vue'
                 <div class="space-y-4">
                     <details class="group rounded-lg bg-indigo-50 border border-gray-500 p-6 [&_summary::-webkit-details-marker]:hidden" open>
                         <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                            <h2 class="font-medium">Cannot delete a product</h2>
+                            <h2 class="font-medium">Cannot delete a programme</h2>
                             <svg class="h-5 w-5 shrink-0 transition duration-300 group-open:-rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </summary>
                         <div class="border border-dashed border-gray-400 mt-5"></div>
                         <p class="mt-4 leading-relaxed text-gray-700">
-                            The product might be in used in 
+                            The programme might be in use in 
                             <ul class="px-5 list-disc">
                                 <li><Link ::href="route('docs.classes')" class="hover:underline text-sm text-indigo-800 font-semibold">Classes</Link></li>
                                 <li><Link ::href="route('docs.students')" class="hover:underline text-sm text-indigo-800 font-semibold">Students</Link></li>

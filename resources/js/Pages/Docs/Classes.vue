@@ -17,7 +17,8 @@ import Main from '@/Pages/Docs/Layouts/Main.vue'
             <div class="mt-10">
                 <p class="font-semibold tracking-normal text-slate-900 mb-1">Requirements</p>
                 <ul class="px-5 list-disc">
-                    <li><Link class="hover:underline text-indigo-800 font-semibold">Countries</Link></li>
+                    <li><Link class="hover:underline text-indigo-800 font-semibold">Centres</Link></li>
+                    <li><Link class="hover:underline text-indigo-800 font-semibold">Programmes</Link></li>
                 </ul>
             </div>
             <div class="mt-10">
@@ -29,14 +30,14 @@ import Main from '@/Pages/Docs/Layouts/Main.vue'
                 <div class="space-y-4">
                     <details class="group rounded-lg bg-indigo-50 border border-gray-500 p-6 [&_summary::-webkit-details-marker]:hidden">
                         <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                            <h2 class="font-medium">Cannot delete a centre</h2>
+                            <h2 class="font-medium">Cannot delete a class</h2>
                             <svg class="h-5 w-5 shrink-0 transition duration-300 group-open:-rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </summary>
                         <div class="border border-dashed border-gray-400 mt-5"></div>
                         <p class="mt-4 leading-relaxed text-gray-700">
-                            The centre might be in used in 
+                            The class might be in use in 
                             <ul class="px-5 list-disc">
                                 <li><Link ::href="route('docs.centre_manager')" class="hover:underline text-sm text-indigo-800 font-semibold">Centre Manager</Link></li>
                                 <li><Link ::href="route('docs.division_manager')" class="hover:underline text-sm text-indigo-800 font-semibold">Division Manager</Link></li>
