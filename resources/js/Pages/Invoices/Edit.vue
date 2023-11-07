@@ -123,7 +123,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                         <div class="mb-4 text-right pr-5">
                                             <label for="amount" class="block text-md font-bold text-gray-700"> Total Amount</label>
-                                            <span class="text-2xl font-bold text-indigo-500">{{ form.invoice_amount }}</span>
+                                            <span class="text-2xl font-bold text-indigo-500">{{ totalFee(form.invoice_items) }}</span>
                                             
                                         </div>
                                     </div>
@@ -242,6 +242,7 @@ export default {
         'form.invoice_items': {
             handler(newVal) {
                 newVal.forEach(item => {
+            console.log(item)
                     !item.programme_fee             ? item.programme_fee = 0 : ''
                     !item.programme_fee_discount    ? item.programme_fee_discount = 0 : ''
                     !item.material_fee              ? item.material_fee = 0 : ''
