@@ -36,7 +36,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mb-4">
                                             <label for="invoice_number" class="block text-sm font-bold text-gray-700"> Invoice Number </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input disabled type="text" name="invoice_number" id="invoice_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="this.$page.props.invoice_data.invoice_number" autocomplete="off">
+                                                <input disabled type="text" name="invoice_number" id="invoice_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="$page.props.invoice_data.invoice_number" autocomplete="off">
                                             </div>
                                         </div>
                                     </div>
@@ -44,7 +44,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mb-4">
                                             <label for="student_name" class="block text-sm font-bold text-gray-700"> Student Name </label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input disabled type="text" name="student_name" id="student_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="this.$page.props.invoice_data.student_name" autocomplete="off">
+                                                <input disabled type="text" name="student_name" id="student_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="$page.props.invoice_data.student_name" autocomplete="off">
                                             </div>
                                         </div>
                                     </div>
