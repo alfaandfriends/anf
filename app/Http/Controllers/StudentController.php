@@ -105,7 +105,7 @@ class StudentController extends Controller
             $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
-
+            
             foreach($request->fee as $fee_index=>$fee){
                 /* Create Fee */
                 $student_fee_id     =   DB::table('student_fees')->insertGetId([
@@ -163,10 +163,17 @@ class StudentController extends Controller
             }
             
             /* Create Orders */
-            $order_data['student_id']   =   $student_id;
-            $order_data['invoice_id']   =   $new_invoice_id;
-            $order_data['products']     =   array_merge(...collect($request->fee)->pluck('material')->toArray());
-            OrderHelper::newOrder($order_data);
+            $materials = array_filter($request->fee, function ($item) {
+                return data_get($item, 'fee_info.include_material_fee') === true;
+            });
+
+            if(!empty($materials)){
+                /* Create Orders */
+                $order_data['student_id']   =   $student_id;
+                $order_data['invoice_id']   =   $new_invoice_id;
+                $order_data['products']     =   array_merge(...collect($materials)->pluck('material')->toArray());
+                OrderHelper::newOrder($order_data);
+            }
         
             DB::commit();   
 
@@ -450,11 +457,17 @@ class StudentController extends Controller
                 }
             }
             
-            /* Create Orders */
-            $order_data['student_id']   =   $student_id;
-            $order_data['invoice_id']   =   $new_invoice_id;
-            $order_data['products']     =   array_merge(...collect($request->fee)->pluck('material')->toArray());
-            OrderHelper::newOrder($order_data);
+            $materials = array_filter($request->fee, function ($item) {
+                return data_get($item, 'fee_info.include_material_fee') === true;
+            });
+
+            if(!empty($materials)){
+                /* Create Orders */
+                $order_data['student_id']   =   $student_id;
+                $order_data['invoice_id']   =   $new_invoice_id;
+                $order_data['products']     =   array_merge(...collect($materials)->pluck('material')->toArray());
+                OrderHelper::newOrder($order_data);
+            }
         
             $log_data =   'Added class for student ID '.$student_id;
             event(new DatabaseTransactionEvent($log_data));

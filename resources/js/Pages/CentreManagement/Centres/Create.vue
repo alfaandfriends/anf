@@ -307,13 +307,7 @@ export default {
     },
     methods: {
         submit() {
-            const loading = this.$loading.show();
-            this.$inertia.post(route('centres.store'), this.form, { 
-                preserveState: true,
-                onFinish: visit => {
-                    loading.hide();
-                },
-            })
+            this.$inertia.post(route('centres.store'), this.form, { preserveState: true })
         },
         read(file, event) {
             return new Promise((resolve, reject) => {

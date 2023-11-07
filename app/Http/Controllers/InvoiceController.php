@@ -283,7 +283,14 @@ class InvoiceController extends Controller
 
         if ($finalSignature == $header_signature) {
             if($decoded_request_body['transaction']['status'] == 'SUCCESS'){
+                
+                $invoice_id   =   DB::table('invoices')->where('invoice_number', $decoded_request_body['order']['invoice_number'])->pluck('id')->first();
+                /* Update invoice status to paid */
                 DB::table('invoices')->where('invoice_number', $decoded_request_body['order']['invoice_number'])->update([
+                    'status'    => 2
+                ]);
+                /* Update order status to processing */
+                DB::table('orders')->where('invoice_id', $invoice_id)->update([
                     'status'    => 2
                 ]);
                 return response('OK', 200)->header('Content-Type', 'text/plain');
@@ -294,7 +301,13 @@ class InvoiceController extends Controller
     public function checkStatus(Request $request){
         $data = Billplz::bill()->get($request->billplz['id'])->getContent();
         if($data['paid']){
+            $invoice_id   =   DB::table('invoices')->where('bill_id', $request->billplz['id'])->pluck('id')->first();
+            /* Update invoice status to paid */
             DB::table('invoices')->where('bill_id', $request->billplz['id'])->update([
+                'status'    => 2
+            ]);
+            /* Update order status to processing */
+            DB::table('orders')->where('invoice_id', $invoice_id)->update([
                 'status'    => 2
             ]);
         }

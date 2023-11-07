@@ -225,7 +225,6 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('permission:delete_products');
             Route::delete('/variation/delete/{id}', [ProductController::class, 'deleteVariation'])->name('products.delete_variation')->middleware('permission:view_products|create_products|edit_products|delete_products');
             Route::delete('/sub-variation/delete', [ProductController::class, 'deleteSubVariation'])->name('products.delete_sub_variation')->middleware('permission:view_products|create_products|edit_products|delete_products');
-            Route::get('/get-product-data-by-fee', [ProductHelper::class, 'getProductDataByFee'])->name('products.get_product_data_by_fee')->middleware('permission:view_products');
         });
 
         /* Orders */
