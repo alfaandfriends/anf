@@ -13,42 +13,38 @@ class ArtGalleryController extends Controller
 {
     public function index()
     {
-        $query  =   DB::table('student_art_gallery')
-                        ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
-                        ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
-                        ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
-                        ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
-                        ->leftJoin('students', 'student_art_gallery.student_id', '=', 'students.id')
-                        ->leftJoin('children', 'students.children_id', '=', 'children.id')
-                        ->select(
-                            'student_art_gallery.id as artwork_id',
-                            'students.id as student_id',
-                            'children.name as student_name',
-                            'student_art_gallery.filename as art_file_location',
-                            'art_levels.name as level',
-                            'art_themes.name as theme',
-                            'art_lessons.name as lesson',
-                            'art_activities.name as activity',
-                        );
-        
-        if(request('search')){
-            $query  ->where('children.name', 'LIKE', '%'.request('search').'%');
-        }
-
-        if(request('centre_id')){
-            $query  ->where('students.centre_id', request('centre_id'));
-        }
-        
-        $results    =   $query->orderBy('student_art_gallery.id')
-                                ->orderBy('art_levels.id')
-                                ->orderBy('art_themes.id')
-                                ->orderBy('art_lessons.id')
-                                ->orderBy('art_activities.id')
-                                ->paginate(10);
+        $results    =   DB::table('student_art_gallery')
+                            ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
+                            ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
+                            ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
+                            ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
+                            ->leftJoin('students', 'student_art_gallery.student_id', '=', 'students.id')
+                            ->leftJoin('children', 'students.children_id', '=', 'children.id')
+                            ->when(request('search'), function($query, $search) {
+                                $query->where(function ($q) use ($search) {
+                                    $q->where('children.name', 'LIKE', "%$search%");
+                                });
+                            })
+                            ->select(
+                                'student_art_gallery.id as artwork_id',
+                                'students.id as student_id',
+                                'children.name as student_name',
+                                'student_art_gallery.filename as art_file_location',
+                                'art_levels.name as level',
+                                'art_themes.name as theme',
+                                'art_lessons.name as lesson',
+                                'art_activities.name as activity',
+                            )
+                            ->orderBy('student_art_gallery.id')
+                            ->orderBy('art_levels.id')
+                            ->orderBy('art_themes.id')
+                            ->orderBy('art_lessons.id')
+                            ->orderBy('art_activities.id')
+                            ->paginate(10);
 
         return Inertia::render('ArtGallery/Index', [
-            'filter'=>request()->all('search', 'centre_id'),
-            'arts' => $results,
+            'filter'    =>  request()->all('search'),
+            'arts'      =>  $results,
         ]);
     }
 

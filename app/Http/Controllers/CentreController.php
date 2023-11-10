@@ -23,23 +23,27 @@ class CentreController extends Controller
 
     public function index()
     {
-        $query = DB::table('centres')
-                    ->leftJoin('countries', 'centres.country_id', '=', 'countries.id')
-                    ->select('centres.id as centre_id', 'centres.label as centre_name', 'centres.address as centre_address',
-                        'centres.is_active as centre_status', 'countries.name as country_name')
-                    ->when(request('search'), function ($query, $search) {
-                        $query->where(function ($q) use ($search) {
-                            $q->where('centres.label', 'LIKE', "%$search%")
-                            ->orWhere('centres.email', 'LIKE', "%$search%");
-                        });
-                    })
-                    ->whereIn('centres.id', $this->getAllowedCentres())
-                    ->orderBy('centres.id')
-                    ->paginate(10);
+        $results    =   DB::table('centres')
+                            ->leftJoin('countries', 'centres.country_id', '=', 'countries.id')
+                            ->when(request('search'), function ($query, $search) {
+                                $query->where(function ($q) use ($search) {
+                                    $q->where('centres.label', 'LIKE', "%$search%");
+                                });
+                            })
+                            ->whereIn('centres.id', $this->getAllowedCentres())
+                            ->select(
+                                'centres.id as centre_id', 
+                                'centres.label as centre_name', 
+                                'centres.address as centre_address',
+                                'centres.is_active as centre_status', 
+                                'countries.name as country_name'
+                            )
+                            ->orderBy('centres.id')
+                            ->paginate(10);
 
         return Inertia::render('CentreManagement/Centres/Index', [
-            'filter' => request()->only('search', 'centre_id'),
-            'centres' => $query,
+            'filter'    => request()->only('search'),
+            'centres'   => $results,
         ]);
     }
 

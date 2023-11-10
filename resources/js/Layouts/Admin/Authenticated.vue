@@ -11,10 +11,11 @@ import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } 
 import Toast from '@/Components/Toast.vue'
 import Breadcrumbs from '@/Components/Breadcrumbs.vue'
 import TimeAgo from '@/Components/TimeAgo.vue'
+import Toggle from '@vueform/toggle';
 
 export default {
     components: {
-        BreezeApplicationLogo, Link, Toast, BreezeButton,
+        BreezeApplicationLogo, Link, Toast, BreezeButton, Toggle,
         BreezeDropdown, BreezeDropdownLink, BreezeNavLink, BreezeResponsiveNavLink, BreezeNavSubLink, Breadcrumbs, TimeAgo,
         CogIcon, ChevronRightIcon, LogoutIcon, ViewGridIcon, XIcon, MenuIcon
     },
@@ -41,9 +42,18 @@ export default {
             ],
             notifications: [],
             username: '',
+            darkMode: false
         }
     },
     methods: {
+        switchMode(){
+            if(this.darkMode){
+
+            }
+            else{
+
+            }
+        },
         toggleMenu(section_key, menu_key) {
             const sectionKeyToFind = section_key.toString();
             const menuKeyToFind = menu_key.toString();
@@ -235,6 +245,7 @@ export default {
                 <div class="flex flex-col">
                     <nav class="bg-white border-b border-gray-100 sticky top-0 z-20">
                         <!-- Primary Navigation Menu -->
+                        
                         <div class="mx-auto px-4 sm:px-6 lg:px-8 shadow-md">
                             <div class="flex justify-between h-16">
                                 <div class="flex">
@@ -248,6 +259,24 @@ export default {
     
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                                 <!-- Settings Dropdown -->
+                                
+                                    <!-- <div class="flex space-x-2">
+                                        <Toggle @click="switchMode" v-model="darkMode"
+                                            :classes="{
+                                                container: 'inline-block',
+                                                toggle: 'flex w-10 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
+                                                toggleOn: 'bg-gray-500 border-gray-500 justify-start text-white',
+                                                toggleOff: 'bg-white-400 border-gray-500 justify-end text-gray-700',
+                                                handle: 'inline-block bg-gray-500 w-5 h-5 top-0 rounded-full absolute transition-all',
+                                                handleOn: 'left-full transform -translate-x-full bg-white',
+                                                handleOff: 'left-0 bg-gray-500',
+                                            }
+                                        "/>
+                                        
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800" viewBox="0 0 384 512">
+                                            <path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/>
+                                        </svg>
+                                    </div> -->
                                     <div class="ml-3 relative">
                                         <BreezeDropdown align="right" width="96" @close-notification="closeNotification">
                                             <template #trigger>
