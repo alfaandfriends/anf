@@ -13,16 +13,10 @@ yarn-error.log
 /.idea
 /.vscode
 
-/vendor/*
-!/vendor/jgrossi
+# /vendor/*
+# !/vendor/jgrossi
 
 /vendor
-# /vendor/*
-# /vendor/*/
-# !/vendor/
-# !vendor/jgrossi
-# vendor/*
-# !vendor/jgrossi/corcel/
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
