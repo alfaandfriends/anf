@@ -156,7 +156,7 @@ import BreezeButton from '@/Components/Button.vue';
                     </template>
                     <template v-if="resource_data.media_type_id == 2">
                         <div class="flex justify-center">
-                            <iframe :src="'storage/teacher_resources/'+resource_data.content" width="100%" height="600px"></iframe>
+                            <iframe :src="baseUrl() + '/storage/teacher_resources/'+resource_data.content" width="100%" height="600px"></iframe>
                         </div>
                     </template>
                     <template v-if="resource_data.media_type_id == 3">
