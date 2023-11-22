@@ -218,11 +218,19 @@ export default {
     props: {
         filter: Object,
     },
-    // mounted(){
-    //     this.params.centre_id = this.$page.props.allowed_centres[0] ? this.$page.props.allowed_centres[0].ID : ''
+    // watch: {
+    //     params: {
+    //         handler(){
+    //             if(this.params){
+    //                 this.$inertia.get(this.route('classes'), this.params, { replace: true, preserveState: true});
+    //             }
+    //         },
+    //         deep: true
+    //     }
     // },
     data(){
-        return{showModal: false,
+        return{
+            showModal: false,
             isOpen: false,
             userID: '',
             confirmationTitle: '',

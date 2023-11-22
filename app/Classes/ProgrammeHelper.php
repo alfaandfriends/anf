@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 class ProgrammeHelper {
 
     public static function programmes(){
-        $programmes =   DB::table('programmes')->get();
+        $programmes =   DB::table('programmes')->join('countries', 'programmes.country_id', '=', 'countries.id')->select('programmes.id', 'programmes.name', 'countries.name as country_name')->get();
 
         return $programmes;
     }

@@ -294,16 +294,17 @@ class DiagnosticTestController extends Controller
         /* Diagnostic Test List */
         public function dtList(){
             $diagnostic_test_list   =   DB::table('diagnostic_test')
-                                            ->join('diagnostic_test_languages', 'diagnostic_test.language_id', '=', 'diagnostic_test_languages.id')
-                                            ->join('diagnostic_test_ages', 'diagnostic_test.age_id', '=', 'diagnostic_test_ages.id')
+                                            ->leftJoin('diagnostic_test_languages', 'diagnostic_test.language_id', '=', 'diagnostic_test_languages.id')
+                                            ->leftJoin('diagnostic_test_ages', 'diagnostic_test.age_id', '=', 'diagnostic_test_ages.id')
                                             ->select([
                                                 'diagnostic_test.id',
                                                 'diagnostic_test.name',
                                                 'diagnostic_test_ages.name as age',
                                                 'diagnostic_test_languages.name as language',
                                             ])
+                                            ->orderBy('id')
                                             ->paginate(10);
-
+                                                                          
             return Inertia::render('DiagnosticTests/Index', [
                 'diagnostic_test_list' => $diagnostic_test_list,
             ]);

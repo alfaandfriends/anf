@@ -253,7 +253,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                 </div>
                             </div>
-                            <div class="sm:row-span-3">
+                            <div class="sm:row-span-3"  v-if="!form.create_bulk">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md h-full">
                                     <div class="mb-5">
                                         <h1 class="font-bold text-indigo-800">Collect Payment</h1>

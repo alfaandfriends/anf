@@ -172,14 +172,14 @@ export default {
                 <span class="flex justify-center items-center border-b border-dotted px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
                 <nav class="text-sm font-medium text-gray-500 p-3 space-y-4 my-3">
                     <div class="space-y-1" v-for="section, section_key in $page.props.menu">
-                        <p class="uppercase text-gray-100 text-xs mb-3 tracking-wide">{{ section.name }}</p>
+                        <p class="uppercase text-gray-100 text-xs mb-3">{{ section.name }}</p>
                         <template v-for="menu, menu_key in section.menus">
                             <template v-if="menu.menu_route">
                                 <div class="flex space-x-1">
                                     <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(menu.menu_route)"></div>
                                     <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current() && route().current().startsWith(menu.menu_route)" class="rounded-lg flex-auto">
                                         <span class="mr-2" v-html="menu.menu_icon"></span>
-                                        <span class="select-none tracking-wide">{{ menu.menu_name }}</span>
+                                        <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
                                     </BreezeNavLink>
                                 </div>
                             </template>
@@ -188,7 +188,7 @@ export default {
                                     <div class="flex items-center justify-between px-4 py-2 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200 rounded-lg" :class="menu_opened.section_key == section_key && menu_opened.menu_key == menu_key ? 'text-white tracking-wide bg-gray-800' : ''" role="button" @click="toggleMenu(section_key, menu_key)">
                                         <div class="flex items-center">
                                             <span class="mr-2" v-html="menu.menu_icon"></span>
-                                            <span class="select-none tracking-wide">{{ menu.menu_name }}</span>
+                                            <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
                                         </div>
                                         <ChevronRightIcon :class="{ 'rotate-90': checkMenuIsOpen(section_key, menu_key) }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                     </div>
@@ -199,7 +199,7 @@ export default {
                                                 <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''"
                                                                 :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg flex-auto"
                                                 >
-                                                <span class="select-none tracking-normal">{{ sub_menu.sub_menu_name }}</span>
+                                                <span class="select-none tracking-wide">{{ sub_menu.sub_menu_name }}</span>
                                                 </BreezeNavSubLink>
                                             </div>
                                         </template>

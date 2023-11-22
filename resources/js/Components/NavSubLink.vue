@@ -6,7 +6,7 @@ const props = defineProps(['href', 'active']);
 
 const classes = computed(() => props.active
     ? ' flex items-center py-2 pl-10 pr-4 transition cursor-pointer text-white font-semibold bg-gray-800'
-    : 'flex items-center py-2 pl-12 pr-4 transition cursor-pointer hover:text-white hover:font-semibold hover:bg-gray-800'
+    : 'flex items-center py-2 pl-12 pr-4 transition cursor-pointer hover:text-white hover:bg-gray-800 font-semibold'
 );
 
 const expand = computed(() => props.active

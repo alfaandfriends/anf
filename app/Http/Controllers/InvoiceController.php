@@ -89,67 +89,97 @@ class InvoiceController extends Controller
     }
     
     public function feeInvoiceStore(Request $request){
-        /* Default single invoice */
-        $invoice_to_create_count    =   1;
-
-        /* If Bulk Create */
-        if($request->create_bulk){
-            $from_date = Carbon::parse($request->from_date)->startOfMonth();
-            $to_date = Carbon::parse($request->to_date)->startOfMonth();
-            do
-            {
-                $months[$from_date->format('m-Y')] = $from_date->format('F Y');
-            } 
-            while ($from_date->addMonth() <= $to_date);
-            $invoice_to_create_count    =   count($months);
-        }
-        
-        $currentYear        =   Carbon::now()->year;
-        $invoice_config     =   DB::table('invoice_config')->whereYear('year', $currentYear)->first();
-        $quota_exceeded    =   $this->checkInvoiceQuota($invoice_config->quota, $invoice_to_create_count);
-        
-        if($quota_exceeded){
-            return redirect(route('fee.invoices'))->with(['type'=>'error', 'message'=>'Invoice quota exceeded, please contact technical support!']);
-        }
-
-        $currency  =   StudentHelper::getStudentCurrency($request->student_id);
-        
         try {
             DB::beginTransaction();
-            
-            $start_month = Carbon::parse($request->from_date)->startOfMonth();
-            foreach(range(1, $invoice_to_create_count) as $index){
-                $invoice_number    =   $this->getCurrentYearInvoiceNumber($invoice_config->quota, $invoice_config->current_count);
-        
-                if(!$request->create_bulk && $request->file('payment.proof.file')){
+
+            /* Default single invoice */
+            $invoice_to_create_count    =   1;
+
+            /* If Bulk Create */
+            if($request->create_bulk){
+                $from_date = Carbon::create($request->from_date['year'], $request->from_date['month']+1, 1)->startOfMonth();
+                $to_date = Carbon::create($request->to_date['year'], $request->to_date['month']+1, 1)->startOfMonth();
+                do
+                {
+                    $months[$from_date->format('m-Y')] = $from_date->format('F Y');
+                } 
+                while ($from_date->addMonth() <= $to_date);
+
+                $invoice_to_create_count    =   count($months);
+                
+                $currentYear        =   Carbon::now()->year;
+                $invoice_config     =   DB::table('invoice_config')->whereYear('year', $currentYear)->first();
+                $quota_exceeded     =   $this->checkInvoiceQuota($invoice_config->quota, $invoice_to_create_count);
+                
+                if($quota_exceeded){
+                    return redirect(route('fee.invoices'))->with(['type'=>'error', 'message'=>'Invoice quota exceeded, please contact technical support!']);
+                }
+
+                $currency  =   StudentHelper::getStudentCurrency($request->student_id);
+
+                $start_month = Carbon::create($request->from_date['year'], $request->from_date['month']+1, 1)->startOfMonth();
+                
+                foreach(range(1, $invoice_to_create_count) as $index){
+                    $invoice_number    =   $this->getCurrentYearInvoiceNumber($invoice_config->quota, $invoice_config->current_count);
+                    
+                    $invoice_id =   DB::table('invoices')->insertGetId([
+                        'student_id'                => $request->student_id,
+                        'invoice_number'            => Carbon::now()->year.'-'.$invoice_number,
+                        'invoice_items'             => json_encode($request->invoice_items),
+                        'date_issued'               => $start_month->format('Y-m-d'),
+                        'due_date'                  => $start_month->copy()->addDays(7)->format('Y-m-d'),
+                        'amount'                    => $request->invoice_amount,
+                        'currency'                  => $currency,
+                        'status'                    => $request->status,
+                    ]);
+                    $start_month->addMonths(1);
+                    $invoice_config->quota -= 1;
+                    $invoice_config->current_count += 1;
+                    
+                    $log_data =   'Added invoice ID '.$invoice_id;
+                    event(new DatabaseTransactionEvent($log_data));
+                }
+            }
+            else{
+                $currentYear        =   Carbon::now()->year;
+                $invoice_config     =   DB::table('invoice_config')->whereYear('year', $currentYear)->first();
+                $quota_exceeded     =   $this->checkInvoiceQuota($invoice_config->quota, $invoice_to_create_count);
+
+                if($quota_exceeded){
+                    return redirect(route('fee.invoices'))->with(['type'=>'error', 'message'=>'Invoice quota exceeded, please contact technical support!']);
+                }
+
+                $currency  =   StudentHelper::getStudentCurrency($request->student_id);
+                $invoice_number     =   $this->getCurrentYearInvoiceNumber($invoice_config->quota, $invoice_config->current_count);
+                
+                if($request->file('payment.proof.file')){
                     $file = $request->file('payment.proof.file');
                     $extension = $file->getClientOriginalExtension();
                     $filename = time() . '.' . $extension;
                     Storage::putFileAs('proof_of_payment', $request->file('payment.proof.file'), $filename);
                 }
+                // dd($request->payment['transaction_id']);
                 $invoice_id =   DB::table('invoices')->insertGetId([
                     'student_id'                => $request->student_id,
                     'invoice_number'            => Carbon::now()->year.'-'.$invoice_number,
                     'invoice_items'             => json_encode($request->invoice_items),
-                    'date_issued'               => $start_month->format('Y-m-d'),
-                    'due_date'                  => $start_month->copy()->addDays(7)->format('Y-m-d'),
+                    'date_issued'               => Carbon::parse($request->date_issued)->format('Y-m-d'),
+                    'due_date'                  => Carbon::parse($request->due_date)->format('Y-m-d'),
                     'amount'                    => $request->invoice_amount,
                     'currency'                  => $currency,
                     'status'                    => $request->status,
-                    'payment_date'              => Carbon::parse($request->payment['date'])->format('Y-m-d'),
-                    'payment_transaction_id'    => $request->payment['transaction_id'],
-                    'payment_proof'             => $request->file('payment.proof') ? $filename : '',
+                    'payment_date'              => $request->payment['date'] ? Carbon::parse($request->payment['date'])->format('Y-m-d') : null,
+                    'payment_transaction_id'    => $request->payment['transaction_id'] ? $request->payment['transaction_id'] : null,
+                    'payment_proof'             => $request->file('payment.proof') ? $filename : null,
                 ]);
-                $start_month->addMonths(1);
-                $invoice_config->quota -= 1;
-                $invoice_config->current_count += 1;
                 
                 $log_data =   'Added invoice ID '.$invoice_id;
                 event(new DatabaseTransactionEvent($log_data));
             }
+
             DB::commit();
-    
-            return redirect(route('fee.invoices'))->with(['type'=>'success', 'message'=>'New invoice created successfully!']);
+
+            // return redirect(route('fee.invoices'))->with(['type'=>'success', 'message'=>'New invoice created successfully!']);
         } catch (\Exception $e) {
             DB::rollback();
             // return redirect(route('fee.invoices'))->with(['type'=>'error', 'message'=>'Something went wrong, please try again!']);
@@ -189,7 +219,7 @@ class InvoiceController extends Controller
         }
 
         DB::table('invoices')->where('id', $request->invoice_id)->update([
-            'invoice_items'             =>  $request->invoice_items,
+            'invoice_items'             =>  json_encode($request->invoice_items),
             'amount'                    =>  $request->invoice_amount,
             'status'                    =>  $request->payment['status'],
             'payment_date'              =>  Carbon::parse($request->payment['date'])->format('Y-m-d'),

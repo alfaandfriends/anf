@@ -26,6 +26,9 @@ class ClassController extends Controller
         $can_access_centre = $allowed_centres->search(function ($value) {
             return $value->ID == request('centre_id');
         });
+        $request->merge([
+            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
+        ]);
 
         $results    =   DB::table('classes')
                             ->join('centres', 'classes.centre_id', '=', 'centres.id')
@@ -48,12 +51,7 @@ class ClassController extends Controller
                                         'class_types.name as type',
                                         'start_time',
                                         'end_time',
-                                        'classes.status'])
-                            ->paginate(10);
-
-        $request->merge([
-            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
-        ]);
+                                        'classes.status'])->paginate(10);
 
         return Inertia::render('CentreManagement/Classes/Index', [
             'filter'        => request()->all('search', 'centre_id'),
