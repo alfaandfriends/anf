@@ -212,7 +212,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                 </div>
                             </div>
-                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md" v-if="$page.props.can.manage_roles">
+                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md" v-if="$page.props.can.view_user_roles">
                                 <div class="mb-5">
                                     <h1 class="text-indigo-800 font-bold">User Roles</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
