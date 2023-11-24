@@ -173,16 +173,16 @@ class CentreController extends Controller
         event(new DatabaseTransactionEvent($log_data));
 
         /* Delete selected images */
-        // if(!empty($request->images_to_delete)){
-        //     foreach($request->images_to_delete as $key=>$image_to_delete){
-        //         $this->destroyImage($image_to_delete['image_id']);
-        //     }
-        //     $log_data =   'Deleted images for centre ID '.$request->centre_id;
-        //     event(new DatabaseTransactionEvent($log_data));
-        // }
+        if(!empty($request->images_to_delete)){
+            foreach($request->images_to_delete as $key=>$image_to_delete){
+                $this->destroyImage($image_to_delete['image_id']);
+            }
+            $log_data =   'Deleted images for centre ID '.$request->centre_id;
+            event(new DatabaseTransactionEvent($log_data));
+        }
         
         /* Upload new images */
-        // $this->uploadImages($request->centre_id, $request->image_list);
+        $this->uploadImages($request->centre_id, $request->image_list);
 
         return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre updated successfully !']);
     }
