@@ -82,9 +82,9 @@ class UserController extends Controller
                                     'user_nicename'         => $request->username,
                                     'user_email'            => $request->email,
                                     'user_address'          => $request->address,
-                                    'user_country_id'       => $request->country,
+                                    'user_country_id'       => $request->country_id,
                                     'user_contact'          => $request->contact_number,
-                                    'user_state'            => $request->state,
+                                    'user_state'            => $request->country_state,
                                     'user_url'              => '',
                                     'user_registered'       => now(),
                                     'user_activation_key'   => '',
@@ -251,17 +251,17 @@ class UserController extends Controller
 
         $random_password        =   Str::random(20);
         $hashed_random_password =   Hash::make($random_password);
+        
+        DB::table('wpvt_users')->where('ID', $request->data)->update(['user_pass' => $hashed_random_password]);   
 
-        DB::table('wpvt_users')->where('ID', $request->data['user_id'])->update(['user_pass' => $hashed_random_password]);   
-
-        $user           =   User::where('ID', $request->data['user_id'])->first();
+        $user           =   User::where('ID', $request->data)->first();
         $credentials    =   [
             'new_password'  =>  $random_password,
         ];
 
         Notification::sendNow($user, new ResetUserPassword($credentials));
                 
-        $log_data =   'Resetted password for user ID '.$request->data['user_id'];
+        $log_data =   'Resetted password for user ID '.$request->data;
         event(new DatabaseTransactionEvent($log_data));
 
         return redirect()->back()->with(['type'=>'success', 'message'=>"User's password has been reset successfully! New password will be sent to their email."]);

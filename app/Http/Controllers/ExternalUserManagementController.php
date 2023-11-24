@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\DatabaseTransactionEvent;
-use App\Models\User;
+use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
