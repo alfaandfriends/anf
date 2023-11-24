@@ -85,12 +85,12 @@ const setStep = (step) => {
                                                 </div>
                                                 <div class="flex space-x-4">
                                                     <div class="mt-1 flex rounded-md">
-                                                        <BreezeButton v-if="!form.detailed_info.has_variation" @click="form.detailed_info.has_variation = true" buttonType="info">Enable Variation</BreezeButton>
-                                                        <BreezeButton v-if="form.detailed_info.has_variation" @click="form.detailed_info.has_variation = false, form.detailed_info.has_sub_variation = false" buttonType="gray">Disable Variation</BreezeButton>
+                                                        <BreezeButton v-if="form.detailed_info.has_variation == 0" @click="form.detailed_info.has_variation = true" buttonType="info">Enable Variation</BreezeButton>
+                                                        <BreezeButton v-if="form.detailed_info.has_variation == 1" @click="form.detailed_info.has_variation = false, form.detailed_info.has_sub_variation = false" buttonType="gray">Disable Variation</BreezeButton>
                                                     </div>
                                                     <div class="mt-1 flex rounded-md">
-                                                        <BreezeButton v-if="form.detailed_info.has_variation && !form.detailed_info.has_sub_variation" @click="form.detailed_info.has_sub_variation = true" buttonType="info">Enable Sub Variation</BreezeButton>
-                                                        <BreezeButton v-if="form.detailed_info.has_variation && form.detailed_info.has_sub_variation" @click="form.detailed_info.has_sub_variation = false" buttonType="gray">Disable Sub Variation</BreezeButton>
+                                                        <BreezeButton v-if="form.detailed_info.has_variation == 1 && form.detailed_info.has_sub_variation == 0" @click="form.detailed_info.has_sub_variation = true" buttonType="info">Enable Sub Variation</BreezeButton>
+                                                        <BreezeButton v-if="form.detailed_info.has_variation == 1 && form.detailed_info.has_sub_variation == 1" @click="form.detailed_info.has_sub_variation = false" buttonType="gray">Disable Sub Variation</BreezeButton>
                                                     </div>
                                                 </div>
                                             </div>
