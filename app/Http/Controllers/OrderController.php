@@ -2,26 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\InvoiceHelper;
 use App\Classes\OrderHelper;
-use App\Enums\OrderStatus;
 use App\Events\DatabaseTransactionEvent;
-use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
-use App\Models\Order;
-use App\Models\OrderStatus as ModelsOrderStatus;
-use App\Models\Product;
-use App\Models\Shipping;
-use App\Models\ShippingProvider;
-use App\Models\User;
-use App\Notifications\InvoiceCreated;
-use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
-use Inertia\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller

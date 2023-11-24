@@ -171,7 +171,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
                                                         <option value="">-- Select Programme --</option>
-                                                        <option :value="programme.id" v-for="(programme, index) in $page.props.programme_list" :key="index">{{ programme.name }}</option>
+                                                        <option :value="programme.id" v-for="(programme, index) in $page.props.programme_list" :key="index">{{ programme.name }} ({{ programme.country_name }})</option>
                                                     </select>
                                                 </div>
                                             </div>
