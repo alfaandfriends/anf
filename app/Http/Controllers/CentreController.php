@@ -184,7 +184,7 @@ class CentreController extends Controller
         /* Upload new images */
         // $this->uploadImages($request->centre_id, $request->image_list);
 
-        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre updated successfully !']);
+        return back()->with(['type'=>'success', 'message'=>'Centre updated successfully !']);
     }
 
     public function destroy($id)
