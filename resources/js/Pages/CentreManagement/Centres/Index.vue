@@ -59,7 +59,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <span class="font-semibold whitespace-break-spaces text-sm">{{ centre.country_name ? centre.country_name : 'Not Set' }}</span>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="centre.centre_status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.centre_status ? 'Active' : 'Not Active' }} </span>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="centre.centre_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.centre_status == 1 ? 'Active' : 'Not Active' }} </span>
                                         </td>
                                         <td class="px-6 py-4 text-sm font-medium">
                                             <div class="flex justify-center space-x-2">
