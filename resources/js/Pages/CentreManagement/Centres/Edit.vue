@@ -263,7 +263,7 @@ export default {
             email_exist: this.$page.props.email_exist ? this.$page.props.email_exist : '',
             form: {
                 centre_id: this.$page.props.centre_info ? this.$page.props.centre_info.ID : '',
-                centre_country: this.$page.props.centre_info ? this.$page.props.centre_info.country_id : '',
+                centre_country: this.$page.props.centre_info.country_id != 0 ? this.$page.props.centre_info.country_id : '',
                 centre_name: this.$page.props.centre_info ? this.$page.props.centre_info.label : '',
                 centre_contact_number: this.$page.props.centre_info ? this.$page.props.centre_info.phone : '',
                 centre_email: this.$page.props.centre_info ? this.$page.props.centre_info.email : '',
