@@ -128,11 +128,11 @@ class CentreController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'centre_name'               => 'required|max:20',
+            'centre_name'               => 'required',
             'centre_country'            => 'required',
-            'centre_contact_number'     => 'required|max:50',
-            'centre_email'              => 'required|max:50',
-            'centre_address'            => 'required|max:100',
+            'centre_contact_number'     => 'required',
+            'centre_email'              => 'required',
+            'centre_address'            => 'required',
         ]);
 
         /* Check images */
