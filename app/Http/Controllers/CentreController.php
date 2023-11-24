@@ -134,14 +134,15 @@ class CentreController extends Controller
             'centre_email'              => 'required|max:50',
             'centre_address'            => 'required|max:100',
         ]);
+
         /* Check images */
-        $images_count           = DB::table('centre_images')->where('centre_id', $request->centre_id)->count();
+        // $images_count           = DB::table('centre_images')->where('centre_id', $request->centre_id)->count();
         
-        if( (empty($request->image_list) && $images_count < 1) || 
-            count(collect($request->image_list)->where('image_type', 'front')) < 1 || 
-            count(collect($request->image_list)->where('image_type', 'inside')) < 1){   
-            return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload required image !']);
-        }
+        // if( (empty($request->image_list) && $images_count < 1) || 
+        //     count(collect($request->image_list)->where('image_type', 'front')) < 1 || 
+        //     count(collect($request->image_list)->where('image_type', 'inside')) < 1){   
+        //     return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload required image !']);
+        // }
 
         // if(auth()->user()->is_admin == false){
         //     $approval_data      =   $request->all();
@@ -172,16 +173,16 @@ class CentreController extends Controller
         event(new DatabaseTransactionEvent($log_data));
 
         /* Delete selected images */
-        if(!empty($request->images_to_delete)){
-            foreach($request->images_to_delete as $key=>$image_to_delete){
-                $this->destroyImage($image_to_delete['image_id']);
-            }
-            $log_data =   'Deleted images for centre ID '.$request->centre_id;
-            event(new DatabaseTransactionEvent($log_data));
-        }
+        // if(!empty($request->images_to_delete)){
+        //     foreach($request->images_to_delete as $key=>$image_to_delete){
+        //         $this->destroyImage($image_to_delete['image_id']);
+        //     }
+        //     $log_data =   'Deleted images for centre ID '.$request->centre_id;
+        //     event(new DatabaseTransactionEvent($log_data));
+        // }
         
         /* Upload new images */
-        $this->uploadImages($request->centre_id, $request->image_list);
+        // $this->uploadImages($request->centre_id, $request->image_list);
 
         return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre updated successfully !']);
     }
