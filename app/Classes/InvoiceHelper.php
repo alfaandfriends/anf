@@ -76,7 +76,7 @@ class InvoiceHelper {
                                     'amount'            => $totalFee,
                                     'currency'          => $currency,
                                     'bill_id'           => $bill_response->toArray()['id'],
-                                    'payment_url'       => env('VITE_BILLPLZ_ENDPOINT').'/'.$bill_response->toArray()['id'],
+                                    'payment_url'       => env('VITE_BILLPLZ_ENDPOINT').$bill_response->toArray()['id'],
                                 ]);
         
                 return $invoice_id;
