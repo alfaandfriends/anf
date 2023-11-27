@@ -486,8 +486,8 @@ export default {
             handler(){
                 if(this.search_product_form.product_id){
                     this.selected.product = this.list.products.find(item => item.id === this.search_product_form.product_id)
-                    this.show.product_variations                        =   this.selected.product.has_variation ? true : false
-                    this.show.product_sub_variations                    =   this.selected.product.has_sub_variation ? true : false
+                    this.show.product_variations                        =   this.selected.product.has_variation == 1 ? true : false
+                    this.show.product_sub_variations                    =   this.selected.product.has_sub_variation == 1 ? true : false
                     this.search_product_form.product_variation_id       =   ''
                     this.search_product_form.product_sub_variation_id   =   ''
                     this.selected.product_variation                     =   []
@@ -540,10 +540,10 @@ export default {
             this.validation.material_fee.error              = this.fee_form.material_fee == '' ? true : false
             this.validation.class_type.error                = this.fee_form.class_type == '' ? true : false
             this.validation.product.error                   = !Object.keys(this.selected.product).length ? true : false
-            this.validation.product_variation.required      = this.selected.product.has_variation ? true : false
-            this.validation.product_variation.error         = this.selected.product.has_variation && !Object.keys(this.selected.product_variation).length ? true : false
-            this.validation.product_sub_variation.required  = this.selected.product.has_sub_variation ? true : false
-            this.validation.product_sub_variation.error     = this.selected.product.has_sub_variation && !Object.keys(this.selected.product_sub_variation).length ? true : false
+            this.validation.product_variation.required      = this.selected.product.has_variation == 1 ? true : false
+            this.validation.product_variation.error         = this.selected.product.has_variation == 1 && !Object.keys(this.selected.product_variation).length ? true : false
+            this.validation.product_sub_variation.required  = this.selected.product.has_sub_variation == 1 ? true : false
+            this.validation.product_sub_variation.error     = this.selected.product.has_sub_variation == 1 && !Object.keys(this.selected.product_sub_variation).length ? true : false
 
             if(this.validation.product.required && !Object.keys(this.selected.product).length || this.validation.product_variation.required && !Object.keys(this.selected.product_variation).length || this.validation.product_sub_variation.required && !Object.keys(this.selected.product_sub_variation).length){
                 return
