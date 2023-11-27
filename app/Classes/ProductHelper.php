@@ -55,11 +55,14 @@ class ProductHelper {
     }
 
     public static function getProductVariations(Request $request){
-        $product_variations     =   DB::table('product_variations')
-                                        ->join('product_sub_variations', 'product_sub_variations.product_variation_id', '=', 'product_variations.id')
+        $product_variations     =   DB::table('products')
+                                        ->leftJoin('product_variations', 'products.id', '=', 'product_variations.product_id')
+                                        ->leftJoin('product_sub_variations', 'product_variations.id', '=', 'product_sub_variations.product_variation_id')
                                         ->where('product_variations.product_id', $request->product_id)
-                                        ->where('product_variations.stock', '>', 0)
-                                        ->orWhere('product_sub_variations.stock', '>', 0)
+                                        ->where(function ($query) {
+                                            $query->where('product_variations.stock', '>', 0);
+                                            $query->orWhere('product_sub_variations.stock', '>', 0);
+                                        })
                                         ->distinct()
                                         ->select('product_variations.*')
                                         ->limit(10)
@@ -69,7 +72,11 @@ class ProductHelper {
     }
 
     public static function getProductSubVariations(Request $request){
-        $product_sub_variations  =   DB::table('product_sub_variations')->where('product_variation_id', $request->product_variation_id)->where('stock', '>', 0)->limit(10)->get();
+        $product_sub_variations     =   DB::table('product_sub_variations')
+                                            ->where('product_variation_id', $request->product_variation_id)
+                                            ->where('stock', '>', 0)
+                                            ->limit(10)
+                                            ->get();
 
         return $product_sub_variations;
     }
