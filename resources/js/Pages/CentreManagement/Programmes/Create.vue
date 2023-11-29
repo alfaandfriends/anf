@@ -182,7 +182,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                             <div class="grid grid-cols-1">
                                 <div class="mb-4">
-                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Product Name <span class="text-red-500">*</span></label>
+                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Product Name </label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
                                         <Multiselect 
                                             ref="multiselect"
@@ -244,7 +244,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                 </div>
                                 <div class="mb-4" v-if="show.product_variations">
-                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Variation <span class="text-red-500">*</span></label>
+                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Variation </label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
                                         <Multiselect 
                                             v-model="search_product_form.product_variation_id"
@@ -304,7 +304,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                 </div>
                                 <div class="mb-4" v-if="show.product_sub_variations">
-                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Sub Variation <span class="text-red-500">*</span></label>
+                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Sub Variation </label>
                                     <div class="mt-1 flex rounded-md shadow-sm z-50">
                                         <Multiselect 
                                             v-model="search_product_form.product_sub_variation_id"
@@ -444,7 +444,7 @@ export default {
                     error: false
                 },
                 product: {
-                    required: true,
+                    required: false,
                     error: false
                 },
                 product_variation: {
@@ -539,7 +539,7 @@ export default {
             this.validation.level.error                     = this.fee_form.level == '' ? true : false
             this.validation.material_fee.error              = this.fee_form.material_fee == '' ? true : false
             this.validation.class_type.error                = this.fee_form.class_type == '' ? true : false
-            this.validation.product.error                   = !Object.keys(this.selected.product).length ? true : false
+            this.validation.product.error                   = this.validation.product.required && !Object.keys(this.selected.product).length ? true : false
             this.validation.product_variation.required      = this.selected.product.has_variation == 1 ? true : false
             this.validation.product_variation.error         = this.selected.product.has_variation == 1 && !Object.keys(this.selected.product_variation).length ? true : false
             this.validation.product_sub_variation.required  = this.selected.product.has_sub_variation == 1 ? true : false
