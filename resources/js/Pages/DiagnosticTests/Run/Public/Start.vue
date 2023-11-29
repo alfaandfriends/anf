@@ -122,7 +122,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="flex flex-col sm:flex-row justify-center sm:space-x-10 space-y-2 sm:space-y-0" v-if="current.question_type == 1">
                             <div class="select-none text-white flex justify-center items-center rounded bg-indigo-600 hover:bg-indigo-500 hover:text-white cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="saveSingleChoice(index)">
-                                <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
+                                <div class="p-1 w-32" v-if="answer_info.image_name" v-html="answer_info.answer">
                                 </div>
                                 <div class="py-5 px-6" v-else>
                                     <span v-html="answer_info.answer"></span>
@@ -132,7 +132,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="flex flex-col space-y-10" v-if="current.question_type == 2">
                             <div class="grid grid-cols-4 gap-4 mx-auto">
                                 <div class="flex justify-center items-center rounded cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="selectMultipleChoices(index)" :class="checkSingleValueExistsInArray(index) ? 'text-white bg-indigo-600' : 'text-white bg-indigo-400'">
-                                    <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
+                                    <div class="p-1 w-32" v-if="answer_info.image_name" v-html="answer_info.answer">
                                     </div>
                                     <div class="py-5 px-6" v-else>
                                         <span v-html="answer_info.answer"></span>
@@ -663,7 +663,7 @@ export default {
                     scales: {
                         y:{
                             min: 0,
-                            max: this.dt_list.length,
+                            max: 5,
                             stepSize: 1,
                             ticks: {
                                 beginAtZero: true
@@ -675,7 +675,7 @@ export default {
                         },
                         x:{
                             min: 0,
-                            max: this.dt_list.length,
+                            max: 5,
                             stepSize: 1,
                             ticks: {
                                 beginAtZero: true
@@ -723,7 +723,7 @@ export default {
                     scales: {
                         y:{
                             min: 0,
-                            max: this.dt_list.length,
+                            max: 3,
                             stepSize: 1,
                             ticks: {
                                 beginAtZero: true

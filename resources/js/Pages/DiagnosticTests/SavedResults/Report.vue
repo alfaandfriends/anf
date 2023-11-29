@@ -39,11 +39,11 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 <div class="py-3 flex justify-between text-sm font-medium">
                                     <dt class="text-gray-500">Date :</dt>
-                                    <dd class="text-gray-900">{{ moment(report.datetime).format('DD/MM/Y') }}</dd>
+                                    <dd class="text-gray-900">{{ report.date }}</dd>
                                 </div>
                                 <div class="py-3 flex justify-between text-sm font-medium">
                                     <dt class="text-gray-500">Time :</dt>
-                                    <dd class="text-gray-900">{{ moment(report.datetime).format('h:mm A') }}</dd>
+                                    <dd class="text-gray-900">{{ report.time }}</dd>
                                 </div>
                             </dl>
                         </div>
@@ -430,7 +430,8 @@ export default {
                 this.report.name        = response.data.child_name
                 this.report.age         = response.data.child_age
                 this.report.result      = this.$page.props.answer_record.total_correct_answers + '/' + this.$page.props.answer_record.total_answers
-                this.report.datetime    = moment(response.data.created_at).format('DD/MM/YYYY, hh:mm A')
+                this.report.date        = moment(response.data.created_at).format('DD/MM/YYYY')
+                this.report.time        = moment(response.data.created_at).format('hh:mm A')
                 this.finish_loading_report = true
             })
             .catch(error => {

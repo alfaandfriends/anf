@@ -3,24 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Events\DatabaseTransactionEvent;
-use App\Notifications\DTNotifyPIC;
-use App\Notifications\DTNotifyUser;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\DiagnosticTest\ResultToParent;
+use App\Mail\DiagnosticTest\ResultToPIC;
 use Carbon\Carbon;
 use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Spatie\Browsershot\Browsershot;
-use Str;
-use Symfony\Component\Panther\PantherTestCase;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 class DiagnosticTestController extends Controller
 {
@@ -112,20 +104,22 @@ class DiagnosticTestController extends Controller
 
     public function saveDtResult(Request $request)
     {  
-        $result_id  =   DB::table('diagnostic_test_result')->insertGetId([
-            // 'user_id'           =>  auth()->check() ? auth()->user()->ID : NULL,
-            'child_id'          =>  auth()->check() ? $request->student_id : NULL,
-            'child_name'        =>  $request->student_name ? $request->student_name : NULL,
-            'child_age'         =>  $request->student_age ? $request->student_age : NULL,
-            'child_school'      =>  $request->student_school ? $request->student_school : NULL,
-            'parent_name'       =>  $request->parent_name ? $request->parent_name : NULL,
-            'parent_contact'    =>  $request->parent_contact ? $request->parent_contact : NULL,
-            'parent_address'    =>  $request->parent_address ? $request->parent_address : NULL,
-            'parent_email'      =>  $request->parent_email ? $request->parent_email : NULL,
-            'eligible_level'    =>  $request->eligible_level ? $request->eligible_level : NULL,
-        ]);
+        $resultData = [
+            'child_id'         => $request->input('student_id'),
+            'child_name'       => $request->input('student_name'),
+            'child_age'        => $request->input('student_age'),
+            'child_school'     => $request->input('student_school'),
+            'parent_name'      => $request->input('parent_name'),
+            'parent_contact'   => $request->input('parent_contact'),
+            'parent_address'   => $request->input('parent_address'),
+            'parent_email'     => $request->input('parent_email'),
+            'eligible_level'   => $request->input('eligible_level'),
+        ];
+        
+        $result_id = DB::table('diagnostic_test_result')->insertGetId($resultData);
 
-        $data = array();
+        $student_age    =   DB::table('diagnostic_test_ages')->where('id', $request->input('student_age'))->pluck('name')->first();
+
         foreach($request->answer_record as $answer){
             $info['question']               = $answer['question'];
             $info['question_category_id']   = $answer['question_category_id'];
@@ -134,45 +128,42 @@ class DiagnosticTestController extends Controller
             $data[$answer['dt_id']][]       = $info;
         }
 
+        $report_titles  =   DB::table('diagnostic_test')->whereIn('id', collect($data)->keys()->all())->select('id', 'name')->get()->keyBy('id');
+
         foreach($data as $dt_id=>$dt_data){
-            DB::table('diagnostic_test_result_details')->insert([
-                'result_id' => $result_id,
-                'dt_id' => $dt_id,
+            $new_report  =   DB::table('diagnostic_test_result_details')->insertGetId([
+                'result_id'     => $result_id,
+                'dt_id'         => $dt_id,
                 'answer_record' => serialize($dt_data),
             ]);
+            $reports[] = [
+                'name'   => $report_titles[$dt_id]->name,
+                'id'     => encrypt($new_report),
+            ];
         }
 
         /* Send Email to User*/
-        $parent_email   =   $request->parent_email;
-        $result_id      =   encrypt($result_id);
-        $info    =   [
-            'result_id'  =>  $result_id
-        ];
-
-        $parentNotification = new DTNotifyUser($info);
-        Notification::route('mail', $parent_email)->notify($parentNotification);
+        $parentNotification = new ResultToParent($reports);
+        dispatch(Mail::to($request->parent_email)->send($parentNotification));
 
         /* Send Email to PIC */
-        $emails     =   ['nurezzati_sallihin@alfaandfriends.com', 'suetli_tan@alfaandfriends.com'];
+        // $emails     =   ['sitihajar_ahmadjazuli@alfaandfriends.com', 'nurezzati_sallihin@alfaandfriends.com', 'gantika_novyasari@alfaandfriends.com'];
+        $emails     =   ['abdulraof_mohdiskandar@alfaandfriends.com'];
         $users      =   User::whereIn('user_email', $emails)->get();
-        $result_id  =   encrypt($result_id);
 
-        
         foreach ($users as $user) {
             $info    =   [
-                'result_id'     =>  $result_id,
-                'user_name'     =>  $user->display_name,
+                'pic_name'      =>  $user->display_name,
                 'student_name'  =>  $request->student_name,
-                'student_age'   =>  $request->student_age,
+                'student_age'   =>  $student_age,
                 'dt_title'      =>  $request->dt_title,
-                'test_date'     =>  Carbon::now()->format('d/m/Y')
+                'test_date'     =>  Carbon::now()->format('d/m/Y'),
+                'reports'       =>  $reports
             ];
-            $picNotification = new DTNotifyPIC($info);
-            Notification::route('mail', $user->user_email)->notify($picNotification);
+            $picNotification = new ResultToPIC($info);
+            dispatch(Mail::to($user->user_email)->send($picNotification));
         }
-
         return true;
-
     }
 
     public function savedDtResult(Request $request)
@@ -815,14 +806,14 @@ class DiagnosticTestController extends Controller
             $result_id      =   decrypt($id);
             $answer_record  =   DB::table('diagnostic_test_result_details')
                                     ->join('diagnostic_test', 'diagnostic_test_result_details.dt_id', '=', 'diagnostic_test.id')
-                                    ->where('result_id', $result_id)
+                                    ->where('diagnostic_test_result_details.result_id', $result_id)
                                     ->select([
                                         'diagnostic_test.id as dt_id',
                                         'diagnostic_test.name as dt_name',
                                         'diagnostic_test.chart_id as chart_type',
                                         'diagnostic_test_result_details.answer_record as answer_record',
                                         'diagnostic_test_result_details.created_at',
-                                    ])->orderBy('diagnostic_test_result_details.id')->first();
+                                    ])->orderBy('diagnostic_test_result_details.id')->get();
                                     
             $answer_record->answer_record           =   unserialize($answer_record->answer_record);
             $answer_record->total_correct_answers   =   collect($answer_record->answer_record)->where('correct', true)->count();
