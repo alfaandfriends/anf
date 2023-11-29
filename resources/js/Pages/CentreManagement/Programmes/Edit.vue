@@ -155,7 +155,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="grow">
                                     <label for="programme_material_fee" class="block text-sm text-gray-700 font-bold"> Material Fee <span class="text-red-500">*</span></label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="number" min="1" name="programme_material_fee" id="programme_material_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.material_fee.error ? 'border-red-300' : 'border-gray-300'" v-model="fee_form.material_fee" autocomplete="off"/>
+                                        <input type="number" min="0" name="programme_material_fee" id="programme_material_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.material_fee.error ? 'border-red-300' : 'border-gray-300'" v-model="fee_form.material_fee" autocomplete="off"/>
                                     </div>
                                 </div>
                                 <div class="grow">
@@ -425,7 +425,7 @@ export default {
             },
             fee_form: {
                 level: '',
-                material_fee: '',
+                material_fee: 0,
                 class_type: '',
                 fees: [],
             },
@@ -563,7 +563,7 @@ export default {
         },
         addFee(){
             this.validation.level.error                     = this.fee_form.level == '' ? true : false
-            this.validation.material_fee.error              = this.fee_form.material_fee == '' ? true : false
+            this.validation.material_fee.error              = this.fee_form.material_fee === ''
             this.validation.class_type.error                = this.fee_form.class_type == '' ? true : false
             this.validation.product.error                   = this.validation.product.required && !Object.keys(this.selected.product).length ? true : false
             this.validation.product_variation.required      = this.selected.product.has_variation == 1 ? true : false
@@ -574,7 +574,7 @@ export default {
             if(this.validation.product.required && !Object.keys(this.selected.product).length || this.validation.product_variation.required && !Object.keys(this.selected.product_variation).length || this.validation.product_sub_variation.required && !Object.keys(this.selected.product_sub_variation).length){
                 return
             }
-            if(this.fee_form.level == '' || this.fee_form.material_fee == '' || this.fee_form.material_fee == 0 || this.fee_form.class_type == '' || this.fee_form.fees.length < 1){
+            if(this.fee_form.level == '' || this.fee_form.material_fee == '' || this.fee_form.class_type == '' || this.fee_form.fees.length < 1){
                 return
             }
             const fee_items =   this.fee_form.fees
