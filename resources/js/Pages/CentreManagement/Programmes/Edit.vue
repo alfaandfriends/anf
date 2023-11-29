@@ -470,7 +470,7 @@ export default {
                     error: false
                 },
                 product: {
-                    required: true,
+                    required: false,
                     error: false
                 },
                 product_variation: {
@@ -565,7 +565,7 @@ export default {
             this.validation.level.error                     = this.fee_form.level == '' ? true : false
             this.validation.material_fee.error              = this.fee_form.material_fee == '' ? true : false
             this.validation.class_type.error                = this.fee_form.class_type == '' ? true : false
-            this.validation.product.error                   = !Object.keys(this.selected.product).length ? true : false
+            this.validation.product.error                   = this.validation.product.required && !Object.keys(this.selected.product).length ? true : false
             this.validation.product_variation.required      = this.selected.product.has_variation == 1 ? true : false
             this.validation.product_variation.error         = this.selected.product.has_variation == 1 && !Object.keys(this.selected.product_variation).length ? true : false
             this.validation.product_sub_variation.required  = this.selected.product.has_sub_variation == 1 ? true : false
