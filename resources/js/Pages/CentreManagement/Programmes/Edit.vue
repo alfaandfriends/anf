@@ -182,7 +182,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                             <div class="grid grid-cols-1">
                                 <div class="mb-4">
-                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Product Name <span class="text-red-500">*</span></label>
+                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Product Name </label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
                                         <Multiselect 
                                             ref="multiselect"
@@ -574,7 +574,7 @@ export default {
             if(this.validation.product.required && !Object.keys(this.selected.product).length || this.validation.product_variation.required && !Object.keys(this.selected.product_variation).length || this.validation.product_sub_variation.required && !Object.keys(this.selected.product_sub_variation).length){
                 return
             }
-            if(this.fee_form.level == '' || this.fee_form.material_fee == '' || this.fee_form.class_type == '' || this.fee_form.fees.length < 1){
+            if(this.fee_form.level == '' || this.fee_form.material_fee === '' || this.fee_form.class_type == '' || this.fee_form.fees.length < 1){
                 return
             }
             const fee_items =   this.fee_form.fees
@@ -610,7 +610,7 @@ export default {
         },
         clearForm(){
             this.fee_form.level = ''
-            this.fee_form.material_fee = ''
+            this.fee_form.material_fee = 0
             this.fee_form.class_type = ''
             this.fee_form.fees = []
         },
