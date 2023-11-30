@@ -45,7 +45,7 @@ import BreezeButton from '@/Components/Button.vue';
                 <div class="flex-1 flex-grow flex flex-col w-full border bg-white px-6 py-8 shadow-md rounded-[4px] min-w-[25%] space-y-4">
                     <div class="flex flex-col">
                         <div class="font-semibold leading-5 text-xl">Final step</div>
-                        <div class="mt-1 leading-5 text-slate-500 text-sm">Please fill in parent details.</div>
+                        <div class="mt-1 leading-5 text-slate-500 text-sm">Kindly fill out the parent's details to receive the generated result.</div>
                     </div>
                     <hr>
                     <div class="flex flex-col text-sm rounded-md space-y-1">
@@ -57,14 +57,14 @@ import BreezeButton from '@/Components/Button.vue';
                         <input type="number" class="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_contact ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_contact" autocomplete="off" required/>
                     </div>
                     <div class="flex flex-col text-sm rounded-md space-y-1">    
-                        <label class="block text-sm text-gray-700 font-bold" for="">Address <span class="text-red-500">*</span></label>
-                        <input type="text" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_address ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_address" autocomplete="off" required/>
+                        <label class="block text-sm text-gray-700 font-bold" for="">Area/Location <span class="text-red-500">*</span></label>
+                        <input type="text" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_area_location ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_area_location" autocomplete="off" placeholder="e.g. Puchong, Selangor" required/>
                     </div>
                     <div class="flex flex-col text-sm rounded-md space-y-1">    
                         <label class="block text-sm text-gray-700 font-bold" for="">Email <span class="text-red-500">*</span></label>
                         <input type="email" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_email ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_email" autocomplete="off" required/>
                     </div>
-                    <button type="submit" class="mt-5 w-full border p-2 bg-gray-800 text-white rounded-[4px] hover:bg-gray-700" @click="!submitting ? saveResult() : ''">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
+                    <button type="submit" class="mt-5 w-full border p-2 text-white rounded-[4px] hover:bg-gray-700" :class="!submitting ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-800'" @click="!submitting ? saveResult() : ''">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
                     <div class="text-center">
                         <span class="italic text-center text-sm text-gray-700 font-semibold" v-if="submitting">Please do not close your browser or current tab</span>
                     </div>
@@ -122,7 +122,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="flex flex-col sm:flex-row justify-center sm:space-x-10 space-y-2 sm:space-y-0" v-if="current.question_type == 1">
                             <div class="select-none text-white flex justify-center items-center rounded bg-indigo-600 hover:bg-indigo-500 hover:text-white cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="saveSingleChoice(index)">
-                                <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
+                                <div class="p-1 w-32" v-if="answer_info.image_name" v-html="answer_info.answer">
                                 </div>
                                 <div class="py-5 px-6" v-else>
                                     <span v-html="answer_info.answer"></span>
@@ -132,7 +132,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="flex flex-col space-y-10" v-if="current.question_type == 2">
                             <div class="grid grid-cols-4 gap-4 mx-auto">
                                 <div class="flex justify-center items-center rounded cursor-pointer drop-shadow" v-for="(answer_info, index) in current.answers" @click="selectMultipleChoices(index)" :class="checkSingleValueExistsInArray(index) ? 'text-white bg-indigo-600' : 'text-white bg-indigo-400'">
-                                    <div class="p-1 w-32" v-if="answer_info.image_name != null" v-html="answer_info.answer">
+                                    <div class="p-1 w-32" v-if="answer_info.image_name" v-html="answer_info.answer">
                                     </div>
                                     <div class="py-5 px-6" v-else>
                                         <span v-html="answer_info.answer"></span>
@@ -277,7 +277,7 @@ export default {
                 student_school: this.form_data.school,
                 parent_name: '',
                 parent_contact: '',
-                parent_address: '',
+                parent_area_location: '',
                 parent_email: '',
                 answer_record: [],
                 eligible_level: ''
@@ -285,7 +285,7 @@ export default {
             error:{
                 parent_name: false,
                 parent_contact: false,
-                parent_address: false,
+                parent_area_location: false,
                 parent_email: false,
             },
             chart_data: [1, 2, 3]
@@ -502,10 +502,14 @@ export default {
             });
         },
         saveResult(){
-            this.error.parent_name = this.form.parent_name != '' ? false : true
-            this.error.parent_contact = this.form.parent_contact != '' ? false : true
-            this.error.parent_address = this.form.parent_address != '' ? false : true
-            this.error.parent_email = this.form.parent_email != '' ? false : true
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            this.error.parent_name          = this.form.parent_name === ''
+            this.error.parent_contact       = this.form.parent_contact === ''
+            this.error.parent_area_location = this.form.parent_area_location === ''
+            this.error.parent_email         = this.form.parent_email === '' || !emailRegex.test(this.form.parent_email);
+
+            return
 
             for (const key in this.error) {
                 if (this.error[key] === true) {
@@ -663,7 +667,7 @@ export default {
                     scales: {
                         y:{
                             min: 0,
-                            max: this.dt_list.length,
+                            max: 5,
                             stepSize: 1,
                             ticks: {
                                 beginAtZero: true
@@ -675,7 +679,7 @@ export default {
                         },
                         x:{
                             min: 0,
-                            max: this.dt_list.length,
+                            max: 5,
                             stepSize: 1,
                             ticks: {
                                 beginAtZero: true
@@ -719,11 +723,24 @@ export default {
                         legend: {
                             display: false
                         },
+                        tooltip: {
+                            footerColor: '#fff',
+                            footerFont: '{size: 10}',
+                            callbacks: {
+                                label: function () {
+                                    return ''; // Return an empty string to disable the title
+                                },
+                                footer: function(context){
+                                    console.log(context)
+                                    return 'Able to count, recognise numbers and write number words.'
+                                }
+                            }
+                        },
                     },
                     scales: {
                         y:{
                             min: 0,
-                            max: this.dt_list.length,
+                            max: 3,
                             stepSize: 1,
                             ticks: {
                                 beginAtZero: true
