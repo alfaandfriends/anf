@@ -424,19 +424,13 @@ export default {
             this.answer_data =   this.$page.props.answer_record.answer_record
         },
         initInfos(){
-            axios.post(route('diagnostic_test.get_saved_result_info'), {'result_id' : this.$page.props.result_id})
-            .then(response => {
-                this.report.title       = this.$page.props.answer_record.dt_name
-                this.report.name        = response.data.child_name
-                this.report.age         = response.data.child_age
-                this.report.result      = this.$page.props.answer_record.total_correct_answers + '/' + this.$page.props.answer_record.total_answers
-                this.report.date        = moment(response.data.created_at).format('DD/MM/YYYY')
-                this.report.time        = moment(response.data.created_at).format('hh:mm A')
-                this.finish_loading_report = true
-            })
-            .catch(error => {
-                console.error(error);
-            });
+            this.report.title       = this.$page.props.answer_record.dt_name
+            this.report.name        = this.$page.props.answer_record.child_name
+            this.report.age         = this.$page.props.answer_record.child_age
+            this.report.result      = this.$page.props.answer_record.total_correct_answers + '/' + this.$page.props.answer_record.total_answers
+            this.report.date        = moment(this.$page.props.answer_record.created_at).format('DD/MM/YYYY')
+            this.report.time        = moment(this.$page.props.answer_record.created_at).format('hh:mm A')
+            this.finish_loading_report = true
         },
         download(){
             document.getElementById('report').style.display = 'block'

@@ -105,15 +105,16 @@ class DiagnosticTestController extends Controller
     public function saveDtResult(Request $request)
     {  
         $resultData = [
-            'child_id'         => $request->input('student_id'),
-            'child_name'       => $request->input('student_name'),
-            'child_age'        => $request->input('student_age'),
-            'child_school'     => $request->input('student_school'),
-            'parent_name'      => $request->input('parent_name'),
-            'parent_contact'   => $request->input('parent_contact'),
-            'parent_address'   => $request->input('parent_address'),
-            'parent_email'     => $request->input('parent_email'),
-            'eligible_level'   => $request->input('eligible_level'),
+            'child_id'              => $request->input('student_id'),
+            'child_name'            => $request->input('student_name'),
+            'child_age'             => $request->input('student_age'),
+            'child_school'          => $request->input('student_school'),
+            'parent_name'           => $request->input('parent_name'),
+            'parent_contact'        => $request->input('parent_contact'),
+            'parent_area_location'  => $request->input('parent_area_location'),
+            'parent_address'        => $request->input('parent_address'),
+            'parent_email'          => $request->input('parent_email'),
+            'eligible_level'        => $request->input('eligible_level'),
         ];
         
         $result_id = DB::table('diagnostic_test_result')->insertGetId($resultData);
@@ -144,11 +145,11 @@ class DiagnosticTestController extends Controller
 
         /* Send Email to User*/
         $parentNotification = new ResultToParent($reports);
-        dispatch(Mail::to($request->parent_email)->send($parentNotification));
+        Mail::to($request->parent_email)->send($parentNotification);
 
         /* Send Email to PIC */
-        // $emails     =   ['sitihajar_ahmadjazuli@alfaandfriends.com', 'nurezzati_sallihin@alfaandfriends.com', 'gantika_novyasari@alfaandfriends.com'];
-        $emails     =   ['abdulraof_mohdiskandar@alfaandfriends.com'];
+        $emails     =   ['sitihajar_ahmadjazuli@alfaandfriends.com', 'nurezzati_sallihin@alfaandfriends.com', 'gantika_novyasari@alfaandfriends.com'];
+        // $emails     =   ['abdulraof_mohdiskandar@alfaandfriends.com'];
         $users      =   User::whereIn('user_email', $emails)->get();
 
         foreach ($users as $user) {
@@ -161,7 +162,7 @@ class DiagnosticTestController extends Controller
                 'reports'       =>  $reports
             ];
             $picNotification = new ResultToPIC($info);
-            dispatch(Mail::to($user->user_email)->send($picNotification));
+            Mail::to($user->user_email)->send($picNotification);
         }
         return true;
     }
@@ -806,15 +807,19 @@ class DiagnosticTestController extends Controller
             $result_id      =   decrypt($id);
             $answer_record  =   DB::table('diagnostic_test_result_details')
                                     ->join('diagnostic_test', 'diagnostic_test_result_details.dt_id', '=', 'diagnostic_test.id')
-                                    ->where('diagnostic_test_result_details.result_id', $result_id)
+                                    ->join('diagnostic_test_result', 'diagnostic_test_result_details.result_id', '=', 'diagnostic_test_result.id')
+                                    ->join('diagnostic_test_ages', 'diagnostic_test_result.child_age', '=', 'diagnostic_test_ages.id')
+                                    ->where('diagnostic_test_result_details.id', $result_id)
                                     ->select([
                                         'diagnostic_test.id as dt_id',
                                         'diagnostic_test.name as dt_name',
                                         'diagnostic_test.chart_id as chart_type',
+                                        'diagnostic_test_result.child_name as child_name',
+                                        'diagnostic_test_ages.name as child_age',
                                         'diagnostic_test_result_details.answer_record as answer_record',
                                         'diagnostic_test_result_details.created_at',
-                                    ])->orderBy('diagnostic_test_result_details.id')->get();
-                                    
+                                    ])->orderBy('diagnostic_test_result_details.id')->first();
+                               
             $answer_record->answer_record           =   unserialize($answer_record->answer_record);
             $answer_record->total_correct_answers   =   collect($answer_record->answer_record)->where('correct', true)->count();
             $answer_record->total_answers           =   count($answer_record->answer_record);
