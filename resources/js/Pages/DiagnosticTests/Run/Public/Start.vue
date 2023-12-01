@@ -33,9 +33,25 @@ import BreezeButton from '@/Components/Button.vue';
             <div class="flex flex-col items-center justify-center w-full h-full max-w-4xl" v-show="show_chart" style="display:hidden">
                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md overflow-x-auto w-[350px] sm:w-full h-[200px] sm:h-auto" v-show="show_scatter_chart">
                     <canvas id="scatter-chart" class="hidden m-0"></canvas>
+                    <div class="flex items-center p-4 text-sm text-gray-800 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600" role="alert">
+                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                        </svg>
+                        <div class="flex flex-col space-y-2">
+                            <span v-for="info in chart_info"><span class="font-semibold" :class="'text-[' + info.category_color + ']'">{{ info.category_name }}:</span> {{ info.category_description }}</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md overflow-x-auto w-[350px] sm:w-full h-[200px] sm:h-auto" v-show="show_bar_chart">
                     <canvas id="bar-chart" class="hidden m-0"></canvas>
+                    <div class="flex items-center p-4 text-sm text-gray-800 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600" role="alert">
+                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                        </svg>
+                        <div class="flex flex-col space-y-2">
+                            <span v-for="info in chart_info"><span class="font-semibold" :class="'text-[' + info.category_color + ']'">{{ info.category_name }}:</span> {{ info.category_description }}</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="p-6 text-center">
                     <button class="py-2 px-4 rounded shadow-md bg-gray-800 text-white hover:bg-gray-700" @click="parentDetails">Next Step</button>
@@ -225,6 +241,7 @@ export default {
             submitting: false,
             can_go_higher: true,
             can_go_lower: true,
+            chart_info: [],
             bar_chart: '',
             scatter_chart: '',
             show_chart: false,
@@ -509,8 +526,6 @@ export default {
             this.error.parent_area_location = this.form.parent_area_location === ''
             this.error.parent_email         = this.form.parent_email === '' || !emailRegex.test(this.form.parent_email);
 
-            return
-
             for (const key in this.error) {
                 if (this.error[key] === true) {
                     return;
@@ -561,10 +576,12 @@ export default {
             this.initChart()
 
             if(this.dt_details.chart_id == 1){
+                this.chart_info         = this.$page.props.diagnostic_test_chart_info.filter(item => item.chart_id === this.dt_details.chart_id);
                 this.show_bar_chart     = true
                 this.show_scatter_chart = false
             }
             else{
+                this.chart_info         = this.$page.props.diagnostic_test_chart_info.filter(item => item.chart_id === this.dt_details.chart_id);
                 this.show_scatter_chart = true
                 this.show_bar_chart     = false
             }
@@ -661,8 +678,11 @@ export default {
                             display: false // <-- this option disables legends
                         },
                         tooltip: {
-                            enabled: false // <-- this option disables tooltips
-                        }
+                            enabled: false
+                        },
+        datalabels: {
+            display: false, // This line controls the display of data labels
+        },
                     },
                     scales: {
                         y:{
@@ -714,6 +734,12 @@ export default {
                     labels: this.diagnostic_test_categories_label,
                     datasets: [{
                         data: this.chart_data,
+                        backgroundColor: [
+                            '#7B66FF',  // First bar color
+                            '#39A7FF', // Second bar color
+                            '#508D69', // Third bar color
+                            '#ED5AB3', // Fourth bar color
+                        ],
                         borderWidth: 1
                     }]
                 },
@@ -724,17 +750,7 @@ export default {
                             display: false
                         },
                         tooltip: {
-                            footerColor: '#fff',
-                            footerFont: '{size: 10}',
-                            callbacks: {
-                                label: function () {
-                                    return ''; // Return an empty string to disable the title
-                                },
-                                footer: function(context){
-                                    console.log(context)
-                                    return 'Able to count, recognise numbers and write number words.'
-                                }
-                            }
+                            enabled: false
                         },
                     },
                     scales: {
@@ -747,6 +763,7 @@ export default {
                             }
                         },
                         x:{
+                            display: false, // Hide the x-axis labels
                             min: 0,
                             max: this.dt_list.length,
                             stepSize: 1,

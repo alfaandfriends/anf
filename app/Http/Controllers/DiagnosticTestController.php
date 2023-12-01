@@ -70,6 +70,7 @@ class DiagnosticTestController extends Controller
         
         $diagnostic_test_categories_label   =   DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->pluck('name');
         $diagnostic_test_categories         =   DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->select(['id', 'name'])->orderBy('id')->get();
+        $diagnostic_test_chart_info         =   DB::table('diagnostic_test_chart_info')->where('language_id', $request->form_data['language'])->get();
         
         return Inertia::render('DiagnosticTests/Run/'.$template, [
             'form_data' =>  $request->form_data,
@@ -77,7 +78,8 @@ class DiagnosticTestController extends Controller
             'dt_list'   =>  $dt_list,
             'dt_id'     =>  $dt_id,
             'diagnostic_test_categories_label'     =>  $diagnostic_test_categories_label,
-            'diagnostic_test_categories'     =>  $diagnostic_test_categories
+            'diagnostic_test_categories'     =>  $diagnostic_test_categories,
+            'diagnostic_test_chart_info'     =>  $diagnostic_test_chart_info
         ]);
     }
 
@@ -112,7 +114,6 @@ class DiagnosticTestController extends Controller
             'parent_name'           => $request->input('parent_name'),
             'parent_contact'        => $request->input('parent_contact'),
             'parent_area_location'  => $request->input('parent_area_location'),
-            'parent_address'        => $request->input('parent_address'),
             'parent_email'          => $request->input('parent_email'),
             'eligible_level'        => $request->input('eligible_level'),
         ];
@@ -148,8 +149,8 @@ class DiagnosticTestController extends Controller
         Mail::to($request->parent_email)->send($parentNotification);
 
         /* Send Email to PIC */
-        $emails     =   ['sitihajar_ahmadjazuli@alfaandfriends.com', 'nurezzati_sallihin@alfaandfriends.com', 'gantika_novyasari@alfaandfriends.com'];
-        // $emails     =   ['abdulraof_mohdiskandar@alfaandfriends.com'];
+        // $emails     =   ['sitihajar_ahmadjazuli@alfaandfriends.com', 'nurezzati_sallihin@alfaandfriends.com', 'gantika_novyasari@alfaandfriends.com'];
+        $emails     =   ['abdulraof_mohdiskandar@alfaandfriends.com'];
         $users      =   User::whereIn('user_email', $emails)->get();
 
         foreach ($users as $user) {
@@ -196,7 +197,6 @@ class DiagnosticTestController extends Controller
                         'diagnostic_test_result.child_school', 
                         'diagnostic_test_result.parent_name', 
                         'diagnostic_test_result.parent_contact', 
-                        'diagnostic_test_result.parent_address', 
                         'diagnostic_test_result.parent_email', 
                         'diagnostic_test_result.eligible_level', 
                         'diagnostic_test_result.admitted', 
@@ -263,10 +263,16 @@ class DiagnosticTestController extends Controller
         if($request->chart_type == 1){
             $categories['label']    =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->pluck('name');
             $categories['data']     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->select(['id', 'name'])->orderBy('id')->get();
+
+            $language_id            =   DB::table('diagnostic_test')->where('id', $request->dt_id)->pluck('language_id');
+            $categories['info']     =   DB::table('diagnostic_test_chart_info')->where('language_id', $language_id)->where('chart_id', $request->chart_type)->get();
         }
         else{
             $categories['label']    =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->pluck('name');
             $categories['data']     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->select(['id', 'name'])->orderBy('id')->get();
+
+            $language_id            =   DB::table('diagnostic_test')->where('id', $request->dt_id)->pluck('language_id');
+            $categories['info']     =   DB::table('diagnostic_test_chart_info')->where('language_id', $language_id)->where('chart_id', $request->chart_type)->get();
         }
 
         return $categories;

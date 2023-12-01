@@ -65,41 +65,47 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="bg-white w-[210mm] h-[297mm] space-y-6 py-4"> -->
                                 <div class="grid grid-rows-1">
                                     <div class="flex justify-center">
-                                        <h1 class="font-bold text-slate-800 text-2xl py-4 uppercase">Diagnostic Test {{ report.title }}</h1>
+                                        <h1 class="font-bold text-slate-800 text-xl py-5 uppercase">Diagnostic Test {{ report.title }}</h1>
                                     </div>
                                 </div>
                                 <div class="grid grid-rows-1">
                                     <div class="grid grid-cols-2 px-4 space-x-4">
-                                        <div class="flex items-center justify-center p-6 rounded-lg h-[300px]">
-                                            <div id="chartImage" ref="chartImage"></div>
+                                        <div class="flex items-center justify-center rounded-lg">
+                                            <!-- <div id="chartImage" ref="chartImage"></div> -->
                                             <canvas id="scatter-chart" ref="scatterChart" class="hidden m-0"></canvas>
                                             <canvas id="bar-chart" ref="barChart" class="hidden m-0"></canvas>
                                         </div>
                                         <div class="p-6 rounded-lg">
                                             <!-- <h3 class="font-medium text-indigo-700">Student's Information</h3>
                                             <hr class="mt-3 border-2 border-indigo-700 border-dashed"> -->
-                                            <dl class="mt-2">
-                                                <div class="py-3 flex justify-between text-sm font-medium">
+                                            <dl class="mt-2 space-y-3">
+                                                <div class="flex justify-between text-sm font-medium">
                                                     <dt class="text-gray-500 min-w-[70px]">Name : </dt>
                                                     <dd class="text-gray-900 break-word">{{ report.name }}</dd>
                                                 </div>
-                                                <div class="py-3 flex justify-between text-sm font-medium">
+                                                <div class="flex justify-between text-sm font-medium">
                                                     <dt class="text-gray-500">Age :</dt>
                                                     <dd class="text-gray-900">{{ report.age }}</dd>
                                                 </div>
-                                                <div class="py-3 flex justify-between text-sm font-medium">
+                                                <div class="flex justify-between text-sm font-medium">
                                                     <dt class="text-gray-500">Result :</dt>
                                                     <dd class="text-gray-900">{{ report.result }}</dd>
                                                 </div>
-                                                <div class="py-3 flex justify-between text-sm font-medium">
-                                                    <dt class="text-gray-500">Date :</dt>
-                                                    <dd class="text-gray-900">{{ moment(report.datetime).format('DD/MM/Y') }}</dd>
-                                                </div>
-                                                <div class="py-3 flex justify-between text-sm font-medium">
-                                                    <dt class="text-gray-500">Time :</dt>
-                                                    <dd class="text-gray-900">{{ moment(report.datetime).format('h:mm A') }}</dd>
+                                                <div class="flex justify-between text-sm font-medium">
+                                                    <dt class="text-gray-500">Date / Time</dt>
+                                                    <dd class="text-gray-900">{{ moment(report.datetime).format('DD/MM/Y') }} - {{ moment(report.datetime).format('h:mm A') }}</dd>
                                                 </div>
                                             </dl>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 px-4 space-x-4">
+                                        <div class="flex items-center p-2 text-sm text-gray-800 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600" role="alert">
+                                            <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                            </svg>
+                                            <div class="flex flex-col">
+                                                <span v-for="info in chart_data.categories.info"><span class="font-semibold" :class="'text-[' + info.category_color + ']'">{{ info.category_name }}:</span> {{ info.category_description }}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -122,8 +128,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </thead>
                                                 <tbody class="text-sm divide-y divide-gray-100">
                                                     <tr v-for="answer, index in answer_data">
-                                                        <td class="p-2 whitespace-nowrap border-2 text-center align-middle">{{ ++index }}</td>
-                                                        <td class="p-2 whitespace-nowrap border-2 align-middle">
+                                                        <td class="p-1 whitespace-nowrap border-2 text-center align-middle">{{ ++index }}</td>
+                                                        <td class="p-1 whitespace-nowrap border-2 align-middle">
                                                             <div class="flex flex-col flex-wrap">
                                                                 <p class="whitespace-normal font-semibold">{{ answer.question }}</p>
                                                                 <template v-if="answer.answer">
@@ -140,7 +146,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                                 </template>
                                                             </div>
                                                         </td>
-                                                        <td class="p-2 whitespace-nowrap border-2 text-center align-middle">
+                                                        <td class="p-1 whitespace-nowrap border-2 text-center align-middle">
                                                             <div class="flex justify-center">
                                                                 <svg v-if="answer.correct" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill text-green-500" viewBox="0 0 16 16">
                                                                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
@@ -254,6 +260,7 @@ export default {
                 this.chart_data.categories.label    =   response.data.label;
                 this.chart_data.categories.data     =   response.data.data;
                 this.chart_data.categories.data     =   this.splitResultByCategory(index)
+                this.chart_data.categories.info     =   response.data.info
                 this.initChart(chart_type)
                 this.initAnswers(index)
                 this.initInfos(index)
@@ -276,44 +283,39 @@ export default {
                         labels: this.chart_data.categories.label,
                         datasets: [{
                             data: this.chart_data.categories.data,
+                            backgroundColor: [
+                                '#7B66FF',  // First bar color
+                                '#39A7FF', // Second bar color
+                                '#508D69', // Third bar color
+                                '#ED5AB3', // Fourth bar color
+                            ],
                             borderWidth: 1
                         }]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        animation: {
-                            duration: 0,
-                            onComplete: function(){
-                                document.getElementById('chartImage').innerHTML = '<img src="'+this.toBase64Image()+'">'
-                            }
-                        },
+                        animation: false,
                         plugins: {
                             legend: {
                                 display: false
                             },
+                            tooltip: {
+                                enabled: false
+                            },
                             datalabels: {
-                                anchor: 'end',
-                                align: 'end',
-                                color: '#000000',
-                                font: {
-                                    size: 14
-                                },
-                                formatter: function(value, context) {
-                                    return value;
-                                }
-                            }
+                                display: false, // This line controls the display of data labels
+                            },
                         },
                         scales: {
                             y:{
                                 min: 0,
-                                max: this.chart_data.total_answers,
+                                max: 3,
                                 stepSize: 1,
                                 ticks: {
                                     beginAtZero: true
                                 }
                             },
                             x:{
+                                display: false, // Hide the x-axis labels
                                 min: 0,
                                 max: this.chart_data.total_answers,
                                 stepSize: 1,
@@ -414,30 +416,19 @@ export default {
                         }]
                     },
                     options: {
-                        animation: {
-                            duration: 0,
-                            onComplete: function(){
-                                document.getElementById('chartImage').innerHTML = '<img src="'+this.toBase64Image()+'">'
-                            }
-                        },
+                        animation: false,
                         plugins: {
                             legend: {
-                                display: false
+                                display: false // <-- this option disables legends
                             },
-                            // datalabels: {
-                            //     display: true,
-                            //     anchor: 'end',
-                            //     align: 'end',
-                            //     color: '#000000',
-                            //     font: {
-                            //         size: 14
-                            //     }
-                            // }
+                            tooltip: {
+                                enabled: false
+                            }
                         },
                         scales: {
                             y:{
                                 min: 0,
-                                max: this.chart_data.total_answers,
+                                max: 5,
                                 stepSize: 1,
                                 ticks: {
                                     beginAtZero: true
@@ -449,7 +440,7 @@ export default {
                             },
                             x:{
                                 min: 0,
-                                max: this.chart_data.total_answers,
+                                max: 5,
                                 stepSize: 1,
                                 ticks: {
                                     beginAtZero: true
