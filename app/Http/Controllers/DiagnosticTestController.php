@@ -149,8 +149,8 @@ class DiagnosticTestController extends Controller
         Mail::to($request->parent_email)->send($parentNotification);
 
         /* Send Email to PIC */
-        // $emails     =   ['sitihajar_ahmadjazuli@alfaandfriends.com', 'nurezzati_sallihin@alfaandfriends.com', 'gantika_novyasari@alfaandfriends.com'];
-        $emails     =   ['abdulraof_mohdiskandar@alfaandfriends.com'];
+        $emails     =   ['sitihajar_ahmadjazuli@alfaandfriends.com', 'nurezzati_sallihin@alfaandfriends.com', 'gantika_novyasari@alfaandfriends.com', 'suetli_tan@alfaandfriends.com'];
+        // $emails     =   ['abdulraof_mohdiskandar@alfaandfriends.com'];
         $users      =   User::whereIn('user_email', $emails)->get();
 
         foreach ($users as $user) {
