@@ -680,9 +680,9 @@ export default {
                         tooltip: {
                             enabled: false
                         },
-        datalabels: {
-            display: false, // This line controls the display of data labels
-        },
+                        datalabels: {
+                            display: false, // This line controls the display of data labels
+                        },
                     },
                     scales: {
                         y:{
