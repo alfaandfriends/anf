@@ -71,6 +71,55 @@ import BreezeButton from '@/Components/Button.vue';
                                         }"
                                     />
                                 </div>
+                                <div class="flex">
+                                    <Multiselect 
+                                        @select="search"
+                                        v-model="params.day"
+                                        valueProp="id"
+                                        :appendNewOption="false"
+                                        :searchable="true"
+                                        :options="$page.props.days_of_the_week"
+                                        :clearOnSelect="true"
+                                        :canClear="false"
+                                        :canDeselect="false"
+                                        trackBy="name"
+                                        label="name"
+                                        placeholder="Days of the week"
+                                        :classes="{
+                                            container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
+                                            containerDisabled: 'cursor-default bg-gray-100',
+                                            containerOpen: 'rounded-b-none',
+                                            containerActive: 'border-2 border-gray-300',
+                                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
+                                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                            search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-gray-300 text-base font-sans bg-white rounded-lg',
+                                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
+                                            clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                            clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                            dropdownHidden: 'hidden',
+                                            options: 'flex flex-col p-0 m-0 list-none w-full',
+                                            group: 'p-0 m-0',
+                                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                            groupLabelPointable: 'cursor-pointer',
+                                            groupLabelPointed: 'bg-gray-300 text-black-700',
+                                            groupLabelSelected: 'bg-gray-100 text-black',
+                                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                            groupOptions: 'p-0 m-0',
+                                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
+                                            optionPointed: 'text-gray-800 bg-gray-100',
+                                            optionSelected: 'text-white bg-indigo-500',
+                                            optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                        }"
+                                    />
+                                </div>
                             </div>
                             <div class="flex">
                                 <BreezeButton @click="addClass(params.centre_id)" v-if="$page.props.can.create_classes">New Class</BreezeButton>
@@ -243,6 +292,7 @@ export default {
             params: {
                 search: this.filter.search ? this.filter.search : '',
                 centre_id: this.filter.centre_id ? this.filter.centre_id : '',
+                day: this.filter.day ? this.filter.day : '',
             }
         }
     },
