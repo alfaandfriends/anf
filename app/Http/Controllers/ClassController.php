@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ClassHelper;
+use App\Classes\GeneralHelper;
 use App\Classes\ProgrammeHelper;
 use App\Events\DatabaseTransactionEvent;
 use App\Http\Controllers\Approval\ClassApprovalController;
@@ -30,6 +31,8 @@ class ClassController extends Controller
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
         ]);
 
+        $days_of_the_week   =   GeneralHelper::getDaysOfTheWeeks();
+
         $results    =   DB::table('classes')
                             ->join('centres', 'classes.centre_id', '=', 'centres.id')
                             ->join('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
@@ -39,6 +42,11 @@ class ClassController extends Controller
                             ->when(request('search'), function ($query, $search) {
                                 $query->where(function ($q) use ($search) {
                                     $q->where('programmes.name', 'LIKE', "%$search%");
+                                });
+                            })
+                            ->when(request('day'), function ($query, $search) {
+                                $query->where(function ($q) use ($search) {
+                                    $q->where('classes.class_day_id', request('day'));
                                 });
                             })
                             ->where('classes.centre_id', '=', $request->centre_id)
@@ -54,8 +62,9 @@ class ClassController extends Controller
                                         'classes.status'])->paginate(10);
 
         return Inertia::render('CentreManagement/Classes/Index', [
-            'filter'        => request()->all('search', 'centre_id'),
-            'classes'       => $results,
+            'filter'            => request()->all('search', 'centre_id'),
+            'days_of_the_week'  => $days_of_the_week,
+            'classes'           => $results,
         ]);
     }
 
