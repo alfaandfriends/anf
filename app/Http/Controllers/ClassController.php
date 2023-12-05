@@ -45,9 +45,7 @@ class ClassController extends Controller
                                 });
                             })
                             ->when(request('day'), function ($query, $search) {
-                                $query->where(function ($q) use ($search) {
-                                    $q->where('classes.class_day_id', request('day'));
-                                });
+                                $query->where('classes.class_day_id', request('day'));
                             })
                             ->where('classes.centre_id', '=', $request->centre_id)
                             ->select([  'programmes.name as programme_name', 
@@ -62,7 +60,7 @@ class ClassController extends Controller
                                         'classes.status'])->paginate(10);
 
         return Inertia::render('CentreManagement/Classes/Index', [
-            'filter'            => request()->all('search', 'centre_id'),
+            'filter'            => request()->all('search', 'centre_id', 'day'),
             'days_of_the_week'  => $days_of_the_week,
             'classes'           => $results,
         ]);
