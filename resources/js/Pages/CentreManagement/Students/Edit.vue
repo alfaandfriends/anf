@@ -878,7 +878,7 @@ export default {
                 this.total_amount = 0
                 for (const feeObject of this.form.fee) {
                     const { include_material_fee, material_fee, programme_fee } = feeObject.fee_info;
-                    this.total_amount += include_material_fee ? programme_fee + material_fee : programme_fee;
+                    this.total_amount += include_material_fee ? Number(programme_fee) + Number(material_fee) : Number(programme_fee);
                 }
             },
             deep: true

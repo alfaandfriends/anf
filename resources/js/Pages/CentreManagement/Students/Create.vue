@@ -288,70 +288,83 @@ import BreezeButton from '@/Components/Button.vue';
                                         <h1 class="font-bold text-indigo-800">Fee Information</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
-                                    <div class="space-y-2 text-left" v-if="!form.fee.length">
-                                        <span class="font-semibold text-gray-500">No classes added.</span>
-                                    </div>
-                                    <div class="space-y-2" v-else>
-                                        <details class="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden" v-for="fee, fee_index in form.fee">
-                                            <summary class="flex cursor-pointer items-center justify-between gap-2 bg-indigo-100 p-4 text-gray-900 transition">
-                                                <span class="text-sm font-medium">
-                                                    <div class="flex items-center space-x-4 text-gray-800">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 640 512" fill="currentColor">
-                                                            <path d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5V291.9c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"/>
+                                    <div class="space-y-2">
+                                        <template v-if="form.fee.length" v-for="fee, fee_index in form.fee">
+                                            <details class="rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
+                                                <summary class="flex cursor-pointer items-center justify-between gap-2 bg-indigo-100 p-4 text-gray-900 transition">
+                                                    <span class="text-sm font-medium">
+                                                        <div class="flex items-center space-x-4 text-gray-800">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 640 512" fill="currentColor">
+                                                                <path d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5V291.9c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"/>
+                                                            </svg>
+                                                            <span class="font-bold">{{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }})</span>
+                                                            <span class="text-red-500 hover:underline cursor-pointer font-semibold" @click="deleteClass(fee.fee_info.student_fee_id, fee.fee_info.fee_id, fee.fee_info.invoice_id, fee.fee_info.admission_date)">Delete</span>
+                                                        </div>
+                                                    </span>
+                                                    <span class="transition group-open:-rotate-180">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
                                                         </svg>
-                                                        <span class="font-bold">{{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }})</span>
-                                                        <span class="text-red-500 hover:underline cursor-pointer font-semibold" @click="deleteFee(fee.fee_info.programme_id, fee.fee_info.class_type_id)">Delete</span>
+                                                    </span>
+                                                </summary>
+                                                <div class="p-6 space-y-4">
+                                                    <div class="flex items-center space-x-4">
+                                                        <div class="flex space-x-4 font-medium text-gray-900">
+                                                            <div class="flex items-center space-x-2 text-gray-600 text-sm">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
+                                                                    <path d="M243.4 2.6l-224 96c-14 6-21.8 21-18.7 35.8S16.8 160 32 160v8c0 13.3 10.7 24 24 24H456c13.3 0 24-10.7 24-24v-8c15.2 0 28.3-10.7 31.3-25.6s-4.8-29.9-18.7-35.8l-224-96c-8-3.4-17.2-3.4-25.2 0zM128 224H64V420.3c-.6 .3-1.2 .7-1.8 1.1l-48 32c-11.7 7.8-17 22.4-12.9 35.9S17.9 512 32 512H480c14.1 0 26.5-9.2 30.6-22.7s-1.1-28.1-12.9-35.9l-48-32c-.6-.4-1.2-.7-1.8-1.1V224H384V416H344V224H280V416H232V224H168V416H128V224zM256 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>
+                                                                </svg>
+                                                                <span>{{ fee.fee_info.centre_name }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex space-x-4 font-medium text-gray-900">
+                                                            <div class="flex items-center space-x-2 text-gray-600 text-sm">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 384 512">
+                                                                    <path d="M14 2.2C22.5-1.7 32.5-.3 39.6 5.8L80 40.4 120.4 5.8c9-7.7 22.3-7.7 31.2 0L192 40.4 232.4 5.8c9-7.7 22.3-7.7 31.2 0L304 40.4 344.4 5.8c7.1-6.1 17.1-7.5 25.6-3.6s14 12.4 14 21.8V488c0 9.4-5.5 17.9-14 21.8s-18.5 2.5-25.6-3.6L304 471.6l-40.4 34.6c-9 7.7-22.3 7.7-31.2 0L192 471.6l-40.4 34.6c-9 7.7-22.3 7.7-31.2 0L80 471.6 39.6 506.2c-7.1 6.1-17.1 7.5-25.6 3.6S0 497.4 0 488V24C0 14.6 5.5 6.1 14 2.2zM96 144c-8.8 0-16 7.2-16 16s7.2 16 16 16H288c8.8 0 16-7.2 16-16s-7.2-16-16-16H96zM80 352c0 8.8 7.2 16 16 16H288c8.8 0 16-7.2 16-16s-7.2-16-16-16H96c-8.8 0-16 7.2-16 16zM96 240c-8.8 0-16 7.2-16 16s7.2 16 16 16H288c8.8 0 16-7.2 16-16s-7.2-16-16-16H96z"/>
+                                                                </svg>
+                                                                <span>{{ fee.fee_info.programme_type }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex space-x-4 font-medium text-gray-900">
+                                                            <div class="flex items-center space-x-2 text-gray-600 text-sm">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                                                                    <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
+                                                                </svg>
+                                                                <span>{{ fee.fee_info.class_method }}</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </span>
-                                                <span class="transition group-open:-rotate-180">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-                                                    </svg>
-                                                </span>
-                                            </summary>
-                                            <div class="border-t border-gray-200 bg-white">
-                                                <div class="flex px-6 py-3 ">
-                                                    <div class="flex items-center justify-center divide-x divide-gray-400">
-                                                        <div class="flex space-x-4 font-medium text-gray-900 px-4">
-                                                            <span>Centre: </span>
-                                                            <dd class="text-indigo-600 sm:col-span-2">{{ fee.fee_info.centre_name }}</dd>
+                                                    <div class="flex space-x-4">
+                                                        <div class="flex space-x-4 text-sm border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
+                                                            <div class="flex items-center space-x-2">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                                                                    <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/>
+                                                                </svg>
+                                                                <span>{{ classes.class_day }}</span>
+                                                            </div>
+                                                            <div class="flex items-center space-x-2">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
+                                                                    <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
+                                                                </svg>
+                                                                <span>{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
+                                                            </div>
                                                         </div>
-                                                        <div class="flex space-x-4 font-medium text-gray-900 px-4">
-                                                            <span>Fee Type: </span>
-                                                            <dd class="text-indigo-600 sm:col-span-2">{{ fee.fee_info.programme_type }}</dd>
+                                                    </div>
+                                                    <div class="flex pt-6 border-t justify-between">
+                                                        <div class="flex">
+                                                            <input :id="fee_index" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                            <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-700 select-none cursor-pointer">Material Fee : {{ fee.fee_info.material_fee }}</label>
                                                         </div>
-                                                        <div class="flex space-x-4 font-medium text-gray-900 px-4">
-                                                            <span>Class Method: </span>
-                                                            <dd class="text-indigo-600 sm:col-span-2">{{ fee.fee_info.class_method }}</dd>
-                                                        </div>
+                                                        <span class="ml-3 text-gray-900 select-none font-semibold">Fee: {{ fee.fee_info.include_material_fee ? fee.fee_info.material_fee + fee.fee_info.programme_fee : fee.fee_info.programme_fee }}</span>
                                                     </div>
                                                 </div>
-                                        
-                                                <div class="relative overflow-x-auto px-6 pb-4 w-full">
-                                                    <table class="text-sm text-left text-gray-500 border w-1/2">
-                                                        <thead class="text-xs text-gray-700 uppercase bg-gray-200">
-                                                            <tr>
-                                                                <th scope="col" class="px-6 py-3">Day</th>
-                                                                <th scope="col" class="px-6 py-3">Time</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr class="bg-white border-b" v-for="classes in fee.classes">
-                                                                <td class="px-6 py-4 text-gray-800 font-semibold">{{ classes.class_day}}</td>
-                                                                <td class="px-6 py-4 text-gray-800 font-semibold">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="flex p-6 border-t justify-between">
-                                                    <div class="flex">
-                                                        <input :id="fee_index" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                        <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-700 select-none cursor-pointer">Material Fee : {{ fee.fee_info.material_fee }}</label>
-                                                    </div>
-                                                    <span class="ml-3 text-gray-900 select-none font-semibold">Fee: {{ fee.fee_info.include_material_fee ? fee.fee_info.material_fee + fee.fee_info.programme_fee : fee.fee_info.programme_fee }}</span>
-                                                </div>
+                                            </details>
+                                        </template>
+                                        <template v-else>
+                                            <div class="space-y-2 text-left">
+                                                <span class="font-semibold text-gray-500">No classes added.</span>
                                             </div>
-                                        </details>
+                                        </template>
                                     </div>
                                     <div class="flex justify-end p-6" v-if="form.fee.length">
                                         <span class="text-right ml-3 text-gray-900 cursor-text font-bold">Total Amount: {{ total_amount }}</span>
@@ -486,7 +499,8 @@ export default {
                 this.total_amount = 0
                 for (const feeObject of this.form.fee) {
                     const { include_material_fee, material_fee, programme_fee } = feeObject.fee_info;
-                    this.total_amount += include_material_fee ? programme_fee + material_fee : programme_fee;
+                    console.log(include_material_fee, material_fee, programme_fee)
+                    this.total_amount += include_material_fee ? Number(programme_fee) + Number(material_fee) : Number(programme_fee);
                 }
             },
             deep: true

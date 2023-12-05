@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\DiagnosticTestHelper;
 use App\Events\DatabaseTransactionEvent;
 use App\Mail\DiagnosticTest\ResultToParent;
 use App\Mail\DiagnosticTest\ResultToPIC;
@@ -291,6 +292,8 @@ class DiagnosticTestController extends Controller
     /* Settings */
         /* Diagnostic Test List */
         public function dtList(){
+            $languages              =   DiagnosticTestHelper::getLanguages();
+            $ages                   =   DiagnosticTestHelper::getAges();
             $diagnostic_test_list   =   DB::table('diagnostic_test')
                                             ->leftJoin('diagnostic_test_languages', 'diagnostic_test.language_id', '=', 'diagnostic_test_languages.id')
                                             ->leftJoin('diagnostic_test_ages', 'diagnostic_test.age_id', '=', 'diagnostic_test_ages.id')
@@ -300,11 +303,20 @@ class DiagnosticTestController extends Controller
                                                 'diagnostic_test_ages.name as age',
                                                 'diagnostic_test_languages.name as language',
                                             ])
-                                            ->orderBy('id')
+                                            ->when(request('language_id'), function ($query, $search) {
+                                                $query->where('diagnostic_test.language_id', request('language_id'));
+                                            })
+                                            ->when(request('age_id'), function ($query, $search) {
+                                                $query->where('diagnostic_test.age_id', request('age_id'));
+                                            })
+                                            ->orderBy('age_id')
                                             ->paginate(10);
                                                                           
             return Inertia::render('DiagnosticTests/Index', [
-                'diagnostic_test_list' => $diagnostic_test_list,
+                'filter'                => request()->all('search', 'language_id', 'age_id'),
+                'languages'             => $languages,
+                'ages'                  => $ages,
+                'diagnostic_test_list'  => $diagnostic_test_list,
             ]);
         }
 
