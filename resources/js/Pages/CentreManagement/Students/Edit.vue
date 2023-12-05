@@ -761,6 +761,7 @@ export default {
             show_add_class: false,
             show_transfer_student: false,
             disable_check_box: false,
+            fetching_fee: false,
             total_amount: 0,
             errors: {
                 child: false,
@@ -922,6 +923,9 @@ export default {
             }
         },
         getNormalFee(class_id, class_type_id, programme_id, programme_level_id, is_transfer_student = false){
+            if(this.fetching_fee){
+                return
+            }
             if(!is_transfer_student){
                 const  only_one_class_allowed_form      = this.form.fee.find(item => item.fee_info.class_type_id === 1 && item.fee_info.class_type_id === class_type_id && item.fee_info.programme_id === programme_id);
                 const  only_one_class_allowed_current   = this.current_fee.find(item => item.fee_info.class_type_id === 1 && item.fee_info.class_type_id === class_type_id && item.fee_info.programme_id === programme_id);
@@ -945,6 +949,7 @@ export default {
                 }
             }
             
+            this.fetching_fee = true
             axios.get(route('programmes.get_fee'), {
                 'params': {
                     'class_id' : class_id,
@@ -956,9 +961,13 @@ export default {
                 this.pushMaterialFee(programme_id)
                 this.scrollToElement('class_fee')
                 this.searching.fee = false
+                this.fetching_fee = false
             });
         },
         getPlusFee(event, class_id, class_type, programme_id, is_transfer_student = false){
+            if(this.fetching_fee){
+                return
+            }
             if(this.disable_check_box){
                 return
             }
@@ -990,6 +999,7 @@ export default {
             this.form.fee = this.form.fee.filter(item => item.fee_info.programme_id !== programme_id);
             
             if(this.selected_plus_class[programme_id].length){
+                this.fetching_fee = true
                 axios.get(route('programmes.get_fee'), {
                     'params': {
                         'class_type' : this.search_form.class_type,
@@ -1005,10 +1015,12 @@ export default {
                     this.scrollToElement('class_fee')
                     this.searching.fee = false
                     this.disable_check_box  = false
+                    this.fetching_fee = false
                 })
                 .catch((error) => {
                     this.searching.fee = false
                     this.disable_check_box  = false
+                    this.fetching_fee = false
                 });
             }
             else{
