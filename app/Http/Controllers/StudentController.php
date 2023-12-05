@@ -183,7 +183,6 @@ class StudentController extends Controller
             return redirect(route('students'))->with(['type'=>'success', 'message'=>'Admission success !']);
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
             
             return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
         }
