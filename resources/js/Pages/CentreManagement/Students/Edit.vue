@@ -491,7 +491,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <input :id="fee_index" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
                                                     <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-700 select-none cursor-pointer">Material Fee : {{ fee.fee_info.material_fee }}</label>
                                                 </div>
-                                                <span class="ml-3 text-gray-900 select-none font-semibold">Fee: {{ fee.fee_info.include_material_fee ? fee.fee_info.material_fee + fee.fee_info.programme_fee : fee.fee_info.programme_fee }}</span>
+                                                <span class="ml-3 text-gray-900 select-none font-semibold">Fee: {{ fee.fee_info.include_material_fee ? (fee.fee_info.material_fee + fee.fee_info.programme_fee) : fee.fee_info.programme_fee }}</span>
                                             </div>
                                         </div>
                                     </details>
