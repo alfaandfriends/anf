@@ -39,7 +39,6 @@ class InvoiceHelper {
         $invoice_number    =   self::getCurrentYearInvoiceNumber($invoice_config);
 
         $invoice_items      =   collect($invoice_data['invoice_items']);
-        dd($invoice_items);
 
         $totalFee = $invoice_items->sum(function ($item) {
             return $item['include_material_fee']
@@ -47,13 +46,13 @@ class InvoiceHelper {
                 : $item['programme_fee'];
         });
 
-        $data = array_map(function ($value) {
-            return is_numeric($value) ? (float) $value : $value;
-        }, $invoice_items->toArray());
-        
-        $jsonResult = json_encode($data);
+        foreach ($invoice_items as &$value) {
+            if (is_numeric($value)) {
+                $value = (float) $value;
+            }
+        }
 
-        dd($jsonResult);
+        dd($invoice_items);
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];
