@@ -104,7 +104,7 @@ class StudentController extends Controller
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
             $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
         
-            $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
+            $new_invoice_id                     =   InvoiceHelper::newFeeInvoice($invoice_data);
             
             foreach($request->fee as $fee_index=>$fee){
                 /* Create Fee */
@@ -184,6 +184,7 @@ class StudentController extends Controller
         } catch (\Exception $e) {
             event(new DatabaseTransactionEvent($e));
             DB::rollback();
+            dd($e);
             
             return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
         }

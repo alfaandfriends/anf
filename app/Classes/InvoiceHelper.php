@@ -52,7 +52,7 @@ class InvoiceHelper {
         $invoice_number     =   Carbon::now()->year.'-'.$invoice_number;
         $date_admission     =   $invoice_data['date_admission'];
         $currency           =   $invoice_data['currency'];
-
+        
         if($student_country == self::$malaysia){
             $bill_collection_id     =   config('app.billplz.collection_id');
             $bill_email             =   StudentHelper::getStudentEmail($invoice_data['student_id']);

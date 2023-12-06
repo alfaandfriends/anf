@@ -44,7 +44,7 @@ class StudentHelper {
                                         ->where('students.id', $student_id)
                                         ->pluck('countries.currency_symbol')
                                         ->first();
-
+                                        
         return $user_currenct_currency;
     }
 
