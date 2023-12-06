@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\ProgrammeHelper;
 use App\Http\Controllers\ArtGalleryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CentreController;
@@ -79,7 +80,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/programmes/edit', [ProgrammeController::class, 'editProgramme'])->name('programmes.edit')->middleware('permission:edit_programmes');
             Route::post('/programmes/update', [ProgrammeController::class, 'updateProgramme'])->name('programmes.update')->middleware('permission:edit_programmes');
             Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:delete_programmes');
-            Route::get('/programmes/get-fee', [ProgrammeController::class, 'getFee'])->name('programmes.get_fee')->middleware('permission:view_programmes|create_programmes|delete_programmes');
+            Route::get('/programmes/get-fee', [ProgrammeHelper::class, 'getFee'])->name('programmes.get_fee')->middleware('permission:view_programmes|create_programmes|delete_programmes');
             Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:edit_programmes|delete_programmes');
 
             /* Classes */

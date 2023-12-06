@@ -53,11 +53,11 @@ class InvoiceController extends Controller
         }    
         
         if($request->centre_id){
-            $query->where('invoices.invoice_items', 'LIKE', '%centre_id": '.$request->centre_id.'%');
+            $query->where('invoices.invoice_items', 'LIKE', '%centre_id": "'.$request->centre_id.'"%');
         }     
         
         if($request->programme_id){
-            $query->where('invoices.invoice_items', 'LIKE', '%programme_id": '.$request->programme_id.'%');
+            $query->where('invoices.invoice_items', 'LIKE', '%programme_id": "'.$request->programme_id.'"%');
         }     
         
         if($request->date){
