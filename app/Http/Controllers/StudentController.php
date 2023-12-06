@@ -101,6 +101,7 @@ class StudentController extends Controller
             $invoice_data['student_id']         =   $student_id;
             $invoice_data['children_id']        =   $request->children_id;
             $invoice_data['invoice_items']      =   collect($request->fee)->pluck('fee_info')->toArray();
+            dd($request->fee);
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
             $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
         
