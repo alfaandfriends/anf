@@ -308,7 +308,6 @@ class ProgrammeController extends Controller
         }
 
         $data['fee_info']   =   $fee_info_query->first();
-        dd($data['fee_info']);
 
         $classes_query  =   DB::table('classes')
                                 ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')

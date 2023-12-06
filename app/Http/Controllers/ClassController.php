@@ -93,7 +93,7 @@ class ClassController extends Controller
             'start_time'            => 'required',
             'end_time'              => 'required',
         ]);
-
+        dd($request->all());
         $class_id   =   DB::table('classes')->insertGetId([
             'centre_id'             =>  $request->centre_id,
             'programme_level_id'    =>  $request->programme_level_id,
