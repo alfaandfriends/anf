@@ -46,12 +46,6 @@ class InvoiceHelper {
                 : $item['programme_fee'];
         });
 
-        foreach ($invoice_items as &$value) {
-            if (is_numeric($value)) {
-                $value = (float) $value;
-            }
-        }
-
         dd($invoice_items);
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  

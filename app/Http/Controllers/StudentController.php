@@ -498,7 +498,6 @@ class StudentController extends Controller
     }
 
     public function transferStudent(Request $request){
-        // dd($request->all());
         $centre_info    =   CentreHelper::getCentreInfo($request->centre_id);
         $fee_info       =   DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->first();
         $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info->invoice_id)->pluck('invoice_items')->first());
