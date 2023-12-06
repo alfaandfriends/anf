@@ -134,6 +134,6 @@ class ProgrammeHelper {
         
                         
 
-        return $data;
+        return response()->json($data);
     }
 }
