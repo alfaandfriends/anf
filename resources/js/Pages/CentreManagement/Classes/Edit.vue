@@ -202,8 +202,8 @@ export default {
         return{
             disable_class_types: false,
             disable_class_levels: false,
-            class_types: this.class_types ? this.class_types : [],
-            class_levels: this.class_levels ? this.class_levels : [],
+            class_types: this.$page.props.class_types ? this.$page.props.class_types : [],
+            class_levels: this.$page.props.class_levels ? this.$page.props.class_levels : [],
             form: {
                 class_id: this.class_info ? this.class_info.class_id : '',
                 centre_id: this.class_info ? this.class_info.centre_id : '',
