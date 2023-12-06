@@ -93,7 +93,7 @@ class ClassController extends Controller
             'start_time'            => 'required',
             'end_time'              => 'required',
         ]);
-        dd($request->all());
+
         $class_id   =   DB::table('classes')->insertGetId([
             'centre_id'             =>  $request->centre_id,
             'programme_level_id'    =>  $request->programme_level_id,
@@ -208,6 +208,8 @@ class ClassController extends Controller
 
         //     return redirect(route('classes'))->with(['type' => 'success', 'message' => 'Your request has been sent for approval!']);
         // }
+        
+        dd($request->all());
         DB::table('classes')->where('id', $request->class_id)->update([
             'centre_id'             =>  $request->centre_id,
             'programme_level_id'    =>  $request->programme_level_id,
