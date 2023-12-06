@@ -350,10 +350,7 @@ class ProgrammeController extends Controller
             }
     
             $data['material']    =   $material;
-        }
-                  
-        
-                        
+        }       
 
         return $data;
     }
