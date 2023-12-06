@@ -39,6 +39,7 @@ class InvoiceHelper {
         $invoice_number    =   self::getCurrentYearInvoiceNumber($invoice_config);
 
         $invoice_items      =   collect($invoice_data['invoice_items']);
+        dd($invoice_items);
 
         $totalFee = $invoice_items->sum(function ($item) {
             return $item['include_material_fee']
