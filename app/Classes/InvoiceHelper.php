@@ -45,6 +45,7 @@ class InvoiceHelper {
                 ? $item['programme_fee'] + $item['material_fee']
                 : $item['programme_fee'];
         });
+        dd(json_encode($invoice_items->toArray()));
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];
