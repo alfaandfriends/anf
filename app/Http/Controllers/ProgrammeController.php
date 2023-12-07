@@ -307,7 +307,10 @@ class ProgrammeController extends Controller
             $fee_info_query->where('classes.id', $request->classes)->where('programme_levels.class_type_id', $request->class_type)->where('class_types_detail.class_count', $request->class_count);
         }
 
-        $data['fee_info']   =   $fee_info_query->first();
+        $data['fee_info']                           =   $fee_info_query->first();
+        $data['fee_info']['include_material_fee']   =   true;
+        $data['fee_info']['material_fee_discount']  =   0;
+        $data['fee_info']['programme_fee_discount'] =   0;
 
         $classes_query  =   DB::table('classes')
                                 ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')
