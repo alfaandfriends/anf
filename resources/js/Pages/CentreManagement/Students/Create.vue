@@ -579,6 +579,7 @@ export default {
                 }
             })
             .then((res) => {
+                console.log(res)
                 this.form.fee.push(res.data)
                 this.pushMaterialFee(programme_id)
                 this.scrollToElement('class_fee')
@@ -685,7 +686,7 @@ export default {
         },
         sumMaterialFee(has_material_fee, material_fee, programme_fee){
             return has_material_fee ? Number(material_fee) + Number(programme_fee) : Number(programme_fee)
-        }
+        },
     },
     mounted(){
         const now = new Date();
