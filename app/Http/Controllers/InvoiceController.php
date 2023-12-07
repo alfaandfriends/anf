@@ -179,10 +179,10 @@ class InvoiceController extends Controller
 
             DB::commit();
 
-            // return redirect(route('fee.invoices'))->with(['type'=>'success', 'message'=>'New invoice created successfully!']);
+            return redirect(route('fee.invoices'))->with(['type'=>'success', 'message'=>'Invoices have been successfully generated!']);
         } catch (\Exception $e) {
             DB::rollback();
-            // return redirect(route('fee.invoices'))->with(['type'=>'error', 'message'=>'Something went wrong, please try again!']);
+            return redirect(route('fee.invoices'))->with(['type'=>'error', 'message'=>'Something went wrong, please try again!']);
         }
     }
 
