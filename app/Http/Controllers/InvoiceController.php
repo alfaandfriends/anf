@@ -125,7 +125,7 @@ class InvoiceController extends Controller
                     $invoice_id =   DB::table('invoices')->insertGetId([
                         'student_id'                => $request->student_id,
                         'invoice_number'            => Carbon::now()->year.'-'.$invoice_number,
-                        'invoice_items'             => json_encode($request->invoice_items),
+                        'invoice_items'             => json_encode($request->invoice_items, JSON_NUMERIC_CHECK),
                         'date_issued'               => $start_month->format('Y-m-d'),
                         'due_date'                  => $start_month->copy()->addDays(7)->format('Y-m-d'),
                         'amount'                    => $request->invoice_amount,
@@ -162,7 +162,7 @@ class InvoiceController extends Controller
                 $invoice_id =   DB::table('invoices')->insertGetId([
                     'student_id'                => $request->student_id,
                     'invoice_number'            => Carbon::now()->year.'-'.$invoice_number,
-                    'invoice_items'             => json_encode($request->invoice_items),
+                    'invoice_items'             => json_encode($request->invoice_items, JSON_NUMERIC_CHECK),
                     'date_issued'               => Carbon::parse($request->date_issued)->format('Y-m-d'),
                     'due_date'                  => Carbon::parse($request->due_date)->format('Y-m-d'),
                     'amount'                    => $request->invoice_amount,
@@ -219,7 +219,7 @@ class InvoiceController extends Controller
         }
 
         DB::table('invoices')->where('id', $request->invoice_id)->update([
-            'invoice_items'             =>  json_encode($request->invoice_items),
+            'invoice_items'             =>  json_encode($request->invoice_items, JSON_NUMERIC_CHECK),
             'amount'                    =>  $request->invoice_amount,
             'status'                    =>  $request->payment['status'],
             'payment_date'              =>  Carbon::parse($request->payment['date'])->format('Y-m-d'),

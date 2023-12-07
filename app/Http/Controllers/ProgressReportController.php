@@ -133,7 +133,7 @@ class ProgressReportController extends Controller
 
         DB::table('progress_report_details')->where('id', $request->report_id)->update([
             'date'                  => Carbon::parse($request->date)->format('Y-m-d'),
-            'report_data'           => json_encode($request->report_data),
+            'report_data'           => json_encode($request->report_data, JSON_NUMERIC_CHECK),
             'comments'              => $request->comments,
             'attendance_status'     => $request->attendance_status,
         ]);

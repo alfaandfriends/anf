@@ -58,10 +58,10 @@ class OrderController extends Controller
         
         $order_id   =   DB::table('orders')->insertGetId([
             'student_id'            =>  $request->student_id,
-            'products'              =>  json_encode($request->products),
+            'products'              =>  json_encode($request->products, JSON_NUMERIC_CHECK),
             'shipping_provider'     =>  $request->shipping_provider,
             'tracking_number'       =>  $request->tracking_number,
-            'tracking_status'       =>  json_encode($request->tracking_status),
+            'tracking_status'       =>  json_encode($request->tracking_status, JSON_NUMERIC_CHECK),
             'status'                =>  $request->status,
         ]);
                 
@@ -103,10 +103,10 @@ class OrderController extends Controller
 
         DB::table('orders')->where('id', $request->order_id)->update([
             'student_id'            =>  $request->student_id,
-            'products'              =>  json_encode($request->products),
+            'products'              =>  json_encode($request->products, JSON_NUMERIC_CHECK),
             'shipping_provider'     =>  $request->shipping_provider,
             'tracking_number'       =>  $request->tracking_number,
-            'tracking_status'       =>  json_encode($request->tracking_status),
+            'tracking_status'       =>  json_encode($request->tracking_status, JSON_NUMERIC_CHECK),
             'status'                =>  $request->status,
         ]);
                 

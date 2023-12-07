@@ -70,7 +70,7 @@ class InvoiceHelper {
                 $invoice_id =   DB::table('invoices')->insertGetId([
                                     'student_id'        => $student_id,
                                     'invoice_number'    => $invoice_number,
-                                    'invoice_items'     => json_encode($invoice_items->toArray()),
+                                    'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
                                     'date_issued'       => $date_admission,
                                     'due_date'          => $due_date->addWeeks(2)->toDateString(),
                                     'amount'            => $totalFee,
@@ -102,7 +102,7 @@ class InvoiceHelper {
                 )
             );
 
-            $digest_hash = base64_encode(hash('sha256', json_encode($request_body), true));
+            $digest_hash = base64_encode(hash('sha256', json_encode($request_body, JSON_NUMERIC_CHECK), true));
             
             $signature_component  = "Client-Id:".$client_id."\n".
                                     "Request-Id:".$request_id."\n" .
@@ -126,7 +126,7 @@ class InvoiceHelper {
                     $invoice_id =   DB::table('invoices')->insertGetId([
                         'student_id'        => $student_id,
                         'invoice_number'    => $invoice_number,
-                        'invoice_items'     => json_encode($invoice_items->toArray()),
+                        'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
                         'date_issued'       => $date_admission,
                         'due_date'          => $due_date->addWeeks(2)->toDateString(),
                         'amount'            => $totalFee,
