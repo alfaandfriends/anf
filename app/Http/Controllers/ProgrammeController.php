@@ -308,9 +308,9 @@ class ProgrammeController extends Controller
         }
 
         $data['fee_info']                           =   $fee_info_query->first();
-        $data['fee_info']->include_material_fee   =   true;
-        $data['fee_info']->material_fee_discount  =   0;
-        $data['fee_info']->programme_fee_discount =   0;
+        $data['fee_info']->include_material_fee     =   true;
+        $data['fee_info']->material_fee_discount    =   0;
+        $data['fee_info']->programme_fee_discount   =   0;
 
         $classes_query  =   DB::table('classes')
                                 ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')

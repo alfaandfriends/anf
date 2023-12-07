@@ -95,7 +95,6 @@ class StudentController extends Controller
             $student_id         =   DB::table('students')->insertGetId([
                 'children_id'    =>  $request->children_id,
             ]);
-
                                             
             /* Create Invoice */
             $invoice_data['student_id']         =   $student_id;

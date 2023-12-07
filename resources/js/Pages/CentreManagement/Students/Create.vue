@@ -580,7 +580,6 @@ export default {
             })
             .then((res) => {
                 this.form.fee.push(res.data)
-                this.pushMaterialFee(programme_id)
                 this.scrollToElement('class_fee')
                 this.searching.fee = false
                 this.fetching_fee = false
@@ -630,7 +629,6 @@ export default {
                 .then((res) => {
                     if(res.data.fee_info){
                         this.form.fee.push(res.data)
-                        this.pushMaterialFee(programme_id)
                     }
                     this.scrollToElement('class_fee')
                     this.searching.fee = false
@@ -670,18 +668,6 @@ export default {
         checkIfClassSelected(class_id, programme_id){
             const classExists = this.selected_plus_class[programme_id] ? this.selected_plus_class[programme_id].includes(class_id) : false
             return classExists
-        },
-        pushMaterialFee(programme_id){
-            for (const feeObject of this.form.fee) {
-                const classObject = feeObject.fee_info;
-                if (classObject.programme_id === programme_id) {
-                    classObject.include_material_fee = true;
-                    classObject.material_fee_discount = 0;
-                    classObject.programme_fee_discount = 0;
-                    break;
-                }
-                
-            }
         },
         sumMaterialFee(has_material_fee, material_fee, programme_fee){
             return has_material_fee ? Number(material_fee) + Number(programme_fee) : Number(programme_fee)
