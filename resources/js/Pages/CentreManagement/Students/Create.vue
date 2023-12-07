@@ -579,7 +579,6 @@ export default {
                 }
             })
             .then((res) => {
-                console.log(res)
                 this.form.fee.push(res.data)
                 this.pushMaterialFee(programme_id)
                 this.scrollToElement('class_fee')
@@ -675,6 +674,7 @@ export default {
         pushMaterialFee(programme_id){
             for (const feeObject of this.form.fee) {
                 const classObject = feeObject.fee_info;
+                console.log(classObject)
                 if (classObject.programme_id === programme_id) {
                     classObject.include_material_fee = true;
                     classObject.material_fee_discount = 0;
