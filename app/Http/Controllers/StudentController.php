@@ -95,6 +95,10 @@ class StudentController extends Controller
             $student_id         =   DB::table('students')->insertGetId([
                 'children_id'    =>  $request->children_id,
             ]);
+
+            if($student_id){
+                
+            }
                                             
             /* Create Invoice */
             $invoice_data['student_id']         =   $student_id;
@@ -102,6 +106,10 @@ class StudentController extends Controller
             $invoice_data['invoice_items']      =   collect($request->fee)->pluck('fee_info')->toArray();
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
             $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
+
+            if($invoice_data['currency']){
+                return back()->with(['type'=>'error', 'message'=>'Please set the country for the parent of this student.']);
+            }
         
             $new_invoice_id                     =   InvoiceHelper::newFeeInvoice($invoice_data);
             
