@@ -242,7 +242,6 @@ export default {
         'form.invoice_items': {
             handler(newVal) {
                 newVal.forEach(item => {
-            console.log(item)
                     !item.programme_fee             ? item.programme_fee = 0 : ''
                     !item.programme_fee_discount    ? item.programme_fee_discount = 0 : ''
                     !item.material_fee              ? item.material_fee = 0 : ''

@@ -27,7 +27,6 @@ class InvoiceHelper {
 
     public static function newFeeInvoice($invoice_data)
     {
-        dd($invoice_data);
         $currentYear        =   Carbon::now()->year;
         $invoice_config     =   DB::table('invoice_config')->whereYear('year', $currentYear)->first();
 

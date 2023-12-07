@@ -9,6 +9,7 @@ use App\Classes\OrderHelper;
 use App\Classes\ProductHelper;
 use App\Classes\ProgrammeHelper;
 use App\Classes\StudentHelper;
+use App\Classes\UserHelper;
 use App\Events\DatabaseTransactionEvent;
 use Billplz\Laravel\Billplz;
 use Carbon\Carbon;
@@ -86,7 +87,14 @@ class StudentController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {   
+        /* Check for children currency first */
+        $child_currency           =   UserHelper::getChildCurrency($request->children_id);
+
+        if(!$child_currency){
+            return back()->with(['type'=>'error', 'message'=>'Please set the country for the parent of this child.']);
+        }
+
         try {
             // Begin the transaction
             DB::beginTransaction();
@@ -95,10 +103,6 @@ class StudentController extends Controller
             $student_id         =   DB::table('students')->insertGetId([
                 'children_id'    =>  $request->children_id,
             ]);
-
-            if($student_id){
-                
-            }
                                             
             /* Create Invoice */
             $invoice_data['student_id']         =   $student_id;
@@ -106,10 +110,6 @@ class StudentController extends Controller
             $invoice_data['invoice_items']      =   collect($request->fee)->pluck('fee_info')->toArray();
             $invoice_data['date_admission']     =   Carbon::parse($request->date_admission)->format('Y-m-d');
             $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
-
-            if($invoice_data['currency']){
-                return back()->with(['type'=>'error', 'message'=>'Please set the country for the parent of this student.']);
-            }
         
             $new_invoice_id                     =   InvoiceHelper::newFeeInvoice($invoice_data);
             
@@ -191,7 +191,6 @@ class StudentController extends Controller
         } catch (\Exception $e) {
             event(new DatabaseTransactionEvent($e));
             DB::rollback();
-            dd($e);
             
             return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
         }

@@ -158,7 +158,7 @@ class InvoiceController extends Controller
                     $filename = time() . '.' . $extension;
                     Storage::putFileAs('proof_of_payment', $request->file('payment.proof.file'), $filename);
                 }
-                // dd($request->payment['transaction_id']);
+                
                 $invoice_id =   DB::table('invoices')->insertGetId([
                     'student_id'                => $request->student_id,
                     'invoice_number'            => Carbon::now()->year.'-'.$invoice_number,
