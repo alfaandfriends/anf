@@ -351,7 +351,7 @@ class ProgrammeController extends Controller
     
             $data['material']    =   $material;
         }       
-        dd($data);
-        return json_encode($data);
+        
+        return json_encode($data, JSON_NUMERIC_CHECK);
     }
 }
