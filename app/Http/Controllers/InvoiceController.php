@@ -53,7 +53,8 @@ class InvoiceController extends Controller
         }    
         
         if($request->centre_id){
-            $query->where('invoices.invoice_items', 'LIKE', '%centre_id": '.$request->centre_id.'%');
+            $centreIdJson = json_encode(["centre_id" => $request->centre_id], JSON_NUMERIC_CHECK);
+            $query->whereRaw('JSON_CONTAINS(invoices.invoice_items, ?)', [$centreIdJson]);
         }     
         
         if($request->programme_id){
