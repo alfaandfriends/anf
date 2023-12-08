@@ -122,7 +122,7 @@
                                         <h1 class="text-indigo-800 font-bold">Centre View</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="mb-4" v-show="show_front_upload">
                                             <label class="block text-sm text-gray-700 font-bold"> Centre Front View <span class="text-red-500">*</span> (<span class="text-blue-500">1 Image</span>)</label>
                                             <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
@@ -165,14 +165,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="mb-4" v-show="show_image">
+                                    </div>
+                                    <div class="flex flex-wrap space-y-4 sm:space-x-6">
+                                        <div class="overflow-x-auto" v-show="show_image">
                                             <label class="block text-sm text-gray-900 font-bold"> Crop Image</label>
                                             <div class="w-96 h-60 mt-1">
                                                 <img class="image" ref="input" :src="image">
                                             </div>
                                         </div>
-                                        <div class="mb-4" v-show="show_image">
-                                            <div class="flex flex-row justify-end">
+                                        <div class="" v-show="show_image">
+                                            <div class="flex flex-row justify-center">
                                                 <div class="flex-column text-center">
                                                     <label class="block text-sm text-gray-900 font-bold"> Image Preview </label>
                                                     <div class="preview h-52 w-96 mt-1"></div>
@@ -193,9 +195,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="sm:col-span-2 self-center flex flex-wrap gap-4" v-show="form.image_list.length">
-                                            <div class="relative h-32 w-32 rounded mr-3 mt-3 text-center" v-for="(image_data, index) in form.image_list" :key="index">
-                                                <div class="absolute bg-red-500 p-2 rounded-full text-white z-10 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">
+                                    </div>
+                                    <div class="flex flex-wrap space-y-4 sm:space-x-6">
+                                        <div class="sm:col-span-2 self-center flex flex-wrap gap-4 py-3" v-show="form.image_list.length">
+                                            <div class="relative h-32 w-32 rounded mr-3 mt-3 text-center shadow-sm shadow-gray-400 border" v-for="(image_data, index) in form.image_list" :key="index">
+                                                <div class="absolute bg-red-500 p-2 shadow rounded-full text-white z-10 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
