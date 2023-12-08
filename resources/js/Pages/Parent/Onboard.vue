@@ -140,7 +140,7 @@
                                     singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                     multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
                                     search: 'h-9 md:h-11 text-sm md:text-base w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 font-sans bg-white rounded-md pl-3.5',
-                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-black',
                                     clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
                                     clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
                                     dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
@@ -170,7 +170,7 @@
                     <div class="mb-5">
                         <label for="use_phone" class="font-semibold text-sm">Phone Number
                             <div class="mt-1 flex rounded-md shadow-sm">
-                                <input class="h-10 md:h-12 text-sm md:text-base text-center inline-flex items-center px-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-500" v-model="form.calling_code" size="5" disabled>
+                                <input class="h-10 md:h-12 text-sm md:text-base text-center inline-flex items-center px-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-700" v-model="form.calling_code" size="5" disabled>
                                 <input type="number" name="use_phone" id="use_phone" class="h-10 md:h-12 text-sm md:text-base focus:ring-0 border-gray-300 focus:border-gray-300 flex-1 block w-full rounded-none rounded-r-md" :class="errors.contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.contact_number" autocomplete="none"/>
                             </div>
                         </label>
@@ -212,11 +212,10 @@ export default {
             form: {
                 full_name: this.$page.props.auth.user.display_name,
                 calling_code: '',
-                contact_number: '',
-                address: '',
-                country_id: '',
-                country_name: '',
-                country_state: '',
+                contact_number: this.$page.props.auth.user.user_contact ? this.$page.props.auth.user.user_contact : '',
+                address: this.$page.props.auth.user.user_address ? this.$page.props.auth.user.user_address : '',
+                country_id: this.$page.props.auth.user.user_country_id ? this.$page.props.auth.user.user_country_id : '',
+                country_state: this.$page.props.auth.user.user_state ? this.$page.props.auth.user.user_state : '',
                 country_code: '',
             },
             errors: {
@@ -254,7 +253,6 @@ export default {
                 .then(response => {
                     this.setStateList(response.data.country_code)
                     this.form.calling_code  =   response.data.calling_code
-                    this.form.country_name  =   response.data.name
                     this.form.country_code  =   response.data.country_code
                 })
                 .catch(error => {
