@@ -30,7 +30,6 @@ class CentreController extends Controller
                                     $q->where('centres.label', 'LIKE', "%$search%");
                                 });
                             })
-                            ->whereIn('centres.id', $this->getAllowedCentres())
                             ->select(
                                 'centres.id as centre_id', 
                                 'centres.label as centre_name', 

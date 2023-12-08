@@ -132,12 +132,13 @@ class HandleInertiaRequests extends Middleware
     public function userAllowedCentres()
     {
         if(auth()->user()->can_view_all_centres || auth()->user()->is_admin){
-            $allowed_centres    =   DB::table('centres')->orderBy('id')->get(['centres.ID', 'centres.label']);
+            $allowed_centres    =   DB::table('centres')->where('is_active', 1)->orderBy('id')->get(['centres.ID', 'centres.label']);
         }
         else{
             $allowed_centres    =   DB::table('user_has_centres')
                                     ->join('centres', 'user_has_centres.centre_id', '=', 'centres.ID')
                                     ->where('user_id', Auth::id())->orderBy('id')
+                                    ->where('is_active', 1)
                                     ->orderBy('id')
                                     ->get(['centres.ID', 'centres.label']);
         }
