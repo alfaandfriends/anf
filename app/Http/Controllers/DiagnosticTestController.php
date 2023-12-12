@@ -303,6 +303,10 @@ class DiagnosticTestController extends Controller
                                                 'diagnostic_test_ages.name as age',
                                                 'diagnostic_test_languages.name as language',
                                             ])
+                                            ->when(request('search'), function ($query, $search) {
+                                                $query->where('diagnostic_test.name', 'LIKE', '%'.request('search').'%');
+                                                // $query->where('diagnostic_test.language_id', request('language_id'));
+                                            })
                                             ->when(request('language_id'), function ($query, $search) {
                                                 $query->where('diagnostic_test.language_id', request('language_id'));
                                             })
@@ -323,7 +327,10 @@ class DiagnosticTestController extends Controller
         public function dtCreate(){
             $languages      =   DB::table('diagnostic_test_languages')->get();
             $ages           =   DB::table('diagnostic_test_ages')->get();
-            $dt_list        =   DB::table('diagnostic_test')->get();
+            $dt_list        =   DB::table('diagnostic_test')
+                                    ->join('diagnostic_test_ages', 'diagnostic_test.age_id', '=', 'diagnostic_test_ages.id')
+                                    ->select('diagnostic_test.*', DB::raw("CONCAT(diagnostic_test_ages.name, ' - ', diagnostic_test.name) AS name"))
+                                    ->get();
             $chart_types    =   DB::table('chart_types')->get();
 
             return Inertia::render('DiagnosticTests/Create', [
@@ -365,10 +372,13 @@ class DiagnosticTestController extends Controller
 
         public function dtEdit(Request $request){
             $diagnostic_test_info   =   DB::table('diagnostic_test')->where('id', $request->dt_id)->first();
-            $dt_list                =   DB::table('diagnostic_test')->get();
+            $dt_list                =   DB::table('diagnostic_test')
+                                            ->join('diagnostic_test_ages', 'diagnostic_test.age_id', '=', 'diagnostic_test_ages.id')
+                                            ->select('diagnostic_test.*', DB::raw("CONCAT(diagnostic_test_ages.name, ' - ', diagnostic_test.name) AS name"))
+                                            ->get();
             $languages              =   DB::table('diagnostic_test_languages')->get();
             $ages                   =   DB::table('diagnostic_test_ages')->get();
-            $chart_types    =   DB::table('chart_types')->get();
+            $chart_types            =   DB::table('chart_types')->get();
             
             return Inertia::render('DiagnosticTests/Edit', [
                 'diagnostic_test_info'  => $diagnostic_test_info,
