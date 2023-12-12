@@ -184,7 +184,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 :closeOnSelect="true"
                                                 :canClear="false"
                                                 :canDeselect="false"
-                                                placeholder="Next Level (Default)"
+                                                placeholder="Default (No Redirect)"
                                                 trackBy="name"
                                                 label="name"
                                                 :classes="{
@@ -254,7 +254,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 :closeOnSelect="true"
                                                 :canClear="false"
                                                 :canDeselect="false"
-                                                placeholder="Next Level (Default)"
+                                                placeholder="Default (No Redirect)"
                                                 trackBy="name"
                                                 label="name"
                                                 :classes="{
