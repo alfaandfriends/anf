@@ -194,10 +194,12 @@ export default defineComponent({
             },{
                 id: 2,
                 name: 'Multiple Choices'
-            },{
-                id: 3,
-                name: 'Matrix Sorting'
-            },{
+            },
+            // {
+            //     id: 3,
+            //     name: 'Matrix Sorting'
+            // },
+            {
                 id: 4,
                 name: 'Fill in the Blank'
             }],

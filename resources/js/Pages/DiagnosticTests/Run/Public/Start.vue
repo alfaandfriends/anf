@@ -445,16 +445,23 @@ export default {
                 }
             })
             this.answer = answer
-            if(this.sentence_parts.every(this.partIsCorrect)){
+            if(this.sentence_parts.every(this.partIsCorrect) && this.inputAnswersUnique(this.sentence_parts)){
                 this.current.score += 1
                 this.correct = true
             }
             this.pushAnswer()
         },
         partIsCorrect (part) {
-            const answer = part.answer.replace(/\s+/g, ' ').trim()
+            const answer = part.answer.replace(/\s+/g, ' ').trim()  
             const answer_matched     =    part.text.includes(answer)
             return !part.input || (Array.isArray(part.text) && part.text.length !== 0) === answer_matched
+        },
+        inputAnswersUnique(sentenceParts) {
+            const inputParts = sentenceParts.filter(part => part.input);
+
+            const uniqueAnswers = new Set(inputParts.map(part => part.answer));
+            
+            return uniqueAnswers.size === inputParts.length;
         },
         resetFillInBlank(){
             const re = /(\[[^\]]*\])/

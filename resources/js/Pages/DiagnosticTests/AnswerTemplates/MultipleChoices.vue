@@ -71,7 +71,7 @@ export default {
     },
     methods: {
         init(){
-            if(this.action === 'edit' && this.prop_answers.answers.length > 0){
+            if(this.action === 'edit' && this.prop_answers.answers){
                 this.reconstructAnswers(this.prop_answers.answers)
             }
             else{
@@ -140,11 +140,13 @@ export default {
             }
         },
         reconstructAnswers(prop_answers){
-            Object.keys(prop_answers).forEach((index) => {
-                this.answers.push(
-                    prop_answers[index]
-                )
-            });
+            if(prop_answers.length > 0){
+                Object.keys(prop_answers).forEach((index) => {
+                    this.answers.push(
+                        prop_answers[index]
+                    )
+                });
+            }
         }
     }
 }

@@ -56,6 +56,7 @@ export default {
         prop_answers: Object
     },
     mounted(){
+        console.log(this.prop_answers)
         this.init()
     },
     data(){
@@ -143,11 +144,20 @@ export default {
             }
         },
         reconstructAnswers(prop_answers){
-            Object.keys(prop_answers).forEach((index) => {
-                this.answers.push(
-                    prop_answers[index]
-                )
-            });
+            if(prop_answers){
+                Object.keys(prop_answers).forEach((index) => {
+                    this.answers.push(
+                        prop_answers[index]
+                    )
+                });
+            }
+            else{
+                this.answers.push({
+                    'answer' : '',
+                    'image_name' : '',
+                    'image_file' : '',
+                })
+            }
         }
     }
 }
