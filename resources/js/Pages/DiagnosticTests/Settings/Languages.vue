@@ -1,0 +1,228 @@
+<script setup>
+import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
+import BreezeButton from '@/Components/Button.vue';
+</script>
+
+<template>
+    <div class="pt-6">
+        <div class="flex mb-3">
+            <BreezeButton type="button" @click="addLanguage">New language</BreezeButton>
+        </div>
+        <div class="overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="3">#</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="5">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr v-if="!$page.props.languages.data.length">
+                        <td class="text-center" colspan="10">
+                            <div class="p-3">
+                                No Record Found! 
+                            </div>
+                        </td>
+                    </tr> 
+                    <tr class="hover:bg-gray-100" v-for="(language, index) in $page.props.languages.data" :key="language.id">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-700">{{ ++index }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ language.name }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                            <div class="flex justify-center">
+                                <div class="flex pr-1">
+                                    <BreezeButton buttonType="warning" @click="editLanguage(language.id)">
+                                        Edit
+                                    </BreezeButton>
+                                </div>
+                                <div class="flex">
+                                    <BreezeButton buttonType="danger" @click="deleteLanguage(language.id)">
+                                        Delete
+                                    </BreezeButton>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <Pagination :page_data="$page.props.languages" :params="params"></Pagination>
+    </div>
+    <Modal :showModal="form_modal" modalType="sm" @hideModal="form_modal = false" :key="form.id">
+        <template v-slot:header>
+            <h3 class="text-gray-800 tracking-wide font-semibold text-lg">              
+                Language
+            </h3>                
+        </template>
+        <template v-slot:content>
+            <div class="w-full md:w-[48rem] p-4 overflow-y-auto">
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="">
+                        <label for="language_name" class="block text-sm text-gray-700 font-bold"> Name </label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                            <input type="text" name="language_name" id="language_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.name ? 'border-red-300' : 'border-gray-300'" v-model="form.name" autocomplete="none"/>
+                        </div>
+                    </div>
+                    <div class="">
+                        <label for="guideline_header" class="block text-sm text-gray-700 font-bold"> Guideline Title </label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                            <input type="text" name="guideline_header" id="guideline_header" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.guideline_header ? 'border-red-300' : 'border-gray-300'" v-model="form.guideline_header" autocomplete="none"/>
+                        </div>
+                    </div>
+                    <div class="">
+                        <label for="guideline_body" class="block text-sm text-gray-700 font-bold"> Guideline Body (Press enter to break a new line) </label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                            <textarea rows="6" name="guideline_body" id="guideline_body" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.guideline_body ? 'border-red-300' : 'border-gray-300'" v-model="form.guideline_body" autocomplete="none"></textarea>
+                        </div>
+                    </div>
+                    <div class="">
+                        <label for="final_message" class="block text-sm text-gray-700 font-bold"> Final Message </label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                            <textarea rows="3" name="final_message" id="final_message" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.final_message ? 'border-red-300' : 'border-gray-300'" v-model="form.final_message" autocomplete="none"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template v-slot:footer>
+            <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                <BreezeButton type="button" buttonType="info" @click="form.id != '' ? update() : store() ">Save</BreezeButton>
+                <BreezeButton buttonType="gray" @click="form_modal = false">Cancel</BreezeButton>
+            </div>
+        </template>
+    </Modal>
+    <ConfirmationModal 
+        :show="open_delete_modal" 
+        @close="open_delete_modal = false"
+        confirmationAlert="danger"
+        confirmationTitle="Delete Language"
+        confirmationText="Are you sure want to delete this language?"
+        confirmationButton="Delete"
+        confirmationMethod="delete"
+        :confirmationRoute="confirmation_data"
+        :confirmationData="confirmation_route"
+    />
+</template>
+
+<script>
+import Pagination from '@/Components/Pagination.vue'
+import Modal from '@/Components/Modal.vue'
+import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import axios from 'axios'
+
+export default {
+    components: {
+        Pagination, Modal, ConfirmationModal, 
+    },
+    data(){
+        return{
+            form_modal: false,
+            open_delete_modal: false,
+            confirmation_data: '',
+            confirmation_route: '',
+            processing: false,
+            error: {
+                name: false,
+                guideline_header: false,
+                guideline_body: false,
+                final_message: false
+            },
+            form:{
+                id: '',
+                name: '',
+                guideline_header: '',
+                guideline_body: '',
+                final_message: ''
+            }
+        }
+    },
+    methods: {
+        addLanguage(){
+            this.clearForm()
+            this.form_modal = true
+        },
+        editLanguage(language_id){
+            if(this.processing){
+                return
+            }
+            this.processing = true
+            this.clearForm()
+            axios.get(route('dt.settings.languages.edit'), { params: { language_id: language_id } })
+            .then(response => {
+                this.form.id                = response.data.id
+                this.form.name              = response.data.name
+                this.form.guideline_header  = response.data.guideline_header
+                this.form.guideline_body    = response.data.guideline_body
+                this.form.final_message     = response.data.final_message
+                this.form_modal = true
+                this.processing = false
+            })
+            .catch(error => {
+                this.processing = false
+            });
+        },
+        deleteLanguage(language_id){
+            this.confirmation_data = 'dt.settings.languages.destroy'
+            this.confirmation_route = language_id
+            this.open_delete_modal = true
+        },
+        store(){
+            if(this.processing){
+                return
+            }
+            this.processing = true
+            const formValid =   this.validateForm();
+            if(formValid){
+                this.$inertia.post(route('dt.settings.languages.store'), this.form, {
+                    onSuccess: page => {
+                        this.form_modal = false
+                        this.processing = false
+                    },
+                })
+            }
+            return
+        },
+        update(){
+            if(this.processing){
+                return
+            }
+            this.processing = true
+            const formValid =   this.validateForm();
+            if(formValid){
+                this.$inertia.post(route('dt.settings.languages.update'), this.form, {
+                    onSuccess: page => {
+                        this.form_modal = false
+                        this.processing = false
+                    },
+                })
+            }
+            return
+        },
+        clearForm(){
+            this.form.id = ''
+            this.form.name = ''
+            this.form.guideline_header = ''
+            this.form.guideline_body = ''
+            this.form.final_message = ''
+        },
+        validateForm() {
+            for (let key in this.error) {
+                this.error[key] = false;
+            }
+            for (let key in this.form) {
+                if (key === 'id') {
+                    continue;
+                }
+                if (this.form[key].trim() === '') {
+                    this.error[key] = true;
+                }
+            }
+            return Object.values(this.error).every(value => !value);
+        },
+    }
+}
+</script>

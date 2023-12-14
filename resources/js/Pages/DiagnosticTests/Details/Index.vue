@@ -19,7 +19,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
                                             <div class="flex items-center space-x-2">
                                                 <h1 class="text-indigo-800 font-bold">Categories</h1>
-                                                <Tooltip :raw_HTML="categories_tooltip"></Tooltip>
+                                                <!-- <Tooltip :raw_HTML="categories_tooltip"></Tooltip> -->
                                             </div>
                                             <div class="flex justify-start mb-2">
                                                 <BreezeButton :route="route('dt.settings.categories.create', {'dt_id': $page.props.diagnostic_test_id})">
@@ -115,7 +115,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <draggable class="w-full" v-model="dtList" v-if="dtList.length > 0" @change="updateSorting">
                                             <div class="mb-1" v-for="(element, index) in dtList" :key="index">
                                                 <div class="flex">
-                                                    <div class="cursor-pointer w-full flex justify-between list-group-item bg-indigo-200 py-1 px-5 text-left" :class="showdtDetails ? 'rounded-tl' : 'rounded-l'" @click="dtEdit(element.id, element.dt_id)">
+                                                    <div class="cursor-pointer w-full flex justify-between list-group-item bg-indigo-200 hover:bg-indigo-300 py-1 px-5 text-left" :class="showdtDetails ? 'rounded-tl' : 'rounded-l'" @click="dtEdit(element.id, element.dt_id)">
                                                         {{ (index+1) + '. ' + element.question }}
                                                     </div>
                                                     <div class="cursor-pointer p-1 bg-red-500 hover:bg-red-700" :class="showdtDetails ? 'rounded-tr' : 'rounded-r'" @click="dtDelete(element.id)">

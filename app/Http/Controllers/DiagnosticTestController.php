@@ -17,13 +17,12 @@ use Inertia\Inertia;
 
 class DiagnosticTestController extends Controller
 {
-
-    /* Diagnostic Test Run */
+    /* main page */
     public function dtMain(){
         
         // $template               =   auth()->check() ? 'User/Main' : 'Public/Main';
         $template               =   'Public/Main';
-        
+
         $diagnostic_test_list   =   DB::table('diagnostic_test')->get();
         $languages              =   DB::table('diagnostic_test_languages')->get();
         $ages                   =   DB::table('diagnostic_test_ages')->get();
@@ -37,6 +36,7 @@ class DiagnosticTestController extends Controller
         ]);
     }
 
+    /* start */
     public function dtStart(Request $request){
 
         // $template       =   auth()->check() ? 'User/Start' : 'Public/Start';
@@ -51,6 +51,7 @@ class DiagnosticTestController extends Controller
         // $age            =   auth()->check() && $request->form_data['child_age'] ? DB::table('diagnostic_test_ages')->where('age', $request->form_data['child_age'])->pluck('id')->first() : $request->form_data['age'];
         $age            =   $request->form_data['age'];
         $dt_id          =   DB::table('diagnostic_test')->where('age_id', $age)->where('language_id', $request->form_data['language'])->pluck('id')->first();
+        $final_message  =   DB::table('diagnostic_test_languages')->where('id', $request->form_data['language'])->pluck('final_message')->first();
 
         if(!$dt_id){
             return back()->with(['type' => 'error', 'message' => 'Sorry, no diagnostic test found for this language.']);
@@ -68,29 +69,31 @@ class DiagnosticTestController extends Controller
                 $dt_info->correct_answer    =   !empty($answers_info) && array_key_exists('correct_answer', $answers_info) ? $answers_info['correct_answer'] : '';
             }
         }
-        
+
         $diagnostic_test_categories_label   =   DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->pluck('name');
         $diagnostic_test_categories         =   DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->select(['id', 'name'])->orderBy('id')->get();
         $diagnostic_test_chart_info         =   DB::table('diagnostic_test_chart_info')->where('language_id', $request->form_data['language'])->get();
-        
+
         return Inertia::render('DiagnosticTests/Run/'.$template, [
-            'form_data' =>  $request->form_data,
-            'dt_details'   =>  $dt_details,
-            'dt_list'   =>  $dt_list,
-            'dt_id'     =>  $dt_id,
-            'diagnostic_test_categories_label'     =>  $diagnostic_test_categories_label,
-            'diagnostic_test_categories'     =>  $diagnostic_test_categories,
-            'diagnostic_test_chart_info'     =>  $diagnostic_test_chart_info
+            'form_data'                         =>  $request->form_data,
+            'dt_details'                        =>  $dt_details,
+            'final_message'                     =>  $final_message,
+            'dt_list'                           =>  $dt_list,
+            'dt_id'                             =>  $dt_id,
+            'diagnostic_test_categories_label'  =>  $diagnostic_test_categories_label,
+            'diagnostic_test_categories'        =>  $diagnostic_test_categories,
+            'diagnostic_test_chart_info'        =>  $diagnostic_test_chart_info
         ]);
     }
 
+    /* get new level */
     public function dtNewLevel(Request $request)
     {
         $new_level_data['category_label']   =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->pluck('name');
         $new_level_data['dt_details']       =   DB::table('diagnostic_test')->where('id', $request->dt_id)->first();
         $new_level_data['dt_list']          =   DB::table('diagnostic_test_questions')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
         $answers_data   =   DB::table('diagnostic_test_answers')->whereIn('question_id', $new_level_data['dt_list']->pluck('id'))->get();
-        
+
         if(!empty($new_level_data['dt_list'])){
             foreach($new_level_data['dt_list'] as $key=>$dt_info){
                 $serialized_answers_data    =   $answers_data->where('question_id', $dt_info->id)->pluck('answer_data')->first();
@@ -99,14 +102,15 @@ class DiagnosticTestController extends Controller
                     $dt_info->answers           =   array_key_exists('answers', $answers_info) ? $answers_info['answers'] : '';
                     $dt_info->correct_answer    =   array_key_exists('correct_answer', $answers_info) ? $answers_info['correct_answer'] : '';
                 }
-                
+
             }
         }
         return $new_level_data;
     }
 
+    /* save result */
     public function saveDtResult(Request $request)
-    {  
+    {
         $resultData = [
             'child_id'              => $request->input('student_id'),
             'child_name'            => $request->input('student_name'),
@@ -118,7 +122,7 @@ class DiagnosticTestController extends Controller
             'parent_email'          => $request->input('parent_email'),
             'eligible_level'        => $request->input('eligible_level'),
         ];
-        
+
         $result_id = DB::table('diagnostic_test_result')->insertGetId($resultData);
 
         $student_age    =   DB::table('diagnostic_test_ages')->where('id', $request->input('student_age'))->pluck('name')->first();
@@ -169,6 +173,7 @@ class DiagnosticTestController extends Controller
         return true;
     }
 
+    /* list of saved result */
     public function savedDtResult(Request $request)
     {
         $allowed_centres    =   (object)Inertia::getShared('allowed_centres');
@@ -184,26 +189,26 @@ class DiagnosticTestController extends Controller
         if($request->search){
             $query->where('child_name', 'LIKE', '%'.$request->search.'%');
         }
-        
+
         if($request->centre_id){
             $query->where('centre_id', '=', $request->centre_id);
         }
 
-        $query->select(['diagnostic_test_result.id', 
-                        'diagnostic_test_result.child_id', 
-                        'diagnostic_test_result.centre_id', 
-                        'centres.label as centre_name', 
-                        'diagnostic_test_result.child_name', 
-                        'diagnostic_test_ages.age as child_age', 
-                        'diagnostic_test_result.child_school', 
-                        'diagnostic_test_result.parent_name', 
-                        'diagnostic_test_result.parent_contact', 
-                        'diagnostic_test_result.parent_email', 
-                        'diagnostic_test_result.eligible_level', 
-                        'diagnostic_test_result.admitted', 
-                        'diagnostic_test_result.notes', 
-                        'diagnostic_test_result.eligible_level', 
-                        'children.name as student_name', 
+        $query->select(['diagnostic_test_result.id',
+                        'diagnostic_test_result.child_id',
+                        'diagnostic_test_result.centre_id',
+                        'centres.label as centre_name',
+                        'diagnostic_test_result.child_name',
+                        'diagnostic_test_ages.age as child_age',
+                        'diagnostic_test_result.child_school',
+                        'diagnostic_test_result.parent_name',
+                        'diagnostic_test_result.parent_contact',
+                        'diagnostic_test_result.parent_email',
+                        'diagnostic_test_result.eligible_level',
+                        'diagnostic_test_result.admitted',
+                        'diagnostic_test_result.notes',
+                        'diagnostic_test_result.eligible_level',
+                        'children.name as student_name',
                         'children.date_of_birth as student_dob'])->get();
 
         return Inertia::render('DiagnosticTests/SavedResults/Index', [
@@ -212,21 +217,7 @@ class DiagnosticTestController extends Controller
         ]);
     }
 
-    public function saveDtResultStatus(Request $request)
-    {
-        DB::table('diagnostic_test_result')->where('id', $request->result_id)->update([
-            'admitted'      =>  $request->admitted,
-            'centre_id'     =>  $request->centre_id,
-            'notes'         =>  $request->notes,
-            'updated_at'    =>  Carbon::now(),
-        ]);
-
-        $log_data =   'Updated DT status ID '.$request->result_id;
-        event(new DatabaseTransactionEvent($log_data));
-
-        return back()->with(['type' => 'success', 'message' => 'Status has been updated !']);
-    }
-
+    /* saved result details */
     public function savedDtResultDetails(Request $request)
     {
         $answer_record  =   DB::table('diagnostic_test_result_details')
@@ -259,6 +250,23 @@ class DiagnosticTestController extends Controller
         ]);
     }
 
+    /* save dt status */
+    public function saveDtResultStatus(Request $request)
+    {
+        DB::table('diagnostic_test_result')->where('id', $request->result_id)->update([
+            'admitted'      =>  $request->admitted,
+            'centre_id'     =>  $request->centre_id,
+            'notes'         =>  $request->notes,
+            'updated_at'    =>  Carbon::now(),
+        ]);
+
+        $log_data =   'Updated DT status ID '.$request->result_id;
+        event(new DatabaseTransactionEvent($log_data));
+
+        return back()->with(['type' => 'success', 'message' => 'Status has been updated !']);
+    }
+
+    /* categories */
     public function getDtCategories(Request $request)
     {
         if($request->chart_type == 1){
@@ -279,6 +287,7 @@ class DiagnosticTestController extends Controller
         return $categories;
     }
 
+    /* saved result basic info */
     public function getSavedResultInfo(Request $request)
     {
         $result_info    =   DB::table('diagnostic_test_result')
@@ -315,7 +324,7 @@ class DiagnosticTestController extends Controller
                                             })
                                             ->orderBy('age_id')
                                             ->paginate(10);
-                                                                          
+
             return Inertia::render('DiagnosticTests/Index', [
                 'filter'                => request()->all('search', 'language_id', 'age_id'),
                 'languages'             => $languages,
@@ -349,9 +358,8 @@ class DiagnosticTestController extends Controller
                 'chart_type'                => 'required',
                 'lower_score'               => 'required',
                 'higher_score'              => 'required',
-                'final_message'             => 'required',
             ]);
-            
+
             $dt_id  =   DB::table('diagnostic_test')->insertGetId([
                 'name'                      =>  $request->name,
                 'age_id'                    =>  $request->age,
@@ -361,9 +369,8 @@ class DiagnosticTestController extends Controller
                 'lower_score_direction'     =>  $request->lower_score_direction,
                 'higher_score'              =>  $request->higher_score,
                 'higher_score_direction'    =>  $request->higher_score_direction,
-                'final_message'             =>  $request->final_message,
             ]);
-        
+
             $log_data =   'Added DT ID '.$dt_id;
             event(new DatabaseTransactionEvent($log_data));
 
@@ -379,7 +386,7 @@ class DiagnosticTestController extends Controller
             $languages              =   DB::table('diagnostic_test_languages')->get();
             $ages                   =   DB::table('diagnostic_test_ages')->get();
             $chart_types            =   DB::table('chart_types')->get();
-            
+
             return Inertia::render('DiagnosticTests/Edit', [
                 'diagnostic_test_info'  => $diagnostic_test_info,
                 'dt_list'               => $dt_list,
@@ -397,7 +404,6 @@ class DiagnosticTestController extends Controller
                 'chart_type'                => 'required',
                 'lower_score'       => 'required',
                 'higher_score'      => 'required',
-                'final_message'     => 'required',
             ]);
 
             DB::table('diagnostic_test')->where('id', $request->dt_id)->update([
@@ -409,13 +415,12 @@ class DiagnosticTestController extends Controller
                 'lower_score_direction'     =>  $request->lower_score_direction,
                 'higher_score'              =>  $request->higher_score,
                 'higher_score_direction'    =>  $request->higher_score_direction,
-                'final_message'             =>  $request->final_message,
                 'updated_at'                =>  Carbon::now(),
             ]);
-        
+
             $log_data =   'Updated DT ID '.$request->dt_id;
             event(new DatabaseTransactionEvent($log_data));
-            
+
             return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Diagnostic test updated successfully !']);
         }
 
@@ -435,7 +440,7 @@ class DiagnosticTestController extends Controller
                 $data       =   unserialize($question_info->answer_data);
                 $images     =   $data['answers'];
 
-                
+
                 if($data['question_type'] == 3){
                     foreach($data['answers'] as $answer){
                         if($answer['criterion']['image_name']){
@@ -461,11 +466,11 @@ class DiagnosticTestController extends Controller
                     }
                 }
             }
-            
+
             DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->delete();
             DB::table('diagnostic_test_questions')->where('diagnostic_test_questions.dt_id', $dt_id)->delete();
             DB::table('diagnostic_test')->where('id', $dt_id)->delete();
-        
+
             $log_data =   'Deleted DT ID '.$dt_id;
             event(new DatabaseTransactionEvent($log_data));
 
@@ -479,7 +484,7 @@ class DiagnosticTestController extends Controller
             }
             $diagnostic_test_list           =   DB::table('diagnostic_test_questions')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
             $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
-            
+
             return Inertia::render('DiagnosticTests/Details/Index', [
                 'diagnostic_test_id'            => $request->dt_id,
                 'diagnostic_test_list'          => $diagnostic_test_list,
@@ -512,7 +517,7 @@ class DiagnosticTestController extends Controller
                             Storage::putFileAs('diagnostic_test_photo', $data['image_file'], $data['image_file']->getClientOriginalName());
                         }
                         unset($data['image_file']);
-                        $answers_data[]   =  $data; 
+                        $answers_data[]   =  $data;
                     }
                     $question_answer_data['answers'] = $answers_data;
                 }
@@ -571,7 +576,7 @@ class DiagnosticTestController extends Controller
                     'question_image'    => $file_path,
                 ]);
             }
-        
+
             $log_data =   'Added DT Question ID '.$question_id;
             event(new DatabaseTransactionEvent($log_data));
 
@@ -585,7 +590,7 @@ class DiagnosticTestController extends Controller
             $diagnostic_test_info           =   DB::table('diagnostic_test_questions')->where('id', $request->test_id)->first();
             $diagnostic_test_answers        =   DB::table('diagnostic_test_answers')->where('question_id', $request->test_id)->first();
             $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
-            
+
             return Inertia::render('DiagnosticTests/Details/Edit', [
                 'redirect_url'                  => url()->current(),
                 'test_id' => $test_id,
@@ -604,7 +609,7 @@ class DiagnosticTestController extends Controller
                     Storage::delete('diagnostic_test_photo/'.$image);
                 }
             }
-            
+
             $question_answer_data   =   $request->question_answer_data;
             if(!empty($question_answer_data['answers'])){
                 if($request->question_answer_data['question_type'] != 3){
@@ -615,7 +620,7 @@ class DiagnosticTestController extends Controller
                             Storage::putFileAs('diagnostic_test_photo', $data['image_file'], $data['image_file']->getClientOriginalName());
                         }
                         unset($data['image_file']);
-                        $answers_data[]   =  $data; 
+                        $answers_data[]   =  $data;
                     }
 
                     /* delete empty array */
@@ -626,7 +631,7 @@ class DiagnosticTestController extends Controller
                             }
                         }
                     }
-                    
+
                     $question_answer_data['answers'] = $answers_data;
                 }
                 else{
@@ -644,7 +649,7 @@ class DiagnosticTestController extends Controller
                                     Storage::putFileAs('diagnostic_test_photo', $image['file'], $image['file']->getClientOriginalName());
                                 }
                                 unset($question_answer_data['answers'][$key]['element']['images'][$image_key]['file']);
-                                
+
                                 /* delete criterion empty array */
                                 if(!empty($data['element']['images']) && $data['element']['value'] != null){
                                     if($data['element']['value'] == null){
@@ -675,7 +680,7 @@ class DiagnosticTestController extends Controller
                     'updated_at'        => Carbon::now(),
                 ]);
             }
-            
+
             /* Replace question's image */
             if(!empty($request->file('image_file'))){
                 if($diagnostic_test_info->question_image && Storage::exists($diagnostic_test_info->question_image)){
@@ -705,20 +710,20 @@ class DiagnosticTestController extends Controller
             DB::table('diagnostic_test_answers')->where('question_id', $diagnostic_test_info->id)->update([
                 'answer_data'   => serialize($question_answer_data),
             ]);
-        
+
             $log_data =   'Updated DT Question ID '.$request->id;
             event(new DatabaseTransactionEvent($log_data));
 
             return redirect()->route('dt.settings.details', ['dt_id' => $request->dt_id])->with(['type' => 'success', 'message' => 'Item updated successfully !']);
         }
 
-        public function dtDetailsDestroy($id){   
-            
+        public function dtDetailsDestroy($id){
+
             $diagnostic_test_info    =   DB::table('diagnostic_test_questions')->where('id', $id)->first();
 
             $dt_answers =   DB::table('diagnostic_test_answers')->where('question_id', $id)->first();
             $data       =   unserialize($dt_answers->answer_data);
-            
+
             if($data['question_type'] == 3){
                 foreach($data['answers'] as $answer){
                     if($answer['criterion']['image_name']){
@@ -735,7 +740,7 @@ class DiagnosticTestController extends Controller
                 }
             }
             else{
-                $images     =   $data['answers'];   
+                $images     =   $data['answers'];
                 foreach($images as $image){
                     if($image['image_name']){
                         if(Storage::exists('diagnostic_test_photo/'.$image['image_name'])){
@@ -744,10 +749,10 @@ class DiagnosticTestController extends Controller
                     }
                 }
             }
-            
+
             DB::table('diagnostic_test_answers')->where('question_id', $id)->delete();
             DB::table('diagnostic_test_questions')->where('id', $id)->delete();
-        
+
             $log_data =   'Deleted DT Question ID '.$id;
             event(new DatabaseTransactionEvent($log_data));
 
@@ -760,7 +765,7 @@ class DiagnosticTestController extends Controller
                     'ordering' => $key+1
                 ]);
             }
-        
+
             $log_data =   'Sorted DT Question';
             event(new DatabaseTransactionEvent($log_data));
 
@@ -783,7 +788,7 @@ class DiagnosticTestController extends Controller
                 'dt_id' =>  $request->dt_id,
                 'name' =>  $request->category_name,
             ]);
-        
+
             $log_data =   'Added DT category ID '.$category_id;
             event(new DatabaseTransactionEvent($log_data));
 
@@ -792,7 +797,7 @@ class DiagnosticTestController extends Controller
 
         public function dtCategoriesEdit(Request $request){
             $category_info = DB::table('diagnostic_test_categories')->where('id', $request->category_id)->first();
-            
+
             return Inertia::render('DiagnosticTests/Categories/Edit', [
                 'category_info' => $category_info
             ]);
@@ -806,8 +811,8 @@ class DiagnosticTestController extends Controller
             DB::table('diagnostic_test_categories')->where('id', $request->category_id)->update([
                 'name'          =>  $request->category_name,
                 'updated_at'    =>  Carbon::now(),
-            ]); 
-        
+            ]);
+
             $log_data =   'Updated DT category ID '.$request->category_id;
             event(new DatabaseTransactionEvent($log_data));
 
@@ -823,7 +828,7 @@ class DiagnosticTestController extends Controller
 
             $dtInfo = DB::table('diagnostic_test_categories')->where('id', $id)->first();
             DB::table('diagnostic_test_categories')->where('id', $id)->delete();
-        
+
             $log_data =   'Deleted DT category ID '.$id;
             event(new DatabaseTransactionEvent($log_data));
 
@@ -847,14 +852,103 @@ class DiagnosticTestController extends Controller
                                         'diagnostic_test_result_details.answer_record as answer_record',
                                         'diagnostic_test_result_details.created_at',
                                     ])->orderBy('diagnostic_test_result_details.id')->first();
-                               
+
             $answer_record->answer_record           =   unserialize($answer_record->answer_record);
             $answer_record->total_correct_answers   =   collect($answer_record->answer_record)->where('correct', true)->count();
             $answer_record->total_answers           =   count($answer_record->answer_record);
-    
+
             return Inertia::render('DiagnosticTests/SavedResults/Report', [
                 'result_id'     =>  $result_id,
                 'answer_record' =>  $answer_record
             ]);
         }
+
+    /***************  settings *****************/
+    /* language list */
+    public function dtLanguages(){
+        $languages  =   DB::table('diagnostic_test_languages')->paginate(10);
+
+        return Inertia::render('DiagnosticTests/Settings/Index', [
+            'languages' =>  $languages
+        ]);
+    }
+
+    /* save language */
+    public function dtLanguagesStore(Request $request){
+        $request->validate([
+            'name'              =>  'required',
+            'guideline_header'  =>  'required',
+            'guideline_body'    =>  'required',
+            'final_message'     =>  'required',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('diagnostic_test_languages')->insert([
+                'name'              =>  $request->name,
+                'guideline_header'  =>  $request->guideline_header,
+                'guideline_body'    =>  $request->guideline_body,
+                'final_message'     =>  $request->final_message,
+            ]);
+
+            DB::commit();
+            return back()->with(['type'=>'success', 'message'=>'Added new language successfully!']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['type'=>'error', 'message'=>'An error has occurred!']);
+        }
+    }
+
+    public function dtLanguagesEdit(Request $request){
+        $language_info  =   DB::table('diagnostic_test_languages')->where('id', $request->language_id)->first();
+
+        return $language_info;
+    }
+
+    /* update language */
+    public function dtLanguagesUpdate(Request $request){
+        $request->validate([
+            'name'              =>  'required',
+            'guideline_header'  =>  'required',
+            'guideline_body'    =>  'required',
+            'final_message'     =>  'required',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('diagnostic_test_languages')->where('id', $request->id)->update([
+                'name'              =>  $request->name,
+                'guideline_header'  =>  $request->guideline_header,
+                'guideline_body'    =>  $request->guideline_body,
+                'final_message'     =>  $request->final_message,
+            ]);
+
+            DB::commit();
+            return back()->with(['type'=>'success', 'message'=>'Updated language successfully!']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['type'=>'error', 'message'=>'An error has occurred!']);
+        }
+    }
+    /* delete language */
+    public function dtLanguagesDestroy($id){
+        try {
+            DB::beginTransaction();
+
+            DB::table('diagnostic_test_languages')->where('id', $id)->delete();
+
+            DB::commit();
+            return back()->with(['type'=>'success', 'message'=>'Deleted language successfully!']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with(['type'=>'error', 'message'=>'Cannot proceed, this language is being used!']);
+        }
+    }
+
+
 }

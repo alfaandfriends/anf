@@ -306,14 +306,6 @@ import BreezeButton from '@/Components/Button.vue';
                                             />
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
-                                        <div class="mb-4">
-                                            <label for="final_message" class="block text-sm text-gray-700 font-bold">Final Message   </label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <textarea type="text" name="final_message" id="final_message" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.final_message ? 'border-red-300' : 'border-gray-300'" v-model="form.final_message" autocomplete="off"/>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div><div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
@@ -372,7 +364,6 @@ export default {
                 lower_score_direction: '',
                 higher_score: '',
                 higher_score_direction: '',
-                final_message: '',
             }
         }
     },

@@ -93,7 +93,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <h1 class="font-mono text-xl sm:text-3xl font-bold">Thank You!</h1>
-                        <h3 class="font-sans text-sm sm:text-xl">{{ dt_details.final_message }}</h3>
+                        <h3 class="font-sans text-sm sm:text-xl">{{ $page.props.final_message }}</h3>
                     </div>
                     <button type="submit" class="mt-5 w-full border p-2 bg-gray-800 text-white rounded-[4px] hover:bg-gray-700" @click="returnHome">Return Home</button>
                 </div>

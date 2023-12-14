@@ -172,37 +172,44 @@ Route::middleware(['auth', 'device'])->group(function(){
         });
 
         /* Diagnostic Test Setting*/
-        Route::prefix('diagnostic-test')->middleware('permission:diagnostic_test_access')->group(function () {
+        Route::prefix('diagnostic-test/settings')->middleware('permission:diagnostic_test_access')->group(function () {
             /* Diagnostic Test List */
-            Route::get('/settings', [DiagnosticTestController::class, 'dtList'])->name('dt.settings');
-            Route::get('/settings/create', [DiagnosticTestController::class, 'dtCreate'])->name('dt.settings.create');
-            Route::post('/settings/store', [DiagnosticTestController::class, 'dtStore'])->name('dt.settings.store');
-            Route::get('/settings/edit', [DiagnosticTestController::class, 'dtEdit'])->name('dt.settings.edit');
-            Route::post('/settings/update', [DiagnosticTestController::class, 'dtUpdate'])->name('dt.settings.update');
-            Route::delete('/settings/destroy/{id}', [DiagnosticTestController::class, 'dtDestroy'])->name('dt.settings.destroy');
+            Route::get('/', [DiagnosticTestController::class, 'dtList'])->name('dt.settings');
+            Route::get('/create', [DiagnosticTestController::class, 'dtCreate'])->name('dt.settings.create');
+            Route::post('/store', [DiagnosticTestController::class, 'dtStore'])->name('dt.settings.store');
+            Route::get('/edit', [DiagnosticTestController::class, 'dtEdit'])->name('dt.settings.edit');
+            Route::post('/update', [DiagnosticTestController::class, 'dtUpdate'])->name('dt.settings.update');
+            Route::delete('/destroy/{id}', [DiagnosticTestController::class, 'dtDestroy'])->name('dt.settings.destroy');
 
             /* Diagnostic Test Detail List */
-            Route::get('/settings/details', [DiagnosticTestController::class, 'dtDetailsList'])->name('dt.settings.details');
-            Route::get('/settings/details/create', [DiagnosticTestController::class, 'dtDetailsCreate'])->name('dt.settings.details.create');
-            Route::post('/settings/details/store', [DiagnosticTestController::class, 'dtDetailsStore'])->name('dt.settings.details.store');
-            Route::get('/settings/details/edit', [DiagnosticTestController::class, 'dtDetailsEdit'])->name('dt.settings.details.edit');
-            Route::post('/settings/details/update', [DiagnosticTestController::class, 'dtDetailsUpdate'])->name('dt.settings.details.update');
-            Route::delete('/settings/details/destroy/{id}', [DiagnosticTestController::class, 'dtDetailsDestroy'])->name('dt.settings.details.destroy');
-            Route::post('/settings/details/sort', [DiagnosticTestController::class, 'dtDetailsSort'])->name('dt.settings.details.sort');
+            Route::get('/details', [DiagnosticTestController::class, 'dtDetailsList'])->name('dt.settings.details');
+            Route::get('/details/create', [DiagnosticTestController::class, 'dtDetailsCreate'])->name('dt.settings.details.create');
+            Route::post('/details/store', [DiagnosticTestController::class, 'dtDetailsStore'])->name('dt.settings.details.store');
+            Route::get('/details/edit', [DiagnosticTestController::class, 'dtDetailsEdit'])->name('dt.settings.details.edit');
+            Route::post('/details/update', [DiagnosticTestController::class, 'dtDetailsUpdate'])->name('dt.settings.details.update');
+            Route::delete('/details/destroy/{id}', [DiagnosticTestController::class, 'dtDetailsDestroy'])->name('dt.settings.details.destroy');
+            Route::post('/details/sort', [DiagnosticTestController::class, 'dtDetailsSort'])->name('dt.settings.details.sort');
 
             /* Diagnostic Test Detail Conditions */
-            Route::get('/settings/conditions/create', [DiagnosticTestController::class, 'dtConditionsCreate'])->name('dt.settings.conditions.create');
-            Route::post('/settings/conditions/store', [DiagnosticTestController::class, 'dtConditionsStore'])->name('dt.settings.conditions.store');
-            Route::get('/settings/conditions/edit', [DiagnosticTestController::class, 'dtConditionsEdit'])->name('dt.settings.conditions.edit');
-            Route::post('/settings/conditions/update', [DiagnosticTestController::class, 'dtConditionsUpdate'])->name('dt.settings.conditions.update');
-            Route::delete('/settings/conditions/destroy/{id}', [DiagnosticTestController::class, 'dtConditionsDestroy'])->name('dt.settings.conditions.destroy');
+            Route::get('/conditions/create', [DiagnosticTestController::class, 'dtConditionsCreate'])->name('dt.settings.conditions.create');
+            Route::post('/conditions/store', [DiagnosticTestController::class, 'dtConditionsStore'])->name('dt.settings.conditions.store');
+            Route::get('/conditions/edit', [DiagnosticTestController::class, 'dtConditionsEdit'])->name('dt.settings.conditions.edit');
+            Route::post('/conditions/update', [DiagnosticTestController::class, 'dtConditionsUpdate'])->name('dt.settings.conditions.update');
+            Route::delete('/conditions/destroy/{id}', [DiagnosticTestController::class, 'dtConditionsDestroy'])->name('dt.settings.conditions.destroy');
 
             /* Diagnostic Test Detail Categories */
-            Route::get('/settings/categories/create', [DiagnosticTestController::class, 'dtCategoriesCreate'])->name('dt.settings.categories.create');
-            Route::post('/settings/categories/store', [DiagnosticTestController::class, 'dtCategoriesStore'])->name('dt.settings.categories.store');
-            Route::get('/settings/categories/edit', [DiagnosticTestController::class, 'dtCategoriesEdit'])->name('dt.settings.categories.edit');
-            Route::post('/settings/categories/update', [DiagnosticTestController::class, 'dtCategoriesUpdate'])->name('dt.settings.categories.update');
-            Route::delete('/settings/categories/destroy/{id}', [DiagnosticTestController::class, 'dtCategoriesDestroy'])->name('dt.settings.categories.destroy');
+            Route::get('/categories/create', [DiagnosticTestController::class, 'dtCategoriesCreate'])->name('dt.settings.categories.create');
+            Route::post('/categories/store', [DiagnosticTestController::class, 'dtCategoriesStore'])->name('dt.settings.categories.store');
+            Route::get('/categories/edit', [DiagnosticTestController::class, 'dtCategoriesEdit'])->name('dt.settings.categories.edit');
+            Route::post('/categories/update', [DiagnosticTestController::class, 'dtCategoriesUpdate'])->name('dt.settings.categories.update');
+            Route::delete('/categories/destroy/{id}', [DiagnosticTestController::class, 'dtCategoriesDestroy'])->name('dt.settings.categories.destroy');
+
+            /* Diagnostic Test Languages */
+            Route::get('/languages', [DiagnosticTestController::class, 'dtLanguages'])->name('dt.settings.languages');
+            Route::post('/languages/store', [DiagnosticTestController::class, 'dtLanguagesStore'])->name('dt.settings.languages.store');
+            Route::get('/languages/edit', [DiagnosticTestController::class, 'dtLanguagesEdit'])->name('dt.settings.languages.edit');
+            Route::post('/languages/update', [DiagnosticTestController::class, 'dtLanguagesUpdate'])->name('dt.settings.languages.update');
+            Route::delete('/languages/destroy/{id}', [DiagnosticTestController::class, 'dtLanguagesDestroy'])->name('dt.settings.languages.destroy');
         });
 
         /* Accounting */
