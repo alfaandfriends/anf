@@ -49,7 +49,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                             </svg>
-                            <div class="flex flex-col text-sm">
+                            <div class="flex flex-col text-xs">
                                 <span v-for="info in chart_data.categories.info"><span class="font-semibold" :style="'color: ' + info.category_color">{{ info.category_name }}:</span> {{ info.category_description }}</span>
                             </div>
                         </div>
@@ -396,17 +396,15 @@ export default {
             }
         },
         splitResultByCategory(){
-            const correctAnswers    = this.$page.props.answer_record.answer_record.filter(answer => answer.correct);
-            const splittedAnswers   = correctAnswers.reduce((acc, item) => {
-                if (item.correct) {
-                    if (!acc[item.question_category_id]) {
-                    acc[item.question_category_id] = 1;
-                    } else {
-                    acc[item.question_category_id]++;
-                    }
+            const splittedAnswers   = this.$page.props.answer_record.answer_record.reduce((acc, question) => {
+                if (question.correct) {
+                    acc[question.question_category_id] = (acc[question.question_category_id] || 0) + 1;
+                } else if (!acc.hasOwnProperty(question.question_category_id)) {
+                    // Initialize with 0 if not present
+                    acc[question.question_category_id] = null;
                 }
                 return acc;
-            }, {})
+            }, {});
             
             const newObject = {};
             Object.keys(splittedAnswers).forEach((key, index) => {

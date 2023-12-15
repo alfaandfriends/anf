@@ -20,4 +20,10 @@ class DiagnosticTestHelper {
 
         return $ages;
     }
+
+    public static function getPicEmailsByLanguageId($language_id){
+        $emails   =   DB::table('diagnostic_test_emails')->where('language_id', $language_id)->pluck('email');
+
+        return $emails;
+    }
 }

@@ -56,7 +56,6 @@ export default {
         prop_answers: Object
     },
     mounted(){
-        console.log(this.prop_answers)
         this.init()
     },
     data(){

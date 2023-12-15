@@ -80,6 +80,7 @@ class DiagnosticTestController extends Controller
             'final_message'                     =>  $final_message,
             'dt_list'                           =>  $dt_list,
             'dt_id'                             =>  $dt_id,
+            'language_id'                       =>  $request->form_data['language'],
             'diagnostic_test_categories_label'  =>  $diagnostic_test_categories_label,
             'diagnostic_test_categories'        =>  $diagnostic_test_categories,
             'diagnostic_test_chart_info'        =>  $diagnostic_test_chart_info
@@ -123,8 +124,7 @@ class DiagnosticTestController extends Controller
             'eligible_level'        => $request->input('eligible_level'),
         ];
 
-        $result_id = DB::table('diagnostic_test_result')->insertGetId($resultData);
-
+        $result_id      =   DB::table('diagnostic_test_result')->insertGetId($resultData);
         $student_age    =   DB::table('diagnostic_test_ages')->where('id', $request->input('student_age'))->pluck('name')->first();
 
         foreach($request->answer_record as $answer){
@@ -154,23 +154,24 @@ class DiagnosticTestController extends Controller
         Mail::to($request->parent_email)->send($parentNotification);
 
         /* Send Email to PIC */
-        $emails     =   ['sitihajar_ahmadjazuli@alfaandfriends.com', 'nurezzati_sallihin@alfaandfriends.com', 'gantika_novyasari@alfaandfriends.com', 'suetli_tan@alfaandfriends.com'];
-        // $emails     =   ['abdulraof_mohdiskandar@alfaandfriends.com'];
-        $users      =   User::whereIn('user_email', $emails)->get();
-
-        foreach ($users as $user) {
-            $info    =   [
-                'pic_name'      =>  $user->display_name,
-                'student_name'  =>  $request->student_name,
-                'student_age'   =>  $student_age,
-                'dt_title'      =>  $request->dt_title,
-                'test_date'     =>  Carbon::now()->format('d/m/Y'),
-                'reports'       =>  $reports
-            ];
-            $picNotification = new ResultToPIC($info);
-            Mail::to($user->user_email)->send($picNotification);
+        $emails     =   DiagnosticTestHelper::getPicEmailsByLanguageId($request->input('language_id'));
+        if(!empty($emails)){ 
+            $users      =   User::whereIn('user_email', $emails)->get();
+            foreach ($users as $user) {
+                $info    =   [
+                    'pic_name'      =>  $user->display_name,
+                    'student_name'  =>  $request->student_name,
+                    'student_age'   =>  $student_age,
+                    'dt_title'      =>  $request->dt_title,
+                    'test_date'     =>  Carbon::now()->format('d/m/Y'),
+                    'reports'       =>  $reports
+                ];
+                $picNotification = new ResultToPIC($info);
+                Mail::to($user->user_email)->send($picNotification);
+            }
         }
         return true;
+       
     }
 
     /* list of saved result */
@@ -225,11 +226,16 @@ class DiagnosticTestController extends Controller
                                 ->where('result_id', $request->result_id)
                                 ->select([
                                     'diagnostic_test.id as dt_id',
+                                    'diagnostic_test_result_details.id as dt_details_id',
                                     'diagnostic_test.name as dt_name',
                                     'diagnostic_test.chart_id as chart_type',
                                     'diagnostic_test_result_details.answer_record as answer_record',
                                     'diagnostic_test_result_details.created_at',
                                 ])->orderBy('diagnostic_test_result_details.id')->paginate(10);
+
+        foreach ($answer_record as $item) {
+            $item->dt_details_id = encrypt($item->dt_details_id);
+        }
 
         $answer_collection = collect($answer_record->items());
 
@@ -885,12 +891,28 @@ class DiagnosticTestController extends Controller
         try {
             DB::beginTransaction();
 
-            DB::table('diagnostic_test_languages')->insert([
+            $language_id    =   DB::table('diagnostic_test_languages')->insertGetId([
                 'name'              =>  $request->name,
                 'guideline_header'  =>  $request->guideline_header,
                 'guideline_body'    =>  $request->guideline_body,
                 'final_message'     =>  $request->final_message,
             ]);
+            
+            if (!empty($request->pic_emails)) {
+            
+                $emailsToInsert = [];
+            
+                foreach ($request->pic_emails as $pic) {
+                    $emailsToInsert[] = [
+                        'language_id'   => $language_id,
+                        'email'         => $pic['email'],
+                    ];
+                }
+            
+                if (!empty($emailsToInsert)) {
+                    DB::table('diagnostic_test_emails')->insert($emailsToInsert);
+                }
+            }
 
             DB::commit();
             return back()->with(['type'=>'success', 'message'=>'Added new language successfully!']);
@@ -902,9 +924,10 @@ class DiagnosticTestController extends Controller
     }
 
     public function dtLanguagesEdit(Request $request){
-        $language_info  =   DB::table('diagnostic_test_languages')->where('id', $request->language_id)->first();
+        $data['language_info']  =   DB::table('diagnostic_test_languages')->where('id', $request->language_id)->first();
+        $data['pic_emails']     =   DB::table('diagnostic_test_emails')->where('language_id', $request->language_id)->select('email')->get();
 
-        return $language_info;
+        return $data;
     }
 
     /* update language */
@@ -926,6 +949,24 @@ class DiagnosticTestController extends Controller
                 'final_message'     =>  $request->final_message,
             ]);
 
+            DB::table('diagnostic_test_emails')->where('language_id', $request->id)->delete();
+            
+            if (!empty($request->pic_emails)) {
+            
+                $emailsToInsert = [];
+            
+                foreach ($request->pic_emails as $pic) {
+                    $emailsToInsert[] = [
+                        'language_id'   => $request->id,
+                        'email'         => $pic['email'],
+                    ];
+                }
+            
+                if (!empty($emailsToInsert)) {
+                    DB::table('diagnostic_test_emails')->insert($emailsToInsert);
+                }
+            }
+
             DB::commit();
             return back()->with(['type'=>'success', 'message'=>'Updated language successfully!']);
 
@@ -939,7 +980,10 @@ class DiagnosticTestController extends Controller
         try {
             DB::beginTransaction();
 
-            DB::table('diagnostic_test_languages')->where('id', $id)->delete();
+            DB::table('diagnostic_test_languages')
+                ->join('diagnostic_test_emails', 'diagnostic_test_emails.language_id', '=', 'diagnostic_test_languages.id')
+                ->where('diagnostic_test_languages.id', $id)
+                ->delete();
 
             DB::commit();
             return back()->with(['type'=>'success', 'message'=>'Deleted language successfully!']);
@@ -949,6 +993,4 @@ class DiagnosticTestController extends Controller
             return back()->with(['type'=>'error', 'message'=>'Cannot proceed, this language is being used!']);
         }
     }
-
-
 }

@@ -297,7 +297,8 @@ export default {
                 parent_area_location: '',
                 parent_email: '',
                 answer_record: [],
-                eligible_level: ''
+                eligible_level: '',
+                language_id: this.$page.props.language_id
             },
             error:{
                 parent_name: false,
@@ -563,22 +564,22 @@ export default {
                 return { ...q, category_id: category ? category.category_id : null };
             });
 
-            const correctAnswers    = combined.filter(answer => answer.correct);
-            const splittedAnswers   = correctAnswers.reduce((acc, item) => {
-                if (item.correct) {
-                    if (!acc[item.category_id]) {
-                        acc[item.category_id] = 1;
-                    } else {
-                    acc[item.category_id]++;
-                    }
+            const result = combined.reduce((acc, question) => {
+                if (question.correct) {
+                    acc[question.question_category_id] = (acc[question.question_category_id] || 0) + 1;
+                } else if (!acc.hasOwnProperty(question.question_category_id)) {
+                    // Initialize with 0 if not present
+                    acc[question.question_category_id] = null;
                 }
                 return acc;
-            }, {})
+            }, {});
+            
             const finalScores = [];
-            Object.keys(splittedAnswers).forEach((key, index) => {
-                finalScores[index] = splittedAnswers[key];
+            Object.keys(result).forEach((key, index) => {
+                finalScores[index] = result[key];
             });
             Object.values(finalScores)
+
             this.chart_data = finalScores
             this.initChart()
 

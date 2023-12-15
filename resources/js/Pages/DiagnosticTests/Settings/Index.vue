@@ -47,7 +47,7 @@ import Languages from './Languages.vue'
 
 export default {
     components: {
-        Head, Link, Languages
+        Head, Link, 
     },
     data() {
         return {

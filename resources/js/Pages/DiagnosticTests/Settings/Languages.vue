@@ -55,34 +55,47 @@ import BreezeButton from '@/Components/Button.vue';
     <Modal :showModal="form_modal" modalType="sm" @hideModal="form_modal = false" :key="form.id">
         <template v-slot:header>
             <h3 class="text-gray-800 tracking-wide font-semibold text-lg">              
-                Language
+                Language Setting
             </h3>                
         </template>
         <template v-slot:content>
             <div class="w-full md:w-[48rem] p-4 overflow-y-auto">
                 <div class="grid grid-cols-1 gap-4">
                     <div class="">
-                        <label for="language_name" class="block text-sm text-gray-700 font-bold"> Name </label>
+                        <label for="language_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
                         <div class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text" name="language_name" id="language_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.name ? 'border-red-300' : 'border-gray-300'" v-model="form.name" autocomplete="none"/>
+                            <input type="text" name="language_name" id="language_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.name ? 'border-red-300' : 'border-gray-300'" v-model="form.name" autocomplete="none"/>
                         </div>
                     </div>
                     <div class="">
-                        <label for="guideline_header" class="block text-sm text-gray-700 font-bold"> Guideline Title </label>
+                        <label for="guideline_header" class="block text-sm text-gray-700 font-bold"> Guideline Title <span class="text-red-500">*</span></label>
                         <div class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text" name="guideline_header" id="guideline_header" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.guideline_header ? 'border-red-300' : 'border-gray-300'" v-model="form.guideline_header" autocomplete="none"/>
+                            <input type="text" name="guideline_header" id="guideline_header" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.guideline_header ? 'border-red-300' : 'border-gray-300'" v-model="form.guideline_header" autocomplete="none"/>
                         </div>
                     </div>
                     <div class="">
-                        <label for="guideline_body" class="block text-sm text-gray-700 font-bold"> Guideline Body (Press enter to break a new line) </label>
+                        <label for="guideline_body" class="block text-sm text-gray-700 font-bold"> Guideline Body <span class="text-red-500">*</span> (Press enter to break a new line) </label>
                         <div class="mt-1 flex rounded-md shadow-sm">
-                            <textarea rows="6" name="guideline_body" id="guideline_body" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.guideline_body ? 'border-red-300' : 'border-gray-300'" v-model="form.guideline_body" autocomplete="none"></textarea>
+                            <textarea rows="6" name="guideline_body" id="guideline_body" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.guideline_body ? 'border-red-300' : 'border-gray-300'" v-model="form.guideline_body" autocomplete="none"></textarea>
                         </div>
                     </div>
                     <div class="">
-                        <label for="final_message" class="block text-sm text-gray-700 font-bold"> Final Message </label>
+                        <label for="final_message" class="block text-sm text-gray-700 font-bold"> Final Message <span class="text-red-500">*</span></label>
                         <div class="mt-1 flex rounded-md shadow-sm">
-                            <textarea rows="3" name="final_message" id="final_message" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.final_message ? 'border-red-300' : 'border-gray-300'" v-model="form.final_message" autocomplete="none"></textarea>
+                            <textarea rows="3" name="final_message" id="final_message" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.final_message ? 'border-red-300' : 'border-gray-300'" v-model="form.final_message" autocomplete="none"></textarea>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="email_input" class="block text-sm text-gray-700 font-bold"> PIC Emails</label>
+                        <div class="mt-1 flex rounded-md shadow-sm space-x-2">
+                            <input type="email" name="email_input" id="email_input" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.email_input ? 'border-red-300' : 'border-gray-300'" v-model="form.email_input" autocomplete="none"/>
+                            <BreezeButton class="py-2.5 px-4" @click="addEmail()">Add</BreezeButton>
+                        </div>
+                        <div class="">
+                            <ul class="w-full text-sm font-medium divide-dashed divide-y text-gray-900 bg-white border border-gray-200 rounded-lg">
+                                <li class="w-full px-4 py-2 space-x-4" v-if="form.pic_emails.length" v-for="email, index in form.pic_emails"><span>{{ email.email }}</span><span class="text-xs cursor-pointer uppercase text-red-500 hover:underline" @click="deleteEmail(index)">Delete</span></li>
+                                <li class="w-full px-4 py-2 space-x-4 bg-gray-100" v-else><span class="font-semibold text-gray-600 italic text-sm">No email has been added.</span></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -125,18 +138,21 @@ export default {
             confirmation_data: '',
             confirmation_route: '',
             processing: false,
-            error: {
+            errors: {
                 name: false,
                 guideline_header: false,
                 guideline_body: false,
-                final_message: false
+                final_message: false,
+                email_input: false,
             },
             form:{
                 id: '',
                 name: '',
                 guideline_header: '',
                 guideline_body: '',
-                final_message: ''
+                final_message: '',
+                email_input: '',
+                pic_emails: []
             }
         }
     },
@@ -153,11 +169,12 @@ export default {
             this.clearForm()
             axios.get(route('dt.settings.languages.edit'), { params: { language_id: language_id } })
             .then(response => {
-                this.form.id                = response.data.id
-                this.form.name              = response.data.name
-                this.form.guideline_header  = response.data.guideline_header
-                this.form.guideline_body    = response.data.guideline_body
-                this.form.final_message     = response.data.final_message
+                this.form.id                = response.data.language_info.id
+                this.form.name              = response.data.language_info.name
+                this.form.guideline_header  = response.data.language_info.guideline_header
+                this.form.guideline_body    = response.data.language_info.guideline_body
+                this.form.final_message     = response.data.language_info.final_message
+                this.form.pic_emails        = response.data.pic_emails
                 this.form_modal = true
                 this.processing = false
             })
@@ -174,9 +191,9 @@ export default {
             if(this.processing){
                 return
             }
-            this.processing = true
             const formValid =   this.validateForm();
             if(formValid){
+                this.processing = true
                 this.$inertia.post(route('dt.settings.languages.store'), this.form, {
                     onSuccess: page => {
                         this.form_modal = false
@@ -190,9 +207,9 @@ export default {
             if(this.processing){
                 return
             }
-            this.processing = true
             const formValid =   this.validateForm();
             if(formValid){
+                this.processing = true
                 this.$inertia.post(route('dt.settings.languages.update'), this.form, {
                     onSuccess: page => {
                         this.form_modal = false
@@ -202,27 +219,54 @@ export default {
             }
             return
         },
+        addEmail(){
+            const emailIsvalid  = this.validateEmailInput()
+            if(!emailIsvalid){
+                return
+            }
+            this.form.pic_emails.push({
+                'email': this.form.email_input
+            })
+            this.form.email_input = ''
+        },
+        deleteEmail(index){
+            this.form.pic_emails.splice(index, 1)
+        },
         clearForm(){
             this.form.id = ''
             this.form.name = ''
             this.form.guideline_header = ''
             this.form.guideline_body = ''
             this.form.final_message = ''
+            this.form.email_input = ''
+            this.form.pic_emails = []
+            for (let key in this.errors) {
+                this.errors[key] = false;
+            }
         },
         validateForm() {
-            for (let key in this.error) {
-                this.error[key] = false;
+            for (let key in this.errors) {
+                this.errors[key] = false;
             }
             for (let key in this.form) {
-                if (key === 'id') {
+                if (key === 'id' || key === 'email_input' || key === 'pic_emails') {
                     continue;
                 }
                 if (this.form[key].trim() === '') {
-                    this.error[key] = true;
+                    this.errors[key] = true;
                 }
             }
-            return Object.values(this.error).every(value => !value);
+            return Object.values(this.errors).every(value => !value);
         },
+        validateEmailInput(){
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            const emailIsValid = emailRegex.test(this.form.email_input);
+
+            this.errors.email_input = emailIsValid ? false : true
+
+            return emailIsValid
+        }
     }
 }
 </script>
