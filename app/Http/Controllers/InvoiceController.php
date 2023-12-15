@@ -75,7 +75,7 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function feeInvoiceCreate(){
+    public function feeInvoiceCreate(Request $request){
         $programmes     =   ProgrammeHelper::programmes();
         $fee_types      =   ClassHelper::classTypeDetails();
         $levels         =   ProgrammeHelper::distinctLevels();
@@ -86,6 +86,7 @@ class InvoiceController extends Controller
             'fee_types'         =>  $fee_types,
             'levels'            =>  $levels,
             'payment_status'    =>  $payment_status,
+            'params'            =>  $request->params,
         ]);
     }
     
@@ -147,7 +148,7 @@ class InvoiceController extends Controller
                 $quota_exceeded     =   $this->checkInvoiceQuota($invoice_config->quota, $invoice_to_create_count);
 
                 if($quota_exceeded){
-                    return redirect(route('fee.invoices'))->with(['type'=>'error', 'message'=>'Invoice quota exceeded, please contact technical support!']);
+                    return redirect(route('fee.invoices', $request->params))->with(['type'=>'error', 'message'=>'Invoice quota exceeded, please contact technical support!']);
                 }
 
                 $currency  =   StudentHelper::getStudentCurrency($request->student_id);
@@ -180,10 +181,10 @@ class InvoiceController extends Controller
 
             DB::commit();
 
-            return redirect(route('fee.invoices'))->with(['type'=>'success', 'message'=>'Invoices have been successfully generated!']);
+            return redirect(route('fee.invoices', $request->params))->with(['type'=>'success', 'message'=>'Invoices have been successfully generated!']);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect(route('fee.invoices'))->with(['type'=>'error', 'message'=>'Something went wrong, please try again!']);
+            return redirect(route('fee.invoices', $request->params))->with(['type'=>'error', 'message'=>'Something went wrong, please try again!']);
         }
     }
 
@@ -200,7 +201,8 @@ class InvoiceController extends Controller
 
         return Inertia::render('Invoices/Edit', [
             'invoice_data'      =>  $invoice_data,
-            'invoice_status'    =>  $invoice_status
+            'invoice_status'    =>  $invoice_status,
+            'params'            =>  $request->params
         ]);
     }
 
@@ -231,7 +233,7 @@ class InvoiceController extends Controller
         $log_data =   'Updated invoice ID '.$request->invoice_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('fee.invoices'))->with(['type'=>'success', 'message'=>'Invoice updated successfully !']);
+        return redirect(route('fee.invoices', $request->params))->with(['type'=>'success', 'message'=>'Invoice updated successfully !']);
     }
 
     public function getCurrentYearInvoiceNumber($quota, $current_count){

@@ -151,7 +151,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                             <div class="flex" v-if="$page.props.can.create_fee_invoices">
-                                <BreezeButton :route="route('fee.invoices.create')">New invoice</BreezeButton>
+                                <BreezeButton :route="route('fee.invoices.create', {'params': params})">New invoice</BreezeButton>
                             </div>
                         </div>
                     </div>
@@ -342,7 +342,7 @@ export default {
             this.open_modal = true
         },
         editInvoice(invoice_id){
-            this.$inertia.get(route('fee.invoices.edit'), {'invoice_id':invoice_id}, {preserveState: false})
+            this.$inertia.get(route('fee.invoices.edit'), {'invoice_id':invoice_id, 'params': this.params}, {preserveState: false})
         },
         totalFee(invoice_items) {
             let total = 0;

@@ -194,7 +194,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex items-center justify-end">
                                         <div class="flex space-x-2">
-                                            <BreezeButton buttonType="gray" :route="route('fee.invoices')">Cancel</BreezeButton>
+                                            <BreezeButton buttonType="gray" :route="route('fee.invoices', $page.props.params)">Cancel</BreezeButton>
                                             <BreezeButton type="submit">Save</BreezeButton>
                                         </div>
                                     </div>
@@ -222,6 +222,7 @@ export default {
             date_issued: moment(this.$page.props.invoice_data.date_issued).format('DD MMM Y'),
             due_date: moment(this.$page.props.invoice_data.due_date).format('DD MMM Y'),
             form: {
+                params: this.$page.props.params,
                 invoice_id: this.$page.props.invoice_data.id,
                 invoice_items: JSON.parse(this.$page.props.invoice_data.invoice_items),
                 invoice_amount: this.$page.props.invoice_data.amount,
