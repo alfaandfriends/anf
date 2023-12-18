@@ -10,7 +10,7 @@ Dear **{{ $info['pic_name'] }}**,
 It has been reviewed and certain areas have been identified where **{{ $info['student_name'] }}** may need additional support and guidance.
 
 
-<span style="text-decoration: underline;padding-bottom: 100px">Refer to the parent's details below for follow-ups:-</span><br><br>
+<span style="text-decoration: underline;padding-bottom: 100px">Refer to the parent's details below for follow-ups:-</span><br>
 Name: {{ $info['parent_name'] }}<br>
 Phone number: {{ $info['parent_contact'] }}<br>
 Email: {{ $info['parent_email'] }}<br>
