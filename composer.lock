@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df5fdaa4460921e34ae7d6b117f62692",
+    "content-hash": "e3ddaaf3208c5a527d66478fe3e63ca6",
     "packages": [
         {
             "name": "alfaandfriends/corcel",
@@ -10427,21 +10427,21 @@
         },
         {
             "name": "xammie/mailbook",
-            "version": "1.6.2",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Xammie/mailbook.git",
-                "reference": "c7d4d15f72c4138cf107eff8aa2ccb69181bce53"
+                "reference": "db9e6578b5ad23ac0048406466a7b2612c8f405d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Xammie/mailbook/zipball/c7d4d15f72c4138cf107eff8aa2ccb69181bce53",
-                "reference": "c7d4d15f72c4138cf107eff8aa2ccb69181bce53",
+                "url": "https://api.github.com/repos/Xammie/mailbook/zipball/db9e6578b5ad23ac0048406466a7b2612c8f405d",
+                "reference": "db9e6578b5ad23ac0048406466a7b2612c8f405d",
                 "shasum": ""
             },
             "require": {
                 "illuminate/contracts": "^9.0|^10.0",
-                "php": "^8.0|^8.1",
+                "php": "^8.0",
                 "spatie/laravel-package-tools": "^1.9.2"
             },
             "require-dev": {
@@ -10496,7 +10496,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Xammie/mailbook/issues",
-                "source": "https://github.com/Xammie/mailbook/tree/1.6.2"
+                "source": "https://github.com/Xammie/mailbook/tree/1.7.0"
             },
             "funding": [
                 {
@@ -10504,7 +10504,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-05-18T11:30:05+00:00"
+            "time": "2023-12-07T19:55:29+00:00"
         }
     ],
     "aliases": [],

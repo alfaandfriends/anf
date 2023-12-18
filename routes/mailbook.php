@@ -9,7 +9,7 @@ Mailbook::add(function (): ResultToParent {
         ['name' => 'John Doe', 'id' => 'asd'],
         ['name' => 'Jane Doe', 'id' => 'asd'],
     ];
-    return new ResultToParent($data);
+    return new ResultToParent($data, '/example/url');
 });
 
 Mailbook::add(function (): ResultToPIC {
@@ -22,6 +22,10 @@ Mailbook::add(function (): ResultToPIC {
         ['name' => 'John Doe', 'id' => 'asd'],
         ['name' => 'Jane Doe', 'id' => 'asd'],
     ];
-    return new ResultToPIC($data);
+    $data['parent_name']            =   'Raof';
+    $data['parent_contact']         =   '0102063234';
+    $data['parent_area_location']   =   'Puchong';
+    $data['parent_email']           =   'abdulraof628@gmail.com';
+    return new ResultToPIC($data, '/example/url');
 });
 
