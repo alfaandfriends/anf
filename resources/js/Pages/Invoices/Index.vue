@@ -218,10 +218,10 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center justify-center space-x-2">
+                                        <div class="flex items-center justify-start space-x-2">
                                             <!-- <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton> -->
                                             <BreezeButton buttonType="warning" @click="editInvoice(result.id)" v-if="$page.props.can.edit_fee_invoices">Edit / Collect Payment</BreezeButton>
-                                            <BreezeButton buttonType="danger" @click="deleteInvoice(result.id)" v-if="$page.props.can.delete_fee_invoices">Delete</BreezeButton>
+                                            <BreezeButton buttonType="danger" @click="deleteInvoice(result.id)" v-if="$page.props.can.delete_fee_invoices && result.can_delete == 1">Delete</BreezeButton>
                                         </div>
                                     </td>
                                 </tr>

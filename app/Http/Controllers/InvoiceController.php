@@ -39,7 +39,7 @@ class InvoiceController extends Controller
                         ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                     'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
                                     'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 
-                                    'invoice_status.bg_color as status_bg_color', 'invoice_status.text_color as status_text_color');
+                                    'invoice_status.bg_color as status_bg_color', 'invoice_status.text_color as status_text_color', 'invoices.can_delete');
         
         $request->merge([
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
@@ -134,6 +134,7 @@ class InvoiceController extends Controller
                         'amount'                    => $request->invoice_amount,
                         'currency'                  => $currency,
                         'status'                    => $request->status,
+                        'can_delete'                => 1,
                     ]);
                     $start_month->addMonths(1);
                     $invoice_config->quota -= 1;
@@ -174,6 +175,7 @@ class InvoiceController extends Controller
                     'payment_date'              => $request->payment['date'] ? Carbon::parse($request->payment['date'])->format('Y-m-d') : null,
                     'payment_transaction_id'    => $request->payment['transaction_id'] ? $request->payment['transaction_id'] : null,
                     'payment_proof'             => $request->file('payment.proof') ? $filename : null,
+                    'can_delete'                => 1
                 ]);
                 
                 $log_data =   'Added invoice ID '.$invoice_id;
