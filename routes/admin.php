@@ -218,6 +218,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/fee_invoices/create', [InvoiceController::class, 'feeInvoiceCreate'])->name('fee.invoices.create')->middleware('permission:create_fee_invoices');
             Route::post('/fee_invoices/store', [InvoiceController::class, 'feeInvoiceStore'])->name('fee.invoices.store')->middleware('permission:create_fee_invoices');
             Route::get('/fee_invoices/edit', [InvoiceController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit')->middleware('permission:edit_fee_invoices');
+            Route::delete('/fee_invoices/destroy/{id}', [InvoiceController::class, 'feeInvoiceDestroy'])->name('fee.invoices.destroy')->middleware('permission:delete_fee_invoices');
             Route::post('/fee_invoices/update', [InvoiceController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update')->middleware('permission:edit_fee_invoices');
             Route::get('/fee_invoices/generate', [InvoiceController::class, 'feeInvoiceGenerate'])->name('fee.invoices.generate')->middleware('permission:view_fee_invoices');
         });

@@ -210,17 +210,19 @@ import BreezeButton from '@/Components/Button.vue';
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">{{ result.amount }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="">
                                         <div class="ml-2 flex-shrink-0 flex">
                                             <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" :class="[result.status_bg_color, result.status_text_color]">
                                             {{ result.status }}
                                             </p>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        <!-- <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton> -->
-                                        <BreezeButton buttonType="warning" @click="editInvoice(result.id)" v-if="$page.props.can.edit_fee_invoices">Edit / Collect Payment</BreezeButton>
-                                        <!-- <BreezeButton buttonType="danger" @click="deleteResource(result.id)">Delete</BreezeButton> -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center justify-center space-x-2">
+                                            <!-- <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton> -->
+                                            <BreezeButton buttonType="warning" @click="editInvoice(result.id)" v-if="$page.props.can.edit_fee_invoices">Edit / Collect Payment</BreezeButton>
+                                            <BreezeButton buttonType="danger" @click="deleteInvoice(result.id)" v-if="$page.props.can.delete_fee_invoices">Delete</BreezeButton>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -234,8 +236,8 @@ import BreezeButton from '@/Components/Button.vue';
             :show="isOpen" 
             @close="isOpen = false"
             confirmationAlert="danger"
-            confirmationTitle="Delete Resource"
-            confirmationText="Are you sure want to delete this resource?"
+            confirmationTitle="Delete Invoice"
+            confirmationText="Are you sure want to delete this invoice?"
             confirmationButton="Delete"
             confirmationMethod="delete"
             :confirmationRoute="confirmationRoute"
@@ -343,6 +345,11 @@ export default {
         },
         editInvoice(invoice_id){
             this.$inertia.get(route('fee.invoices.edit'), {'invoice_id':invoice_id, 'params': this.params}, {preserveState: false})
+        },
+        deleteInvoice(invoice_id){
+            this.confirmationRoute = 'fee.invoices.destroy'
+            this.confirmationData = invoice_id
+            this.isOpen = true
         },
         totalFee(invoice_items) {
             let total = 0;

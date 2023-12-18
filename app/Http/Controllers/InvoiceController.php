@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia; 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 
 class InvoiceController extends Controller
 {
@@ -204,6 +205,24 @@ class InvoiceController extends Controller
             'invoice_status'    =>  $invoice_status,
             'params'            =>  $request->params
         ]);
+    }
+
+    public function feeInvoiceDestroy($id){
+        try {
+            DB::beginTransaction();
+
+            DB::table('invoices')->where('id', $id)->delete();
+
+            DB::commit();
+
+            $log_data =   'Deleted invoice ID '.$id;
+            event(new DatabaseTransactionEvent($log_data));
+
+            return back()->with(['type'=>'success', 'message'=>'Invoice deleted successfully! ']);
+        } catch (Exception $e) {
+            DB::rollback();
+            return back()->with(['type'=>'error', 'message'=>'An error has occurred, please try again!']);
+        }
     }
 
     public function feeInvoiceUpdate(Request $request){
