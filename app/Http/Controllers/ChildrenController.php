@@ -72,6 +72,10 @@ class ChildrenController extends Controller
 
     public function destroy($id)
     {
+        $record_exists   =   DB::table('students')->where('children_id', $id)->exists();
+        if($record_exists){
+            return back()->with(['type'=>'error', 'message'=>'Unable to delete this child as there are associated records within the application.']);
+        }
         DB::table('children')->where('id', $id)->delete();
 
         return back()->with(['type'=>'success', 'message'=>'Child deleted successfully !']);

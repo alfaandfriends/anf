@@ -219,10 +219,10 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="flex py-1" v-if="$page.props.errors.selected_roles">
                                             <span class="text-sm text-red-500">{{ $page.props.errors.selected_roles }}</span>
                                         </div>
-                                        <div class="block">
-                                            <div class="mt-2">
-                                                <div class="mb-2" v-for="role in roles" :key="role.id">
-                                                    <label class="inline-flex items-center text-gray-800 select-none text-md cursor-pointer" :for="role.id">
+                                        <div class="block" v-for="role in roles" :key="role.id">
+                                            <div class="mt-2" v-if="hasPermission(role.permission)">
+                                                <div class="mb-2">
+                                                    <label class="inline-flex items-center text-gray-800 select-none text-md cursor-pointer">
                                                         <input type="checkbox" class="h-5 w-5 border border-gray-300 rounded-sm bg-white focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer"
                                                                 :id="role.id" 
                                                                 :value="role.id"
@@ -478,7 +478,10 @@ export default {
         },
         deleteChild(index){
             this.form.children.splice(index, 1)
-        }
+        },
+        hasPermission(permissionKey) {
+            return this.$page.props.can.hasOwnProperty(permissionKey) && this.$page.props.can[permissionKey];
+        },
     }
 
 }
