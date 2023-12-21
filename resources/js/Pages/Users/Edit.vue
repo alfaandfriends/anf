@@ -222,9 +222,9 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="flex py-1" v-if="$page.props.errors.selected_roles">
                                             <span class="text-sm text-red-500">{{ $page.props.errors.selected_roles }}</span>
                                         </div>
-                                        <div class="block">
-                                            <div class="mt-2">
-                                                <div class="mb-2" v-for="role in $page.props.roles" :key="role.id">
+                                        <div class="block" v-for="role in $page.props.roles" :key="role.id">
+                                            <div class="mt-2" v-if="hasPermission(role.permission)">
+                                                <div class="mb-2">
                                                     <label class="inline-flex items-center text-gray-800 select-none text-md cursor-pointer" :for="role.id">
                                                         <input type="checkbox" class="h-5 w-5 border border-gray-300 rounded-sm bg-white focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer"
                                                                 :id="role.id" 
@@ -241,8 +241,8 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" v-if="$page.props.can.view_child">
+                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md" v-if="$page.props.can.create_child">
                                 <div class="mb-5">
                                     <h1 class="text-indigo-800 font-bold">Children Information</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
@@ -279,7 +279,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
                                                     <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Date of Birth</th>
-                                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" v-if="$page.props.can.edit_child || $page.props.can.delete_child">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -300,10 +300,10 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                                                         {{ moment(children.date_of_birth).format('DD/MM/Y') }}
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium" v-if="$page.props.can.edit_child || $page.props.can.delete_child">
                                                         <div class="flex justify-center space-x-2">
-                                                            <BreezeButton buttonType="warning" @click="!processing ? editChild(children.id) : ''">Edit</BreezeButton>
-                                                            <BreezeButton buttonType="danger" @click="!processing ? deleteChild(children.id) : ''">Delete</BreezeButton>
+                                                            <BreezeButton buttonType="warning" @click="!processing ? editChild(children.id) : ''" v-if="$page.props.can.edit_child">Edit</BreezeButton>
+                                                            <BreezeButton buttonType="danger" @click="!processing ? deleteChild(children.id) : ''" v-if="$page.props.can.delete_child">Delete</BreezeButton>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -313,7 +313,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" v-if="$page.props.can.reset_password">
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex flex-row-reverse items-center justify-between">
@@ -629,6 +629,9 @@ export default {
                 this.showEdit               =   true
                 this.processing = false
             });
+        },
+        hasPermission(permissionKey) {
+            return this.$page.props.can.hasOwnProperty(permissionKey) && this.$page.props.can[permissionKey];
         },
     }
 }
