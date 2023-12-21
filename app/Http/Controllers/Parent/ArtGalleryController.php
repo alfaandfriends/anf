@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Parent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
-use Storage;
 
 class ArtGalleryController extends Controller
 {
