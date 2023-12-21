@@ -51,7 +51,8 @@ class StudentController extends Controller
                                 ->distinct();
 
         if($request->search){
-            $query->where('programmes.name', 'LIKE', '%'.$request->search.'%');
+            $query->where('children.name', 'LIKE', '%'.$request->search.'%')
+                    ->orWhere('programmes.name', 'LIKE', '%'.$request->search.'%');
         }
 
         $request->merge([
