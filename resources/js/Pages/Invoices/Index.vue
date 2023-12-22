@@ -25,210 +25,202 @@ import BreezeButton from '@/Components/Button.vue';
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <div class="py-4 px-4">
+            <div class="flex justify-end mb-3" v-if="$page.props.can.create_fee_invoices">
+                <BreezeButton :route="route('fee.invoices.create', {'params': params})">New invoice</BreezeButton>
+            </div>
+            <hr class="my-3 border border-dashed border-gray-400">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
+                <div class="relative w-full">
+                    <svg class="absolute top-2.5 left-3 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" v-debounce:800ms="search" v-model="params.search">
+                </div>
+                <div class="relative w-full">
+                    <Multiselect 
+                        @select="search"
+                        @deselect="search"
+                        v-model="params.centre_id"
+                        valueProp="ID"
+                        :appendNewOption="false"
+                        :searchable="true"
+                        :options="$page.props.allowed_centres"
+                        :clearOnSelect="false"
+                        :canClear="false"
+                        :canDeselect="false"
+                        trackBy="label"
+                        label="label"
+                        placeholder="Centre"
+                        :classes="{
+                            container: 'relative w-full flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
+                            containerDisabled: 'cursor-default bg-gray-100',
+                            containerOpen: 'rounded-b-none',
+                            containerActive: 'border-2 border-gray-300',
+                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
+                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                            search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-gray-300 text-base font-sans bg-white rounded-lg',
+                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
+                            clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                            clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                            dropdownHidden: 'hidden',
+                            options: 'flex flex-col p-0 m-0 list-none w-full',
+                            group: 'p-0 m-0',
+                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                            groupLabelPointable: 'cursor-pointer',
+                            groupLabelPointed: 'bg-gray-300 text-black-700',
+                            groupLabelSelected: 'bg-gray-100 text-black',
+                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                            groupOptions: 'p-0 m-0',
+                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
+                            optionPointed: 'text-gray-800 bg-gray-100',
+                            optionSelected: 'text-white bg-indigo-500',
+                            optionDisabled: 'text-gray-300 cursor-not-allowed',
+                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                        }"
+                    />
+                </div>
+                <div class="relative w-full">
+                    <Multiselect 
+                        @select="search"
+                        @deselect="search"
+                        @clear="search"
+                        v-model="params.programme_id"
+                        valueProp="id"
+                        :appendNewOption="false"
+                        :searchable="true"
+                        :options="$page.props.programmes"
+                        :clearOnSelect="false"
+                        :canClear="true"
+                        :canDeselect="true"
+                        trackBy="name"
+                        label="name"
+                        placeholder="All Programmes"
+                        :classes="{
+                            container: 'relative w-full flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
+                            containerDisabled: 'cursor-default bg-gray-100',
+                            containerOpen: 'rounded-b-none',
+                            containerActive: 'border-2 border-gray-300',
+                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
+                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                            search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-gray-300 text-base font-sans bg-white rounded-lg',
+                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
+                            clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                            clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                            dropdownHidden: 'hidden',
+                            options: 'flex flex-col p-0 m-0 list-none w-full',
+                            group: 'p-0 m-0',
+                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                            groupLabelPointable: 'cursor-pointer',
+                            groupLabelPointed: 'bg-gray-300 text-black-700',
+                            groupLabelSelected: 'bg-gray-100 text-black',
+                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                            groupOptions: 'p-0 m-0',
+                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
+                            optionPointed: 'text-gray-800 bg-gray-100',
+                            optionSelected: 'text-white bg-indigo-500',
+                            optionDisabled: 'text-gray-300 cursor-not-allowed',
+                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                        }"
+                    />
+                </div>
+                <div class="relative w-full">
+                    <Datepicker :class="'w-full md:w-64 lg:w-64 rounded-lg shadow-sm'" 
+                                input-class-name="invoices-date-picker focus:ring-0"
+                                v-model="params.date" 
+                                :month-picker="true" 
+                                :auto-apply="true" 
+                                :placeholder="'Month / Year'" 
+                    />
+                </div>
+            </div>
             <div class="overflow-x-auto">
-                <div class="mx-auto">
-                    <div class="align-middle inline-block min-w-full">
-                        <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
-                            <div class="flex space-x-2">
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <svg class="h-10 w-4 text-gray-400" viewBox="0 0 24 24" fill="none">
-                                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </span>
-                                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-debounce:800ms="search" v-model="params.search">
-                                </div>
-                                <div class="flex">
-                                    <Multiselect 
-                                        @select="search"
-                                        @deselect="search"
-                                        @clear="search"
-                                        v-model="params.programme_id"
-                                        valueProp="id"
-                                        :appendNewOption="false"
-                                        :searchable="true"
-                                        :options="$page.props.programmes"
-                                        :clearOnSelect="false"
-                                        :canClear="true"
-                                        :canDeselect="true"
-                                        trackBy="name"
-                                        label="name"
-                                        placeholder="Programme"
-                                        :classes="{
-                                            container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
-                                            containerDisabled: 'cursor-default bg-gray-100',
-                                            containerOpen: 'rounded-b-none',
-                                            containerActive: 'border-2 border-gray-300',
-                                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                            search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-gray-300 text-base font-sans bg-white rounded-lg',
-                                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
-                                            clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                                            clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                            dropdownHidden: 'hidden',
-                                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                                            group: 'p-0 m-0',
-                                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                            groupLabelPointable: 'cursor-pointer',
-                                            groupLabelPointed: 'bg-gray-300 text-black-700',
-                                            groupLabelSelected: 'bg-gray-100 text-black',
-                                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                            groupOptions: 'p-0 m-0',
-                                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                            optionPointed: 'text-gray-800 bg-gray-100',
-                                            optionSelected: 'text-white bg-indigo-500',
-                                            optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                        }"
-                                    />
-                                </div>
-                                <div class="flex">
-                                    <Multiselect 
-                                        @select="search"
-                                        @deselect="search"
-                                        v-model="params.centre_id"
-                                        valueProp="ID"
-                                        :appendNewOption="false"
-                                        :searchable="true"
-                                        :options="$page.props.allowed_centres"
-                                        :clearOnSelect="false"
-                                        :canClear="false"
-                                        :canDeselect="false"
-                                        trackBy="label"
-                                        label="label"
-                                        placeholder="Centre"
-                                        :classes="{
-                                            container: 'relative w-full md:w-64 lg:w-64 flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
-                                            containerDisabled: 'cursor-default bg-gray-100',
-                                            containerOpen: 'rounded-b-none',
-                                            containerActive: 'border-2 border-gray-300',
-                                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                            search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-gray-300 text-base font-sans bg-white rounded-lg',
-                                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
-                                            clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                                            clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                            dropdownHidden: 'hidden',
-                                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                                            group: 'p-0 m-0',
-                                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                            groupLabelPointable: 'cursor-pointer',
-                                            groupLabelPointed: 'bg-gray-300 text-black-700',
-                                            groupLabelSelected: 'bg-gray-100 text-black',
-                                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                            groupOptions: 'p-0 m-0',
-                                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                            optionPointed: 'text-gray-800 bg-gray-100',
-                                            optionSelected: 'text-white bg-indigo-500',
-                                            optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                        }"
-                                    />
-                                </div>
-                                <div class="flex">
-                                    <Datepicker :class="'w-full md:w-64 lg:w-64 rounded-lg shadow-sm'" 
-                                                :style="$page.props.errors.end_time ? '--dp-border-color: #fa9e9e' : ''" 
-                                                input-class-name="invoices-date-picker focus:ring-0"
-                                                v-model="params.date" 
-                                                :month-picker="true" 
-                                                :auto-apply="true" 
-                                                :placeholder="'Month / Year'" 
-                                    />
-                                </div>
-                            </div>
-                            <div class="flex" v-if="$page.props.can.create_fee_invoices">
-                                <BreezeButton :route="route('fee.invoices.create', {'params': params})">New invoice</BreezeButton>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-300">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Name / invoice </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Date Issued</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Due Date</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Amount</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Status</th>
-                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-if="!$page.props.invoices.data.length">
-                                    <td class="text-center" colspan="10">
-                                        <div class="p-3">
-                                            No Record Found! 
-                                        </div>
-                                    </td>
-                                </tr> 
-                                <tr class="" v-for="(result, invoice_index) in $page.props.invoices.data" :key="result.id">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-700">{{ invoice_index + 1 }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center justify-between">
-                                            <p class="text-sm font-medium text-gray-900 truncate">
-                                                {{ result.student_name }}
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-300">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Name / invoice </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Date Issued</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Due Date</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Amount</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Status</th>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr v-if="!$page.props.invoices.data.length">
+                                <td class="text-center" colspan="10">
+                                    <div class="p-3">
+                                        No Record Found! 
+                                    </div>
+                                </td>
+                            </tr> 
+                            <tr class="" v-for="(result, invoice_index) in $page.props.invoices.data" :key="result.id">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-700">{{ invoice_index + 1 }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            {{ result.student_name }}
+                                        </p>
+                                    </div>
+                                    <div class="mt-2 sm:flex sm:justify-between">
+                                        <div class="flex items-center space-x-2">
+                                            <p class="flex items-center text-sm text-gray-500">
+                                            #{{ result.invoice_number }}
                                             </p>
+                                            <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-1 w-1 text-gray-400" viewBox="0 0 512 512">
+                                                <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"/>
+                                            </svg>
+                                            <p class="flex items-center text-sm text-gray-500">
+                                            {{ result.invoice_number }}
+                                            </p> -->
                                         </div>
-                                        <div class="mt-2 sm:flex sm:justify-between">
-                                            <div class="flex items-center space-x-2">
-                                                <p class="flex items-center text-sm text-gray-500">
-                                                #{{ result.invoice_number }}
-                                                </p>
-                                                <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-1 w-1 text-gray-400" viewBox="0 0 512 512">
-                                                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"/>
-                                                </svg>
-                                                <p class="flex items-center text-sm text-gray-500">
-                                                {{ result.invoice_number }}
-                                                </p> -->
-                                            </div>
-                                        </div>
-                                        <div class="text-sm font-medium text-gray-900">{{ result.title }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ moment(result.date_issued).format('DD MMM Y') }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ moment(result.due_date).format('DD MMM Y') }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ result.amount }}</div>
-                                    </td>
-                                    <td class="">
-                                        <div class="ml-2 flex-shrink-0 flex">
-                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" :class="[result.status_bg_color, result.status_text_color]">
-                                            {{ result.status }}
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center justify-start space-x-2">
-                                            <!-- <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton> -->
-                                            <BreezeButton buttonType="warning" @click="editInvoice(result.id)" v-if="$page.props.can.edit_fee_invoices">Edit / Collect Payment</BreezeButton>
-                                            <BreezeButton buttonType="danger" @click="deleteInvoice(result.id)" v-if="$page.props.can.delete_fee_invoices && result.can_delete == 1">Delete</BreezeButton>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <Pagination :page_data="$page.props.invoices" :params="params"></Pagination>
-                    </div>
+                                    </div>
+                                    <div class="text-sm font-medium text-gray-900">{{ result.title }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ moment(result.date_issued).format('DD MMM Y') }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ moment(result.due_date).format('DD MMM Y') }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ result.amount }}</div>
+                                </td>
+                                <td class="">
+                                    <div class="ml-2 flex-shrink-0 flex">
+                                        <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" :class="[result.status_bg_color, result.status_text_color]">
+                                        {{ result.status }}
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center justify-start space-x-2">
+                                        <!-- <BreezeButton buttonType="blue" @click="viewInvoice(invoice_index)">View / Print</BreezeButton> -->
+                                        <BreezeButton buttonType="warning" @click="editInvoice(result.id)" v-if="$page.props.can.edit_fee_invoices">Edit / Collect Payment</BreezeButton>
+                                        <BreezeButton buttonType="danger" @click="deleteInvoice(result.id)" v-if="$page.props.can.delete_fee_invoices && result.can_delete == 1">Delete</BreezeButton>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <Pagination :page_data="$page.props.invoices" :params="params"></Pagination>
                 </div>
             </div>
         </div>

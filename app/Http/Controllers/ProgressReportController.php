@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ProgrammeHelper;
+use App\Classes\ProgressReportHelper;
 use App\Events\DatabaseTransactionEvent;
 use Carbon\Carbon;
 use DateTime;
@@ -203,6 +204,7 @@ class ProgressReportController extends Controller
 
         return $lessons;
     }
+
     public function getCodingTopics($lesson_id){
         $topics   =   DB::table('pr_coding_topics')->where('lesson_id', $lesson_id)->get();
 
@@ -227,6 +229,7 @@ class ProgressReportController extends Controller
 
         return $themes;
     }
+
     public function getArtLessons($theme_id){
         $lessons   =   DB::table('pr_art_lessons')->where('theme_id', $theme_id)->get();
 

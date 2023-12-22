@@ -10,87 +10,80 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <div class="py-4 px-4">
+            <div class="flex justify-end mb-3" v-if="$page.props.can.create_orders">
+                <BreezeButton :route="route('orders.create')">Add New Order</BreezeButton>
+            </div>
+            <hr class="my-3 border border-dashed border-gray-400">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
+                <div class="relative w-full">
+                    <svg class="absolute top-2.5 left-3 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" v-debounce:800ms="search" v-model="params.search">
+                </div>
+            </div>
             <div class="overflow-x-auto">
-                <div class="mx-auto">
-                    <div class="align-middle inline-block min-w-full">
-                        <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
-                            <div class="flex space-x-2">
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none">
-                                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-300">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-6/14">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Date</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Attachments</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Shipment Tracking</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">Status</th>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr v-if="!$page.props.orders.data || !$page.props.orders.data.length">
+                                <td class="text-center" colspan="10">
+                                    <div class="p-3">
+                                        No Record Found!
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-else class="" v-for="(order, index) in $page.props.orders.data">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-700">{{ index + 1 }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ order.parent_full_name }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ moment(order.created_at).format('DD/MM/Y') }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                                    <span @click="viewInvoice(order.id, index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
+                                        {{ generating[index].invoice ? 'Generating...' : 'Invoice'}}
                                     </span>
-                                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-debounce:800ms="search" v-model="params.search">
-                                </div>
-                            </div>
-                            <div class="flex">
-                                <BreezeButton :route="route('orders.create')" v-if="$page.props.can.create_orders">Add New Order</BreezeButton>
-                            </div>
-                        </div>
-                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-300">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-6/14">Name</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Date</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Attachments</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Shipment Tracking</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-if="!$page.props.orders.data || !$page.props.orders.data.length">
-                                        <td class="text-center" colspan="10">
-                                            <div class="p-3">
-                                                No Record Found!
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr v-else class="" v-for="(order, index) in $page.props.orders.data">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-700">{{ index + 1 }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ order.parent_full_name }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ moment(order.created_at).format('DD/MM/Y') }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap space-x-2">
-                                            <span @click="viewInvoice(order.id, index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
-                                                {{ generating[index].invoice ? 'Generating...' : 'Invoice'}}
-                                            </span>
-                                            <span @click="viewPackingSlip(order.id, index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
-                                                {{ generating[index].packing_slip ? 'Generating...' : 'Packing Slip'}}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex flex-col text-sm font-medium text-gray-900" v-if="order.shipping_provider_name">
-                                                <small class="font-bold text-gray-600">{{ order.shipping_provider_name }}</small>
-                                                <span class="font-semibold text-indigo-700">{{ order.tracking_number }}</span>
-                                            </div>
-                                            <div class="" v-else>-</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">
-                                                <span @click="viewTrackingStatus(order.tracking_status)" class="border whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer " :class="[order.class_name]">{{ order.status_name }}</span>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                            <div class="flex space-x-2 justify-center">
-                                                <BreezeButton @click="editOrder(order.id)" buttonType="warning" v-if="$page.props.can.edit_orders">Edit</BreezeButton>
-                                                <BreezeButton @click="deleteOrder(order.id)" buttonType="danger" v-if="$page.props.can.delete_orders">Delete</BreezeButton>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <Pagination v-if="$page.props.orders.length" :page_data="$page.props.orders" :params="params"></Pagination>
-                        </div>
-                    </div>
+                                    <span @click="viewPackingSlip(order.id, index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
+                                        {{ generating[index].packing_slip ? 'Generating...' : 'Packing Slip'}}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex flex-col text-sm font-medium text-gray-900" v-if="order.shipping_provider_name">
+                                        <small class="font-bold text-gray-600">{{ order.shipping_provider_name }}</small>
+                                        <span class="font-semibold text-indigo-700">{{ order.tracking_number }}</span>
+                                    </div>
+                                    <div class="" v-else>-</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        <span @click="viewTrackingStatus(order.tracking_status)" class="border whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer " :class="[order.class_name]">{{ order.status_name }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                    <div class="flex space-x-2 justify-center">
+                                        <BreezeButton @click="editOrder(order.id)" buttonType="warning" v-if="$page.props.can.edit_orders">Edit</BreezeButton>
+                                        <BreezeButton @click="deleteOrder(order.id)" buttonType="danger" v-if="$page.props.can.delete_orders">Delete</BreezeButton>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <Pagination v-if="$page.props.orders.length" :page_data="$page.props.orders" :params="params"></Pagination>
                 </div>
             </div>
             <ConfirmationModal

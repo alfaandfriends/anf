@@ -1,6 +1,7 @@
 <?php
 
 use App\Classes\ProgrammeHelper;
+use App\Classes\StudentHelper;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DownloadController;
@@ -32,6 +33,7 @@ Route::middleware(['auth'])->group(function(){
     /* Students */
     Route::prefix('students')->group(function () {
         Route::get('find', [StudentController::class, 'findStudents'])->name('students.find');
+        Route::get('fees/{id}', [StudentHelper::class, 'getStudentFees'])->name('students.fees');
     });
 
     /* Math Select Options */

@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use DateTime;
+use Illuminate\Support\Facades\DB;
 
 class ProgressReportHelper {
     public static function getDatesForDayOfWeekFromCustomDate($dayOfWeek, $customDate) {
@@ -21,5 +22,12 @@ class ProgressReportHelper {
         }
         
         return $dates;
+    }
+
+    public static function getConfigByProgrammeId($programme_id)
+    {
+        $config_id     =   DB::table('progress_report_configs')->where('programme_id', $programme_id)->first();
+
+        return $config_id;
     }
 }

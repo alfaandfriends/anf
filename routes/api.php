@@ -32,3 +32,4 @@ Route::get('find-product-sub-variations', [ProductHelper::class, 'getProductSubV
 Route::post('fee_invoices/callback/my', [InvoiceController::class, 'callbackMy'])->name('fee.invoices.callback.my');
 Route::any('fee_invoices/callback/id', [InvoiceController::class, 'callbackId'])->name('fee.invoices.callback.id');
 Route::get('fee_invoices/check-status', [InvoiceController::class, 'checkStatus'])->name('fee.invoices.check_status');
+Route::get('/fee_invoices/generate', [InvoiceController::class, 'feeInvoiceGenerate'])->name('fee.invoices.generate');

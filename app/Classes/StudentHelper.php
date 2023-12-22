@@ -80,4 +80,18 @@ class StudentHelper {
                                     ->first();
         return $child_id;
     }
+
+    public static function getStudentFees($student_id)
+    {
+        $student_fees   =   DB::table('student_fees')
+                                ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                ->where('student_fees.student_id', $student_id)
+                                ->whereNull('student_fees.status')
+                                ->select('student_fees.id as id', 'programmes.name as name', 'programme_levels.level as programme_level')
+                                ->get();
+
+        return $student_fees;
+    }
 }

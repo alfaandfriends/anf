@@ -62,4 +62,16 @@ class ProgrammeHelper {
 
         return $programme_levels;
     }
+
+    public static function getProgrammeIdByStudentFee($student_fee_id){
+        $programme_id   =   DB::table('student_fees')
+                                ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                ->where('student_fees.id', $student_fee_id)
+                                ->pluck('programme.id')
+                                ->first();
+
+        return $programme_id;
+    }
 }

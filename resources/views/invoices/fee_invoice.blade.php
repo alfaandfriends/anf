@@ -62,13 +62,13 @@
         <tr>
             <td align="left">
                 <strong style="font-size: 15px">{{ $data['parent_full_name'] }}</strong><br/>
-                <div style="max-width: 200px; font-size: 14px; margin-top: 10px; line-height: 1.5">{{ $data['parent_address'] }}</div><br/> 
-                <div style="max-width: 200px; font-size: 14px; margin-top: 10px; font-weight: bold; text-decoration: underline;">Student: {{ $data['student_name'] }}</div><br/> 
+                <div style="max-width: 250px; font-size: 14px; margin-top: 10px; line-height: 1.5">{{ $data['parent_address'] }}</div><br/> 
+                <div style="max-width: 250px; font-size: 14px; margin-top: 10px; font-weight: bold; text-decoration: underline;">Student: {{ $data['student_name'] }}</div><br/> 
             </td>
             <td align="left">
-                <div style="font-size: 14px; padding-left: 270px">Invoice Number: {{ $data['invoice_number'] }}</div><br/> 
-                <div style="font-size: 14px; padding-left: 270px">Invoice Date: {{ $data['date_issued'] }}</div><br/> 
-                <div style="font-size: 14px; padding-left: 270px">Due Date: {{ $data['due_date'] }}</div><br/> 
+                <div style="font-size: 14px; padding-left: 240px">Invoice Number: {{ $data['invoice_number'] }}</div><br/> 
+                <div style="font-size: 14px; padding-left: 240px">Invoice Date: {{ $data['date_issued'] }}</div><br/> 
+                <div style="font-size: 14px; padding-left: 240px">Due Date: {{ $data['due_date'] }}</div><br/> 
             </td>
         </tr>
     </table>
@@ -130,7 +130,7 @@
                 </td>
                 <td align="right" style="border-top: 1px solid; border-bottom: 1px solid;">
                     <div style="padding-top: 5px; padding-bottom: 5px; font-size: 13px; padding-left:1rem; padding-right:1rem;">
-                    {{ $data['currency'] }} {{ $data['amount'] }}.00
+                    {{ $data['currency'] }} {{ $data['amount'] }}
                     </div>
                 </td>
             </tr>

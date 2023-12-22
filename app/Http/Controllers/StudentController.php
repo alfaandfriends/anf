@@ -51,8 +51,7 @@ class StudentController extends Controller
                                 ->distinct();
 
         if($request->search){
-            $query->where('children.name', 'LIKE', '%'.$request->search.'%')
-                    ->orWhere('programmes.name', 'LIKE', '%'.$request->search.'%');
+            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
         }
 
         $request->merge([
@@ -72,11 +71,6 @@ class StudentController extends Controller
 
     public function create(Request $request)
     {
-        $user_currenct_currency =   DB::table('wpvt_users')
-                                        ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
-                                        ->where('wpvt_users.id', auth()->user()->ID)
-                                        ->pluck('countries.currency_symbol')
-                                        ->first();
         $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
 
