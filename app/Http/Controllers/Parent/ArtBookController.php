@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Parent;
 
+use App\Classes\ArtBookHelper;
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -11,10 +13,17 @@ class ArtBookController extends Controller
 {
     public function index()
     {
-        $themes     =   DB::table('art_themes')->where('level_id', 1)->get();
+        $levels     =   ArtBookHelper::getLevels();
 
         return Inertia::render('Parent/ArtBook/Index',[
-            'themes'    =>  $themes
+            'levels'    =>  $levels,
         ]);
+    }
+
+    public function generate(Request $request){
+        $pdf = PDF::setPaper(array(0,0,648,576))
+                    ->setOption('fontDir', public_path('/images/artbook/font'))
+                    ->loadView('artbooks.level_1.artventure_to_the_beach.template');
+        return $pdf->stream();
     }
 }

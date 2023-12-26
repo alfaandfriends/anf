@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\ArtBookHelper;
 use App\Http\Controllers\Parent\ArtBookController;
 use App\Http\Controllers\Parent\ChildrenController;
 use App\Http\Controllers\Parent\ArtGalleryController;
@@ -36,11 +37,10 @@ Route::middleware(['auth'])->group(function(){
     
         /* Art Book */
         Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book');
+        Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate');
         
         /* Art Gallery Select Options */
         Route::get('/art-gallery/get-levels', [ArtGalleryController::class, 'getLevels'])->name('art_gallery.get_levels');
         Route::get('/art-gallery/get-themes/{level_id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes');
     });
-    
-    
 });
