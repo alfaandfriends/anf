@@ -252,7 +252,7 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="flex flex-col mb-10" :class="{'hidden': !detailed_info.has_sub_variation}">
+        <div class="flex flex-col mb-10" :class="{'hidden': detailed_info.has_sub_variation == 0}">
             <div class="mb-3">
                 <label class="block text-sm text-gray-700 font-bold"> Sub Variation </label>
             </div>
