@@ -21,9 +21,10 @@ class ArtBookController extends Controller
     }
 
     public function generate(Request $request){
+        $data['name']   =   'Hoo Lee Shet';
         $pdf = PDF::setPaper(array(0,0,648,576))
                     ->setOption('fontDir', public_path('/images/artbook/fonts'))
-                    ->loadView('artbooks.level_1.artventure_to_the_beach.template');
+                    ->loadView('artbooks.level_1.artventure_to_the_beach.template', compact('data'));
         return $pdf->stream();
     }
 }
