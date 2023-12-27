@@ -561,6 +561,7 @@ export default {
                 return
             }
             const  only_one_class_allowed   = this.form.fee.find(item => item.fee_info.class_type_id === 1 && item.fee_info.class_type_id === class_type_id && item.fee_info.programme_id === programme_id);
+            console.log(only_one_class_allowed)
             if(only_one_class_allowed){
                 alert('Only one class is allowed for normal class.')
                 this.searching.fee = false
