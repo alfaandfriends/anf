@@ -556,6 +556,7 @@ export default {
             }
         },
         getNormalFee(class_id, class_type_id, programme_id, programme_level_id){
+            console.log(class_type_id, programme_id)
             if(this.fetching_fee){
                 return
             }
