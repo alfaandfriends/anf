@@ -556,19 +556,16 @@ export default {
             }
         },
         getNormalFee(class_id, class_type_id, programme_id, programme_level_id){
-            console.log(class_type_id, programme_id)
             if(this.fetching_fee){
                 return
             }
-            console.log(this.form.fee)
-            const  only_one_class_allowed   = this.form.fee.find(item => item.fee_info.class_type_id == 1 && item.fee_info.class_type_id == class_type_id && item.fee_info.programme_id == programme_id);
-            console.log(only_one_class_allowed)
+            const only_one_class_allowed   = this.form.fee.find(item => item.fee_info.class_type_id == 1 && item.fee_info.class_type_id == class_type_id && item.fee_info.programme_id == programme_id);
             if(only_one_class_allowed){
                 alert('Only one class is allowed for normal class.')
                 this.searching.fee = false
                 return
             }
-            const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type_id);
+            const programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type_id);
             if(programme_already_added){
                 alert('This programme already been added. Please remove the previous one first.')
                 this.searching.fee = false
@@ -595,7 +592,7 @@ export default {
             if(this.disable_check_box){
                 return
             }
-            const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type);
+            const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type);
             if(programme_already_added){
                 alert('This programme already been added. Please remove the previous one first.')
                 if(event.target.checked){

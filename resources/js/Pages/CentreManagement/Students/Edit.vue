@@ -941,16 +941,16 @@ export default {
                 return
             }
             if(!is_transfer_student){
-                const  only_one_class_allowed_form      = this.form.fee.find(item => item.fee_info.class_type_id === 1 && item.fee_info.class_type_id === class_type_id && item.fee_info.programme_id === programme_id);
-                const  only_one_class_allowed_current   = this.current_fee.find(item => item.fee_info.class_type_id === 1 && item.fee_info.class_type_id === class_type_id && item.fee_info.programme_id === programme_id);
+                const  only_one_class_allowed_form      = this.form.fee.find(item => item.fee_info.class_type_id == 1 && item.fee_info.class_type_id == class_type_id && item.fee_info.programme_id == programme_id);
+                const  only_one_class_allowed_current   = this.current_fee.find(item => item.fee_info.class_type_id == 1 && item.fee_info.class_type_id == class_type_id && item.fee_info.programme_id == programme_id);
                 if(only_one_class_allowed_form || only_one_class_allowed_current){
                     alert('Only one class is allowed for normal class.')
                     this.searching.fee = false
                     return
                 }
 
-                const  programme_already_added_form     = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type_id);
-                const  programme_already_added_current  = this.current_fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type_id);
+                const  programme_already_added_form     = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type_id);
+                const  programme_already_added_current  = this.current_fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type_id);
                 if(programme_already_added_form || programme_already_added_current){
                     alert('This programme already been added. Please remove the previous one first.')
                     this.searching.fee = false
@@ -986,8 +986,8 @@ export default {
                 return
             }
             if(!is_transfer_student){
-                const  programme_already_added_form   = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type);
-                const  programme_already_added_current   = this.current_fee.find(item => item.fee_info.programme_id === programme_id);
+                const  programme_already_added_form   = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type);
+                const  programme_already_added_current   = this.current_fee.find(item => item.fee_info.programme_id == programme_id);
                 if(programme_already_added_form || programme_already_added_current){
                     alert('This programme already been added. Please remove the previous one first.')
                     if(event.target.checked){
