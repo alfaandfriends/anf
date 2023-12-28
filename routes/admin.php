@@ -89,9 +89,6 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:edit_classes');
             Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:edit_classes');
             Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:delete_classes');
-            Route::get('/classes/get-class-types', [ClassController::class, 'getClassTypes'])->name('classes.get_class_types');
-            Route::get('/classes/get-class-levels', [ClassController::class, 'getClassLevels'])->name('classes.get_class_levels');
-            Route::get('/classes/find', [ClassController::class, 'findClasses'])->name('classes.find');
         });
 
         /* Students */
