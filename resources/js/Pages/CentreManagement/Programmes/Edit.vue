@@ -83,9 +83,14 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.level }}</td>
                                                     <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ $page.props.class_types[form.programme_info[index].class_type].name}}</td>
                                                     <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.material_fee }}</td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">
-                                                        <div class="flex" v-for="fee in info.fees">
-                                                            <p class="text-sm text-gray-700">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-bold">{{ fee.value }}</span></p>
+                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700 w-3/12">
+                                                        <div class="flex space-x-4">
+                                                            <div class="flex flex-col">
+                                                                <p class="text-sm text-gray-700" v-for="fee in info.fees">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-bold">{{ fee.value }}</span></p>
+                                                            </div>
+                                                            <div class="flex flex-1 flex-col justify-center items-end">
+                                                                <span class="font-semibold text-yellow-600 hover:underline cursor-pointer" @click="editFee(index, info.programme_level_id ? false : true)">Edit</span>
+                                                            </div>
                                                         </div>
                                                     </td>
                                                     <td class="px-4 py-2 text-left border border-gray-400">
@@ -373,6 +378,34 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>
             </template>
         </Modal>
+        <Modal :showModal="show.edit_fee" modalType="sm" @hideModal="show.edit_fee = false">
+            <template v-slot:header>
+                <h3 class="text-gray-900 text-xl font-semibold">                
+                    Edit Fee  
+                </h3>                
+            </template>
+            <template v-slot:content>
+                <div class="overflow-y-auto p-6" ref="scrollableDiv">
+                    <div class="flex flex-col space-y-4">
+                        <div class="">
+                            <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4 items-end mb-3">
+                                <div class="grow" v-for="fee in fee_edit_form.data">
+                                    <label for="programme_material_fee" class="block text-sm text-gray-700 font-bold">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }}<span class="text-red-500">*</span></label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="number" min="0" name="programme_material_fee" id="programme_material_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.material_fee.error ? 'border-red-300' : 'border-gray-300'" v-model="fee.value" autocomplete="off"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:footer>
+                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                    <BreezeButton buttonType="info" @click="updateFee()">Save</BreezeButton>
+                </div>
+            </template>
+        </Modal>
         <ConfirmationModal 
             :show="confirmation_modal" 
             @close="confirmation_modal = false"
@@ -429,8 +462,14 @@ export default {
                 class_type: '',
                 fees: [],
             },
+            fee_edit_form: {
+                new_item: false,
+                programme_info_index: '',
+                data: [],
+            },
             show:{
                 add_fee: false,
+                edit_fee: false,
                 product_variations: false,
                 product_sub_variations: false,
                 add_tracking_status: false
@@ -668,6 +707,23 @@ export default {
             }, 10);
 
         },
+        editFee(programme_info_index, new_item){
+            this.fee_edit_form.new_item             = new_item
+            this.fee_edit_form.programme_info_index = programme_info_index
+            this.fee_edit_form.data                 = []
+            this.fee_edit_form.data                 = this.form.programme_info[programme_info_index].fees
+            this.show.edit_fee                      = true
+        },
+        updateFee(){
+            if(!this.fee_edit_form.new_item){
+                this.$inertia.patch(route('programmes.fee.update'), {'fee_edit_form': this.fee_edit_form}, {preserveState: false});
+            }
+            else{
+                this.form.programme_info[this.fee_edit_form.programme_info_index].fees = []
+                this.form.programme_info[this.fee_edit_form.programme_info_index].fees = this.fee_edit_form.data
+                this.show.edit_fee  = false
+            }
+        }
     },
 }
 </script>
