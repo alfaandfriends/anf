@@ -298,7 +298,8 @@ class ProgrammeController extends Controller
                                 ->select(   'programmes.id as programme_id', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 
                                             'programme_levels.material_fee', 'programme_level_fees.id as fee_id', 'programme_level_fees.fee_amount as programme_fee', 
                                             'class_types_detail.label as programme_type', 'centres.id as centre_id', 'centres.label as centre_name', 
-                                            'class_types.id as class_type_id', 'class_methods.name as class_method');
+                                            'class_types.id as class_type_id', 'class_methods.name as class_method')
+                                ->where('programme_level_fees.fee_amount', '>', 0);
                         
         if($request->class_id){
             $fee_info_query->where('classes.id', $request->class_id);
