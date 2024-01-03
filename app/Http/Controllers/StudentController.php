@@ -38,6 +38,45 @@ class StudentController extends Controller
         });
 
         $query          =   DB::table('students')
+                                ->join('children', 'students.children_id', '=', 'children.id')
+                                ->join('student_fees', 'students.id', '=', 'student_fees.student_id')
+                                ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                ->select([  'students.id as id', 
+                                            'children.name as name', 
+                                            'wpvt_users.display_name as parent_name', 
+                                            'students.status'])
+                                ->distinct();
+
+        if($request->search){
+            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+        }
+
+        $request->merge([
+            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
+        ]);
+        
+        $query->where('student_fees.centre_id', '=', $request->centre_id)->where('students.status', 1);
+
+        return Inertia::render('CentreManagement/Students/Index', [
+            'filter'        => request()->all('search', 'centre_id'),
+            'students'       => $query->paginate(10),
+        ]);
+    }
+    
+    public function inactive(Request $request)
+    {
+        $allowed_centres    =   Inertia::getShared('allowed_centres');
+        if($allowed_centres->isEmpty()){
+            return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
+        }
+        $can_access_centre = $allowed_centres->search(function ($value) {
+            return $value->ID == request('centre_id');
+        });
+
+        $query          =   DB::table('students')
                                 ->leftJoin('children', 'students.children_id', '=', 'children.id')
                                 ->leftJoin('student_fees', 'students.id', '=', 'student_fees.student_id')
                                 ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
@@ -58,12 +97,9 @@ class StudentController extends Controller
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
         ]);
         
-        $query->where('student_fees.centre_id', '=', $request->centre_id);
-        $query->orWhere(function($query){
-            $query->orWhereNull('student_fees.id');
-        });
+        $query->whereNull('student_fees.id')->orWhere('students.status', 0);
 
-        return Inertia::render('CentreManagement/Students/Index', [
+        return Inertia::render('CentreManagement/Students/Inactive', [
             'filter'        => request()->all('search', 'centre_id'),
             'students'       => $query->paginate(10),
         ]);

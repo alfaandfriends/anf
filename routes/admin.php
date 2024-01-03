@@ -95,6 +95,7 @@ Route::middleware(['auth', 'device'])->group(function(){
         Route::prefix('students')->middleware('permission:student_access')->group(function () {
             /* Students */
             Route::get('/', [StudentController::class, 'index'])->name('students')->middleware('permission:view_students');
+            Route::get('/inactive', [StudentController::class, 'inactive'])->name('students.inactive')->middleware('permission:view_students');
             Route::get('/create', [StudentController::class, 'create'])->name('students.create')->middleware('permission:create_students');
             Route::post('/store', [StudentController::class, 'store'])->name('students.store')->middleware('permission:create_students');
             Route::get('/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:edit_students');
