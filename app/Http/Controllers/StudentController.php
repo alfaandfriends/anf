@@ -321,7 +321,8 @@ class StudentController extends Controller
                                             ->whereNull('student_fees.status');
                                     })
                                     ->get();
-                                    
+                                  
+        dd($result);  
         $student_academics = collect($result)->groupBy('fee_id')->map(function ($group) {
             $fee_info = [
                 "centre_id" => $group->first()->centre_id,
@@ -356,7 +357,6 @@ class StudentController extends Controller
             ];
         })->values()->all();
 
-        dd($student_academics);
         $gender_list        =   DB::table('genders')->get();
         $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
