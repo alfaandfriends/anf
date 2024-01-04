@@ -316,9 +316,10 @@ class StudentController extends Controller
                                                 'student_fees.id as student_fee_id', 
                                                 'student_fees.status as student_fee_status')
                                     ->where('student_fees.student_id', $request->student_id)
-                                    ->whereMonth('student_fees.created_at', '=', now()->format('m'))
-                                    ->whereNull('student_fees.status')
-                                    ->orWhere('student_fees.status', 2)
+                                    ->where(function($query){
+                                        $query->whereMonth('student_fees.created_at', '=', now()->format('m'))
+                                            ->whereNull('student_fees.status');
+                                    })
                                     ->get();
                                     
         $student_academics = collect($result)->groupBy('fee_id')->map(function ($group) {
