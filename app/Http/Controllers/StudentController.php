@@ -321,8 +321,7 @@ class StudentController extends Controller
                                             ->whereNull('student_fees.status');
                                     })
                                     ->get();
-                                  
-        dd($result);  
+                          
         $student_academics = collect($result)->groupBy('fee_id')->map(function ($group) {
             $fee_info = [
                 "centre_id" => $group->first()->centre_id,
@@ -594,17 +593,22 @@ class StudentController extends Controller
             'invoice_items'    => $new_invoice_items,
         ]);
 
-        DB::table('student_classes')->where('student_fee_id', $request->student_fee_id)->delete();
-        foreach ($request->fee as $fee) {
-            if ($fee["fee_info"]["fee_id"] === $request->fee_id) {
-                foreach($fee["classes"] as $class_key => $class){
-                    DB::table('student_classes')->insert([
-                        'student_fee_id'    =>  $request->student_fee_id,
-                        'class_id'          =>  $class['class_id'],
-                    ]);
-                }
-            }
-        }
+        // DB::table('student_classes')->where('student_fee_id', $request->student_fee_id)->update([
+        //     'student_fee_id'    =>  $request->student_fee_id,
+        //     'class_id'          =>  $class['class_id'],
+        // ]);
+
+
+        // foreach ($request->fee as $fee) {
+        //     if ($fee["fee_info"]["fee_id"] === $request->fee_id) {
+        //         foreach($fee["classes"] as $class_key => $class){
+        //             DB::table('student_classes')->insert([
+        //                 'student_fee_id'    =>  $request->student_fee_id,
+        //                 'class_id'          =>  $class['class_id'],
+        //             ]);
+        //         }
+        //     }
+        // }
         $log_data =   'Transferred student ID '.$request->student_fee_id;
         event(new DatabaseTransactionEvent($log_data));
 
