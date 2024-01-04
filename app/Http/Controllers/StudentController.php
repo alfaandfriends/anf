@@ -285,17 +285,17 @@ class StudentController extends Controller
                                     ->first();
 
         $result            =   DB::table('classes')
-                                    ->join('student_classes', 'student_classes.class_id', '=', 'classes.id')
-                                    ->join('student_fees', 'student_classes.student_fee_id', '=', 'student_fees.id')
-                                    ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')
-                                    ->join('centres', 'student_fees.centre_id', '=', 'centres.id')
-                                    ->join('class_methods', 'classes.class_method_id', '=', 'class_methods.id')
-                                    ->join('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
-                                    ->join('class_types', 'programme_levels.class_type_id', '=', 'class_types.id')
-                                    ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-                                    ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
-                                    ->join('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
-                                    ->join('invoices', 'student_fees.invoice_id', '=', 'invoices.id')
+                                    ->leftJoin('student_classes', 'student_classes.class_id', '=', 'classes.id')
+                                    ->leftJoin('student_fees', 'student_classes.student_fee_id', '=', 'student_fees.id')
+                                    ->leftJoin('class_days', 'classes.class_day_id', '=', 'class_days.id')
+                                    ->leftJoin('centres', 'student_fees.centre_id', '=', 'centres.id')
+                                    ->leftJoin('class_methods', 'classes.class_method_id', '=', 'class_methods.id')
+                                    ->leftJoin('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
+                                    ->leftJoin('class_types', 'programme_levels.class_type_id', '=', 'class_types.id')
+                                    ->leftJoin('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                    ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                    ->leftJoin('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
+                                    ->leftJoin('invoices', 'student_fees.invoice_id', '=', 'invoices.id')
                                     ->select(   'classes.id as class_id', 
                                                 'class_days.name as class_day', 
                                                 'classes.start_time', 
@@ -356,6 +356,7 @@ class StudentController extends Controller
             ];
         })->values()->all();
 
+        dd($student_academics);
         $gender_list        =   DB::table('genders')->get();
         $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
