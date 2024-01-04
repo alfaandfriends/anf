@@ -9,13 +9,7 @@ import BreezeButton from '@/Components/Button.vue';
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <div class="py-4 px-4 space-y-2">
-            <div class="flex justify-between bg-white rounded px-4 py-2 border border-gray-400">
-                <nav class="flex gap-2" aria-label="Tabs">
-                    <a :href="route('students')" class="self-center shrink-0 rounded-lg px-4 py-2 text-sm font-medium text-indigo-500 hover:bg-indigo-200 hover:text-indigo-500" :class="route().current('students') ? 'bg-indigo-100 text-indigo-400' : ''">Active</a>
-                    <a :href="route('students.inactive')" class="self-center shrink-0 rounded-lg px-4 py-2 text-sm font-medium text-indigo-500 hover:bg-indigo-200 hover:text-indigo-500" :class="route().current('students.inactive') ? 'bg-indigo-100 text-indigo-400' : ''">Inactive</a>
-                </nav>
-                <BreezeButton @click="newAdmission(params.centre_id)" v-if="$page.props.can.create_students">New Admission</BreezeButton>
-            </div>
+            <Tabs></Tabs>
             <div class="bg-white rounded p-4 border border-gray-400">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
                     <div class="relative w-full">
@@ -188,6 +182,7 @@ import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
+import Tabs from './Tabs.vue'
 import moment from 'moment';
 import Multiselect from '@vueform/multiselect'
 import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'
@@ -196,7 +191,7 @@ import { debounce } from 'vue-debounce'
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Multiselect, VueFinalModal, ModalsContainer, Pagination
+        ConfirmationModal, Head, Link, Multiselect, VueFinalModal, ModalsContainer, Pagination, Tabs
     },
     props: {
         filter: Object,

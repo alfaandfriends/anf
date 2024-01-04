@@ -32,8 +32,17 @@
                     </div>
                     
                 </div>
-                <div class="flex justify-center underline pt-8 uppercase text-sm text-gray-500 tracking-wider">
-                    <a href="/">@yield('extra_message')</a>
+                <div class="flex justify-center pt-8 uppercase text-sm text-gray-500 tracking-wider">
+                    <a href="/" class="underline">@yield('extra_message')</a> &nbsp; or &nbsp;
+                    
+                    @yield('content')
+                    <a class="cursor-pointer underline" href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+
+                    <form id="logout-form" action="{{ route('admin.logout') }}" method="post" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
             </div>
         </div>

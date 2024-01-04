@@ -193,7 +193,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </div>
                                                 </div>
                                                 <div class="mt-6">
-                                                    <BreezeButton class="py-2.5 px-4" v-if="fee.fee_info.student_fee_status" @click="fee.fee_info.student_fee_status == 2 ? showTransferStudent(fee.fee_info.fee_id, fee.fee_info.student_fee_id, fee.fee_info.programme_id, fee.fee_info.class_type_id, fee.fee_info.programme_level) : changeFeeStatus(fee.fee_info.student_fee_id, fee.fee_info.student_fee_status)">{{ fee.fee_info.student_fee_status == 2 ? 'Transfer Student' : 'Set as completed'}}</BreezeButton>
+                                                    <BreezeButton class="py-2.5 px-4" v-if="fee.fee_info.student_fee_status == 2" @click="showTransferStudent(fee.fee_info.fee_id, fee.fee_info.student_fee_id, fee.fee_info.programme_id, fee.fee_info.class_type_id, fee.fee_info.programme_level)">Confirm</BreezeButton>
+                                                    <BreezeButton class="py-2.5 px-4" v-else @click="changeFeeStatus(fee.fee_info.student_fee_id, fee.fee_info.student_fee_status)">{{ fee.fee_info.student_fee_status == 2 ? 'Transfer Student' : 'Confirm'}}</BreezeButton>
                                                 </div>
                                             </div>
                                         </div>
@@ -941,6 +942,7 @@ export default {
             this.show_add_class = true
         },
         findClasses(){
+            this.selected_plus_class = []
             this.errors.centre          =   !this.form.centre_id ? true : false
             this.errors.admission_date  =   !this.form.date_admission ? true : false
             this.errors.programme       =   !this.search_form.programme_id ? true : false
@@ -1046,9 +1048,9 @@ export default {
                 }
                 this.selected_plus_class[programme_id] = this.selected_plus_class[programme_id].filter(id => id !== class_id);
             }
-
             this.form.fee = []
             this.form.fee = this.form.fee.filter(item => item.fee_info.programme_id !== programme_id);
+
             
             if(this.selected_plus_class[programme_id].length){
                 this.fetching_fee = true
