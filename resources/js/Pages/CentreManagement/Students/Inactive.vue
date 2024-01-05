@@ -9,7 +9,7 @@ import BreezeButton from '@/Components/Button.vue';
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <div class="py-4 px-4 space-y-2">
-            <Tabs></Tabs>
+            <Tabs :centre_id="params.centre_id"></Tabs>
             <div class="bg-white rounded p-4 border border-gray-400">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
                     <div class="relative w-full">
