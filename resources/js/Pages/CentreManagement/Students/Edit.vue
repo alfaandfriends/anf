@@ -332,6 +332,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <label for="programme" class="block text-sm font-bold text-gray-700"> Start Date <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <Datepicker class="w-full rounded-lg shadow-sm focus:border-indigo-300"
+                                                    disabled="disabled"
                                                     :class="errors.admission_date ? 'border-red-300' : ' border-gray-300'"
                                                     input-class-name="student-date-picker focus:ring-0"
                                                     v-model="form.date_admission"
