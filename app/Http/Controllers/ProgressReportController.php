@@ -154,7 +154,7 @@ class ProgressReportController extends Controller
                                             ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
                                             ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                                             ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-                                            ->select('children.name as student_name', 'students.created_at as date_joined','programmes.name as programme_name', 
+                                            ->select('children.name as student_name', 'students.date_joined','programmes.name as programme_name', 
                                                     'programme_levels.level as programme_level')
                                             ->where('progress_report_id', $request->progress_report_id)->first();
 

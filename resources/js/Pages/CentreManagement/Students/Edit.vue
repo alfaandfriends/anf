@@ -34,37 +34,49 @@ import BreezeButton from '@/Components/Button.vue';
                                         <h1 class="font-bold text-indigo-800">Student Information</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-0 sm:gap-4">
                                         <div class="mb-4">
                                             <label for="centre" class="block text-sm font-bold text-gray-700"> Name <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
                                                 <input type="text" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.name ? 'border-red-300' : 'border-gray-300'" v-model="form.basic_info.name" autocomplete="off">
                                             </div>
                                         </div>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                            <div class="mb-4">
-                                                <label for="gender" class="block text-sm font-bold text-gray-700"> Gender <span class="text-red-500">*</span></label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <select name="gender" id="gender" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.gender ? 'border-red-300' : 'border-gray-300'" v-model="form.basic_info.gender" autocomplete="off">
-                                                        <option value="">-- Select Gender --</option>
-                                                        <option :value="gender.id" v-for="(gender, index) in $page.props.gender_list" :key="index">{{ gender.name }}</option>
-                                                    </select>
-                                                </div>
+                                        <div class="mb-4">
+                                            <label for="gender" class="block text-sm font-bold text-gray-700"> Gender <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select name="gender" id="gender" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.gender ? 'border-red-300' : 'border-gray-300'" v-model="form.basic_info.gender" autocomplete="off">
+                                                    <option value="">-- Select Gender --</option>
+                                                    <option :value="gender.id" v-for="(gender, index) in $page.props.gender_list" :key="index">{{ gender.name }}</option>
+                                                </select>
                                             </div>
-                                            <div class="mb-4">
-                                                <label for="end_time" class="block text-sm font-bold text-gray-700"> Date of Birth <span class="text-red-500">*</span></label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <Datepicker class="w-full rounded-lg shadow-sm" 
-                                                        :class="errors.dob ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'" 
-                                                        input-class-name="student-date-picker focus:ring-0"
-                                                        v-model="form.basic_info.dob" 
-                                                        :enable-time-picker="false"
-                                                        :auto-apply="true" 
-                                                        :format="'dd/MM/yyyy'"
-                                                    />
-                                                </div>
-                                                <!-- <Datepicker class="mt-1 rounded-md shadow-sm" :class="errors.dob ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'"  v-model="form.basic_info.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" format="dd/MM/yyyy"/> -->
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="end_time" class="block text-sm font-bold text-gray-700"> Date of Birth <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <Datepicker class="w-full rounded-lg shadow-sm" 
+                                                    :class="errors.dob ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'" 
+                                                    input-class-name="student-date-picker focus:ring-0"
+                                                    v-model="form.basic_info.dob" 
+                                                    :enable-time-picker="false"
+                                                    :auto-apply="true" 
+                                                    :format="'dd/MM/yyyy'"
+                                                />
                                             </div>
+                                            <!-- <Datepicker class="mt-1 rounded-md shadow-sm" :class="errors.dob ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'"  v-model="form.basic_info.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" format="dd/MM/yyyy"/> -->
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="end_time" class="block text-sm font-bold text-gray-700"> Date Joined <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <Datepicker class="w-full rounded-lg shadow-sm" 
+                                                    :class="errors.date_joined ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'" 
+                                                    input-class-name="student-date-picker focus:ring-0"
+                                                    v-model="form.basic_info.date_joined" 
+                                                    :enable-time-picker="false"
+                                                    :auto-apply="true" 
+                                                    :format="'dd/MM/yyyy'"
+                                                />
+                                            </div>
+                                            <!-- <Datepicker class="mt-1 rounded-md shadow-sm" :class="errors.dob ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'"  v-model="form.basic_info.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" format="dd/MM/yyyy"/> -->
                                         </div>
                                     </div>
                                 </div>
@@ -867,6 +879,7 @@ export default {
                     name: this.$page.props.student_info ? this.$page.props.student_info.name : '',
                     gender: this.$page.props.student_info ? this.$page.props.student_info.gender : '',
                     dob: this.$page.props.student_info ? this.$page.props.student_info.dob : '',
+                    date_joined: this.$page.props.student_info ? this.$page.props.student_info.date_joined : '',
                 },
                 parent_info: {
                     name: this.$page.props.student_info ? this.$page.props.student_info.parent_full_name  : '',

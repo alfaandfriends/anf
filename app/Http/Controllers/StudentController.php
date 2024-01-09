@@ -47,12 +47,19 @@ class StudentController extends Controller
                                             'students.status'])
                                 ->where('students.status', 1)
                                 ->where('student_fees.centre_id', '=', $request->centre_id)
-                                ->whereNull('student_fees.status')
-                                ->whereMonth('student_fees.created_at', '=', now()->format('m'));
-
-        if($request->search){
-            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+                                ->whereNull('student_fees.status');
+                                
+        if($request->date){
+            $date = new DateTime($request->date['year']."-".($request->date['month'] + 1)."-01");
+            $month = $date->format('m');
         }
+
+        $request->search    ??  $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+        $request->date      ?   $query->whereYear('student_fees.created_at', '=', $request->date['year'])
+                                    ->whereMonth('student_fees.created_at', '=', $month)
+                                : 
+                                $query->whereYear('student_fees.created_at', '=', now()->year)
+                                    ->whereMonth('student_fees.created_at', '=', now()->month);
 
         $request->merge([
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
@@ -273,6 +280,7 @@ class StudentController extends Controller
                                     ->select([  
                                                 'students.id as id', 
                                                 'students.status as status', 
+                                                'students.date_joined', 
                                                 'children.id as children_id', 
                                                 'children.name as name', 
                                                 'children.date_of_birth as dob', 
@@ -317,7 +325,8 @@ class StudentController extends Controller
                                                 'student_fees.status as student_fee_status')
                                     ->where('student_fees.student_id', $request->student_id)
                                     ->where(function($query){
-                                        $query->whereMonth('student_fees.created_at', '=', now()->format('m'))
+                                        $query->whereYear('student_fees.created_at', '=', now()->year)
+                                            ->whereMonth('student_fees.created_at', '=', now()->month)
                                             ->whereNull('student_fees.status');
                                     })
                                     ->get();
@@ -373,9 +382,35 @@ class StudentController extends Controller
 
     public function update(Request $request)
     {
-        DB::table('students')->where('id', $request->student_id)->update([
-            'status' => $request->student_status
+        // dd($request->all());
+        if(!$request->basic_info['name']){
+            return back()->with(['type'=>'error', 'message'=>'Student name is required.']);
+        }
+        if(!$request->basic_info['gender']){
+            return back()->with(['type'=>'error', 'message'=>'Student gender is required.']);
+        }
+        if(!$request->basic_info['dob']){
+            return back()->with(['type'=>'error', 'message'=>'Student date of birth is required.']);
+        }
+        if(!$request->basic_info['date_joined']){
+            return back()->with(['type'=>'error', 'message'=>'Student date joined is required.']);
+        }
+
+        $children_id    =   DB::table('students')->where('id', $request->student_id)->pluck('children_id')->first();
+
+        DB::table('children')->where('id', $children_id)->update([
+            'name'          => $request->basic_info['name'],
+            'gender_id'     => $request->basic_info['gender'],
+            'date_of_birth' => Carbon::parse($request->basic_info['dob'])->format('Y-m-d'),
         ]);
+
+        DB::table('students')->where('id', $request->student_id)->update([
+            'status' => $request->student_status,
+            'date_joined' => Carbon::parse($request->basic_info['date_joined'])->format('Y-m-d'),
+        ]);
+
+
+
         $log_data =   'Updated student ID '.$request->student_id;
         event(new DatabaseTransactionEvent($log_data));
 
@@ -385,7 +420,7 @@ class StudentController extends Controller
         //     NotificationHelper::sendApprovalNotifications($this->update_student_config, $data);
         // }
 
-        return redirect(route('students'))->with(['type'=>'success', 'message'=>'Student details updated !']);
+        return redirect()->back()->with(['type'=>'success', 'message'=>'Student details updated !']);
     }
 
     public function destroy(Request $request)

@@ -3,6 +3,19 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
+<style>
+.progress-report-date-picker{
+    border: 2px solid #D1D5DB; /* Default border color and thickness */
+    border-radius: 0.35rem;
+}
+:hover.progress-report-date-picker  {
+    border: 2px solid #D1D5DB; /* Highlighted border color and thickness */
+}
+:focus.progress-report-date-picker  {
+    border: 2px solid #D1D5DB; /* Highlighted border color and thickness */
+}
+</style>
+
 <template>
     <Head title="Students" />
 
@@ -65,6 +78,16 @@ import BreezeButton from '@/Components/Button.vue';
                                 noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                 fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                             }"
+                        />
+                    </div>
+                    <div class="relative w-full">
+                        <Datepicker :class="'w-full rounded-lg shadow-sm'" 
+                                    input-class-name="progress-report-date-picker focus:ring-0"
+                                    v-model="params.date" 
+                                    :month-picker="true" 
+                                    :auto-apply="true" 
+                                    @update:model-value="search"
+                                    :placeholder="'Month / Year'" 
                         />
                     </div>
                 </div>
@@ -187,11 +210,12 @@ import moment from 'moment';
 import Multiselect from '@vueform/multiselect'
 import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'
 import { debounce } from 'vue-debounce'
+import Datepicker from '@vuepic/vue-datepicker';
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Multiselect, VueFinalModal, ModalsContainer, Pagination, Tabs
+        ConfirmationModal, Head, Link, Multiselect, VueFinalModal, ModalsContainer, Pagination, Tabs, Datepicker
     },
     props: {
         filter: Object,
@@ -214,6 +238,7 @@ export default {
             params: {
                 search: this.filter.search ? this.filter.search : '',
                 centre_id: this.filter.centre_id ? this.filter.centre_id : '',
+                date: this.filter.date ? this.filter.date : '',
             }
         }
     },
