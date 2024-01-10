@@ -129,7 +129,10 @@ class StudentController extends Controller
                                             'wpvt_users.display_name as parent_name', 
                                             'students.status'])
                                 ->where('students.status', 1)
-                                ->whereNull('student_fees.id');
+                                ->where(function ($query) {
+                                    $query->whereNull('student_fees.id')
+                                        ->orWhereNotNull('student_fees.status');
+                                });
 
         if($request->search){
             $query->where('children.name', 'LIKE', '%'.$request->search.'%');
@@ -172,6 +175,7 @@ class StudentController extends Controller
 
             /* Create student */
             $student_id         =   DB::table('students')->insertGetId([
+                'date_joined'    =>  Carbon::now()->format('Y-m-d'),
                 'children_id'    =>  $request->children_id,
             ]);
                                             
