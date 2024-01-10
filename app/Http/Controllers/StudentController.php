@@ -118,20 +118,18 @@ class StudentController extends Controller
 
         $query          =   DB::table('students')
                                 ->join('children', 'students.children_id', '=', 'children.id')
-                                ->leftJoin('student_fees', 'student_fees.student_id', '=', 'students.id')
+                                ->leftJoin('student_fees', function ($join) {
+                                    $join->on('student_fees.student_id', '=', 'students.id')
+                                        ->whereYear('student_fees.created_at', '=', now()->year)
+                                        ->whereMonth('student_fees.created_at', '=', now()->format('m'));
+                                })
                                 ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
                                 ->select([  'students.id as id', 
                                             'children.name as name', 
                                             'wpvt_users.display_name as parent_name', 
                                             'students.status'])
-                                ->where('students.status', 1) 
-                                ->where(function($query){
-                                    $query->whereNull('student_fees.student_id');
-                                })
-                                ->orWhere(function($query){
-                                    $query->orWhereNotNull('student_fees.status')
-                                    ->whereMonth('student_fees.created_at', '=', now()->format('m'));
-                                });
+                                ->where('students.status', 1)
+                                ->whereNull('student_fees.id');
 
         if($request->search){
             $query->where('children.name', 'LIKE', '%'.$request->search.'%');
