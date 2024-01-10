@@ -47,7 +47,8 @@ class StudentController extends Controller
                                             'students.status'])
                                 ->where('students.status', 1)
                                 ->where('student_fees.centre_id', '=', $request->centre_id)
-                                ->whereNull('student_fees.status');
+                                ->whereNull('student_fees.status')
+                                ->groupBy('student_fees.student_id');
                                 
         if($request->date){
             $date = new DateTime($request->date['year']."-".($request->date['month'] + 1)."-01");

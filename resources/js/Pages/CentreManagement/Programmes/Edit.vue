@@ -85,7 +85,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.material_fee }}</td>
                                                     <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700 w-3/12">
                                                         <div class="flex space-x-4">
-                                                            <div class="flex flex-col">
+                                                            <div class="flex flex-col items-start">
                                                                 <p class="text-sm text-gray-700" v-for="fee in info.fees">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-bold">{{ fee.value }}</span></p>
                                                             </div>
                                                             <div class="flex flex-1 flex-col justify-center items-end">
