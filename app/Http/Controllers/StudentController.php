@@ -49,6 +49,10 @@ class StudentController extends Controller
                                 ->where('student_fees.centre_id', '=', $request->centre_id)
                                 ->whereNull('student_fees.status')
                                 ->groupBy('student_fees.student_id');
+
+        if($request->search){
+            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+        }
                                 
         if($request->date){
             $date = new DateTime($request->date['year']."-".($request->date['month'] + 1)."-01");
