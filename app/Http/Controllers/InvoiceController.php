@@ -234,7 +234,7 @@ class InvoiceController extends Controller
 
     public function feeInvoiceUpdate(Request $request){
         $invoice_record     =   DB::table('invoices')->where('id', $request->invoice_id)->first();
-        // dd($request->all(), $invoice_record );
+        
         if($request->payment['proof']['delete_previous']){
             $file_deleted   =   Storage::delete('proof_of_payment/'.$invoice_record->payment_proof);
             $invoice_record->payment_proof  =   '';
@@ -246,7 +246,7 @@ class InvoiceController extends Controller
             $filename = time() . '.' . $extension;
             Storage::putFileAs('proof_of_payment', $request->file('payment.proof.file'), $filename);
         }
-        if((int)$request->invoice_amount !== (int)$invoice_record->amount){
+        if((int)$request->invoice_amount !== (int)$invoice_record->amount && $request->payment['status'] == 1){
             $student_country    =   StudentHelper::getStudentCountryId($invoice_record->student_id);
             if($student_country == self::$malaysia){
                 $bill_collection_id     =   config('app.billplz.collection_id');
