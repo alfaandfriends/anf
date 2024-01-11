@@ -41,7 +41,7 @@ class InvoiceController extends Controller
                         ->join('children', 'students.children_id', '=', 'children.id')
                         ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
                         ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
-                        ->join('student_fees', 'invoices.id', '=', 'student_fees.invoice_id')
+                        ->leftJoin('student_fees', 'invoices.id', '=', 'student_fees.invoice_id')
                         ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                     'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
                                     'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 
