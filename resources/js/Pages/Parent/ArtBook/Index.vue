@@ -150,11 +150,9 @@ const images = ref([
         </div>
         <SimpleModal v-if="show_download_modal" :open="show_download_modal" @close:modal="show_download_modal = false" class="w-5/6 md:w-3/6 xl:w-2/6 px-6 py-8">
             <div class="flex flex-col justify-center items-center space-y-4">
-                <form action="">
-                    <h2 class="block mb-2 font-semibold text-gray-900 dark:text-white">What do you prefer to be called?</h2>
-                    <input type="text" :class="error_student_nickname ? 'border-red-300' : 'border-gray-300'" class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="Max 10 Characters" v-model="student_nickname" required>
-                    <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="generateArtBook()">Generate</button>
-                </form>
+                <h2 class="block mb-2 font-semibold text-gray-900 dark:text-white">What do you prefer to be called?</h2>
+                <input type="text" :class="error_student_nickname ? 'border-red-300' : 'border-gray-300'" class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="Max : 10 Characters" v-model="student_nickname" required>
+                <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="generateArtBook()">Generate</button>
             </div>
         </SimpleModal>
     </Authenticated>
