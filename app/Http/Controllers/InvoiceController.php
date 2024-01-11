@@ -234,7 +234,7 @@ class InvoiceController extends Controller
 
     public function feeInvoiceUpdate(Request $request){
         $invoice_record     =   DB::table('invoices')->where('id', $request->invoice_id)->first();
-        
+
         if($request->payment['proof']['delete_previous']){
             $file_deleted   =   Storage::delete('proof_of_payment/'.$invoice_record->payment_proof);
             $invoice_record->payment_proof  =   '';
@@ -321,6 +321,11 @@ class InvoiceController extends Controller
                     event(new DatabaseTransactionEvent($e));
                 }
             }
+        }
+        else{
+            DB::table('invoices')->where('id', $request->invoice_id)->update([
+                'amount'            => $request->invoice_amount,
+            ]);
         }
 
         DB::table('invoices')->where('id', $request->invoice_id)->update([
