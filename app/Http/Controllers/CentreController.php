@@ -57,16 +57,16 @@ class CentreController extends Controller
     public function store(Request $request)
     {   
         $request->validate([
-            'centre_name'               => 'required|max:20',
+            'centre_name'               => 'required',
             'centre_country'            => 'required',
-            'centre_contact_number'     => 'required|max:50',
-            'centre_email'              => 'required|max:50',
-            'centre_address'            => 'required|max:50',
+            'centre_contact_number'     => 'required',
+            'centre_email'              => 'required',
+            'centre_address'            => 'required',
         ]);
 
-        if(empty($request->image_list) || count(collect($request->image_list)->where('type', 'front')) < 1 || count(collect($request->image_list)->where('type', 'inside')) < 1){
-            return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload at least 1 image from the front and 1 image from inside the centre!']);
-        }
+        // if(empty($request->image_list) || count(collect($request->image_list)->where('type', 'front')) < 1 || count(collect($request->image_list)->where('type', 'inside')) < 1){
+        //     return redirect()->back()->with(['type'=>'error', 'message'=>'Please upload at least 1 image from the front and 1 image from inside the centre!']);
+        // }
         
         $new_centre_id   =   DB::table('centres')->insertGetId([
                                 'country_id' => $request->centre_country,
