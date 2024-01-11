@@ -143,11 +143,20 @@ const images = ref([
             <div v-if="!this.searching.art_book_themes && list.art_book_themes.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2">
                 <div class="w-full space-y-4 p-4 bg-white border border-gray-200 rounded-lg shadow-sm shadow-gray-400" v-for="artbook in list.art_book_themes">
                     <img :src="'/images' + artbook.art_book_folder + 'cover.jpg'" alt="">
-                    <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="generateArtBook">Download</button>
+                    <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="openDownloadModal()">Select</button>
                 </div>
             </div>
             
         </div>
+        <SimpleModal v-if="show_download_modal" :open="show_download_modal" @close:modal="show_download_modal = false" class="w-5/6 md:w-3/6 xl:w-2/6 px-6 py-8">
+            <div class="flex flex-col justify-center items-center space-y-4">
+                <form action="">
+                    <h2 class="block mb-2 font-semibold text-gray-900 dark:text-white">What do you prefer to be called?</h2>
+                    <input type="text" :class="error_student_nickname ? 'border-red-300' : 'border-gray-300'" class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="Max 10 Characters" v-model="student_nickname" required>
+                    <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="generateArtBook()">Generate</button>
+                </form>
+            </div>
+        </SimpleModal>
     </Authenticated>
 </template>
 <script>
@@ -160,7 +169,9 @@ export default {
     data(){
         return{
             init: true,
+            show_download_modal: false,
             student_nickname: '',
+            error_student_nickname: false,
             list: {
                 levels: this.$page.props.levels,
                 art_book_themes: [],
@@ -190,7 +201,18 @@ export default {
                 })
             }
         },
+        openDownloadModal(){
+            this.student_nickname = ''
+            this.show_download_modal = true
+        },
         generateArtBook(){
+            this.error_student_nickname = this.student_nickname === '' ? true : false
+            if(this.student_nickname === ''){
+                return
+            }
+            if(this.generating){
+                return
+            }
             axios.get(route('parent.art_book.generate'), {
                 responseType: 'blob', // Set the response type to 'blob' to handle binary data
                 params: {
