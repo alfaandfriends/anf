@@ -5,20 +5,20 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Artbook</title>
+    <title>{{ $data['name'] }}'s Artventure to the Beach</title>
     <style type="text/css">
         @page { margin: 0px; }
         @font-face {
             font-family: 'Candy Beans';
-            src: url('{{ public_path("/images/artbook/fonts/candy_beans/Candy Beans.ttf") }}') format('truetype');
+            src: url('{{ public_path("/fonts/candy_beans/Candy Beans.ttf") }}') format('truetype');
         }
         @font-face {
             font-family: 'Century Gothic';
-            src: url('{{ public_path("/images/artbook/fonts/century_gothic/GOTHIC.ttf") }}') format('truetype');
+            src: url('{{ public_path("/fonts/century_gothic/GOTHIC.ttf") }}') format('truetype');
         }
         @font-face {
             font-family: 'Century Gothic Bold';
-            src: url('{{ public_path("/images/artbook/fonts/century_gothic/GOTHICB.ttf") }}') format('truetype');
+            src: url('{{ public_path("/fonts/century_gothic/GOTHICB.ttf") }}') format('truetype');
         }
         .candy_beans{
             font-family: 'Candy Beans', sans-serif;
@@ -84,7 +84,7 @@
 
 <body>
     <div style="position: relative;">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/cover.jpg') }}" style="width: 100%">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/cover.jpg') }}" style="width: 100%">
         <div style="position: absolute; top: 12.1%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="candy_beans" style="text-align: center; font-size: 40px; color: #d95293; letter-spacing: 0em;">{{ $data['name'] }}'s</p>
         </div>
@@ -113,7 +113,7 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_1.jpg') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_1.jpg') }}" class="artwork_area">
         <div style="position: absolute; top: 18%; left: 39%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 <span style="color: #d95293;">{{ $data['name'] }}</span> 
@@ -133,7 +133,7 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_2.jpg') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_2.jpg') }}" class="artwork_area">
         <div style="position: absolute; top: 14%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 The children take out their sketchbooks and start painting. 
@@ -161,8 +161,8 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_3.png') }}" class="artwork_area">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/level_1.jpg') }}" style="
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_3.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/level_1.jpg') }}" style="
             height: 100%;
             position: absolute;
             left: 0;
@@ -192,7 +192,7 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_4.jpg') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_4.jpg') }}" class="artwork_area">
         <div style="position: absolute; top: 14%; left: 40%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 “But…how about the sailboat and the<br>
@@ -217,8 +217,8 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_5.jpg') }}" class="artwork_area">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/level_1.jpg') }}" style="
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_5.jpg') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/level_1.jpg') }}" style="
             height: 100%;
             position: absolute;
             left: 0;
@@ -252,8 +252,8 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_6.png') }}" class="artwork_area">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/level_1.jpg') }}" class="artwork">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_6.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/level_1.jpg') }}" class="artwork">
         <div style="position: absolute; top: 10%; left: 20%; transform: translate(-10%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 Now everyone can put their mind to their sketchbook.<br>
@@ -268,7 +268,7 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_7.jpg') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_7.jpg') }}" class="artwork_area">
         <div style="position: absolute; top: 16%; left: 19%; transform: translate(-20%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 “Look over there! It is a huge whale!”<br>
@@ -286,8 +286,8 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_8.png') }}" class="artwork_area">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/level_1.jpg') }}" class="artwork">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_8.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/level_1.jpg') }}" class="artwork">
         <div style="position: absolute; top: 10%; left: 30%; transform: translate(-20%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
             There are really so many things to draw at the beach.<br>
@@ -303,7 +303,7 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_9.jpg') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_9.jpg') }}" class="artwork_area">
         <div style="position: absolute; top: 16%; left: 13%; transform: translate(-5%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 “I wonder, what more can we add to our scenery?” <span style="color: white">{{ $data['name'] }}</span> asks.<br><br>
@@ -327,8 +327,8 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_10.png') }}" class="artwork_area">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/level_1.jpg') }}" class="artwork">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_10.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/level_1.jpg') }}" class="artwork">
         <div style="position: absolute; top: 10%; left: 5%; transform: translate(-2%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 Just when their painting is all done,<br>
@@ -357,7 +357,7 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbook/templates/level_1/artventure_to_the_beach/page_11.jpg') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_11.jpg') }}" class="artwork_area">
         <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 28%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">to the Beach</p>

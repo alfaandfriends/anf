@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class ArtBookController extends Controller
 {
@@ -21,10 +22,12 @@ class ArtBookController extends Controller
     }
 
     public function generate(Request $request){
-        $data['name']   =   'Hoo Lee Shet';
+        $data['name']   =   Str::headline($request->student_nickname);
+        $folder         =   DB::table('art_themes')->where('id', $request->theme_id)->pluck('art_book_assets')->first();
+        
         $pdf = PDF::setPaper(array(0,0,648,576))
-                    ->setOption('fontDir', public_path('/images/artbook/fonts'))
-                    ->loadView('artbooks.level_1.artventure_to_the_beach.template', compact('data'));
+                    ->setOption('fontDir', public_path('/fonts'))
+                    ->loadView($folder.'template', compact('data'));
         return $pdf->stream();
     }
 }

@@ -46,7 +46,7 @@ const images = ref([
         <div class="bg-white overflow-hidden shadow rounded-lg border p-6 min-h-[600px]">
             <div class="flex flex-col md:flex-row lg:flex-row justify-start md:justify-between lg:justify-between items-start md:items-center">
                 <div class="p-3 mt-auto">
-                    <h1 class="text-2xl">Generate Art Book</h1>
+                    <h1 class="text-2xl">Art Book</h1>
                 </div>
                 <!-- <div class="hidden md:block lg:block" v-if="$page.props.current_active_child.student_id"> -->
                 <!-- <div class="hidden md:block lg:block">
@@ -142,17 +142,34 @@ const images = ref([
             </div>
             <div v-if="!this.searching.art_book_themes && list.art_book_themes.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2">
                 <div class="w-full space-y-4 p-4 bg-white border border-gray-200 rounded-lg shadow-sm shadow-gray-400" v-for="artbook in list.art_book_themes">
-                    <img :src="'/images' + artbook.art_book_folder + 'cover.jpg'" alt="">
-                    <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="openDownloadModal()">Select</button>
+                    <img :src="'/images/' + artbook.art_book_assets + 'cover.jpg'" alt="">
+                    <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="openDownloadModal(artbook.id)">Select</button>
                 </div>
             </div>
             
         </div>
-        <SimpleModal v-if="show_download_modal" :open="show_download_modal" @close:modal="show_download_modal = false" class="w-5/6 md:w-3/6 xl:w-2/6 px-6 py-8">
-            <div class="flex flex-col justify-center items-center space-y-4">
-                <h2 class="block mb-2 font-semibold text-gray-900 dark:text-white">What do you prefer to be called?</h2>
-                <input type="text" :class="error_student_nickname ? 'border-red-300' : 'border-gray-300'" class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="Max : 10 Characters" v-model="student_nickname" required>
+        <SimpleModal v-if="show_download_modal" :open="show_download_modal" @close:modal="show_download_modal = false" :disable_overlay="true" class="flex flex-col space-y-4 w-5/6 md:w-3/6 xl:w-2/6 2xl:w-3/12 px-6 py-8">
+            <div class="flex flex-col justify-center items-center space-y-4" v-if="!generating">
+                <h2 class="block mb-2 font-semibold text-gray-900 dark:text-white">What's the fun name you want to be called?</h2>
+                <input type="text" :class="error_student_nickname ? 'border-red-300' : 'border-gray-300'" class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 capitalize" maxlength="10" placeholder="Max : 10 Characters" v-model="student_nickname" required>
                 <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="generateArtBook()">Generate</button>
+                <a href="#" class="text-sm underline" @click="show_download_modal = false">Cancel</a>
+            </div>
+            <div class="p-4 text-indigo-800 border border-indigo-300 rounded-lg bg-indigo-50" v-else>
+                <div class="flex items-center text-xl">
+                    <svg class="flex-shrink-0 w-6 h-6 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <h3 class="text-xl font-medium">Do not close the browser</h3>
+                </div>
+                <div class="flex items-center my-4 text-sm" >
+                    <div role="status">
+                        <svg aria-hidden="true" class="w-6 h-6 me-2 text-indigo-200 animate-spin fill-indigo-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Kindly wait as the system is in the process of creating your art book, this might take a minute...
+                </div>
             </div>
         </SimpleModal>
     </Authenticated>
@@ -167,9 +184,12 @@ export default {
     data(){
         return{
             init: true,
+            progress: 0,
             show_download_modal: false,
             student_nickname: '',
+            theme_id: '',
             error_student_nickname: false,
+            controller : '',
             list: {
                 levels: this.$page.props.levels,
                 art_book_themes: [],
@@ -180,6 +200,7 @@ export default {
             searching: {
                 art_book_themes: false,
             },
+            generating: false
         }
     },
     watch: {
@@ -199,23 +220,34 @@ export default {
                 })
             }
         },
-        openDownloadModal(){
+        openDownloadModal(theme_id){
             this.student_nickname = ''
+            this.theme_id =   theme_id
             this.show_download_modal = true
         },
         generateArtBook(){
-            this.error_student_nickname = this.student_nickname === '' ? true : false
-            if(this.student_nickname === ''){
+            if(this.student_nickname === '' || this.student_nickname.length > 10){
+                this.error_student_nickname = true
                 return
             }
+            else{
+                this.error_student_nickname = false
+            }
+
             if(this.generating){
                 return
             }
+
+            this.generating = true
+            this.controller = new AbortController();
+
             axios.get(route('parent.art_book.generate'), {
                 responseType: 'blob', // Set the response type to 'blob' to handle binary data
                 params: {
+                    'theme_id': this.theme_id,
                     'student_nickname': this.student_nickname
-                }
+                },
+                signal: this.controller.signal
             })
             .then(response => {
                 // Create a Blob object from the response data
@@ -226,13 +258,16 @@ export default {
 
                 // Open the PDF in a new tab
                 window.open(pdfUrl, '_blank');
-                this.generating[index] = false
+                this.generating = false
+                this.show_download_modal = false
             })
             .catch(error => {
                 console.error('Error fetching PDF:', error);
-                this.generating[index] = false
+                this.generating = false
             });
-            
+        },
+        stopGenerate(){
+            this.controller.abort()
         }
     }
 }
