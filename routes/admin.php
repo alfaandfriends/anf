@@ -68,6 +68,11 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/edupreneurs', [ExternalUserManagementController::class, 'edupreneurList'])->name('edupreneurs')->middleware('permission:view_edupreneurs');
             Route::get('/edupreneurs/manage', [ExternalUserManagementController::class, 'manageEdupreneur'])->name('edupreneurs.manage')->middleware('permission:manage_edupreneurs');
             Route::post('/edupreneurs/manage/store', [ExternalUserManagementController::class, 'manageEdupreneurStore'])->name('edupreneurs.store')->middleware('permission:manage_edupreneurs');
+            
+            /* Teachers */
+            Route::get('/teachers', [ExternalUserManagementController::class, 'teacherList'])->name('teachers')->middleware('permission:view_edupreneurs');
+            Route::get('/teachers/manage', [ExternalUserManagementController::class, 'manageTeacher'])->name('teachers.manage')->middleware('permission:manage_edupreneurs');
+            Route::post('/teachers/manage/store', [ExternalUserManagementController::class, 'manageTeacherStore'])->name('teachers.store')->middleware('permission:manage_edupreneurs');
         });
 
         /* Academic */
