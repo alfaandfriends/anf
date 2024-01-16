@@ -281,7 +281,7 @@ import BreezeButton from '@/Components/Button.vue';
             :confirmationRoute="confirmationRoute"
             :confirmationData="confirmationData"
         />
-        <Modal :modalType="'md'" :showModal="show_progress_report" @hideModal="show_progress_report = false">
+        <Modal :modalType="'lg'" :showModal="show_progress_report" @hideModal="show_progress_report = false">
             <!-- <template v-slot:header>
                 <h3 class="text-gray-900 text-xl font-semibold">                
                     Progress Report
@@ -289,7 +289,7 @@ import BreezeButton from '@/Components/Button.vue';
             </template> -->
             <template v-slot:content>
                 <div class="p-6 overflow-y-auto no-scrollbar">
-                    <div class="grid grid-rows-1">
+                    <div class="flex justify-center">
                         <component :is="component.file" v-if="component.file" :data="component.data"/>
                     </div>
                 </div>

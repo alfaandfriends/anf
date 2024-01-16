@@ -125,7 +125,6 @@ import Pagination from '@/Components/Pagination.vue'
 import moment from 'moment';
 import Multiselect from '@vueform/multiselect'
 import axios from 'axios'
-import Modal from '@/Components/Modal.vue'
 import Chart from 'chart.js/auto';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -134,7 +133,7 @@ import domtoimage from 'dom-to-image';
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Multiselect, Modal, Pagination
+        ConfirmationModal, Head, Link, Multiselect, Pagination
     },
     props: {
         filter: Object,
