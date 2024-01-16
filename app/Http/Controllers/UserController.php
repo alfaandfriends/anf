@@ -173,7 +173,7 @@ class UserController extends Controller
         $user                           =   User::find($request->user_id);
 
         $admin_role                     =   array(1, 2);
-        $can_view_all_centres_role      =   array(1, 2, 3);
+        $can_view_all_centres_role      =   array(1, 2, 3, 9);
 
         $user_is_admin                  =   false;
         $user_can_view_all_centres      =   false;

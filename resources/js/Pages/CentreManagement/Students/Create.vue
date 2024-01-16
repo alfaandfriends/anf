@@ -157,6 +157,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <label for="programme" class="block text-sm font-bold text-gray-700"> Start Date <span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <Datepicker class="w-full rounded-lg shadow-sm" 
+                                                        disabled="disabled"
                                                         :class="errors.admission_date ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'" 
                                                         input-class-name="student-date-picker focus:ring-0"
                                                         v-model="form.date_admission" 
@@ -261,8 +262,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <td class="px-2 py-2 text-left">{{ classes.capacity}}</td>
                                                             <td class="px-2 py-2 text-center">
                                                                 <div class="flex justify-center">
-                                                                    <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id)">Choose</BreezeButton>
-                                                                    <input v-else class="h-5 w-5 border border-indigo-300 rounded-sm focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
+                                                                    <!-- <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id)">Choose</BreezeButton> -->
+                                                                    <input class="h-5 w-5 border border-indigo-300 rounded-sm focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
                                                                             type="checkbox" 
                                                                             :checked="checkIfClassSelected(classes.class_id, classes.programme_id)"
                                                                             :disabled="disable_check_box"
@@ -281,7 +282,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee">
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee" v-if="form.fee.length">
                             <div class="sm:row-span-3" >
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="mb-5">
@@ -289,7 +290,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
                                     <div class="space-y-2">
-                                        <template v-if="form.fee.length" v-for="fee, fee_index in form.fee">
+                                        <template v-for="fee, fee_index in form.fee">
                                             <details class="rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
                                                 <summary class="flex cursor-pointer items-center justify-between gap-2 bg-indigo-100 p-4 text-gray-900 transition">
                                                     <span class="text-sm font-medium">
@@ -360,11 +361,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </div>
                                             </details>
                                         </template>
-                                        <template v-else>
-                                            <div class="space-y-2 text-left">
-                                                <span class="font-semibold text-gray-500">No classes added.</span>
-                                            </div>
-                                        </template>
                                     </div>
                                     <div class="flex justify-end p-6" v-if="form.fee.length">
                                         <span class="text-right ml-3 text-gray-900 cursor-text font-bold">Total Amount: {{ total_amount }}</span>
@@ -372,10 +368,34 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                         </div>
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee" v-else-if="enable_container.available_classes && !form.fee.length && !no_fee_found">
+                            <div class="p-2 bg-white border border-gray-200 rounded-lg shadow-md">
+                                <div id="alert-border-1" class="flex items-center p-4 text-blue-800 border-t-4 border-blue-300 bg-blue-50 dark:text-blue-400 dark:bg-gray-800 dark:border-blue-800" role="alert">
+                                    <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                    <div class="ms-3 text-sm font-medium">
+                                        No classes selected.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee" v-else-if="enable_container.available_classes && no_fee_found">
+                            <div class="p-2 bg-white border border-gray-200 rounded-lg shadow-md">
+                                <div id="alert-border-1" class="flex items-center p-4 text-red-800 border-t-4 border-red-300 bg-red-50 dark:text-red-400 dark:bg-gray-800 dark:border-red-800" role="alert">
+                                    <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                    <div class="ms-3 text-sm font-medium">
+                                        Fee is not available for the selected classes.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" v-if="form.fee.length">
                             <div class="sm:row-span-3" >
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="flex pt-4 justify-end space-x-2">
+                                    <div class="flex justify-end space-x-2">
                                         <BreezeButton buttonType="gray">Cancel</BreezeButton>
                                         <BreezeButton buttonType="info" @click="admitStudent">Admit</BreezeButton>
                                     </div>
@@ -410,6 +430,7 @@ export default {
         return{
             disable_check_box: false,
             fetching_fee: false,
+            no_fee_found: false,
             total_amount: 0,
             errors: {
                 child: false,
@@ -504,7 +525,7 @@ export default {
                 }
             },
             deep: true
-        }
+        },
     },
     methods: {
         submit() {
@@ -555,36 +576,36 @@ export default {
                 });
             }
         },
-        getNormalFee(class_id, class_type_id, programme_id, programme_level_id){
-            if(this.fetching_fee){
-                return
-            }
-            const  only_one_class_allowed   = this.form.fee.find(item => item.fee_info.class_type_id === 1 && item.fee_info.class_type_id === class_type_id && item.fee_info.programme_id === programme_id);
-            if(only_one_class_allowed){
-                alert('Only one class is allowed for normal class.')
-                this.searching.fee = false
-                return
-            }
-            const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type_id);
-            if(programme_already_added){
-                alert('This programme already been added. Please remove the previous one first.')
-                this.searching.fee = false
-                return
-            }
-            this.fetching_fee = true
-            axios.get(route('programmes.get_fee'), {
-                'params': {
-                    'class_id' : class_id,
-                    'programme_level_id' : programme_level_id,
-                }
-            })
-            .then((res) => {
-                this.form.fee.push(res.data)
-                this.scrollToElement('class_fee')
-                this.searching.fee = false
-                this.fetching_fee = false
-            });
-        },
+        // getNormalFee(class_id, class_type_id, programme_id, programme_level_id){
+        //     if(this.fetching_fee){
+        //         return
+        //     }
+        //     const only_one_class_allowed   = this.form.fee.find(item => item.fee_info.class_type_id == 1 && item.fee_info.class_type_id == class_type_id && item.fee_info.programme_id == programme_id);
+        //     if(only_one_class_allowed){
+        //         alert('Only one class is allowed for normal class.')
+        //         this.searching.fee = false
+        //         return
+        //     }
+        //     const programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type_id);
+        //     if(programme_already_added){
+        //         alert('This programme already been added. Please remove the previous one first.')
+        //         this.searching.fee = false
+        //         return
+        //     }
+        //     this.fetching_fee = true
+        //     axios.get(route('programmes.get_fee'), {
+        //         'params': {
+        //             'class_id' : class_id,
+        //             'programme_level_id' : programme_level_id,
+        //         }
+        //     })
+        //     .then((res) => {
+        //         this.form.fee.push(res.data)
+        //         this.scrollToElement('class_fee')
+        //         this.searching.fee = false
+        //         this.fetching_fee = false
+        //     });
+        // },
         getPlusFee(event, class_id, class_type, programme_id, programme_level_id){
             if(this.fetching_fee){
                 return
@@ -592,15 +613,15 @@ export default {
             if(this.disable_check_box){
                 return
             }
-            const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.class_type_id !== class_type);
-            if(programme_already_added){
-                alert('This programme already been added. Please remove the previous one first.')
-                if(event.target.checked){
-                    event.target.checked = false
-                }
-                this.searching.fee = false
-                return
-            }
+            // const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type);
+            // if(programme_already_added){
+            //     alert('This programme already been added. Please remove the previous one first.')
+            //     if(event.target.checked){
+            //         event.target.checked = false
+            //     }
+            //     this.searching.fee = false
+            //     return
+            // }
 
             this.disable_check_box = true
 
@@ -611,6 +632,10 @@ export default {
                 this.selected_plus_class[programme_id].push(class_id)
             }
             else{
+                if(this.selected_plus_class[programme_id].length == 1){
+                    this.selected_plus_class[programme_id] = []
+                    this.no_fee_found = false
+                }
                 this.selected_plus_class[programme_id] = this.selected_plus_class[programme_id].filter(id => id !== class_id);
             }
 
@@ -640,6 +665,7 @@ export default {
                     this.searching.fee = false
                     this.disable_check_box  = false
                     this.fetching_fee = false
+                    this.no_fee_found = true
                 });
             }
             else{

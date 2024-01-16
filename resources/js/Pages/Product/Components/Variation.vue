@@ -42,7 +42,7 @@ export default {
     watch:{
         sub_variations: {
             handler(){
-                if(this.detailed_info.has_sub_variation == true){
+                if(this.detailed_info.has_sub_variation == 1){
                     this.constructTable()
                 }
             },
@@ -252,7 +252,7 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="flex flex-col mb-10" :class="{'hidden': !detailed_info.has_sub_variation}">
+        <div class="flex flex-col mb-10" :class="{'hidden': detailed_info.has_sub_variation == 0}">
             <div class="mb-3">
                 <label class="block text-sm text-gray-700 font-bold"> Sub Variation </label>
             </div>
@@ -284,7 +284,7 @@ export default {
                     <thead class="bg-gray-300">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">{{ detailed_info.main_variation_name}}</th>
-                            <th v-if="detailed_info.has_sub_variation && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">{{ detailed_info.sub_variation_name}}</th>
+                            <th v-if="detailed_info.has_sub_variation == 1 && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">{{ detailed_info.sub_variation_name}}</th>
                             <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Price</th>
                             <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Stock</th>
                         </tr>
@@ -298,12 +298,12 @@ export default {
                                         <label :for="variation.name" class="text-sm text-gray-500 text-center"> {{ variation.name }} </label>
                                     </div>
                                 </td>
-                                <td v-if="detailed_info.has_sub_variation && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')" class="px-6 py-4 whitespace-nowrap">
+                                <td v-if="detailed_info.has_sub_variation == 1 && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')" class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex flex-col items-center space-y-2" v-for="(sub_variation, sub_variation_index) in variation.sub_variations.options">
                                         <label v-if="sub_variation.name" :for="sub_variation.name" class="py-3 text-sm text-gray-500 text-center"> {{ sub_variation.name }} </label>
                                     </div>
                                 </td>
-                                <template v-if="detailed_info.has_sub_variation && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')">
+                                <template v-if="detailed_info.has_sub_variation == 1 && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex flex-col justify-center items-center space-y-2">
                                             <template v-for="(sub_variation, sub_variation_index) in variation.sub_variations.options">
