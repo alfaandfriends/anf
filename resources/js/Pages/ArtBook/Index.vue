@@ -25,10 +25,15 @@ import BreezeButton from '@/Components/Button.vue';
                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 </div>
                 <Modal :showModal="open_modal" @hideModal="open_modal = false" :modalType="'xs'">
-                    <template v-slot:header>
-                        <h3 class="text-gray-900 text-xl font-semibold">                
-                            Generate Art Book
-                        </h3>                
+                    <template v-slot:header v-if="!generating">
+                        <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
+                            <h3 class="text-gray-900 text-xl font-semibold">                
+                                Generate Art Book
+                            </h3>        
+                            <button type="button" @click="open_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </button>
+                        </div>        
                     </template>
                     <template v-slot:content>
                         <div class="p-6" v-if="!generating">
@@ -54,7 +59,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         label="name"
                                         :classes="{
                                             container: 
-                                                $page.props.errors.student_id ? 
+                                            error_student_id ? 
                                                 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10':
                                                 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10',
                                             containerDisabled: 'cursor-default bg-gray-100',
@@ -95,7 +100,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="mb-4">
                                 <label for="class_name" class="block text-sm font-bold text-gray-700"> Nickname <span class="text-red-500">*</span></label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
-                                    <input type="text" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.transaction_id ? 'border-red-300' : 'border-gray-300'" maxlength="10" placeholder="Max : 10 Characters" v-model="form.student_nickname">
+                                    <input type="text" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error_student_nickname ? 'border-red-300' : 'border-gray-300'" maxlength="10" placeholder="Max : 10 Characters" v-model="form.student_nickname">
                                 </div>
                             </div>
                         </div>
@@ -153,7 +158,8 @@ export default {
                 students: false
             },
             generating: false,
-            error_student_nickname: false
+            error_student_nickname: false,
+            error_student_id: false
         }
     },
     methods: {
@@ -177,13 +183,17 @@ export default {
                 });
             }
         },
-        generateArtBook(theme_id){
+        generateArtBook(){
+
+            this.error_student_nickname = this.form.student_nickname === '' || this.form.student_nickname.length > 10 ? true : false
+            this.error_student_id = this.form.student_id === '' ? true : false
+
             if(this.form.student_nickname === '' || this.form.student_nickname.length > 10){
-                this.error_student_nickname = true
                 return
             }
-            else{
-                this.error_student_nickname = false
+
+            if(this.form.student_id === ''){
+                return
             }
 
             if(this.generating){
