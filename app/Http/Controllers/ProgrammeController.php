@@ -108,12 +108,13 @@ class ProgrammeController extends Controller
                                         
         $programme_level_fees   =   DB::table('programme_level_fees')
                                         ->whereIn('programme_level_id', $programme_info->pluck('programme_level_id'))
-                                        ->select('programme_level_id', 'class_type_detail_id', 'fee_amount')
+                                        ->select('id', 'programme_level_id', 'class_type_detail_id', 'fee_amount')
                                         ->get();
                                         
         foreach($programme_info as $programme_level){
             foreach($programme_level_fees as $programme_level_fee){
                 if($programme_level_fee->programme_level_id == $programme_level->programme_level_id){
+                    $info['fee_id']                 =   $programme_level_fee->id;
                     $info['class_type_detail_id']   =   $programme_level_fee->class_type_detail_id;
                     $info['value']                  =   $programme_level_fee->fee_amount;
                     $programme_level->fees[]        =   $info;
@@ -298,7 +299,8 @@ class ProgrammeController extends Controller
                                 ->select(   'programmes.id as programme_id', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 
                                             'programme_levels.material_fee', 'programme_level_fees.id as fee_id', 'programme_level_fees.fee_amount as programme_fee', 
                                             'class_types_detail.label as programme_type', 'centres.id as centre_id', 'centres.label as centre_name', 
-                                            'class_types.id as class_type_id', 'class_methods.name as class_method');
+                                            'class_types.id as class_type_id', 'class_methods.name as class_method')
+                                ->where('programme_level_fees.fee_amount', '>', 0);
                         
         if($request->class_id){
             $fee_info_query->where('classes.id', $request->class_id);
@@ -356,5 +358,15 @@ class ProgrammeController extends Controller
         }       
         
         return json_encode($data, JSON_NUMERIC_CHECK);
+    }
+
+    public function updateFee(Request $request){
+        foreach($request->fee_edit_form['data'] as $key=>$data){
+            DB::table('programme_level_fees')->where('id', $data['fee_id'])->update([
+                'fee_amount' => $data['value']
+            ]);
+        }
+
+        return back()->with(['type'=>'success', 'message'=>'Fee amount updated!']);
     }
 }

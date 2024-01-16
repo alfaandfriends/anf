@@ -40,15 +40,60 @@ class StudentController extends Controller
         $query          =   DB::table('students')
                                 ->leftJoin('children', 'students.children_id', '=', 'children.id')
                                 ->leftJoin('student_fees', 'students.id', '=', 'student_fees.student_id')
-                                ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
-                                ->leftJoin('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
-                                ->leftJoin('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
                                 ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
                                 ->select([  'students.id as id', 
                                             'children.name as name', 
                                             'wpvt_users.display_name as parent_name', 
                                             'students.status'])
-                                ->distinct();
+                                ->where('students.status', 1)
+                                ->where('student_fees.centre_id', '=', $request->centre_id)
+                                ->whereNull('student_fees.status')
+                                ->groupBy('student_fees.student_id');
+
+        if($request->search){
+            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+        }
+                                
+        if($request->date){
+            $date = new DateTime($request->date['year']."-".($request->date['month'] + 1)."-01");
+            $month = $date->format('m');
+        }
+
+        $request->search    ??  $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+        $request->date      ?   $query->whereYear('student_fees.created_at', '=', $request->date['year'])
+                                    ->whereMonth('student_fees.created_at', '=', $month)
+                                : 
+                                $query->whereYear('student_fees.created_at', '=', now()->year)
+                                    ->whereMonth('student_fees.created_at', '=', now()->month);
+
+        $request->merge([
+            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
+        ]);
+
+        return Inertia::render('CentreManagement/Students/Index', [
+            'filter'        => request()->all('search', 'centre_id'),
+            'students'       => $query->paginate(10),
+        ]);
+    }
+    
+    public function inactive(Request $request)
+    {
+        $allowed_centres    =   Inertia::getShared('allowed_centres');
+        if($allowed_centres->isEmpty()){
+            return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
+        }
+        $can_access_centre = $allowed_centres->search(function ($value) {
+            return $value->ID == request('centre_id');
+        });
+
+        $query          =   DB::table('students')
+                                ->leftJoin('children', 'students.children_id', '=', 'children.id')
+                                ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                ->select([  'students.id as id', 
+                                            'children.name as name', 
+                                            'wpvt_users.display_name as parent_name', 
+                                            'students.status'])
+                                ->where('students.status', 0);
 
         if($request->search){
             $query->where('children.name', 'LIKE', '%'.$request->search.'%');
@@ -58,12 +103,51 @@ class StudentController extends Controller
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
         ]);
         
-        $query->where('student_fees.centre_id', '=', $request->centre_id);
-        $query->orWhere(function($query){
-            $query->orWhereNull('student_fees.id');
+        $query->where('students.status', 0);
+
+        return Inertia::render('CentreManagement/Students/Inactive', [
+            'filter'        => request()->all('search', 'centre_id'),
+            'students'       => $query->paginate(10),
+        ]);
+    }
+    
+    public function unassigned(Request $request)
+    {
+        $allowed_centres    =   Inertia::getShared('allowed_centres');
+        if($allowed_centres->isEmpty()){
+            return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
+        }
+        $can_access_centre = $allowed_centres->search(function ($value) {
+            return $value->ID == request('centre_id');
         });
 
-        return Inertia::render('CentreManagement/Students/Index', [
+        $query          =   DB::table('students')
+                                ->join('children', 'students.children_id', '=', 'children.id')
+                                ->leftJoin('student_fees', function ($join) {
+                                    $join->on('student_fees.student_id', '=', 'students.id')
+                                        ->whereYear('student_fees.created_at', '=', now()->year)
+                                        ->whereMonth('student_fees.created_at', '=', now()->format('m'))
+                                        ->whereNull('student_fees.status');
+                                })
+                                ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                ->select([
+                                    'students.id as id',
+                                    'children.name as name',
+                                    'wpvt_users.display_name as parent_name',
+                                    'students.status'
+                                ])
+                                ->where('students.status', 1)
+                                ->where('student_fees.id');
+
+        if($request->search){
+            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+        }
+
+        $request->merge([
+            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
+        ]);
+
+        return Inertia::render('CentreManagement/Students/Unassigned', [
             'filter'        => request()->all('search', 'centre_id'),
             'students'       => $query->paginate(10),
         ]);
@@ -96,6 +180,7 @@ class StudentController extends Controller
 
             /* Create student */
             $student_id         =   DB::table('students')->insertGetId([
+                'date_joined'    =>  Carbon::now()->format('Y-m-d'),
                 'children_id'    =>  $request->children_id,
             ]);
                                             
@@ -202,6 +287,7 @@ class StudentController extends Controller
                                     ->select([  
                                                 'students.id as id', 
                                                 'students.status as status', 
+                                                'students.date_joined', 
                                                 'children.id as children_id', 
                                                 'children.name as name', 
                                                 'children.date_of_birth as dob', 
@@ -214,17 +300,17 @@ class StudentController extends Controller
                                     ->first();
 
         $result            =   DB::table('classes')
-                                    ->join('student_classes', 'student_classes.class_id', '=', 'classes.id')
-                                    ->join('student_fees', 'student_classes.student_fee_id', '=', 'student_fees.id')
-                                    ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')
-                                    ->join('centres', 'student_fees.centre_id', '=', 'centres.id')
-                                    ->join('class_methods', 'classes.class_method_id', '=', 'class_methods.id')
-                                    ->join('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
-                                    ->join('class_types', 'programme_levels.class_type_id', '=', 'class_types.id')
-                                    ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-                                    ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
-                                    ->join('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
-                                    ->join('invoices', 'student_fees.invoice_id', '=', 'invoices.id')
+                                    ->leftJoin('student_classes', 'student_classes.class_id', '=', 'classes.id')
+                                    ->leftJoin('student_fees', 'student_classes.student_fee_id', '=', 'student_fees.id')
+                                    ->leftJoin('class_days', 'classes.class_day_id', '=', 'class_days.id')
+                                    ->leftJoin('centres', 'student_fees.centre_id', '=', 'centres.id')
+                                    ->leftJoin('class_methods', 'classes.class_method_id', '=', 'class_methods.id')
+                                    ->leftJoin('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
+                                    ->leftJoin('class_types', 'programme_levels.class_type_id', '=', 'class_types.id')
+                                    ->leftJoin('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                    ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                    ->leftJoin('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
+                                    ->leftJoin('invoices', 'student_fees.invoice_id', '=', 'invoices.id')
                                     ->select(   'classes.id as class_id', 
                                                 'class_days.name as class_day', 
                                                 'classes.start_time', 
@@ -245,10 +331,13 @@ class StudentController extends Controller
                                                 'student_fees.id as student_fee_id', 
                                                 'student_fees.status as student_fee_status')
                                     ->where('student_fees.student_id', $request->student_id)
-                                    ->whereNull('student_fees.status')
-                                    ->orWhere('student_fees.status', 2)
+                                    ->where(function($query){
+                                        $query->whereYear('student_fees.created_at', '=', now()->year)
+                                            ->whereMonth('student_fees.created_at', '=', now()->month)
+                                            ->whereNull('student_fees.status');
+                                    })
                                     ->get();
-                                    
+                          
         $student_academics = collect($result)->groupBy('fee_id')->map(function ($group) {
             $fee_info = [
                 "centre_id" => $group->first()->centre_id,
@@ -300,9 +389,35 @@ class StudentController extends Controller
 
     public function update(Request $request)
     {
-        DB::table('students')->where('id', $request->student_id)->update([
-            'status' => $request->student_status
+        // dd($request->all());
+        if(!$request->basic_info['name']){
+            return back()->with(['type'=>'error', 'message'=>'Student name is required.']);
+        }
+        if(!$request->basic_info['gender']){
+            return back()->with(['type'=>'error', 'message'=>'Student gender is required.']);
+        }
+        if(!$request->basic_info['dob']){
+            return back()->with(['type'=>'error', 'message'=>'Student date of birth is required.']);
+        }
+        if(!$request->basic_info['date_joined']){
+            return back()->with(['type'=>'error', 'message'=>'Student date joined is required.']);
+        }
+
+        $children_id    =   DB::table('students')->where('id', $request->student_id)->pluck('children_id')->first();
+
+        DB::table('children')->where('id', $children_id)->update([
+            'name'          => $request->basic_info['name'],
+            'gender_id'     => $request->basic_info['gender'],
+            'date_of_birth' => Carbon::parse($request->basic_info['dob'])->format('Y-m-d'),
         ]);
+
+        DB::table('students')->where('id', $request->student_id)->update([
+            'status' => $request->student_status,
+            'date_joined' => Carbon::parse($request->basic_info['date_joined'])->format('Y-m-d'),
+        ]);
+
+
+
         $log_data =   'Updated student ID '.$request->student_id;
         event(new DatabaseTransactionEvent($log_data));
 
@@ -312,7 +427,7 @@ class StudentController extends Controller
         //     NotificationHelper::sendApprovalNotifications($this->update_student_config, $data);
         // }
 
-        return redirect(route('students'))->with(['type'=>'success', 'message'=>'Student details updated !']);
+        return redirect()->back()->with(['type'=>'success', 'message'=>'Student details updated !']);
     }
 
     public function destroy(Request $request)
@@ -323,9 +438,11 @@ class StudentController extends Controller
 
         /* Check if paid */ 
         if($student_country == $this->malaysia){
-            $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
-            if(!$bill['paid']){
-                Billplz::bill()->destroy($invoice_data->bill_id);
+            if($invoice_data->bill_id){
+                $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
+                if(!$bill['paid']){
+                    Billplz::bill()->destroy($invoice_data->bill_id);
+                }
             }
         }
         /* Delete related records */
@@ -518,17 +635,22 @@ class StudentController extends Controller
             'invoice_items'    => $new_invoice_items,
         ]);
 
-        DB::table('student_classes')->where('student_fee_id', $request->student_fee_id)->delete();
-        foreach ($request->fee as $fee) {
-            if ($fee["fee_info"]["fee_id"] === $request->fee_id) {
-                foreach($fee["classes"] as $class_key => $class){
-                    DB::table('student_classes')->insert([
-                        'student_fee_id'    =>  $request->student_fee_id,
-                        'class_id'          =>  $class['class_id'],
-                    ]);
-                }
-            }
-        }
+        // DB::table('student_classes')->where('student_fee_id', $request->student_fee_id)->update([
+        //     'student_fee_id'    =>  $request->student_fee_id,
+        //     'class_id'          =>  $class['class_id'],
+        // ]);
+
+
+        // foreach ($request->fee as $fee) {
+        //     if ($fee["fee_info"]["fee_id"] === $request->fee_id) {
+        //         foreach($fee["classes"] as $class_key => $class){
+        //             DB::table('student_classes')->insert([
+        //                 'student_fee_id'    =>  $request->student_fee_id,
+        //                 'class_id'          =>  $class['class_id'],
+        //             ]);
+        //         }
+        //     }
+        // }
         $log_data =   'Transferred student ID '.$request->student_fee_id;
         event(new DatabaseTransactionEvent($log_data));
 

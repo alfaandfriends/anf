@@ -124,7 +124,7 @@
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="mb-4" v-show="show_front_upload">
-                                            <label class="block text-sm text-gray-700 font-bold"> Centre Front View <span class="text-red-500">*</span> (1 Image)</label>
+                                            <label class="block text-sm text-gray-700 font-bold"> Centre Front View  (1 Image)</label>
                                             <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                                                 @change="change_front"
                                                 @dragover="dragover_front"
@@ -145,7 +145,7 @@
                                             </div>
                                         </div>
                                         <div class="mb-4" v-show="show_inside_upload">
-                                            <label class="block text-sm text-gray-700 font-bold"> Centre Inside View <span class="text-red-500">*</span> (Max: 5 Images)</label>
+                                            <label class="block text-sm text-gray-700 font-bold"> Centre Inside View  (Max: 5 Images)</label>
                                             <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                                                 @change="change_inside"
                                                 @dragover="dragover_inside"

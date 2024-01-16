@@ -110,6 +110,21 @@ Breadcrumbs::for('students', function (BreadcrumbTrail $trail) {
     $trail->push('Students', route('students'));
 });
 
+Breadcrumbs::for('students.inactive', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Students', route('students.inactive'));
+});
+
+Breadcrumbs::for('students.on_break', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Students', route('students.on_break'));
+});
+
+Breadcrumbs::for('students.unassigned', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Students', route('students.unassigned'));
+});
+
 Breadcrumbs::for('students.create', function (BreadcrumbTrail $trail) {
     $trail->parent('students');
     $trail->push('Add Student', route('students'));

@@ -112,7 +112,7 @@ class ProgressReportController extends Controller
                                     ->select('progress_report_details.progress_report_id', 'progress_report_details.id', 'progress_report_details.date', 
                                             'progress_report_details.report_data', 'progress_report_details.comments', 'progress_report_details.attendance_status',
                                             'progress_report_status.class as attendance_status_class_name', 'progress_report_status.name as attendance_status_name')
-                                    ->where('progress_report_id', $request->progress_report_id)->get();
+                                    ->where('progress_report_id', $request->progress_report_id)->orderBy('progress_report_details.date')->get();
         
         return Inertia::render('ProgressReport/Templates/'.$config_info->vue_template, [
             'student_info'          => $student_info,
@@ -154,7 +154,7 @@ class ProgressReportController extends Controller
                                             ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
                                             ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                                             ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-                                            ->select('children.name as student_name', 'students.created_at as date_joined','programmes.name as programme_name', 
+                                            ->select('children.name as student_name', 'students.date_joined','programmes.name as programme_name', 
                                                     'programme_levels.level as programme_level')
                                             ->where('progress_report_id', $request->progress_report_id)->first();
 

@@ -10,17 +10,19 @@ use Inertia\Inertia;
 
 class ExternalUserManagementController extends Controller
 {
-    public $division_manager_role_id, $centre_manager_role_id, $edupreneur_role_id;
-    public $division_managers, $centre_managers, $edupreneurs;
+    public $division_manager_role_id, $centre_manager_role_id, $edupreneur_role_id, $teacher_role_id;
+    public $division_managers, $centre_managers, $edupreneurs, $teachers;
 
     public function __construct(){
         $this->division_manager_role_id =   4;
         $this->centre_manager_role_id   =   5;
         $this->edupreneur_role_id       =   6;
+        $this->teacher_role_id          =   7;
 
         $this->division_managers    =   $this->getDivisionManagers()->toArray();
         $this->centre_managers      =   $this->getCentreManagers()->toArray();
         $this->edupreneurs          =   $this->getEdupreneurs()->toArray();
+        $this->teachers             =   $this->getTeachers()->toArray();
     }
 
     public function divisionManagerList(Request $request)
@@ -197,10 +199,73 @@ class ExternalUserManagementController extends Controller
                 'centre_id'   =>  $centre_id
             ]);
         }
-        $log_data =   "Updated edupreneurs's centre access for user ID ".$request->user_id;
+        $log_data =   "Updated edupreneur's centre access for user ID ".$request->user_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('centre_manager'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
+        return redirect(route('edupreneurs'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
+    }
+
+    public function teacherList(Request $request)
+    {
+        $allowed_centres    =   collect(Inertia::getShared('allowed_centres'))->pluck('ID');
+        if($allowed_centres->isEmpty()){
+            return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to any centre. Please contact support to gain access for centres."]);
+        }
+        
+        $query          =   DB::table('wpvt_users')
+                                ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
+                                ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
+                                ->distinct()
+                                ->select([  'wpvt_users.id as id', 
+                                            'wpvt_users.display_name as name', 
+                                            'wpvt_users.user_email as email', 
+                                            'roles.display_name as role'])->where('user_has_roles.role_id', $this->teacher_role_id);
+
+        if(!auth()->user()->is_admin && !auth()->user()->can_view_all_centres){
+            $query->join('user_has_centres', 'wpvt_users.id', '=', 'user_has_centres.user_id')
+                    ->whereIn('user_has_centres.centre_id', $allowed_centres);
+        }
+
+        if($request->search){
+            $query->where('wpvt_users.display_name', 'LIKE', '%'.$request->search.'%');
+        }
+
+        return Inertia::render('ExternalUserManagement/Teachers/Index', [
+            'filter'    => request()->all('search'),
+            'teachers'  => $query->paginate(10),
+        ]);
+    }
+
+    public function manageTeacher(Request $request)
+    {
+        if(in_array($request->user_id, $this->teachers)){
+            $user_info      =   DB::table('wpvt_users')->where('id', $request->user_id)->first();
+            $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
+
+            return Inertia::render('ExternalUserManagement/Teachers/ManageUser',[
+                'user_id'       => $request->user_id,
+                'user_info'     => $user_info,
+                'user_centres'  => $user_centres,
+            ]);
+        }
+
+        return redirect(route('teachers'))->with(['type'=>'error', 'message'=>"You're not allowed to perform this action!"]);
+    }
+
+    public function manageTeacherStore(Request $request)
+    {
+        DB::table('user_has_centres')->where('user_id', $request->user_id)->delete();
+
+        foreach($request->selected_centres as $key=>$centre_id){
+            DB::table('user_has_centres')->insert([
+                'user_id'   =>  $request->user_id,
+                'centre_id'   =>  $centre_id
+            ]);
+        }
+        $log_data =   "Updated teacher's centre access for user ID ".$request->user_id;
+        event(new DatabaseTransactionEvent($log_data));
+
+        return redirect(route('teachers'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
     }
 
 
@@ -248,37 +313,49 @@ class ExternalUserManagementController extends Controller
 
     public function getDivisionManagers()
     {
-        $division_managers          =   DB::table('wpvt_users')
-                                            ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
-                                            ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
-                                            ->select([  'wpvt_users.id as id'])
-                                            ->where('user_has_roles.role_id', $this->division_manager_role_id)
-                                            ->pluck('id');
+        $division_managers      =   DB::table('wpvt_users')
+                                        ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
+                                        ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
+                                        ->select([  'wpvt_users.id as id'])
+                                        ->where('user_has_roles.role_id', $this->division_manager_role_id)
+                                        ->pluck('id');
 
         return $division_managers;
     }
 
     public function getCentreManagers()
     {
-        $centre_managers          =   DB::table('wpvt_users')
-                                            ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
-                                            ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
-                                            ->select([  'wpvt_users.id as id'])
-                                            ->where('user_has_roles.role_id', $this->centre_manager_role_id)
-                                            ->pluck('id');
+        $centre_managers    =   DB::table('wpvt_users')
+                                    ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
+                                    ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
+                                    ->select([  'wpvt_users.id as id'])
+                                    ->where('user_has_roles.role_id', $this->centre_manager_role_id)
+                                    ->pluck('id');
 
         return $centre_managers;
     }
 
     public function getEdupreneurs()
     {
-        $edupreneurs          =   DB::table('wpvt_users')
-                                            ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
-                                            ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
-                                            ->select([  'wpvt_users.id as id'])
-                                            ->where('user_has_roles.role_id', $this->edupreneur_role_id)
-                                            ->pluck('id');
+        $edupreneurs    =   DB::table('wpvt_users')
+                                ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
+                                ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
+                                ->select([  'wpvt_users.id as id'])
+                                ->where('user_has_roles.role_id', $this->edupreneur_role_id)
+                                ->pluck('id');
 
         return $edupreneurs;
+    }
+
+    public function getTeachers()
+    {
+        $teachers   =   DB::table('wpvt_users')
+                            ->join('user_has_roles', 'wpvt_users.id', '=', 'user_has_roles.user_id')
+                            ->join('roles', 'user_has_roles.role_id', '=', 'roles.id')
+                            ->select([  'wpvt_users.id as id'])
+                            ->where('user_has_roles.role_id', $this->teacher_role_id)
+                            ->pluck('id');
+
+        return $teachers;
     }
 }

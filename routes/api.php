@@ -1,7 +1,9 @@
 <?php
 
 use App\Classes\ProductHelper;
+use App\Http\Controllers\ClassController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +35,9 @@ Route::post('fee_invoices/callback/my', [InvoiceController::class, 'callbackMy']
 Route::any('fee_invoices/callback/id', [InvoiceController::class, 'callbackId'])->name('fee.invoices.callback.id');
 Route::get('fee_invoices/check-status', [InvoiceController::class, 'checkStatus'])->name('fee.invoices.check_status');
 Route::get('/fee_invoices/generate', [InvoiceController::class, 'feeInvoiceGenerate'])->name('fee.invoices.generate');
+
+Route::get('/programmes/get-fee', [ProgrammeController::class, 'getFee'])->name('programmes.get_fee');
+
+Route::get('classes/get-class-types', [ClassController::class, 'getClassTypes'])->name('classes.get_class_types');
+Route::get('classes/get-class-levels', [ClassController::class, 'getClassLevels'])->name('classes.get_class_levels');
+Route::get('classes/find', [ClassController::class, 'findClasses'])->name('classes.find');

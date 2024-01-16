@@ -6,6 +6,7 @@ use App\Classes\StudentHelper;
 use App\Http\Controllers\Controller;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB as FacadesDB;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -16,7 +17,7 @@ class HomeController extends Controller
             return redirect(route('parent.home'));
         }
 
-        $countries = DB::table('countries')->get();
+        $countries = FacadesDB::table('countries')->get();
 
         return Inertia::render('Parent/Onboard', [
             'countries' => $countries

@@ -68,6 +68,11 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/edupreneurs', [ExternalUserManagementController::class, 'edupreneurList'])->name('edupreneurs')->middleware('permission:view_edupreneurs');
             Route::get('/edupreneurs/manage', [ExternalUserManagementController::class, 'manageEdupreneur'])->name('edupreneurs.manage')->middleware('permission:manage_edupreneurs');
             Route::post('/edupreneurs/manage/store', [ExternalUserManagementController::class, 'manageEdupreneurStore'])->name('edupreneurs.store')->middleware('permission:manage_edupreneurs');
+            
+            /* Teachers */
+            Route::get('/teachers', [ExternalUserManagementController::class, 'teacherList'])->name('teachers')->middleware('permission:view_edupreneurs');
+            Route::get('/teachers/manage', [ExternalUserManagementController::class, 'manageTeacher'])->name('teachers.manage')->middleware('permission:manage_edupreneurs');
+            Route::post('/teachers/manage/store', [ExternalUserManagementController::class, 'manageTeacherStore'])->name('teachers.store')->middleware('permission:manage_edupreneurs');
         });
 
         /* Academic */
@@ -79,8 +84,8 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/programmes/edit', [ProgrammeController::class, 'editProgramme'])->name('programmes.edit')->middleware('permission:edit_programmes');
             Route::post('/programmes/update', [ProgrammeController::class, 'updateProgramme'])->name('programmes.update')->middleware('permission:edit_programmes');
             Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:delete_programmes');
-            Route::get('/programmes/get-fee', [ProgrammeController::class, 'getFee'])->name('programmes.get_fee')->middleware('permission:view_programmes|create_programmes|delete_programmes');
             Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:edit_programmes|delete_programmes');
+            Route::patch('/programmes/fee/update', [ProgrammeController::class, 'updateFee'])->name('programmes.fee.update')->middleware('permission:edit_programmes');
 
             /* Classes */
             Route::get('/classes', [ClassController::class, 'index'])->name('classes')->middleware('permission:view_classes');
@@ -89,15 +94,14 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:edit_classes');
             Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:edit_classes');
             Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:delete_classes');
-            Route::get('/classes/get-class-types', [ClassController::class, 'getClassTypes'])->name('classes.get_class_types')->middleware('permission:view_classes|create_classes|create_classes');
-            Route::get('/classes/get-class-levels', [ClassController::class, 'getClassLevels'])->name('classes.get_class_levels')->middleware('permission:view_classes|create_classes|create_classes');
-            Route::get('/classes/find', [ClassController::class, 'findClasses'])->name('classes.find')->middleware('permission:view_classes|create_classes|create_classes');
         });
 
         /* Students */
         Route::prefix('students')->middleware('permission:student_access')->group(function () {
             /* Students */
             Route::get('/', [StudentController::class, 'index'])->name('students')->middleware('permission:view_students');
+            Route::get('/inactive', [StudentController::class, 'inactive'])->name('students.inactive')->middleware('permission:view_students');
+            Route::get('/unassigned', [StudentController::class, 'unassigned'])->name('students.unassigned')->middleware('permission:view_students');
             Route::get('/create', [StudentController::class, 'create'])->name('students.create')->middleware('permission:create_students');
             Route::post('/store', [StudentController::class, 'store'])->name('students.store')->middleware('permission:create_students');
             Route::get('/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:edit_students');
