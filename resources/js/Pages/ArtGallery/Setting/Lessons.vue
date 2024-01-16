@@ -117,13 +117,12 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
 import axios from 'axios'
-import Modal from '@/Components/Modal.vue'
 import { debounce } from 'vue-debounce'
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Modal, Pagination
+        ConfirmationModal, Head, Link, Pagination
     },
     data(){
         return{

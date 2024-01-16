@@ -57,28 +57,6 @@
                 </table>
             </div>
         </div>
-        <Modal :showModal="open_modal" modalType="md" @hideModal="open_modal = false">
-            <template v-slot:header>
-                <h3 class="text-gray-900 text-xl font-semibold">                
-                    Invoice
-                </h3>                
-            </template>
-            <template v-slot:content>
-                <MonthlyFee :invoice_data="invoice_data"></MonthlyFee>
-            </template>
-            <template v-slot:footer>
-                <div class="flex justify-between space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="blue" class="px-4 py-2 space-x-2" @click="print">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-                            <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
-                        </svg>
-                        <span>Print</span>
-                    </BreezeButton>
-                    <BreezeButton buttonType="gray" @click="open_modal = false">Close</BreezeButton>
-                </div>
-            </template>
-        </Modal>
     </Authenticated>
 </template>
 
@@ -89,13 +67,12 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <script>
-import Modal from '@/Components/Modal.vue'
 import axios from 'axios'
 import moment from 'moment';
 
 export default {
     components: {
-        Head, Link, Modal
+        Head, Link
     },
     data(){
         return{

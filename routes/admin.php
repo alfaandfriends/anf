@@ -14,6 +14,7 @@ use App\Http\Controllers\MathManipulativesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ArtBookController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -116,6 +117,12 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/art-gallery/create', [ArtGalleryController::class, 'create'])->name('art_gallery.create')->middleware('permission:create_art_gallery');
             Route::post('/art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store')->middleware('permission:create_art_gallery');
             Route::delete('/art-gallery/destroy/{id}', [ArtGalleryController::class, 'destroy'])->name('art_gallery.destroy')->middleware('permission:delete_art_gallery');
+
+            /* Art Book */
+            // Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book')->middleware('permission:view_art_book');
+            // Route::get('/art-book/create', [ArtBookController::class, 'create'])->name('art_book.create')->middleware('permission:create_art_book');
+            Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book');
+            Route::get('/art-book/create', [ArtBookController::class, 'create'])->name('art_book.create');
 
             Route::get('/art-gallery/get_levels/{id}', [ArtGalleryController::class, 'getLevels'])->name('art_gallery.get_levels')->middleware('permission:view_art_gallery');
             Route::get('/art-gallery/get_themes/{id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes')->middleware('permission:view_art_gallery');
