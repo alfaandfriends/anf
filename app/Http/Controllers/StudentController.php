@@ -46,25 +46,27 @@ class StudentController extends Controller
                                             'wpvt_users.display_name as parent_name', 
                                             'students.status'])
                                 ->where('students.status', 1)
-                                ->where('student_fees.centre_id', '=', $request->centre_id)
                                 ->whereNull('student_fees.status')
                                 ->groupBy('student_fees.student_id');
 
-        if($request->search){
-            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
-        }
-                                
+        // if($request->search){
+        //     $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+        // }
+                    
+        $request->centre_id ?   $query->where('student_fees.centre_id', '=', $request->centre_id) : $query->where('student_fees.centre_id', '=', $allowed_centres[0]->ID);
+        $request->search    ??  $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+
         if($request->date){
             $date = new DateTime($request->date['year']."-".($request->date['month'] + 1)."-01");
             $month = $date->format('m');
-        }
 
-        $request->search    ??  $query->where('children.name', 'LIKE', '%'.$request->search.'%');
-        $request->date      ?   $query->whereYear('student_fees.created_at', '=', $request->date['year'])
-                                    ->whereMonth('student_fees.created_at', '=', $month)
-                                : 
-                                $query->whereYear('student_fees.created_at', '=', now()->year)
-                                    ->whereMonth('student_fees.created_at', '=', Carbon::now()->format('m'));
+            $query->whereYear('student_fees.created_at', '=', $request->date['year'])
+                    ->whereMonth('student_fees.created_at', '=', $month);
+        }
+        else{
+            $query->whereYear('student_fees.created_at', '=', Carbon::now()->format('Y'))
+                ->whereMonth('student_fees.created_at', '=', Carbon::now()->format('m'));
+        }
 
         $request->merge([
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
