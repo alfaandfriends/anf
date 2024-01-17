@@ -26,14 +26,18 @@ class Menu extends Model
                         'menus.menu_icon as menu_icon', 
                         'menus.menu_route as menu_route', 
                         'menus.permission_name as menu_permission',
+                        'menus.menu_status as menu_status',
                         'menus_sub.id as sub_menu_id',
                         'menus_sub.menu_sub_label as sub_menu_name',
                         'menus_sub.menu_sub_route as sub_menu_route',
-                        'menus_sub.permission_name as sub_menu_permission')
+                        'menus_sub.permission_name as sub_menu_permission',
+                        'menus_sub.menu_sub_status as sub_menu_status')
                     ->whereIn('menus.permission_name', $user_permissions)
                     ->orWhereIn('menus_sub.permission_name', $user_permissions)
                     ->orderBy('menus.menu_rank')
                     ->orderBy('menus_sub.menu_sub_rank')
+                    ->where('menus.menu_status', 1)
+                    ->where('menus_sub.menu_sub_status', 1)
                     ->get();
 
         // Create a multi-level array for menus
@@ -61,6 +65,7 @@ class Menu extends Model
                     'menu_icon' => $row->menu_icon,
                     'menu_route' => $row->menu_route,
                     'menu_permission' => $row->menu_permission,
+                    'menu_status' => $row->menu_status,
                     'sub_menus' => [],
                 ];
 
@@ -74,6 +79,7 @@ class Menu extends Model
                     'sub_menu_name' => $row->sub_menu_name,
                     'sub_menu_route' => $row->sub_menu_route,
                     'sub_menu_permission' => $row->sub_menu_permission,
+                    'sub_menu_status' => $row->sub_menu_status,
                 ];
             }
         }

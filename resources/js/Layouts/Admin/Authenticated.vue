@@ -174,7 +174,7 @@ export default {
                     <div class="space-y-1" v-for="section, section_key in $page.props.menu">
                         <p class="uppercase text-gray-100 text-xs mb-3">{{ section.name }}</p>
                         <template v-for="menu, menu_key in section.menus">
-                            <template v-if="menu.menu_route">
+                            <template v-if="menu.menu_route && menu.menu_status == 1">
                                 <div class="flex space-x-1">
                                     <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(menu.menu_route)"></div>
                                     <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current() && route().current().startsWith(menu.menu_route)" class="rounded-lg flex-auto">
@@ -194,7 +194,7 @@ export default {
                                     </div>
                                     <div class="mb-3 ml-3 space-y-1 pb-3" v-if="checkMenuIsOpen(section_key, menu_key)">
                                         <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
-                                            <div class="flex space-x-1" v-if="$page.props.can[sub_menu.sub_menu_permission]">
+                                            <div class="flex space-x-1" v-if="$page.props.can[sub_menu.sub_menu_permission] && sub_menu.sub_menu_status == 1">
                                                 <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(sub_menu.sub_menu_route)"></div>
                                                 <BreezeNavSubLink v-if="$page.props.can[sub_menu.sub_menu_permission]" :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''"
                                                                 :active="sub_menu.sub_menu_route ? route().current() && route().current().startsWith(sub_menu.sub_menu_route) : ''" class="rounded-lg flex-auto"
