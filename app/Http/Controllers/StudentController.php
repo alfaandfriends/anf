@@ -64,7 +64,7 @@ class StudentController extends Controller
                                     ->whereMonth('student_fees.created_at', '=', $month)
                                 : 
                                 $query->whereYear('student_fees.created_at', '=', now()->year)
-                                    ->whereMonth('student_fees.created_at', '=', now()->month);
+                                    ->whereMonth('student_fees.created_at', '=', Carbon::now()->format('m'));
 
         $request->merge([
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
@@ -635,7 +635,7 @@ class StudentController extends Controller
             'invoice_items'    => $new_invoice_items,
         ]);
 
-        DB::table('student_classes')->where('id', $request->student_fee_id)->delete();
+        DB::table('student_classes')->where('student_fee_id', $request->student_fee_id)->delete();
         foreach ($request->fee as $fee) {
             foreach($fee["classes"] as $class_key => $class){
                 DB::table('student_classes')->insert([
@@ -644,7 +644,7 @@ class StudentController extends Controller
                 ]);
             }
         }
-        
+
         $log_data =   'Transferred student ID '.$request->student_fee_id;
         event(new DatabaseTransactionEvent($log_data));
 
