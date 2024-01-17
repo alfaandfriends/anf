@@ -619,7 +619,7 @@ class StudentController extends Controller
         $centre_info    =   CentreHelper::getCentreInfo($request->centre_id);
         $fee_info       =   DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->first();
         $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info->invoice_id)->pluck('invoice_items')->first());
-
+        
         $new_invoice_items  =   collect($invoice_info)->each(function ($item) use ($request, $centre_info) {
             if ($item->fee_id === $request->fee_id) {
                 $item->centre_id = $centre_info['centre_id'] ? $centre_info['centre_id'] : '';
@@ -635,22 +635,16 @@ class StudentController extends Controller
             'invoice_items'    => $new_invoice_items,
         ]);
 
-        // DB::table('student_classes')->where('student_fee_id', $request->student_fee_id)->update([
-        //     'student_fee_id'    =>  $request->student_fee_id,
-        //     'class_id'          =>  $class['class_id'],
-        // ]);
-
-
-        // foreach ($request->fee as $fee) {
-        //     if ($fee["fee_info"]["fee_id"] === $request->fee_id) {
-        //         foreach($fee["classes"] as $class_key => $class){
-        //             DB::table('student_classes')->insert([
-        //                 'student_fee_id'    =>  $request->student_fee_id,
-        //                 'class_id'          =>  $class['class_id'],
-        //             ]);
-        //         }
-        //     }
-        // }
+        DB::table('student_classes')->where('id', $request->student_fee_id)->delete();
+        foreach ($request->fee as $fee) {
+            foreach($fee["classes"] as $class_key => $class){
+                DB::table('student_classes')->insert([
+                    'student_fee_id'    =>  $request->student_fee_id,
+                    'class_id'          =>  $class['class_id'],
+                ]);
+            }
+        }
+        
         $log_data =   'Transferred student ID '.$request->student_fee_id;
         event(new DatabaseTransactionEvent($log_data));
 
