@@ -39,8 +39,8 @@ class StudentController extends Controller
 
         $query          =   DB::table('students')
                                 ->leftJoin('children', 'students.children_id', '=', 'children.id')
-                                ->leftJoin('student_fees', 'students.id', '=', 'student_fees.student_id')
                                 ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                ->leftJoin('student_fees', 'students.id', '=', 'student_fees.student_id')
                                 ->select([  'students.id as id', 
                                             'children.name as name', 
                                             'wpvt_users.display_name as parent_name', 
@@ -49,12 +49,11 @@ class StudentController extends Controller
                                 ->whereNull('student_fees.status')
                                 ->groupBy('student_fees.student_id');
 
-        // if($request->search){
-        //     $query->where('children.name', 'LIKE', '%'.$request->search.'%');
-        // }
+        if($request->search){
+            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+        }
                     
         $request->centre_id ?   $query->where('student_fees.centre_id', '=', $request->centre_id) : $query->where('student_fees.centre_id', '=', $allowed_centres[0]->ID);
-        $request->search    ??  $query->where('children.name', 'LIKE', '%'.$request->search.'%');
 
         if($request->date){
             $date = new DateTime($request->date['year']."-".($request->date['month'] + 1)."-01");
