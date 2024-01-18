@@ -64,7 +64,7 @@ import BreezeButton from '@/Components/Button.vue';
             </div>               
         </template>
         <template v-slot:content>
-            <div class="w-full md:w-[48rem] p-4 overflow-y-auto">
+            <div class="w-full p-4 overflow-y-auto">
                 <div class="grid grid-cols-1 gap-4">
                     <div class="">
                         <label for="language_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
