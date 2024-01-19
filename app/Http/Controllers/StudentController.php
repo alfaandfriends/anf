@@ -622,12 +622,11 @@ class StudentController extends Controller
         $fee_info       =   collect(DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->first())->toArray();
         $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info['invoice_id'])->pluck('invoice_items')->first());
 
-
         $new_invoice_items  =   collect($invoice_info)->each(function ($item) use ($request, $centre_info) {
             $item->centre_id = $centre_info['centre_id'] ? $centre_info['centre_id'] : '';
             $item->centre_name = $centre_info['centre_name'] ? $centre_info['centre_name'] : '';
         })->toArray();
-        
+
         DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->update([
             'centre_id'    => $request->centre_id,
         ]);
