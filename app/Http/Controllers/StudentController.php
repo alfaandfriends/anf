@@ -630,10 +630,10 @@ class StudentController extends Controller
             }
         })->toArray();
 
-        Log::info('centre_info: '.$centre_info);
-        Log::info('fee_info: '.$fee_info);
-        Log::info('invoice_info: '.$invoice_info);
-        Log::info('new_invoice_items: '.$new_invoice_items);
+        Log::info($centre_info);
+        Log::info($fee_info);
+        Log::info($invoice_info);
+        Log::info($new_invoice_items);
         
         DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->update([
             'centre_id'    => $request->centre_id,
