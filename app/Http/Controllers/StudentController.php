@@ -624,16 +624,9 @@ class StudentController extends Controller
 
 
         $new_invoice_items  =   collect($invoice_info)->each(function ($item) use ($request, $centre_info) {
-            if ($item->fee_id === $request->fee_id) {
-                $item->centre_id = $centre_info['centre_id'] ? $centre_info['centre_id'] : '';
-                $item->centre_name = $centre_info['centre_name'] ? $centre_info['centre_name'] : '';
-            }
+            $item->centre_id = $centre_info['centre_id'] ? $centre_info['centre_id'] : '';
+            $item->centre_name = $centre_info['centre_name'] ? $centre_info['centre_name'] : '';
         })->toArray();
-
-        Log::info($centre_info);
-        Log::info($fee_info);
-        Log::info($invoice_info);
-        Log::info($new_invoice_items);
         
         DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->update([
             'centre_id'    => $request->centre_id,
