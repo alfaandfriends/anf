@@ -621,6 +621,7 @@ class StudentController extends Controller
         $fee_info       =   DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->first();
         $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info->invoice_id)->pluck('invoice_items')->first());
         
+        event(new DatabaseTransactionEvent($invoice_info));
         $new_invoice_items  =   collect($invoice_info)->each(function ($item) use ($request, $centre_info) {
             if ($item->fee_id === $request->fee_id) {
                 $item->centre_id = $centre_info['centre_id'] ? $centre_info['centre_id'] : '';
