@@ -619,8 +619,8 @@ class StudentController extends Controller
 
     public function transferStudent(Request $request){
         $centre_info    =   CentreHelper::getCentreInfo($request->centre_id);
-        $fee_info       =   DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->first();
-        $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info->invoice_id)->pluck('invoice_items')->first());
+        $fee_info       =   collect(DB::table('student_fees')->where('student_id', $request->student_id)->where('id', $request->student_fee_id)->first())->toArray();
+        $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info['invoice_id'])->pluck('invoice_items')->first());
 
 
         $new_invoice_items  =   collect($invoice_info)->each(function ($item) use ($request, $centre_info) {
@@ -631,7 +631,7 @@ class StudentController extends Controller
         })->toArray();
 
         Log::info($centre_info);
-        Log::info($fee_info ? $fee_info->toArray() : 'No fee information found.');
+        Log::info($fee_info);
         Log::info($invoice_info);
         Log::info($new_invoice_items);
         
@@ -639,7 +639,7 @@ class StudentController extends Controller
             'centre_id'    => $request->centre_id,
         ]);
 
-        DB::table('invoices')->where('id', $fee_info->invoice_id)->update([
+        DB::table('invoices')->where('id', $fee_info['invoice_id'])->update([
             'invoice_items'    => $new_invoice_items,
         ]);
 
