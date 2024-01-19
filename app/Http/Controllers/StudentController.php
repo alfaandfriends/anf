@@ -631,7 +631,7 @@ class StudentController extends Controller
         })->toArray();
 
         Log::info($centre_info);
-        Log::info($fee_info->toArray());
+        Log::info($fee_info ? $fee_info->toArray() : 'No fee information found.');
         Log::info($invoice_info);
         Log::info($new_invoice_items);
         
