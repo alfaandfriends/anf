@@ -632,7 +632,7 @@ class StudentController extends Controller
         ]);
 
         DB::table('invoices')->where('id', $fee_info['invoice_id'])->update([
-            'invoice_items'    => $new_invoice_items,
+            'invoice_items'    => json_encode($new_invoice_items, JSON_NUMERIC_CHECK),
         ]);
 
         DB::table('student_classes')->where('student_fee_id', $request->student_fee_id)->delete();
