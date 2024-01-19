@@ -202,9 +202,10 @@ export default {
 
             this.generating = true
 
-            axios.get(route('parent.art_book.generate'), {
+            axios.get(route('art_book.generate'), {
                 responseType: 'blob', // Set the response type to 'blob' to handle binary data
                 params: {
+                    'student_id': this.form.student_id,
                     'theme_id': this.form.theme_id,
                     'student_nickname': this.form.student_nickname
                 },

@@ -10,7 +10,7 @@ use App\Http\Controllers\Parent\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth', 'child'])->group(function(){
     /* Onboard */
     Route::get('onboarding', [HomeController::class, 'onboarding'])->name('onboarding');
     Route::middleware(['onboard'])->prefix('/')->name('parent.')->group(function () {

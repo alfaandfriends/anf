@@ -120,7 +120,7 @@ Route::middleware(['auth', 'device'])->group(function(){
 
             /* Art Book */
             Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book')->middleware('permission:view_art_book');
-            Route::get('/art-book/create', [ArtBookController::class, 'create'])->name('art_book.create')->middleware('permission:create_art_book');
+            Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate')->middleware('permission:create_art_book');
 
             Route::get('/art-gallery/get_levels/{id}', [ArtGalleryController::class, 'getLevels'])->name('art_gallery.get_levels')->middleware('permission:view_art_gallery');
             Route::get('/art-gallery/get_themes/{id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes')->middleware('permission:view_art_gallery');

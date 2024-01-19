@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'permission' => \App\Http\Middleware\Permission::class,
         'onboard' => \App\Http\Middleware\Onboard::class,
         'device' => \App\Http\Middleware\CheckDeviceType::class,
+        'child' => \App\Http\Middleware\Child::class,
     ];
 
     protected $commands = [
