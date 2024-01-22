@@ -65,21 +65,31 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                     <hr>
                     <div class="flex flex-col text-sm rounded-md space-y-1">
-                        <label class="block text-sm text-gray-700 font-bold" for="">Name <span class="text-red-500">*</span></label>
+                        <label class="block text-sm text-gray-700 font-bold" for="">Parent's Name <span class="text-red-500">*</span></label>
                         <input type="text" class="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_name ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_name" autocomplete="off" required/>
                     </div>
                     <div class="flex flex-col text-sm rounded-md space-y-1">
-                        <label class="block text-sm text-gray-700 font-bold" for="">Contact Number <span class="text-red-500">*</span></label>
+                        <label class="block text-sm text-gray-700 font-bold" for="">Parent's Contact Number <span class="text-red-500">*</span></label>
                         <input type="number" class="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_contact ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_contact" autocomplete="off" required/>
                     </div>
                     <div class="flex flex-col text-sm rounded-md space-y-1">    
-                        <label class="block text-sm text-gray-700 font-bold" for="">Area/Location <span class="text-red-500">*</span></label>
+                        <label class="block text-sm text-gray-700 font-bold" for="">Parent's Area/Location <span class="text-red-500">*</span></label>
                         <input type="text" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_area_location ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_area_location" autocomplete="off" placeholder="e.g. Puchong, Selangor" required/>
                     </div>
                     <div class="flex flex-col text-sm rounded-md space-y-1">    
-                        <label class="block text-sm text-gray-700 font-bold" for="">Email <span class="text-red-500">*</span></label>
+                        <label class="block text-sm text-gray-700 font-bold" for="">Parent's Email <span class="text-red-500">*</span></label>
                         <input type="email" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_email ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_email" autocomplete="off" required/>
                     </div>
+                    <hr>
+                    <div class="flex items-center">
+                        <input id="link-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-0 cursor-pointer" v-model="form.has_edu_teacher_email">
+                        <label for="link-checkbox" class="ms-2 text-sm font-medium text-gray-900 cursor-pointer">Keep a copy for myself</label>
+                    </div>
+                    <template v-if="form.has_edu_teacher_email">
+                        <div class="flex flex-col text-sm rounded-md space-y-1">    
+                            <input type="email" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500 border-gray-500" v-model="form.edu_teacher_email" autocomplete="off" placeholder="Your Email"/>
+                        </div>
+                    </template>
                     <button type="submit" class="mt-5 w-full border p-2 text-white rounded-[4px] hover:bg-gray-700" :class="!submitting ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-800'" @click="!submitting ? saveResult() : ''">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
                     <div class="text-center">
                         <span class="italic text-center text-sm text-gray-700 font-semibold" v-if="submitting">Please do not close your browser or current tab</span>
@@ -298,7 +308,9 @@ export default {
                 parent_email: '',
                 answer_record: [],
                 eligible_level: '',
-                language_id: this.$page.props.language_id
+                language_id: this.$page.props.language_id,
+                has_edu_teacher_email: false,
+                edu_teacher_email: '',
             },
             error:{
                 parent_name: false,

@@ -149,10 +149,12 @@ class DiagnosticTestController extends Controller
             ];
         }
 
-        /* Send Email to User*/
-        $parentNotification = new ResultToParent($reports);
-        Mail::to($request->parent_email)->send($parentNotification);
-
+        if(app()->environment('production')){
+            /* Send Email to User*/
+            $parentNotification = new ResultToParent($reports);
+            Mail::to($request->parent_email)->send($parentNotification);
+        }
+    
         /* Send Email to PIC */
         $emails     =   DiagnosticTestHelper::getPicEmailsByLanguageId($request->input('language_id'));
         if(!empty($emails)){ 
@@ -174,8 +176,25 @@ class DiagnosticTestController extends Controller
                 Mail::to($user->user_email)->send($picNotification);
             }
         }
+
+        if($request->input('edu_teacher_email')){
+            $edu_teacher      =   User::where('user_email', $emails)->first();
+            $info    =   [
+                'pic_name'              =>  $edu_teacher->display_name,
+                'student_name'          =>  $request->student_name,
+                'student_age'           =>  $student_age,
+                'dt_title'              =>  $request->dt_title,
+                'test_date'             =>  Carbon::now()->format('d/m/Y'),
+                'reports'               =>  $reports,
+                'parent_name'           =>  $request->input('parent_name'),
+                'parent_contact'        =>  $request->input('parent_contact'),
+                'parent_area_location'  =>  $request->input('parent_area_location'),
+                'parent_email'          =>  $request->input('parent_email'),
+            ];
+            $picNotification = new ResultToPIC($info);
+            Mail::to($edu_teacher->user_email)->send($picNotification);
+        }
         return true;
-       
     }
 
     /* list of saved result */
