@@ -117,6 +117,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="flex justify-center space-x-2">
                                         <BreezeButton buttonType="info" class="py-1 px-2" @click="updateStatus(result.id, result.admitted, result.centre_id, result.notes)">Status</BreezeButton>
                                         <BreezeButton buttonType="blue" @click="viewDetails(result.id)">View Details</BreezeButton>
+                                        <BreezeButton buttonType="danger" class="py-1 px-2" @click="deleteStatus(result.id)">Delete</BreezeButton>
                                     </div>
                                 </td>
                             </tr>
@@ -208,6 +209,18 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>
             </div>
         </div>
+        <ConfirmationModal 
+            :show="isOpen" 
+            @close="isOpen = false"
+            confirmationAlert="danger"
+            :confirmationTitle="confirmationTitle"
+            :confirmationText="confirmationText"
+            :confirmationButton="confirmationButton"
+            :confirmationMethod="confirmationMethod"
+            :confirmationRoute="confirmationRoute"
+            :confirmationData="confirmationData"
+        >
+        </ConfirmationModal>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -235,7 +248,15 @@ export default {
     // },
     data(){
         return{
+            isOpen: false,
             open_modal: false,
+            confirmationTitle: '',
+            confirmationText: '',
+            confirmationAlert: '',
+            confirmationButton: '',
+            confirmationMethod: '',
+            confirmationData: '',
+            confirmationRoute: '',
             params: {
                 search: this.filter.search ? this.filter.search : '',
                 centre_id: this.filter.centre_id ? this.filter.centre_id : '',
@@ -258,6 +279,15 @@ export default {
             this.form.centre_id     = centre_id ? centre_id : ''
             this.form.notes         = notes
             this.open_modal         = true
+        },
+        deleteStatus(result_id){
+            this.confirmationTitle="Delete Diagnostic Test Result"
+            this.confirmationText="Are you sure want to delete this result?"
+            this.confirmationButton="Delete"
+            this.confirmationMethod="delete"
+            this.confirmationRoute = 'diagnostic_test.delete_result'
+            this.confirmationData = result_id
+            this.isOpen = true
         },
         saveStatus(){
             this.$inertia.post(this.route('diagnostic_test.saved_result.save_status'), this.form, { onSuccess: page => {            

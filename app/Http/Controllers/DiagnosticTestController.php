@@ -241,6 +241,13 @@ class DiagnosticTestController extends Controller
         ]);
     }
 
+    public function deleteDtResult($id){
+        DB::table('diagnostic_test_result')->where('id', $id)->delete();
+
+        return back()->with(['type' => 'success', 'message' => 'Record has been deleted successfully.']);
+    }
+    
+
     /* saved result details */
     public function savedDtResultDetails(Request $request)
     {
