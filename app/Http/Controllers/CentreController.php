@@ -37,7 +37,7 @@ class CentreController extends Controller
                                 'centres.is_active as centre_status', 
                                 'countries.name as country_name'
                             )
-                            ->orderBy('centres.id')
+                            ->orderBy('centres.label')
                             ->paginate(10);
 
         return Inertia::render('CentreManagement/Centres/Index', [
