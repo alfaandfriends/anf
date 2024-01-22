@@ -162,13 +162,15 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_3.png') }}" class="artwork_area">
-        <img src="{{ public_path('/storage/art_gallery/'.$data['image_1']) }}" style="
-            height: 100%;
-            position: absolute;
-            left: 0;
-            z-index: -1;
-            top: 0;
-            width: 100%;">
+        @if($data['image_1'])
+            <img src="{{ public_path('/storage/art_gallery/'.$data['image_1']) }}" style="
+                height: 100%;
+                position: absolute;
+                left: 0;
+                z-index: -1;
+                top: 0;
+                width: 100%;">
+        @endif
         <div style="position: absolute; top: 12%; left: 25%; transform: translate(-15%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 “Look at the end of the sea. That is a straight line!” Says Alfa.<br>
@@ -246,7 +248,9 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_6.png') }}" class="artwork_area">
-        <img src="{{ public_path('/storage/art_gallery/'.$data['image_2']) }}" class="artwork">
+        @if($data['image_2'])
+            <img src="{{ public_path('/storage/art_gallery/'.$data['image_2']) }}" class="artwork">
+        @endif
         <div style="position: absolute; top: 10%; left: 20%; transform: translate(-10%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 Now everyone can put their mind to their sketchbook.<br>
@@ -280,7 +284,9 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_8.png') }}" class="artwork_area">
-        <img src="{{ public_path('/storage/art_gallery/'.$data['image_3']) }}" class="artwork">
+        @if($data['image_3'])
+            <img src="{{ public_path('/storage/art_gallery/'.$data['image_3']) }}" class="artwork">
+        @endif
         <div style="position: absolute; top: 10%; left: 30%; transform: translate(-20%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
             There are really so many things to draw at the beach.<br>
@@ -321,7 +327,9 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_10.png') }}" class="artwork_area">
-        <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" class="artwork">
+        @if($data['image_4'])
+            <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" class="artwork">
+        @endif
         <div style="position: absolute; top: 10%; left: 5%; transform: translate(-2%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 Just when their painting is all done,<br>
