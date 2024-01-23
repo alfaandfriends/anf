@@ -70,7 +70,7 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                     <div class="flex flex-col text-sm rounded-md space-y-1">
                         <label class="block text-sm text-gray-700 font-bold" for="">Parent's Contact Number <span class="text-red-500">*</span></label>
-                        <input type="number" class="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_contact ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_contact" autocomplete="off" required/>
+                        <input type="text" class="w-full mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_contact ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_contact" autocomplete="off" @input="restrictToNumbers" required/>
                     </div>
                     <div class="flex flex-col text-sm rounded-md space-y-1">    
                         <label class="block text-sm text-gray-700 font-bold" for="">Parent's Area/Location <span class="text-red-500">*</span></label>
@@ -322,6 +322,13 @@ export default {
         }
     },
     methods: {
+        restrictToNumbers() {
+            // Remove non-numeric characters from the input
+            this.form.parent_contact = this.form.parent_contact.replace(/\D/g, "");
+
+            // You can add additional validation logic here if needed
+            // For example, check if the input is a valid phone number, etc.
+        },
         clearAllAnswers(){
             this.selected_answer.single_choice = '',
             this.selected_answer.multiple_choices = []

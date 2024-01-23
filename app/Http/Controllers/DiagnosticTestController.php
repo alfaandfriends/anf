@@ -153,27 +153,27 @@ class DiagnosticTestController extends Controller
             /* Send Email to User*/
             $parentNotification = new ResultToParent($reports);
             Mail::to($request->parent_email)->send($parentNotification);
-        }
-    
-        /* Send Email to PIC */
-        $emails     =   DiagnosticTestHelper::getPicEmailsByLanguageId($request->input('language_id'));
-        if(!empty($emails)){ 
-            $users      =   User::whereIn('user_email', $emails)->get();
-            foreach ($users as $user) {
-                $info    =   [
-                    'pic_name'              =>  $user->display_name,
-                    'student_name'          =>  $request->student_name,
-                    'student_age'           =>  $student_age,
-                    'dt_title'              =>  $request->dt_title,
-                    'test_date'             =>  Carbon::now()->format('d/m/Y'),
-                    'reports'               =>  $reports,
-                    'parent_name'           =>  $request->input('parent_name'),
-                    'parent_contact'        =>  $request->input('parent_contact'),
-                    'parent_area_location'  =>  $request->input('parent_area_location'),
-                    'parent_email'          =>  $request->input('parent_email'),
-                ];
-                $picNotification = new ResultToPIC($info);
-                Mail::to($user->user_email)->send($picNotification);
+
+            /* Send Email to PIC */
+            $emails     =   DiagnosticTestHelper::getPicEmailsByLanguageId($request->input('language_id'));
+            if(!empty($emails)){ 
+                $users      =   User::whereIn('user_email', $emails)->get();
+                foreach ($users as $user) {
+                    $info    =   [
+                        'pic_name'              =>  $user->display_name,
+                        'student_name'          =>  $request->student_name,
+                        'student_age'           =>  $student_age,
+                        'dt_title'              =>  $request->dt_title,
+                        'test_date'             =>  Carbon::now()->format('d/m/Y'),
+                        'reports'               =>  $reports,
+                        'parent_name'           =>  $request->input('parent_name'),
+                        'parent_contact'        =>  $request->input('parent_contact'),
+                        'parent_area_location'  =>  $request->input('parent_area_location'),
+                        'parent_email'          =>  $request->input('parent_email'),
+                    ];
+                    $picNotification = new ResultToPIC($info);
+                    Mail::to($user->user_email)->send($picNotification);
+                }
             }
         }
 
