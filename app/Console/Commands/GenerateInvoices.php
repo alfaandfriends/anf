@@ -81,7 +81,7 @@ class GenerateInvoices extends Command
                 $invoice_data['student_id']         =   $student_id;
                 $invoice_data['children_id']        =   StudentHelper::getChildId($student_id);
                 $invoice_data['invoice_items']      =   $fees;
-                $invoice_data['date_admission']     =   Carbon::now()->startOfMonth()->format('Y-m-d');
+                $invoice_data['date_admission']     =   Carbon::now()->month(2)->startOfMonth()->format('Y-m-d');
                 $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
 
                 $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
@@ -98,7 +98,7 @@ class GenerateInvoices extends Command
                         'centre_id'         =>  $fee['centre_id'],
                         'fee_id'            =>  $fee['fee_id'],
                         'invoice_id'        =>  $new_invoice_id,
-                        'admission_date'    =>  Carbon::now()->startOfMonth()->format('Y-m-d')
+                        'admission_date'    =>  Carbon::now()->month(2)->startOfMonth()->format('Y-m-d')
                     ]);
 
                     /* Create Class */
@@ -114,7 +114,7 @@ class GenerateInvoices extends Command
                     $progress_report_id =   DB::table('progress_reports')->insertGetId([
                         'student_fee_id'                =>  $student_fee_id,
                         'progress_report_config_id'     =>  $progress_report_config_id,
-                        'month'                         =>  Carbon::now()->startOfMonth()->format('Y-m-d')
+                        'month'                         =>  Carbon::now()->month(2)->startOfMonth()->format('Y-m-d')
                     ]);
 
                     /* Calculate how many days a week */
@@ -124,7 +124,7 @@ class GenerateInvoices extends Command
                     /* Create class based on student selected date */
                     $total_date_available   =   0;
                     foreach($class_days as $data){
-                        $date_available =   ProgressReportHelper::getDatesForDayOfWeekFromCustomDate($data->class_day, Carbon::now()->startOfMonth()->format('Y-m-d'));
+                        $date_available =   ProgressReportHelper::getDatesForDayOfWeekFromCustomDate($data->class_day, Carbon::now()->month(2)->startOfMonth()->format('Y-m-d'));
                         foreach($date_available as $date){
                             DB::table('progress_report_details')->insert([
                                 'progress_report_id'    => $progress_report_id,
