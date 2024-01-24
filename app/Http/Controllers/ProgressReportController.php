@@ -168,7 +168,7 @@ class ProgressReportController extends Controller
 
         $data['report_template']    =    DB::table('progress_reports')
                                             ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
-                                            ->where('progress_reports.id', $request->progress_report_id)->pluck('progress_report_configs.vue_template')->first();
+                                            ->where('progress_reports.id', $request->progress_report_id)->pluck('progress_report_configs.report_template')->first();
                                             
         $pdf = PDF::setPaper('a4', 'portrait')->loadView($data['report_template'], compact('data'));
         return $pdf->stream();
