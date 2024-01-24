@@ -164,7 +164,7 @@ class ProgressReportController extends Controller
                                             ->join('progress_report_status', 'progress_report_details.attendance_status', '=', 'progress_report_status.id')
                                             ->select('progress_report_details.date', 'progress_report_details.report_data', 'progress_report_details.comments', 
                                                     'progress_report_status.name as attendance_status_name')
-                                            ->where('progress_reports.student_fee_id', $request->student_fee)->orderBy('progress_report_details.id')->get();
+                                            ->where('progress_reports.student_fee_id', $request->student_fee)->orderBy('progress_report_details.date')->get();
 
         $data['report_template']    =    DB::table('progress_reports')
                                             ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
