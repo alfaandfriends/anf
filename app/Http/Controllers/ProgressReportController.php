@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\ProgrammeHelper;
 use App\Classes\ProgressReportHelper;
 use App\Events\DatabaseTransactionEvent;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -144,8 +145,7 @@ class ProgressReportController extends Controller
         return back()->with(['type'=>'success', 'message'=>'Progress report updated successfully !']);
     }
     
-    public function getFullProgressReports(Request $request)
-    {
+    public function getFullProgressReports(Request $request){
         $data['student_data']        =   DB::table('progress_reports')
                                             ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
                                             ->join('student_fees', 'progress_reports.student_fee_id', '=', 'student_fees.id')
@@ -157,6 +157,7 @@ class ProgressReportController extends Controller
                                             ->select('children.name as student_name', 'students.date_joined','programmes.name as programme_name', 
                                                     'programme_levels.level as programme_level')
                                             ->where('progress_report_id', $request->progress_report_id)->first();
+        $data['student_data']->date_joined = Carbon::hasFormat($data['student_data']->date_joined, 'Y-m-d') && Carbon::createFromFormat('Y-m-d', $data['student_data']->date_joined)->isValid() ? Carbon::parse($data['student_data']->date_joined)->format('d/m/Y') : 'Not Set';
 
         $data['report_data']        =   DB::table('progress_reports')
                                             ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
@@ -167,10 +168,10 @@ class ProgressReportController extends Controller
 
         $data['report_template']    =    DB::table('progress_reports')
                                             ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
-                                            ->where('progress_reports.id', $request->progress_report_id)->pluck('progress_report_configs.vue_template')
-                                            ->first();
-
-        return $data;
+                                            ->where('progress_reports.id', $request->progress_report_id)->pluck('progress_report_configs.vue_template')->first();
+                                            
+        $pdf = PDF::setPaper('a4', 'portrait')->loadView($data['report_template'], compact('data'));
+        return $pdf->stream();
     }
 
     /* Math */

@@ -379,19 +379,45 @@ export default {
             if(this.generate.running){
                 return
             }
-            this.generate.id = progress_report_id
             this.generate.running = true
-            axios.get(route('progress_report.full_reports', {progress_report_id: progress_report_id, student_fee: student_fee}))
+            axios.get(route('progress_report.full_reports'), {
+                responseType: 'blob', // Set the response type to 'blob' to handle binary data
+                params: {
+                    progress_report_id: progress_report_id, 
+                    student_fee: student_fee
+                }
+            })
             .then(response => {
-                import(`./Reports/${response.data.report_template}.vue`)
-                .then(module => {
-                    this.component.file = module.default;
-                })
-                this.component.data = response.data;
-                this.generate.id = ''
+                // Create a Blob object from the response data
+                const blob = new Blob([response.data], { type: 'application/pdf' });
+
+                // Create a URL for the Blob object
+                const pdfUrl = URL.createObjectURL(blob);
+
+                // Open the PDF in a new tab
+                window.open(pdfUrl, '_blank');
                 this.generate.running = false
-                this.show_progress_report = true
+            })
+            .catch(error => {
+                console.error('Error fetching PDF:', error);
+                this.generate.running = false
             });
+            // if(this.generate.running){
+            //     return
+            // }
+            // this.generate.id = progress_report_id
+            // this.generate.running = true
+            // axios.get(route('progress_report.full_reports', {progress_report_id: progress_report_id, student_fee: student_fee}))
+            // .then(response => {
+            //     import(`./Reports/${response.data.report_template}.vue`)
+            //     .then(module => {
+            //         this.component.file = module.default;
+            //     })
+            //     this.component.data = response.data;
+            //     this.generate.id = ''
+            //     this.generate.running = false
+            //     this.show_progress_report = true
+            // });
         },
         search(){
             this.$inertia.get(this.route('progress_report'), this.params, { replace: true, preserveState: true})
