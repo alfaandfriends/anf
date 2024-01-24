@@ -18,8 +18,7 @@ class FeeHelper {
                             ->join('class_methods', 'classes.class_method_id', '=', 'class_methods.id')
                             ->whereNull('student_fees.status')
                             ->where('students.status', 1)
-                            ->whereMonth('student_fees.created_at', '=', now()->month(1)->format('m'))
-                            // ->whereMonth('student_fees.created_at', '=', now()->subMonth()->format('m'))
+                            ->whereMonth('student_fees.created_at', '=', now()->subMonth()->format('m'))
                             ->select('students.id as student_id', 'programme_level_fees.id as fee_id', 'centres.id as centre_id', 'centres.label as centre_name', 
                                     'class_methods.name as class_method', 'programme_levels.material_fee', 'programmes.id as programme_id', 
                                     'class_types_detail.class_type_id', 'programme_level_fees.fee_amount as programme_fee', 'programmes.name as programme_name', 
