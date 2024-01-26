@@ -115,7 +115,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="grid grid-cols-1">
                             <hr class="my-4">
                         </div>
-                        <div class="grid grid-cols-4 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div class="mb-3">
                                 <label for="title" class="block text-sm font-bold text-gray-700"> Term / Book </label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
@@ -199,60 +199,64 @@ import BreezeButton from '@/Components/Button.vue';
                                     />
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Lesson </label>
-                                <div class="mt-1 flex rounded-md.shadow-sm">
-                                    <Multiselect 
-                                        :option-height="104" :custom-label="customLabel"
-                                        v-model="search.lesson_id"
-                                        valueProp="id"
-                                        :appendNewOption="false"
-                                        :searchable="true"
-                                        :options="options.lessons"
-                                        :clearOnSelect="false"
-                                        :canClear="false"
-                                        :canDeselect="false"
-                                        trackBy="name"
-                                        label="name"
-                                        :disabled="disabled.lessons"
-                                        placeholder="Please Select"
-                                        :loading="loading.lessons"
-                                        :classes="{
-                                            container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer rounded-sm bg-white text-base leading-snug border-gray-300' ,
-                                            containerDisabled: 'cursor-not-allowed bg-gray-100 border focus:border-gray-200 h-10',
-                                            containerOpen: 'rounded-b-none',
-                                            containerOpenTop: 'rounded-t-none',
-                                            containerActive: 'border border-gray-300',
-                                            search: 'w-full absolute inset-0 border-gray-300 focus:outline-none focus:border-transparent focus:ring-0 appearance-none text-base font-sans bg-white rounded-sm',
-                                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                            dropdownHidden: 'hidden',
-                                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                                            optionsTop: 'flex-col-reverse',
-                                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3 text-sm',
-                                            optionPointed: 'text-gray-800 bg-gray-100',
-                                            optionSelected: 'text-white bg-indigo-500',
-                                            optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                        }"
-                                    >
-                                    </Multiselect>
+                        </div>
+                        <div class="grid grid-cols-12 gap-4">
+                            <div class="col-span-11">
+                                <div class="mb-3">
+                                    <label for="title" class="block text-sm font-bold text-gray-700"> Lesson </label>
+                                    <div class="mt-1 flex rounded-md.shadow-sm">
+                                        <Multiselect 
+                                            :option-height="104" :custom-label="customLabel"
+                                            v-model="search.lesson_id"
+                                            valueProp="id"
+                                            :appendNewOption="false"
+                                            :searchable="true"
+                                            :options="options.lessons"
+                                            :clearOnSelect="false"
+                                            :canClear="false"
+                                            :canDeselect="false"
+                                            trackBy="name"
+                                            label="name"
+                                            :disabled="disabled.lessons"
+                                            placeholder="Please Select"
+                                            :loading="loading.lessons"
+                                            :classes="{
+                                                container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer rounded-sm bg-white text-base leading-snug border-gray-300' ,
+                                                containerDisabled: 'cursor-not-allowed bg-gray-100 border focus:border-gray-200 h-10',
+                                                containerOpen: 'rounded-b-none',
+                                                containerOpenTop: 'rounded-t-none',
+                                                containerActive: 'border border-gray-300',
+                                                search: 'w-full absolute inset-0 border-gray-300 focus:outline-none focus:border-transparent focus:ring-0 appearance-none text-base font-sans bg-white rounded-sm',
+                                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                                dropdownHidden: 'hidden',
+                                                options: 'flex flex-col p-0 m-0 list-none w-full',
+                                                optionsTop: 'flex-col-reverse',
+                                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3 text-sm',
+                                                optionPointed: 'text-gray-800 bg-gray-100',
+                                                optionSelected: 'text-white bg-indigo-500',
+                                                optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                                noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                                noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                            }"
+                                        >
+                                        </Multiselect>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="flex self-end">
+                            <div class="col-span-1 self-end">
                                 <div class="mb-3">
                                     <label for="" class="block text-sm font-bold text-gray-700"> </label>
                                     <div class="mt-1 flex rounded-md.shadow-sm">
                                         <BreezeButton class="py-3 px-4" buttonType="info" @click="addItem">
                                             <div class="flex items-center">
-                                                <svg v-if="searching" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <svg v-if="searching" aria-hidden="true" class="w-4 h-4 text-white animate-spin fill-indigo-600" viewBox="0 0 100 101" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
                                                     <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
                                                 </svg>
-                                                {{ searching ? 'Adding' : 'Add' }}
+                                                {{ searching ? '' : 'Add' }}
                                             </div>
                                         </BreezeButton>
                                     </div>
@@ -264,10 +268,10 @@ import BreezeButton from '@/Components/Button.vue';
                                 <label for="title" class="block text-sm font-bold text-gray-700"> Objectives </label>
                             </div>
                             <div class="grid grid-cols-1 divide-y divide-neutral-200 border-x border-t border-b mb-3" v-if="!form.report_data">
-                                <div class="p-3 bg-gray-50">No objectives found.</div>
+                                <div class="p-3">No objectives found.</div>
                             </div>
-                            <div class="grid grid-cols-1 divide-y divide-gray-400 divide-dotted border-x border-t border-b border-gray-200 mb-3" v-else>
-                                <div class="p-3 bg-gray-50" v-if="!form.report_data.length">No objectives found.</div>
+                            <div class="grid grid-cols-1 divide-y divide-gray-400 divide-dashed border-x border-t border-b border-gray-300 mb-3" v-else>
+                                <div class="p-3" v-if="!form.report_data.length">No objectives found.</div>
                                 <div class="p-5 bg-white hover:bg-indigo-50 divide-y" v-for="data, index in form.report_data">
                                     <details class="group space-y-4">
                                         <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
