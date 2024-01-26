@@ -135,7 +135,16 @@ import BreezeButton from '@/Components/Button.vue';
                             noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                         }"
-                    />
+                    >
+                        <template #singlelabel="{ value }">
+                            <div class="multiselect-single-label">
+                                {{ value.name }}
+                            </div>
+                        </template>
+                        <template #option="{ option }">
+                            {{ option.name }} ({{ option.country_name }})
+                        </template>
+                    </Multiselect>
                 </div>
                 <div class="relative w-full">
                     <Datepicker :class="'w-full md:w-64 lg:w-64 rounded-lg shadow-sm'" 

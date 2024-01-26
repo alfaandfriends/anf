@@ -35,12 +35,6 @@ import BreezeButton from '@/Components/Button.vue';
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <div class="py-4 px-4">
-            <!-- <template v-if="$page.props.can.view_progress_report_setting"> -->
-                <!-- <div class="flex justify-end">
-                    <BreezeButton class="py-2 px-4" :route="route('art_gallery.create')">Settings</BreezeButton>
-                </div>
-                <hr class="my-3 border border-dashed border-gray-400"> -->
-            <!-- </template> -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
                 <div class="relative w-full">
                     <svg class="absolute top-2.5 left-3 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none">
@@ -145,16 +139,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                 fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                             }"
-                    >
-                        <template #singlelabel="{ value }">
-                            <div class="multiselect-single-label">
-                                {{ value.name }}
-                            </div>
-                        </template>
-                        <template #option="{ option }">
-                            {{ option.name }} ({{ option.country_name }})
-                        </template>
-                    </Multiselect>
+                    />
                 </div>
                 <div class="w-full">
                     <Multiselect 
