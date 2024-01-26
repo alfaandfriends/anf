@@ -215,7 +215,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 
 export default {
     components: {
-        Head, Link, 
+        Head, Link,
     },
     data(){
         return{

@@ -328,6 +328,109 @@ import BreezeButton from '@/Components/Button.vue';
                 </form>
             </div>
         </div>
+        <Modal :showModal="open_modal" modalType="md" @hideModal="open_modal = false">
+            <template v-slot:content>
+                <div class="p-6">
+                    <div class="grid grid-cols-1">
+                        <div class="mb-4">
+                            <label for="student_id" class="block text-sm font-bold text-gray-700"> Centre </label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <Multiselect 
+                                v-model="programme_form.centre_id"
+                                valueProp="ID"
+                                placeholder="Please enter some keywords"
+                                :options="$page.props.allowed_centres"
+                                :searchable="true"
+                                noOptionsText="Nothing found"
+                                noResultsText="Nothing found"
+                                :clearOnSelect="true"
+                                :canClear="false"
+                                :canDeselect="false"
+                                :internal-search="false"
+                                trackBy="label"
+                                label="label"
+                                :classes="{
+                                    container: 
+                                        error.centre_id ? 
+                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10':
+                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10',
+                                    containerDisabled: 'cursor-default bg-gray-100',
+                                    containerOpen: 'rounded-b-none',
+                                    containerOpenTop: 'rounded-t-none',
+                                    containerActive: 'border border-indigo-300',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
+                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                    multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
+                                    search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 sm:text-sm font-sans bg-white rounded-md pl-3.5',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
+                                    clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
+                                    clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                    dropdownHidden: 'hidden',
+                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                    optionsTop: 'flex-col-reverse',
+                                    group: 'p-0 m-0',
+                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                    groupLabelPointable: 'cursor-pointer',
+                                    groupLabelPointed: 'bg-gray-300 text-black-700',
+                                    groupLabelSelected: 'bg-gray-100 text-black',
+                                    groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                    groupOptions: 'p-0 m-0',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
+                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                    optionSelected: 'text-white bg-indigo-500',
+                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                    spacer: 'h-9 py-px box-content',
+                                }"
+                            />
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="student_id" class="block text-sm font-bold text-gray-700"> Programme </label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <select name="programme_id" id="programme_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.programme_id ? 'border-red-300' : 'border-gray-300'" v-model="programme_form.programme_id" autocomplete="off">
+                                    <option value="">Please Select</option>
+                                    <option :value="programme.id" v-for="(programme, index) in $page.props.programmes" :key="index">{{ programme.name }} ({{ programme.country_name }})</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="programme_level" class="block text-sm font-bold text-gray-700"> Programme Level</label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <select name="programme_level" id="programme_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.programme_level ? 'border-red-300' : 'border-gray-300'" v-model="programme_form.programme_level" autocomplete="off">
+                                    <option value="">Please Select</option>
+                                    <option :value="level.level" v-for="(level, index) in $page.props.levels" :key="index">{{ level.level }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="fee_type_id" class="block text-sm font-bold text-gray-700"> Fee Type</label>
+                            <div class="mt-1 flex rounded-md shadow-sm">
+                                <select name="fee_type_id" id="fee_type_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="error.programme_type ? 'border-red-300' : 'border-gray-300'" v-model="programme_form.programme_type" autocomplete="off">
+                                    <option value="">Please Select</option>
+                                    <option :value="fee_type.id" v-for="(fee_type, index) in $page.props.fee_types" :key="index">{{ fee_type.label }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="">
+                            <label for="include_material_fee" class="cursor-pointer">
+                                <input id="include_material_fee" class="form-check-input h-5 w-5 mt-0.5 border border-gray-300 rounded-sm bg-white hover:bg-white focus:ring-transparent text-indigo-500 transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" v-model="programme_form.include_material_fee" :value="programme_form.include_material_fee"> Include Material Fee
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:footer>
+                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                    <BreezeButton buttonType="gray" @click="cancelProgramme">Cancel</BreezeButton>
+                    <BreezeButton buttonType="info" @click="saveProgramme">Save</BreezeButton>
+                </div>
+            </template>
+        </Modal>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -338,10 +441,11 @@ import Datepicker from '@vuepic/vue-datepicker';
 import Multiselect from '@vueform/multiselect'
 import { debounce } from 'vue-debounce'
 import Toggle from '@vueform/toggle';
+import Modal from '@/Components/Modal.vue'
 
 export default {
     components: {
-        Head, Link, Multiselect, Toggle
+        Head, Link, Multiselect, Toggle, Modal, 
     },
     data(){
         return{
