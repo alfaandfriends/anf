@@ -83,7 +83,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                             </tr>
                         </tbody>
                     </table>
-                    <Pagination v-if="$page.props.orders.length" :page_data="$page.props.orders" :params="params"></Pagination>
+                    <Pagination v-if="$page.props.orders.data.length" :page_data="$page.props.orders" :params="params"></Pagination>
                 </div>
             </div>
             <ConfirmationModal
@@ -199,8 +199,12 @@ import moment from 'moment'
 import Invoice from '@/Pages/Order/Invoice.vue'
 import PackingSlip from '@/Pages/Order/PackingSlip.vue'
 import { debounce } from 'vue-debounce'
+import Pagination from '@/Components/Pagination.vue'
 
 export default {
+    components: {
+        Pagination
+    },
     data(){
         return{
             show_invoice: false,

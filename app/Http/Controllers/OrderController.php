@@ -153,6 +153,7 @@ class OrderController extends Controller
             'amount'            => $invoice_data->amount,
             'currency'          => $invoice_data->currency,
         ];
+        // dd($data);
         
         $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.order_invoice', compact('data'));
         return $pdf->download($invoice_data->invoice_number.'.pdf');

@@ -82,10 +82,11 @@ export default {
                     name: 'Math',
                     url: 'progress_report.settings.math.levels',
                 }, 
+                {
+                    name: 'Coding & Robotics',
+                    url: 'progress_report.settings.coding_robotics.levels',
+                }, 
                 // {
-                //     name: 'Coding & Robotics',
-                //     url: 'progress_report.settings.coding_robotics.levels',
-                // }, {
                 //     name: 'Digital Art',
                 //     url: 'progress_report.settings.digital_art.levels',
                 // }
@@ -96,9 +97,6 @@ export default {
         configure(){
             this.$inertia.post(route('progress_report.settings'), this.form)
         }
-    },
-    created(){
-        console.table(this.programme_list)
     }
 }
 </script>
