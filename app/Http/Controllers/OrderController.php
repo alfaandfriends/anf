@@ -95,7 +95,7 @@ class OrderController extends Controller
                                 ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
                                 ->leftJoin('order_shipping_providers', 'orders.shipping_provider', '=', 'order_shipping_providers.id')
                                 ->join('order_status', 'orders.status', '=', 'order_status.id')
-                                ->select('orders.id as order_id', 'orders.products', 'orders.student_id', 'orders.tracking_number', 'orders.status as status_id', 
+                                ->select('orders.id as order_id', 'orders.products', 'orders.student_id', 'orders.address', 'orders.tracking_number', 'orders.status as status_id', 
                                         'orders.shipping_provider as shipping_provider_id', 'orders.tracking_status as tracking_status', 'children.name as student_name', 
                                         'order_shipping_providers.name as shipping_provider_name', 'order_status.name as status_name')
                                 ->where('orders.id', $request->order_id)
@@ -116,6 +116,7 @@ class OrderController extends Controller
 
         DB::table('orders')->where('id', $request->order_id)->update([
             'student_id'            =>  $request->student_id,
+            'address'                =>  $request->address,
             'products'              =>  json_encode($request->products, JSON_NUMERIC_CHECK),
             'shipping_provider'     =>  $request->shipping_provider,
             'tracking_number'       =>  $request->tracking_number,

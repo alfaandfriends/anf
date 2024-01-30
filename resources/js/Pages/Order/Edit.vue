@@ -21,7 +21,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
-                                        <div class="grid grid-cols-2 sm:grid-cols-0 gap-0 sm:gap-4">
+                                        <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                                             <div class="">
                                                 <label class="block text-sm text-gray-700 font-bold mb-2"> Student's Name <span class="text-red-500">*</span></label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
@@ -81,6 +81,12 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                                             spacer: 'h-9 py-px box-content',
                                                         }"
                                                     />
+                                                </div>
+                                            </div>
+                                            <div class="">
+                                                <label for="address" class="block text-sm text-gray-700 font-bold mb-2"> Address </label>
+                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                    <textarea type="text" id="address" class="focus:ring-0 border-gray-300 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.address" autocomplete="off"></textarea>
                                                 </div>
                                             </div>
                                             <div class="flex justify-end items-end">
@@ -516,6 +522,7 @@ export default {
             form:{
                 order_id: this.$page.props.order_info ? this.$page.props.order_info.order_id : '',
                 student_id: this.$page.props.order_info ? this.$page.props.order_info.student_id : '',
+                address: this.$page.props.order_info ? this.$page.props.order_info.address : '',
                 shipping_provider: this.$page.props.order_info && this.$page.props.order_info.shipping_provider_id ? this.$page.props.order_info.shipping_provider_id : '',
                 tracking_number: this.$page.props.order_info ? this.$page.props.order_info.tracking_number : '',
                 status: this.$page.props.order_info ? this.$page.props.order_info.status_id : '',
