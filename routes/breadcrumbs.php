@@ -72,6 +72,17 @@ Breadcrumbs::for('edupreneurs.manage', function (BreadcrumbTrail $trail) {
     $trail->push('Manage Edupreneurs', route('edupreneurs'));
 });
 
+/* Teachers */
+Breadcrumbs::for('teachers', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Teachers', route('teachers'));
+});
+
+Breadcrumbs::for('teachers.manage', function (BreadcrumbTrail $trail) {
+    $trail->parent('teachers');
+    $trail->push('Manage Teachers', route('teachers'));
+});
+
 /* Programmes */
 Breadcrumbs::for('programmes', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
@@ -177,6 +188,37 @@ Breadcrumbs::for('progress_report.details', function (BreadcrumbTrail $trail) {
     $trail->push('Details', route('progress_report'));
 });
 
+/* Progress report Setting */
+Breadcrumbs::for('progress_report.settings', function (BreadcrumbTrail $trail) {
+    $trail->parent('progress_report');
+    $trail->push('Settings', route('progress_report.settings'));
+});
+
+Breadcrumbs::for('progress_report.settings.math.levels', function (BreadcrumbTrail $trail) {
+    $trail->parent('progress_report.settings');
+    $trail->push('Levels', route('progress_report.settings.math.levels'));
+});
+
+Breadcrumbs::for('progress_report.settings.math.terms_books', function (BreadcrumbTrail $trail) {
+    $trail->parent('progress_report.settings');
+    $trail->push('Terms / Books', route('progress_report.settings.math.terms_books'));
+});
+
+Breadcrumbs::for('progress_report.settings.math.units', function (BreadcrumbTrail $trail) {
+    $trail->parent('progress_report.settings');
+    $trail->push('Units', route('progress_report.settings.math.units'));
+});
+
+Breadcrumbs::for('progress_report.settings.math.lessons', function (BreadcrumbTrail $trail) {
+    $trail->parent('progress_report.settings');
+    $trail->push('Lessons', route('progress_report.settings.math.lessons'));
+});
+
+Breadcrumbs::for('progress_report.settings.math.objectives', function (BreadcrumbTrail $trail) {
+    $trail->parent('progress_report.settings');
+    $trail->push('Objectives', route('progress_report.settings.math.objectives'));
+});
+
 /* Teacher Resources */
 Breadcrumbs::for('teacher_resources', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
@@ -225,6 +267,12 @@ Breadcrumbs::for('dt.settings', function (BreadcrumbTrail $trail) {
     $trail->push('Diagnostic Test Settings', route('dt.settings'));
 });
 
+/* Diagnostic Test Language Settings */
+Breadcrumbs::for('dt.settings.languages', function (BreadcrumbTrail $trail) {
+    $trail->parent('dt.settings');
+    $trail->push('Languages', route('dt.settings.languages'));
+});
+
 Breadcrumbs::for('dt.settings.create', function (BreadcrumbTrail $trail) {
     $trail->parent('dt.settings');
     $trail->push('Add Test', route('dt.settings.create'));
@@ -259,6 +307,8 @@ Breadcrumbs::for('dt.settings.details.edit', function (BreadcrumbTrail $trail) {
     $trail->parent('dt.settings');
     $trail->push('Edit Question', route('dt.settings.details.edit'));
 });
+
+
 
 /* Fee Invoices */
 Breadcrumbs::for('fee.invoices', function (BreadcrumbTrail $trail) {

@@ -8,6 +8,7 @@ use App\Events\DatabaseTransactionEvent;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use DateTime;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -254,4 +255,229 @@ class ProgressReportController extends Controller
 
         return $objectives;
     }
+
+    /* Settings */
+        public function settings(){
+            return Inertia::render('ProgressReport/Settings/Index');
+        }
+        
+        /* Math Levels*/
+            public function mathLevels(){
+                $levels     =   DB::table('pr_math_levels')->get();
+                return Inertia::render('ProgressReport/Settings/Math/Levels', [
+                    'levels'    =>  $levels
+                ]);
+            }
+
+            public function mathLevelsStore(Request $request)
+            {
+                $level   =   DB::table('pr_math_levels')->insertGetId([
+                    'name'      => $request->level_name
+                ]);
+                $log_data =   'Added progress report level ID '.$level;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
+            }
+
+            public function mathLevelsUpdate(Request $request)
+            {
+                DB::table('pr_math_levels')->where('id', $request->id)->update([
+                    'name'  => $request->level_name
+                ]);
+                $log_data =   'Updated progress report level ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
+            }
+
+            public function mathLevelsDestroy($id)
+            {
+                DB::table('pr_math_levels')->where('id', $id)->delete();
+    
+                $log_data =   'Deleted progress report level ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+    
+                return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
+            }
+        /* Math Levels */
+        
+        /* Math Terms Books*/
+            public function mathTermsBooks(Request $request){
+                $terms_books     =   DB::table('pr_math_terms_books')->where('level_id', $request->level_id)->get();
+                return Inertia::render('ProgressReport/Settings/Math/TermsBooks', [
+                    'level_id'       =>     $request->level_id,
+                    'terms_books'    =>     $terms_books
+                ]);
+            }
+
+            public function mathTermsBooksStore(Request $request)
+            {
+                $term_book   =   DB::table('pr_math_terms_books')->insertGetId([
+                    'level_id'  => $request->level_id,
+                    'name'      => $request->term_book_name
+                ]);
+                $log_data =   'Added progress report term book ID '.$term_book;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New term book has been added!']);
+            }
+
+            public function mathTermsBooksUpdate(Request $request)
+            {
+                DB::table('pr_math_terms_books')->where('id', $request->id)->update([
+                    'name'  => $request->term_book_name
+                ]);
+                $log_data =   'Updated progress report term book ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Term Book has been updated!']);
+            }
+
+            public function mathTermsBooksDestroy($id)
+            {
+                DB::table('pr_math_terms_books')->where('id', $id)->delete();
+    
+                $log_data =   'Deleted progress report term book ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+    
+                return back()->with(['type'=>'success', 'message'=>'Term Book has been deleted!']);
+            }
+        /* Math Terms Books */
+        
+        /* Math Units*/
+            public function mathUnits(Request $request){
+                $units     =   DB::table('pr_math_units')->where('term_book_id', $request->term_book_id)->get();
+                return Inertia::render('ProgressReport/Settings/Math/Units', [
+                    'level_id'      =>     $request->level_id,
+                    'term_book_id'  =>     $request->term_book_id,
+                    'units'         =>     $units
+                ]);
+            }
+
+            public function mathUnitsStore(Request $request)
+            {
+                $unit   =   DB::table('pr_math_units')->insertGetId([
+                    'term_book_id'  => $request->term_book_id,
+                    'name'          => $request->unit_name
+                ]);
+                $log_data =   'Added progress report unit ID '.$unit;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New unit has been added!']);
+            }
+
+            public function mathUnitsUpdate(Request $request)
+            {
+                DB::table('pr_math_units')->where('id', $request->id)->update([
+                    'name'  => $request->unit_name
+                ]);
+                $log_data =   'Updated progress report unit ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Unit has been updated!']);
+            }
+
+            public function mathUnitsDestroy($id)
+            {
+                DB::table('pr_math_units')->where('id', $id)->delete();
+    
+                $log_data =   'Deleted progress report unit ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+    
+                return back()->with(['type'=>'success', 'message'=>'Unit has been deleted!']);
+            }
+        /* Math Units */
+        
+        /* Math Lessons*/
+            public function mathLessons(Request $request){
+                $lessons     =   DB::table('pr_math_lessons')->where('unit_id', $request->unit_id)->get();
+                return Inertia::render('ProgressReport/Settings/Math/Lessons', [
+                    'level_id'      =>     $request->level_id,
+                    'term_book_id'  =>     $request->term_book_id,
+                    'unit_id'       =>     $request->unit_id,
+                    'lessons'       =>     $lessons
+                ]);
+            }
+
+            public function mathLessonsStore(Request $request)
+            {
+                $lesson   =   DB::table('pr_math_lessons')->insertGetId([
+                    'unit_id'   => $request->unit_id,
+                    'name'      => $request->lesson_name
+                ]);
+                $log_data =   'Added progress report lesson ID '.$lesson;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
+            }
+
+            public function mathLessonsUpdate(Request $request)
+            {
+                DB::table('pr_math_lessons')->where('id', $request->id)->update([
+                    'name'  => $request->lesson_name
+                ]);
+                $log_data =   'Updated progress report lesson ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
+            }
+
+            public function mathLessonsDestroy($id)
+            {
+                DB::table('pr_math_lessons')->where('id', $id)->delete();
+    
+                $log_data =   'Deleted progress report lesson ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+    
+                return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
+            }
+        /* Math Lessons */
+        
+        /* Math Objectives*/
+            public function mathObjectives(Request $request){
+                $objectives     =   DB::table('pr_math_objectives')->where('lesson_id', $request->lesson_id)->get();
+                return Inertia::render('ProgressReport/Settings/Math/Objectives', [
+                    'level_id'      =>     $request->level_id,
+                    'term_book_id'  =>     $request->term_book_id,
+                    'unit_id'       =>     $request->unit_id,
+                    'lesson_id'     =>     $request->lesson_id,
+                    'objectives'    =>     $objectives
+                ]);
+            }
+
+            public function mathObjectivesStore(Request $request)
+            {
+                $objective   =   DB::table('pr_math_objectives')->insertGetId([
+                    'lesson_id' => $request->lesson_id,
+                    'name'      => $request->objective_name
+                ]);
+                $log_data =   'Added progress report objective ID '.$objective;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New objective has been added!']);
+            }
+
+            public function mathObjectivesUpdate(Request $request)
+            {
+                DB::table('pr_math_objectives')->where('id', $request->id)->update([
+                    'name'  => $request->objective_name
+                ]);
+                $log_data =   'Updated progress report objective ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Objective has been updated!']);
+            }
+
+            public function mathObjectivesDestroy($id)
+            {
+                DB::table('pr_math_objectives')->where('id', $id)->delete();
+    
+                $log_data =   'Deleted progress report objective ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+    
+                return back()->with(['type'=>'success', 'message'=>'Objective has been deleted!']);
+            }
+        /* Math Objectives */
+    /* Settings */
 }
