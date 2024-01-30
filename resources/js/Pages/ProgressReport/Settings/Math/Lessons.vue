@@ -41,7 +41,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex flex-col space-y-1 text-sm text-gray-900">
-                                            <span class="font-semibold">{{ result.name }}</span>
+                                            <span class="font-semibold whitespace-normal">{{ result.name }}</span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
