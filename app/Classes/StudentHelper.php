@@ -95,4 +95,15 @@ class StudentHelper {
 
         return $student_fees;
     }
+
+    public static function getStudentAddress($student_id){
+        $student_address =   DB::table('students')
+                                ->join('children', 'students.children_id', '=', 'children.id')
+                                ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
+                                ->where('students.id', $student_id)
+                                ->pluck('wpvt_users.user_address')
+                                ->first();
+
+        return $student_address;
+    }
 }

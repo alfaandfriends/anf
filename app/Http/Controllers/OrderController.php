@@ -55,9 +55,22 @@ class OrderController extends Controller
         if(empty($request->products)){
             return back()->with(['type'=>'error', 'message'=>'Please add some products.']);
         }
+
+        $currentYear    =   Carbon::now()->year;
+        $order_config   =   DB::table('order_config')->whereYear('year', $currentYear)->first();
+
+        $quota_exceeded =   OrderHelper::checkOrderQuota($order_config);
+
+        if($quota_exceeded){
+            return back()->with(['type'=>'error', 'message'=>'Quota to create new order has exceeded.']);
+        }
+
+        $order_number =   OrderHelper::getCurrentYearOrderNumber($order_config);
         
         $order_id   =   DB::table('orders')->insertGetId([
             'student_id'            =>  $request->student_id,
+            'order_number'          =>  Carbon::now()->year.'-'.$order_number,
+            'address'                =>  $request->address,
             'products'              =>  json_encode($request->products, JSON_NUMERIC_CHECK),
             'shipping_provider'     =>  $request->shipping_provider,
             'tracking_number'       =>  $request->tracking_number,
@@ -136,7 +149,7 @@ class OrderController extends Controller
                                 ->select('orders.id', 'orders.order_number', 'orders.products', 'orders.tracking_number', 'orders.created_at', 
                                         'orders.tracking_status as tracking_status', 'order_shipping_providers.name as shipping_provider_name',
                                         'invoices.id as invoice_id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
-                                        'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
+                                        'wpvt_users.display_name as parent_full_name', 'orders.address as parent_address', 
                                         'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.currency')
                                 ->where('orders.id', $request->order_id)
                                 ->first();
@@ -169,7 +182,7 @@ class OrderController extends Controller
                                 ->select('orders.id', 'orders.order_number', 'orders.products', 'orders.tracking_number', 'orders.created_at', 
                                         'orders.tracking_status as tracking_status', 'order_shipping_providers.name as shipping_provider_name',
                                         'invoices.id as invoice_id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
-                                        'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
+                                        'wpvt_users.display_name as parent_full_name', 'orders.address as parent_address', 
                                         'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.currency')
                                 ->where('orders.id', $request->order_id)
                                 ->first();

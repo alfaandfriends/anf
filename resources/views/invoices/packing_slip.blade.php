@@ -57,17 +57,22 @@
     </table>
     <br/>
     <br/>
-
     <table width="100%">
         <tr>
             <td align="left">
                 <strong style="font-size: 15px">{{ $data['parent_full_name'] }}</strong><br/>
-                <div style="max-width: 200px; font-size: 14px; margin-top: 10px; line-height: 1.5">{{ $data['parent_address'] }}</div><br/> 
-                <div style="max-width: 200px; font-size: 14px; margin-top: 10px; font-weight: bold; text-decoration: underline;">Student: {{ $data['student_name'] }}</div><br/> 
             </td>
-            <td align="left">
-                <div style="font-size: 14px; padding-left: 270px">Order Number: {{ $data['order_number'] }}</div><br/> 
-                <div style="font-size: 14px; padding-left: 270px">Order Date: {{ $data['created_at'] }}</div><br/> 
+        </tr>
+    </table>
+    <table width="100%">
+        <tr>
+            <td align="left" valign="top">
+                <div style="max-width: 200px; font-size: 14px; line-height: 1.5">{{ $data['parent_address'] }}</div><br/> 
+                <div style="font-size: 14px; margin-top: 10px; font-weight: bold; text-decoration: underline;">Student: {{ $data['student_name'] }}</div><br/> 
+            </td>
+            <td align="left" width="30%">
+                <div style="font-size: 14px">Order Number: {{ $data['order_number'] }}</div><br/> 
+                <div style="font-size: 14px">Order Date: {{ $data['created_at'] }}</div><br/> 
             </td>
         </tr>
     </table>

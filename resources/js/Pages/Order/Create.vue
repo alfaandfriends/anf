@@ -28,6 +28,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                                     <Multiselect 
                                                         v-debounce:1s="findStudents"
                                                         v-model="form.student_id"
+                                                        @select="setAddress"
                                                         @close="clearUsers"
                                                         valueProp="id"
                                                         :loading="loading.students"
@@ -80,6 +81,12 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                                             spacer: 'h-9 py-px box-content',
                                                         }"
                                                     />
+                                                </div>
+                                            </div>
+                                            <div class="">
+                                                <label for="address" class="block text-sm text-gray-700 font-bold mb-2"> Address </label>
+                                                <div class="mt-1 flex rounded-md shadow-sm">
+                                                    <textarea type="text" id="address" class="focus:ring-0 border-gray-300 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" v-model="form.address" autocomplete="off"></textarea>
                                                 </div>
                                             </div>
                                             <div class="flex justify-end items-end">
@@ -518,6 +525,7 @@ export default {
             },
             form:{
                 student_id: '',
+                address: '',
                 shipping_provider: '',
                 tracking_number: '',
                 status: '',
@@ -628,6 +636,9 @@ export default {
                     this.loading.students = false
                 });
             }
+        },
+        setAddress(value, option){
+            this.form.address = option.user_address
         },
         clearUsers(){
             this.list.students = []

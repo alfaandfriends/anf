@@ -30,12 +30,14 @@ class OrderHelper {
             return back()->with(['type'=>'error', 'message'=>'Quota to create new order has exceeded.']);
         }
 
-        $order_number =   self::getCurrentYearOrderNumber($order_config);
+        $order_number   =   self::getCurrentYearOrderNumber($order_config);
+        $address        =   StudentHelper::getStudentAddress($order_data['student_id']);
 
         $order_id     =   DB::table('orders')->insertGetId([
             'student_id'    =>  $order_data['student_id'],
             'invoice_id'    =>  isset($order_data['invoice_id']) ? $order_data['invoice_id'] : null,
             'order_number'  =>  Carbon::now()->year.'-'.$order_number,
+            'address'       =>  $address,
             'products'      =>  json_encode($order_data['products'], JSON_NUMERIC_CHECK),
         ]);
 
