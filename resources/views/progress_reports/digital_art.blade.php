@@ -9,6 +9,9 @@
     * {
         font-family: Verdana, Arial, sans-serif;
     }
+    .page-break {
+        page-break-after: always;
+    }
     table{
         font-size: x-small;
         border-collapse: collapse;
@@ -58,54 +61,57 @@
             </tr>
         </table>
     </div>
+    <div class="page-break"></div>
     <table width="100%" style="margin-top: 10px;">
-        <tr>
-            <th width="15%" style="border: 2px solid; padding: 10px; font-size: 12px">Date</th>
-            <th width="50%" style="border: 2px solid; padding: 10px; font-size: 12px">Theme / Lesson / Activity / Outcome</th>
-            <th width="35%" style="border: 2px solid; padding: 10px; font-size: 12px">Assessments through Observations</th>
-        </tr>
-        @foreach($data['report_data'] as $key => $report)
+        <thead>
             <tr>
-                <td style="text-align: center; border: 2px solid; padding: 10px">
-                    <div>
-                        {{ $report->date }}
-                    </div>
-                    <div>
-                        {{ $report->attendance_status_name }}
-                    </div>
-                </td>
-                <td style="border: 2px solid; padding: 10px">
-                    @php
-                        $report_item = json_decode($report->report_data, true);
-                    @endphp
-                    @if(count($report_item) > 0)
-                        @foreach($report_item as $key => $item)
-                        <div style="padding-bottom: 20px">
-                            <div style="padding-bottom: 5px"><b style="text-decoration: underline;">{{ $item['term_book_name'] }} &nbsp; (Unit {{ $item['unit_name'] }})</b></div>
-                            <div style="padding-bottom: 5px"><i>Lesson {{ $item['lesson_name'] }}</i></div>
-                            <div>
-                                @foreach($item['objectives'] as $key => $objective)
-                                    <div style="display: inline-block; vertical-align: middle; line-height: 20px; ">
-                                        @if($objective['achieved'])
-                                            <img src="{{ public_path('/images/progress_report/circle-check.svg') }}" width="15px"/>
-                                        @else
-                                            <img src="{{ public_path('/images/progress_report/circle-cross.svg') }}" width="15px"/>
-                                        @endif
-                                        {{ $objective['name'] }}
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        @endforeach
-                    @endif
-                </td>
-                <td valign="top" style="text-align: justify; border: 2px solid; padding: 10px">
-                    <div>
-                        {{ $report->comments }}
-                    </div>
-                </td>
+                <th width="15%" style="border: 2px solid; padding: 10px; font-size: 12px">Date</th>
+                <th width="50%" style="border: 2px solid; padding: 10px; font-size: 12px">Theme / Lesson / Activity / Outcome</th>
+                <th width="35%" style="border: 2px solid; padding: 10px; font-size: 12px">Assessments through Observations</th>
             </tr>
-        @endforeach
+        </thead>
+        <tbody>
+            @foreach($data['report_data'] as $key => $report)
+                <tr>
+                    <td style="text-align: center; border: 2px solid; padding: 10px">
+                        <div>
+                            {{ $report->date }}
+                        </div>
+                        <div>
+                            {{ $report->attendance_status_name }}
+                        </div>
+                    </td>
+                    <td style="border: 2px solid; padding: 10px">
+                        @php
+                            $report_item = json_decode($report->report_data, true);
+                        @endphp
+                        @if(count($report_item) > 0)
+                            @foreach($report_item as $key => $item)
+                            <div style="padding-bottom: 20px">
+                                <div style="padding-bottom: 5px"><strong><b>{{ $item['theme_name'] }}</b></strong></div>
+                                <div style="padding-bottom: 5px"><b style="text-decoration: underline;">{{ $item['lesson_name'] }} : {{ $item['activity_name'] }}</b></div>
+                                <div style="padding-bottom: 5px"><i>{{ $item['outcome_name'] }}</i></div>
+                                <div>
+                                    @foreach($item['objectives'] as $key => $objective)
+                                        @if($objective['achieved'])
+                                        <div style="display: inline-block; vertical-align: middle; line-height: 20px; ">
+                                            {{ $objective['name'] }}
+                                        </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endforeach
+                        @endif
+                    </td>
+                    <td valign="top" style="text-align: justify; border: 2px solid; padding: 10px">
+                        <div>
+                            {{ $report->comments }}
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
     </table>
 </body>
 </html>

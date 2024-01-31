@@ -157,7 +157,7 @@ class ProgressReportController extends Controller
                                             ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
                                             ->select('children.name as student_name', 'students.date_joined','programmes.name as programme_name', 
                                                     'programme_levels.level as programme_level')
-                                            ->where('progress_report_id', $request->progress_report_id)->first();
+                                            ->where('progress_report_details.progress_report_id', $request->progress_report_id)->first();
         $data['student_data']->date_joined = Carbon::hasFormat($data['student_data']->date_joined, 'Y-m-d') && Carbon::createFromFormat('Y-m-d', $data['student_data']->date_joined)->isValid() ? Carbon::parse($data['student_data']->date_joined)->format('d/m/Y') : 'Not Set';
 
         $data['report_data']        =   DB::table('progress_reports')
@@ -170,7 +170,7 @@ class ProgressReportController extends Controller
         $data['report_template']    =    DB::table('progress_reports')
                                             ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
                                             ->where('progress_reports.id', $request->progress_report_id)->pluck('progress_report_configs.report_template')->first();
-                                            
+        // dd($data);
         $pdf = PDF::setPaper('a4', 'portrait')->loadView($data['report_template'], compact('data'));
         return $pdf->stream();
     }
@@ -274,7 +274,7 @@ class ProgressReportController extends Controller
                 $level   =   DB::table('pr_math_levels')->insertGetId([
                     'name'      => $request->level_name
                 ]);
-                $log_data =   'Added progress report level ID '.$level;
+                $log_data =   'Added progress report math level ID '.$level;
                 event(new DatabaseTransactionEvent($log_data));
 
                 return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
@@ -285,7 +285,7 @@ class ProgressReportController extends Controller
                 DB::table('pr_math_levels')->where('id', $request->id)->update([
                     'name'  => $request->level_name
                 ]);
-                $log_data =   'Updated progress report level ID '.$request->id;
+                $log_data =   'Updated progress report math level ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
                 return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
@@ -295,7 +295,7 @@ class ProgressReportController extends Controller
             {
                 DB::table('pr_math_levels')->where('id', $id)->delete();
     
-                $log_data =   'Deleted progress report level ID '.$id;
+                $log_data =   'Deleted progress report math level ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
                 return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
@@ -317,7 +317,7 @@ class ProgressReportController extends Controller
                     'level_id'  => $request->level_id,
                     'name'      => $request->term_book_name
                 ]);
-                $log_data =   'Added progress report term book ID '.$term_book;
+                $log_data =   'Added progress report math term book ID '.$term_book;
                 event(new DatabaseTransactionEvent($log_data));
 
                 return back()->with(['type'=>'success', 'message'=>'New term book has been added!']);
@@ -328,7 +328,7 @@ class ProgressReportController extends Controller
                 DB::table('pr_math_terms_books')->where('id', $request->id)->update([
                     'name'  => $request->term_book_name
                 ]);
-                $log_data =   'Updated progress report term book ID '.$request->id;
+                $log_data =   'Updated progress report math term book ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
                 return back()->with(['type'=>'success', 'message'=>'Term Book has been updated!']);
@@ -338,7 +338,7 @@ class ProgressReportController extends Controller
             {
                 DB::table('pr_math_terms_books')->where('id', $id)->delete();
     
-                $log_data =   'Deleted progress report term book ID '.$id;
+                $log_data =   'Deleted progress report math term book ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
                 return back()->with(['type'=>'success', 'message'=>'Term Book has been deleted!']);
@@ -361,7 +361,7 @@ class ProgressReportController extends Controller
                     'term_book_id'  => $request->term_book_id,
                     'name'          => $request->unit_name
                 ]);
-                $log_data =   'Added progress report unit ID '.$unit;
+                $log_data =   'Added progress report math unit ID '.$unit;
                 event(new DatabaseTransactionEvent($log_data));
 
                 return back()->with(['type'=>'success', 'message'=>'New unit has been added!']);
@@ -372,7 +372,7 @@ class ProgressReportController extends Controller
                 DB::table('pr_math_units')->where('id', $request->id)->update([
                     'name'  => $request->unit_name
                 ]);
-                $log_data =   'Updated progress report unit ID '.$request->id;
+                $log_data =   'Updated progress report math unit ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
                 return back()->with(['type'=>'success', 'message'=>'Unit has been updated!']);
@@ -382,7 +382,7 @@ class ProgressReportController extends Controller
             {
                 DB::table('pr_math_units')->where('id', $id)->delete();
     
-                $log_data =   'Deleted progress report unit ID '.$id;
+                $log_data =   'Deleted progress report math unit ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
                 return back()->with(['type'=>'success', 'message'=>'Unit has been deleted!']);
@@ -406,7 +406,7 @@ class ProgressReportController extends Controller
                     'unit_id'   => $request->unit_id,
                     'name'      => $request->lesson_name
                 ]);
-                $log_data =   'Added progress report lesson ID '.$lesson;
+                $log_data =   'Added progress report math lesson ID '.$lesson;
                 event(new DatabaseTransactionEvent($log_data));
 
                 return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
@@ -417,7 +417,7 @@ class ProgressReportController extends Controller
                 DB::table('pr_math_lessons')->where('id', $request->id)->update([
                     'name'  => $request->lesson_name
                 ]);
-                $log_data =   'Updated progress report lesson ID '.$request->id;
+                $log_data =   'Updated progress report math lesson ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
                 return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
@@ -427,7 +427,7 @@ class ProgressReportController extends Controller
             {
                 DB::table('pr_math_lessons')->where('id', $id)->delete();
     
-                $log_data =   'Deleted progress report lesson ID '.$id;
+                $log_data =   'Deleted progress report math lesson ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
                 return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
@@ -452,7 +452,7 @@ class ProgressReportController extends Controller
                     'lesson_id' => $request->lesson_id,
                     'name'      => $request->objective_name
                 ]);
-                $log_data =   'Added progress report objective ID '.$objective;
+                $log_data =   'Added progress report math objective ID '.$objective;
                 event(new DatabaseTransactionEvent($log_data));
 
                 return back()->with(['type'=>'success', 'message'=>'New objective has been added!']);
@@ -463,7 +463,7 @@ class ProgressReportController extends Controller
                 DB::table('pr_math_objectives')->where('id', $request->id)->update([
                     'name'  => $request->objective_name
                 ]);
-                $log_data =   'Updated progress report objective ID '.$request->id;
+                $log_data =   'Updated progress report math objective ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
                 return back()->with(['type'=>'success', 'message'=>'Objective has been updated!']);
@@ -473,11 +473,97 @@ class ProgressReportController extends Controller
             {
                 DB::table('pr_math_objectives')->where('id', $id)->delete();
     
-                $log_data =   'Deleted progress report objective ID '.$id;
+                $log_data =   'Deleted progress report math objective ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
                 return back()->with(['type'=>'success', 'message'=>'Objective has been deleted!']);
             }
         /* Math Objectives */
+
+        
+        
+        /* Coding Robotics Levels*/
+            public function codingRoboticsLevels(){
+                $levels     =   DB::table('pr_coding_levels')->get();
+                return Inertia::render('ProgressReport/Settings/CodingRobotics/Levels', [
+                    'levels'    =>  $levels
+                ]);
+            }
+
+            public function codingRoboticsLevelsStore(Request $request)
+            {
+                $level   =   DB::table('pr_coding_levels')->insertGetId([
+                    'name'      => $request->level_name
+                ]);
+                $log_data =   'Added progress report coding robotics level ID '.$level;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
+            }
+
+            public function codingRoboticsLevelsUpdate(Request $request)
+            {
+                DB::table('pr_coding_levels')->where('id', $request->id)->update([
+                    'name'  => $request->level_name
+                ]);
+                $log_data =   'Updated progress report coding robotics level ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
+            }
+
+            public function codingRoboticsLevelsDestroy($id)
+            {
+                DB::table('pr_coding_levels')->where('id', $id)->delete();
+
+                $log_data =   'Deleted progress report coding robotics level ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
+            }
+        /* Coding Robotics Levels */
+        
+        /* Coding Robotics Lessons*/
+            public function codingRoboticsLessons(Request $request){
+                $lessons     =   DB::table('pr_coding_lessons')->where('level_id', $request->level_id)->get();
+                return Inertia::render('ProgressReport/Settings/CodingRobotics/Lessons', [
+                    'level_id'      =>     $request->level_id,
+                    'lessons'       =>      $lessons
+                ]);
+            }
+
+            public function codingRoboticsLessonsStore(Request $request)
+            {
+                $lesson   =   DB::table('pr_coding_lessons')->insertGetId([
+                    'level_id'      =>     $request->level_id,
+                    'name'      => $request->level_name
+                ]);
+                $log_data =   'Added progress report coding robotics lesson ID '.$lesson;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
+            }
+
+            public function codingRoboticsLessonsUpdate(Request $request)
+            {
+                DB::table('pr_coding_lessons')->where('id', $request->id)->update([
+                    'name'  => $request->level_name
+                ]);
+                $log_data =   'Updated progress report coding robotics lesson ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
+            }
+
+            public function codingRoboticsLessonsDestroy($id)
+            {
+                DB::table('pr_coding_lessons')->where('id', $id)->delete();
+
+                $log_data =   'Deleted progress report coding robotics lesson ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
+            }
+        /* Coding Robotics Lessons */
     /* Settings */
 }
