@@ -75,6 +75,7 @@ class ProgressReportController extends Controller
         }
         
         $query->where('student_fees.centre_id', '=', $request->centre_id);
+        $query->where('students.status', '=', 0);
         
         return Inertia::render('ProgressReport/Index', [
             'filter'            =>  request()->all('search', 'centre_id', 'programme_id', 'date', 'programme_level'),
