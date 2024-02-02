@@ -46,7 +46,9 @@ class InvoiceController extends Controller
                                     'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
                                     'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 
                                     'invoice_status.bg_color as status_bg_color', 'invoice_status.text_color as status_text_color', 'invoices.can_delete')
-                        ->whereNull('student_fees.status');
+                        ->whereNull('student_fees.status')
+                        ->orderBy('children.name')
+                        ->distinct('invoices.id');
         
         $request->merge([
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
