@@ -263,10 +263,10 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="flex flex-col space-y-1 text-sm text-gray-900">
                                     <span class="font-semibold">{{ result.student_name }}</span>
                                     <div class="flex items-center text-sm space-x-2">
-                                        <div class="text-xs px-2 py-1 border text-white border-indigo-700 rounded bg-indigo-500">
+                                        <div class="text-xs px-2 py-1 border text-indigo-700 font-semibold border-indigo-500 rounded bg-indigo-200">
                                             {{ result.programme_name }}
                                         </div>
-                                        <div class="text-xs px-2 py-1 border text-white border-indigo-700 rounded bg-indigo-500">
+                                        <div class="text-xs px-2 py-1 border text-blue-700 font-semibold border-blue-500 rounded bg-blue-200">
                                             Level {{ result.programme_level }}
                                         </div>
                                     </div>
