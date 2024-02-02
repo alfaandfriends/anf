@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia; 
 use Barryvdh\DomPDF\Facade\Pdf;
+use DateTime;
 use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -69,12 +70,19 @@ class InvoiceController extends Controller
         
         if($request->programme_id){
             $query->where('invoices.invoice_items', 'LIKE', '%programme_id": '.$request->programme_id.'%');
-        }     
-        
+        }    
+
         if($request->date){
-            $month  =   $request->date['month'] + 1  < 10 ? '-0'.$request->date['month'] + 1 : '-'.$request->date['month'] + 1;
-            $query->where('invoices.date_issued', 'LIKE', '%'.$request->date['year'].$month.'%');
-        }      
+            $date = new DateTime($request->date['year']."-".($request->date['month'] + 1)."-01");
+            $month = $date->format('m');
+
+            $query->whereYear('invoices.date_issued', '=', $request->date['year'])
+                    ->whereMonth('invoices.date_issued', '=', $month);
+        }
+        else{
+            $query->whereYear('invoices.date_issued', '=', Carbon::now()->format('Y'))
+                ->whereMonth('invoices.date_issued', '=', Carbon::now()->format('m'));
+        }
 
         $programmes =   ProgrammeHelper::programmes();
         

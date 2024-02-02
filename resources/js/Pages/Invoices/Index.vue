@@ -150,6 +150,7 @@ import BreezeButton from '@/Components/Button.vue';
                     <Datepicker :class="'w-full md:w-64 lg:w-64 rounded-lg shadow-sm'" 
                                 input-class-name="invoices-date-picker focus:ring-0"
                                 v-model="params.date" 
+                                format="MMMM yyyy"
                                 :month-picker="true" 
                                 :auto-apply="true" 
                                 :placeholder="'Month / Year'" 
@@ -284,10 +285,10 @@ export default {
             confirmationRoute: '',
             open_modal: false,
             params: {
-                search: this.$page.props.filter ? this.$page.props.filter.search : '',
-                centre_id: this.$page.props.filter ? this.$page.props.filter.centre_id : '',
-                programme_id: this.$page.props.filter ? this.$page.props.filter.programme_id : '',
-                date: this.$page.props.filter ? this.$page.props.filter.date : '',
+                search: this.$page.props.filter.search ? this.$page.props.filter.search : '',
+                centre_id: this.$page.props.filter.centre_id ? this.$page.props.filter.centre_id : '',
+                programme_id: this.$page.props.filter.programme_id ? this.$page.props.filter.programme_id : '',
+                date: this.$page.props.filter.date ? this.$page.props.filter.date : { month: new Date().getMonth(), year: new Date().getFullYear() },
             },
             invoice_data: {
                 parent_name: '',

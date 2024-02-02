@@ -202,6 +202,24 @@ Route::middleware(['auth', 'device'])->group(function(){
                 Route::post('/progress-report/settings/coding-robotics/lessons/store', [ProgressReportController::class, 'codingRoboticsLessonsStore'])->name('progress_report.settings.coding_robotics.lessons.store')->middleware('permission:view_progress_report_settings');
                 Route::post('/progress-report/settings/coding-robotics/lessons/update', [ProgressReportController::class, 'codingRoboticsLessonsUpdate'])->name('progress_report.settings.coding_robotics.lessons.update')->middleware('permission:view_progress_report_settings');
                 Route::delete('/progress-report/settings/coding-robotics/lessons/destroy/{id}', [ProgressReportController::class, 'codingRoboticsLessonsDestroy'])->name('progress_report.settings.coding_robotics.lessons.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /* Coding Robotics Topics */
+                Route::get('/progress-report/settings/coding-robotics/topics', [ProgressReportController::class, 'codingRoboticsTopics'])->name('progress_report.settings.coding_robotics.topics')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/coding-robotics/topics/store', [ProgressReportController::class, 'codingRoboticsTopicsStore'])->name('progress_report.settings.coding_robotics.topics.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/coding-robotics/topics/update', [ProgressReportController::class, 'codingRoboticsTopicsUpdate'])->name('progress_report.settings.coding_robotics.topics.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/coding-robotics/topics/destroy/{id}', [ProgressReportController::class, 'codingRoboticsTopicsDestroy'])->name('progress_report.settings.coding_robotics.topics.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /* Coding Robotics Objectives */
+                Route::get('/progress-report/settings/coding-robotics/objectives', [ProgressReportController::class, 'codingRoboticsObjectives'])->name('progress_report.settings.coding_robotics.objectives')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/coding-robotics/objectives/store', [ProgressReportController::class, 'codingRoboticsObjectivesStore'])->name('progress_report.settings.coding_robotics.objectives.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/coding-robotics/objectives/update', [ProgressReportController::class, 'codingRoboticsObjectivesUpdate'])->name('progress_report.settings.coding_robotics.objectives.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/coding-robotics/objectives/destroy/{id}', [ProgressReportController::class, 'codingRoboticsObjectivesDestroy'])->name('progress_report.settings.coding_robotics.objectives.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /* Coding Robotics Activities Procedures */
+                Route::get('/progress-report/settings/coding-robotics/activities-procedures', [ProgressReportController::class, 'codingRoboticsActivitiesProcedures'])->name('progress_report.settings.coding_robotics.activities_procedures')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/coding-robotics/activities-procedures/store', [ProgressReportController::class, 'codingRoboticsActivitiesProceduresStore'])->name('progress_report.settings.coding_robotics.activities_procedures.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/coding-robotics/activities-procedures/update', [ProgressReportController::class, 'codingRoboticsActivitiesProceduresUpdate'])->name('progress_report.settings.coding_robotics.activities_procedures.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/coding-robotics/activities-procedures/destroy/{id}', [ProgressReportController::class, 'codingRoboticsActivitiesProceduresDestroy'])->name('progress_report.settings.coding_robotics.activities_procedures.destroy')->middleware('permission:view_progress_report_settings');
 
                 /* Digital Art */
                 Route::get('/progress-report/settings/digital-art/levels', [ProgressReportController::class, 'digitalArtLevels'])->name('progress_report.settings.digital_art.levels')->middleware('permission:view_progress_report_settings');

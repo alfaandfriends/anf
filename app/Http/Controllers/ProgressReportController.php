@@ -530,7 +530,7 @@ class ProgressReportController extends Controller
             public function codingRoboticsLessons(Request $request){
                 $lessons     =   DB::table('pr_coding_lessons')->where('level_id', $request->level_id)->get();
                 return Inertia::render('ProgressReport/Settings/CodingRobotics/Lessons', [
-                    'level_id'      =>     $request->level_id,
+                    'level_id'      =>      $request->level_id,
                     'lessons'       =>      $lessons
                 ]);
             }
@@ -538,8 +538,8 @@ class ProgressReportController extends Controller
             public function codingRoboticsLessonsStore(Request $request)
             {
                 $lesson   =   DB::table('pr_coding_lessons')->insertGetId([
-                    'level_id'      =>     $request->level_id,
-                    'name'      => $request->level_name
+                    'level_id'  =>  $request->level_id,
+                    'name'      =>  $request->lesson_name
                 ]);
                 $log_data =   'Added progress report coding robotics lesson ID '.$lesson;
                 event(new DatabaseTransactionEvent($log_data));
@@ -550,7 +550,7 @@ class ProgressReportController extends Controller
             public function codingRoboticsLessonsUpdate(Request $request)
             {
                 DB::table('pr_coding_lessons')->where('id', $request->id)->update([
-                    'name'  => $request->level_name
+                    'name'  => $request->lesson_name
                 ]);
                 $log_data =   'Updated progress report coding robotics lesson ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
@@ -568,5 +568,140 @@ class ProgressReportController extends Controller
                 return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
             }
         /* Coding Robotics Lessons */
+        
+        /* Coding Robotics Topics*/
+            public function codingRoboticsTopics(Request $request){
+                $topics     =   DB::table('pr_coding_topics')->where('lesson_id', $request->lesson_id)->get();
+                return Inertia::render('ProgressReport/Settings/CodingRobotics/Topics', [
+                    'level_id'  =>  $request->level_id,
+                    'lesson_id' =>  $request->lesson_id,
+                    'topics'   =>  $topics
+                ]);
+            }
+
+            public function codingRoboticsTopicsStore(Request $request)
+            {
+                $topic   =   DB::table('pr_coding_topics')->insertGetId([
+                    'lesson_id' =>  $request->lesson_id,
+                    'name'      =>  $request->topic_name
+                ]);
+                $log_data =   'Added progress report coding robotics topic ID '.$topic;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New topic has been added!']);
+            }
+
+            public function codingRoboticsTopicsUpdate(Request $request)
+            {
+                DB::table('pr_coding_topics')->where('id', $request->id)->update([
+                    'name'  => $request->topic_name
+                ]);
+                $log_data =   'Updated progress report coding robotics topic ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Topic has been updated!']);
+            }
+
+            public function codingRoboticsTopicsDestroy($id)
+            {
+                DB::table('pr_coding_topics')->where('id', $id)->delete();
+
+                $log_data =   'Deleted progress report coding robotics topic ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'Topic has been deleted!']);
+            }
+        /* Coding Robotics Topics */
+        
+        /* Coding Robotics Objectives*/
+            public function codingRoboticsObjectives(Request $request){
+                $objectives     =   DB::table('pr_coding_objectives')->where('topic_id', $request->topic_id)->get();
+                return Inertia::render('ProgressReport/Settings/CodingRobotics/Objectives', [
+                    'level_id'      =>  $request->level_id,
+                    'lesson_id'     =>  $request->lesson_id,
+                    'topic_id'      =>  $request->topic_id,
+                    'objectives'    =>  $objectives
+                ]);
+            }
+
+            public function codingRoboticsObjectivesStore(Request $request)
+            {
+                $objective   =   DB::table('pr_coding_objectives')->insertGetId([
+                    'topic_id'  =>  $request->topic_id,
+                    'name'      =>  $request->objective_name
+                ]);
+                $log_data =   'Added progress report coding robotics objective ID '.$objective;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New objective has been added!']);
+            }
+
+            public function codingRoboticsObjectivesUpdate(Request $request)
+            {
+                DB::table('pr_coding_objectives')->where('id', $request->id)->update([
+                    'name'  => $request->objective_name
+                ]);
+                $log_data =   'Updated progress report coding robotics objective ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Objective has been updated!']);
+            }
+
+            public function codingRoboticsObjectivesDestroy($id)
+            {
+                DB::table('pr_coding_objectives')->where('id', $id)->delete();
+
+                $log_data =   'Deleted progress report coding robotics objective ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'Objective has been deleted!']);
+            }
+        /* Coding Robotics Objectives */
+        
+        /* Coding Robotics Activities Procedures*/
+            public function codingRoboticsActivitiesProcedures(Request $request){
+                $activities_procedures     =   DB::table('pr_coding_activities_procedures')->where('objective_id', $request->objective_id)->get();
+                return Inertia::render('ProgressReport/Settings/CodingRobotics/ActivitiesProcedures', [
+                    'level_id'              =>  $request->level_id,
+                    'lesson_id'             =>  $request->lesson_id,
+                    'topic_id'              =>  $request->topic_id,
+                    'objective_id'          =>  $request->objective_id,
+                    'activities_procedures' =>  $activities_procedures
+                ]);
+            }
+
+            public function codingRoboticsActivitiesProceduresStore(Request $request)
+            {
+                $activity_procedure   =   DB::table('pr_coding_activities_procedures')->insertGetId([
+                    'objective_id'  =>  $request->objective_id,
+                    'name'          =>  $request->activity_procedure_name
+                ]);
+                $log_data =   'Added progress report coding robotics activity procedure ID '.$activity_procedure;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'New activity procedure has been added!']);
+            }
+
+            public function codingRoboticsActivitiesProceduresUpdate(Request $request)
+            {
+                DB::table('pr_coding_activities_procedures')->where('id', $request->id)->update([
+                    'name'  => $request->activity_procedure_name
+                ]);
+                $log_data =   'Updated progress report coding robotics activity procedure ID '.$request->id;
+                event(new DatabaseTransactionEvent($log_data));
+        
+                return back()->with(['type'=>'success', 'message'=>'Activity procedure has been updated!']);
+            }
+
+            public function codingRoboticsActivitiesProceduresDestroy($id)
+            {
+                DB::table('pr_coding_activities_procedures')->where('id', $id)->delete();
+
+                $log_data =   'Deleted progress report coding robotics activity procedure ID '.$id;
+                event(new DatabaseTransactionEvent($log_data));
+
+                return back()->with(['type'=>'success', 'message'=>'Activity procedure has been deleted!']);
+            }
+        /* Coding Robotics Activities Procedures */
     /* Settings */
 }
