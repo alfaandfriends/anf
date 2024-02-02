@@ -48,7 +48,8 @@ class StudentController extends Controller
                                             'students.status'])
                                 ->where('students.status', 1)
                                 ->whereNull('student_fees.status')
-                                ->groupBy('student_fees.student_id');
+                                ->groupBy('student_fees.student_id')
+                                ->orderBy('children.name');
 
         if($request->search){
             $query->where('children.name', 'LIKE', '%'.$request->search.'%');
@@ -95,7 +96,8 @@ class StudentController extends Controller
                                             'children.name as name', 
                                             'wpvt_users.display_name as parent_name', 
                                             'students.status'])
-                                ->where('students.status', 0);
+                                ->where('students.status', 0)
+                                ->orderBy('children.name');
 
         if($request->search){
             $query->where('children.name', 'LIKE', '%'.$request->search.'%');
@@ -139,7 +141,8 @@ class StudentController extends Controller
                                     'students.status'
                                 ])
                                 ->where('students.status', 1)
-                                ->where('student_fees.id');
+                                ->where('student_fees.id')
+                                ->orderBy('children.name');
 
         if($request->search){
             $query->where('children.name', 'LIKE', '%'.$request->search.'%');
