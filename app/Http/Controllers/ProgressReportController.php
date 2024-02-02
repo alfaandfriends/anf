@@ -41,6 +41,7 @@ class ProgressReportController extends Controller
                         ->join('children', 'students.children_id', '=' ,'children.id')
                         ->select(   'progress_reports.student_fee_id as student_fee',
                                     'progress_reports.id as progress_report_id',
+                                    'progress_reports.month',
                                     'programmes.name as programme_name',
                                     'centres.label as centre_name',
                                     'programme_levels.level as programme_level',
@@ -49,7 +50,8 @@ class ProgressReportController extends Controller
                                     DB::raw('count(progress_reports.id) as total_class'),
                                     DB::raw('count(CASE WHEN progress_report_details.attendance_status = 1 THEN 1 END) as total_present'), 
                                     DB::raw('count(CASE WHEN progress_report_details.attendance_status = 2 THEN 1 END) as total_absent'), 
-                        );
+                        )
+                        ->orderBy('children.name');
                         
         if($request->search){
             $query->where('children.name', 'LIKE', '%'.$request->search.'%');

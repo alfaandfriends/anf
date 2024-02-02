@@ -84,6 +84,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <Datepicker :class="'w-full rounded-lg shadow-sm'" 
                                     input-class-name="progress-report-date-picker focus:ring-0"
                                     v-model="params.date" 
+                                    format="MMMM yyyy"
                                     :month-picker="true" 
                                     :auto-apply="true" 
                                     @update:model-value="search"
@@ -238,7 +239,7 @@ export default {
             params: {
                 search: this.filter.search ? this.filter.search : '',
                 centre_id: this.filter.centre_id ? this.filter.centre_id : '',
-                date: this.filter.date ? this.filter.date : '',
+                date: this.filter.date ? this.filter.date : { month: new Date().getMonth(), year: new Date().getFullYear() },
             }
         }
     },

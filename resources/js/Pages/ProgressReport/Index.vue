@@ -223,6 +223,7 @@ import BreezeButton from '@/Components/Button.vue';
                     <Datepicker :class="'w-full rounded-lg shadow-sm'" 
                                 input-class-name="progress-report-date-picker focus:ring-0"
                                 v-model="params.date" 
+                                format="MMMM yyyy"
                                 :month-picker="true" 
                                 :auto-apply="true" 
                                 :placeholder="'Month / Year'" 
@@ -274,7 +275,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="text-sm font-medium text-gray-900">{{ result.centre_name }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ moment(result.month).format('MMM Y') }}</div>
+                                <div class="text-sm font-medium text-gray-900">{{ moment(result.month).format('MMMM Y') }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">{{ result.total_present + '/' + result.total_class }}</div>
@@ -362,7 +363,7 @@ export default {
                 search: this.$page.props.filter.search ? this.$page.props.filter.search : '',
                 centre_id: this.$page.props.filter.centre_id ? this.$page.props.filter.centre_id : '',
                 programme_id: this.$page.props.filter.programme_id ? this.$page.props.filter.programme_id : '',
-                date: this.$page.props.filter.date ? this.$page.props.filter.date : '',
+                date: this.$page.props.filter.date ? this.$page.props.filter.date : { month: new Date().getMonth(), year: new Date().getFullYear() },
                 programme_level: this.$page.props.filter.programme_level ? this.$page.props.filter.programme_level : '',
             },
             form: {
