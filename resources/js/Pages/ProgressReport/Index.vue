@@ -262,12 +262,13 @@ import BreezeButton from '@/Components/Button.vue';
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex flex-col space-y-1 text-sm text-gray-900">
                                     <span class="font-semibold">{{ result.student_name }}</span>
-                                    <div class="flex items-center text-sm">
-                                        <span class="text-sm text-indigo-600 italic font-semibold">{{ result.programme_name }}</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
-                                            </svg>
-                                        <span class="text-sm text-slate-600 font-semibold italic">Level {{ result.programme_level }}</span>
+                                    <div class="flex items-center text-sm space-x-2">
+                                        <div class="text-xs px-2 py-1 border text-white border-indigo-700 rounded bg-indigo-500">
+                                            {{ result.programme_name }}
+                                        </div>
+                                        <div class="text-xs px-2 py-1 border text-white border-indigo-700 rounded bg-indigo-500">
+                                            Level {{ result.programme_level }}
+                                        </div>
                                     </div>
                                 </div>
                             </td>
