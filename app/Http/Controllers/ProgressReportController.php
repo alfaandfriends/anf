@@ -51,6 +51,7 @@ class ProgressReportController extends Controller
                                     DB::raw('count(CASE WHEN progress_report_details.attendance_status = 1 THEN 1 END) as total_present'), 
                                     DB::raw('count(CASE WHEN progress_report_details.attendance_status = 2 THEN 1 END) as total_absent'), 
                         )
+                        ->whereNull('student_fees.status')
                         ->orderBy('children.name');
                         
         if($request->search){
