@@ -221,8 +221,41 @@ Route::middleware(['auth', 'device'])->group(function(){
                 Route::post('/progress-report/settings/coding-robotics/activities-procedures/update', [ProgressReportController::class, 'codingRoboticsActivitiesProceduresUpdate'])->name('progress_report.settings.coding_robotics.activities_procedures.update')->middleware('permission:view_progress_report_settings');
                 Route::delete('/progress-report/settings/coding-robotics/activities-procedures/destroy/{id}', [ProgressReportController::class, 'codingRoboticsActivitiesProceduresDestroy'])->name('progress_report.settings.coding_robotics.activities_procedures.destroy')->middleware('permission:view_progress_report_settings');
 
-                /* Digital Art */
+                /* Digital Art Levels */
                 Route::get('/progress-report/settings/digital-art/levels', [ProgressReportController::class, 'digitalArtLevels'])->name('progress_report.settings.digital_art.levels')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/levels/store', [ProgressReportController::class, 'digitalArtLevelsStore'])->name('progress_report.settings.digital_art.levels.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/levels/update', [ProgressReportController::class, 'digitalArtLevelsUpdate'])->name('progress_report.settings.digital_art.levels.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/digital-art/levels/destroy/{id}', [ProgressReportController::class, 'digitalArtLevelsDestroy'])->name('progress_report.settings.digital_art.levels.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /*Digital Art Themes*/
+                Route::get('/progress-report/settings/digital-art/themes', [ProgressReportController::class, 'digitalArtThemes'])->name('progress_report.settings.digital_art.themes')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/themes/store', [ProgressReportController::class, 'digitalArtThemesStore'])->name('progress_report.settings.digital_art.themes.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/themes/update', [ProgressReportController::class, 'digitalArtThemesUpdate'])->name('progress_report.settings.digital_art.themes.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/digital-art/themes/destroy/{id}', [ProgressReportController::class, 'digitalArtThemesDestroy'])->name('progress_report.settings.digital_art.themes.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /*Digital Art Lessons*/
+                Route::get('/progress-report/settings/digital-art/lessons', [ProgressReportController::class, 'digitalArtLessons'])->name('progress_report.settings.digital_art.lessons')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/lessons/store', [ProgressReportController::class, 'digitalArtLessonsStore'])->name('progress_report.settings.digital_art.lessons.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/lessons/update', [ProgressReportController::class, 'digitalArtLessonsUpdate'])->name('progress_report.settings.digital_art.lessons.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/digital-art/lessons/destroy/{id}', [ProgressReportController::class, 'digitalArtLessonsDestroy'])->name('progress_report.settings.digital_art.lessons.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /*Digital Art Activities*/
+                Route::get('/progress-report/settings/digital-art/activities', [ProgressReportController::class, 'digitalArtActivities'])->name('progress_report.settings.digital_art.activities')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/activities/store', [ProgressReportController::class, 'digitalArtActivitiesStore'])->name('progress_report.settings.digital_art.activities.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/activities/update', [ProgressReportController::class, 'digitalArtActivitiesUpdate'])->name('progress_report.settings.digital_art.activities.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/digital-art/activities/destroy/{id}', [ProgressReportController::class, 'digitalArtActivitiesDestroy'])->name('progress_report.settings.digital_art.activities.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /*Digital Art Outcomes*/
+                Route::get('/progress-report/settings/digital-art/outcomes', [ProgressReportController::class, 'digitalArtOutcomes'])->name('progress_report.settings.digital_art.outcomes')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/outcomes/store', [ProgressReportController::class, 'digitalArtOutcomesStore'])->name('progress_report.settings.digital_art.outcomes.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/outcomes/update', [ProgressReportController::class, 'digitalArtOutcomesUpdate'])->name('progress_report.settings.digital_art.outcomes.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/digital-art/outcomes/destroy/{id}', [ProgressReportController::class, 'digitalArtOutcomesDestroy'])->name('progress_report.settings.digital_art.outcomes.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /*Digital Art Objectives*/
+                Route::get('/progress-report/settings/digital-art/objectives', [ProgressReportController::class, 'digitalArtObjectives'])->name('progress_report.settings.digital_art.objectives')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/objectives/store', [ProgressReportController::class, 'digitalArtObjectivesStore'])->name('progress_report.settings.digital_art.objectives.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/digital-art/objectives/update', [ProgressReportController::class, 'digitalArtObjectivesUpdate'])->name('progress_report.settings.digital_art.objectives.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/digital-art/objectives/destroy/{id}', [ProgressReportController::class, 'digitalArtObjectivesDestroy'])->name('progress_report.settings.digital_art.objectives.destroy')->middleware('permission:view_progress_report_settings');
         });
 
         /* Resources */

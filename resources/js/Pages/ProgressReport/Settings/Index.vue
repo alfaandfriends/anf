@@ -86,10 +86,10 @@ export default {
                     name: 'Coding & Robotics',
                     url: 'progress_report.settings.coding_robotics.levels',
                 }, 
-                // {
-                //     name: 'Digital Art',
-                //     url: 'progress_report.settings.digital_art.levels',
-                // }
+                {
+                    name: 'Digital Art',
+                    url: 'progress_report.settings.digital_art.levels',
+                }
             ]
         }
     },
