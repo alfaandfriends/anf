@@ -171,7 +171,7 @@ export default {
             this.isOpen = true
         },
         viewObjectives(outcome_id){
-            this.$inertia.get(route('progress_report.settings.digital_art.objectives'), {'level_id': this.$page.props.level_id, 'theme_id': this.$page.props.theme_id, 'lesson_id': this.$page.props.lesson_id, 'lesson_id': this.$page.props.lesson_id, 'outcome_id' : outcome_id})
+            this.$inertia.get(route('progress_report.settings.digital_art.objectives'), {'level_id': this.$page.props.level_id, 'theme_id': this.$page.props.theme_id, 'lesson_id': this.$page.props.lesson_id, 'activity_id': this.$page.props.activity_id, 'outcome_id' : outcome_id})
         },
     }
 }
