@@ -14,11 +14,11 @@
         }
         @font-face {
             font-family: 'Century Gothic';
-            src: url('{{ public_path("/fonts/century_gothic/Gothic.ttf") }}') format('truetype');
+            src: url('{{ public_path("/fonts/century_gothic/GOTHIC.TTF") }}') format('truetype');
         }
         @font-face {
             font-family: 'Century Gothic Bold';
-            src: url('{{ public_path("/fonts/century_gothic/GothicB.ttf") }}') format('truetype');
+            src: url('{{ public_path("/fonts/century_gothic/GOTHICB.TTF") }}') format('truetype');
         }
         .candy_beans{
             font-family: 'Candy Beans', sans-serif;
