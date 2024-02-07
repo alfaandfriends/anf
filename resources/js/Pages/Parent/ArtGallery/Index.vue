@@ -196,7 +196,7 @@ const images = ref([
                     </div>
                 </div>
             </template>
-            <div class="flex items-end justify-end fixed bottom-24 right-4 md:hidden lg:hidden">
+            <div class="flex items-end justify-end fixed bottom-24 right-4 md:hidden lg:hidden" v-if="$page.props.current_active_child.student_id">
                 <button class="bg-indigo-600 hover:bg-indigo-600 text-white font-semibold p-3 rounded-full shadow-lg" @click="showUpload">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
