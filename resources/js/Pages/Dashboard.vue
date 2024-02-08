@@ -69,10 +69,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
                                 <span class="text-gray-500"> Since last month </span>
                             </p>
                         </div>
-                        <div class="mt-1 flex gap-1 text-indigo-600" v-else>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
-                                <path d="M48 128c-17.7 0-32 14.3-32 32s14.3 32 32 32H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H48zm0 192c-17.7 0-32 14.3-32 32s14.3 32 32 32H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H48z"/>
-                            </svg>
+                        <div class="mt-1 flex gap-1 text-indigo-600" v-if="$page.props.physical_students_this_month == $page.props.physical_students_last_month">
                             <p class="flex gap-2 text-xs">
                                 <span class="font-medium"> Students Remain </span>
                                 <span class="text-gray-500"> Since last month </span>
@@ -113,10 +110,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
                                 <span class="text-gray-500"> Since last month </span>
                             </p>
                         </div>
-                        <div class="mt-1 flex gap-1 text-indigo-600" v-else>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
-                                <path d="M48 128c-17.7 0-32 14.3-32 32s14.3 32 32 32H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H48zm0 192c-17.7 0-32 14.3-32 32s14.3 32 32 32H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H48z"/>
-                            </svg>
+                        <div class="mt-1 flex gap-1 text-indigo-600" v-if="$page.props.physical_students_this_month == $page.props.physical_students_last_month">
                             <p class="flex gap-2 text-xs">
                                 <span class="font-medium"> Students Remain </span>
                                 <span class="text-gray-500"> Since last month </span>
