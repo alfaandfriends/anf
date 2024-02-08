@@ -22,6 +22,7 @@ class DashboardController extends Controller
                                                 ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
                                                 ->join('classes', 'student_classes.class_id', '=', 'classes.id')
                                                 ->where('classes.class_method_id', 1)
+                                                ->where('students.status', 1)
                                                 ->whereYear('student_fees.created_at', '=', Carbon::now()->format('Y'))
                                                 ->whereMonth('student_fees.created_at', '=', Carbon::now()->format('m'))
                                                 ->distinct()->select('students.id')->get();
@@ -31,6 +32,7 @@ class DashboardController extends Controller
                                                 ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
                                                 ->join('classes', 'student_classes.class_id', '=', 'classes.id')
                                                 ->where('classes.class_method_id', 1)
+                                                ->where('students.status', 1)
                                                 ->whereYear('student_fees.created_at', '=', Carbon::now()->format('Y'))
                                                 ->whereMonth('student_fees.created_at', '=', Carbon::now()->subMonth(1)->format('m'))
                                                 ->distinct()->select('students.id')->get();
@@ -40,6 +42,7 @@ class DashboardController extends Controller
                                                 ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
                                                 ->join('classes', 'student_classes.class_id', '=', 'classes.id')
                                                 ->where('classes.class_method_id', 2)
+                                                ->where('students.status', 1)
                                                 ->whereYear('student_fees.created_at', '=', Carbon::now()->format('Y'))
                                                 ->whereMonth('student_fees.created_at', '=', Carbon::now()->format('m'))
                                                 ->distinct()->select('students.id')->get();
@@ -49,6 +52,7 @@ class DashboardController extends Controller
                                                 ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
                                                 ->join('classes', 'student_classes.class_id', '=', 'classes.id')
                                                 ->where('classes.class_method_id', 2)
+                                                ->where('students.status', 1)
                                                 ->whereYear('student_fees.created_at', '=', Carbon::now()->format('Y'))
                                                 ->whereMonth('student_fees.created_at', '=', Carbon::now()->subMonth(1)->format('m'))
                                                 ->distinct()->select('students.id')->get();
