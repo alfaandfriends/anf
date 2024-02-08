@@ -102,7 +102,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="text-sm font-medium text-gray-900">{{ result.programme }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ result.level }}</div>
+                                    <div class="text-sm font-medium text-gray-900">{{ result.name }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center space-x-2">

@@ -41,6 +41,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             return redirect(route('dashboard'));
         });
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:view_dashboard');
+        Route::get('/dashboard/centres-data', [DashboardController::class, 'centresData'])->name('dashboard.centres_data')->middleware('permission:view_dashboard');
         
         /* Administration */
         Route::prefix('administration')->middleware('permission:administration_access')->group(function () {

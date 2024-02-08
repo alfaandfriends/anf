@@ -39,7 +39,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <select name="level_id" id="level_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.level_id ? 'border-red-300' : 'border-gray-300'" v-model="form.level_id" autocomplete="off">
                                                 <option value="">Please Select</option>
-                                                <option :value="level.level" v-for="level, index in list.levels" :key="level">{{ level.level }}</option>
+                                                <option :value="level.id" v-for="level, index in $page.props.levels" :key="level">{{ level.name }}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -116,18 +116,18 @@ export default {
         }
     },
     watch: {
-        'form.programme_id': {
-            handler(){
-                if(this.form.programme_id != ''){
-                    axios.get(route('get_programme_levels', this.form.programme_id))
-                    .then((response) => {
-                        this.form.level_id  =   ''
-                        this.list.levels    =   response.data
-                    })
-                }
-            },
-            deep: true
-        },
+        // 'form.programme_id': {
+        //     handler(){
+        //         if(this.form.programme_id != ''){
+        //             axios.get(route('get_programme_levels', this.form.programme_id))
+        //             .then((response) => {
+        //                 this.form.level_id  =   ''
+        //                 this.list.levels    =   response.data
+        //             })
+        //         }
+        //     },
+        //     deep: true
+        // },
         'form.media_type_id': {
             handler(){
                 this.form.embed_link = ''

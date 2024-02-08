@@ -15,12 +15,13 @@ class TeacherResourcesController extends Controller
 {
     public function index(Request $request)
     {
-        $query =   DB::table('teacher_resources')
-                                    ->join('programmes', 'teacher_resources.programme_id', '=', 'programmes.id')
-                                    ->select('teacher_resources.id', 'teacher_resources.title', 
-                                            'programmes.name as programme', 'teacher_resources.level', 'teacher_resources.media_type', 'teacher_resources.language_id', 
-                                            'teacher_resources.content', 'teacher_resources.file_size', 'teacher_resources.download_count', 
-                                            'teacher_resources.created_at', 'teacher_resources.updated_at');
+        $query  =   DB::table('teacher_resources')
+                        ->join('programmes', 'teacher_resources.programme_id', '=', 'programmes.id')
+                        ->join('teacher_resources_levels', 'teacher_resources.level', '=', 'teacher_resources_levels.id')
+                        ->select('teacher_resources.id', 'teacher_resources.title', 
+                                'programmes.name as programme', 'teacher_resources_levels.name', 'teacher_resources.media_type', 'teacher_resources.language_id', 
+                                'teacher_resources.content', 'teacher_resources.file_size', 'teacher_resources.download_count', 
+                                'teacher_resources.created_at', 'teacher_resources.updated_at');
         if($request->search){
             $query->where('teacher_resources.title', 'LIKE', '%'.request('search').'%');
         }
@@ -43,11 +44,13 @@ class TeacherResourcesController extends Controller
         $programmes     =   ProgrammeHelper::programmes();
         $languages      =   DB::table('languages')->get();
         $media_types    =   DB::table('teacher_resource_media_types')->get();
+        $levels         =   DB::table('teacher_resources_levels')->get();
 
         return Inertia::render('TeacherResources/Create', [
             'programmes'    =>  $programmes,
             'languages'     =>  $languages,
-            'media_types'     =>  $media_types
+            'media_types'   =>  $media_types,
+            'levels'        =>  $levels
         ]);
     }
 
@@ -95,13 +98,15 @@ class TeacherResourcesController extends Controller
         $languages      =   DB::table('languages')->get();
         $media_types    =   DB::table('teacher_resource_media_types')->get();
         $resource_info  =   DB::table('teacher_resources')->where('id', $request->resource_id)->first();
+        $levels         =   DB::table('teacher_resources_levels')->get();
 
         return Inertia::render('TeacherResources/Edit', [
             'id'                =>  $request->resource_id,
             'programmes'        =>  $programmes,
             'languages'         =>  $languages,
             'media_types'       =>  $media_types,
-            'resource_info'     =>  $resource_info
+            'resource_info'     =>  $resource_info,
+            'levels'            =>  $levels
         ]);
     }
 
