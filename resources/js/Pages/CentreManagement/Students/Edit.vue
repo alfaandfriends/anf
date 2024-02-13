@@ -183,6 +183,21 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <p class="text-sm font-medium">{{ fee.fee_info.class_method }}</p>
                                                     </div>
                                                 </div>
+                                                <div class="flex space-x-2 mt-3">
+                                                    <div class="">
+                                                        <label for="fee_status" class="block text-sm font-bold text-gray-700"> Status </label>
+                                                        <div class="mt-1 flex rounded-md shadow-sm items-center space-x-2">
+                                                            <select name="fee_status" id="fee_status" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="fee.fee_info.student_fee_status" autocomplete="off">
+                                                                <option value="">-- Not Set --</option>
+                                                                <option :value="fee_status.id" v-for="(fee_status, index) in $page.props.fee_status" :key="index">{{ fee_status.name }}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-6">
+                                                        <BreezeButton class="py-2.5 px-4" v-if="fee.fee_info.student_fee_status == 2" @click="showTransferStudent(fee.fee_info.fee_id, fee.fee_info.student_fee_id, fee.fee_info.programme_id, fee.fee_info.class_type_id, fee.fee_info.programme_level)">Confirm</BreezeButton>
+                                                        <BreezeButton class="py-2.5 px-4" v-else @click="changeFeeStatus(fee.fee_info.student_fee_id, fee.fee_info.student_fee_status)">{{ fee.fee_info.student_fee_status == 2 ? 'Transfer Student' : 'Confirm'}}</BreezeButton>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </article>
