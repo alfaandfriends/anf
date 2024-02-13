@@ -304,7 +304,7 @@ class StudentController extends Controller
                                                 'wpvt_users.user_email as parent_email'])
                                     ->first();
 
-        $result            =   DB::table('classes')
+        $results            =   DB::table('classes')
                                     ->leftJoin('student_classes', 'student_classes.class_id', '=', 'classes.id')
                                     ->leftJoin('student_fees', 'student_classes.student_fee_id', '=', 'student_fees.id')
                                     ->leftJoin('class_days', 'classes.class_day_id', '=', 'class_days.id')
@@ -334,16 +334,19 @@ class StudentController extends Controller
                                                 'invoices.id as invoice_id', 
                                                 'student_fees.admission_date as admission_date', 
                                                 'student_fees.id as student_fee_id', 
+                                                'student_fees.created_at as fee_month', 
                                                 'student_fees.status as student_fee_status')
                                     ->where('student_fees.student_id', $request->student_id)
-                                    ->where(function($query){
-                                        $query->whereYear('student_fees.created_at', '=', now()->year)
-                                            ->whereMonth('student_fees.created_at', '=', now()->month)
-                                            ->whereNull('student_fees.status');
-                                    })
+                                    // ->where(function($query){
+                                    //     $query->whereYear('student_fees.created_at', '=', now()->year)
+                                    //         ->whereMonth('student_fees.created_at', '=', now()->month)
+                                    //         ->whereNull('student_fees.status');
+                                    // })
                                     ->get();
                           
-        $student_academics = collect($result)->groupBy('fee_id')->map(function ($group) {
+        $student_academics['current'] = collect($results)->filter(function ($result) {
+            return Carbon::parse($result->fee_month)->isCurrentMonth() && $result->student_fee_status === null;
+        })->groupBy('fee_id')->map(function ($group) {
             $fee_info = [
                 "centre_id" => $group->first()->centre_id,
                 "centre_name" => $group->first()->centre_name,
@@ -359,6 +362,7 @@ class StudentController extends Controller
                 "invoice_id" => $group->first()->invoice_id,
                 "admission_date" => $group->first()->admission_date,
                 "student_fee_id" => $group->first()->student_fee_id,
+                "fee_month" => $group->first()->fee_month,
                 "student_fee_status" => $group->first()->student_fee_status ? $group->first()->student_fee_status : '',
             ];
         
@@ -376,6 +380,34 @@ class StudentController extends Controller
                 "fee_info" => $fee_info,
             ];
         })->values()->all();
+
+        
+        foreach ($results as $result) {
+            $info['class_id']       =   $result->class_id;
+            $info['class_day']      =   $result->class_day;
+            $info['start_time']     =   $result->start_time;
+            $info['end_time']       =   $result->end_time;
+            $classes[$result->student_fee_id][]   =   $info;
+        }
+
+        foreach ($results as $result) {
+            // if(){
+                $info['programme_id']           =   $result->programme_id;
+                $info['programme_name']         =   $result->programme_name;
+                $info['programme_level']        =   $result->programme_level;
+                $info['material_fee']           =   $result->material_fee;
+                $info['fee_id']                 =   $result->fee_id;
+                $info['programme_fee']          =   $result->programme_fee;
+                $info['centre_id']              =   $result->centre_id;
+                $info['centre_name']            =   $result->centre_name;
+                $info['class_type_id']          =   $result->class_type_id;
+                $info['class_method']           =   $result->class_method;
+                $info['invoice_id']             =   $result->invoice_id;
+                $info['student_fee_status']     =   $result->student_fee_status;
+                $info['classes']                =   $classes[$result->student_fee_id];
+                $student_academics[$result->student_fee_id]                 =   $info;
+            // }
+        }
 
         $gender_list        =   DB::table('genders')->get();
         $programme_list     =   ProgrammeHelper::programmes();
@@ -442,11 +474,13 @@ class StudentController extends Controller
         $student_country    =   StudentHelper::getStudentCountryId($invoice_data->student_id);
 
         /* Check if paid */ 
-        if($student_country == $this->malaysia){
-            if($invoice_data->bill_id){
-                $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
-                if(!$bill['paid']){
-                    Billplz::bill()->destroy($invoice_data->bill_id);
+        if(env('APP_ENV') != 'local'){
+            if($student_country == $this->malaysia){
+                if($invoice_data->bill_id){
+                    $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
+                    if(!$bill['paid']){
+                        Billplz::bill()->destroy($invoice_data->bill_id);
+                    }
                 }
             }
         }
