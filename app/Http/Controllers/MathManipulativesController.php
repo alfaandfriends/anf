@@ -48,7 +48,8 @@ class MathManipulativesController extends Controller
             'title'             =>  'required',
             // 'thumbnail'         =>  'required',
         ]);
-        
+        dd($request->all());
+
         if($request->file('thumbnail.file') == null){
             return back()->with(['type'=>'error', 'message'=>'Thumbnail is required!']);
         }
