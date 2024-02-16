@@ -46,7 +46,7 @@ class MathManipulativesController extends Controller
     {
         $request->validate([
             'title'             =>  'required',
-            'thumbnail'         =>  'required',
+            // 'thumbnail'         =>  'required',
         ]);
         
         if(!$request->file('thumbnail.file')){
@@ -76,7 +76,7 @@ class MathManipulativesController extends Controller
         $log_data =   'Added math manipulative ID '.$math_manipulative_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'New math manipulative added successfully !']);
+        return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'New item added successfully !']);
     }
 
     public function configurationDelete($id)

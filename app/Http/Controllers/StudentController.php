@@ -345,7 +345,7 @@ class StudentController extends Controller
                                     ->get();
                           
         $student_academics['current'] = collect($results)->filter(function ($result) {
-            return Carbon::parse($result->fee_month)->isCurrentMonth() && $result->student_fee_status === null;
+            return Carbon::parse($result->fee_month)->isCurrentMonth();
         })->groupBy('fee_id')->map(function ($group) {
             $fee_info = [
                 "centre_id" => $group->first()->centre_id,
@@ -381,33 +381,73 @@ class StudentController extends Controller
             ];
         })->values()->all();
 
+        $student_academics['history'] = collect($results)->filter(function ($result) {
+            return Carbon::parse($result->fee_month)->lt(Carbon::now()->startOfMonth());
+        })->groupBy('fee_id')->groupBy('student_fee_id')->map(function ($group) {
+            
+        dd($group);
+            $fee_info[] = [
+                "centre_id" => $group->first()->centre_id,
+                "centre_name" => $group->first()->centre_name,
+                "class_method" => $group->first()->class_method,
+                "class_type_id" => $group->first()->class_type_id,
+                "fee_id" => $group->first()->fee_id,
+                "material_fee" => $group->first()->material_fee,
+                "programme_fee" => $group->first()->programme_fee,
+                "programme_id" => $group->first()->programme_id,
+                "programme_level" => $group->first()->programme_level,
+                "programme_name" => $group->first()->programme_name,
+                "programme_type" => $group->first()->programme_type,
+                "invoice_id" => $group->first()->invoice_id,
+                "admission_date" => $group->first()->admission_date,
+                "student_fee_id" => $group->first()->student_fee_id,
+                "fee_month" => $group->first()->fee_month,
+                "student_fee_status" => $group->first()->student_fee_status ? $group->first()->student_fee_status : '',
+            ];
         
-        foreach ($results as $result) {
-            $info['class_id']       =   $result->class_id;
-            $info['class_day']      =   $result->class_day;
-            $info['start_time']     =   $result->start_time;
-            $info['end_time']       =   $result->end_time;
-            $classes[$result->student_fee_id][]   =   $info;
-        }
+            $classes = $group->map(function ($item) {
+                return [
+                    "class_id" => $item->class_id,
+                    "class_day" => $item->class_day,
+                    "start_time" => $item->start_time,
+                    "end_time" => $item->end_time,
+                ];
+            })->values()->all();
+        
+            return [
+                "classes" => $classes,
+                "fee_info" => $fee_info,
+            ];
+        })->values()->all();
+        dd($student_academics);
 
-        foreach ($results as $result) {
-            // if(){
-                $info['programme_id']           =   $result->programme_id;
-                $info['programme_name']         =   $result->programme_name;
-                $info['programme_level']        =   $result->programme_level;
-                $info['material_fee']           =   $result->material_fee;
-                $info['fee_id']                 =   $result->fee_id;
-                $info['programme_fee']          =   $result->programme_fee;
-                $info['centre_id']              =   $result->centre_id;
-                $info['centre_name']            =   $result->centre_name;
-                $info['class_type_id']          =   $result->class_type_id;
-                $info['class_method']           =   $result->class_method;
-                $info['invoice_id']             =   $result->invoice_id;
-                $info['student_fee_status']     =   $result->student_fee_status;
-                $info['classes']                =   $classes[$result->student_fee_id];
-                $student_academics[$result->student_fee_id]                 =   $info;
-            // }
-        }
+        
+        // foreach ($results as $result) {
+        //     $info['class_id']       =   $result->class_id;
+        //     $info['class_day']      =   $result->class_day;
+        //     $info['start_time']     =   $result->start_time;
+        //     $info['end_time']       =   $result->end_time;
+        //     $classes[$result->student_fee_id][]   =   $info;
+        // }
+
+        // foreach ($results as $result) {
+        //     // if(){
+        //         $info['programme_id']           =   $result->programme_id;
+        //         $info['programme_name']         =   $result->programme_name;
+        //         $info['programme_level']        =   $result->programme_level;
+        //         $info['material_fee']           =   $result->material_fee;
+        //         $info['fee_id']                 =   $result->fee_id;
+        //         $info['programme_fee']          =   $result->programme_fee;
+        //         $info['centre_id']              =   $result->centre_id;
+        //         $info['centre_name']            =   $result->centre_name;
+        //         $info['class_type_id']          =   $result->class_type_id;
+        //         $info['class_method']           =   $result->class_method;
+        //         $info['invoice_id']             =   $result->invoice_id;
+        //         $info['student_fee_status']     =   $result->student_fee_status;
+        //         $info['classes']                =   $classes[$result->student_fee_id];
+        //         $student_academics['history'][$result->student_fee_id] =   $info;
+        //     // }
+        // }
 
         $gender_list        =   DB::table('genders')->get();
         $programme_list     =   ProgrammeHelper::programmes();
