@@ -383,9 +383,7 @@ class StudentController extends Controller
 
         $student_academics['history'] = collect($results)->filter(function ($result) {
             return Carbon::parse($result->fee_month)->lt(Carbon::now()->startOfMonth());
-        })->groupBy('fee_id')->groupBy('student_fee_id')->map(function ($group) {
-            
-        dd($group);
+        })->groupBy('fee_id')->map(function ($group) {
             $fee_info[] = [
                 "centre_id" => $group->first()->centre_id,
                 "centre_name" => $group->first()->centre_name,
@@ -419,7 +417,6 @@ class StudentController extends Controller
                 "fee_info" => $fee_info,
             ];
         })->values()->all();
-        dd($student_academics);
 
         
         // foreach ($results as $result) {
