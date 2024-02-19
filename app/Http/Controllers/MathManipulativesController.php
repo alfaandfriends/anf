@@ -44,7 +44,7 @@ class MathManipulativesController extends Controller
 
     public function configurationStore(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         // $request->validate([
         //     'title'             =>  'required',
         //     // 'thumbnail'         =>  'required',
@@ -54,30 +54,30 @@ class MathManipulativesController extends Controller
         //     return back()->with(['type'=>'error', 'message'=>'Thumbnail is required!']);
         // }
 
-        // /* Thumbnail */
-        // $file = $request->file('thumbnail.file');
-        // $extension = $file->getClientOriginalExtension();
-        // $thumbnail = time() . '.' . $extension;
+        /* Thumbnail */
+        $file = $request->file('thumbnail.file');
+        $extension = $file->getClientOriginalExtension();
+        $thumbnail = time() . '.' . $extension;
 
-        // Storage::putFileAs('math_manipulatives/thumbnails',$file, $thumbnail);
+        Storage::putFileAs('math_manipulatives/thumbnails',$file, $thumbnail);
 
-        // /* HTML5 Folder */
-        // if (Storage::exists('math_manipulatives/'.key($request->folder))) {
-        //     return back()->with(['type'=>'error', 'message'=>'Folder exists!']);
-        // }
+        /* HTML5 Folder */
+        if (Storage::exists('math_manipulatives/'.key($request->folder))) {
+            return back()->with(['type'=>'error', 'message'=>'Folder exists!']);
+        }
 
-        // $this->uploadFolder($request->folder, 'math_manipulatives');
+        $this->uploadFolder($request->folder, 'math_manipulatives');
 
-        // $math_manipulative_id = DB::table('math_manipulatives')->insertGetId([
-        //     'name'          => $request->title,
-        //     'thumbnail'     => $thumbnail,
-        //     'folder_name'   => key($request->folder),
-        // ]);
+        $math_manipulative_id = DB::table('math_manipulatives')->insertGetId([
+            'name'          => $request->title,
+            'thumbnail'     => $thumbnail,
+            'folder_name'   => key($request->folder),
+        ]);
 
-        // $log_data =   'Added math manipulative ID '.$math_manipulative_id;
-        // event(new DatabaseTransactionEvent($log_data));
+        $log_data =   'Added math manipulative ID '.$math_manipulative_id;
+        event(new DatabaseTransactionEvent($log_data));
 
-        // return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'New item added successfully !']);
+        return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'New item added successfully !']);
     }
 
     public function configurationDelete($id)
