@@ -283,13 +283,13 @@ import BreezeButton from '@/Components/Button.vue';
                                     </details> -->
                                 </template>
                                 <template v-if="current_tab == 2">
-                                    <article class="rounded border border-dashed border-gray-500 bg-white p-6" v-if="previous_fee.length" v-for="fee, fee_index in previous_fee">
+                                    <article class="rounded border border-dashed border-gray-500 bg-white p-6" v-if="Object.keys(previous_fee).length" v-for="fee, fee_index in previous_fee">
                                         <div class="flex items-start">
                                             <div>
-                                                <strong class="rounded border border-blue-500 bg-blue-400 px-3 py-1.5 text-[12px] font-medium text-white">{{ moment(fee.fee_info.fee_month).format('MMMM Y') }}</strong>
+                                                <strong class="rounded border border-blue-500 bg-blue-400 px-3 py-1.5 text-[12px] font-medium text-white">{{ moment(fee.fee_month).format('MMMM Y') }}</strong>
                                                 <h3 class="mt-4 text-lg font-medium sm:text-sm space-x-2">
-                                                    <span> {{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }}) </span>
-                                                    <span class="text-red-500 hover:underline cursor-pointer font-semibold" @click="deleteClass(fee.fee_info.student_fee_id, fee.fee_info.fee_id, fee.fee_info.invoice_id, fee.fee_info.admission_date)">Delete</span>
+                                                    <span> {{ fee.programme_name }} (Level {{ fee.programme_level }}) </span>
+                                                    <!-- <span class="text-red-500 hover:underline cursor-pointer font-semibold" @click="deleteClass(fee.student_fee_id, fee.fee_id, fee.invoice_id, fee.admission_date)">Delete</span> -->
                                                 </h3>
                                                 <div class="mt-3 flex space-x-4">
                                                     <div class="flex space-x-4 text-xs border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
@@ -309,30 +309,15 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </div>
                                                 <div class="mt-3 sm:flex sm:items-center sm:gap-2">
                                                     <div class="flex items-center gap-1 text-gray-500">
-                                                        <p class="text-sm font-medium">{{ fee.fee_info.centre_name }}</p>
+                                                        <p class="text-sm font-medium">{{ fee.centre_name }}</p>
                                                     </div>
                                                     <span class="hidden sm:block" aria-hidden="true">&middot;</span>
                                                     <div class="flex items-center gap-1 text-gray-500">
-                                                        <p class="text-sm font-medium">{{ fee.fee_info.programme_type }}</p>
+                                                        <p class="text-sm font-medium">{{ fee.programme_type }}</p>
                                                     </div>
                                                     <span class="hidden sm:block" aria-hidden="true">&middot;</span>
                                                     <div class="flex items-center gap-1 text-gray-500">
-                                                        <p class="text-sm font-medium">{{ fee.fee_info.class_method }}</p>
-                                                    </div>
-                                                </div>
-                                                <div class="flex space-x-2 mt-3">
-                                                    <div class="">
-                                                        <label for="fee_status" class="block text-sm font-bold text-gray-700"> Status </label>
-                                                        <div class="mt-1 flex rounded-md shadow-sm items-center space-x-2">
-                                                            <select name="fee_status" id="fee_status" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="fee.fee_info.student_fee_status" autocomplete="off">
-                                                                <option value="">-- Not Set --</option>
-                                                                <option :value="fee_status.id" v-for="(fee_status, index) in $page.props.fee_status" :key="index">{{ fee_status.name }}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mt-6">
-                                                        <BreezeButton class="py-2.5 px-4" v-if="fee.fee_info.student_fee_status == 2" @click="showTransferStudent(fee.fee_info.fee_id, fee.fee_info.student_fee_id, fee.fee_info.programme_id, fee.fee_info.class_type_id, fee.fee_info.programme_level)">Confirm</BreezeButton>
-                                                        <BreezeButton class="py-2.5 px-4" v-else @click="changeFeeStatus(fee.fee_info.student_fee_id, fee.fee_info.student_fee_status)">{{ fee.fee_info.student_fee_status == 2 ? 'Transfer Student' : 'Confirm'}}</BreezeButton>
+                                                        <p class="text-sm font-medium">{{ fee.class_method }}</p>
                                                     </div>
                                                 </div>
                                             </div>
