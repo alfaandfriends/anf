@@ -221,6 +221,7 @@ export default {
         },
         change(event) {
             const files = event.target.files;
+            console.log(files)
 
             // Create an empty object to represent the folder structure
             const folderTree = {};
