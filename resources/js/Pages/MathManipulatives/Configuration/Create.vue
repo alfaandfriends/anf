@@ -91,7 +91,13 @@ import BreezeButton from '@/Components/Button.vue';
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mb-4 space-y-2">
+                                    <div class="mb-4">
+                                        <label for="folder_name" class="block text-sm font-bold text-gray-700"> Folder Name <span class="text-red-500">*</span></label>
+                                        <div class="mt-1 flex rounded-md.shadow-sm">
+                                            <input type="text" name="folder_name" id="folder_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.folder_name ? 'border-red-300' : 'border-gray-300'" v-model="form.folder_name" autocomplete="off"/>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="mb-4 space-y-2">
                                         <label class="block text-sm text-gray-700 font-bold"> Math Manipulative Folder </label>
                                         <div class="flex items-center justify-center bg-grey-lighter" v-if="Object.keys(form.folder).length === 0">
                                             <label class="w-full flex flex-col items-center px-4 py-6 bg-white text-indigo-400 rounded-lg shadow-lg tracking-wide uppercase border border-indigo cursor-pointer hover:bg-indigo-400 hover:text-white">
@@ -106,7 +112,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <folder-tree :folders="form.folder" />
                                             <button class="py-2 px-4 bg-red-600 hover:bg-red-500 rounded text-white" @click="removeFolder()">Remove Folder</button>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
                                     <div class="flex items-center justify-end">
                                         <div class="flex space-x-2">
@@ -151,7 +157,7 @@ export default {
             },
             form: {
                 title: '',
-                folder: [],
+                folder_name: '',
                 thumbnail: {
                     image_url: '',
                     file: ''

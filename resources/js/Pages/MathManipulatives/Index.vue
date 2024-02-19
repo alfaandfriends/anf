@@ -20,7 +20,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-10">
                                     <div class="flex flex-col divide-y items-center justify-center bg-white rounded-lg overflow-hidden shadow-lg transform transition hover:scale-[0.99] hover:cursor-pointer" v-for="item in $page.props.math_manipulatives" @click="openNewTab(item.folder_name)">
                                         <div class="flex items-center h-60 w-60">
-                                            <img :src="'/storage/math_manipulatives/thumbnails/'+item.thumbnail">
+                                            <img :src="'/math_manipulatives/thumbnails/'+item.thumbnail">
                                         </div>
                                         <div class="w-full p-4 text-center bg-indigo-200">
                                             <h3 class="font-medium text-gray-900">{{ item.name }}</h3>
@@ -32,8 +32,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="bg-white shadow-md rounded border" v-else>
                             <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 lg:py-24">
                               <div class="max-w-3xl mx-auto text-center">
-                                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-3xl">It seems no math manipulatives have been added.</h2>
-                                <p class="mt-3 text-xl font-sans text-gray-500 sm:mt-4">To start adding one, click on the configuration button.</p>
+                                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-3xl">No math manipulatives have been added.</h2>
                               </div>
                             </div>
                           </div>
