@@ -45,39 +45,39 @@ class MathManipulativesController extends Controller
     public function configurationStore(Request $request)
     {
         // dd($request->all());
-        // $request->validate([
-        //     'title'             =>  'required',
-        //     // 'thumbnail'         =>  'required',
-        // ]);
-
-        // if($request->file('thumbnail.file') == null){
-        //     return back()->with(['type'=>'error', 'message'=>'Thumbnail is required!']);
-        // }
-
-        /* Thumbnail */
-        $file = $request->file('thumbnail.file');
-        $extension = $file->getClientOriginalExtension();
-        $thumbnail = time() . '.' . $extension;
-
-        Storage::putFileAs('math_manipulatives/thumbnails',$file, $thumbnail);
-
-        /* HTML5 Folder */
-        if (Storage::exists('math_manipulatives/'.key($request->folder))) {
-            return back()->with(['type'=>'error', 'message'=>'Folder exists!']);
-        }
-
-        $this->uploadFolder($request->folder, 'math_manipulatives');
-
-        $math_manipulative_id = DB::table('math_manipulatives')->insertGetId([
-            'name'          => $request->title,
-            'thumbnail'     => $thumbnail,
-            'folder_name'   => key($request->folder),
+        $request->validate([
+            'title'             =>  'required',
+            // 'thumbnail'         =>  'required',
         ]);
 
-        $log_data =   'Added math manipulative ID '.$math_manipulative_id;
-        event(new DatabaseTransactionEvent($log_data));
+        if($request->file('thumbnail.file') == null){
+            return back()->with(['type'=>'error', 'message'=>'Thumbnail is required!']);
+        }
 
-        return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'New item added successfully !']);
+        // /* Thumbnail */
+        // $file = $request->file('thumbnail.file');
+        // $extension = $file->getClientOriginalExtension();
+        // $thumbnail = time() . '.' . $extension;
+
+        // Storage::putFileAs('math_manipulatives/thumbnails',$file, $thumbnail);
+
+        // /* HTML5 Folder */
+        // if (Storage::exists('math_manipulatives/'.key($request->folder))) {
+        //     return back()->with(['type'=>'error', 'message'=>'Folder exists!']);
+        // }
+
+        // $this->uploadFolder($request->folder, 'math_manipulatives');
+
+        // $math_manipulative_id = DB::table('math_manipulatives')->insertGetId([
+        //     'name'          => $request->title,
+        //     'thumbnail'     => $thumbnail,
+        //     'folder_name'   => key($request->folder),
+        // ]);
+
+        // $log_data =   'Added math manipulative ID '.$math_manipulative_id;
+        // event(new DatabaseTransactionEvent($log_data));
+
+        // return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'New item added successfully !']);
     }
 
     public function configurationDelete($id)
