@@ -274,8 +274,8 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="grid grid-cols-1 divide-y divide-gray-400 divide-dashed border-x border-t border-b border-gray-300 mb-3" v-else>
                                 <div class="p-3 bg-gray-50" v-if="!form.report_data.length">No objectives found.</div>
                                 <div class="p-5 bg-gray-50 hover:bg-gray-100" v-for="data, index in form.report_data">
-                                    <details class="group space-y-4">
-                                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
+                                    <!-- <details class="group space-y-4">
+                                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none"> -->
                                             <div class="space-y-2 ml-2 text-sm">
                                                 <div class="flex space-x-4 items-center justify-between">
                                                     <div class="flex items-center space-x-2">
@@ -290,20 +290,20 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </div>
                                                 <!-- <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500">Lesson {{ data.lesson_name }}</p> -->
                                             </div>
-                                            <span class="transition group-open:rotate-180">
+                                            <!-- <span class="transition group-open:rotate-180">
                                                 <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path>
                                                 </svg>
-                                            </span>
-                                        </summary>
-                                        <ul class="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg divide-y">
+                                            </span> -->
+                                        <!-- </summary> -->
+                                        <!-- <ul class="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg divide-y">
                                             <li class="w-full" v-for="activitiy_procedure, activity_procedure_index in data.activities_procedures">
                                                 <div class="flex items-center pl-3">
                                                     <input :id="activitiy_procedure.id" type="checkbox" :value="activitiy_procedure.id" v-model="form.report_data[index].activities_procedures[activity_procedure_index].achieved" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-300 focus:ring-0">
                                                     <label :for="activitiy_procedure.id" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 cursor-pointer">{{ activitiy_procedure.name }}</label>
                                                 </div>
                                             </li>
-                                        </ul>
-                                    </details>
+                                        </ul> -->
+                                    <!-- </details> -->
                                 </div>
                             </div>
                         </div>
