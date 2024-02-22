@@ -62,11 +62,11 @@
                 });
             });
         @endphp
-        <table width="100%" style="margin-top: 20px; page-break-inside: auto">
+        <table width="100%" style="margin-top: 20px; page-break-inside: auto; border-top: 2px solid; border-bottom: 2px solid; border-left: 2px solid; border-right: 2px solid;">
             <tbody>
                 <tr>
-                    <th width="40%" style="background-color: #A0C49D; border: 2px solid; padding: 10px; font-size: 12px">Date</th>
-                    <th width="60%" style="background-color: #A0C49D; border: 2px solid; padding: 10px; font-size: 12px" colspan="2">
+                    <th width="40%" style="background-color: #A0C49D; border: 1px solid; padding: 10px; font-size: 12px">Date</th>
+                    <th width="60%" style="background-color: #A0C49D; border: 1px solid; padding: 10px; font-size: 12px" colspan="2">
                         <div>
                             {{ date("d-m-Y", strtotime($report->date)) }} ({{ $report->attendance_status_name }}) 
                         </div>
@@ -77,8 +77,8 @@
                 </tr>
                 @foreach($filteredData as $term_book_name => $term_book)
                     <tr>
-                        <th style="background-color: #C4D7B2; border: 2px solid; padding: 10px; font-size: 12px">Term / Book</th>
-                        <th style="background-color: #C4D7B2; border: 2px solid; padding: 10px; font-size: 12px" colspan="2">
+                        <th style="background-color: #C4D7B2; border: 1px solid; padding: 10px; font-size: 12px">Term / Book</th>
+                        <th style="background-color: #C4D7B2; border: 1px solid; padding: 10px; font-size: 12px" colspan="2">
                             <div>
                                 {{ $term_book_name }}
                             </div>
@@ -86,14 +86,14 @@
                     </tr>
                     @foreach($term_book as $unit_name => $unit)
                         <tr>
-                            <th style="background-color: #E1ECC8; border: 2px solid; padding: 10px; font-size: 12px; text-decoration: underline;" colspan="3">Unit {{ $unit_name }}</th>
+                            <th style="background-color: #E1ECC8; border: 1px solid; padding: 10px; font-size: 12px; text-decoration: underline;" colspan="3">Unit {{ $unit_name }}</th>
                         </tr>
                         @foreach($unit as $lesson_name => $lesson)
                             <tr>
-                                <td style="border: 2px solid; padding: 10px;">
+                                <td style=" border: 1px solid; padding: 10px;">
                                     <div style="font-weight: bold;"><b>Lesson {{ $lesson_name }}</b></div>
                                 </td>
-                                <td valign="top" style="text-align: justify; border: 2px solid; padding: 10px;" colspan="2">
+                                <td valign="top" style="text-align: justify; border: 1px solid; padding: 10px;" colspan="2">
                                     @foreach($lesson['objectives'] as $key => $objective)
                                         <div style="display: block;">
                                             <div style="display: inline-block; vertical-align: middle; line-height: 20px; ">
@@ -111,16 +111,18 @@
                         @endforeach
                     @endforeach
                 @endforeach
-                <tr>
-                    <th width="15%" style="text-align: left; background-color: #F7FFE5; border: 2px solid; padding: 10px; font-size: 12px" colspan="3">COMMENT</th>
-                </tr>
-                <tr>
-                    <td width="15%" style="border: 2px solid; padding: 10px; font-size: 12px" colspan="3">
-                        <div>
-                            <i>{!! nl2br($report->comments) !!}</i>
-                        </div>
-                    </td>
-                </tr>
+                @if($report->comments)
+                    <tr>
+                        <th width="15%" style="text-align: left; background-color: #F7FFE5; border: 1px solid; padding: 10px; font-size: 12px" colspan="3">COMMENT</th>
+                    </tr>
+                    <tr>
+                        <td width="15%" style="border: 1px solid; padding: 10px; font-size: 12px" colspan="3">
+                            <div>
+                                <i>{!! nl2br($report->comments) !!}</i>
+                            </div>
+                        </td>
+                    </tr>
+                @endif
             </tbody>
         </table>
     @endforeach

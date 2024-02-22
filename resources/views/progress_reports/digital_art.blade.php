@@ -78,67 +78,69 @@
                 });
             });
         @endphp
-        <table width="100%" style="margin-top: 20px; page-break-inside: auto">
+        <table width="100%" style="margin-top: 20px; page-break-inside: auto; border-top: 2px solid; border-bottom: 2px solid; border-left: 2px solid; border-right: 2px solid;">
             <tbody>
-            <tr>
-                <th width="40%" style="background-color: #A0C49D; border: 2px solid; padding: 10px; font-size: 12px">Date</th>
-                <th width="60%" style="background-color: #A0C49D; border: 2px solid; padding: 10px; font-size: 12px" colspan="2">
-                    <div>
-                        {{ date("d-m-Y", strtotime($report->date)) }} ({{ $report->attendance_status_name }}) 
-                    </div>
-                    <div>
-                        
-                    </div>
-                </th>
-            </tr>
-            @foreach($filteredData as $theme_name => $lessons)
                 <tr>
-                    <th style="background-color: #C4D7B2; border: 2px solid; padding: 10px; font-size: 12px">Theme</th>
-                    <th style="background-color: #C4D7B2; border: 2px solid; padding: 10px; font-size: 12px" colspan="2">
+                    <th width="40%" style="background-color: #A0C49D; border: 1px solid; padding: 10px; font-size: 12px">Date</th>
+                    <th width="60%" style="background-color: #A0C49D; border: 1px solid; padding: 10px; font-size: 12px" colspan="2">
                         <div>
-                            {{ $theme_name }}
+                            {{ date("d-m-Y", strtotime($report->date)) }} ({{ $report->attendance_status_name }}) 
+                        </div>
+                        <div>
+                            
                         </div>
                     </th>
                 </tr>
-                @foreach($lessons as $lesson_name => $activities)
-                    @foreach($activities as $activity_name => $outcomes)
-                        <tr>
-                            <th style="text-align: left; background-color: #E1ECC8; border: 2px solid; padding: 10px; font-size: 12px; text-decoration: underline;" colspan="3">{{ $lesson_name }} : {{ $activity_name }}</th>
-                        </tr>
-                        @foreach($outcomes as $outcome_name => $objectives)
+                @foreach($filteredData as $theme_name => $lessons)
+                    <tr>
+                        <th style="background-color: #C4D7B2; border: 1px solid; padding: 10px; font-size: 12px">Theme</th>
+                        <th style="background-color: #C4D7B2; border: 1px solid; padding: 10px; font-size: 12px" colspan="2">
+                            <div>
+                                {{ $theme_name }}
+                            </div>
+                        </th>
+                    </tr>
+                    @foreach($lessons as $lesson_name => $activities)
+                        @foreach($activities as $activity_name => $outcomes)
                             <tr>
-                                <td style="border: 2px solid; padding: 10px;">
-                                    <div style="font-weight: bold"><b>{{ $outcome_name }}</b></div>
-                                </td>
-                                <td valign="top" style="text-align: justify; border: 2px solid; padding: 10px;" colspan="2">
-                                    @foreach($objectives['objectives'] as $key => $objective)
-                                        <div style="display: block;">
-                                            <div style="display: inline-block; vertical-align: middle; line-height: 20px; ">
-                                                @if($objective['achieved'])
-                                                    <img src="{{ public_path('/images/progress_report/circle-check.svg') }}" width="15px"/>
-                                                @else
-                                                    <img src="{{ public_path('/images/progress_report/circle-cross.svg') }}" width="15px"/>
-                                                @endif
-                                                {{ $objective['name'] }}
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </td>
+                                <th style="text-align: left; background-color: #E1ECC8; border: 1px solid; padding: 10px; font-size: 12px; text-decoration: underline;" colspan="3">{{ $lesson_name }} : {{ $activity_name }}</th>
                             </tr>
+                            @foreach($outcomes as $outcome_name => $objectives)
+                                <tr>
+                                    <td style="border: 1px solid; padding: 10px;">
+                                        <div style="font-weight: bold"><b>{{ $outcome_name }}</b></div>
+                                    </td>
+                                    <td valign="top" style="text-align: justify; border: 1px solid; padding: 10px;" colspan="2">
+                                        @foreach($objectives['objectives'] as $key => $objective)
+                                            <div style="display: block;">
+                                                <div style="display: inline-block; vertical-align: middle; line-height: 20px; ">
+                                                    @if($objective['achieved'])
+                                                        <img src="{{ public_path('/images/progress_report/circle-check.svg') }}" width="15px"/>
+                                                    @else
+                                                        <img src="{{ public_path('/images/progress_report/circle-cross.svg') }}" width="15px"/>
+                                                    @endif
+                                                    {{ $objective['name'] }}
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </td>
+                                </tr>
+                            @endforeach
                         @endforeach
                     @endforeach
                 @endforeach
-            @endforeach
-            <tr>
-                <th width="15%" style="text-align: left; background-color: #F7FFE5; border: 2px solid; padding: 10px; font-size: 12px" colspan="3">COMMENT</th>
-            </tr>
-            <tr>
-                <td width="15%" style="border: 2px solid; padding: 10px; font-size: 12px" colspan="3">
-                    <div>
-                        <i>{!! nl2br($report->comments) !!}</i>
-                    </div>
-                </td>
-            </tr>
+                @if($report->comments)
+                    <tr>
+                        <th width="15%" style="text-align: left; background-color: #F7FFE5; border: 1px solid; padding: 10px; font-size: 12px" colspan="3">COMMENT</th>
+                    </tr>
+                    <tr>
+                        <td width="15%" style="border: 1px solid; padding: 10px; font-size: 12px" colspan="3">
+                            <div>
+                                <i>{!! nl2br($report->comments) !!}</i>
+                            </div>
+                        </td>
+                    </tr>
+                @endif
             </tbody>
         </table>
     @endforeach
