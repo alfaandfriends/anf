@@ -173,6 +173,7 @@ class ProgressReportController extends Controller
                                             ->select('children.name as student_name', 'students.date_joined','programmes.name as programme_name', 
                                                     'programme_levels.level as programme_level', 'progress_reports.upcoming_feedback', 'progress_reports.improvement_feedback')
                                             ->where('progress_report_details.progress_report_id', $request->progress_report_id)->first();
+                                            
         $data['student_data']->date_joined = Carbon::hasFormat($data['student_data']->date_joined, 'Y-m-d') && Carbon::createFromFormat('Y-m-d', $data['student_data']->date_joined)->isValid() ? Carbon::parse($data['student_data']->date_joined)->format('d/m/Y') : 'Not Set';
 
         $data['report_data']        =   DB::table('progress_reports')

@@ -48,16 +48,21 @@ class ClassController extends Controller
                                 $query->where('classes.class_day_id', request('day'));
                             })
                             ->where('classes.centre_id', '=', $request->centre_id)
-                            ->select([  'programmes.name as programme_name', 
+                            ->select([  'programmes.id as programme_id', 
+                                        'programmes.name as programme_name', 
+                                        'class_days.id as class_day_id', 
                                         'class_days.name as class_day', 
                                         'programme_levels.level', 
                                         'classes.id', 
                                         'classes.centre_id', 
                                         'capacity',
+                                        'class_types.id as class_type_id',
                                         'class_types.name as type',
                                         'start_time',
                                         'end_time',
-                                        'classes.status'])->paginate(10);
+                                        'classes.status'])
+                            ->orderBy('programme_id')->orderBy('level')->orderBy('class_type_id')->orderBy('class_day_id')->orderBy('start_time')
+                            ->paginate(10);
 
         return Inertia::render('CentreManagement/Classes/Index', [
             'filter'            => request()->all('search', 'centre_id', 'day'),
