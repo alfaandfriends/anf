@@ -16,7 +16,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <BreezeButton buttonType="info" @click="$inertia.get(route('math_manipulatives.configuration'))">Configuration</BreezeButton>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5 gap-10" v-if="$page.props.math_manipulatives.length">
-                            <div class="group relative block cursor-pointer" v-for="item in $page.props.math_manipulatives">
+                            <div class="group relative block cursor-pointer" v-for="item in $page.props.math_manipulatives" @click="openNewTab(item.folder_name)">
                                 <span class="absolute inset-0 border-2 border-dashed border-black rounded"></span>
                                 <div class="rounded px-6 py-4 flex flex-col justify-between h-full transform items-center border-2 border-black  bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2">
                                     <!-- <div class="flex items-center h-20 w-20"> -->
