@@ -10,7 +10,7 @@ import BreezeButton from '@/Components/Button.vue';
         <template #header></template>
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
-                <div class="mx-auto">
+                <div class="m-3">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex justify-end pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
                             <div class="flex">
@@ -46,9 +46,9 @@ import BreezeButton from '@/Components/Button.vue';
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                 <div class="flex justify-center space-x-2">
-                                                    <BreezeButton buttonType="warning" class="py-1 px-2" @click="edit(result.id, result.name)">Edit</BreezeButton>
+                                                    <BreezeButton buttonType="warning" @click="edit(result.id, result.name)">Edit</BreezeButton>
                                                     <BreezeButton buttonType="danger" @click="destroy(result.id)">Delete</BreezeButton>
-                                                    <BreezeButton buttonType="blue" class="py-1 px-2" @click="viewThemes(result.id)">View Themes</BreezeButton>
+                                                    <BreezeButton buttonType="blue" @click="viewThemes(result.id)">View Themes</BreezeButton>
                                                 </div>
                                             </td>
                                         </tr>

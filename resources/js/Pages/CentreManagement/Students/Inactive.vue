@@ -57,7 +57,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="students.status == true ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ students.status == true ? 'Active' : 'Inactive' }} </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        <BreezeButton buttonType="warning" title="Edit Class" @click="editStudent(students.id)" v-if="$page.props.can.edit_students">
+                                        <BreezeButton buttonType="info" class="py-1 px-4" title="Edit Class" @click="editStudent(students.id)" v-if="$page.props.can.edit_students">
                                             Edit Student
                                         </BreezeButton>
                                     </td>

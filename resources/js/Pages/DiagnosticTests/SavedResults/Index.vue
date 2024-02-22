@@ -115,9 +115,9 @@ import BreezeButton from '@/Components/Button.vue';
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center space-x-2">
-                                        <BreezeButton buttonType="info" class="py-1 px-2" @click="updateStatus(result.id, result.admitted, result.centre_id, result.notes)">Status</BreezeButton>
+                                        <BreezeButton buttonType="info" class="py-1 px-4" @click="updateStatus(result.id, result.admitted, result.centre_id, result.notes)">Status</BreezeButton>
                                         <BreezeButton buttonType="blue" @click="viewDetails(result.id)">View Details</BreezeButton>
-                                        <BreezeButton buttonType="danger" class="py-1 px-2" @click="deleteStatus(result.id)">Delete</BreezeButton>
+                                        <BreezeButton buttonType="danger" @click="deleteStatus(result.id)">Delete</BreezeButton>
                                     </div>
                                 </td>
                             </tr>

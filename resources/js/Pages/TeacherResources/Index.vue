@@ -107,7 +107,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center space-x-2">
                                         <BreezeButton buttonType="blue" @click="viewResource(result.id)" v-if="$page.props.can.view_teacher_resources">View / Download</BreezeButton>
-                                        <BreezeButton buttonType="warning" @click="editResource(result.id)" v-if="$page.props.can.edit_teacher_resources">Edit</BreezeButton>
+                                        <BreezeButton buttonType="info" class="py-1 px-4" @click="editResource(result.id)" v-if="$page.props.can.edit_teacher_resources">Edit</BreezeButton>
                                         <BreezeButton buttonType="danger" @click="deleteResource(result.id)" v-if="$page.props.can.delete_teacher_resources">Delete</BreezeButton>
                                     </div>
                                 </td>

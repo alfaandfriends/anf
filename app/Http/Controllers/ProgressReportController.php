@@ -121,12 +121,14 @@ class ProgressReportController extends Controller
                                     ->where('progress_report_id', $request->progress_report_id)->orderBy('progress_report_details.date')->get();
         
         return Inertia::render('ProgressReport/Templates/'.$config_info->vue_template, [
-            'student_info'          => $student_info,
-            'math_terms_books'      => $math_terms_books,
-            'coding_lessons'        => $coding_lessons,
-            'art_themes'            => $art_themes,
-            'progress_reports'      => $progress_reports,
-            'attendance_status'     => $attendance_status,
+            'progress_report_id'    =>  $request->progress_report_id,
+            'report_details'        =>  $report_details,
+            'student_info'          =>  $student_info,
+            'math_terms_books'      =>  $math_terms_books,
+            'coding_lessons'        =>  $coding_lessons,
+            'art_themes'            =>  $art_themes,
+            'progress_reports'      =>  $progress_reports,
+            'attendance_status'     =>  $attendance_status,
         ]);
     }
 
@@ -149,6 +151,15 @@ class ProgressReportController extends Controller
 
         return back()->with(['type'=>'success', 'message'=>'Progress report updated successfully !']);
     }
+
+    public function storeSummary(Request $request){
+        DB::table('progress_reports')->where('id', $request->id)->update([
+            'upcoming_feedback' => $request->upcoming_feedback,
+            'improvement_feedback' => $request->improvement_feedback,
+        ]);
+
+        return back()->with(['type'=>'success', 'message'=>'Feedback has been saved']);
+    }
     
     public function getFullProgressReports(Request $request){
         $data['student_data']        =   DB::table('progress_reports')
@@ -160,7 +171,7 @@ class ProgressReportController extends Controller
                                             ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                                             ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
                                             ->select('children.name as student_name', 'students.date_joined','programmes.name as programme_name', 
-                                                    'programme_levels.level as programme_level')
+                                                    'programme_levels.level as programme_level', 'progress_reports.upcoming_feedback', 'progress_reports.improvement_feedback')
                                             ->where('progress_report_details.progress_report_id', $request->progress_report_id)->first();
         $data['student_data']->date_joined = Carbon::hasFormat($data['student_data']->date_joined, 'Y-m-d') && Carbon::createFromFormat('Y-m-d', $data['student_data']->date_joined)->isValid() ? Carbon::parse($data['student_data']->date_joined)->format('d/m/Y') : 'Not Set';
 
@@ -174,7 +185,7 @@ class ProgressReportController extends Controller
         $data['report_template']    =    DB::table('progress_reports')
                                             ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
                                             ->where('progress_reports.id', $request->progress_report_id)->pluck('progress_report_configs.report_template')->first();
-        // dd($data);
+                                            
         $pdf = PDF::setPaper('a4', 'portrait')->loadView($data['report_template'], compact('data'));
         return $pdf->stream();
     }

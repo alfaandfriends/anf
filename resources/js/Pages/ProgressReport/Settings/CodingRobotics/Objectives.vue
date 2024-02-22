@@ -12,8 +12,8 @@ import BreezeButton from '@/Components/Button.vue';
             
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
-                    <BreezeButton buttonType="gray" class="py-2 px-4" :route="route('progress_report.settings.coding_robotics.topics', {'level_id': $page.props.level_id, 'lesson_id': $page.props.lesson_id})">Back</BreezeButton>
-                    <BreezeButton class="py-2 px-4" @click="create">New Objective</BreezeButton>
+                    <BreezeButton buttonType="gray" :route="route('progress_report.settings.coding_robotics.topics', {'level_id': $page.props.level_id, 'lesson_id': $page.props.lesson_id})">Back</BreezeButton>
+                    <BreezeButton @click="create">New Objective</BreezeButton>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-4">
@@ -46,9 +46,9 @@ import BreezeButton from '@/Components/Button.vue';
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="warning" class="py-1 px-2" @click="edit(result.id, result.name)">Edit</BreezeButton>
+                                            <BreezeButton buttonType="warning" @click="edit(result.id, result.name)">Edit</BreezeButton>
                                             <BreezeButton buttonType="danger" @click="destroy(result.id)">Delete</BreezeButton>
-                                            <BreezeButton buttonType="blue" class="py-1 px-2" @click="viewActivitiesProcedures(result.id)">View Activities & Procedures</BreezeButton>
+                                            <BreezeButton buttonType="blue" @click="viewActivitiesProcedures(result.id)">View Activities & Procedures</BreezeButton>
                                         </div>
                                     </td>
                                 </tr>

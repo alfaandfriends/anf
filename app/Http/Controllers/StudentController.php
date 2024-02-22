@@ -381,6 +381,7 @@ class StudentController extends Controller
             ];
         })->values()->all();
 
+        $academics = [];
         $fees_by_month  =   collect($results)->groupBy('fee_month');
         foreach ($fees_by_month as $fees) {
             foreach($fees as $fee){
@@ -412,10 +413,12 @@ class StudentController extends Controller
                 $academics[$fee->student_fee_id] =   $info;
             }
         }
-        $student_academics['history']   =   collect($academics)->filter(function ($fee) {
-            return $fee['fee_month'] < Carbon::now()->format('Y-m');
-        });
-        // dd($student_academics);
+
+        if(count($academics)){
+            $student_academics['history']   =   collect($academics)->filter(function ($fee) {
+                return $fee['fee_month'] < Carbon::now()->format('Y-m');
+            });
+        }
 
         $gender_list        =   DB::table('genders')->get();
         $programme_list     =   ProgrammeHelper::programmes();

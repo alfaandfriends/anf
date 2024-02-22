@@ -15,7 +15,18 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="flex lg:grow sm:justify-end" v-if="$page.props.can.create_math_manipulatives">
                             <BreezeButton buttonType="info" @click="$inertia.get(route('math_manipulatives.configuration'))">Configuration</BreezeButton>
                         </div>
-                        <div class="bg-gray-50 rounded shadow p-6" v-if="$page.props.math_manipulatives.length">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5 gap-10" v-if="$page.props.math_manipulatives.length">
+                            <div class="group relative block cursor-pointer" v-for="item in $page.props.math_manipulatives">
+                                <span class="absolute inset-0 border-2 border-dashed border-black rounded"></span>
+                                <div class="rounded px-6 py-4 flex flex-col justify-between h-full transform items-center border-2 border-black  bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2">
+                                    <!-- <div class="flex items-center h-20 w-20"> -->
+                                        <img :src="'/math_manipulatives/thumbnails/'+item.thumbnail">
+                                    <!-- </div> -->
+                                    <h3 class="mt-2 text-xl font-medium sm:text-xl">{{ item.name }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="bg-gray-50 rounded shadow p-6" v-if="$page.props.math_manipulatives.length">
                             <div class="p-4">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-10">
                                     <div class="flex flex-col divide-y items-center justify-center bg-white rounded-lg overflow-hidden shadow-lg transform transition hover:scale-[0.99] hover:cursor-pointer" v-for="item in $page.props.math_manipulatives" @click="openNewTab(item.folder_name)">
@@ -28,7 +39,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="bg-white shadow-md rounded border" v-else>
                             <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 lg:py-24">
                               <div class="max-w-3xl mx-auto text-center">

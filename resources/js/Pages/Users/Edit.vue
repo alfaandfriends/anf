@@ -322,7 +322,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <BreezeButton type="submit">Save</BreezeButton>
                                         </div>
                                         <div class="flex">
-                                            <BreezeButton :class="'px-4 py-2 bg-red-600 hover:bg-red-700 drop-shadow-sm'" @click="resetPassword($page.props.user_info.user_id)">Reset Password</BreezeButton>
+                                            <BreezeButton buttonType="danger" class="py-2 px-4" @click="resetPassword($page.props.user_info.user_id)">Reset Password</BreezeButton>
                                         </div>
                                     </div>
                                 </div>

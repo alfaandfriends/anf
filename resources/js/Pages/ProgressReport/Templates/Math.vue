@@ -78,6 +78,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                         </div>
+                        <FeedbackSummary :report_details="$page.props.report_details"/>
                     </div>
                 </form>
             </div>
@@ -115,7 +116,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="grid grid-cols-1">
                             <hr class="my-4">
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <div class="mb-3">
                                 <label for="title" class="block text-sm font-bold text-gray-700"> Term / Book </label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
@@ -157,9 +158,49 @@ import BreezeButton from '@/Components/Button.vue';
                                     />
                                 </div>
                             </div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4">
                             <div class="mb-3">
                                 <label for="title" class="block text-sm font-bold text-gray-700"> Unit </label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
+                                <!-- <Multiselect
+                                    mode="tags"
+                                    v-model="search.unit_id"
+                                    trackBy="name"
+                                    label="name"
+                                    placeholder="Please Select"
+                                    :close-on-select="false"
+                                    :min-chars="1"
+                                    :options="options.units"
+                                    :canClear="false"
+                                    :searchable="false"
+                                    valueProp="id"
+                                    :classes="{
+                                        container: 'relative mx-auto w-full flex items-center justify-start box-border cursor-pointer rounded-sm bg-white text-base leading-snug border border-gray-300' ,
+                                        containerDisabled: 'cursor-not_allowed bg-gray-100 border focus:border-gray-200 h-10',
+                                        containerOpen: 'rounded-b-none',
+                                        containerOpenTop: 'rounded-t-none',
+                                        containerActive: 'border border-gray-300',
+                                        search: 'w-full absolute inset-0 border-gray-300 focus:outline-none focus:border-transparent focus:ring-0 appearance-none text-base font-sans bg-white rounded-sm',
+                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                        dropdownHidden: 'hidden',
+                                        options: 'flex flex-col p-0 m-0 list-none w-full',
+                                        optionsTop: 'flex-col-reverse',
+                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3 text-sm',
+                                        optionPointed: 'text-gray-800 bg-gray-100',
+                                        optionSelected: 'text-white bg-indigo-500',
+                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        wrapper: 'flex w-full p-2 items-center justify-between',
+                                        tagWrapper: 'flex w-full justify-center',
+                                        tags: 'flex flex-wrap gap-2 items-center justify-start',
+                                        tag: 'flex text-sm items-center bg-indigo-300 rounded pl-3 pr-1 py-1',
+                                    }"
+                                /> -->
                                     <Multiselect 
                                         @select="getLessons(search.unit_id)"
                                         v-model="search.unit_id"
@@ -195,6 +236,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
                                             noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
                                             noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                            
                                         }"
                                     />
                                 </div>
@@ -310,7 +352,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="mb-3">
                                 <label for="title" class="block text-sm font-bold text-gray-700"> Comments </label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
-                                    <textarea class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="4" v-model="form.comments"></textarea>
+                                    <textarea class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="4" v-model="form.comments" placeholder="What you see is what you get..."></textarea>
                                 </div>
                             </div>
                         </div>
@@ -346,6 +388,7 @@ import Modal from '@/Components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
 import Multiselect from '@vueform/multiselect'
+import FeedbackSummary from './FeedbackSummary.vue'
 
 export default {
     components: {
@@ -353,6 +396,7 @@ export default {
     },
     data(){
         return{
+            value: [],
             show_progress_report: false,
             searching: false,
             progress_report_list: {},
@@ -375,8 +419,8 @@ export default {
             },
             search: {
                 term_book_id: '',
-                unit_id: '',
-                lesson_id: '',
+                unit_id: [],
+                lesson_id: [],
             },
             form: {
                 date: '',
@@ -414,7 +458,7 @@ export default {
             this.options.units = [];
             this.options.lessons = [];
             
-            this.search.unit_id = '';
+            this.search.unit_id = [];
             this.search.lesson_id = '';
 
             axios.get(route('progress_report.get_math_units', term_book_id))
@@ -484,7 +528,7 @@ export default {
         },
         clearSearch(){
             this.search.term_book_id = ''
-            this.search.unit_id = ''
+            this.search.unit_id = []
             this.search.lesson_id = ''
         }
     },

@@ -10,7 +10,7 @@
         <template #header></template>
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
-                <div class="mx-auto">
+                <div class="m-3">
                     <div class="align-middle inline-block w-full lg:w-1/2 px-2">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
                             <BreezeButton @click="addPermission()" v-if="$page.props.can.create_permissions"> 
@@ -30,7 +30,7 @@
                                         </div>
                                         <ChevronRightIcon :class="{ 'rotate-90': expandAccordion && index === selected }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
                                     </div>
-                                    <div class="flex flex-none items-center px-4 py-1 transition cursor-pointer group border border-indigo-200 border-l-0 text-gray-800" role="button">
+                                    <div class="flex flex-none items-center px-4 py-1 transition cursor-pointer border border-indigo-200 border-l-0 text-gray-800" role="button">
                                         <div class="flex items-center space-x-2">
                                             <BreezeButton buttonType="warning" @click="editPermission(permission.id)" v-if="$page.props.can.edit_permissions">Edit</BreezeButton>
                                             <BreezeButton buttonType="danger" @click="deletePermission(permission.id)" v-if="$page.props.can.delete_permissions">Delete</BreezeButton>

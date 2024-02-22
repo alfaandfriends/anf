@@ -56,7 +56,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center space-x-2">
-                                        <BreezeButton  buttonType="warning" @click="editProgramme(programme.id)" v-if="$page.props.can.edit_programmes">
+                                        <BreezeButton  buttonType="info" class="py-1 px-4" @click="editProgramme(programme.id)" v-if="$page.props.can.edit_programmes">
                                             Edit
                                         </BreezeButton>
                                         <BreezeButton buttonType="danger" @click="deleteProgramme(programme.id)" v-if="$page.props.can.delete_programmes">

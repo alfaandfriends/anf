@@ -79,6 +79,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                         </div>
+                        <FeedbackSummary :report_details="$page.props.report_details"/>
                     </div>
                 </form>
             </div>
@@ -399,6 +400,7 @@ import Modal from '@/Components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
 import Multiselect from '@vueform/multiselect'
+import FeedbackSummary from './FeedbackSummary.vue'
 
 export default {
     components: {

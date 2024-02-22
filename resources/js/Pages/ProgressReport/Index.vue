@@ -287,7 +287,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <div class="flex justify-center space-x-2">
                                     <BreezeButton buttonType="blue" @click="viewProgressReport(result.progress_report_id)" v-if="$page.props.can.view_progress_report">View Details</BreezeButton>
-                                    <BreezeButton class="py-1 px-2" @click="showProgressReport(result.progress_report_id, result.student_fee)" v-if="$page.props.can.view_progress_report">{{ generate.id == result.progress_report_id && generate.running ? 'Generating...'  : 'Show / Print'}}</BreezeButton>
+                                    <BreezeButton class="py-1 px-4" @click="showProgressReport(result.progress_report_id, result.student_fee)" v-if="$page.props.can.view_progress_report">{{ generate.id == result.progress_report_id && generate.running ? 'Generating...'  : 'Show / Print'}}</BreezeButton>
                                 </div>
                             </td>
                         </tr>

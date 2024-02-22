@@ -243,9 +243,9 @@ export default {
                             <label class="block text-sm text-gray-700 font-bold"> Options <span class="text-red-500">*</span></label>
                             <BreezeButton @click="addVariation" buttonType="info" class="text-sm py-2 px-3">Add more option</BreezeButton>
                         </div>
-                        <div v-for="(option, index) in detailed_info.variations.options" :key="index" class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text" placeholder="E.g. Level 1" class="focus:ring-0 border-gray-300 focus:border-gray-400 flex-1 block rounded-tl-md rounded-bl-md sm:text-sm" v-model="option.name" autocomplete="off"/>
-                            <BreezeButton buttonType="danger" class="h-full px-4 rounded-r rounded-l-none" @click="removeVariation(index, option.id)">Remove</BreezeButton>
+                        <div v-for="(option, index) in detailed_info.variations.options" :key="index" class="flex items-center mt-1 space-x-2 rounded-md">
+                            <input type="text" placeholder="E.g. Level 1" class="focus:ring-0 border-gray-300 focus:border-gray-400 flex-1 block rounded sm:text-sm" v-model="option.name" autocomplete="off"/>
+                            <BreezeButton buttonType="danger" @click="removeVariation(index, option.id)">Remove</BreezeButton>
                         </div>
                     </div>
                     </div>
@@ -269,9 +269,9 @@ export default {
                             <label class="block text-sm text-gray-700 font-bold"> Options <span class="text-red-500">*</span></label>
                             <BreezeButton @click="addSubVariation" buttonType="info" class="text-sm py-2 px-3">Add more option</BreezeButton>
                         </div>
-                        <div v-for="(option, index) in sub_variations.options" :key="index" class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text" placeholder="option" class="focus:ring-0 border-gray-300 focus:border-gray-400 flex-1 block rounded-tl-md rounded-bl-md sm:text-sm" v-model="option.name" autocomplete="off"/>
-                            <BreezeButton buttonType="danger" class="h-full px-4 rounded-r rounded-l-none" @click="removeSubVariation(index)">Remove</BreezeButton>
+                        <div v-for="(option, index) in sub_variations.options" :key="index" class="flex items-center mt-1 space-x-2 rounded-md">
+                            <input type="text" placeholder="option" class="focus:ring-0 border-gray-300 focus:border-gray-400 flex-1 block rounded sm:text-sm" v-model="option.name" autocomplete="off"/>
+                            <BreezeButton buttonType="danger" @click="removeSubVariation(index)">Remove</BreezeButton>
                         </div>
                     </div>
                     </div>

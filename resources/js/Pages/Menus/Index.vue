@@ -10,7 +10,7 @@
         <template #header></template>
         <div class="py-4 px-4">
             <div class="overflow-x-auto">
-                <div class="mx-auto">
+                <div class="m-3">
                     <div class="align-top inline-block w-full lg:w-1/2 px-2 mb-3">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
                             <BreezeButton :route="route('menus.add_menu')" v-if="$page.props.can.create_menu_editor">
@@ -68,13 +68,13 @@
                                         </td>
                                         <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex space-x-2">
-                                                <BreezeButton class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" @click="editMenu(menu.id)" title="Edit" v-if="$page.props.can.edit_menu_editor">
+                                                <BreezeButton buttonType="warning" class="py-1.5 px-1.5" @click="editMenu(menu.id)" title="Edit" v-if="$page.props.can.edit_menu_editor">
                                                     <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
                                                 </BreezeButton>
-                                                <BreezeButton class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteMenu(menu.id)" title="Delete" v-if="$page.props.can.delete_menu_editor">
+                                                <BreezeButton buttonType="danger" class="py-1.5 px-1.5" @click="deleteMenu(menu.id)" title="Delete" v-if="$page.props.can.delete_menu_editor">
                                                     <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                 </BreezeButton>
-                                                <BreezeButton class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-1 border border-blue-700 rounded" @click="showSubMenu(menu.id)" title="View Sub Menu" v-if="$page.props.can.edit_menu_editor">
+                                                <BreezeButton buttonType="blue" class="py-1.5 px-1.5" @click="showSubMenu(menu.id)" title="View Sub Menu" v-if="$page.props.can.edit_menu_editor">
                                                     <ChevronRightIcon class="text-white-600 h-4 w-4 fill-current"></ChevronRightIcon>
                                                 </BreezeButton>
                                             </div>
@@ -147,12 +147,12 @@
                                         <td class="px-6 py-2 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex">
                                                 <div class="pr-1">
-                                                    <BreezeButton class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-1 border border-yellow-700 rounded" @click="editSubMenu(sub_menu.id)" title="Delete" v-if="$page.props.can.edit_menu_editor">
+                                                    <BreezeButton buttonType="warning" class="py-1.5 px-1.5" @click="editSubMenu(sub_menu.id)" title="Delete" v-if="$page.props.can.edit_menu_editor">
                                                         <PencilIcon class="text-white-600 h-4 w-4 fill-current"></PencilIcon>
                                                     </BreezeButton>
                                                 </div>
                                                 <div class="pr-1">
-                                                    <BreezeButton class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-1 border border-red-700 rounded" @click="deleteSubMenu(sub_menu.id)" title="Delete" v-if="$page.props.can.delete_menu_editor">
+                                                    <BreezeButton buttonType="danger" class="py-1.5 px-1.5" @click="deleteSubMenu(sub_menu.id)" title="Delete" v-if="$page.props.can.delete_menu_editor">
                                                         <TrashIcon class="text-white-600 h-4 w-4 fill-current"></TrashIcon>
                                                     </BreezeButton>
                                                 </div>

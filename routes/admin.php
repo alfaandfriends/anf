@@ -159,6 +159,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/progress-report/details', [ProgressReportController::class, 'details'])->name('progress_report.details')->middleware('permission:view_progress_report');
             Route::get('/progress-report/full-reports', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports')->middleware('permission:view_progress_report');
             Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store')->middleware('permission:view_progress_report');
+            Route::post('/progress-report/summary/store', [ProgressReportController::class, 'storeSummary'])->name('progress_report.store_summary')->middleware('permission:view_progress_report');
                 /* Settings */
                 Route::get('/progress-report/settings', [ProgressReportController::class, 'settings'])->name('progress_report.settings')->middleware('permission:view_progress_report_settings');
 

@@ -178,7 +178,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center">
                                         <div class="flex pr-1" v-if="$page.props.can.edit_classes">
-                                            <BreezeButton buttonType="warning" title="Edit Class" @click="editClass(classes.id)">Edit</BreezeButton>
+                                            <BreezeButton buttonType="info" class="py-1 px-4" title="Edit Class" @click="editClass(classes.id)">Edit</BreezeButton>
                                         </div>
                                         <div class="flex" v-if="$page.props.can.delete_classes">
                                             <BreezeButton buttonType="danger" title="Delete Class" @click="deleteClass(classes.id)">Delete</BreezeButton>
