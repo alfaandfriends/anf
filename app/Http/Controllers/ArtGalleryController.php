@@ -13,6 +13,8 @@ class ArtGalleryController extends Controller
 {
     public function index()
     {
+        $levels     =   $this->getLevels();
+        $themes     =   $this->getThemes();
         $results    =   DB::table('student_art_gallery')
                             ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
                             ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
@@ -24,6 +26,12 @@ class ArtGalleryController extends Controller
                                 $query->where(function ($q) use ($search) {
                                     $q->where('children.name', 'LIKE', "%$search%");
                                 });
+                            })
+                            ->when(request('level'), function($query) {
+                                $query->where('art_levels.id', request('level'));
+                            })
+                            ->when(request('theme'), function($query) {
+                                $query->where('art_themes.id', request('theme'));
                             })
                             ->select(
                                 'student_art_gallery.id as artwork_id',
@@ -43,7 +51,9 @@ class ArtGalleryController extends Controller
                             ->paginate(10);
 
         return Inertia::render('ArtGallery/Index', [
-            'filter'    =>  request()->all('search'),
+            'filter'    =>  request()->all('search', 'level', 'theme'),
+            'levels'    =>  $levels,
+            'themes'    =>  $themes,
             'arts'      =>  $results,
         ]);
     }
@@ -153,9 +163,13 @@ class ArtGalleryController extends Controller
         return $levels;
     }
 
-    public function getThemes($level_id)
+    public function getThemes($level_id = '')
     {
-        $themes =   DB::table('art_themes')->where('level_id', $level_id)->get();
+        $themes =   DB::table('art_themes')
+                    ->when($level_id, function($query) use ($level_id){
+                        $query->where('level_id', $level_id);
+                    })
+                    ->get();
 
         return  $themes;
     }
