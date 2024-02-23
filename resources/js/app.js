@@ -34,7 +34,7 @@ axios.interceptors.response.use(
 
 
 /* App title */
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'ALFA and Friends Centre';
+const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'ALFA and Friends App';
 
 /* Remove app data in inspect element */
 const cleanApp = () => {

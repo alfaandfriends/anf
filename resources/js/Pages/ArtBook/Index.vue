@@ -22,8 +22,6 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>
             </div>
             <div class="overflow-x-auto">
-                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                </div>
                 <Modal :showModal="open_modal" @hideModal="open_modal = false" :modalType="'xs'">
                     <template v-slot:header v-if="!generating">
                         <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
@@ -127,6 +125,50 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                     </template>
                 </Modal>
+                <Modal :showModal="open_ad_detected" @hideModal="open_ad_detected = false" :modalType="'xs'">
+                    <template v-slot:content>
+                        <div class="fixed z-10 inset-0 overflow-y-auto" id="my-modal">
+                            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                                    <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                                </div>
+                                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                                <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                                    role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                                    <div>
+                                        <!-- <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                                            <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </div> -->
+                                        <div class="mt-3 text-center sm:mt-5">
+                                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                                                Adblocker Detected
+                                            </h3>
+                                            <div class="mt-2">
+                                                <p class="text-sm text-gray-500">
+                                                    Please disable adblocker to prevent error during artbook generation.
+                                                </p>
+                                                <p class="text-sm text-gray-500">
+                                                    Thank you.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5 sm:mt-6">
+                                        <button
+                                            class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+                                            @click="open_ad_detected = false">
+                                            OK
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </Modal>
             </div>
         </div>
     </BreezeAuthenticatedLayout>
@@ -138,13 +180,16 @@ import axios from 'axios'
 import Modal from '@/Components/Modal.vue'
 import Multiselect from '@vueform/multiselect'
 import { debounce } from 'vue-debounce'
+import detectAdBlocker from '../../Plugins/DetectAdBlocker/index'
 
 export default {
     components: {
         Head, Link, Modal, Multiselect, 
     },
+    mixins: [detectAdBlocker],
     data(){
         return{
+            open_ad_detected: false,
             open_modal: false,
             form: {
                 student_id: '',
@@ -230,6 +275,15 @@ export default {
         clearStudents(){
             this.list.students = []
         },
+    },
+    mounted(){
+        this.detectAdBlock().then((response)=>{
+            if(response){
+                this.open_ad_detected = true
+            }else{
+                this.open_ad_detected = true
+            }
+        })
     }
 }
 </script>
