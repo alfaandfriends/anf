@@ -49,7 +49,10 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                     <div class="text-sm text-gray-700">{{ index + 1 }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ order.parent_full_name }}</div>
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ order.parent_full_name }}
+                                    </div>
+                                    <div class="text-sm font-medium text-slate-500"> {{ order.parent_calling_code }}{{ order.parent_contact }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">{{ moment(order.created_at).format('DD/MM/Y') }}</div>

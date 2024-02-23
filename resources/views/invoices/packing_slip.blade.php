@@ -67,6 +67,7 @@
     <table width="100%">
         <tr>
             <td align="left" valign="top">
+                <div style="max-width: 200px; font-size: 14px; line-height: 1.5">{{ $data['parent_calling_code'] }}{{ $data['parent_contact'] }}</div><br/> 
                 <div style="max-width: 200px; font-size: 14px; line-height: 1.5">{{ $data['parent_address'] }}</div><br/> 
                 <div style="font-size: 14px; margin-top: 10px; font-weight: bold; text-decoration: underline;">Student: {{ $data['student_name'] }}</div><br/> 
             </td>

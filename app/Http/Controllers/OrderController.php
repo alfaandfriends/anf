@@ -20,6 +20,7 @@ class OrderController extends Controller
                         ->leftJoin('students', 'orders.student_id', '=', 'students.id')
                         ->leftJoin('children', 'students.children_id', '=', 'children.id')
                         ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
+                        ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
                         ->leftJoin('invoice_status', 'invoices.status', '=', 'invoice_status.id')
                         ->leftJoin('order_shipping_providers', 'orders.shipping_provider', '=', 'order_shipping_providers.id')
                         ->join('order_status', 'orders.status', '=', 'order_status.id')
@@ -27,8 +28,8 @@ class OrderController extends Controller
                                 'orders.tracking_status as tracking_status', 'order_shipping_providers.name as shipping_provider_name',
                                  'order_status.class_name as class_name', 'invoices.id as invoice_id', 'invoices.invoice_number', 'invoices.invoice_items', 
                                  'children.name as student_name', 'wpvt_users.display_name as parent_full_name', 'wpvt_users.user_address as parent_address', 
-                                 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 
-                                 'invoice_status.bg_color as status_bg_color', 'invoice_status.text_color as status_text_color');
+                                 'countries.calling_code as parent_calling_code', 'wpvt_users.user_contact as parent_contact', 'invoices.date_issued', 
+                                 'invoices.due_date', 'invoices.amount', 'invoice_status.name as status', 'invoice_status.bg_color as status_bg_color', 'invoice_status.text_color as status_text_color');
         if($request->search){
             $query->where('wpvt_users.display_name', 'LIKE', '%'.request('search').'%');
         }   
@@ -179,26 +180,29 @@ class OrderController extends Controller
                                 ->leftJoin('students', 'orders.student_id', '=', 'students.id')
                                 ->leftJoin('children', 'students.children_id', '=', 'children.id')
                                 ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
+                                ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
                                 ->leftJoin('order_shipping_providers', 'orders.shipping_provider', '=', 'order_shipping_providers.id')
                                 ->select('orders.id', 'orders.order_number', 'orders.products', 'orders.tracking_number', 'orders.created_at', 
                                         'orders.tracking_status as tracking_status', 'order_shipping_providers.name as shipping_provider_name',
                                         'invoices.id as invoice_id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
-                                        'wpvt_users.display_name as parent_full_name', 'orders.address as parent_address', 
-                                        'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.currency')
+                                        'wpvt_users.display_name as parent_full_name', 'orders.address as parent_address', 'countries.calling_code as parent_calling_code', 
+                                        'wpvt_users.user_contact as parent_contact', 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.currency')
                                 ->where('orders.id', $request->order_id)
                                 ->first();
                                 
         $data   =   [
-            'parent_full_name'  => $invoice_data->parent_full_name,
-            'parent_address'    => $invoice_data->parent_address,
-            'student_name'      => $invoice_data->student_name,
-            'invoice_number'    => $invoice_data->invoice_number,
-            'date_issued'       => Carbon::parse($invoice_data->date_issued)->format('d M Y'),
-            'order_number'      => $invoice_data->order_number,
-            'created_at'        => Carbon::parse($invoice_data->created_at)->format('d M Y'),
-            'products'          => json_decode($invoice_data->products),
-            'amount'            => $invoice_data->amount,
-            'currency'          => $invoice_data->currency,
+            'parent_full_name'      => $invoice_data->parent_full_name,
+            'parent_calling_code'   => $invoice_data->parent_calling_code,
+            'parent_contact'        => $invoice_data->parent_contact,
+            'parent_address'        => $invoice_data->parent_address,
+            'student_name'          => $invoice_data->student_name,
+            'invoice_number'        => $invoice_data->invoice_number,
+            'date_issued'           => Carbon::parse($invoice_data->date_issued)->format('d M Y'),
+            'order_number'          => $invoice_data->order_number,
+            'created_at'            => Carbon::parse($invoice_data->created_at)->format('d M Y'),
+            'products'              => json_decode($invoice_data->products),
+            'amount'                => $invoice_data->amount,
+            'currency'              => $invoice_data->currency,
         ];
         
         $pdf = PDF::setPaper('a4', 'portrait')->loadView('invoices.packing_slip', compact('data'));
