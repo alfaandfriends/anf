@@ -280,8 +280,6 @@ export default {
         this.detectAdBlock().then((response)=>{
             if(response){
                 this.open_ad_detected = true
-            }else{
-                this.open_ad_detected = true
             }
         })
     }
