@@ -15,9 +15,19 @@ class TeacherResourcesController extends Controller
 {
     public function index(Request $request)
     {
+        $levels         =   DB::table('teacher_resources_levels')->get();
+        $languages      =   DB::table('languages')->get();
+
         $query  =   DB::table('teacher_resources')
                         ->join('programmes', 'teacher_resources.programme_id', '=', 'programmes.id')
                         ->join('teacher_resources_levels', 'teacher_resources.level', '=', 'teacher_resources_levels.id')
+                        ->join('languages', 'teacher_resources.language_id', '=', 'languages.id')
+                        ->when(request('level'), function($query) {
+                            $query->where('teacher_resources_levels.id', request('level'));
+                        })
+                        ->when(request('language'), function($query) {
+                            $query->where('teacher_resources.language_id', request('language'));
+                        })
                         ->select('teacher_resources.id', 'teacher_resources.title', 
                                 'programmes.name as programme', 'teacher_resources_levels.name', 'teacher_resources.media_type', 'teacher_resources.language_id', 
                                 'teacher_resources.content', 'teacher_resources.file_size', 'teacher_resources.download_count', 
@@ -33,8 +43,10 @@ class TeacherResourcesController extends Controller
         $programmes     =   ProgrammeHelper::programmes();
         
         return Inertia::render('TeacherResources/Index', [
-            'filter'            =>  request()->all('search', 'programme_id'),
+            'filter'            =>  request()->all('search', 'programme_id', 'level', 'language'),
             'teacher_resources' =>  $query->paginate(10),
+            'levels'            =>  $levels,
+            'languages'         =>  $languages,
             'programmes'        =>  $programmes
         ]);
     }
