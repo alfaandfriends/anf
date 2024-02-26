@@ -15,13 +15,13 @@ class ArtGalleryController extends Controller
     {
         $levels     =   $this->getLevels();
         $themes     =   $this->getThemes();
-        $results    =   DB::table('student_art_gallery')
+        $results    =   DB::table('students')
+                            ->join('children', 'students.children_id', '=', 'children.id')
+                            ->join('student_art_gallery', 'student_art_gallery.student_id', '=', 'students.id')
                             ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
                             ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
                             ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
                             ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
-                            ->leftJoin('students', 'student_art_gallery.student_id', '=', 'students.id')
-                            ->leftJoin('children', 'students.children_id', '=', 'children.id')
                             ->when(request('search'), function($query, $search) {
                                 $query->where(function ($q) use ($search) {
                                     $q->where('children.name', 'LIKE', "%$search%");
@@ -33,9 +33,13 @@ class ArtGalleryController extends Controller
                             ->when(request('theme'), function($query) {
                                 $query->where('art_themes.id', request('theme'));
                             })
+                            ->when(request('status') != null, function($query) {
+                                $query->where('students.status', request('status'));
+                            })
                             ->select(
                                 'student_art_gallery.id as artwork_id',
                                 'students.id as student_id',
+                                'students.status as student_status',
                                 'children.name as student_name',
                                 'student_art_gallery.filename as art_file_location',
                                 'art_levels.name as level',
@@ -48,10 +52,11 @@ class ArtGalleryController extends Controller
                             ->orderBy('art_themes.id')
                             ->orderBy('art_lessons.id')
                             ->orderBy('art_activities.id')
+                            // ->toSql();
                             ->paginate(10);
-
+                            
         return Inertia::render('ArtGallery/Index', [
-            'filter'    =>  request()->all('search', 'level', 'theme'),
+            'filter'    =>  request()->all('search', 'level', 'theme', 'status'),
             'levels'    =>  $levels,
             'themes'    =>  $themes,
             'arts'      =>  $results,
