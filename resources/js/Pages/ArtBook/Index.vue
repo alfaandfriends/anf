@@ -4,7 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Art Gallery" />
+    <Head title="Art Book" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
@@ -15,7 +15,7 @@ import BreezeButton from '@/Components/Button.vue';
                 <div class="flex">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
                         <div class="w-full space-y-4 p-2 bg-white border border-gray-200 rounded-lg shadow-sm shadow-gray-400" v-for="artbook in themes">
-                            <img class="w-full" :src="'/images/' + artbook.art_book_assets + 'cover.jpg'" alt="">
+                            <img class="w-full" :src="'/images/' + artbook.art_book_assets + 'thumbnail.jpg'" alt="">
                             <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="openDownloadModal(artbook.id)">Select</button>
                         </div>
                     </div>

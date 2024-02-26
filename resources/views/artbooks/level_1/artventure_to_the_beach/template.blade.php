@@ -102,7 +102,7 @@
             </div>
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">Illustrated by:</span>
-                <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">ALFA and Friends and Jebat</span>
+                <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">ALFA and Friends and {{ $data['name'] }}</span>
             </div>
         </div>
         <div style="position: absolute; top: 82%; left: 16%; transform: translate(-10%, 0%); text-align: justify;">
@@ -360,6 +360,7 @@
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_11.jpg') }}" class="artwork_area">
         <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 28%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+            <p class="candy_beans" style="display: inline-block; color: #d95293;">{{ $data['name'] }}'s</p> 
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">to the Beach</p>
         </div>
