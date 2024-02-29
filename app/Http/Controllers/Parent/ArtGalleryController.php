@@ -69,7 +69,7 @@ class ArtGalleryController extends Controller
 
     public function getThemes($level_id)
     {
-        $themes =   DB::table('art_themes')->where('level_id', $level_id)->get();
+        $themes =   DB::table('art_themes')->where('level_id', $level_id)->where('art_book_active', 1)->get();
 
         return $themes;
     }
@@ -84,7 +84,7 @@ class ArtGalleryController extends Controller
                             ->where('student_art_gallery.level_id', $request->level_id)
                             ->where('student_art_gallery.theme_id', $request->theme_id)
                             ->where('student_art_gallery.student_id', $request->session()->get('current_active_child.student_id'))
-                            ->select('student_art_gallery.id', 'art_levels.name as level', 'art_themes.name as theme', 'art_lessons.name as lesson', 'art_activities.name as activity', 'student_art_gallery.filename')
+                            ->select('student_art_gallery.id', 'art_levels.name as level', 'art_themes.name as theme', 'art_lessons.name as lesson', 'art_activities.name as activity', 'student_art_gallery.filename', 'art_themes.art_book_active')
                             ->get();
         $artworks   =   collect($result)->groupBy('lesson');
         

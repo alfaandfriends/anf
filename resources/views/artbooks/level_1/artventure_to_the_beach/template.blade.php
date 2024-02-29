@@ -94,7 +94,7 @@
     <div class="position: relative;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <div style="text-align: center; margin-bottom: 30px;">
-                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure to the Beach</span>
+                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure<br> to the Beach</span>
             </div>
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">Story by:</span>
@@ -171,14 +171,14 @@
                 top: 0;
                 width: 100%;">
         @endif
-        <div style="position: absolute; top: 12%; left: 25%; transform: translate(-15%, -50%); z-index: 1;">
+        <div style="position: absolute; top: 10.5%; left: 25%; transform: translate(-15%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 “Look at the end of the sea. That is a straight line!” Says Alfa.<br>
                 “The tides! It looks just like a wavy line!” Says Patch.<br>
                 “And the clouds… They are curved lines!” Says Ollie.
             </p>
         </div>
-        <div style="position: absolute; top: 76%; left: 15%; transform: translateX(-5%); z-index: 1;">
+        <div style="position: absolute; top: 76.5%; left: 15%; transform: translateX(-5%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem;">
             “Brilliant! Lines are the simplest element in design.<br>
             If you can draw the lines, then you can draw almost everything!”<br>
@@ -330,7 +330,7 @@
         @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" class="artwork">
         @endif
-        <div style="position: absolute; top: 10%; left: 5%; transform: translate(-2%, -50%); z-index: 1;">
+        <div style="position: absolute; top: 10%; left: 10%; transform: translate(-2%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 Just when their painting is all done,<br>
                 the Sun bids them farewell and goes down the horizon line.<br>

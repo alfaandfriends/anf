@@ -85,7 +85,7 @@
 <body>
     <div style="position: relative;">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/cover.jpg') }}" style="width: 100%">
-        <div style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+        <div style="position: absolute; top: 11%; left: 52%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="candy_beans" style="text-align: center; font-size: 40px; color: #d95293; letter-spacing: 0em;">{{ $data['name'] }}'s</p>
         </div>
     </div>
@@ -94,7 +94,7 @@
     <div class="position: relative;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <div style="text-align: center; margin-bottom: 30px;">
-                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure with the Mirror</span>
+                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure<br> with the Mirror</span>
             </div>
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">Story by:</span>
@@ -308,7 +308,7 @@
                 self-portrait masterpiece! But uh-oh, <span style="color: #d95293">{{ $data['name'] }}’s</span> feeling a bit<br>
                 puzzled about {{ $data['gender']['possessive_adjective'] }} own features.<br><br>
                 Guess what? Miss Nasha comes to the rescue with a<br>
-                magical gold mirror, setting Jebat on a thrilling journey to<br>
+                magical gold mirror, setting <span style="color: #d95293">{{ $data['name'] }}</span> on a thrilling journey to<br>
                 discover {{ $data['gender']['possessive_adjective'] }} many expressions and uncover {{ $data['gender']['possessive_adjective'] }}<br>
                 real self.
             </p>
