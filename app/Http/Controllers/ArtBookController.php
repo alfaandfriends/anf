@@ -64,8 +64,13 @@ class ArtBookController extends Controller
                                     ->pluck('filename')
                                     ->first();
 
-        $data['name']   =   Str::headline($request->student_nickname);
-        $folder         =   DB::table('art_themes')->where('id', $request->theme_id)->pluck('art_book_assets')->first();
+        $data['name']       =   Str::headline($request->student_nickname);
+        $data['gender']     =   collect(DB::table('students')
+                                    ->join('children', 'students.children_id', '=', 'children.id')
+                                    ->join('genders', 'children.gender_id', '=', 'genders.id')
+                                    ->where('students.id', $request->student_id)->select('genders.subject_pronoun', 'genders.object_pronoun', 'genders.possessive_adjective', 'genders.possessive_pronoun', 'genders.reflexive_pronoun')->first())->toArray();
+
+        $folder             =   DB::table('art_themes')->where('id', $request->theme_id)->pluck('art_book_assets')->first();
         
         $pdf = PDF::setPaper(array(0,0,648,576))
                     ->setOption('fontDir', public_path('/fonts'))
