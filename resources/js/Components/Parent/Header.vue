@@ -123,7 +123,7 @@
                                 </a>
                             </div>
                             <hr class="my-3">
-                            <button href="#" class="flex items-center space-x-4 text-sm font-semibold md:text-base py-2 px-3" v-if="$page.props.user_has_children.length" v-for="info in $page.props.user_has_children" @click="switchChild(info.child_id, info.student_id)">
+                            <button href="#" class="flex items-center space-x-4 text-sm font-semibold md:text-base py-2 px-3" v-if="$page.props.user_has_children.length" v-for="info in $page.props.user_has_children" @click="switchChild(info.child_id, info.child_name, info.student_id)">
                                 <span class="text-gray-500 hover:text-gray-800 text-left">{{ info.child_name }}</span>
                                 <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded" v-if="!switching && info.child_id == $page.props.current_active_child.child_id">Current</span>
                                 <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded" v-if="switching && info.child_id == $page.props.current_active_child.child_id">Switching</span>
