@@ -295,7 +295,7 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_11.jpg') }}" class="artwork_area">
-        <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 35%; left: 49.9%; transform: translate(-50%, -50%); z-index: 1;">
+        <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap;">
             <p class="candy_beans" style="display: inline-block; color: #d95293;">{{ $data['name'] }}'s</p> 
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">with the Mirror</p>

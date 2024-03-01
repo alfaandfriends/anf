@@ -359,7 +359,7 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_beach/page_11.jpg') }}" class="artwork_area">
-        <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 28%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+        <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 28%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap;">
             <p class="candy_beans" style="display: inline-block; color: #d95293;">{{ $data['name'] }}'s</p> 
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">to the Beach</p>

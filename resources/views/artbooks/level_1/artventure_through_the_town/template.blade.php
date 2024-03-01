@@ -85,7 +85,7 @@
 <body>
     <div style="position: relative;">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_through_the_town/cover.jpg') }}" style="width: 100%">
-        <div style="position: absolute; top: 17%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+        <div style="position: absolute; top: 17%; left: 51.5%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap;">
             <p class="candy_beans" style="text-align: center; font-size: 40px; color: #d95293; letter-spacing: 0em;">{{ $data['name'] }}'s</p>
         </div>
     </div>
@@ -114,8 +114,8 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_through_the_town/page_1.jpg') }}" class="artwork_area">
-        <div style="position: absolute; top: 19%; left: 16%; transform: translate(-10%, -50%); z-index: 1;">
-            <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem;">
+        <div style="position: absolute; top: 19%; left: 17%; transform: translate(-10%, -50%); z-index: 1;">
+            <p class="century_gothic" style="text-align: left; font-size: 16px; letter-spacing: 0.05em; line-height: 1.1rem;">
                 The class ends a bit early.<br>
                 <span style="color: #d95293;">{{ $data['name'] }}</span> invites {{ $data['gender']['possessive_adjective'] }} friends to come over to {{ $data['gender']['possessive_adjective'] }} house to play.<br><br>
                 “It’s just around the corner. We could just walk from here!” Says <span style="color: #d95293;">{{ $data['name'] }}</span>.<br><br>
@@ -124,7 +124,7 @@
             </p>
         </div>
         <div style="position: absolute; top: 83.5%; left: 15%; transform: translate(-10%, -50%); z-index: 1;">
-            <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem;">
+            <p class="century_gothic" style="text-align: left; font-size: 16px; letter-spacing: 0.05em; line-height: 1.1rem;">
                 “Is that apartment yours?” Asks Alfa.<br>
                 “What a tall house you have. I can barely see the top!” Says Ollie.<br>
                 “It has so many windows and floors. Which one is yours?” Asks Piper.
@@ -169,7 +169,7 @@
             <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
                 “No, no! That is not my house.<br>
                 We have to walk a bit more,”<br>
-                says Jebat.
+                says <span style="color: #d95293;">{{ $data['name'] }}</span>.
             </p>
         </div>
     </div>
@@ -241,7 +241,7 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_through_the_town/page_9.jpg') }}" class="artwork_area">
-        <div style="position: absolute; top: 23.5%; left: 12%; transform: translate(-5%, -50%); z-index: 1;">
+        <div style="position: absolute; top: 23.5%; left: 13.5%; transform: translate(-5%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.05rem">
                 They continue walking and see another wooden house.<br><br>
                 “This is rumah panjang. It is long enough for the whole family to live<br>
@@ -285,7 +285,7 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_through_the_town/page_11.jpg') }}" class="artwork_area">
-        <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 38%; left: 45%; transform: translate(-40%, -50%); z-index: 1;">
+        <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap;">
             <p class="candy_beans" style="display: inline-block; color: #d95293;">{{ $data['name'] }}'s</p> 
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">through the Town</p>
