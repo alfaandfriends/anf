@@ -290,6 +290,7 @@ class ProgrammeController extends Controller
     public function getFee(Request $request){
         $fee_info_query  =   DB::table('classes')
                                 ->join('centres', 'classes.centre_id', '=', 'centres.id')
+                                ->join('countries', 'centres.country_id', '=', 'countries.id')
                                 ->join('class_methods', 'classes.class_method_id', '=', 'class_methods.id')
                                 ->join('programme_levels', 'classes.programme_level_id', '=', 'programme_levels.id')
                                 ->join('class_types', 'programme_levels.class_type_id', '=', 'class_types.id')
@@ -299,7 +300,7 @@ class ProgrammeController extends Controller
                                 ->select(   'programmes.id as programme_id', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 
                                             'programme_levels.material_fee', 'programme_level_fees.id as fee_id', 'programme_level_fees.fee_amount as programme_fee', 
                                             'class_types_detail.label as programme_type', 'centres.id as centre_id', 'centres.label as centre_name', 
-                                            'class_types.id as class_type_id', 'class_methods.name as class_method')
+                                            'class_types.id as class_type_id', 'class_methods.name as class_method', 'countries.currency_symbol')
                                 ->where('programme_level_fees.fee_amount', '>', 0);
                         
         if($request->class_id){

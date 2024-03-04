@@ -284,14 +284,83 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee" v-if="form.fee.length">
                             <div class="sm:row-span-3" >
+                                
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="mb-5">
-                                        <h1 class="font-bold text-indigo-800">Fee Information</h1>
+                                        <h1 class="font-bold text-indigo-800">Fee Confirmation</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
                                     <div class="space-y-2">
                                         <template v-for="fee, fee_index in form.fee">
-                                            <details class="rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
+                                            <div class="flex justify-between max-w-lg mx-auto rounded-lg overflow-hidden lg:max-w-none lg:flex border-2 bg-white border-indigo-500 border-dashed">
+                                                <div class="p-6">
+                                                    <h3 class="flex space-x-4 items-center text-lg text-left uppercase leading-8 font-extrabold text-gray-900 sm:leading-9">
+                                                        <img src="/images/school.png" class="w-16 h-16" alt="">
+                                                        <span class="flex flex-col">
+                                                            <span>{{ fee.fee_info.programme_name }}</span>
+                                                            <span class="font-semibold text-sm">Level {{ fee.fee_info.programme_level }}</span>
+                                                        </span>
+                                                    </h3>
+                                                    <div class="mt-3">
+                                                        <ul class="flex flex-wrap gap-8">
+                                                            <li class="flex items-start lg:col-span-1">
+                                                                <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
+                                                                    <span class="text-sm font-bold underline">Centre</span>
+                                                                    <span class="text-sm font-semibold">{{ fee.fee_info.centre_name }}</span>
+                                                                </p>
+                                                            </li>
+                                                            <li class="flex items-start lg:col-span-1">
+                                                                <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
+                                                                    <span class="text-sm font-bold underline">Class Fee</span>
+                                                                    <span class="text-sm font-semibold">{{ fee.fee_info.programme_type }}</span>
+                                                                </p>
+                                                            </li>
+                                                            <li class="flex items-start lg:col-span-1">
+                                                                <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
+                                                                    <span class="text-sm font-bold underline">Class Method</span>
+                                                                    <span class="text-sm font-semibold">{{ fee.fee_info.class_method }}</span>
+                                                                </p>
+                                                            </li>
+                                                            <li class="flex items-start lg:col-span-1">
+                                                                <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
+                                                                    <span class="text-sm font-bold underline">Classes</span>
+                                                                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                                                                        <div class="flex space-x-4 text-sm border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
+                                                                            <div class="flex items-center space-x-2">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                                                                                    <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/>
+                                                                                </svg>
+                                                                                <span>{{ classes.class_day }}</span>
+                                                                            </div>
+                                                                            <div class="flex items-center space-x-2">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
+                                                                                    <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
+                                                                                </svg>
+                                                                                <span>{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left mt-3">
+                                                    </p>
+        
+                                                </div>
+                                                <div class="py-8 px-6 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
+                                                    <div class="flex">
+                                                        <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                        <label :for="fee_index" class="text ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                    </div>
+                                                    <div
+                                                        class="my-10 lg:my-6 flex items-baseline justify-center text-xl leading-none font-extrabold text-gray-900">
+                                                        <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.programme_fee }}</span><span class="leading-7 font-medium text-gray-700">/month</span>
+        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <details class="rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
                                                 <summary class="flex cursor-pointer items-center justify-between gap-2 bg-indigo-100 p-4 text-gray-900 transition">
                                                     <span class="text-sm font-medium">
                                                         <div class="flex items-center space-x-4 text-gray-800">
@@ -358,11 +427,11 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <span class="ml-3 text-gray-900 select-none font-semibold">Fee: {{ sumMaterialFee(fee.fee_info.include_material_fee, fee.fee_info.material_fee, fee.fee_info.programme_fee) }}</span>
                                                     </div>
                                                 </div>
-                                            </details>
+                                            </details> -->
                                         </template>
                                     </div>
                                     <div class="flex justify-end p-6" v-if="form.fee.length">
-                                        <span class="text-right ml-3 text-gray-900 cursor-text font-bold">Total Amount: {{ total_amount }}</span>
+                                        <span class="text-right ml-3 text-gray-900 cursor-text font-bold text-lg">Total Amount: {{ total_amount }}</span>
                                     </div>
                                 </div>
                             </div>
