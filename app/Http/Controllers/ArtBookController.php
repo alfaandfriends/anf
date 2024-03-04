@@ -80,6 +80,14 @@ class ArtBookController extends Controller
                                     ->pluck('filename')
                                     ->first();
 
+        $data['image_7']    =   DB::table('student_art_gallery')
+                                    ->where('theme_id', $request->theme_id)
+                                    ->where('lesson_id', $image_condition->where('artwork_number', 7)->pluck('lesson_id')->first())
+                                    ->where('activity_id', $image_condition->where('artwork_number', 7)->pluck('activity_id')->first())
+                                    ->where('student_id', $request->student_id)
+                                    ->pluck('filename')
+                                    ->first();
+
         $data['name']       =   Str::headline($request->student_nickname);
         $data['gender']     =   collect(DB::table('students')
                                     ->join('children', 'students.children_id', '=', 'children.id')

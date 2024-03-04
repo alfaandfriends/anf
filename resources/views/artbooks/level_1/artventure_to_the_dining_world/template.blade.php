@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{{ $data['name'] }}'s Artventure to the Zoo</title>
+    <title>{{ $data['name'] }}'s Artventure to the Dining World</title>
     <style type="text/css">
         @page { margin: 0px; }
         @font-face {
@@ -75,8 +75,8 @@
 </head>
 
 <body>
-    <div style="position: relative;">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/cover.jpg') }}" style="width: 100%">
+    <!-- <div style="position: relative;">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/cover.jpg') }}" style="width: 100%">
         <div style="position: absolute; top: 14%; left: 52%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="candy_beans" style="text-align: center; font-size: 40px; color: #d95293; letter-spacing: 0em;">{{ $data['name'] }}'s</p>
         </div>
@@ -86,7 +86,7 @@
     <div class="position: relative;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <div style="text-align: center; margin-bottom: 30px;">
-                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure<br> to the Zoo</span>
+                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure<br> to the Dining World</span>
             </div>
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">Story by:</span>
@@ -105,72 +105,72 @@
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_1.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_1.png') }}" class="artwork_area">
         @if($data['image_1'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_1'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_1']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%;">
         @endif
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_2.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_2.png') }}" class="artwork_area">
         @if($data['image_1'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_1'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_1']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; right: 0%;height: 100%;">
         @endif
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_3.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_3.png') }}" class="artwork_area">
         @if($data['image_2'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_2'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_2']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%;">
         @endif
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_4.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_4.png') }}" class="artwork_area">
         @if($data['image_2'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_2'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_2']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; right: 0%;height: 100%;">
         @endif
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_5.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_5.png') }}" class="artwork_area">
         @if($data['image_3'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_3'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_3']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%; width: 100%;">
         @endif
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_6.png') }}" class="artwork_area">
-        @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
-            <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%; width: 100%;">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_6.png') }}" class="artwork_area">
+        @if($data['image_3'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_3'])))
+            <img src="{{ public_path('/storage/art_gallery/'.$data['image_3']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%; width: 100%;">
         @endif
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_7.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_7.png') }}" class="artwork_area">
+        @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
+            <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%;">
+        @endif
+    </div>
+    <div class="page_break"></div>
+    <div class="artwork_container">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_8.png') }}" class="artwork_area">
+        @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
+            <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; right: 0%;height: 100%;">
+        @endif
+    </div>
+    <div class="page_break"></div>
+    <div class="artwork_container">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_9.png') }}" class="artwork_area">
         @if($data['image_5'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_5'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_5']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%;">
         @endif
     </div>
     <div class="page_break"></div>
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_8.png') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_10.png') }}" class="artwork_area">
         @if($data['image_5'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_5'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_5']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; right: 0%;height: 100%;">
-        @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_9.png') }}" class="artwork_area">
-        @if($data['image_6'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_6'])))
-            <img src="{{ public_path('/storage/art_gallery/'.$data['image_6']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%;">
-        @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_10.png') }}" class="artwork_area">
-        @if($data['image_7'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_7'])))
-            <img src="{{ public_path('/storage/art_gallery/'.$data['image_7']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; right: 0%;height: 100%;">
         @endif
     </div>
     <div class="page_break"></div>
@@ -182,23 +182,22 @@
         </div>
     </div>
     <div class="page_break"></div>
-    <div class="page_break"></div>
+    <div class="page_break"></div> -->
     <div class="artwork_container">
-        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_11.jpg') }}" class="artwork_area">
+        <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_11.jpg') }}" class="artwork_area">
         <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap;">
             <p class="candy_beans" style="display: inline-block; color: #d95293;">{{ $data['name'] }}'s</p> 
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">to the Zoo</p>
         </div>
-        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 48%; left: 24%; transform: translate(-5%, -40%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 16px; letter-spacing: 0.05em; line-height: 0.95rem">
-                Join young adventurer <span style="color: #d95293">{{ $data['name'] }}</span> on an exciting trip to the<br>
-                zoo where {{ $data['gender']['subject_pronoun'] }} encounters a world of diverse animals.<br>
-                As {{ $data['gender']['subject_pronoun'] }} explores, <span style="color: #d95293">{{ $data['name'] }}</span> learns about their habitats<br>
-                and the importance of preserving biodiversity, touching<br>
-                on Sustainable Development Goal: Life on Land. The tale<br>
-                unfolds with valuable lessons about conservation and<br>
-                protecting animals from extinction.
+        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 46%; left: 50%; transform: translate(-50%, -40%); z-index: 1; white-space: nowrap;">
+            <p class="century_gothic" style="text-align: center; font-size: 16px; letter-spacing: 0.05em; line-height: 0.95rem;">
+                It is <span style="color: #d95293">{{ $data['name'] }}</span> birthday party! The party comes with a big feast with lots of<br>
+                yummy food. Of course, {{ $data['gender']['possessive_adjective'] }} tiny belly couldn’t fit the whole course thus<br>
+                leaving a lot of leftover food. Mommy made <span style="color: #d95293">{{ $data['name'] }}</span> realize what<br>
+                happened to the food in the trash bin and how it is unfair to the poor<br> 
+                and starving people around the world. <span style="color: #d95293">{{ $data['name'] }}</span> comes up with<br> 
+                a brilliant idea on how to make food sustainable at least for {{ $data['gender']['possessive_adjective'] }} family!
             </p>
         </div>
     </div>
