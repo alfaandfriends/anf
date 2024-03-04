@@ -75,7 +75,7 @@
 </head>
 
 <body>
-    <!-- <div style="position: relative;">
+    <div style="position: relative;">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/cover.jpg') }}" style="width: 100%">
         <div style="position: absolute; top: 14%; left: 52%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="candy_beans" style="text-align: center; font-size: 40px; color: #d95293; letter-spacing: 0em;">{{ $data['name'] }}'s</p>
@@ -182,13 +182,13 @@
         </div>
     </div>
     <div class="page_break"></div>
-    <div class="page_break"></div> -->
+    <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_dining_world/page_11.jpg') }}" class="artwork_area">
         <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap;">
             <p class="candy_beans" style="display: inline-block; color: #d95293;">{{ $data['name'] }}'s</p> 
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
-            <p class="candy_beans" style="display: inline-block; color: #13a8b5;">to the Zoo</p>
+            <p class="candy_beans" style="display: inline-block; color: #13a8b5;">to the Dining World</p>
         </div>
         <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 46%; left: 50%; transform: translate(-50%, -40%); z-index: 1; white-space: nowrap;">
             <p class="century_gothic" style="text-align: center; font-size: 16px; letter-spacing: 0.05em; line-height: 0.95rem;">
