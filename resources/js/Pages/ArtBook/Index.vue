@@ -217,7 +217,7 @@ export default {
         findStudents(query){
             if(query){
                 this.loading.students = true
-                axios.get(route('students.find'), {
+                axios.get(route('students.find_digital_art_students'), {
                     params: {
                         'keyword': query
                     }

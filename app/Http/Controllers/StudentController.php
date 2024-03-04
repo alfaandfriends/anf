@@ -555,6 +555,25 @@ class StudentController extends Controller
         return $students;
     }
 
+    public function findDigitalArtStudents(Request $request){
+        $digital_art_programme_id   =   [3, 5];
+        $students   =   DB::table('students')
+                            ->join('children', 'students.children_id', '=', 'children.id')
+                            ->join('student_fees', 'student_fees.student_id', '=', 'students.id')
+                            ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                            ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                            ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                            ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
+                            ->whereIn('programmes.id', $digital_art_programme_id)
+                            ->whereNull('student_fees.status')
+                            ->whereYear('student_fees.created_at', '=', now()->year)
+                            ->whereMonth('student_fees.created_at', '=', now()->month)
+                            ->select('students.id', 'children.name')
+                            ->get();
+
+        return $students;
+    }
+
     public function addStudentClass(Request $request)
     {
         try {

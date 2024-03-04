@@ -89,7 +89,11 @@ import BreezeButton from '@/Components/Button.vue';
                                     :auto-apply="true" 
                                     @update:model-value="search"
                                     :placeholder="'Month / Year'" 
+                                    :clearable="false"
                         />
+                    </div>
+                    <div class="w-full">
+                        <BreezeButton buttonType="gray" class="py-2 px-3" :route="route('students')">Clear Search</BreezeButton>
                     </div>
                 </div>
                 <div class="overflow-x-auto">

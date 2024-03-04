@@ -46,7 +46,7 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>
                 <hr class="my-3 border border-dashed border-gray-400">
             </template>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 mb-3">
                 <div class="relative w-full">
                     <svg class="absolute top-2.5 left-3 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none">
                         <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -112,6 +112,7 @@ import BreezeButton from '@/Components/Button.vue';
                         :searchable="true"
                         :options="$page.props.programmes"
                         :clearOnSelect="true"
+                        :closeOnDeselect="true"
                         :canClear="false"
                         :canDeselect="true"
                         trackBy="name"
@@ -171,6 +172,7 @@ import BreezeButton from '@/Components/Button.vue';
                         :searchable="true"
                         :options="$page.props.levels"
                         :clearOnSelect="false"
+                        :closeOnDeselect="true"
                         :canClear="false"
                         :canDeselect="true"
                         trackBy="level"
@@ -227,7 +229,11 @@ import BreezeButton from '@/Components/Button.vue';
                                 :month-picker="true" 
                                 :auto-apply="true" 
                                 :placeholder="'Month / Year'" 
+                                :clearable="false"
                     />
+                </div>
+                <div class="w-full">
+                    <BreezeButton buttonType="gray" class="py-2 px-3" :route="route('progress_report')">Clear Search</BreezeButton>
                 </div>
             </div>
             <!-- <hr class="my-3 border border-dashed border-gray-400">

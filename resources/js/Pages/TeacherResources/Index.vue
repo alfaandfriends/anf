@@ -166,6 +166,9 @@ import BreezeButton from '@/Components/Button.vue';
                             }">
                         </Multiselect>
                 </div>
+                <div class="w-full">
+                    <BreezeButton buttonType="gray" class="py-2 px-3" :route="route('teacher_resources')">Clear Search</BreezeButton>
+                </div>
             </div>
             <div class="overflow-x-auto">
                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">

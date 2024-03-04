@@ -72,6 +72,7 @@ import BreezeButton from '@/Components/Button.vue';
                 <div class="relative w-full">
                     <Multiselect 
                         @select="search"
+                        @deselect="search"
                         v-model="params.day"
                         valueProp="id"
                         :appendNewOption="false"
@@ -79,9 +80,10 @@ import BreezeButton from '@/Components/Button.vue';
                         :options="$page.props.days_of_the_week"
                         :clearOnSelect="true"
                         :canClear="false"
-                        :canDeselect="false"
+                        :canDeselect="true"
                         trackBy="name"
                         label="name"
+                        :closeOnDeselect="true"
                         placeholder="Days of the week"
                         :classes="{
                             container: 'relative w-full flex items-center justify-end box-border cursor-pointer border-2 border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-10',
@@ -117,6 +119,9 @@ import BreezeButton from '@/Components/Button.vue';
                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                         }"
                     />
+                </div>
+                <div class="w-full self-center">
+                    <BreezeButton buttonType="gray" class="py-2 px-3" :route="route('classes')">Clear Search</BreezeButton>
                 </div>
             </div>
             <div class="overflow-x-auto">

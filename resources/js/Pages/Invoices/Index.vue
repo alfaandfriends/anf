@@ -97,6 +97,7 @@ import BreezeButton from '@/Components/Button.vue';
                         :searchable="true"
                         :options="$page.props.programmes"
                         :clearOnSelect="false"
+                        :closeOnDeselect="true"
                         :canClear="true"
                         :canDeselect="true"
                         trackBy="name"
@@ -147,14 +148,18 @@ import BreezeButton from '@/Components/Button.vue';
                     </Multiselect>
                 </div>
                 <div class="relative w-full">
-                    <Datepicker :class="'w-full md:w-64 lg:w-64 rounded-lg shadow-sm'" 
+                    <Datepicker :class="'w-full rounded-lg shadow-sm'" 
                                 input-class-name="invoices-date-picker focus:ring-0"
                                 v-model="params.date" 
                                 format="MMMM yyyy"
                                 :month-picker="true" 
                                 :auto-apply="true" 
                                 :placeholder="'Month / Year'" 
+                                :clearable="false"
                     />
+                </div>
+                <div class="relative w-full self-center">
+                    <BreezeButton buttonType="gray" class="py-2 px-3" :route="route('fee.invoices')">Clear Search</BreezeButton>
                 </div>
             </div>
             <div class="overflow-x-auto">

@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function(){
     /* Students */
     Route::prefix('students')->group(function () {
         Route::get('find', [StudentController::class, 'findStudents'])->name('students.find');
+        Route::get('find-digital-art-students', [StudentController::class, 'findDigitalArtStudents'])->name('students.find_digital_art_students');
         Route::get('fees/{id}', [StudentHelper::class, 'getStudentFees'])->name('students.fees');
     });
 

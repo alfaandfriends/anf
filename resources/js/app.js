@@ -68,7 +68,7 @@ InertiaProgress.init({
 /* Loading */
 const $loading = useLoading({
     container: null,
-    loader: 'bars',
+    loader: 'dots',
     lockScroll: false,
     zIndex: 9999,
     opacity: 0.2,
