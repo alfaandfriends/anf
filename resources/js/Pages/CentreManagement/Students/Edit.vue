@@ -446,8 +446,8 @@ import BreezeButton from '@/Components/Button.vue';
         </ConfirmationModal>
         
         <vue-final-modal v-model="show_add_class" :lock-scroll="true" :click-to-close="false">
-            <div id="default-modal" data-modal-show="true" aria-hidden="true" class="overflow-x-hidden overflow-y-auto h-modal md:h-full top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center">
-                <div class="absolute top-[10%] inset-x-[20%]">
+            <div id="default-modal" data-modal-show="true" aria-hidden="true" class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 flex justify-center items-center">
+                <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
                     <div class="bg-white rounded-lg shadow relative">
                         <div class="flex items-center justify-between py-3 px-6 border-b rounded-t">
                             <span class="text-lg font-semibold text-gray-700">Add New Class</span>
@@ -455,7 +455,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
                             </button>
                         </div>
-                        <div class="p-6 space-y-2 overflow-y-auto" style="max-height: calc(100vh - 350px)">
+                        <div class="p-6 space-y-2 overflow-y-auto" style="max-height: calc(100vh - calc(100vh * 0.1))">
                             <div class="px-2 mb-3">
                                 <div class="mb-5">
                                     <h1 class="font-bold text-indigo-800">Add New Class</h1>
@@ -585,15 +585,15 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                     <div class="mb-4">
-                                        <div class="shadow overflow-hidden border-b border-gray-200 rounded-t-sm rounded-b-none">
-                                            <table class="min-w-full divide-y divide-gray-200">
-                                                <thead class="bg-gray-300">
+                                        <div class="overflow-hidden rounded-t-sm rounded-b-none">
+                                            <table class="min-w-full">
+                                                <thead class="bg-indigo-200">
                                                     <tr class="px-2">
-                                                        <th class="px-2 py-1 text-left">#</th>
-                                                        <th class="px-2 py-1 text-left">Day</th>
-                                                        <th class="px-2 py-1 text-left">Time</th>
-                                                        <th class="px-2 py-1 text-left">Capacity</th>
-                                                        <th class="px-2 py-1 text-center">Action</th>
+                                                        <th class="px-3 py-1 text-left">#</th>
+                                                        <th class="px-3 py-1 text-left">Day</th>
+                                                        <th class="px-3 py-1 text-left">Time</th>
+                                                        <th class="px-3 py-1 text-left">Capacity</th>
+                                                        <th class="px-3 py-1 text-center">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -609,10 +609,10 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <span v-if="!searching.class && !list.available_classes.length">No classes available</span>
                                                         </td>
                                                     </tr>
-                                                    <tr v-else class="hover:bg-gray-200" v-for="classes, index in list.available_classes">
-                                                        <td class="px-2 py-2 text-left">{{ index + 1 }}</td>
-                                                        <td class="px-2 py-2 text-left">{{ classes.class_day}}</td>
-                                                        <td class="px-2 py-2 text-left">
+                                                    <tr v-else class="hover:bg-indigo-50" v-for="classes, index in list.available_classes">
+                                                        <td class="px-3 py-2 text-left">{{ index + 1 }}</td>
+                                                        <td class="px-3 py-2 text-left">{{ classes.class_day}}</td>
+                                                        <td class="px-3 py-2 text-left">
                                                             <div class="text-sm font-medium text-gray-900 flex items-center">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -620,8 +620,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                                 <span class="pl-2">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
                                                             </div>
                                                         </td>
-                                                        <td class="px-2 py-2 text-left">{{ classes.capacity}}</td>
-                                                        <td class="px-2 py-2 text-center">
+                                                        <td class="px-3 py-2 text-left">{{ classes.capacity}}</td>
+                                                        <td class="px-3 py-2 text-center">
                                                             <div class="flex justify-center">
                                                                 <!-- <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id)">Choose</BreezeButton> -->
                                                                 <input class="h-5 w-5 border border-indigo-300 rounded-sm focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
@@ -645,7 +645,145 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
                                 <div class="space-y-2">
-                                    <details class="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden" v-for="fee, fee_index in form.fee">
+                                    <template v-for="fee, fee_index in form.fee">
+                                        <div class="flex justify-between max-w-lg mx-auto rounded-lg overflow-hidden lg:max-w-none lg:flex border-2 bg-white border-indigo-500 border-dashed">
+                                            <div class="p-6">
+                                                <h3 class="flex space-x-4 items-center text-lg text-left uppercase leading-8 font-extrabold text-gray-900 sm:leading-9">
+                                                    <img src="/images/school.png" class="w-16 h-16" alt="">
+                                                    <span class="flex flex-col">
+                                                        <span>{{ fee.fee_info.programme_name }}</span>
+                                                        <span class="font-semibold text-sm">Level {{ fee.fee_info.programme_level }}</span>
+                                                    </span>
+                                                </h3>
+                                                <div class="mt-3">
+                                                    <ul class="flex flex-wrap gap-8">
+                                                        <li class="flex items-start lg:col-span-1">
+                                                            <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
+                                                                <span class="text-sm font-bold underline">Centre</span>
+                                                                <span class="text-sm font-semibold">{{ fee.fee_info.centre_name }}</span>
+                                                            </p>
+                                                        </li>
+                                                        <li class="flex items-start lg:col-span-1">
+                                                            <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
+                                                                <span class="text-sm font-bold underline">Class Fee</span>
+                                                                <span class="text-sm font-semibold">{{ fee.fee_info.programme_type }}</span>
+                                                            </p>
+                                                        </li>
+                                                        <li class="flex items-start lg:col-span-1">
+                                                            <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
+                                                                <span class="text-sm font-bold underline">Class Method</span>
+                                                                <span class="text-sm font-semibold">{{ fee.fee_info.class_method }}</span>
+                                                            </p>
+                                                        </li>
+                                                        <li class="flex items-start lg:col-span-1">
+                                                            <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
+                                                                <span class="text-sm font-bold underline">Classes</span>
+                                                                <div class="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                                                                    <div class="flex space-x-4 text-sm border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
+                                                                        <div class="flex items-center space-x-2">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                                                                                <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/>
+                                                                            </svg>
+                                                                            <span>{{ classes.class_day }}</span>
+                                                                        </div>
+                                                                        <div class="flex items-center space-x-2">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
+                                                                                <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
+                                                                            </svg>
+                                                                            <span>{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </p>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left mt-3">
+                                                </p>
+    
+                                            </div>
+                                            <div class="py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
+                                                <div class="flex">
+                                                    <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                    <label :for="fee_index" class="text ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                </div>
+                                                <div
+                                                    class="my-10 lg:my-6 flex items-baseline justify-center text-xl leading-none font-extrabold text-gray-900">
+                                                    <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.programme_fee }}</span><span class="leading-7 font-medium text-gray-700">/month</span>
+    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <details class="rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
+                                            <summary class="flex cursor-pointer items-center justify-between gap-2 bg-indigo-100 p-4 text-gray-900 transition">
+                                                <span class="text-sm font-medium">
+                                                    <div class="flex items-center space-x-4 text-gray-800">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 640 512" fill="currentColor">
+                                                            <path d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5V291.9c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"/>
+                                                        </svg>
+                                                        <span class="font-bold">{{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }})</span>
+                                                    </div>
+                                                </span>
+                                                <span class="transition group-open:-rotate-180">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                                                    </svg>
+                                                </span>
+                                            </summary>
+                                            <div class="p-6 space-y-4">
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="flex space-x-4 font-medium text-gray-900">
+                                                        <div class="flex items-center space-x-2 text-gray-600 text-sm">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
+                                                                <path d="M243.4 2.6l-224 96c-14 6-21.8 21-18.7 35.8S16.8 160 32 160v8c0 13.3 10.7 24 24 24H456c13.3 0 24-10.7 24-24v-8c15.2 0 28.3-10.7 31.3-25.6s-4.8-29.9-18.7-35.8l-224-96c-8-3.4-17.2-3.4-25.2 0zM128 224H64V420.3c-.6 .3-1.2 .7-1.8 1.1l-48 32c-11.7 7.8-17 22.4-12.9 35.9S17.9 512 32 512H480c14.1 0 26.5-9.2 30.6-22.7s-1.1-28.1-12.9-35.9l-48-32c-.6-.4-1.2-.7-1.8-1.1V224H384V416H344V224H280V416H232V224H168V416H128V224zM256 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>
+                                                            </svg>
+                                                            <span>{{ fee.fee_info.centre_name }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex space-x-4 font-medium text-gray-900">
+                                                        <div class="flex items-center space-x-2 text-gray-600 text-sm">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 384 512">
+                                                                <path d="M14 2.2C22.5-1.7 32.5-.3 39.6 5.8L80 40.4 120.4 5.8c9-7.7 22.3-7.7 31.2 0L192 40.4 232.4 5.8c9-7.7 22.3-7.7 31.2 0L304 40.4 344.4 5.8c7.1-6.1 17.1-7.5 25.6-3.6s14 12.4 14 21.8V488c0 9.4-5.5 17.9-14 21.8s-18.5 2.5-25.6-3.6L304 471.6l-40.4 34.6c-9 7.7-22.3 7.7-31.2 0L192 471.6l-40.4 34.6c-9 7.7-22.3 7.7-31.2 0L80 471.6 39.6 506.2c-7.1 6.1-17.1 7.5-25.6 3.6S0 497.4 0 488V24C0 14.6 5.5 6.1 14 2.2zM96 144c-8.8 0-16 7.2-16 16s7.2 16 16 16H288c8.8 0 16-7.2 16-16s-7.2-16-16-16H96zM80 352c0 8.8 7.2 16 16 16H288c8.8 0 16-7.2 16-16s-7.2-16-16-16H96c-8.8 0-16 7.2-16 16zM96 240c-8.8 0-16 7.2-16 16s7.2 16 16 16H288c8.8 0 16-7.2 16-16s-7.2-16-16-16H96z"/>
+                                                            </svg>
+                                                            <span>{{ fee.fee_info.programme_type }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex space-x-4 font-medium text-gray-900">
+                                                        <div class="flex items-center space-x-2 text-gray-600 text-sm">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                                                                <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
+                                                            </svg>
+                                                            <span>{{ fee.fee_info.class_method }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex space-x-4">
+                                                    <div class="flex space-x-4 text-sm border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
+                                                        <div class="flex items-center space-x-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                                                                <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/>
+                                                            </svg>
+                                                            <span>{{ classes.class_day }}</span>
+                                                        </div>
+                                                        <div class="flex items-center space-x-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
+                                                                <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
+                                                            </svg>
+                                                            <span>{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex pt-6 border-t justify-between">
+                                                    <div class="flex">
+                                                        <input :id="fee_index" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                        <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-700 select-none cursor-pointer">Material Fee : {{ fee.fee_info.material_fee }}</label>
+                                                    </div>
+                                                    <span class="ml-3 text-gray-900 select-none font-semibold">Fee: {{ sumMaterialFee(fee.fee_info.include_material_fee, fee.fee_info.material_fee, fee.fee_info.programme_fee) }}</span>
+                                                </div>
+                                            </div>
+                                        </details> -->
+                                    </template>
+                                    <!-- <details class="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden" v-for="fee, fee_index in form.fee">
                                         <summary class="flex cursor-pointer items-center justify-between gap-2 bg-indigo-100 p-4 text-gray-900 transition">
                                             <span class="text-sm font-medium">
                                                 <div class="flex items-center space-x-4 text-gray-800">
@@ -704,11 +842,11 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <span class="ml-3 text-gray-900 select-none font-semibold">Fee: {{ sumMaterialFee(fee.fee_info.include_material_fee, fee.fee_info.material_fee, fee.fee_info.programme_fee) }}</span>
                                             </div>
                                         </div>
-                                    </details>
+                                    </details> -->
                                 </div>
-                                <div class="flex justify-end p-6" v-if="form.fee.length">
+                                <!-- <div class="flex justify-end p-6" v-if="form.fee.length">
                                     <span class="text-right ml-3 text-gray-900 cursor-text font-bold">Total Amount: {{ total_amount }}</span>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="px-2" v-else-if="list.available_classes.length && !form.fee.length && !no_fee_found">
                                 <div id="alert-border-1" class="flex items-center p-4 text-blue-800 border-t-4 border-blue-300 bg-blue-50 dark:text-blue-400 dark:bg-gray-800 dark:border-blue-800" role="alert">

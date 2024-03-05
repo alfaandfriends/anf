@@ -224,15 +224,15 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
                                         <div class="mb-4">
-                                            <div class="shadow overflow-hidden border-b border-gray-200 rounded-t-sm rounded-b-none">
-                                                <table class="min-w-full divide-y divide-gray-200">
-                                                    <thead class="bg-gray-300">
+                                            <div class="overflow-hidden rounded-t-sm rounded-b-none">
+                                                <table class="min-w-full">
+                                                    <thead class="bg-indigo-200">
                                                         <tr class="px-2">
-                                                            <th class="px-2 py-1 text-left">#</th>
-                                                            <th class="px-2 py-1 text-left">Day</th>
-                                                            <th class="px-2 py-1 text-left">Time</th>
-                                                            <th class="px-2 py-1 text-left">Capacity</th>
-                                                            <th class="px-2 py-1 text-center">Action</th>
+                                                            <th class="px-3 py-1 text-left">#</th>
+                                                            <th class="px-3 py-1 text-left">Day</th>
+                                                            <th class="px-3 py-1 text-left">Time</th>
+                                                            <th class="px-3 py-1 text-left">Capacity</th>
+                                                            <th class="px-3 py-1 text-center">Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -248,10 +248,10 @@ import BreezeButton from '@/Components/Button.vue';
                                                                 <span v-if="!searching.class && !list.available_classes.length">No classes available</span>
                                                             </td>
                                                         </tr>
-                                                        <tr v-else class="hover:bg-gray-200" v-for="classes, index in list.available_classes">
-                                                            <td class="px-2 py-2 text-left">{{ index + 1 }}</td>
-                                                            <td class="px-2 py-2 text-left">{{ classes.class_day}}</td>
-                                                            <td class="px-2 py-2 text-left">
+                                                        <tr v-else class="hover:bg-indigo-50" v-for="classes, index in list.available_classes">
+                                                            <td class="px-3 py-2 text-left">{{ index + 1 }}</td>
+                                                            <td class="px-3 py-2 text-left">{{ classes.class_day}}</td>
+                                                            <td class="px-3 py-2 text-left">
                                                                 <div class="text-sm font-medium text-gray-900 flex items-center">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -259,8 +259,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                                     <span class="pl-2">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
                                                                 </div>
                                                             </td>
-                                                            <td class="px-2 py-2 text-left">{{ classes.capacity}}</td>
-                                                            <td class="px-2 py-2 text-center">
+                                                            <td class="px-3 py-2 text-left">{{ classes.capacity}}</td>
+                                                            <td class="px-3 py-2 text-center">
                                                                 <div class="flex justify-center">
                                                                     <!-- <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id)">Choose</BreezeButton> -->
                                                                     <input class="h-5 w-5 border border-indigo-300 rounded-sm focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
@@ -348,7 +348,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </p>
         
                                                 </div>
-                                                <div class="py-8 px-6 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
+                                                <div class="py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
                                                     <div class="flex">
                                                         <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
                                                         <label :for="fee_index" class="text ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>

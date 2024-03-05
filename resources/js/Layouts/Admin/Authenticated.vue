@@ -169,7 +169,16 @@ export default {
             <nav class="fixed w-[16rem] md:w-[18rem] top-0 left-0 z-30 h-full overflow-x-hidden overflow-y-auto no-scrollbar transition origin-left transform bg-gray-900 sm:translate-x-0"
                     :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }"
             >
-                <span class="flex justify-center items-center border-b border-dotted px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
+            
+                <div class="flex justify-center border-b border-dotted py-2">
+                <!-- Logo -->
+                    <div class="shrink-0 flex items-center">
+                        <Link href="/admin">
+                            <BreezeApplicationLogo class="h-11 fill-current text-gray-500" />
+                        </Link>
+                    </div>
+                    <span class="flex justify-center items-center px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
+                </div>
                 <nav class="text-sm font-medium text-gray-500 p-3 space-y-4 my-3">
                     <div class="space-y-1" v-for="section, section_key in $page.props.menu">
                         <p class="uppercase text-gray-100 text-xs mb-3">{{ section.name }}</p>
@@ -247,15 +256,7 @@ export default {
                         <!-- Primary Navigation Menu -->
                         
                         <div class="mx-auto px-4 sm:px-6 lg:px-8 shadow-md">
-                            <div class="flex justify-between h-16">
-                                <div class="flex">
-                                <!-- Logo -->
-                                    <div class="shrink-0 flex items-center">
-                                        <Link href="/admin">
-                                            <BreezeApplicationLogo class="h-11 fill-current text-gray-500" />
-                                        </Link>
-                                    </div>
-                                </div>
+                            <div class="flex justify-end h-16">
     
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                                 <!-- Settings Dropdown -->

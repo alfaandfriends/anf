@@ -17,7 +17,7 @@ class ProgrammeController extends Controller
     public $update_programme_config = 3;
     public $delete_programme_config = 4;
 
-    public function programmeList(){
+    public function index(){
         $query      =   DB::table('programmes')
                             ->leftJoin('countries', 'programmes.country_id', '=', 'countries.id')
                             ->select('programmes.id', 'programmes.name as programme_name', 'countries.name as country', 'programmes.status');
