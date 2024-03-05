@@ -193,7 +193,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="mt-6">
+                                                    <div class="mt-6" v-if="fee.fee_info.student_fee_status != fee.fee_info.student_fee_status">
                                                         <BreezeButton class="py-2.5 px-4" v-if="fee.fee_info.student_fee_status == 2" @click="showTransferStudent(fee.fee_info.fee_id, fee.fee_info.student_fee_id, fee.fee_info.programme_id, fee.fee_info.class_type_id, fee.fee_info.programme_level)">Confirm</BreezeButton>
                                                         <BreezeButton class="py-2.5 px-4" v-else @click="changeFeeStatus(fee.fee_info.student_fee_id, fee.fee_info.student_fee_status)">{{ fee.fee_info.student_fee_status == 2 ? 'Transfer Student' : 'Confirm'}}</BreezeButton>
                                                     </div>
