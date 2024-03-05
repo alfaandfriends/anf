@@ -264,6 +264,11 @@ import BreezeButton from '@/Components/Button.vue';
                 :confirmationRoute="confirmationRoute"
                 :confirmationData="confirmationData"
             />
+            <FsLightbox
+                :toggler="lightbox.open"
+                :sources="lightbox.src"
+                :exitFullscreenOnClose="true"
+	        />
         </div>
     </BreezeAuthenticatedLayout>
 </template>
@@ -277,11 +282,12 @@ import axios from 'axios'
 import Modal from '@/Components/Modal.vue'
 import { debounce } from 'vue-debounce'
 import Multiselect from '@vueform/multiselect'
+import FsLightbox from "fslightbox-vue/v3";
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Modal, Pagination, Multiselect
+        ConfirmationModal, Head, Link, Modal, Pagination, Multiselect, FsLightbox 
     },
     props: {
         filter: Object,
@@ -297,6 +303,10 @@ export default {
             open_modal: false,
             confirmationData: '',
             confirmationRoute: '',
+            lightbox: {
+                open: false,
+                src: [],
+            },
             student_status: [{
                 'id' : 1,
                 'name' : 'Active'
@@ -323,12 +333,12 @@ export default {
             fetch(window.location.origin+'/storage/art_gallery/'+artwork_file_location)
             .then(response => {
                 if (!response.ok) {
-                    this.artwork.file_location = window.location.origin+'/images/no_image.jpg'
+                    this.lightbox.src = [window.location.origin+'/images/no_image.jpg']
                 }
                 else{
-                    this.artwork.file_location  = window.location.origin+'/storage/art_gallery/'+artwork_file_location;
+                    this.lightbox.src  = [window.location.origin+'/storage/art_gallery/'+artwork_file_location]
                 }
-                this.open_modal         = true
+                this.lightbox.open         = !this.lightbox.open
             })
         },
         deleteArtwork(artwork_id){

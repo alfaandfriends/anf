@@ -275,7 +275,7 @@ export default {
             debounce(val => '400ms')(10)
             if(query){
                 this.isLoading = true
-                axios.get(route('students.find'), {
+                axios.get(route('students.find_digital_art_students'), {
                     params: {
                         'keyword': query
                     }

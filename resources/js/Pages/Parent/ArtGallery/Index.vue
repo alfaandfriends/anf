@@ -275,17 +275,27 @@ const images = ref([
             </div>
         </div>
     </SimpleModal>
+    <FsLightbox
+        :toggler="lightbox.open"
+        :sources="lightbox.src"
+        :exitFullscreenOnClose="true"
+    />
 </template>
 <script>
 import axios from 'axios'
 import Multiselect from '@vueform/multiselect'
 import { Head, Link } from '@inertiajs/inertia-vue3';
+import FsLightbox from "fslightbox-vue/v3";
 
 export default {
-    components: { Multiselect },
+    components: { Multiselect, FsLightbox },
     data(){
         return{
             show_upload: false,
+            lightbox: {
+                open: false,
+                src: [],
+            },
             image:{
                 show: false,
                 file: '',
@@ -406,9 +416,16 @@ export default {
             }
         },
         showImage(filename, activity){
-            this.image.file = '/storage/art_gallery/' +  filename
-            this.image.activity = activity
-            this.image.show = true
+            
+            // if (!response.ok) {
+            //         this.lightbox.src = [window.location.origin+'/images/no_image.jpg']
+            //     }
+            //     else{
+                    this.lightbox.src  = [window.location.origin+'/storage/art_gallery/'+filename]
+            //     }
+            // this.image.file = '/storage/art_gallery/' +  filename
+            // this.image.activity = activity
+            this.lightbox.open         = !this.lightbox.open
         },
         handleArtwork(){
             this.form.artwork_file  =   this.$refs.artwork_file.files[0]

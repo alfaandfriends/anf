@@ -113,12 +113,12 @@ class ArtGalleryController extends Controller
         $record_deleted =   DB::table('student_art_gallery')->where('id', $id)->delete();
 
         if($record_deleted){
-            return redirect(route('art_gallery'))->with(['type'=>'success', 'message'=>'Artwork deleted successfully !']);
+            return back()->with(['type'=>'success', 'message'=>'Artwork deleted successfully !']);
         }
         $log_data =   'Deleted artwork ID '.$id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('art_gallery'))->with(['type'=>'danger', 'message'=>'An error occured, please try again !']);
+        return back()->with(['type'=>'danger', 'message'=>'An error occured, please try again !']);
 
     }
 

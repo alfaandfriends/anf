@@ -430,9 +430,9 @@ import BreezeButton from '@/Components/Button.vue';
                                             </details> -->
                                         </template>
                                     </div>
-                                    <div class="flex justify-end p-6" v-if="form.fee.length">
+                                    <!-- <div class="flex justify-end p-6" v-if="form.fee.length">
                                         <span class="text-right ml-3 text-gray-900 cursor-text font-bold text-lg">Total Amount: {{ total_amount }}</span>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
