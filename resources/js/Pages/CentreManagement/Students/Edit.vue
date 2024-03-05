@@ -678,7 +678,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <li class="flex items-start lg:col-span-1">
                                                             <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
                                                                 <span class="text-sm font-bold underline">Classes</span>
-                                                                <div class="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                                                                <div class="grid grid-cols-1 gap-2">
                                                                     <div class="flex space-x-4 text-sm border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
                                                                         <div class="flex items-center space-x-2">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
