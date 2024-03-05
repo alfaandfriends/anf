@@ -21,56 +21,54 @@ import BreezeButton from '@/Components/Button.vue';
                     <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" v-debounce:800ms="search" v-model="params.search">
                 </div>
             </div>
-            <div class="overflow-x-auto">
-                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-300">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="1%">#</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="7%">Address</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Country</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Status</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-if="!$page.props.centres.data.length">
-                                <td class="text-center" colspan="10">
-                                    <div class="p-3">
-                                        No Record Found! 
-                                    </div>
-                                </td>
-                            </tr> 
-                            <tr class="hover:bg-gray-200" v-for="centre, index in $page.props.centres.data">
-                                <td class="px-6 py-3">
-                                    <span class="font-semibold text-black text-sm dark:text-white">{{ index + 1 }}</span>
-                                </td>
-                                <td class="px-6 py-3">
-                                    <span class="font-semibold whitespace-break-spaces text-sm">{{ centre.centre_name }}</span>
-                                </td>
-                                <td class="px-6 py-3">
-                                    <span class="font-semibold whitespace-break-spaces text-sm">{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</span>
-                                </td>
-                                <td class="px-6 py-3 text-center">
-                                    <span class="font-semibold whitespace-break-spaces text-sm">{{ centre.country_name ? centre.country_name : 'Not Set' }}</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="centre.centre_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.centre_status == 1 ? 'Active' : 'Not Active' }} </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm font-medium">
-                                    <div class="flex justify-center space-x-2">
-                                        <!-- <BreezeButton :buttonType="'blue'" title="View Images" @click="viewImages(centre.centre_id)" v-if="$page.props.can.view_centres">View Images</BreezeButton> -->
-                                        <BreezeButton :buttonType="'info'" class="px-4 py-1" title="Edit School" @click="editCentre(centre.centre_id)" v-if="$page.props.can.edit_centres">Edit</BreezeButton>
-                                        <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.centre_id)" v-if="$page.props.can.delete_centres">Delete</BreezeButton>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <Pagination :page_data="$page.props.centres" :params="params"></Pagination>
-                </div>
+            <div class="overflow-x-auto rounded">
+                <table class="divide-y divide-gray-200">
+                    <thead class="bg-gray-300">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="1%">#</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="7%">Address</th>
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Country</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Status</th>
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr v-if="!$page.props.centres.data.length">
+                            <td class="text-center" colspan="10">
+                                <div class="p-3">
+                                    No Record Found! 
+                                </div>
+                            </td>
+                        </tr> 
+                        <tr class="hover:bg-gray-200" v-for="centre, index in $page.props.centres.data">
+                            <td class="px-6 py-3">
+                                <span class="font-semibold text-black text-sm dark:text-white">{{ index + 1 }}</span>
+                            </td>
+                            <td class="px-6 py-3">
+                                <span class="font-semibold whitespace-nowrap sm:whitespace-break-spaces text-sm">{{ centre.centre_name }}</span>
+                            </td>
+                            <td class="px-6 py-3">
+                                <span class="font-semibold whitespace-nowrap sm:whitespace-break-spaces text-sm">{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</span>
+                            </td>
+                            <td class="px-6 py-3 text-center">
+                                <span class="font-semibold whitespace-nowrap sm:whitespace-break-spaces text-sm">{{ centre.country_name ? centre.country_name : 'Not Set' }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full whitespace-nowrap" :class="centre.centre_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.centre_status == 1 ? 'Active' : 'Not Active' }} </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm font-medium">
+                                <div class="flex justify-center space-x-2">
+                                    <!-- <BreezeButton :buttonType="'blue'" title="View Images" @click="viewImages(centre.centre_id)" v-if="$page.props.can.view_centres">View Images</BreezeButton> -->
+                                    <BreezeButton :buttonType="'info'" class="px-4 py-1" title="Edit School" @click="editCentre(centre.centre_id)" v-if="$page.props.can.edit_centres">Edit</BreezeButton>
+                                    <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.centre_id)" v-if="$page.props.can.delete_centres">Delete</BreezeButton>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <Pagination :page_data="$page.props.centres" :params="params"></Pagination>
             <ConfirmationModal 
                 :show="isOpen" 
                 @close="isOpen = false"
