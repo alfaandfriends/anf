@@ -187,7 +187,7 @@ export default {
                                 <div class="flex space-x-1">
                                     <div class="px-0.5 rounded-r bg-red-500" v-if="route().current() && route().current().startsWith(menu.menu_route)"></div>
                                     <BreezeNavLink v-if="$page.props.can[menu.menu_permission]" :href="route(menu.menu_route)" :active="route().current() && route().current().startsWith(menu.menu_route)" class="rounded-lg flex-auto">
-                                        <span class="mr-2" v-html="menu.menu_icon"></span>
+                                        <span class="mr-3 h-8 w-8"><img :src="'/images/' + menu.menu_icon"></span>
                                         <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
                                     </BreezeNavLink>
                                 </div>
@@ -196,7 +196,7 @@ export default {
                                 <div class="space-y-1" v-if="$page.props.can[menu.menu_permission]">
                                     <div class="flex items-center justify-between px-4 py-2 transition cursor-pointer group hover:bg-gray-800 hover:text-gray-200 rounded-lg" :class="menu_opened.section_key == section_key && menu_opened.menu_key == menu_key ? 'text-white tracking-wide bg-gray-800' : ''" role="button" @click="toggleMenu(section_key, menu_key)">
                                         <div class="flex items-center">
-                                            <span class="mr-2" v-html="menu.menu_icon"></span>
+                                            <span class="mr-3 h-8 w-8"><img :src="'/images/' + menu.menu_icon"></span>
                                             <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
                                         </div>
                                         <ChevronRightIcon :class="{ 'rotate-90': checkMenuIsOpen(section_key, menu_key) }" class="shrink-0 w-4 h-4 ml-2 transition transform"></ChevronRightIcon>
