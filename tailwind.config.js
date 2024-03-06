@@ -11,7 +11,7 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Segoe UI', ...defaultTheme.fontFamily.sans],
+                sans: ['Andika', ...defaultTheme.fontFamily.sans],
             },
         },
     },
