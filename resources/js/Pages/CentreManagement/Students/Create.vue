@@ -346,7 +346,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </div>
                                                 </div>
                                                 <div class="flex flex-col justify-center py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
-                                                    <div class="flex flex-col items-start space-y-1">
+                                                    <!-- <div class="flex flex-col items-start space-y-1">
                                                         <label class="text-sm font-semibold">Promo</label>
                                                         <select class="text-sm rounded focus:ring-0 focus:border-indigo-300 ">
                                                             <option>No Promo</option>
@@ -355,7 +355,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <option>Chinese New Year Promo</option>
                                                         </select>
                                                     </div>
-                                                    <hr class="border-gray-400 my-4">
+                                                    <hr class="border-gray-400 my-4"> -->
                                                     <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900">
                                                         <div class="flex">
                                                             <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
