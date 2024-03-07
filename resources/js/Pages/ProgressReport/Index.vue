@@ -240,7 +240,7 @@ import BreezeButton from '@/Components/Button.vue';
             <div class="grid justify-end mb-3">
                 <BreezeButton buttonType="info" @click="showCreateProgressReport()">Add Progress Report</BreezeButton>
             </div> -->
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div class="shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-300">
                         <tr>
@@ -299,8 +299,8 @@ import BreezeButton from '@/Components/Button.vue';
                         </tr>
                     </tbody>
                 </table>
-                <Pagination :page_data="$page.props.progress_reports" :params="params"></Pagination>
             </div>
+            <Pagination :page_data="$page.props.progress_reports" :params="params"></Pagination>
         </div>
         <ConfirmationModal 
             :show="isOpen" 
