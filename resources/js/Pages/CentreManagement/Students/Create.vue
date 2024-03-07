@@ -344,19 +344,27 @@ import BreezeButton from '@/Components/Button.vue';
                                                             </li>
                                                         </ul>
                                                     </div>
-                                                    <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left mt-3">
-                                                    </p>
-        
                                                 </div>
-                                                <div class="py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
-                                                    <div class="flex">
-                                                        <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                        <label :for="fee_index" class="text ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                <div class="flex flex-col justify-center py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
+                                                    <div class="flex flex-col items-start space-y-1">
+                                                        <label class="text-sm font-semibold">Promo</label>
+                                                        <select class="text-sm rounded focus:ring-0 focus:border-indigo-300 ">
+                                                            <option>No Promo</option>
+                                                            <option>Early Bird Promo</option>
+                                                            <option>Sibling Promo</option>
+                                                            <option>Chinese New Year Promo</option>
+                                                        </select>
                                                     </div>
-                                                    <div
-                                                        class="my-10 lg:my-6 flex items-baseline justify-center text-xl leading-none font-extrabold text-gray-900">
-                                                        <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.programme_fee }}</span><span class="leading-7 font-medium text-gray-700">/month</span>
-        
+                                                    <hr class="border-gray-400 my-4">
+                                                    <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900">
+                                                        <div class="flex">
+                                                            <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                            <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                        </div>
+                                                        <div class="flex justify-center space-y items-center">
+                                                            <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.programme_fee }}</span>
+                                                            <span class="leading-7 font-medium text-gray-700">/month</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

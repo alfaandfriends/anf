@@ -20,6 +20,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\ProgressReportController;
+use App\Http\Controllers\PromoController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StudentController;
@@ -329,6 +330,10 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/fee_invoices/edit', [InvoiceController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit')->middleware('permission:edit_fee_invoices');
             Route::delete('/fee_invoices/destroy/{id}', [InvoiceController::class, 'feeInvoiceDestroy'])->name('fee.invoices.destroy')->middleware('permission:delete_fee_invoices');
             Route::post('/fee_invoices/update', [InvoiceController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update')->middleware('permission:edit_fee_invoices');
+
+            
+            Route::get('/promos', [PromoController::class, 'index'])->name('fee.promos')->middleware('permission:view_promos');
+            Route::get('/promos/create', [PromoController::class, 'create'])->name('fee.promos.create')->middleware('permission:create_promos');
         });
         
         /* Products */
