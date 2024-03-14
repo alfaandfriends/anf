@@ -14,7 +14,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        
+        $status =   DB::table('order_status')->get();
         $query  =   DB::table('orders')
                         ->leftJoin('invoices', 'orders.invoice_id', '=', 'invoices.id')
                         ->leftJoin('students', 'orders.student_id', '=', 'students.id')
@@ -24,6 +24,9 @@ class OrderController extends Controller
                         ->leftJoin('invoice_status', 'invoices.status', '=', 'invoice_status.id')
                         ->leftJoin('order_shipping_providers', 'orders.shipping_provider', '=', 'order_shipping_providers.id')
                         ->join('order_status', 'orders.status', '=', 'order_status.id')
+                        ->when($request->status, function($query) use ($request){
+                            $query->where('order_status.id', $request->status);
+                        })
                         ->select('orders.id', 'orders.order_number', 'orders.products', 'orders.tracking_number', 'orders.created_at', 'order_status.name as status_name', 
                                 'orders.tracking_status as tracking_status', 'order_shipping_providers.name as shipping_provider_name',
                                  'order_status.class_name as class_name', 'invoices.id as invoice_id', 'invoices.invoice_number', 'invoices.invoice_items', 
@@ -35,7 +38,8 @@ class OrderController extends Controller
         }   
 
         return Inertia::render('Order/Index', [
-            'filter'        =>  request()->all('search'),
+            'filter'        =>  request()->all('search', 'status'),
+            'status'        =>  $status,
             'orders'        =>  $query->paginate(10)
         ]);
     }
