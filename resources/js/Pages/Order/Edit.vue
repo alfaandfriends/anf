@@ -561,8 +561,8 @@ export default {
             handler(){
                 if(this.search_product_form.product_id){
                     this.selected.product = this.list.products.find(item => item.id === this.search_product_form.product_id)
-                    this.show.product_variations                        =   this.selected.product.has_variation ? true : false
-                    this.show.product_sub_variations                    =   this.selected.product.has_sub_variation ? true : false
+                    this.show.product_variations                        =   this.selected.product.has_variation == 1 ? true : false
+                    this.show.product_sub_variations                    =   this.selected.product.has_sub_variation == 1 ? true : false
                     this.search_product_form.product_variation_id       =   ''
                     this.search_product_form.product_sub_variation_id   =   ''
                     this.selected.product_variation                     =   []

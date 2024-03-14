@@ -4,7 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Promos" />
+    <Head title="Promotions" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
@@ -27,12 +27,11 @@ import BreezeButton from '@/Components/Button.vue';
                         <thead class="bg-gray-300">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Country</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Country Code</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Currency Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Currency Code</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Currency Symbol</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Calling Code</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Duration</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Type of Value</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Value</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
                             </tr>
                         </thead>
@@ -49,25 +48,22 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="text-sm text-gray-700">{{ ++index }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.name }}</div>
+                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.country_name }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.country_code }}</div>
+                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.promotion_name }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.currency_name }}</div>
+                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.duration_name }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.currency_code }}</div>
+                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.type_name }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.currency_symbol }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.calling_code }}</div>
+                                    <div class="text-sm text-gray-900 font-semibold">{{ promo_list.promotion_value }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                    <BreezeButton buttonType="danger" @click="deleteCountry(promo_list.id)" v-if="$page.props.can.delete_country">
+                                    <BreezeButton buttonType="danger" @click="deletePromo(promo_list.promotion_id)" v-if="$page.props.can.delete_promos">
                                         Delete
                                     </BreezeButton>
                                 </td>
@@ -124,21 +120,18 @@ export default {
         promo_list: Object,
     },
     methods: {
-        editCountry(country_id){
-            this.$inertia.get(route('countries.edit'), {'country_id': country_id})
-        },
-        deleteCountry(country_id){
-            this.confirmationTitle="Delete Country"
-            this.confirmationText="Are you sure want to delete this country?"
+        deletePromo(promo_id){
+            this.confirmationTitle="Delete Promotion"
+            this.confirmationText="Are you sure want to delete this promotion?"
             this.confirmationAlert="danger"
             this.confirmationButton="Delete"
             this.confirmationMethod="delete"
-            this.confirmationRoute = 'countries.destroy'
-            this.confirmationData = country_id
+            this.confirmationRoute = 'fee.promos.destroy'
+            this.confirmationData = promo_id
             this.isOpen = true
         },
         search(){
-            this.$inertia.get(this.route('countries'), this.params, { replace: true, preserveState: true});
+            this.$inertia.get(this.route('fee.promos'), this.params, { replace: true, preserveState: true});
         }
     }
 

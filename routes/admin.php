@@ -328,12 +328,16 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/fee_invoices/create', [InvoiceController::class, 'feeInvoiceCreate'])->name('fee.invoices.create')->middleware('permission:create_fee_invoices');
             Route::post('/fee_invoices/store', [InvoiceController::class, 'feeInvoiceStore'])->name('fee.invoices.store')->middleware('permission:create_fee_invoices');
             Route::get('/fee_invoices/edit', [InvoiceController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit')->middleware('permission:edit_fee_invoices');
-            Route::delete('/fee_invoices/destroy/{id}', [InvoiceController::class, 'feeInvoiceDestroy'])->name('fee.invoices.destroy')->middleware('permission:delete_fee_invoices');
             Route::post('/fee_invoices/update', [InvoiceController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update')->middleware('permission:edit_fee_invoices');
+            Route::delete('/fee_invoices/destroy/{id}', [InvoiceController::class, 'feeInvoiceDestroy'])->name('fee.invoices.destroy')->middleware('permission:delete_fee_invoices');
 
             
             Route::get('/promos', [PromoController::class, 'index'])->name('fee.promos')->middleware('permission:view_promos');
             Route::get('/promos/create', [PromoController::class, 'create'])->name('fee.promos.create')->middleware('permission:create_promos');
+            Route::post('/promos/store', [PromoController::class, 'store'])->name('fee.promos.store')->middleware('permission:create_promos');
+            // Route::get('/promos/edit', [PromoController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit')->middleware('permission:edit_promos');
+            // Route::post('/promos/update', [PromoController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update')->middleware('permission:edit_promos');
+            Route::delete('/promos/destroy/{id}', [PromoController::class, 'destroy'])->name('fee.promos.destroy')->middleware('permission:delete_promos');
         });
         
         /* Products */
