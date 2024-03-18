@@ -283,7 +283,7 @@ class StudentController extends Controller
 
     public function edit(Request $request)
     {
-        $promos             =   DB::table('promotions')->get();
+        // $promos             =   DB::table('promotions')->get();
         $student_info       =   DB::table('students')
                                     ->join('children', 'students.children_id', '=', 'children.id')
                                     ->join('genders', 'children.gender_id', '=', 'genders.id')
