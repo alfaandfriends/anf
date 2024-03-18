@@ -345,7 +345,7 @@ class StudentController extends Controller
                                     // })
                                     ->get();
                           
-        $student_academics['current'] = !empty($result) ? collect($results)->filter(function ($result) {
+        $student_academics['current'] =  collect($results)->filter(function ($result) {
             return Carbon::parse($result->fee_month)->isCurrentMonth();
         })->groupBy('fee_id')->map(function ($group) {
             $fee_info = [
@@ -380,7 +380,7 @@ class StudentController extends Controller
                 "classes" => $classes,
                 "fee_info" => $fee_info,
             ];
-        })->values()->all() : [];
+        })->values()->all();
 
         $academics = [];
         $fees_by_month  =   collect($results)->groupBy('fee_month');
