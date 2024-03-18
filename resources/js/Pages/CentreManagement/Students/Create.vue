@@ -346,8 +346,11 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </div>
                                                 </div>
                                                 <div class="flex flex-col justify-center py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
-                                                    <!-- <div class="flex flex-col items-start space-y-1">
+                                                    <!-- <div class="flex justify-between">
                                                         <label class="text-sm font-semibold">Promo</label>
+                                                        <label class="text-sm font-semibold">Add Promo</label>
+                                                     </div>
+                                                    <div class="flex flex-col items-start space-y-1">
                                                         <select class="text-sm rounded focus:ring-0 focus:border-indigo-300 ">
                                                             <option>No Promo</option>
                                                             <option>Early Bird Promo</option>
