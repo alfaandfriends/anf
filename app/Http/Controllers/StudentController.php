@@ -431,7 +431,7 @@ class StudentController extends Controller
             'programme_list'        => $programme_list,
             'method_list'           => $method_list,
             'fee_status'            => $fee_status,
-            'promos'                => $promos,
+            // 'promos'                => $promos,
         ]);
     }
 
