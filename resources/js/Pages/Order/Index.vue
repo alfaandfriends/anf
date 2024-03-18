@@ -71,73 +71,71 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                         </Multiselect>
                 </div>
             </div>
-            <div class="overflow-x-auto">
-                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-300">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-6/14">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Attachments</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Shipment Tracking</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">Status</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-if="!$page.props.orders.data || !$page.props.orders.data.length">
-                                <td class="text-center" colspan="10">
-                                    <div class="p-3">
-                                        No Record Found!
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr v-else class="" v-for="(order, index) in $page.props.orders.data">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-700">{{ index + 1 }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        {{ order.parent_full_name }}
-                                    </div>
-                                    <div class="text-sm font-medium text-slate-500"> {{ order.parent_calling_code }}{{ order.parent_contact }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ moment(order.created_at).format('DD/MM/Y') }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap space-x-2">
-                                    <span @click="viewInvoice(order.id, index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
-                                        {{ generating[index].invoice ? 'Generating...' : 'Invoice'}}
-                                    </span>
-                                    <span @click="viewPackingSlip(order.id, index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
-                                        {{ generating[index].packing_slip ? 'Generating...' : 'Packing Slip'}}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex flex-col text-sm font-medium text-gray-900" v-if="order.shipping_provider_name">
-                                        <small class="font-bold text-gray-600">{{ order.shipping_provider_name }}</small>
-                                        <span class="font-semibold text-indigo-700">{{ order.tracking_number }}</span>
-                                    </div>
-                                    <div class="" v-else>-</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        <span @click="viewTrackingStatus(order.tracking_status)" class="border whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer " :class="[order.class_name]">{{ order.status_name }}</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                    <div class="flex space-x-2 justify-center">
-                                        <BreezeButton @click="editOrder(order.id)" buttonType="warning" v-if="$page.props.can.edit_orders">Edit</BreezeButton>
-                                        <BreezeButton @click="deleteOrder(order.id)" buttonType="danger" v-if="$page.props.can.delete_orders">Delete</BreezeButton>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <Pagination v-if="$page.props.orders.data.length" :page_data="$page.props.orders" :params="params"></Pagination>
-                </div>
+            <div class="overflow-x-auto">\
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-300">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-6/14">Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Date</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Attachments</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/14">Shipment Tracking</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">Status</th>
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr v-if="!$page.props.orders.data || !$page.props.orders.data.length">
+                            <td class="text-center" colspan="10">
+                                <div class="p-3">
+                                    No Record Found!
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-else class="" v-for="(order, index) in $page.props.orders.data">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-700">{{ index + 1 }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ order.parent_full_name }}
+                                </div>
+                                <div class="text-sm font-medium text-slate-500"> {{ order.parent_calling_code }}{{ order.parent_contact }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ moment(order.created_at).format('DD/MM/Y') }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                                <span @click="viewInvoice(order.id, index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
+                                    {{ generating[index].invoice ? 'Generating...' : 'Invoice'}}
+                                </span>
+                                <span @click="viewPackingSlip(order.id, index)" class="font-semibold border border-blue-600 bg-blue-100 hover:bg-blue-200 text-blue-700 whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer">
+                                    {{ generating[index].packing_slip ? 'Generating...' : 'Packing Slip'}}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex flex-col text-sm font-medium text-gray-900" v-if="order.shipping_provider_name">
+                                    <small class="font-bold text-gray-600">{{ order.shipping_provider_name }}</small>
+                                    <span class="font-semibold text-indigo-700">{{ order.tracking_number }}</span>
+                                </div>
+                                <div class="" v-else>-</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">
+                                    <span @click="viewTrackingStatus(order.tracking_status)" class="border whitespace-nowrap rounded px-2.5 py-1 text-sm cursor-pointer " :class="[order.class_name]">{{ order.status_name }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                <div class="flex space-x-2 justify-center">
+                                    <BreezeButton @click="editOrder(order.id)" buttonType="warning" v-if="$page.props.can.edit_orders">Edit</BreezeButton>
+                                    <BreezeButton @click="deleteOrder(order.id)" buttonType="danger" v-if="$page.props.can.delete_orders">Delete</BreezeButton>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <Pagination v-if="$page.props.orders.data.length" :page_data="$page.props.orders" :params="params"></Pagination>
             <ConfirmationModal
                 :show="show_delete_order"
                 @close="show_delete_order = false"
