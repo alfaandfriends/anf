@@ -181,7 +181,7 @@ return [
         /*
          * Package Service Providers...
          */
-        Lab404\Impersonate\ImpersonateServiceProvider::class,
+        // Lab404\Impersonate\ImpersonateServiceProvider::class,
         Billplz\Laravel\BillplzServiceProvider::class,
 
         /*

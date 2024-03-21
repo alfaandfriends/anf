@@ -152,7 +152,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <strong class="rounded border border-blue-500 bg-blue-400 px-3 py-1.5 text-[12px] font-medium text-white">{{ moment(fee.fee_info.fee_month).format('MMMM Y') }}</strong>
                                                 <h3 class="mt-4 text-lg font-medium sm:text-sm space-x-2">
                                                     <span> {{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }}) </span>
-                                                    <span class="text-red-500 hover:underline cursor-pointer font-semibold" @click="deleteClass(fee.fee_info.student_fee_id, fee.fee_info.fee_id, fee.fee_info.invoice_id, fee.fee_info.admission_date)">Delete</span>
+                                                    <span class="text-red-500 hover:underline cursor-pointer font-semibold" @click="deleteClass(fee.fee_info.student_fee_id, fee.fee_info.invoice_id, fee.fee_info.admission_date, fee.fee_info.centre_id, fee.fee_info.programme_id)">Delete</span>
                                                 </h3>
                                                 <div class="mt-3 flex space-x-4">
                                                     <div class="flex space-x-4 text-xs border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
@@ -700,13 +700,13 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </div>
                                             </div>
                                             <div class="flex flex-col justify-center py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
-                                                <div class="flex flex-col items-start space-y-1">
+                                                <!-- <div class="flex flex-col items-start space-y-1">
                                                     <label class="text-sm font-semibold">Promo</label>
                                                     <select class="text-sm rounded focus:ring-0 focus:border-indigo-300 ">
                                                         <option v-for="promo in $page.props.promos">{{ promo.name }}</option>
                                                     </select>
                                                 </div>
-                                                <hr class="border-gray-400 my-4">
+                                                <hr class="border-gray-400 my-4"> -->
                                                 <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900">
                                                     <div class="flex">
                                                         <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
@@ -1384,14 +1384,14 @@ export default {
         addClass(){
             this.$inertia.post(route('students.add_student_class'), this.form, { preserveState: false, preserveScroll: true})
         },
-        deleteClass(student_fee_id, fee_to_delete, invoice_id, admission_date){
+        deleteClass(student_fee_id, invoice_id, admission_date, centre_id, programme_id){
             this.confirmation_modal.confirmationAlert="danger"
             this.confirmation_modal.confirmationTitle="Are you sure? "
             this.confirmation_modal.confirmationText="This action is irreversible, are you sure?"
             this.confirmation_modal.confirmationButton="Delete"
             this.confirmation_modal.confirmationMethod="delete"
             this.confirmation_modal.confirmationRoute = 'students.destroy'
-            this.confirmation_modal.confirmationData = {'student_fee_id' : student_fee_id, 'fee_to_delete' : fee_to_delete, 'invoice_id' : invoice_id, 'admission_date' : admission_date}
+            this.confirmation_modal.confirmationData = {'student_fee_id' : student_fee_id, 'invoice_id' : invoice_id, 'admission_date' : admission_date, 'centre_id' : centre_id, 'programme_id' : programme_id}
             this.confirmation_modal.isOpen = true
         },
         deleteFee(programme_id, class_type){

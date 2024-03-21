@@ -53,98 +53,111 @@ class InvoiceHelper {
         $date_admission     =   $invoice_data['date_admission'];
         $currency           =   $invoice_data['currency'];
         
-        if($student_country == self::$malaysia){
-            $bill_collection_id     =   config('app.billplz.collection_id');
-            $bill_email             =   StudentHelper::getStudentEmail($invoice_data['student_id']);
-            $bill_mobile            =   '';
-            $bill_name              =   StudentHelper::getStudentName($invoice_data['student_id']);
-            $bill_amount            =   $totalFee * 100;
-            $bill_callback          =   route('fee.invoices.callback.my');
-            $bill_description       =   'Invoice Number: '.$invoice_number;
-            $bill_response          =   Billplz::bill()->create($bill_collection_id, $bill_email, $bill_mobile, $bill_name, $bill_amount, $bill_callback, $bill_description, [
-                                            'due_at'    =>  $due_date->addMonths(1)->toDateString(),
-                                            'redirect_url' => route('fee.invoices.check_status')
-                                        ]); 
-                      
-            if($bill_response->getStatusCode() == 200){
-                $invoice_id =   DB::table('invoices')->insertGetId([
-                                    'student_id'        => $student_id,
-                                    'invoice_number'    => $invoice_number,
-                                    'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
-                                    'date_issued'       => $date_admission,
-                                    'due_date'          => $due_date->addWeeks(2)->toDateString(),
-                                    'amount'            => $totalFee,
-                                    'currency'          => $currency,
-                                    'bill_id'           => $bill_response->toArray()['id'],
-                                    'payment_url'       => env('VITE_BILLPLZ_ENDPOINT').$bill_response->toArray()['id'],
-                                ]);
-        
-                return $invoice_id;
-            }
-        }
-        else if($student_country == self::$indonesia){
-            $endpoint           =   env('VITE_DOKU_ENDPOINT');
-            $target_path        =   env('VITE_DOKU_TARGET_PATH');
-            $secret_key         =   env('VITE_DOKU_SECRET_KEY');
-            $client_id          =   env('VITE_DOKU_CLIENT_ID');
-            $request_id         =   Uuid::uuid1()->toString();
-            $request_timestamp  =   Carbon::now()->format('Y-m-d\TH:i:s\Z');
-            
-            $request_body = array (
-                "order" => array(
-                    "amount"            =>  $totalFee,
-                    "invoice_number"    =>  $invoice_number,
-                    "callback_url"      =>  route('parent.invoices'),
-                    "auto_redirect"     =>  true,
-                ),
-                "payment" => array(
-                    "payment_due_date" => 43800 // 1 month
-                )
-            );
-
-            $digest_hash = base64_encode(hash('sha256', json_encode($request_body, JSON_NUMERIC_CHECK), true));
-            
-            $signature_component  = "Client-Id:".$client_id."\n".
-                                    "Request-Id:".$request_id."\n" .
-                                    "Request-Timestamp:".$request_timestamp."\n".
-                                    "Request-Target:".$target_path."\n".
-                                    "Digest:".$digest_hash;
-                        
-            $signature = base64_encode(hash_hmac('sha256', $signature_component, $secret_key, true));
-        
-            try {
-                $response = Http::withHeaders([
-                    'Client-Id'         =>  $client_id,
-                    'Request-Id'        =>  $request_id,
-                    'Request-Timestamp' =>  $request_timestamp,
-                    'Signature'         =>  "HMACSHA256=" . $signature,
-                ])->post($endpoint, $request_body);
-
-                $response_data  =   json_decode($response->body());
-
-                if($response->status() == 200){
+        if(env('APP_ENV') != 'local'){
+            if($student_country == self::$malaysia){
+                $bill_collection_id     =   config('app.billplz.collection_id');
+                $bill_email             =   StudentHelper::getStudentEmail($invoice_data['student_id']);
+                $bill_mobile            =   '';
+                $bill_name              =   StudentHelper::getStudentName($invoice_data['student_id']);
+                $bill_amount            =   $totalFee * 100;
+                $bill_callback          =   route('fee.invoices.callback.my');
+                $bill_description       =   'Invoice Number: '.$invoice_number;
+                $bill_response          =   Billplz::bill()->create($bill_collection_id, $bill_email, $bill_mobile, $bill_name, $bill_amount, $bill_callback, $bill_description, [
+                                                'due_at'    =>  $due_date->addMonths(1)->toDateString(),
+                                                'redirect_url' => route('fee.invoices.check_status')
+                                            ]); 
+                          
+                if($bill_response->getStatusCode() == 200){
                     $invoice_id =   DB::table('invoices')->insertGetId([
-                        'student_id'        => $student_id,
-                        'invoice_number'    => $invoice_number,
-                        'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
-                        'date_issued'       => $date_admission,
-                        'due_date'          => $due_date->addWeeks(2)->toDateString(),
-                        'amount'            => $totalFee,
-                        'currency'          => $currency,
-                        'bill_id'           => $response_data->response->payment->token_id,
-                        'payment_url'       => $response_data->response->payment->url,
-                    ]);
+                                        'student_id'        => $student_id,
+                                        'invoice_number'    => $invoice_number,
+                                        'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
+                                        'date_issued'       => $date_admission,
+                                        'due_date'          => $due_date->addWeeks(2)->toDateString(),
+                                        'amount'            => $totalFee,
+                                        'currency'          => $currency,
+                                        'bill_id'           => $bill_response->toArray()['id'],
+                                        'payment_url'       => env('VITE_BILLPLZ_ENDPOINT').$bill_response->toArray()['id'],
+                                    ]);
+            
                     return $invoice_id;
                 }
-            } catch (RequestException $e) {
-                event(new DatabaseTransactionEvent($e));
+            }
+            else if($student_country == self::$indonesia){
+                $endpoint           =   env('VITE_DOKU_ENDPOINT');
+                $target_path        =   env('VITE_DOKU_TARGET_PATH');
+                $secret_key         =   env('VITE_DOKU_SECRET_KEY');
+                $client_id          =   env('VITE_DOKU_CLIENT_ID');
+                $request_id         =   Uuid::uuid1()->toString();
+                $request_timestamp  =   Carbon::now()->format('Y-m-d\TH:i:s\Z');
+                
+                $request_body = array (
+                    "order" => array(
+                        "amount"            =>  $totalFee,
+                        "invoice_number"    =>  $invoice_number,
+                        "callback_url"      =>  route('parent.invoices'),
+                        "auto_redirect"     =>  true,
+                    ),
+                    "payment" => array(
+                        "payment_due_date" => 43800 // 1 month
+                    )
+                );
+    
+                $digest_hash = base64_encode(hash('sha256', json_encode($request_body, JSON_NUMERIC_CHECK), true));
+                
+                $signature_component  = "Client-Id:".$client_id."\n".
+                                        "Request-Id:".$request_id."\n" .
+                                        "Request-Timestamp:".$request_timestamp."\n".
+                                        "Request-Target:".$target_path."\n".
+                                        "Digest:".$digest_hash;
+                            
+                $signature = base64_encode(hash_hmac('sha256', $signature_component, $secret_key, true));
+            
+                try {
+                    $response = Http::withHeaders([
+                        'Client-Id'         =>  $client_id,
+                        'Request-Id'        =>  $request_id,
+                        'Request-Timestamp' =>  $request_timestamp,
+                        'Signature'         =>  "HMACSHA256=" . $signature,
+                    ])->post($endpoint, $request_body);
+    
+                    $response_data  =   json_decode($response->body());
+    
+                    if($response->status() == 200){
+                        $invoice_id =   DB::table('invoices')->insertGetId([
+                            'student_id'        => $student_id,
+                            'invoice_number'    => $invoice_number,
+                            'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
+                            'date_issued'       => $date_admission,
+                            'due_date'          => $due_date->addWeeks(2)->toDateString(),
+                            'amount'            => $totalFee,
+                            'currency'          => $currency,
+                            'bill_id'           => $response_data->response->payment->token_id,
+                            'payment_url'       => $response_data->response->payment->url,
+                        ]);
+                        return $invoice_id;
+                    }
+                } catch (RequestException $e) {
+                    event(new DatabaseTransactionEvent($e));
+                }
+            }
+            else{
+                return redirect()->back()->with(['type'=>'error', 'message'=>'An error has occurred, please try again']);
             }
         }
         else{
-            return redirect()->back()->with(['type'=>'error', 'message'=>'An error has occurred, please try again']);
-        }
+            $invoice_id =   DB::table('invoices')->insertGetId([
+                'student_id'        => $student_id,
+                'invoice_number'    => $invoice_number,
+                'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
+                'date_issued'       => $date_admission,
+                'due_date'          => $due_date->addWeeks(2)->toDateString(),
+                'amount'            => $totalFee,
+                'currency'          => $currency,
+            ]);
 
-        return false;
+            return $invoice_id;
+        }
     }
     
     public  static function getStudentFeeInvoices($student_id)

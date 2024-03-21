@@ -23,7 +23,7 @@ class OrderController extends Controller
                         ->leftJoin('countries', 'wpvt_users.user_country_id', '=', 'countries.id')
                         ->leftJoin('invoice_status', 'invoices.status', '=', 'invoice_status.id')
                         ->leftJoin('order_shipping_providers', 'orders.shipping_provider', '=', 'order_shipping_providers.id')
-                        ->join('order_status', 'orders.status', '=', 'order_status.id')
+                        ->leftJoin('order_status', 'orders.status', '=', 'order_status.id')
                         ->when($request->status, function($query) use ($request){
                             $query->where('order_status.id', $request->status);
                         })

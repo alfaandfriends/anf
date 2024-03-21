@@ -505,16 +505,18 @@ class StudentController extends Controller
         }
         /* Recreate new record */
         else{
-            $fee_to_delete          = intval($request->fee_to_delete); // Assuming you get the fee_id from the request
-            $filtered_invoice_items = $invoice_items->reject(function ($item) use ($fee_to_delete) {
-                return $item["fee_id"] === $fee_to_delete;
-            });
+            // dd($request->all(), $invoice_items->count(), $invoice_items);
+            // $fee_to_delete          = intval($request->fee_to_delete);
+            $filtered_invoice_items = $invoice_items->reject(function ($item) use ($request) {
+                return $item["centre_id"] == $request->centre_id && $item["programme_id"] == $request->programme_id;
+            })->values();
+            // dd($filtered_invoice_items);
 
             DB::table('invoices')->where('id', $request->invoice_id)->delete(); 
             DB::table('student_fees')
                 ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
                 ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
-                ->where('student_fees.fee_id', $request->fee_to_delete)->delete();
+                ->where('student_fees.id', $request->student_fee_id)->delete();
             
             /* Create Invoice */
             $new_invoice_data['student_id']         =   $invoice_data->student_id;
@@ -591,7 +593,7 @@ class StudentController extends Controller
             $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
-            
+
             foreach($request->fee as $fee_index=>$fee){
                 /* Create Fee */
                 $student_fee_id     =   DB::table('student_fees')->insertGetId([
@@ -669,7 +671,7 @@ class StudentController extends Controller
             event(new DatabaseTransactionEvent($e));
             DB::rollback();
             
-            return redirect(route('students'))->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
+            return back()->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
         }
     }
 
