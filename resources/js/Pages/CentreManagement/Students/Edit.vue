@@ -629,7 +629,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                                         :checked="checkIfClassSelected(classes.class_id, classes.programme_id)"
                                                                         :disabled="disable_check_box"
                                                                         :class="disable_check_box ? 'bg-gray-100' : 'bg-white'"
-                                                                        @click="getPlusFee($event, classes.class_id, classes.class_type, classes.programme_id)">
+                                                                        @click="getPlusFee($event, classes.class_id, classes.class_type, classes.programme_id, false)">
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -1310,11 +1310,9 @@ export default {
                 return
             }
             if(!is_transfer_student){
-                const  programme_already_added_form   = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type);
-                // const  programme_already_added_current   = this.current_fee.find(item => item.fee_info.programme_id == programme_id);
-                // if(programme_already_added_form || programme_already_added_current){
+                const programme_already_added_form   = this.current_fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.student_fee_status == '');
                 if(programme_already_added_form){
-                    alert('This programme already been added. Please remove the previous one first.')
+                    alert('This programme already been added. Please remove the previous one first or set the status.')
                     if(event.target.checked){
                         event.target.checked = false
                     }
@@ -1322,7 +1320,7 @@ export default {
                     return
                 }
             }
-
+            
             this.disable_check_box = true
 
             if(event.target.checked){
