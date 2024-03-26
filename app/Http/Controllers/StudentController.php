@@ -162,10 +162,13 @@ class StudentController extends Controller
     {
         $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
+        $promos             =   DB::table('promotions')->get();
+
 
         return Inertia::render('CentreManagement/Students/Create', [
             'programme_list'    => $programme_list,
             'method_list'       => $method_list,
+            'promos'            => $promos,
             'centre_id'         => $request->centre_id
         ]);
     }
