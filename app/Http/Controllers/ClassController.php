@@ -270,7 +270,7 @@ class ClassController extends Controller
                                 ->select(['class_types.id', 'class_types.name'])
                                 ->distinct('class_types.id')
                                 ->where('programme_levels.programme_id', $request->programme_id)
-                                ->orderBy('class_types.id')
+                                ->orderBy('class_types.rank')
                                 ->get();
         return $class_types;
     }
