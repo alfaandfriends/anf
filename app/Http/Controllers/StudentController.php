@@ -332,7 +332,7 @@ class StudentController extends Controller
                                                 'centres.label as centre_name', 
                                                 'class_types.id as class_type_id', 
                                                 'class_methods.name as class_method', 
-                                                'invoices.id as invoice_id', 
+                                                'student_fees.invoice_id as invoice_id', 
                                                 'student_fees.admission_date as admission_date', 
                                                 'student_fees.id as student_fee_id', 
                                                 'student_fees.created_at as fee_month', 
@@ -344,7 +344,7 @@ class StudentController extends Controller
                                     //         ->whereNull('student_fees.status');
                                     // })
                                     ->get();
-                          
+                                           
         $student_academics['current'] =  collect($results)->filter(function ($result) {
             return Carbon::parse($result->fee_month)->isCurrentMonth();
         })->groupBy('fee_id')->map(function ($group) {
@@ -481,6 +481,7 @@ class StudentController extends Controller
     public function destroy(Request $request)
     {
         $invoice_data       =  DB::table('invoices')->where('id', $request->invoice_id)->first();
+        dd($request->all());
         $invoice_items      =   collect(json_decode($invoice_data->invoice_items, true));
         $student_country    =   StudentHelper::getStudentCountryId($invoice_data->student_id);
 
