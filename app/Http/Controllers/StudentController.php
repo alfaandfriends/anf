@@ -344,7 +344,7 @@ class StudentController extends Controller
                                     //         ->whereNull('student_fees.status');
                                     // })
                                     ->get();
-                                           
+
         $student_academics['current'] =  collect($results)->filter(function ($result) {
             return Carbon::parse($result->fee_month)->isCurrentMonth();
         })->groupBy('fee_id')->map(function ($group) {
@@ -380,7 +380,7 @@ class StudentController extends Controller
                 "classes" => $classes,
                 "fee_info" => $fee_info,
             ];
-        })->values()->all();
+        })->values()->all(); 
 
         $academics = [];
         $fees_by_month  =   collect($results)->groupBy('fee_month');
@@ -480,68 +480,77 @@ class StudentController extends Controller
 
     public function destroy(Request $request)
     {
-        $invoice_data       =  DB::table('invoices')->where('id', $request->invoice_id)->first();
-        $invoice_items      =   collect(json_decode($invoice_data->invoice_items, true));
-        $student_country    =   StudentHelper::getStudentCountryId($invoice_data->student_id);
-
-        /* Check if paid */ 
-        if(env('APP_ENV') != 'local'){
-            if($student_country == $this->malaysia){
-                if($invoice_data->bill_id){
-                    $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
-                    if(!$bill['paid']){
-                        Billplz::bill()->destroy($invoice_data->bill_id);
-                    }
-                }
-            }
-        }
-        /* Delete related records */
-        if($invoice_items->count() <= 1){
+        $invoice_data       =   DB::table('invoices')->where('id', $request->invoice_id)->first();
+        if(!$invoice_data){
             DB::table('student_fees')
                 ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
                 ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
                 ->where('student_fees.invoice_id', $request->invoice_id)->delete();
-            DB::table('invoices')->where('id', $request->invoice_id)->delete();
         }
-        /* Recreate new record */
         else{
-            // dd($request->all(), $invoice_items->count(), $invoice_items);
-            // $fee_to_delete          = intval($request->fee_to_delete);
-            $filtered_invoice_items = $invoice_items->reject(function ($item) use ($request) {
-                return $item["centre_id"] == $request->centre_id && $item["programme_id"] == $request->programme_id;
-            })->values();
-            // dd($filtered_invoice_items);
-
-            DB::table('invoices')->where('id', $request->invoice_id)->delete(); 
-            DB::table('student_fees')
-                ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
-                ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
-                ->where('student_fees.id', $request->student_fee_id)->delete();
+            $invoice_items      =   collect(json_decode($invoice_data->invoice_items, true));
+            $student_country    =   StudentHelper::getStudentCountryId($invoice_data->student_id);
+    
+            /* Check if paid */ 
+            if(env('APP_ENV') != 'local'){
+                if($student_country == $this->malaysia){
+                    if($invoice_data->bill_id){
+                        $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
+                        if(!$bill['paid']){
+                            Billplz::bill()->destroy($invoice_data->bill_id);
+                        }
+                    }
+                }
+            }
+            /* Delete related records */
+            if($invoice_items->count() <= 1){
+                DB::table('student_fees')
+                    ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
+                    ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
+                    ->where('student_fees.invoice_id', $request->invoice_id)->delete();
+                DB::table('invoices')->where('id', $request->invoice_id)->delete();
+            }
+            /* Recreate new record */
+            else{
+                // dd($request->all(), $invoice_items->count(), $invoice_items);
+                // $fee_to_delete          = intval($request->fee_to_delete);
+                $filtered_invoice_items = $invoice_items->reject(function ($item) use ($request) {
+                    return $item["centre_id"] == $request->centre_id && $item["programme_id"] == $request->programme_id;
+                })->values();
+                // dd($filtered_invoice_items);
+    
+                DB::table('invoices')->where('id', $request->invoice_id)->delete(); 
+                DB::table('student_fees')
+                    ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
+                    ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
+                    ->where('student_fees.id', $request->student_fee_id)->delete();
+                
+                /* Create Invoice */
+                $new_invoice_data['student_id']         =   $invoice_data->student_id;
+                $new_invoice_data['children_id']        =   StudentHelper::getChildId($invoice_data->student_id);
+                $new_invoice_data['invoice_items']      =   $filtered_invoice_items;
+                $new_invoice_data['date_admission']     =   Carbon::parse($request->admission_date)->format('Y-m-d');
+                $new_invoice_data['currency']           =   StudentHelper::getStudentCurrency($invoice_data->student_id);
             
-            /* Create Invoice */
-            $new_invoice_data['student_id']         =   $invoice_data->student_id;
-            $new_invoice_data['children_id']        =   StudentHelper::getChildId($invoice_data->student_id);
-            $new_invoice_data['invoice_items']      =   $filtered_invoice_items;
-            $new_invoice_data['date_admission']     =   Carbon::parse($request->admission_date)->format('Y-m-d');
-            $new_invoice_data['currency']           =   StudentHelper::getStudentCurrency($invoice_data->student_id);
-        
-            $new_invoice_id =   InvoiceHelper::newFeeInvoice($new_invoice_data);
+                $new_invoice_id =   InvoiceHelper::newFeeInvoice($new_invoice_data);
+                
+                DB::table('student_fees')->where('invoice_id', $request->invoice_id)->update([
+                    'invoice_id'    =>  $new_invoice_id
+                ]);
+                
+                $fee_ids            =   $filtered_invoice_items->pluck('fee_id')->toArray();
+                $produce_items      =   ProductHelper::getProductDataByFee($fee_ids);
+    
+                /* Create Order */
+                $order_data['student_id']   =   $invoice_data->student_id;
+                $order_data['invoice_id']   =   $new_invoice_id;
+                $order_data['products']     =   $produce_items;
+                OrderHelper::newOrder($order_data);
+            }
             
-            DB::table('student_fees')->where('invoice_id', $request->invoice_id)->update([
-                'invoice_id'    =>  $new_invoice_id
-            ]);
-            
-            $fee_ids            =   $filtered_invoice_items->pluck('fee_id')->toArray();
-            $produce_items      =   ProductHelper::getProductDataByFee($fee_ids);
-
-            /* Create Order */
-            $order_data['student_id']   =   $invoice_data->student_id;
-            $order_data['invoice_id']   =   $new_invoice_id;
-            $order_data['products']     =   $produce_items;
-            OrderHelper::newOrder($order_data);
+            $log_data =   'Deleted student fee ID ' . $invoice_data->student_id . ' data';
+            event(new DatabaseTransactionEvent($log_data));
         }
-        $log_data =   'Deleted student ID ' . $invoice_data->student_id . ' data';
-        event(new DatabaseTransactionEvent($log_data));
 
         return redirect()->back()->with(['type'=>'success', 'message'=>'Student data deleted successfully!']);
     }
