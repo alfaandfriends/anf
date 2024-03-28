@@ -481,7 +481,6 @@ class StudentController extends Controller
     public function destroy(Request $request)
     {
         $invoice_data       =  DB::table('invoices')->where('id', $request->invoice_id)->first();
-        dd($request->all());
         $invoice_items      =   collect(json_decode($invoice_data->invoice_items, true));
         $student_country    =   StudentHelper::getStudentCountryId($invoice_data->student_id);
 
