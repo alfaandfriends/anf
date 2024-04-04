@@ -162,7 +162,13 @@ class StudentController extends Controller
     {
         $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
-        $promos             =   DB::table('promotions')->get();
+        $promos             =   DB::table('promotions')
+                                    ->join('promotion_types', 'promotions.type_id', '=', 'promotion_types.id')
+                                    ->join('promotion_durations', 'promotions.duration_id', '=', 'promotion_durations.id')
+                                    ->select('promotions.id as promo_id', 'promotions.name as promo_name', 'promotion_types.id as type_id', 
+                                            'promotion_types.name as type_name', 'promotions.value as value', 'promotion_durations.id as duration_id', 
+                                            'promotion_durations.name as duration_name', 'promotion_durations.duration as duration_count')
+                                    ->get();
 
 
         return Inertia::render('CentreManagement/Students/Create', [
@@ -210,6 +216,14 @@ class StudentController extends Controller
                     'invoice_id'        =>  $new_invoice_id,
                     'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
                 ]);
+
+                foreach($fee['fee_info']['promos'] as $promo_index=>$promo){
+                    DB::table('student_fee_promotions')->insert([
+                        'student_fee_id'        =>  $student_fee_id,
+                        'promotion_id'          =>  $promo['promo_id'],
+                        'duration_remaining'    =>  $promo['duration_count'] - 1,
+                    ]);
+                }
 
                 /* Create Class */
                 foreach($fee['classes'] as $class_key => $class){
@@ -287,6 +301,13 @@ class StudentController extends Controller
     public function edit(Request $request)
     {
         // $promos             =   DB::table('promotions')->get();
+        $promos             =   DB::table('promotions')
+        ->join('promotion_types', 'promotions.type_id', '=', 'promotion_types.id')
+        ->join('promotion_durations', 'promotions.duration_id', '=', 'promotion_durations.id')
+        ->select('promotions.id as promo_id', 'promotions.name as promo_name', 'promotion_types.id as type_id', 
+                'promotion_types.name as type_name', 'promotions.value as value', 'promotion_durations.id as duration_id', 
+                'promotion_durations.name as duration_name', 'promotion_durations.duration as duration_count')
+        ->get();
         $student_info       =   DB::table('students')
                                     ->join('children', 'students.children_id', '=', 'children.id')
                                     ->join('genders', 'children.gender_id', '=', 'genders.id')
@@ -320,6 +341,9 @@ class StudentController extends Controller
                                     ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
                                     ->leftJoin('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
                                     ->leftJoin('invoices', 'student_fees.invoice_id', '=', 'invoices.id')
+                                    ->leftJoin('student_fee_promotions', 'student_fee_promotions.student_fee_id', '=', 'student_fees.id')
+                                    ->leftJoin('promotions', 'student_fee_promotions.promotion_id', '=', 'promotions.id')
+                                    ->leftJoin('promotion_types', 'promotions.type_id', '=', 'promotion_types.id')
                                     ->select(   'classes.id as class_id', 
                                                 'class_days.name as class_day', 
                                                 'classes.start_time', 
@@ -335,17 +359,18 @@ class StudentController extends Controller
                                                 'centres.label as centre_name', 
                                                 'class_types.id as class_type_id', 
                                                 'class_methods.name as class_method', 
+                                                'student_fee_promotions.id as student_fee_promo_id', 
+                                                'promotions.id as promo_id', 
+                                                'promotions.name as promo_name', 
+                                                'promotions.value as promo_value', 
+                                                'promotion_types.id as promo_type_id', 
+                                                'promotion_types.name as promo_type_name', 
                                                 'student_fees.invoice_id as invoice_id', 
                                                 'student_fees.admission_date as admission_date', 
                                                 'student_fees.id as student_fee_id', 
                                                 'student_fees.created_at as fee_month', 
                                                 'student_fees.status as student_fee_status')
                                     ->where('student_fees.student_id', $request->student_id)
-                                    // ->where(function($query){
-                                    //     $query->whereYear('student_fees.created_at', '=', now()->year)
-                                    //         ->whereMonth('student_fees.created_at', '=', now()->month)
-                                    //         ->whereNull('student_fees.status');
-                                    // })
                                     ->get();
 
         $student_academics['current'] =  collect($results)->filter(function ($result) {
@@ -378,12 +403,30 @@ class StudentController extends Controller
                     "end_time" => $item->end_time,
                 ];
             })->values()->all();
-        
+            
+            $promo_exist    =   $group[0]->promo_id ? true : false;
+            if($promo_exist){
+                $promos =  $group->map(function ($item) {
+                    return [
+                        "student_fee_promo_id" => $item->student_fee_promo_id,
+                        "promo_id" => $item->promo_id,
+                        "promo_name" => $item->promo_name,
+                        "promo_value" => $item->promo_value,
+                        "promo_type_id" => $item->promo_type_id,
+                        "promo_type_name" => $item->promo_type_name,
+                    ];
+                })->values()->all();
+            }
+            else{
+                $promos =  [];
+            }
+
             return [
                 "classes" => $classes,
-                "fee_info" => $fee_info,
+                "fee_info" => array_merge($fee_info, ["promos" => $promos]),
             ];
         })->values()->all(); 
+
 
         $academics = [];
         $fees_by_month  =   collect($results)->groupBy('fee_month');
@@ -428,13 +471,13 @@ class StudentController extends Controller
         $fee_status        =   DB::table('student_fee_status')->get();
         
         return Inertia::render('CentreManagement/Students/Edit', [
-            'student_info'          => $student_info,
-            'student_academics'     => $student_academics,
-            'gender_list'           => $gender_list,
-            'programme_list'        => $programme_list,
-            'method_list'           => $method_list,
-            'fee_status'            => $fee_status,
-            // 'promos'                => $promos,
+            'student_info'          =>  $student_info,
+            'student_academics'     =>  $student_academics,
+            'gender_list'           =>  $gender_list,
+            'programme_list'        =>  $programme_list,
+            'method_list'           =>  $method_list,
+            'fee_status'            =>  $fee_status,
+            'promos'                =>  $promos
         ]);
     }
 
@@ -512,23 +555,24 @@ class StudentController extends Controller
                     ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
                     ->where('student_fees.invoice_id', $request->invoice_id)->delete();
                 DB::table('invoices')->where('id', $request->invoice_id)->delete();
+                DB::table('orders')->where('invoice_id', $request->invoice_id)->delete();
             }
             /* Recreate new record */
             else{
-                // dd($request->all(), $invoice_items->count(), $invoice_items);
-                // $fee_to_delete          = intval($request->fee_to_delete);
+                /* Remove fee in invoice json */
                 $filtered_invoice_items = $invoice_items->reject(function ($item) use ($request) {
                     return $item["centre_id"] == $request->centre_id && $item["programme_id"] == $request->programme_id;
                 })->values();
-                // dd($filtered_invoice_items);
     
+                /* Remove fee in table */
                 DB::table('invoices')->where('id', $request->invoice_id)->delete(); 
                 DB::table('student_fees')
                     ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
                     ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
                     ->where('student_fees.id', $request->student_fee_id)->delete();
+                DB::table('orders')->where('invoice_id', $request->invoice_id)->delete();
                 
-                /* Create Invoice */
+                /* Create latest Invoice */
                 $new_invoice_data['student_id']         =   $invoice_data->student_id;
                 $new_invoice_data['children_id']        =   StudentHelper::getChildId($invoice_data->student_id);
                 $new_invoice_data['invoice_items']      =   $filtered_invoice_items;
@@ -733,6 +777,94 @@ class StudentController extends Controller
         event(new DatabaseTransactionEvent($log_data));
 
         return back()->with(['type'=>'success', 'message' => 'Student has been transferred successfully.']);
+    }
+
+    public function addPromo(Request $request){
+
+        
+        $fee_info       =   collect(DB::table('student_fees')->where('id', $request->student_fee_id)->first())->toArray();
+        $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info['invoice_id'])->pluck('invoice_items')->first(), true);
+        
+
+        $updated_fees = collect($invoice_info)->map(function ($fee) use ($request){
+            if ($fee['fee_id'] === $request->fee_id) {
+                $fee['promos'][] = [
+                    "value" => $request->data['value'],
+                    "type_id" => $request->data['type_id'],
+                    "promo_id" => $request->data['promo_id'],
+                    "type_name" => $request->data['type_name'],
+                    "promo_name" => $request->data['promo_name'],
+                    "duration_id" => $request->data['duration_id'],
+                    "duration_name" => $request->data['duration_name'],
+                    "duration_count" => $request->data['duration_count']
+                ];
+            }
+            return $fee;
+        });
+        
+        DB::table('invoices')->where('id', $fee_info['invoice_id'])->delete(); 
+        
+        DB::table('student_fee_promotions')->insert([
+            'student_fee_id'        =>  $request->student_fee_id,
+            'promotion_id'          =>  $request->data['promo_id'],
+            'duration_remaining'    =>  $request->data['duration_count'] - 1,
+        ]);
+        
+        /* Create latest Invoice */
+        $new_invoice_data['student_id']         =   $fee_info['student_id'];
+        $new_invoice_data['children_id']        =   StudentHelper::getChildId($fee_info['student_id']);
+        $new_invoice_data['invoice_items']      =   $updated_fees;
+        $new_invoice_data['date_admission']     =   now()->format('Y-m-d');
+        $new_invoice_data['currency']           =   StudentHelper::getStudentCurrency($fee_info['student_id']);
+    
+        $new_invoice_id =   InvoiceHelper::newFeeInvoice($new_invoice_data);
+        
+        DB::table('student_fees')->where('invoice_id', $fee_info['invoice_id'])->update([
+            'invoice_id'    =>  $new_invoice_id
+        ]);
+
+        $log_data =   'Added Promo for '.$request->student_fee_id;
+        event(new DatabaseTransactionEvent($log_data));
+
+        return back()->with(['type'=>'success', 'message' => 'Promo added successfully.']);
+    }
+
+    public function deletePromo(Request $request){
+        // $centre_info    =   CentreHelper::getCentreInfo($request->centre_id);
+        $student_id     =   $request->form['student_id'];
+        $fee_info       =   collect(DB::table('student_fees')->where('student_id', $student_id)->where('id', $request->student_fee_id)->first())->toArray();
+        $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info['invoice_id'])->pluck('invoice_items')->first(), true);
+
+        $filtered_invoice_items = array_map(function ($fee) use ($request) {
+            if (isset($fee['promos']) && $fee['fee_id'] === (int)$request->fee_id) {
+                $fee['promos'] = array_filter($fee['promos'], function ($promo) use ($request) {
+                    return $promo['promo_id'] !== (int)$request->promo_id;
+                });
+            }
+            return $fee;
+        }, $invoice_info);
+        
+        /* Remove fee in table */
+        DB::table('invoices')->where('id', $fee_info['invoice_id'])->delete(); 
+        DB::table('student_fee_promotions')->where('student_fee_id', $request->student_fee_id)->where('promotion_id', $request->promo_id)->delete();
+        
+        /* Create latest Invoice */
+        $new_invoice_data['student_id']         =   $fee_info['student_id'];
+        $new_invoice_data['children_id']        =   StudentHelper::getChildId($fee_info['student_id']);
+        $new_invoice_data['invoice_items']      =   $filtered_invoice_items;
+        $new_invoice_data['date_admission']     =   Carbon::parse($request->admission_date)->format('Y-m-d');
+        $new_invoice_data['currency']           =   StudentHelper::getStudentCurrency($fee_info['student_id']);
+    
+        $new_invoice_id =   InvoiceHelper::newFeeInvoice($new_invoice_data);
+        
+        DB::table('student_fees')->where('invoice_id', $fee_info['invoice_id'])->update([
+            'invoice_id'    =>  $new_invoice_id
+        ]);
+
+        $log_data =   'Deleted Promo for '.$request->student_fee_id;
+        event(new DatabaseTransactionEvent($log_data));
+
+        return back()->with(['type'=>'success', 'message' => 'Promo deleted successfully.']);
     }
 
     /* Usage: $this->getDatesForDayOfWeekFromCustomDate(1, '2023-05-02') */

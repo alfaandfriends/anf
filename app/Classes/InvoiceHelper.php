@@ -40,11 +40,26 @@ class InvoiceHelper {
 
         $invoice_items      =   collect($invoice_data['invoice_items']);
 
+        /* Calculate total fee */
         $totalFee = $invoice_items->sum(function ($item) {
             return $item['include_material_fee']
                 ? $item['programme_fee'] + $item['material_fee']
                 : $item['programme_fee'];
         });
+        
+        /* Calculate total promo */
+        $totalPromo =   0;
+        foreach($invoice_items as $fee_key => $fee){
+            foreach($fee['promos'] as $promo_key => $promo){
+                if($promo['type_id'] === 1){
+                    $totalPromo += ($fee['programme_fee'] * $promo['value'] / 100);
+                }
+                if($promo['type_id'] === 2){
+                    $totalPromo += $promo['value'];
+                }
+            }
+        }
+        $totalFee = $totalFee - $totalPromo;
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];

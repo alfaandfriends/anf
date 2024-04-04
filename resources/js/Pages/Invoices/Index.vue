@@ -25,10 +25,10 @@ import BreezeButton from '@/Components/Button.vue';
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <div class="py-4 px-4">
-            <div class="flex justify-end mb-3" v-if="$page.props.can.create_fee_invoices">
+            <!-- <div class="flex justify-end mb-3" v-if="$page.props.can.create_fee_invoices">
                 <BreezeButton :route="route('fee.invoices.create', {'params': params})">New invoice</BreezeButton>
             </div>
-            <hr class="my-3 border border-dashed border-gray-400">
+            <hr class="my-3 border border-dashed border-gray-400"> -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
                 <div class="relative w-full">
                     <svg class="absolute top-2.5 left-3 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none">
