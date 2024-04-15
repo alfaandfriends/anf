@@ -803,14 +803,14 @@ export default {
             
             if (!promoAdded && selectedPromo) {
                 this.form.fee[this.selected_promo.fee_index].fee_info.promos.push({
-                    promo_id: selectedPromo.promo_id,
+                    promo_id: parseInt(selectedPromo.promo_id),
                     promo_name: selectedPromo.promo_name,
-                    type_id: selectedPromo.type_id,
+                    type_id: parseInt(selectedPromo.type_id),
                     type_name: selectedPromo.type_name,
-                    value: selectedPromo.value,
-                    duration_id: selectedPromo.type_id,
+                    value: parseInt(selectedPromo.value),
+                    duration_id: parseInt(selectedPromo.type_id),
                     duration_name: selectedPromo.duration_name,
-                    duration_count: selectedPromo.duration_count
+                    duration_count: parseInt(selectedPromo.duration_count)
                 });
             }
 
