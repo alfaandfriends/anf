@@ -380,20 +380,20 @@ class StudentController extends Controller
             return Carbon::parse($result->fee_month)->isCurrentMonth();
         })->groupBy('fee_id')->map(function ($group) {
             $fee_info = [
-                "centre_id" => intval($group->first()->centre_id),
+                "centre_id" => (int)$group->first()->centre_id,
                 "centre_name" => $group->first()->centre_name,
                 "class_method" => $group->first()->class_method,
-                "class_type_id" => intval($group->first()->class_type_id),
-                "fee_id" => intval($group->first()->fee_id),
-                "material_fee" => intval($group->first()->material_fee),
-                "programme_fee" => intval($group->first()->programme_fee),
-                "programme_id" => intval($group->first()->programme_id),
-                "programme_level" => intval($group->first()->programme_level),
+                "class_type_id" => (int)$group->first()->class_type_id,
+                "fee_id" => (int)$group->first()->fee_id,
+                "material_fee" => (int)$group->first()->material_fee,
+                "programme_fee" => (int)$group->first()->programme_fee,
+                "programme_id" => (int)$group->first()->programme_id,
+                "programme_level" => (int)$group->first()->programme_level,
                 "programme_name" => $group->first()->programme_name,
                 "programme_type" => $group->first()->programme_type,
-                "invoice_id" => intval($group->first()->invoice_id),
+                "invoice_id" => (int)$group->first()->invoice_id,
                 "admission_date" => $group->first()->admission_date,
-                "student_fee_id" => intval($group->first()->student_fee_id),
+                "student_fee_id" => (int)$group->first()->student_fee_id,
                 "fee_month" => $group->first()->fee_month,
                 "student_fee_status" => $group->first()->student_fee_status ? $group->first()->student_fee_status : '',
             ];
@@ -411,11 +411,11 @@ class StudentController extends Controller
             if($promo_exist){
                 $promos =  $group->map(function ($item) {
                     return [
-                        "student_fee_promo_id" => intval($item->student_fee_promo_id),
-                        "promo_id" => intval($item->promo_id),
+                        "student_fee_promo_id" => (int)$item->student_fee_promo_id,
+                        "promo_id" => (int)$item->promo_id,
                         "promo_name" => $item->promo_name,
-                        "promo_value" => intval($item->promo_value),
-                        "promo_type_id" => intval($item->promo_type_id),
+                        "promo_value" => (int)$item->promo_value,
+                        "promo_type_id" => (int)$item->promo_type_id,
                         "promo_type_name" => $item->promo_type_name,
                     ];
                 })->values()->all();
