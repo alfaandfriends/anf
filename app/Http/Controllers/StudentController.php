@@ -541,7 +541,7 @@ class StudentController extends Controller
             $student_country    =   StudentHelper::getStudentCountryId($invoice_data->student_id);
     
             /* Check if paid */ 
-            if(env('APP_ENV') != 'local'){
+            if(env('APP_ENV') == 'production'){
                 if($student_country == $this->malaysia){
                     if($invoice_data->bill_id){
                         $bill   =   Billplz::bill()->get($invoice_data->bill_id)->toArray();
@@ -662,6 +662,14 @@ class StudentController extends Controller
                     'invoice_id'        =>  $new_invoice_id,
                     'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
                 ]);
+
+                foreach($fee['fee_info']['promos'] as $promo_index=>$promo){
+                    DB::table('student_fee_promotions')->insert([
+                        'student_fee_id'        =>  $student_fee_id,
+                        'promotion_id'          =>  $promo['promo_id'],
+                        'duration_remaining'    =>  $promo['duration_count'] - 1,
+                    ]);
+                }
 
                 /* Create Class */
                 foreach($fee['classes'] as $class_key => $class){

@@ -195,12 +195,12 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <div class="px-4 py-3 rounded border border-indigo-500 border-dashed bg-indigo-50">
                                                         <label for="fee_status" class="block text-sm font-bold text-gray-700 space-x-2"> 
                                                             <span>Promos</span> 
-                                                            <button @click="showPromoModal(fee_index, fee.fee_info.fee_id, fee.fee_info.student_fee_id)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 hover:bg-indigo-100 whitespace-nowrap">Add Promo</button>
+                                                            <button @click="showExistingClassPromoModal(fee_index, fee.fee_info.fee_id, fee.fee_info.student_fee_id)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 hover:bg-indigo-100 whitespace-nowrap">Add Promo</button>
                                                         </label>
                                                         <simplebar v-if="fee.fee_info.promos.length" data-simplebar-auto-hide="true" class="mt-3 pb-3">
                                                             <span class="flex space-x-2 items-center justify-center rounded-md bg-indigo-200 px-2.5 py-1 font-semibold text-indigo-800 transform hover:scale-105 duration-200" v-for="applied_promo, promo_index in fee.fee_info.promos">
                                                                 <p class="whitespace-nowrap text-xs">{{ applied_promo.promo_name }}</p>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" @click="deletePromo(fee.fee_info.fee_id, fee.fee_info.student_fee_id, applied_promo.promo_id, applied_promo.student_fee_promo_id)" class="h-4 w-4 text-red-600 cursor-pointer">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" @click="deleteExistingClassPromo(fee.fee_info.fee_id, fee.fee_info.student_fee_id, applied_promo.promo_id, applied_promo.student_fee_promo_id)" class="h-4 w-4 text-red-600 cursor-pointer">
                                                                     <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
                                                                 </svg>
                                                             </span>
@@ -518,10 +518,94 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                             <div class="px-2 mb-3" v-if="list.available_classes.length && form.fee.length">
                                 <div class="mb-5">
-                                    <h1 class="font-bold text-indigo-800">Fee Information</h1>
+                                    <h1 class="font-bold text-indigo-800">Fee Confirmation</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                 </div>
                                 <div class="space-y-2">
+                                    <template v-for="fee, fee_index in form.fee">
+                                        <div class="grid grid-cols-1 lg:grid-cols-8 rounded-lg overflow-hidden border-2 bg-white border-indigo-500 border-dashed">
+                                            <div class="col-span-3 p-6">
+                                                <h3 class="flex space-x-4 items-center text-lg text-left uppercase leading-8 font-extrabold text-gray-900 sm:leading-9">
+                                                    <img src="/images/school.png" class="w-16 h-16" alt="">
+                                                    <span class="flex flex-col">
+                                                        <span>{{ fee.fee_info.programme_name }}</span>
+                                                        <span class="font-semibold text-sm">Level {{ fee.fee_info.programme_level }}</span>
+                                                    </span>
+                                                </h3>
+                                                <div class="mt-3">
+                                                    <div class="grid grid-cols-1 lg:grid-cols-2">
+                                                        <ul class="grid grid-cols-1">
+                                                            <li class="flex items-start col-span-1 lg:col-span-1 mb-1">
+                                                                <p class="flex flex-col text-left">
+                                                                    <span class="text-sm font-bold">Centre : <span class="text-sm font-normal">{{ fee.fee_info.centre_name }}</span></span>
+                                                                </p>
+                                                            </li>
+                                                            <li class="flex items-start col-span-1 llg:col-span-1 mb-1">
+                                                                <p class="flex flex-col text-left">
+                                                                    <span class="text-sm font-bold">Fee : <span class="text-sm font-normal">{{ fee.fee_info.programme_type }}</span></span>
+                                                                </p>
+                                                            </li>
+                                                            <li class="flex items-start col-span-1 llg:col-span-1 mb-2">
+                                                                <p class="flex flex-col text-left">
+                                                                    <span class="text-sm font-bold">Class Method : <span class="text-sm font-normal">{{ fee.fee_info.class_method }}</span></span>
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                        <ul class="grid grid-cols-1">
+                                                            <li class="flex items-start lg:col-span-1 mb-1">
+                                                                <p class="flex flex-col text-left">
+                                                                    <span class="text-sm font-bold underline">Timetable</span>
+                                                                    <span class="text-sm font-normal" v-for="classes in fee.classes" :key="classes.id">{{ classes.class_day }} ({{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }})</span>
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-5 p-3 bg-indigo-50 space-y-4">
+                                                <div class="flex flex-col bg-white px-4 py-1 rounded-lg border border-gray-500">
+                                                    <div class="flex flex-wrap items-center space-x-4 mt-3 pb-3 pl-2">
+                                                        <h3 class="flex items-center font-semibold text-sm space-x-2 whitespace-nowrap">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="h-5 w-5">
+                                                                <path d="M64 64C28.7 64 0 92.7 0 128v64c0 8.8 7.4 15.7 15.7 18.6C34.5 217.1 48 235 48 256s-13.5 38.9-32.3 45.4C7.4 304.3 0 311.2 0 320v64c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V320c0-8.8-7.4-15.7-15.7-18.6C541.5 294.9 528 277 528 256s13.5-38.9 32.3-45.4c8.3-2.9 15.7-9.8 15.7-18.6V128c0-35.3-28.7-64-64-64H64zm64 112l0 160c0 8.8 7.2 16 16 16H432c8.8 0 16-7.2 16-16V176c0-8.8-7.2-16-16-16H144c-8.8 0-16 7.2-16 16zM96 160c0-17.7 14.3-32 32-32H448c17.7 0 32 14.3 32 32V352c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V160z"/>
+                                                            </svg>
+                                                            <span>Applied Promos</span>
+                                                        </h3>
+                                                        <!-- <select class="text-xs rounded focus:ring-0 focus:border-indigo-300" v-model="selected_promo">
+                                                            <option v-for="promo in $page.props.promos" :value="promo.id" >{{ promo.name }}</option>
+                                                        </select> -->
+                                                        <div @click="showNewClassPromoModal(fee_index)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 hover:bg-indigo-100 whitespace-nowrap">
+                                                            Add Promo
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <simplebar v-if="fee.fee_info.promos.length" data-simplebar-auto-hide="true" class="mt-3 pb-3">
+                                                        <span class="flex space-x-2 items-center justify-center rounded-md bg-indigo-200 px-2.5 py-1 font-semibold text-indigo-800 transform hover:scale-105 duration-200" v-for="applied_promo, promo_index in fee.fee_info.promos">
+                                                            <p class="whitespace-nowrap text-xs">{{ applied_promo.promo_name }}</p>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" @click="deleteNewClassPromo(fee_index, promo_index)" class="h-4 w-4 text-red-600 cursor-pointer">
+                                                                <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
+                                                            </svg>
+                                                        </span>
+                                                    </simplebar>
+                                                    <div class="py-2" v-else>
+                                                        <span class="text-xs font-semibold text-blue-500">No Promo applied.</span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900 p-3">
+                                                    <div class="flex justify-center">
+                                                        <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded cursor-pointer" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                        <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                    </div>
+                                                    <div class="flex justify-center items-center">
+                                                        <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
+                                                        <span class="leading-7 font-medium text-gray-700">/month</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                                <!-- <div class="space-y-2">
                                     <template v-for="fee, fee_index in form.fee">
                                         <div class="flex justify-between max-w-lg mx-auto rounded-lg overflow-hidden lg:max-w-none lg:flex border-2 bg-white border-indigo-500 border-dashed">
                                             <div class="p-6">
@@ -577,13 +661,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </div>
                                             </div>
                                             <div class="flex flex-col justify-center py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
-                                                <!-- <div class="flex flex-col items-start space-y-1">
-                                                    <label class="text-sm font-semibold">Promo</label>
-                                                    <select class="text-sm rounded focus:ring-0 focus:border-indigo-300 ">
-                                                        <option v-for="promo in $page.props.promos">{{ promo.name }}</option>
-                                                    </select>
-                                                </div>
-                                                <hr class="border-gray-400 my-4"> -->
                                                 <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900">
                                                     <div class="flex">
                                                         <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
@@ -595,82 +672,8 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- <div class="py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
-                                                <div class="flex">
-                                                    <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                    <label :for="fee_index" class="text ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
-                                                </div>
-                                                <div
-                                                    class="my-10 lg:my-6 flex items-baseline justify-center text-xl leading-none font-extrabold text-gray-900">
-                                                    <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.programme_fee }}</span><span class="leading-7 font-medium text-gray-700">/month</span>
-    
-                                                </div>
-                                            </div> -->
                                         </div>
                                     </template>
-                                    <!-- <details class="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden" v-for="fee, fee_index in form.fee">
-                                        <summary class="flex cursor-pointer items-center justify-between gap-2 bg-indigo-100 p-4 text-gray-900 transition">
-                                            <span class="text-sm font-medium">
-                                                <div class="flex items-center space-x-4 text-gray-800">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 640 512" fill="currentColor">
-                                                        <path d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5V291.9c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"/>
-                                                    </svg>
-                                                    <span class="font-bold">{{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }})</span>
-                                                    <span class="text-red-500 hover:underline cursor-pointer font-semibold" @click="deleteFee(fee.fee_info.programme_id, fee.fee_info.class_type_id)">Delete</span>
-                                                </div>
-                                            </span>
-                                            <span class="transition group-open:-rotate-180">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-                                                </svg>
-                                            </span>
-                                        </summary>
-                                        <div class="border-t border-gray-200 bg-white">
-                                            <div class="flex px-6 py-3 ">
-                                                <div class="flex items-center justify-center divide-x divide-gray-400">
-                                                    <div class="flex space-x-4 font-medium text-gray-900 px-4">
-                                                        <span>Centre: </span>
-                                                        <dd class="text-indigo-600 sm:col-span-2">{{ fee.fee_info.centre_name }}</dd>
-                                                    </div>
-                                                    <div class="flex space-x-4 font-medium text-gray-900 px-4">
-                                                        <span>Fee Type: </span>
-                                                        <dd class="text-indigo-600 sm:col-span-2">{{ fee.fee_info.programme_type }}</dd>
-                                                    </div>
-                                                    <div class="flex space-x-4 font-medium text-gray-900 px-4">
-                                                        <span>Class Method: </span>
-                                                        <dd class="text-indigo-600 sm:col-span-2">{{ fee.fee_info.class_method }}</dd>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    
-                                            <div class="relative overflow-x-auto px-6 pb-4 w-full">
-                                                <table class="text-sm text-left text-gray-500 border w-1/2">
-                                                    <thead class="text-xs text-gray-700 uppercase bg-gray-200">
-                                                        <tr>
-                                                            <th scope="col" class="px-6 py-3">Day</th>
-                                                            <th scope="col" class="px-6 py-3">Time</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr class="bg-white border-b" v-for="classes in fee.classes">
-                                                            <td class="px-6 py-4 text-gray-800 font-semibold">{{ classes.class_day}}</td>
-                                                            <td class="px-6 py-4 text-gray-800 font-semibold">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="flex p-6 border-t justify-between">
-                                                <div class="flex">
-                                                    <input :id="fee_index" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                    <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-700 select-none cursor-pointer">Material Fee : {{ fee.fee_info.material_fee }}</label>
-                                                </div>
-                                                <span class="ml-3 text-gray-900 select-none font-semibold">Fee: {{ sumMaterialFee(fee.fee_info.include_material_fee, fee.fee_info.material_fee, fee.fee_info.programme_fee) }}</span>
-                                            </div>
-                                        </div>
-                                    </details> -->
-                                </div>
-                                <!-- <div class="flex justify-end p-6" v-if="form.fee.length">
-                                    <span class="text-right ml-3 text-gray-900 cursor-text font-bold">Total Amount: {{ total_amount }}</span>
                                 </div> -->
                             </div>
                             <div class="px-2" v-else-if="list.available_classes.length && !form.fee.length && !no_fee_found">
@@ -944,14 +947,14 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>
             </div>
         </vue-final-modal>
-        
-        <Modal :showModal="open_promo_modal" @hideModal="open_promo_modal = false" :modalType="'xs'">
+
+        <Modal :showModal="open_existing_class_promo_modal" @hideModal="open_existing_class_promo_modal = false" :modalType="'xs'">
             <template v-slot:header>
                 <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
                     <h3 class="text-gray-900 text-xl font-semibold">                
                         Add Promos
                     </h3>        
-                    <button type="button" @click="open_promo_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
+                    <button type="button" @click="open_existing_class_promo_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     </button>
                 </div>        
@@ -1015,7 +1018,82 @@ import BreezeButton from '@/Components/Button.vue';
             </template>
             <template v-slot:footer>
                 <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="info" @click="addPromo()">Apply</BreezeButton>
+                    <BreezeButton buttonType="info" @click="addExistingClassPromo()">Apply</BreezeButton>
+                </div>
+            </template>
+        </Modal>
+        
+        <Modal :showModal="open_new_class_promo_modal" @hideModal="open_new_class_promo_modal = false" :modalType="'xs'">
+            <template v-slot:header>
+                <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
+                    <h3 class="text-gray-900 text-xl font-semibold">                
+                        Add Promos
+                    </h3>        
+                    <button type="button" @click="open_new_class_promo_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>        
+            </template>
+            <template v-slot:content>
+                <div class="p-6">
+                    <div class="mb-4">
+                        <div class="mt-1 flex rounded-md.shadow-sm">
+                            <Multiselect 
+                                v-model="selected_promo.promo_id"
+                                valueProp="promo_id"
+                                :searchable="true"
+                                :options="$page.props.promos"
+                                :clearOnSelect="true"
+                                :canClear="false"
+                                :canDeselect="false"
+                                placeholder="Select a promo"
+                                trackBy="promo_name"
+                                label="promo_name"
+                                :classes="{
+                                    container: 
+                                        errors.centre ? 
+                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
+                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
+                                    containerDisabled: 'cursor-default bg-gray-100',
+                                    containerOpen: 'rounded-b-none',
+                                    containerOpenTop: 'rounded-t-none',
+                                    containerActive: 'border border-indigo-300',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
+                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                    multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
+                                    search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
+                                    clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
+                                    clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                    dropdownHidden: 'hidden',
+                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                    optionsTop: 'flex-col-reverse',
+                                    group: 'p-0 m-0',
+                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                    groupLabelPointable: 'cursor-pointer',
+                                    groupLabelPointed: 'bg-gray-300 text-black-700',
+                                    groupLabelSelected: 'bg-gray-100 text-black',
+                                    groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                    groupOptions: 'p-0 m-0',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
+                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                    optionSelected: 'text-white bg-indigo-500',
+                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                    spacer: 'h-9 py-px box-content',
+                                }"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:footer>
+                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
+                    <BreezeButton buttonType="info" @click="addNewClassPromo()">Apply</BreezeButton>
                 </div>
             </template>
         </Modal>
@@ -1042,7 +1120,8 @@ export default {
     },
     data(){
         return{
-            open_promo_modal: false,
+            open_new_class_promo_modal: false,
+            open_existing_class_promo_modal: false,
             status_centre: {
                 value: '',
                 error: false
@@ -1429,7 +1508,7 @@ export default {
         sumMaterialFee(has_material_fee, material_fee, programme_fee){
             return has_material_fee ? Number(material_fee) + Number(programme_fee) : Number(programme_fee)
         },
-        deletePromo(fee_id, student_fee_id, promo_id, student_fee_promo_id){
+        deleteExistingClassPromo(fee_id, student_fee_id, promo_id, student_fee_promo_id){
             this.confirmation_modal.confirmationAlert="danger"
             this.confirmation_modal.confirmationTitle="Are you sure? "
             this.confirmation_modal.confirmationText="This action is irreversible, are you sure?"
@@ -1439,14 +1518,24 @@ export default {
             this.confirmation_modal.confirmationData = {'fee_id' : fee_id, 'student_fee_id' : student_fee_id, 'promo_id' : promo_id, 'student_fee_promo_id' : student_fee_promo_id, 'form' : this.form}
             this.confirmation_modal.isOpen = true
         },
-        showPromoModal(fee_index, fee_id, student_fee_id){
+        deleteNewClassPromo(fee_index, promo_index){
+            this.form.fee[fee_index].fee_info.promos.splice(promo_index, 1);
+        },
+        showExistingClassPromoModal(fee_index, fee_id, student_fee_id){
             this.selected_promo.promo_id        =   ''
             this.selected_promo.fee_index       =   fee_index   
             this.selected_promo.fee_id          =   fee_id   
             this.selected_promo.student_fee_id  =   student_fee_id   
-            this.open_promo_modal               =   true
+            this.open_existing_class_promo_modal               =   true
         },
-        addPromo(){
+        showNewClassPromoModal(fee_index, fee_id, student_fee_id){
+            this.selected_promo.promo_id        =   ''
+            this.selected_promo.fee_index       =   fee_index   
+            this.selected_promo.fee_id          =   fee_id   
+            this.selected_promo.student_fee_id  =   student_fee_id   
+            this.open_new_class_promo_modal               =   true
+        },
+        addExistingClassPromo(){
             const selectedPromo = this.$page.props.promos.find(promo => promo.promo_id === this.selected_promo.promo_id);
             const promoAdded    = this.current_fee[this.selected_promo.fee_index].fee_info.promos.find(promo => promo.promo_id === this.selected_promo.promo_id);
 
@@ -1465,8 +1554,37 @@ export default {
                 this.$inertia.post(route('students.add_promo'), {fee_id: this.selected_promo.fee_id, student_fee_id: this.selected_promo.student_fee_id, data: data }, {preserveState: false})
             }
 
-            this.open_promo_modal = false
+            this.open_existing_class_promo_modal = false
         },
+        addNewClassPromo(){
+            const selectedPromo = this.$page.props.promos.find(promo => promo.promo_id === this.selected_promo.promo_id);
+            const promoAdded    = this.form.fee[this.selected_promo.fee_index].fee_info.promos.find(promo => promo.promo_id === this.selected_promo.promo_id);
+            
+            if (!promoAdded && selectedPromo) {
+                this.form.fee[this.selected_promo.fee_index].fee_info.promos.push({
+                    promo_id: parseInt(selectedPromo.promo_id),
+                    promo_name: selectedPromo.promo_name,
+                    type_id: parseInt(selectedPromo.type_id),
+                    type_name: selectedPromo.type_name,
+                    value: parseInt(selectedPromo.value),
+                    duration_id: parseInt(selectedPromo.type_id),
+                    duration_name: selectedPromo.duration_name,
+                    duration_count: parseInt(selectedPromo.duration_count)
+                });
+            }
+
+            this.open_new_class_promo_modal = false
+        },
+        calculateTotal(fee_index, fee_amount){
+            const totalPercentValuePromo = this.form.fee[fee_index].fee_info.promos.reduce((accumulator, currentValue) => 
+                currentValue.type_id === 1 ? accumulator + currentValue.value : accumulator
+            , 0);
+            const totalFixedValuePromo = this.form.fee[fee_index].fee_info.promos.reduce((accumulator, currentValue) => 
+                currentValue.type_id === 2 ? accumulator + currentValue.value : accumulator
+            , 0);
+            console.log(fee_index, fee_amount, totalPercentValuePromo, totalFixedValuePromo)
+            return fee_amount - totalFixedValuePromo - (fee_amount * totalPercentValuePromo / 100)
+        }
     },
     created(){
         const now = new Date();
