@@ -801,9 +801,9 @@ class StudentController extends Controller
                     "duration_count" => $request->data['duration_count']
                 ];
             }
+            event(new DatabaseTransactionEvent($fee));
             return $fee;
         });
-        event(new DatabaseTransactionEvent($updated_fees));
         
         DB::table('invoices')->where('id', $fee_info['invoice_id'])->delete(); 
         
