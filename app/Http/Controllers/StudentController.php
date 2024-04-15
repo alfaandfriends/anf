@@ -787,7 +787,6 @@ class StudentController extends Controller
         
         $fee_info       =   collect(DB::table('student_fees')->where('id', $request->student_fee_id)->first())->toArray();
         $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info['invoice_id'])->pluck('invoice_items')->first(), true);
-        
 
         $updated_fees = collect($invoice_info)->map(function ($fee) use ($request){
             if ($fee['fee_id'] === $request->fee_id) {
@@ -801,6 +800,7 @@ class StudentController extends Controller
                     "duration_name" => $request->data['duration_name'],
                     "duration_count" => $request->data['duration_count']
                 ];
+                dd($fee);
             }
             return $fee;
         });

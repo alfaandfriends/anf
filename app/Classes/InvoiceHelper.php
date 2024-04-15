@@ -51,11 +51,13 @@ class InvoiceHelper {
         $totalPromo =   0;
         foreach($invoice_items as $fee_key => $fee){
             foreach($fee['promos'] as $promo_key => $promo){
-                if($promo['type_id'] === 1){
-                    $totalPromo += ($fee['programme_fee'] * $promo['value'] / 100);
-                }
-                if($promo['type_id'] === 2){
-                    $totalPromo += $promo['value'];
+                if (isset($fee['promos'])) { // Check if 'promos' key exists
+                    if($promo['type_id'] === 1){
+                        $totalPromo += ($fee['programme_fee'] * $promo['value'] / 100);
+                    }
+                    if($promo['type_id'] === 2){
+                        $totalPromo += $promo['value'];
+                    }
                 }
             }
         }
@@ -68,7 +70,7 @@ class InvoiceHelper {
         $date_admission     =   $invoice_data['date_admission'];
         $currency           =   $invoice_data['currency'];
         
-        if(env('APP_ENV') != 'local'){
+        if(env('APP_ENV') != 'local' || env('APP_ENV') != 'staging'){
             if($student_country == self::$malaysia){
                 $bill_collection_id     =   config('app.billplz.collection_id');
                 $bill_email             =   StudentHelper::getStudentEmail($invoice_data['student_id']);
