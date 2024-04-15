@@ -70,7 +70,7 @@ class InvoiceHelper {
         $date_admission     =   $invoice_data['date_admission'];
         $currency           =   $invoice_data['currency'];
         
-        if(env('APP_ENV') != 'local' || env('APP_ENV') != 'staging'){
+        if(env('APP_ENV') == 'production'){
             if($student_country == self::$malaysia){
                 $bill_collection_id     =   config('app.billplz.collection_id');
                 $bill_email             =   StudentHelper::getStudentEmail($invoice_data['student_id']);
