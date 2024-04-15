@@ -789,8 +789,7 @@ class StudentController extends Controller
         $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info['invoice_id'])->pluck('invoice_items')->first(), true);
 
         $updated_fees = collect($invoice_info)->map(function ($fee) use ($request){
-            event(new DatabaseTransactionEvent($fee));
-            event(new DatabaseTransactionEvent($request));
+            dd($fee, $request);
             if ($fee['fee_id'] === $request->fee_id) {
                 $fee['promos'][] = [
                     "value" => $request->data['value'],
