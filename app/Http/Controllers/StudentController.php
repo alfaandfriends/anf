@@ -803,6 +803,7 @@ class StudentController extends Controller
             }
             return $fee;
         });
+        event(new DatabaseTransactionEvent($updated_fees));
         
         DB::table('invoices')->where('id', $fee_info['invoice_id'])->delete(); 
         
