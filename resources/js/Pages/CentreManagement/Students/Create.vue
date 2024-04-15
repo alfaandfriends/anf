@@ -360,7 +360,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
                                                     </div>
                                                     <div class="flex justify-center items-center">
-                                                        <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ total_amount }}</span>
+                                                        <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
                                                         <span class="leading-7 font-medium text-gray-700">/month</span>
                                                     </div>
                                                 </div>
