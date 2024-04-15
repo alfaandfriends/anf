@@ -791,14 +791,14 @@ class StudentController extends Controller
         $updated_fees = collect($invoice_info)->map(function ($fee) use ($request){
             if ($fee['fee_id'] === $request->fee_id) {
                 $fee['promos'][] = [
-                    "value" => $request->data['value'],
-                    "type_id" => $request->data['type_id'],
-                    "promo_id" => $request->data['promo_id'],
+                    "value" => (int)$request->data['value'],
+                    "type_id" => (int)$request->data['type_id'],
+                    "promo_id" => (int)$request->data['promo_id'],
                     "type_name" => $request->data['type_name'],
                     "promo_name" => $request->data['promo_name'],
-                    "duration_id" => $request->data['duration_id'],
+                    "duration_id" => (int)$request->data['duration_id'],
                     "duration_name" => $request->data['duration_name'],
-                    "duration_count" => $request->data['duration_count']
+                    "duration_count" => (int)$request->data['duration_count']
                 ];
                 dd($fee);
             }
