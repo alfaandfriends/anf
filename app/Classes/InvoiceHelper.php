@@ -50,8 +50,8 @@ class InvoiceHelper {
         /* Calculate total promo */
         $totalPromo =   0;
         foreach($invoice_items as $fee_key => $fee){
-            foreach($fee['promos'] as $promo_key => $promo){
-                if (isset($fee['promos'])) { // Check if 'promos' key exists
+            if (isset($fee['promos'])) { // Check if 'promos' key exists
+                foreach($fee['promos'] as $promo_key => $promo){
                     if($promo['type_id'] === 1){
                         $totalPromo += ($fee['programme_fee'] * $promo['value'] / 100);
                     }

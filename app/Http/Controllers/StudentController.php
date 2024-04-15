@@ -800,6 +800,7 @@ class StudentController extends Controller
                     "duration_name" => $request->data['duration_name'],
                     "duration_count" => $request->data['duration_count']
                 ];
+                dd($fee);
             }
             return $fee;
         });
