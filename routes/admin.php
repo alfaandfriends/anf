@@ -115,6 +115,9 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::post('/transfer', [StudentController::class, 'transferStudent'])->name('students.transfer')->middleware('permission:view_students|create_students|edit_students');
             Route::post('/add-promo', [StudentController::class, 'addPromo'])->name('students.add_promo')->middleware('permission:view_students|create_students|edit_students');
             Route::delete('/delete-promo', [StudentController::class, 'deletePromo'])->name('students.delete_promo')->middleware('permission:view_students|create_students|edit_students');
+
+            
+            Route::get('/generate-monthly', [StudentController::class, 'generateMonthly'])->name('students.generate_monthly')->middleware('permission:view_students');
             
             /* Art Gallery */
             Route::get('/art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery')->middleware('permission:view_art_gallery');

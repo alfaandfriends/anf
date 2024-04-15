@@ -62,12 +62,14 @@ class GenerateInvoices extends Command
                 });
             });
 
+            /* Reset running index */
             $fee_collection = collect([]);
             foreach ($finalized as $studentId => $feeGroups) {
                 $reset_index = $feeGroups->values();
                 $fee_collection->put($studentId, $reset_index);
             }
 
+            /*  */
             $fee_collection =   $fee_collection->toArray();
             foreach($fee_collection as $student_id=>$fees){
                 $temps_class_items = [];
@@ -76,6 +78,7 @@ class GenerateInvoices extends Command
                     $temps_class_items[$fee['fee_id']] = $fee['class_items'];
                     unset($fee['class_items']);
                 }
+                dd($fees);
 
                 /* Create invoice */
                 $invoice_data['student_id']         =   $student_id;
@@ -148,7 +151,7 @@ class GenerateInvoices extends Command
                     }
                 }
             }
-            DB::commit(); // Commit the transaction if everything was successful
+            DB::commit();
             return Command::SUCCESS;
         } catch (\Exception $e) {
             DB::rollback();

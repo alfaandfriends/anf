@@ -324,16 +324,15 @@ export default {
 
                 var total_promo =   0
                 if(item.promos){
-                    console.log(item.promos)
-                    // for (const promo of item.promos) {
-                    //     if(promo.type_id === 1){
-                    //         total_promo += (programmeFee * promo.value / 100)
-                    //     }
-                    //     if(promo.type_id === 2){
-                    //         total_promo += promo.value
-                    //     }
-                    // }
-                    // total = total - total_promo
+                    for (const promo of item.promos) {
+                        if(promo.type_id === 1){
+                            total_promo += (programmeFee * promo.value / 100)
+                        }
+                        if(promo.type_id === 2){
+                            total_promo += promo.value
+                        }
+                    }
+                    total = total - total_promo
                 }
             }
             return total;
