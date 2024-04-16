@@ -414,11 +414,8 @@ class StudentController extends Controller
                 ];
             })->values()->all();
 
-            event(new DatabaseTransactionEvent('test'));
             if(count($student_promotions)){
                 $promos =  $student_promotions->filter(function ($item) use ($fee_info){
-                    event(new DatabaseTransactionEvent($item->student_fee_id));
-                    event(new DatabaseTransactionEvent($fee_info['student_fee_id']));
                     return $item->student_fee_id === $fee_info['student_fee_id'];
                 })->map(function ($item) {
                     event(new DatabaseTransactionEvent($item));
