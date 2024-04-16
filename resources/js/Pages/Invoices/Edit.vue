@@ -25,7 +25,7 @@ import BreezeButton from '@/Components/Button.vue';
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
                     <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4">
                             <div class="lg:col-span-2">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md h-full">
                                     <div class="mb-5">
@@ -215,7 +215,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                         </div>
                         <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 gap-4">
-                            <div class="sm:row-span-3">
+                        <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex items-center justify-end">
                                         <div class="flex space-x-2">

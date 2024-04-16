@@ -826,7 +826,6 @@ export default {
             const totalFixedValuePromo = this.form.fee[fee_index].fee_info.promos.reduce((accumulator, currentValue) => 
                 currentValue.type_id === 2 ? accumulator + currentValue.value : accumulator
             , 0);
-            console.log(fee_index, fee_amount, totalPercentValuePromo, totalFixedValuePromo)
             return fee_amount - totalFixedValuePromo - (fee_amount * totalPercentValuePromo / 100)
         }
     },
