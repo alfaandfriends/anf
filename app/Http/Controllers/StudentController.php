@@ -434,7 +434,8 @@ class StudentController extends Controller
             else{
                 $promos =  [];
             }
-            event(new DatabaseTransactionEvent($promos));
+            $log_data =   'promos '.$promos;
+            event(new DatabaseTransactionEvent($log_data));
 
             return [
                 "classes" => $classes,
