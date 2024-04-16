@@ -431,7 +431,7 @@ class StudentController extends Controller
             else{
                 $promos =  [];
             }
-            $log_data =   'promos '.$promos;
+            $log_data =   'promos '.json_encode($promos);
             event(new DatabaseTransactionEvent($log_data));
 
             return [
