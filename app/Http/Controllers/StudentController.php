@@ -416,6 +416,7 @@ class StudentController extends Controller
 
             if(count($student_promotions)){
                 $promos =  $student_promotions->filter(function ($item) use ($fee_info){
+                    event(new DatabaseTransactionEvent($item->student_fee_id === $fee_info['student_fee_id']));
                     return $item->student_fee_id === $fee_info['student_fee_id'];
                 })->map(function ($item) {
                     $log_data =   'promos '.json_encode($item);
