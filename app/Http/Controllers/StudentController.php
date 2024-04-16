@@ -414,11 +414,14 @@ class StudentController extends Controller
                 ];
             })->values()->all();
 
+            event(new DatabaseTransactionEvent($student_promotions));
             if(count($student_promotions)){
                 $promos =  $student_promotions->filter(function ($item) use ($fee_info){
+                    event(new DatabaseTransactionEvent($item->student_fee_id));
+                    event(new DatabaseTransactionEvent($fee_info['student_fee_id']));
                     return $item->student_fee_id === $fee_info['student_fee_id'];
                 })->map(function ($item) {
-                   dd($item);
+                    event(new DatabaseTransactionEvent($item));
                     return [
                         "student_fee_promo_id" => (int)$item->student_fee_promo_id,
                         "promo_id" => (int)$item->promo_id,
