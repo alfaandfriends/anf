@@ -1256,8 +1256,17 @@ export default {
             handler(){
                 this.total_amount = 0
                 for (const feeObject of this.form.fee) {
-                    const { include_material_fee, material_fee, programme_fee } = feeObject.fee_info;
-                    this.total_amount += include_material_fee ? Number(programme_fee) + Number(material_fee) : Number(programme_fee);
+                    const { include_material_fee, material_fee, programme_fee, promos } = feeObject.fee_info;
+
+                    // Calculate total promo values for this fee
+                    const totalPercentValuePromo = promos.reduce((accumulator, currentValue) => 
+                        currentValue.type_id === 1 ? accumulator + currentValue.value : accumulator, 0);
+                    const totalFixedValuePromo = promos.reduce((accumulator, currentValue) => 
+                        currentValue.type_id === 2 ? accumulator + currentValue.value : accumulator, 0);
+
+                    // Calculate fee amount after applying promos
+                    let fee_amount = include_material_fee ? Number(programme_fee) + Number(material_fee) : Number(programme_fee);
+                    this.total_amount = fee_amount - totalFixedValuePromo - (fee_amount * totalPercentValuePromo / 100);
                 }
             },
             deep: true

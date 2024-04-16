@@ -344,9 +344,6 @@ class StudentController extends Controller
                                     ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
                                     ->leftJoin('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
                                     ->leftJoin('invoices', 'student_fees.invoice_id', '=', 'invoices.id')
-                                    ->leftJoin('student_fee_promotions', 'student_fee_promotions.student_fee_id', '=', 'student_fees.id')
-                                    ->leftJoin('promotions', 'student_fee_promotions.promotion_id', '=', 'promotions.id')
-                                    ->leftJoin('promotion_types', 'promotions.type_id', '=', 'promotion_types.id')
                                     ->select(   'classes.id as class_id', 
                                                 'class_days.name as class_day', 
                                                 'classes.start_time', 
@@ -362,12 +359,6 @@ class StudentController extends Controller
                                                 'centres.label as centre_name', 
                                                 'class_types.id as class_type_id', 
                                                 'class_methods.name as class_method', 
-                                                'student_fee_promotions.id as student_fee_promo_id', 
-                                                'promotions.id as promo_id', 
-                                                'promotions.name as promo_name', 
-                                                'promotions.value as promo_value', 
-                                                'promotion_types.id as promo_type_id', 
-                                                'promotion_types.name as promo_type_name', 
                                                 'student_fees.invoice_id as invoice_id', 
                                                 'student_fees.admission_date as admission_date', 
                                                 'student_fees.id as student_fee_id', 
@@ -376,9 +367,25 @@ class StudentController extends Controller
                                     ->where('student_fees.student_id', $request->student_id)
                                     ->get();
 
+        $student_fee_ids        =   collect($results)->pluck('student_fee_id')->unique()->values()->all();
+        $student_promotions     =   DB::table('student_fee_promotions')       
+                                        ->leftJoin('promotions', 'student_fee_promotions.promotion_id', '=', 'promotions.id')
+                                        ->leftJoin('promotion_types', 'promotions.type_id', '=', 'promotion_types.id')
+                                        ->select(
+                                            'student_fee_promotions.student_fee_id as student_fee_id', 
+                                            'student_fee_promotions.id as student_fee_promo_id', 
+                                            'promotions.id as promo_id', 
+                                            'promotions.name as promo_name', 
+                                            'promotions.value as promo_value', 
+                                            'promotion_types.id as promo_type_id', 
+                                            'promotion_types.name as promo_type_name'
+                                        )
+                                        ->whereIn('student_fee_promotions.student_fee_id', $student_fee_ids)
+                                        ->get();
+                                        
         $student_academics['current'] =  collect($results)->filter(function ($result) {
             return Carbon::parse($result->fee_month)->isCurrentMonth();
-        })->groupBy('fee_id')->map(function ($group) {
+        })->groupBy('fee_id')->map(function ($group) use ($student_promotions) {
             $fee_info = [
                 "centre_id" => (int)$group->first()->centre_id,
                 "centre_name" => $group->first()->centre_name,
@@ -406,10 +413,11 @@ class StudentController extends Controller
                     "end_time" => $item->end_time,
                 ];
             })->values()->all();
-            
-            $promo_exist    =   $group[0]->promo_id ? true : false;
-            if($promo_exist){
-                $promos =  $group->map(function ($item) {
+
+            if(count($student_promotions)){
+                $promos =  $student_promotions->filter(function ($item) use ($fee_info){
+                    return $item->student_fee_id === $fee_info['student_fee_id'];
+                })->map(function ($item) {
                     return [
                         "student_fee_promo_id" => (int)$item->student_fee_promo_id,
                         "promo_id" => (int)$item->promo_id,
@@ -426,6 +434,7 @@ class StudentController extends Controller
 
             return [
                 "classes" => $classes,
+                // "fee_info" => $fee_info,
                 "fee_info" => array_merge($fee_info, ["promos" => $promos]),
             ];
         })->values()->all(); 
