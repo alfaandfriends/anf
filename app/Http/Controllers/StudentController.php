@@ -418,6 +418,8 @@ class StudentController extends Controller
                 $promos =  $student_promotions->filter(function ($item) use ($fee_info){
                     return $item->student_fee_id === $fee_info['student_fee_id'];
                 })->map(function ($item) {
+                    $log_data =   'promos '.json_encode($item);
+                    event(new DatabaseTransactionEvent($log_data));
                     return [
                         "student_fee_promo_id" => (int)$item->student_fee_promo_id,
                         "promo_id" => (int)$item->promo_id,
@@ -431,8 +433,6 @@ class StudentController extends Controller
             else{
                 $promos =  [];
             }
-            $log_data =   'promos '.json_encode($promos);
-            event(new DatabaseTransactionEvent($log_data));
 
             return [
                 "classes" => $classes,
