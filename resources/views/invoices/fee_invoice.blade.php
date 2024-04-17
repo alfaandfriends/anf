@@ -94,7 +94,7 @@
                             {{ $item->programme_name }} (Level {{ $item->programme_level }})
                         </div>
                         @if($item->include_material_fee)
-                        <div style="margin-bottom: 10px">
+                        <div>
                             - Material Fee
                         </div>
                         @endif
@@ -104,7 +104,7 @@
                     </td>
                     <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
                         @if($item->include_material_fee)
-                        <div style="margin-bottom: 10px">
+                        <div>
                             {{ $item->material_fee_discount }}.00
                         </div>
                         @endif
@@ -114,7 +114,7 @@
                     </td>
                     <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
                         @if($item->include_material_fee)
-                        <div style="margin-bottom: 10px">
+                        <div>
                             {{ $item->material_fee }}.00
                         </div>
                         @endif
