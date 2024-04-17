@@ -46,7 +46,6 @@ class InvoiceHelper {
 
             return $item['programme_fee'] + $registration_fee + $material_fee;
         });
-        dd();
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];
