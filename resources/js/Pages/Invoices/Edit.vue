@@ -85,6 +85,9 @@ import BreezeButton from '@/Components/Button.vue';
                                                                     <div class="bg-indigo-100 py-1 px-3 rounded-sm">
                                                                         <label> {{ item.programme_type }} </label>
                                                                     </div>
+                                                                    <div class="bg-indigo-100 py-1 px-3 rounded-sm" v-if="item.include_registration_fee">
+                                                                        <label> Registration Fee </label>
+                                                                    </div>
                                                                     <div class="bg-indigo-100 py-1 px-3 rounded-sm" v-if="item.include_material_fee">
                                                                         <label> Material Fee </label>
                                                                     </div>
@@ -94,12 +97,14 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <td class="border text-sm py-2 px-4 align-bottom">
                                                             <div class="flex flex-col space-y-1.5">
                                                                 <input type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.programme_fee_discount" autocomplete="off" @input="numbersOnly">
+                                                                <input  v-if="item.include_registration_fee" type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.registration_fee_discount" autocomplete="off" @input="numbersOnly">
                                                                 <input  v-if="item.include_material_fee" type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.material_fee_discount" autocomplete="off" @input="numbersOnly">
                                                             </div>
                                                         </td>
                                                         <td class="border text-sm py-2 px-4 align-bottom">
                                                             <div class="flex flex-col space-y-1.5">
                                                                 <input type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.programme_fee" autocomplete="off" @input="numbersOnly">
+                                                                <input  v-if="item.include_registration_fee" type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.registration_fee" autocomplete="off" @input="numbersOnly">
                                                                 <input  v-if="item.include_material_fee" type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.material_fee" autocomplete="off" @input="numbersOnly">
                                                             </div>
                                                         </td>
@@ -245,6 +250,8 @@ export default {
                 newVal.forEach(item => {
                     !item.programme_fee             ? item.programme_fee = 0 : ''
                     !item.programme_fee_discount    ? item.programme_fee_discount = 0 : ''
+                    !item.registration_fee          ? item.registration_fee = 0 : ''
+                    !item.registration_fee_discount ? item.registration_fee_discount = 0 : ''
                     !item.material_fee              ? item.material_fee = 0 : ''
                     !item.material_fee_discount     ? item.material_fee_discount = 0 : ''
                 });
@@ -285,6 +292,8 @@ export default {
                 // Parse fees and discounts as numbers
                 const programmeFee = parseFloat(item.programme_fee);
                 const programmeDiscount = parseFloat(item.programme_fee_discount);
+                const registrationFee = parseFloat(item.registration_fee);
+                const registrationDiscount = parseFloat(item.registration_fee_discount);
                 const materialFee = parseFloat(item.material_fee);
                 const materialDiscount = parseFloat(item.material_fee_discount);
 
@@ -292,9 +301,13 @@ export default {
                 total += programmeFee - programmeDiscount;
 
                 // Check if material fee should be included
+                if (item.include_registration_fee) {
+                    // Add material fee and subtract material discount
+                    total += registrationFee - registrationDiscount;
+                }
                 if (item.include_material_fee) {
-                // Add material fee and subtract material discount
-                total += materialFee - materialDiscount;
+                    // Add material fee and subtract material discount
+                    total += materialFee - materialDiscount;
                 }
             }
             return total;
