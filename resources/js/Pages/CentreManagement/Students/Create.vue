@@ -343,9 +343,13 @@ import BreezeButton from '@/Components/Button.vue';
                                                         </div>
                                                     </div>
                                                     <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900">
-                                                        <div class="flex justify-center">
-                                                            <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded cursor-pointer" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                            <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                        <div class="flex">
+                                                            <input id="registration_fee" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
+                                                            <label for="registration_fee" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Registration Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</label>
+                                                        </div>
+                                                        <div class="flex">
+                                                            <input id="material_fee" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                            <label for="material_fee" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Material Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
                                                         </div>
                                                         <div class="flex justify-center items-center">
                                                             <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.programme_fee }}</span>
@@ -603,8 +607,10 @@ export default {
             handler(){
                 this.total_amount = 0
                 for (const feeObject of this.form.fee) {
-                    const { include_material_fee, material_fee, programme_fee } = feeObject.fee_info;
-                    this.total_amount += include_material_fee ? Number(programme_fee) + Number(material_fee) : Number(programme_fee);
+                    const { include_registration_fee, registration_fee, include_material_fee, material_fee, programme_fee } = feeObject.fee_info;
+                    const registration_fee_amount  =    include_registration_fee ? Number(registration_fee) : 0;
+                    const material_fee_amount      =    include_material_fee ? Number(material_fee) : 0;
+                    this.total_amount             +=    Number(programme_fee) + registration_fee_amount + material_fee_amount;
                 }
             },
             deep: true

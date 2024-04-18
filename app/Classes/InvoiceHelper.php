@@ -41,9 +41,10 @@ class InvoiceHelper {
         $invoice_items      =   collect($invoice_data['invoice_items']);
 
         $totalFee = $invoice_items->sum(function ($item) {
-            return $item['include_material_fee']
-                ? $item['programme_fee'] + $item['material_fee']
-                : $item['programme_fee'];
+            $registration_fee   =   $item['include_registration_fee'] ? $item['registration_fee'] : 0;
+            $material_fee       =   $item['include_material_fee'] ? $item['material_fee'] : 0;
+
+            return $item['programme_fee'] + $registration_fee + $material_fee;
         });
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
@@ -53,7 +54,7 @@ class InvoiceHelper {
         $date_admission     =   $invoice_data['date_admission'];
         $currency           =   $invoice_data['currency'];
         
-        if(env('APP_ENV') != 'local'){
+        // if(env('APP_ENV') != 'local'){
             if($student_country == self::$malaysia){
                 $bill_collection_id     =   config('app.billplz.collection_id');
                 $bill_email             =   StudentHelper::getStudentEmail($invoice_data['student_id']);
@@ -144,20 +145,20 @@ class InvoiceHelper {
             else{
                 return redirect()->back()->with(['type'=>'error', 'message'=>'An error has occurred, please try again']);
             }
-        }
-        else{
-            $invoice_id =   DB::table('invoices')->insertGetId([
-                'student_id'        => $student_id,
-                'invoice_number'    => $invoice_number,
-                'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
-                'date_issued'       => $date_admission,
-                'due_date'          => $due_date->addWeeks(2)->toDateString(),
-                'amount'            => $totalFee,
-                'currency'          => $currency,
-            ]);
+        // }
+        // else{
+        //     $invoice_id =   DB::table('invoices')->insertGetId([
+        //         'student_id'        => $student_id,
+        //         'invoice_number'    => $invoice_number,
+        //         'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
+        //         'date_issued'       => $date_admission,
+        //         'due_date'          => $due_date->addWeeks(2)->toDateString(),
+        //         'amount'            => $totalFee,
+        //         'currency'          => $currency,
+        //     ]);
 
-            return $invoice_id;
-        }
+        //     return $invoice_id;
+        // }
     }
     
     public  static function getStudentFeeInvoices($student_id)

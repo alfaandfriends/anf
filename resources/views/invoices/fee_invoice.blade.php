@@ -88,6 +88,11 @@
                     <div style="margin-bottom: 10px; font-weight: bold;">
                         {{ $item->programme_name }} (Level {{ $item->programme_level }})
                     </div>
+                    @if($item->include_registration_fee)
+                    <div style="margin-bottom: 10px">
+                        - Registration Fee
+                    </div>
+                    @endif
                     @if($item->include_material_fee)
                     <div style="margin-bottom: 10px">
                         - Material Fee
@@ -98,6 +103,11 @@
                     </div>
                 </td>
                 <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
+                    @if($item->include_registration_fee)
+                    <div style="margin-bottom: 10px">
+                        {{ $item->registration_fee_discount }}.00
+                    </div>
+                    @endif
                     @if($item->include_material_fee)
                     <div style="margin-bottom: 10px">
                         {{ $item->material_fee_discount }}.00
@@ -108,6 +118,11 @@
                     </div>
                 </td>
                 <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
+                    @if($item->include_registration_fee)
+                    <div style="margin-bottom: 10px">
+                        {{ $item->registration_fee }}.00
+                    </div>
+                    @endif
                     @if($item->include_material_fee)
                     <div style="margin-bottom: 10px">
                         {{ $item->material_fee }}.00
