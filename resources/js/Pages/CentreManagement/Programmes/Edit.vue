@@ -69,6 +69,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <tr>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Level</th>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Class Type</th>
+                                                    <th class="px-4 py-1 text-center border border-gray-400">Registration Fee</th>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Material Fee</th>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Fee</th>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Material</th>
@@ -82,6 +83,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <tr else class="hover:bg-gray-200" v-for="info, index in form.programme_info">
                                                     <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.level }}</td>
                                                     <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ $page.props.class_types[form.programme_info[index].class_type].name}}</td>
+                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.registration_fee }}</td>
                                                     <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.material_fee }}</td>
                                                     <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700 w-3/12">
                                                         <div class="flex space-x-4">
@@ -160,6 +162,12 @@ import BreezeButton from '@/Components/Button.vue';
                                             <option value="">Please select a level</option>
                                             <option :value="level" v-for="level in 10">Level {{ level }}</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="grow">
+                                    <label for="registration_fee" class="block text-sm text-gray-700 font-bold"> Registration Fee <span class="text-red-500">*</span></label>
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                        <input type="number" min="0" name="registration_fee" id="registration_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.registration_fee.error ? 'border-red-300' : 'border-gray-300'" v-model="fee_form.registration_fee" autocomplete="off"/>
                                     </div>
                                 </div>
                                 <div class="grow">
@@ -468,6 +476,7 @@ export default {
             },
             fee_form: {
                 level: '',
+                registration_fee: 0,
                 material_fee: 0,
                 class_type: '',
                 fees: [],
@@ -507,6 +516,10 @@ export default {
             },
             validation:{
                 level: {
+                    required: true,
+                    error: false
+                },
+                registration_fee: {
                     required: true,
                     error: false
                 },
@@ -612,6 +625,7 @@ export default {
         },
         addFee(){
             this.validation.level.error                     = this.fee_form.level == '' ? true : false
+            this.validation.registration_fee.error          = this.fee_form.registration_fee === ''
             this.validation.material_fee.error              = this.fee_form.material_fee === ''
             this.validation.class_type.error                = this.fee_form.class_type == '' ? true : false
             this.validation.product.error                   = this.validation.product.required && !Object.keys(this.selected.product).length ? true : false
@@ -623,12 +637,13 @@ export default {
             if(this.validation.product.required && !Object.keys(this.selected.product).length || this.validation.product_variation.required && !Object.keys(this.selected.product_variation).length || this.validation.product_sub_variation.required && !Object.keys(this.selected.product_sub_variation).length){
                 return
             }
-            if(this.fee_form.level == '' || this.fee_form.material_fee === '' || this.fee_form.class_type == '' || this.fee_form.fees.length < 1){
+            if(this.fee_form.level == '' || this.fee_form.registration_fee === ''  || this.fee_form.material_fee === '' || this.fee_form.class_type == '' || this.fee_form.fees.length < 1){
                 return
             }
             const fee_items =   this.fee_form.fees
             this.form.programme_info.push({
                 'level': this.fee_form.level,
+                'registration_fee': this.fee_form.registration_fee,
                 'material_fee': this.fee_form.material_fee,
                 'class_type': this.fee_form.class_type,
                 'fees': fee_items,
@@ -659,6 +674,7 @@ export default {
         },
         clearForm(){
             this.fee_form.level = ''
+            this.fee_form.registration_fee = 0
             this.fee_form.material_fee = 0
             this.fee_form.class_type = ''
             this.fee_form.fees = []

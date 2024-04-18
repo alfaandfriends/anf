@@ -85,7 +85,10 @@ import BreezeButton from '@/Components/Button.vue';
                                                                     <div class="border border-dashed border-indigo-400 rounded py-1 px-3">
                                                                         <label> {{ item.programme_type }} </label>
                                                                     </div>
-                                                                    <div class="border border-dashed border-indigo-400 rounded py-1 px-3" v-if="item.include_material_fee">
+                                                                    <div class="bg-indigo-100 py-1 px-3 rounded-sm" v-if="item.include_registration_fee">
+                                                                        <label> Registration Fee </label>
+                                                                    </div>
+                                                                    <div class="bg-indigo-100 py-1 px-3 rounded-sm" v-if="item.include_material_fee">
                                                                         <label> Material Fee </label>
                                                                     </div>
                                                                     <div class="border border-dashed border-blue-400 bg-blue-100 rounded py-1 px-3 space-x-1" v-if="item.promos" v-for="promo in item.promos">
@@ -94,38 +97,20 @@ import BreezeButton from '@/Components/Button.vue';
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td class="border text-sm py-2 px-4 align-top">
-                                                            <div class="grid grid-rows-1 gap-2.5">
-                                                                <div class="text-center py-1 px-3">
-                                                                    <label class="font-semibold">&nbsp;</label>
-                                                                </div>
-                                                                <div class="text-center py-1 px-3">
-                                                                    <label class="font-semibold">&nbsp;</label>
-                                                                </div>
-                                                                <div class="text-center py-1 px-3" v-if="item.include_material_fee">
-                                                                    <label class="font-semibold">&nbsp;</label>
-                                                                </div>
-                                                                <!-- <input v-if="item.programme_fee_discount != 0" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.programme_fee_discount" autocomplete="off" @input="numbersOnly" disabled>
-                                                                <div v-else class="text-center py-1 px-3">
-                                                                    <label class="font-semibold">&nbsp;</label>
-                                                                </div>
-                                                                <input v-if="item.material_fee_discount != 0" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.material_fee_discount" autocomplete="off" @input="numbersOnly" disabled>
-                                                                <div v-else class="text-center py-1 px-3">
-                                                                    <label class="font-semibold">&nbsp;</label>
-                                                                </div> -->
-                                                                <input v-if="item.promos" v-for="promo in item.promos" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" :value="promo.type_id === 1 ? item.programme_fee * promo.value / 100 : promo.value" autocomplete="off" @input="numbersOnly" disabled>
+                                                        <td class="border text-sm py-2 px-4 align-bottom">
+                                                            <div class="flex flex-col space-y-1.5">
+                                                                <input type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.programme_fee_discount" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.include_registration_fee" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.registration_fee_discount" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.include_material_fee" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.material_fee_discount" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.promos" v-for="promo in item.promos" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" :value="promo.type_id === 1 ? item.programme_fee * promo.value / 100 : promo.value" autocomplete="off" @input="numbersOnly" disabled>
                                                             </div>
                                                         </td>
-                                                        <td class="border text-sm py-2 px-4 align-top">
-                                                            <div class="grid grid-rows-1 gap-2.5">
-                                                                <div class="text-center py-1 px-3">
-                                                                    <label class="font-semibold">&nbsp;</label>
-                                                                </div>
-                                                                <!-- <div class="text-center py-1 px-3">
-                                                                    <label class="font-semibold">{{ item.programme_fee }}</label>
-                                                                </div> -->
-                                                                <input type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.programme_fee" autocomplete="off" @input="numbersOnly" disabled>
-                                                                <input v-if="item.include_material_fee" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.material_fee" autocomplete="off" @input="numbersOnly" disabled>
+                                                        <td class="border text-sm py-2 px-4 align-bottom">
+                                                            <div class="flex flex-col space-y-1.5">
+                                                                <input type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.programme_fee" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.include_registration_fee" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.registration_fee" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.include_material_fee" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.material_fee" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.promos" v-for="promo in item.promos" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" :value="0" @input="numbersOnly" disabled>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -270,6 +255,8 @@ export default {
                 newVal.forEach(item => {
                     !item.programme_fee             ? item.programme_fee = 0 : ''
                     !item.programme_fee_discount    ? item.programme_fee_discount = 0 : ''
+                    !item.registration_fee          ? item.registration_fee = 0 : ''
+                    !item.registration_fee_discount ? item.registration_fee_discount = 0 : ''
                     !item.material_fee              ? item.material_fee = 0 : ''
                     !item.material_fee_discount     ? item.material_fee_discount = 0 : ''
                 });
@@ -310,6 +297,8 @@ export default {
                 // Parse fees and discounts as numbers
                 const programmeFee = parseFloat(item.programme_fee);
                 const programmeDiscount = parseFloat(item.programme_fee_discount);
+                const registrationFee = parseFloat(item.registration_fee);
+                const registrationDiscount = parseFloat(item.registration_fee_discount);
                 const materialFee = parseFloat(item.material_fee);
                 const materialDiscount = parseFloat(item.material_fee_discount);
 
@@ -317,8 +306,12 @@ export default {
                 total += programmeFee - programmeDiscount;
 
                 // Check if material fee should be included
+                if (item.include_registration_fee) {
+                    // Add material fee and subtract material discount
+                    total += registrationFee - registrationDiscount;
+                }
                 if (item.include_material_fee) {
-                // Add material fee and subtract material discount
+                    // Add material fee and subtract material discount
                     total += materialFee - materialDiscount;
                 }
 
@@ -334,8 +327,9 @@ export default {
                     }
                     total = total - total_promo
                 }
+                return total;
             }
-            return total;
+
         },
         deleteProof(){
             this.form.payment.proof.url                 =   []

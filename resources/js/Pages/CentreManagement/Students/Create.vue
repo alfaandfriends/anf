@@ -326,42 +326,48 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </div>
                                             </div>
                                             <div class="col-span-5 p-3 bg-indigo-50 space-y-4">
-                                                <div class="flex flex-col bg-white px-4 py-1 rounded-lg border border-gray-500">
-                                                    <div class="flex flex-wrap items-center space-x-4 mt-3 pb-3 pl-2">
-                                                        <h3 class="flex items-center font-semibold text-sm space-x-2 whitespace-nowrap">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="h-5 w-5">
-                                                                <path d="M64 64C28.7 64 0 92.7 0 128v64c0 8.8 7.4 15.7 15.7 18.6C34.5 217.1 48 235 48 256s-13.5 38.9-32.3 45.4C7.4 304.3 0 311.2 0 320v64c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V320c0-8.8-7.4-15.7-15.7-18.6C541.5 294.9 528 277 528 256s13.5-38.9 32.3-45.4c8.3-2.9 15.7-9.8 15.7-18.6V128c0-35.3-28.7-64-64-64H64zm64 112l0 160c0 8.8 7.2 16 16 16H432c8.8 0 16-7.2 16-16V176c0-8.8-7.2-16-16-16H144c-8.8 0-16 7.2-16 16zM96 160c0-17.7 14.3-32 32-32H448c17.7 0 32 14.3 32 32V352c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V160z"/>
-                                                            </svg>
-                                                            <span>Applied Promos</span>
-                                                        </h3>
-                                                        <!-- <select class="text-xs rounded focus:ring-0 focus:border-indigo-300" v-model="selected_promo">
-                                                            <option v-for="promo in $page.props.promos" :value="promo.id" >{{ promo.name }}</option>
-                                                        </select> -->
-                                                        <div @click="showPromoModal(fee_index)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 hover:bg-indigo-100 whitespace-nowrap">
-                                                            Add Promo
+                                                <div class="flex flex-col p-6 lg:py-8 lg:px-12 bg-indigo-50">
+                                                    <div class="flex flex-col bg-white px-4 py-1 rounded-lg border border-gray-500 mb-3">
+                                                        <div class="flex flex-wrap items-center space-x-4 mt-3 pb-3 pl-2">
+                                                            <h3 class="flex items-center font-semibold text-sm space-x-2 whitespace-nowrap">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="h-5 w-5">
+                                                                    <path d="M64 64C28.7 64 0 92.7 0 128v64c0 8.8 7.4 15.7 15.7 18.6C34.5 217.1 48 235 48 256s-13.5 38.9-32.3 45.4C7.4 304.3 0 311.2 0 320v64c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V320c0-8.8-7.4-15.7-15.7-18.6C541.5 294.9 528 277 528 256s13.5-38.9 32.3-45.4c8.3-2.9 15.7-9.8 15.7-18.6V128c0-35.3-28.7-64-64-64H64zm64 112l0 160c0 8.8 7.2 16 16 16H432c8.8 0 16-7.2 16-16V176c0-8.8-7.2-16-16-16H144c-8.8 0-16 7.2-16 16zM96 160c0-17.7 14.3-32 32-32H448c17.7 0 32 14.3 32 32V352c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V160z"/>
+                                                                </svg>
+                                                                <span>Applied Promos</span>
+                                                            </h3>
+                                                            <!-- <select class="text-xs rounded focus:ring-0 focus:border-indigo-300" v-model="selected_promo">
+                                                                <option v-for="promo in $page.props.promos" :value="promo.id" >{{ promo.name }}</option>
+                                                            </select> -->
+                                                            <div @click="showPromoModal(fee_index)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 hover:bg-indigo-100 whitespace-nowrap">
+                                                                Add Promo
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <simplebar v-if="fee.fee_info.promos.length" data-simplebar-auto-hide="true" class="mt-3 pb-3">
+                                                            <span class="flex space-x-2 items-center justify-center rounded-md bg-indigo-200 px-2.5 py-1 font-semibold text-indigo-800 transform hover:scale-105 duration-200" v-for="applied_promo, promo_index in fee.fee_info.promos">
+                                                                <p class="whitespace-nowrap text-xs">{{ applied_promo.promo_name }}</p>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" @click="deletePromo(fee_index, promo_index)" class="h-4 w-4 text-red-600 cursor-pointer">
+                                                                    <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
+                                                                </svg>
+                                                            </span>
+                                                        </simplebar>
+                                                        <div class="py-2" v-else>
+                                                            <span class="text-xs font-semibold text-blue-500">No Promo applied.</span>
                                                         </div>
                                                     </div>
-                                                    <hr>
-                                                    <simplebar v-if="fee.fee_info.promos.length" data-simplebar-auto-hide="true" class="mt-3 pb-3">
-                                                        <span class="flex space-x-2 items-center justify-center rounded-md bg-indigo-200 px-2.5 py-1 font-semibold text-indigo-800 transform hover:scale-105 duration-200" v-for="applied_promo, promo_index in fee.fee_info.promos">
-                                                            <p class="whitespace-nowrap text-xs">{{ applied_promo.promo_name }}</p>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" @click="deletePromo(fee_index, promo_index)" class="h-4 w-4 text-red-600 cursor-pointer">
-                                                                <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
-                                                            </svg>
-                                                        </span>
-                                                    </simplebar>
-                                                    <div class="py-2" v-else>
-                                                        <span class="text-xs font-semibold text-blue-500">No Promo applied.</span>
-                                                    </div>
-                                                </div>
-                                                <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900 p-3">
-                                                    <div class="flex justify-center">
-                                                        <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded cursor-pointer" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                        <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
-                                                    </div>
-                                                    <div class="flex justify-center items-center">
-                                                        <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
-                                                        <span class="leading-7 font-medium text-gray-700">/month</span>
+                                                    <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900">
+                                                        <div class="flex">
+                                                            <input id="registration_fee" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
+                                                            <label for="registration_fee" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Registration Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</label>
+                                                        </div>
+                                                        <div class="flex">
+                                                            <input id="material_fee" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                            <label for="material_fee" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Material Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                        </div>
+                                                        <div class="flex justify-center items-center">
+                                                            <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
+                                                            <span class="leading-7 font-medium text-gray-700">/month</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -604,17 +610,21 @@ export default {
             handler(){
                 this.total_amount = 0;
                 for (const feeObject of this.form.fee) {
-                    const { include_material_fee, material_fee, programme_fee, promos } = feeObject.fee_info;
 
-                    // Calculate total promo values for this fee
+                    // Calculate fee amount after applying promos
+                    // let fee_amount = include_material_fee ? Number(programme_fee) + Number(material_fee) : Number(programme_fee);
+
+                    const { include_registration_fee, registration_fee, include_material_fee, material_fee, programme_fee, promos } = feeObject.fee_info;
+                    const registration_fee_amount  =    include_registration_fee ? Number(registration_fee) : 0;
+                    const material_fee_amount      =    include_material_fee ? Number(material_fee) : 0;
+                    console.log(promos)
                     const totalPercentValuePromo = promos.reduce((accumulator, currentValue) => 
                         currentValue.type_id === 1 ? accumulator + currentValue.value : accumulator, 0);
                     const totalFixedValuePromo = promos.reduce((accumulator, currentValue) => 
                         currentValue.type_id === 2 ? accumulator + currentValue.value : accumulator, 0);
 
-                    // Calculate fee amount after applying promos
-                    let fee_amount = include_material_fee ? Number(programme_fee) + Number(material_fee) : Number(programme_fee);
-                    this.total_amount = fee_amount - totalFixedValuePromo - (fee_amount * totalPercentValuePromo / 100);
+                    // this.total_amount             +=    Number(programme_fee) + registration_fee_amount + material_fee_amount;
+                    this.total_amount = Number(programme_fee) - totalFixedValuePromo - (this.total_amount * totalPercentValuePromo / 100) + Number(registration_fee_amount) + Number(material_fee_amount);
                 }
             },
             deep: true

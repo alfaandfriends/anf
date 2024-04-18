@@ -66,6 +66,7 @@ class ProgrammeController extends Controller
                 'programme_id'                      =>  $programme_id,
                 'class_type_id'                     =>  $info['class_type'],
                 'level'                             =>  $info['level'],
+                'registration_fee'                  =>  $info['registration_fee'],
                 'material_fee'                      =>  $info['material_fee'],
                 'material_product_id'               =>  !empty($info['product']) ? $info['product']['id'] : null,
                 'material_product_variation_id'     =>  !empty($info['product_variation']) ? $info['product_variation']['id'] : null,
@@ -98,7 +99,7 @@ class ProgrammeController extends Controller
                                         ->leftJoin('product_sub_variations', 'programme_levels.material_product_sub_variation_id', '=', 'product_sub_variations.id')
                                         ->where('programme_levels.programme_id', $request->programme_id)
                                         ->select('programme_levels.id as programme_level_id', 'programme_levels.level', 'programme_levels.class_type_id as class_type', 
-                                                'programme_levels.material_fee', 'products.id as product_id', 'products.name as product_name', 
+                                                'programme_levels.material_fee', 'programme_levels.registration_fee', 'products.id as product_id', 'products.name as product_name', 
                                                 'products.has_variation as has_variation', 'products.has_sub_variation as has_sub_variation', 
                                                 'product_variations.id as product_variation_id', 'product_variations.option_name as product_variation_name', 
                                                 'product_sub_variations.id as product_sub_variation_id', 'product_sub_variations.option_name as product_sub_variation_name')
@@ -205,6 +206,7 @@ class ProgrammeController extends Controller
                     'programme_id'                      =>  $request->programme_id,
                     'class_type_id'                     =>  $info['class_type'],
                     'level'                             =>  $info['level'],
+                    'registration_fee'                  =>  $info['registration_fee'],
                     'material_fee'                      =>  $info['material_fee'],
                     'material_product_id'               =>  !empty($info['product']) ? $info['product']['id'] : null,
                     'material_product_variation_id'     =>  !empty($info['product_variation']) ? $info['product_variation']['id'] : null,
@@ -298,7 +300,7 @@ class ProgrammeController extends Controller
                                 ->join('programme_level_fees', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                                 ->join('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
                                 ->select(   'programmes.id as programme_id', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 
-                                            'programme_levels.material_fee', 'programme_level_fees.id as fee_id', 'programme_level_fees.fee_amount as programme_fee', 
+                                            'programme_levels.material_fee', 'programme_levels.registration_fee', 'programme_level_fees.id as fee_id', 'programme_level_fees.fee_amount as programme_fee', 
                                             'class_types_detail.label as programme_type', 'centres.id as centre_id', 'centres.label as centre_name', 
                                             'class_types.id as class_type_id', 'class_methods.name as class_method', 'countries.currency_symbol')
                                 ->where('programme_level_fees.fee_amount', '>', 0);
@@ -310,11 +312,13 @@ class ProgrammeController extends Controller
             $fee_info_query->where('classes.id', $request->classes)->where('programme_levels.class_type_id', $request->class_type)->where('class_types_detail.class_count', $request->class_count);
         }
 
-        $data['fee_info']                           =   $fee_info_query->first();
-        $data['fee_info']->include_material_fee     =   true;
-        $data['fee_info']->material_fee_discount    =   0;
-        $data['fee_info']->programme_fee_discount   =   0;
-        $data['fee_info']->promos                   =   [];
+        $data['fee_info']                               =   $fee_info_query->first();
+        $data['fee_info']->include_material_fee         =   true;
+        $data['fee_info']->include_registration_fee     =   true;
+        $data['fee_info']->registration_fee_discount    =   0;
+        $data['fee_info']->material_fee_discount        =   0;
+        $data['fee_info']->programme_fee_discount       =   0;
+        $data['fee_info']->promos                       =   [];
 
         $classes_query  =   DB::table('classes')
                                 ->join('class_days', 'classes.class_day_id', '=', 'class_days.id')

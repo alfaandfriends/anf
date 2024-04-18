@@ -87,65 +87,79 @@
             </tr>
         </thead>
         <tbody style="border: 1px solid black">
+            <tr>
+                <td style="padding-top:0.5rem; font-size: 13px; padding-left:1rem; padding-right:1rem;">
+                </td>
+            </tr>
             @foreach ($data['invoice_items'] as $key=>$item)
                 <tr>
-                    <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
-                        <div style="margin-bottom: 10px; font-weight: bold;">
+                    <td style="padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left" colspan="3">
+                        <div style="font-weight: bold;">
                             {{ $item->programme_name }} (Level {{ $item->programme_level }})
                         </div>
-                        @if($item->include_material_fee)
-                        <div>
-                            - Material Fee
-                        </div>
-                        @endif
-                        <div>
-                            - {{ $item->programme_type }}
-                        </div>
-                    </td>
-                    <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
-                        @if($item->include_material_fee)
-                        <div>
-                            {{ $item->material_fee_discount }}.00
-                        </div>
-                        @endif
-                        <div>
-                            {{ $item->programme_fee_discount }}.00
-                        </div>
-                    </td>
-                    <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
-                        @if($item->include_material_fee)
-                        <div>
-                            {{ $item->material_fee }}.00
-                        </div>
-                        @endif
-                        <div>
-                            {{ $item->programme_fee }}.00
-                        </div>
                     </td>
                 </tr>
-                @foreach($item->promos as $promo_index=>$promo)
                 <tr>
-                    <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
-                        <div>
-                            - {{ $promo->promo_name }} (Promotion)
-                        </div>
+                    <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
+                        - {{ $item->programme_type }}
                     </td>
-                    <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
-                        <div>
-                            @if($promo->type_id == 1)
-                                {{ $promo->value * $item->programme_fee / 100 }}.00
-                            @endif
-                            @if($promo->type_id == 2)
-                                {{ $promo->value }}.00
-                            @endif
-                        </div>
+                    <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
+                        {{ $item->programme_fee_discount }}.00
                     </td>
-                    <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
-                        <div>
-                            0.00
-                        </div>
+                    <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
+                        {{ $item->programme_fee }}.00
                     </td>
                 </tr>
+                @if($item->include_registration_fee)
+                <tr>
+                    <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
+                        - Registration Fee
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
+                        {{ $item->registration_fee_discount }}.00
+                    </td>
+                    <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
+                        {{ $item->registration_fee }}.00
+                    </td>
+                </tr>
+                @endif
+                @if($item->include_material_fee)
+                    <tr>
+                        <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
+                            - Material fee
+                        </td>
+                        <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
+                            {{ $item->material_fee_discount }}.00
+                        </td>
+                        <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem; vertical-align: bottom" align="right">
+                            {{ $item->material_fee }}.00
+                        </td>
+                    </tr>
+                @endif
+                <tr ></tr>
+                @foreach($item->promos as $promo_index=>$promo)
+                    <tr>
+                        <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
+                            <div>
+                                - {{ $promo->promo_name }} (Promotion)
+                            </div>
+                        </td>
+                        <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
+                            <div>
+                                @if($promo->type_id == 1)
+                                    {{ $promo->value * $item->programme_fee / 100 }}.00
+                                @endif
+                                @if($promo->type_id == 2)
+                                    {{ $promo->value }}.00
+                                @endif
+                            </div>
+                        </td>
+                        <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
+                            <div>
+                                0.00
+                            </div>
+                        </td>
+                    </tr>
                 @endforeach
             @endforeach
         </tbody>
