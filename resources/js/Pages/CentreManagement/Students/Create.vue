@@ -321,15 +321,15 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </div>
                                                 <div class="flex flex-col p-6 lg:py-8 lg:px-12 bg-indigo-50">
                                                     <div class="flex flex-col">
-                                                        <div class="flex justify-center items-center space-x-4 mb-3">
+                                                        <!-- <div class="flex justify-center items-center space-x-4 mb-3">
                                                             <h3 class="font-semibold text-sm">Applied Promo</h3>
-                                                            <!-- <select class="text-xs rounded focus:ring-0 focus:border-indigo-300" v-model="selected_promo">
+                                                            <select class="text-xs rounded focus:ring-0 focus:border-indigo-300" v-model="selected_promo">
                                                                 <option v-for="promo in $page.props.promos" :value="promo.id" >{{ promo.name }}</option>
-                                                            </select> -->
+                                                            </select>
                                                             <div @click="viewPromo(fee_index)" class="text-sm text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 hover:bg-indigo-200">
                                                                 Add Promo
                                                             </div>
-                                                        </div>
+                                                        </div> -->
                                                         <div class="flex flex-col space-y-2 mb-10">
                                                             <div class="flex items-center space-x-2" v-for="applied_promo in fee.fee_info.promos">
                                                                 <span class="inline-flex items-center justify-center rounded-md bg-indigo-200 px-2.5 py-0.5 text-indigo-800">
