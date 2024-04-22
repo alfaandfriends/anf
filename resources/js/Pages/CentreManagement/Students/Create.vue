@@ -338,7 +338,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <!-- <select class="text-xs rounded focus:ring-0 focus:border-indigo-300" v-model="selected_promo">
                                                                 <option v-for="promo in $page.props.promos" :value="promo.id" >{{ promo.name }}</option>
                                                             </select> -->
-                                                            <div @click="showPromoModal(fee_index)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 hover:bg-indigo-100 whitespace-nowrap">
+                                                            <div @click="showPromoModal(fee_index)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 bg-white hover:bg-indigo-50 whitespace-nowrap">
                                                                 Add Promo
                                                             </div>
                                                         </div>
@@ -357,12 +357,12 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </div>
                                                     <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900">
                                                         <div class="flex">
-                                                            <input id="registration_fee" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
-                                                            <label for="registration_fee" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Registration Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</label>
+                                                            <input :id="'registration_fee'+fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
+                                                            <label :for="'registration_fee'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Registration Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</label>
                                                         </div>
                                                         <div class="flex">
-                                                            <input id="material_fee" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                            <label for="material_fee" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Material Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                            <input :id="'material_fee'+fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                            <label :for="'material_fee'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Material Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
                                                         </div>
                                                         <div class="flex justify-center items-center">
                                                             <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
@@ -820,7 +820,8 @@ export default {
                     value: parseInt(selectedPromo.value),
                     duration_id: parseInt(selectedPromo.type_id),
                     duration_name: selectedPromo.duration_name,
-                    duration_count: parseInt(selectedPromo.duration_count)
+                    duration_count: parseInt(selectedPromo.duration_count),
+                    duration_remaining: parseInt(selectedPromo.duration_count)
                 });
             }
 

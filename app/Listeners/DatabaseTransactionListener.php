@@ -29,6 +29,8 @@ class DatabaseTransactionListener
     public function handle($event)
     {
         // Log information before the transaction starts
-        Log::info(auth()->user()->ID.': '.$event->data);
+        if (auth()->check()) {
+            Log::info(auth()->user()->ID.': '.$event->data);
+        }
     }
 }

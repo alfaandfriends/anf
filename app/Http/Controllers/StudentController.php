@@ -815,7 +815,8 @@ class StudentController extends Controller
                     "promo_name" => $request->data['promo_name'],
                     "duration_id" => (int)$request->data['duration_id'],
                     "duration_name" => $request->data['duration_name'],
-                    "duration_count" => (int)$request->data['duration_count']
+                    "duration_count" => (int)$request->data['duration_count'],
+                    "duration_remaining" => (int)$request->data['duration_remaining']
                 ];
             }
             return $fee;

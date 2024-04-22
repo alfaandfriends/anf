@@ -134,7 +134,6 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mb-4 text-right pr-5">
                                             <label for="amount" class="block text-md font-bold text-gray-700"> Total Amount</label>
                                             <span class="text-2xl font-bold text-indigo-500">{{ totalFee(form.invoice_items) }}</span>
-                                            
                                         </div>
                                     </div>
                                 </div>
@@ -314,7 +313,6 @@ export default {
                     // Add material fee and subtract material discount
                     total += materialFee - materialDiscount;
                 }
-
                 var total_promo =   0
                 if(item.promos){
                     for (const promo of item.promos) {
@@ -327,9 +325,8 @@ export default {
                     }
                     total = total - total_promo
                 }
-                return total;
             }
-
+            return total;
         },
         deleteProof(){
             this.form.payment.proof.url                 =   []

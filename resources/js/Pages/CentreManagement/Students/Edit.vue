@@ -150,7 +150,39 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                   </div>
                                 <template v-if="current_tab == 1">
-                                    <article class="rounded border border-dashed border-gray-500 bg-gray-50 p-6" v-if="current_fee.length" v-for="fee, fee_index in current_fee">
+                                    
+                                    <!-- <div class="px-4 py-3 border border-dashed rounded border-gray-500" v-if="current_fee.length" v-for="fee, fee_index in current_fee">
+                                        <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+                                            <div class="flex flex-col lg:col-span-8">
+                                                <div>
+                                                    <h5 class="mb-1 text-sm font-bold">{{ moment(fee.fee_info.fee_month).format('MMMM Y') }} - <span class="text-indigo-700">{{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }})</span></h5>
+                                                    <span class="text-indigo-700">{{ fee.fee_info.centre_name }}</span>
+                                                    <p class="mb-1 text-slate-700 font-semibold text-sm">
+                                                        <template v-for="(classes, index) in fee.classes">
+                                                            <span v-if="index !== 0" class="mx-2 border-r border-gray-300"></span>
+                                                            <span class="whitespace-nowrap">
+                                                                {{ classes.class_day }} ({{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }})
+                                                            </span>
+                                                        </template>
+                                                    </p>
+                                                    <p class="mb-1 text-slate-700 font-semibold text-sm">Size: <span class="text-slate-800">L</span></p>
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-between lg:flex-col lg:col-end-13 lg:col-span-2">
+                                                <div class="flex justify-end">
+                                                    <div class="mb-auto ltr:lg:text-right rtl:lg:text-left">
+                                                        <span class="text-sm flex items-center space-x-1 bg-red-500 text-white px-2.5 py-1.5 shadow-md rounded transform hover:scale-105 duration-200 cursor-pointer font-semibold" @click="deleteClass(fee.fee_info.student_fee_id, fee.fee_info.invoice_id, fee.fee_info.admission_date, fee.fee_info.centre_id, fee.fee_info.programme_id)">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-4 h-4 text-white" fill="currentColor">
+                                                                <path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/>
+                                                            </svg>
+                                                            <span class="text-xs">Delete</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <article class="rounded border border-dashed border-gray-500 bg-gray-50 p-3" v-if="current_fee.length" v-for="fee, fee_index in current_fee">
                                         <div class="flex justify-between items-center mb-3">
                                             <strong class="rounded border border-blue-500 bg-blue-500 px-3 py-1.5 text-[12px] font-medium text-white">{{ moment(fee.fee_info.fee_month).format('MMMM Y') }}</strong>
                                             <span class="text-sm flex items-center space-x-1 bg-red-500 text-white px-2.5 py-1.5 shadow-md rounded transform hover:scale-105 duration-200 cursor-pointer font-semibold" @click="deleteClass(fee.fee_info.student_fee_id, fee.fee_info.invoice_id, fee.fee_info.admission_date, fee.fee_info.centre_id, fee.fee_info.programme_id)">
@@ -195,7 +227,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <div class="px-4 py-3 rounded border border-indigo-500 border-dashed bg-indigo-50">
                                                         <label for="fee_status" class="block text-sm font-bold text-gray-700 space-x-2"> 
                                                             <span>Promos</span> 
-                                                            <button @click="showExistingClassPromoModal(fee_index, fee.fee_info.fee_id, fee.fee_info.student_fee_id)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 hover:bg-indigo-100 whitespace-nowrap">Add Promo</button>
+                                                            <button @click="showExistingClassPromoModal(fee_index, fee.fee_info.fee_id, fee.fee_info.student_fee_id)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 bg-white hover:bg-indigo-50 whitespace-nowrap">Add Promo</button>
                                                         </label>
                                                         <simplebar v-if="fee.fee_info.promos.length" data-simplebar-auto-hide="true" class="mt-3 pb-3">
                                                             <span class="flex space-x-2 items-center justify-center rounded-md bg-indigo-200 px-2.5 py-1 font-semibold text-indigo-800 transform hover:scale-105 duration-200" v-for="applied_promo, promo_index in fee.fee_info.promos">
@@ -455,7 +487,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                 </div>
                             </div>
-                            <div class="px-2 mb-3" v-if="list.available_classes.length">
+                            <div class="px-2 mb-3" v-if="enable_container.available_classes">    
                                 <div class="mb-5">
                                     <h1 class="font-bold text-indigo-800">Classes Available</h1>
                                     <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
@@ -524,7 +556,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="space-y-2">
                                     <template v-for="fee, fee_index in form.fee">
                                         <div class="grid grid-cols-1 lg:grid-cols-8 rounded-lg overflow-hidden border-2 bg-white border-indigo-500 border-dashed">
-                                            <div class="col-span-3 p-6">
+                                            <div class="col-span-4 p-6">
                                                 <h3 class="flex space-x-4 items-center text-lg text-left uppercase leading-8 font-extrabold text-gray-900 sm:leading-9">
                                                     <img src="/images/school.png" class="w-16 h-16" alt="">
                                                     <span class="flex flex-col">
@@ -562,7 +594,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-span-5 p-3 bg-indigo-50 space-y-4">
+                                            <div class="col-span-4 p-3 bg-indigo-50 space-y-4">
                                                 <div class="flex flex-col bg-white px-4 py-1 rounded-lg border border-gray-500">
                                                     <div class="flex flex-wrap items-center space-x-4 mt-3 pb-3 pl-2">
                                                         <h3 class="flex items-center font-semibold text-sm space-x-2 whitespace-nowrap">
@@ -1558,7 +1590,8 @@ export default {
                     value: selectedPromo.value,
                     duration_id: selectedPromo.type_id,
                     duration_name: selectedPromo.duration_name,
-                    duration_count: selectedPromo.duration_count
+                    duration_count: selectedPromo.duration_count,
+                    duration_remaining: selectedPromo.duration_count
                 }
                 this.$inertia.post(route('students.add_promo'), {fee_id: this.selected_promo.fee_id, student_fee_id: this.selected_promo.student_fee_id, data: data }, {preserveState: false})
             }
@@ -1578,7 +1611,8 @@ export default {
                     value: parseInt(selectedPromo.value),
                     duration_id: parseInt(selectedPromo.type_id),
                     duration_name: selectedPromo.duration_name,
-                    duration_count: parseInt(selectedPromo.duration_count)
+                    duration_count: parseInt(selectedPromo.duration_count),
+                    duration_remaining: parseInt(selectedPromo.duration_count)
                 });
             }
 
