@@ -1,5 +1,0 @@
-<<<<<<< HEAD:public/build/assets/Main-b3076d01.js
-import{o as t,c as s,a as e,d as a,x as l,F as r}from"./app-cc118ad9.js";import m from"./Navigation-21181872.js";import n from"./Header-92d17a9f.js";import"./ApplicationLogo-82ac16a9.js";const c={class:"relative flex mx-auto max-w-8xl"},p={class:"flex-auto min-w-0 px-4 py-10 md:pl-72 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16"},g={__name:"Main",setup(_){return(o,i)=>(t(),s(r,null,[e(n),a("main",c,[e(m),a("div",p,[l(o.$slots,"default")])])],64))}};export{g as default};
-=======
-import{o as t,c as s,a as e,d as a,x as l,F as r}from"./app-52b365f0.js";import m from"./Navigation-2f38aa52.js";import n from"./Header-aac33b68.js";import"./ApplicationLogo-79ae59e2.js";const c={class:"relative flex mx-auto max-w-8xl"},p={class:"flex-auto min-w-0 px-4 py-10 md:pl-72 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16"},g={__name:"Main",setup(_){return(o,i)=>(t(),s(r,null,[e(n),a("main",c,[e(m),a("div",p,[l(o.$slots,"default")])])],64))}};export{g as default};
->>>>>>> e402caeffa6bac873880cfb5d969663444372e1a:public/build/assets/Main-b43ab4dc.js
