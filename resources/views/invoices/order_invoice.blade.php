@@ -89,23 +89,25 @@
         </thead>
         <tbody>
             @foreach ($data['products'] as $key=>$item)
-            <tr style="border: 1px solid black">
-                <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
-                    <div style="margin-bottom: 10px; font-weight: bold;">
-                    {{ $item->product->name }} {{ isset($item->product_variation->option_name) ? '- ' . $item->product_variation->option_name : '' }} {{ isset($item->product_sub_variation->option_name) ? '(' . $item->product_sub_variation->option_name . ')': '' }}
-                    </div>
-                </td>
-                <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
-                    <div>
-                        {{ $item->quantity }}
-                    </div>
-                </td>
-                <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
-                    <div>
-                        0.00
-                    </div>
-                </td>
-            </tr>
+                @if($item->product->name !== null)
+                    <tr style="border: 1px solid black">
+                        <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
+                            <div style="margin-bottom: 10px; font-weight: bold;">
+                            {{ $item->product->name }} {{ isset($item->product_variation->option_name) ? '- ' . $item->product_variation->option_name : '' }} {{ isset($item->product_sub_variation->option_name) ? '(' . $item->product_sub_variation->option_name . ')': '' }}
+                            </div>
+                        </td>
+                        <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
+                            <div>
+                                {{ $item->quantity }}
+                            </div>
+                        </td>
+                        <td style="padding-top:0.5rem; padding-bottom:0.5rem; padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
+                            <div>
+                                0.00
+                            </div>
+                        </td>
+                    </tr>
+                @endif
             @endforeach
         </tbody>
         <tfoot>

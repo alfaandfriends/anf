@@ -40,12 +40,29 @@ class InvoiceHelper {
 
         $invoice_items      =   collect($invoice_data['invoice_items']);
 
+        /* Calculate total fee */
         $totalFee = $invoice_items->sum(function ($item) {
             $registration_fee   =   $item['include_registration_fee'] ? $item['registration_fee'] : 0;
             $material_fee       =   $item['include_material_fee'] ? $item['material_fee'] : 0;
 
             return $item['programme_fee'] + $registration_fee + $material_fee;
         });
+        
+        /* Calculate total promo */
+        $totalPromo =   0;
+        foreach($invoice_items as $fee_key => $fee){
+            if (isset($fee['promos'])) { // Check if 'promos' key exists
+                foreach($fee['promos'] as $promo_key => $promo){
+                    if($promo['type_id'] === 1){
+                        $totalPromo += ($fee['programme_fee'] * $promo['value'] / 100);
+                    }
+                    if($promo['type_id'] === 2){
+                        $totalPromo += $promo['value'];
+                    }
+                }
+            }
+        }
+        $totalFee = $totalFee - $totalPromo;
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];
@@ -54,7 +71,7 @@ class InvoiceHelper {
         $date_admission     =   $invoice_data['date_admission'];
         $currency           =   $invoice_data['currency'];
         
-        // if(env('APP_ENV') != 'local'){
+        // if(env('APP_ENV') == 'production'){
             if($student_country == self::$malaysia){
                 $bill_collection_id     =   config('app.billplz.collection_id');
                 $bill_email             =   StudentHelper::getStudentEmail($invoice_data['student_id']);

@@ -124,36 +124,38 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                                                         </td>
                                                     </tr>
                                                     <tr class="border" v-for="product, index in form.products">
-                                                        <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
-                                                            <div class="text-left">{{ index+1 }}</div>
-                                                        </td>
-                                                        <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
-                                                            <div class="flex items-center">
-                                                                <div class="font-medium text-gray-800">{{ product.product.name }}</div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
-                                                            <div class="text-left">{{ product.product_variation.option_name ? product.product_variation.option_name : '-' }}</div>
-                                                        </td>
-                                                        <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
-                                                            <div class="text-left">{{ product.product_sub_variation.option_name ? product.product_sub_variation.option_name : '-' }}</div>
-                                                        </td>
-                                                        <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
-                                                            <div>
-                                                                <div class="flex items-center border border-gray-200 rounded">
-                                                                    <button @click="decreaseQuantity(index)" type="button" class="font-semibold text-lg flex items-center justify-center w-8 h-8 leading-10 text-white bg-indigo-500">
-                                                                        &minus;
-                                                                    </button>
-                                                                    <input type="number" min="0" max="999" v-model="product.quantity" class="h-8 w-16 border-gray-200 focus:border-gray-200 focus:ring-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"/>
-                                                                    <button @click="increaseQuantity(index)" type="button" class="font-semibold text-lg flex items-center justify-center w-8 h-8 leading-10 text-white bg-indigo-500">
-                                                                        &plus;
-                                                                    </button>
+                                                        <template v-if="product.product.name">
+                                                            <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
+                                                                <div class="text-left">{{ index+1 }}</div>
+                                                            </td>
+                                                            <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
+                                                                <div class="flex items-center">
+                                                                    <div class="font-medium text-gray-800">{{ product.product.name }}</div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
-                                                            <div class="text-center hover:underline text-red-500 hover:text-red-600 cursor-pointer font-semibold" @click="deleteItem(index)">Delete</div>
-                                                        </td>
+                                                            </td>
+                                                            <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
+                                                                <div class="text-left">{{ product.product_variation.option_name ? product.product_variation.option_name : '-' }}</div>
+                                                            </td>
+                                                            <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
+                                                                <div class="text-left">{{ product.product_sub_variation.option_name ? product.product_sub_variation.option_name : '-' }}</div>
+                                                            </td>
+                                                            <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
+                                                                <div>
+                                                                    <div class="flex items-center border border-gray-200 rounded">
+                                                                        <button @click="decreaseQuantity(index)" type="button" class="font-semibold text-lg flex items-center justify-center w-8 h-8 leading-10 text-white bg-indigo-500">
+                                                                            &minus;
+                                                                        </button>
+                                                                        <input type="number" min="0" max="999" v-model="product.quantity" class="h-8 w-16 border-gray-200 focus:border-gray-200 focus:ring-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"/>
+                                                                        <button @click="increaseQuantity(index)" type="button" class="font-semibold text-lg flex items-center justify-center w-8 h-8 leading-10 text-white bg-indigo-500">
+                                                                            &plus;
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td class="border border-gray-400 py-2 px-4 whitespace-nowrap">
+                                                                <div class="text-center hover:underline text-red-500 hover:text-red-600 cursor-pointer font-semibold" @click="deleteItem(index)">Delete</div>
+                                                            </td>
+                                                        </template>
                                                     </tr>
                                                 </tbody>
                                             </table>

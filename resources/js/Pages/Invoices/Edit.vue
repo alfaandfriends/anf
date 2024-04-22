@@ -25,8 +25,8 @@ import BreezeButton from '@/Components/Button.vue';
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
                     <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
-                        <div class="grid grid-rows-1 grid-cols-2 sm:grid-cols-2 gap-4">
-                            <div class="sm:row-span-3">
+                        <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4">
+                            <div class="lg:col-span-2">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md h-full">
                                     <div class="mb-5">
                                         <h1 class="font-bold text-indigo-800">Invoice Information</h1>
@@ -64,25 +64,25 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="grid grid-cols-1">
                                         <div class="mb-10">
-                                            <table>
+                                            <table class="w-full">
                                                 <thead>
                                                     <tr class="bg-gray-600">
                                                         <th class="text-left text-white text-sm py-2 px-4 w-1/12">#</th>
-                                                        <th class="text-left text-white text-sm py-2 px-4 w-7/12">Programme</th>
-                                                        <th class="text-left text-white text-sm py-2 px-4 w-2/12">Discount</th>
-                                                        <th class="text-left text-white text-sm py-2 px-4 w-2/12">Amount</th>
+                                                        <th class="text-left text-white text-sm py-2 px-4 w-7/12">Items</th>
+                                                        <th class="text-center text-white text-sm py-2 px-4 w-2/12">Discount</th>
+                                                        <th class="text-center text-white text-sm py-2 px-4 w-2/12">Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr v-for="item, index in form.invoice_items">
-                                                        <td class="border text-sm align-top py-2 px-4">{{ index + 1 }}</td>
+                                                        <td class="border text-sm text-center py-2 px-4">{{ index + 1 }}</td>
                                                         <td class="border text-sm py-2 px-4">
-                                                            <div class="flex flex-col space-y-4">
-                                                                <div class="bg-indigo-300 py-2 px-3 rounded-t-md">
+                                                            <div class="grid grid-rows-1 gap-2">
+                                                                <div class="border border-dashed border-indigo-400 bg-indigo-200 rounded py-1 px-3">
                                                                     <label class="font-semibold"> {{ item.programme_name }} ( Level {{ item.programme_level }} )</label>
                                                                 </div>
                                                                 <div class="flex flex-col space-y-2 pl-5">
-                                                                    <div class="bg-indigo-100 py-1 px-3 rounded-sm">
+                                                                    <div class="border border-dashed border-indigo-400 rounded py-1 px-3">
                                                                         <label> {{ item.programme_type }} </label>
                                                                     </div>
                                                                     <div class="bg-indigo-100 py-1 px-3 rounded-sm" v-if="item.include_registration_fee">
@@ -91,21 +91,26 @@ import BreezeButton from '@/Components/Button.vue';
                                                                     <div class="bg-indigo-100 py-1 px-3 rounded-sm" v-if="item.include_material_fee">
                                                                         <label> Material Fee </label>
                                                                     </div>
+                                                                    <div class="border border-dashed border-blue-400 bg-blue-100 rounded py-1 px-3 space-x-1" v-if="item.promos" v-for="promo in item.promos">
+                                                                        <label class="text-xs text-white px-1.5 py-0.5 bg-blue-500 rounded">Promo</label> <label> {{ promo.promo_name }} </label>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td class="border text-sm py-2 px-4 align-bottom">
                                                             <div class="flex flex-col space-y-1.5">
-                                                                <input type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.programme_fee_discount" autocomplete="off" @input="numbersOnly">
-                                                                <input  v-if="item.include_registration_fee" type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.registration_fee_discount" autocomplete="off" @input="numbersOnly">
-                                                                <input  v-if="item.include_material_fee" type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.material_fee_discount" autocomplete="off" @input="numbersOnly">
+                                                                <input type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.programme_fee_discount" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.include_registration_fee" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.registration_fee_discount" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.include_material_fee" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.material_fee_discount" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.promos" v-for="promo in item.promos" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" :value="promo.type_id === 1 ? item.programme_fee * promo.value / 100 : promo.value" autocomplete="off" @input="numbersOnly" disabled>
                                                             </div>
                                                         </td>
                                                         <td class="border text-sm py-2 px-4 align-bottom">
                                                             <div class="flex flex-col space-y-1.5">
-                                                                <input type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.programme_fee" autocomplete="off" @input="numbersOnly">
-                                                                <input  v-if="item.include_registration_fee" type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.registration_fee" autocomplete="off" @input="numbersOnly">
-                                                                <input  v-if="item.include_material_fee" type="number" min="0" name="" id="" class="py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" v-model="item.material_fee" autocomplete="off" @input="numbersOnly">
+                                                                <input type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.programme_fee" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.include_registration_fee" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.registration_fee" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.include_material_fee" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" v-model="item.material_fee" autocomplete="off" @input="numbersOnly" disabled>
+                                                                <input v-if="item.promos" v-for="promo in item.promos" type="number" min="0" name="" id="" class="bg-gray-50 py-1 focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 cursor-not-allowed" :value="0" @input="numbersOnly" disabled>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -129,12 +134,11 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="mb-4 text-right pr-5">
                                             <label for="amount" class="block text-md font-bold text-gray-700"> Total Amount</label>
                                             <span class="text-2xl font-bold text-indigo-500">{{ totalFee(form.invoice_items) }}</span>
-                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="sm:row-span-3">
+                            <div class="lg:col-span-1">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md h-full">
                                     <div class="mb-5">
                                         <h1 class="font-bold text-indigo-800">Collect Payment</h1>
@@ -195,7 +199,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                         </div>
                         <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 gap-4">
-                            <div class="sm:row-span-3">
+                        <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex items-center justify-end">
                                         <div class="flex space-x-2">
@@ -308,6 +312,18 @@ export default {
                 if (item.include_material_fee) {
                     // Add material fee and subtract material discount
                     total += materialFee - materialDiscount;
+                }
+                var total_promo =   0
+                if(item.promos){
+                    for (const promo of item.promos) {
+                        if(promo.type_id === 1){
+                            total_promo += (programmeFee * promo.value / 100)
+                        }
+                        if(promo.type_id === 2){
+                            total_promo += promo.value
+                        }
+                    }
+                    total = total - total_promo
                 }
             }
             return total;
