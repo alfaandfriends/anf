@@ -36,7 +36,7 @@ import BreezeButton from '@/Components/Button.vue';
                     <template v-slot:content>
                         <div class="p-6" v-if="!generating">
                             <div class="mb-4">
-                                <label for="class_name" class="block text-sm font-bold text-gray-700"> Generate For <span class="text-red-500">*</span></label>
+                                <label for="class_name" class="block text-sm font-bold text-gray-700"> Student <span class="text-red-500">*</span></label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
                                     <Multiselect 
                                         v-debounce:1s="findStudents"
