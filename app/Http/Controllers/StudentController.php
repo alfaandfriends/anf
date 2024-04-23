@@ -855,10 +855,10 @@ class StudentController extends Controller
         $fee_info       =   collect(DB::table('student_fees')->where('student_id', $student_id)->where('id', $request->student_fee_id)->first())->toArray();
         $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info['invoice_id'])->pluck('invoice_items')->first(), true);
 
-        event(new DatabaseTransactionEvent($student_id));
-        event(new DatabaseTransactionEvent($fee_info));
-        event(new DatabaseTransactionEvent($invoice_info));
-        
+        event(new DatabaseTransactionEvent(json_encode($student_id)));
+        event(new DatabaseTransactionEvent(json_encode($fee_info)));
+        event(new DatabaseTransactionEvent(json_encode($invoice_info)));
+
         $filtered_invoice_items = array_map(function ($fee) use ($request) {
             if (isset($fee['promos']) && $fee['fee_id'] === (int)$request->fee_id) {
                 $fee['promos'] = array_filter($fee['promos'], function ($promo) use ($request) {
