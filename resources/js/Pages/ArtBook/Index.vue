@@ -117,6 +117,9 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 Kindly wait as the system is in the process of creating your art book, this might take a minute...
                             </div>
+                            <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                                <div class="bg-indigo-600 text-xs font-medium text-indigo-100 text-center p-0.5 leading-none rounded-full h-2" :style="'width: ' + this.current_progress + '%'"></div>
+                            </div>
                         </div>
                     </template>
                     <template v-slot:footer v-if="!generating">
@@ -202,6 +205,8 @@ export default {
             list: {
                 students: false
             },
+            current_progress: 0,
+            interval_id: null,
             generating: false,
             error_student_nickname: false,
             error_student_id: false
@@ -229,7 +234,6 @@ export default {
             }
         },
         generateArtBook(){
-
             this.error_student_nickname = this.form.student_nickname === '' || this.form.student_nickname.length > 10 ? true : false
             this.error_student_id = this.form.student_id === '' ? true : false
 
@@ -246,15 +250,24 @@ export default {
             }
 
             this.generating = true
+            this.interval_id = null
+            this.current_progress = 0   
 
-            axios.get(route('art_book.generate'), {
-                responseType: 'blob', // Set the response type to 'blob' to handle binary data
+            const increment = 100 / 120;
+
+            this.interval_id = setInterval(() => {
+                this.current_progress += increment;
+            }, 1000);
+
+            const options = {
                 params: {
                     'student_id': this.form.student_id,
                     'theme_id': this.form.theme_id,
                     'student_nickname': this.form.student_nickname
                 },
-            })
+                responseType: 'blob', // Set the response type to 'blob' to handle binary data
+            }
+            axios.get(route('art_book.generate'), options)
             .then(response => {
                 // Create a Blob object from the response data
                 const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -266,6 +279,7 @@ export default {
                 window.open(pdfUrl, '_blank');
                 this.generating = false
                 this.open_modal = false
+                clearInterval(this.interval_id);
             })
             .catch(error => {
                 console.error('Error fetching PDF:', error);
