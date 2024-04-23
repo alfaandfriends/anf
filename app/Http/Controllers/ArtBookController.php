@@ -19,6 +19,7 @@ class ArtBookController extends Controller
                             ->join('art_levels', 'art_themes.level_id', '=', 'art_levels.id')
                             ->select('art_levels.name as level_name', 'art_themes.*')
                             ->where('art_themes.art_book_active', true)
+                            ->orderBy('art_themes.id')
                             ->get()
                             ->groupBy('level_name')
                             ->toArray();

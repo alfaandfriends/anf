@@ -83,18 +83,18 @@
 </head>
 
 <body>
-    <div style="position: relative;">
+    <!-- <div style="position: relative;">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/cover.jpg') }}" style="width: 100%">
         <div style="position: absolute; top: 11%; left: 52%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="candy_beans" style="text-align: center; font-size: 40px; color: #d95293; letter-spacing: 0em;">{{ $data['name'] }}'s</p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="page_break"></div>
-    <div class="position: relative;">
+    </div> -->
+    <!-- <div class="page_break"></div>
+    <div class="page_break"></div> -->
+    <!-- <div class="position: relative;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <div style="text-align: center; margin-bottom: 30px;">
-                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure<br> with the Mirror</span>
+                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem; white-space: nowrap;">{{ $data['name'] }}'s Artventure<br> with the Mirror</span>
             </div>
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">Story by:</span>
@@ -110,9 +110,9 @@
                 Copyright © 2023 ALFA and Friends Sdn. Bhd. All rights reserved. All characters and story contained therein this book is the sole property of the publisher. No part of the content may be reproduced or transmitted in any form or by means, electronic or mechanical, including photocopying, recording, or by any information storage and retrievel system without written permission.
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_1.jpg') }}" class="artwork_area">
         <div style="position: absolute; top: 31%; left: 47%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem;">
@@ -123,9 +123,9 @@
                 how to draw humans and self-portraits.<br>
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_2.png') }}" class="artwork_area">
         @if($data['image_1'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_1'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_1']) }}" class="artwork" style="top: 17%; left: 13%; height: 75%; width: 75%;">
@@ -136,9 +136,9 @@
                 it can be a lot easier!” Says Miss Nasha.
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_3.jpg') }}" class="artwork_area">
         <div style="position: absolute; top: 17%; left: 49%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
@@ -153,16 +153,16 @@
                 Not to mention their choice of outfits!
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_4.png') }}" class="artwork_area">
         @if($data['image_2'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_2'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_2']) }}" class="artwork" style="top: 17%; left: 13%; height: 75%; width: 75%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_5.png') }}" class="artwork_area">
         @if($data['image_3'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_3'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_3']) }}" class="artwork" style="top: 17%; left: 13%; height: 75%; width: 75%;">
@@ -178,8 +178,8 @@
                 That makes everyone’s face so special.
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
+    </div> -->
+    <!-- <div class="page_break"></div> -->
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_6.jpg') }}" class="artwork_area">
         <div style="position: absolute; top: 10%; left: 10%; transform: translate(-10%, -40%); z-index: 1;">
@@ -189,7 +189,7 @@
             </p>
         </div>
         <div style="position: absolute; top: 72.5%; left: 20%; transform: translate(-10%, -40%); z-index: 1;">
-            <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
+            <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem; white-space: nowrap;">
                 <span style="color: #d95293;">{{ $data['name'] }}</span> frets.<br>
                 <span style="text-transform: capitalize">{{ $data['gender']['subject_pronoun'] }}</span> cannot draw his face.<br>
                 <span style="text-transform: capitalize">{{ $data['gender']['subject_pronoun'] }}</span> cannot recall what {{ $data['gender']['possessive_adjective'] }} face looks like.<br><br>
@@ -201,8 +201,8 @@
             </p>
         </div>
     </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_7.png') }}" class="artwork_area">
         @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" style="position: absolute; z-index: -1; left: 32.5%; top: 29%; width: 35%; height: 35%;">
@@ -221,9 +221,9 @@
                 looks like! 
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_8.png') }}" class="artwork_area">
         @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" style="position: absolute; z-index: -1; left: 32.5%; top: 29%; width: 35%; height: 35%;">
@@ -241,9 +241,9 @@
                 Oh, this is how {{ $data['gender']['subject_pronoun'] }} looks when {{ $data['gender']['subject_pronoun'] }} sees ice cream!
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_9.png') }}" class="artwork_area">
         @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" style="position: absolute; z-index: -1; left: 32.5%; top: 29%; width: 35%; height: 35%;">
@@ -261,9 +261,9 @@
                 This is the face {{ $data['gender']['subject_pronoun'] }} made when {{ $data['gender']['subject_pronoun'] }} couldn’t get the ice cream.
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_10.jpg') }}" class="artwork_area">
         <div style="position: absolute; top: 18%; left: 15%; transform: translate(-5%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
@@ -282,18 +282,18 @@
                 {{ $data['gender']['reflexive_pronoun'] }} and gets a treat of delicious ice cream.
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 22px; letter-spacing: 0.05em; line-height: 1.1rem">
                 The end.
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_11.jpg') }}" class="artwork_area">
         <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap;">
             <p class="candy_beans" style="display: inline-block; color: #d95293;">{{ $data['name'] }}'s</p> 
@@ -313,5 +313,5 @@
                 real self.
             </p>
         </div>
-    </div>
+    </div> -->
 </body></html>

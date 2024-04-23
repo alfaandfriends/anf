@@ -94,7 +94,7 @@
     <div class="position: relative;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <div style="text-align: center; margin-bottom: 30px;">
-                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure<br> to the Farm</span>
+                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem; white-space: nowrap;">{{ $data['name'] }}'s Artventure<br> to the Farm</span>
             </div>
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">Story by:</span>
@@ -163,8 +163,8 @@
                 and a large field for the horses to run daily.<br>
             </p>
         </div>
-        <div style="position: absolute; top: 85%; left: 23%; transform: translate(-10%, -40%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
+        <div style="position: absolute; top: 85%; left: 48.5%; transform: translate(-50%, -40%); z-index: 1;">
+            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem; white-space: nowrap;">
                 “What about the barn? Who is living inside the barn?”<br>
                 <span style="color: #d95293;">{{ $data['name'] }}</span> points at a huge red wooden house. They all rush<br>
                 to the barn to see what kind of animal lives inside.<br>
@@ -277,8 +277,8 @@
         @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" style="height: 86%; width: 86%; position: absolute; z-index: -1; left: 9.3%; top: 7.3%;">
         @endif
-        <div style="position: absolute; top: 15%; left: 18%; transform: translate(-0%, -50%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
+        <div style="position: absolute; top: 15%; left: 52.5%; transform: translate(-50%, -50%); z-index: 1;">
+            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem; white-space: nowrap;">
                 “I think we have made a good memory here,”<br>
                 Says <span style="color: #d95293">{{ $data['name'] }}</span> while looking at the painting in his sketchbook.
             </p>
@@ -302,8 +302,8 @@
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">to the Farm</p>
         </div>
-        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 47%; left: 42%; transform: translate(-35%, -50%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 15px; letter-spacing: 0.05em; line-height: 0.95rem">
+        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 47%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+            <p class="century_gothic" style="text-align: center; font-size: 15px; letter-spacing: 0.05em; line-height: 0.95rem; white-space: nowrap;">
                 Alfa invites everyone to come to his grandpa farm. There,<br>
                 they discover varieties of farm animals.<br><br>
                 <span style="color: #d95293">{{ $data['name'] }}</span> wonders what animal lives inside the barn and goes<br>
@@ -312,7 +312,7 @@
                 each of them are different.<br><br>
                 Unlike the chicken, the duck family at the pond look so<br>
                 much alike from each other. How to tell them apart?<br><br>
-                Lastly, <span style="color: #d95293">{{ $data['name'] }}</span> put all the animals together with their houses
+                Lastly, <span style="color: #d95293">{{ $data['name'] }}</span> put all the animals together with their houses<br>
                 to complete the farm scenery.
             </p>
         </div>

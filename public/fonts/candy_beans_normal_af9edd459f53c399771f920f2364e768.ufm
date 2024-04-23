@@ -1,6 +1,6 @@
 StartFontMetrics 4.1
 Notice Converted by PHP-font-lib
-Comment https://github.com/PhenX/php-font-lib
+Comment https://github.com/dompdf/php-font-lib
 EncodingScheme FontSpecific
 Copyright Candy Beans © Chequered Ink Ltd. 2018. All Rights Reserved
 FontName Candy Beans
@@ -220,22 +220,33 @@ U 338 ; WX 754 ; N OE ; G 193
 U 339 ; WX 724 ; N oe ; G 194
 U 376 ; WX 527 ; N Ydieresis ; G 195
 U 710 ; WX 361 ; N circumflex ; G 196
+U 711 ; WX 500 ; N .notdef ; G 0
+U 712 ; WX 500 ; N .notdef ; G 0
 U 713 ; WX 492 ; N uni02C9 ; G 197
 U 729 ; WX 211 ; N dotaccent ; G 198
 U 730 ; WX 344 ; N ring ; G 199
+U 731 ; WX 500 ; N .notdef ; G 0
 U 732 ; WX 460 ; N tilde ; G 200
 U 894 ; WX 241 ; N semicolon ; G 30
 U 8211 ; WX 750 ; N endash ; G 201
 U 8212 ; WX 895 ; N emdash ; G 202
+U 8213 ; WX 500 ; N .notdef ; G 0
+U 8214 ; WX 500 ; N .notdef ; G 0
+U 8215 ; WX 500 ; N .notdef ; G 0
 U 8216 ; WX 192 ; N quoteleft ; G 203
 U 8217 ; WX 192 ; N quoteright ; G 204
 U 8218 ; WX 192 ; N quotesinglbase ; G 205
+U 8219 ; WX 500 ; N .notdef ; G 0
 U 8220 ; WX 367 ; N quotedblleft ; G 206
 U 8221 ; WX 367 ; N quotedblright ; G 207
 U 8222 ; WX 367 ; N quotedblbase ; G 208
+U 8223 ; WX 500 ; N .notdef ; G 0
 U 8224 ; WX 508 ; N dagger ; G 209
 U 8225 ; WX 508 ; N daggerdbl ; G 210
 U 8226 ; WX 337 ; N bullet ; G 211
+U 8227 ; WX 500 ; N .notdef ; G 0
+U 8228 ; WX 500 ; N .notdef ; G 0
+U 8229 ; WX 500 ; N .notdef ; G 0
 U 8230 ; WX 700 ; N ellipsis ; G 212
 U 8240 ; WX 1219 ; N perthousand ; G 213
 U 8249 ; WX 365 ; N guilsinglleft ; G 214
@@ -245,7 +256,12 @@ U 8308 ; WX 453 ; N uni2074 ; G 217
 U 8364 ; WX 556 ; N Euro ; G 218
 U 8482 ; WX 811 ; N trademark ; G 219
 U 8722 ; WX 593 ; N minus ; G 220
+U 8723 ; WX 500 ; N .notdef ; G 0
+U 8724 ; WX 500 ; N .notdef ; G 0
 U 8725 ; WX 167 ; N fraction ; G 216
+U 8726 ; WX 500 ; N .notdef ; G 0
+U 8727 ; WX 500 ; N .notdef ; G 0
+U 8728 ; WX 500 ; N .notdef ; G 0
 U 8729 ; WX 211 ; N periodcentered ; G 119
 EndCharMetrics
 EndFontMetrics

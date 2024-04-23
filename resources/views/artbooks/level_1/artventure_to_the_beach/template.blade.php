@@ -92,9 +92,9 @@
     <div class="page_break"></div>
     <div class="page_break"></div>
     <div class="position: relative;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; border: 1px solid">
             <div style="text-align: center; margin-bottom: 30px;">
-                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure<br> to the Beach</span>
+                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem; white-space: nowrap">{{ $data['name'] }}'s Artventure<br> to the Beach</span>
             </div>
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">Story by:</span>
@@ -141,8 +141,8 @@
         </div>
         <div style="position: absolute; top: 22%; left: 53%; transform: translate(-55%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem;">
-                “But… how do we start painting?”
-                <span style="color: #d95293;">{{ $data['name'] }}</span> asks.
+                “But… how do we start painting?”<br>
+                <span style="color: #d95293; white-space: nowrap;">{{ $data['name'] }}</span> asks.
             </p>
         </div>
         <div style="position: absolute; top: 75%; left: 48%; transform: translateX(-30%); z-index: 1;">
@@ -330,8 +330,8 @@
         @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" class="artwork">
         @endif
-        <div style="position: absolute; top: 10%; left: 10%; transform: translate(-2%, -50%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
+        <div style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem; white-space: nowrap">
                 Just when their painting is all done,<br>
                 the Sun bids them farewell and goes down the horizon line.<br>
                 “Bye-bye Mr.Sun! Till we meet again!” Says <span style="color: #d95293">{{ $data['name'] }}</span> as he waves his hand.<br>
@@ -366,10 +366,10 @@
         </div>
         <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 47%; left: 42%; transform: translate(-35%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 15px; letter-spacing: 0.05em; line-height: 0.95rem">
-                <span style="color: #d95293">{{ $data['name'] }}</span> went to the beach with Alfa and his friends. <span style="color: #d95293">{{ $data['name'] }}</span> learn that the beach elements can be drawn using lines.<br><br>
-                <span style="color: #d95293">{{ $data['name'] }}</span> learn how to draw a boat and a lighthouse using the shape tool.<br><br>
-                Then, they see a whale blowing and some other beach animals there. <span style="color: #d95293">{{ $data['name'] }}</span> take his time drawing the animals.<br><br>
-                Lastly, <span style="color: #d95293">{{ $data['name'] }}</span> complete his beach by drawing a coconut tree and a sandcastle
+                <span style="color: #d95293; white-space: nowrap;">{{ $data['name'] }}</span> went to the beach with Alfa and his friends. <span style="color: #d95293; white-space: nowrap;">{{ $data['name'] }}</span> learn that the beach elements can be drawn using lines.<br><br>
+                <span style="color: #d95293; white-space: nowrap;">{{ $data['name'] }}</span> learn how to draw a boat and a lighthouse using the shape tool.<br><br>
+                Then, they see a whale blowing and some other beach animals there. <span style="color: #d95293; white-space: nowrap;">{{ $data['name'] }}</span> take his time drawing the animals.<br><br>
+                Lastly, <span style="color: #d95293; white-space: nowrap;">{{ $data['name'] }}</span> complete his beach by drawing a coconut tree and a sandcastle
             </p>
         </div>
     </div>

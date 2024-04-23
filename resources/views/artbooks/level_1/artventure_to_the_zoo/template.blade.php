@@ -81,9 +81,9 @@
             <p class="candy_beans" style="text-align: center; font-size: 40px; color: #d95293; letter-spacing: 0em;">{{ $data['name'] }}'s</p>
         </div>
     </div>
-    <div class="page_break"></div>
-    <div class="page_break"></div>
-    <div class="position: relative;">
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="position: relative;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure<br> to the Zoo</span>
@@ -102,88 +102,88 @@
                 Copyright © 2023 ALFA and Friends Sdn. Bhd. All rights reserved. All characters and story contained therein this book is the sole property of the publisher. No part of the content may be reproduced or transmitted in any form or by means, electronic or mechanical, including photocopying, recording, or by any information storage and retrievel system without written permission.
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_1.png') }}" class="artwork_area">
         @if($data['image_1'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_1'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_1']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_2.png') }}" class="artwork_area">
         @if($data['image_1'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_1'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_1']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; right: 0%;height: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_3.png') }}" class="artwork_area">
         @if($data['image_2'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_2'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_2']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_4.png') }}" class="artwork_area">
         @if($data['image_2'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_2'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_2']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; right: 0%;height: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_5.png') }}" class="artwork_area">
         @if($data['image_3'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_3'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_3']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%; width: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_6.png') }}" class="artwork_area">
         @if($data['image_4'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_4'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_4']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%; width: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_7.png') }}" class="artwork_area">
         @if($data['image_5'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_5'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_5']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_8.png') }}" class="artwork_area">
         @if($data['image_5'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_5'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_5']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; right: 0%;height: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_9.png') }}" class="artwork_area">
         @if($data['image_6'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_6'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_6']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; left: 0%;height: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_10.png') }}" class="artwork_area">
         @if($data['image_7'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_7'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_7']) }}" class="artwork" style="position: absolute; z-index: -1;top: 0%; right: 0%;height: 100%;">
         @endif
-    </div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="century_gothic" style="text-align: center; font-size: 22px; letter-spacing: 0.05em; line-height: 1.1rem">
                 The end.
             </p>
         </div>
-    </div>
-    <div class="page_break"></div>
-    <div class="page_break"></div>
-    <div class="artwork_container">
+    </div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="page_break"></div> -->
+    <!-- <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/page_11.jpg') }}" class="artwork_area">
         <div style="font-size: 26px; text-align: center; letter-spacing: 0.05em; position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap;">
             <p class="candy_beans" style="display: inline-block; color: #d95293;">{{ $data['name'] }}'s</p> 
@@ -201,5 +201,5 @@
                 protecting animals from extinction.
             </p>
         </div>
-    </div>
+    </div> -->
 </body></html>
