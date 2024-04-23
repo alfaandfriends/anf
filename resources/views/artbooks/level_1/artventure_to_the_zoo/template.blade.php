@@ -77,7 +77,7 @@
 <body>
     <div style="position: relative;">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_to_the_zoo/cover.jpg') }}" style="width: 100%">
-        <div style="position: absolute; top: 14%; left: 52%; transform: translate(-50%, -50%); z-index: 1;">
+        <div style="position: absolute; top: 14%; left: 51.5%; transform: translate(-50%, -50%); z-index: 1;">
             <p class="candy_beans" style="text-align: center; font-size: 40px; color: #d95293; letter-spacing: 0em;">{{ $data['name'] }}'s</p>
         </div>
     </div>
@@ -86,7 +86,7 @@
     <div class="position: relative;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <div style="text-align: center; margin-bottom: 30px;">
-                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure<br> to the Zoo</span>
+                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem; white-space: nowrap;">{{ $data['name'] }}'s Artventure<br> to the Zoo</span>
             </div>
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">Story by:</span>
@@ -190,8 +190,8 @@
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">to the Zoo</p>
         </div>
-        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 48%; left: 24%; transform: translate(-5%, -40%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 16px; letter-spacing: 0.05em; line-height: 0.95rem">
+        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 48%; left: 50%; transform: translate(-50%, -40%); z-index: 1;">
+            <p class="century_gothic" style="text-align: center; font-size: 16px; letter-spacing: 0.05em; line-height: 0.95rem; white-space: nowrap;">
                 Join young adventurer <span style="color: #d95293">{{ $data['name'] }}</span> on an exciting trip to the<br>
                 zoo where {{ $data['gender']['subject_pronoun'] }} encounters a world of diverse animals.<br>
                 As {{ $data['gender']['subject_pronoun'] }} explores, <span style="color: #d95293">{{ $data['name'] }}</span> learns about their habitats<br>

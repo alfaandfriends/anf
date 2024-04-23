@@ -94,7 +94,7 @@
     <div class="position: relative;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <div style="text-align: center; margin-bottom: 30px;">
-                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem;">{{ $data['name'] }}'s Artventure through the Town</span>
+                <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem; white-space: nowrap;">{{ $data['name'] }}'s Artventure<br> through the Town</span>
             </div>
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic" style="display: block; font-size: 18px; letter-spacing: 0.05rem; line-height: 1.5rem">Story by:</span>
@@ -114,8 +114,8 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_through_the_town/page_1.jpg') }}" class="artwork_area">
-        <div style="position: absolute; top: 19%; left: 17%; transform: translate(-10%, -50%); z-index: 1;">
-            <p class="century_gothic" style="text-align: left; font-size: 16px; letter-spacing: 0.05em; line-height: 1.1rem;">
+        <div style="position: absolute; top: 19%; left: 10%; transform: translate(0%, -50%); z-index: 1;">
+            <p class="century_gothic" style="text-align: left; font-size: 16px; letter-spacing: 0.05em; line-height: 1.1rem; white-space: nowrap;">
                 The class ends a bit early.<br>
                 <span style="color: #d95293;">{{ $data['name'] }}</span> invites {{ $data['gender']['possessive_adjective'] }} friends to come over to {{ $data['gender']['possessive_adjective'] }} house to play.<br><br>
                 “It’s just around the corner. We could just walk from here!” Says <span style="color: #d95293;">{{ $data['name'] }}</span>.<br><br>
@@ -137,8 +137,8 @@
         @if($data['image_1'] && file_exists(storage_path('app/public/art_gallery/' . $data['image_1'])))
             <img src="{{ public_path('/storage/art_gallery/'.$data['image_1']) }}" style="height: 100%; width: 100%; position: absolute; left: 0; z-index: -1; top: 0;">
         @endif
-        <div style="position: absolute; top: 39%; left: 63%; transform: translate(-5%, -50%); z-index: 1;">
-            <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
+        <div style="position: absolute; top: 39%; left: 77.2%; transform: translate(-50%, -50%); z-index: 1;">
+            <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem; white-space: nowrap;">
                 “No, no! That is not my<br>
                 house. We have to walk a<br>
                 bit more,” says <span style="color: #d95293;">{{ $data['name'] }}</span>.
@@ -290,8 +290,8 @@
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">through the Town</p>
         </div>
-        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 48%; left: 24%; transform: translate(-5%, -40%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 16px; letter-spacing: 0.05em; line-height: 0.95rem">
+        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 48%; left: 50%; transform: translate(-50%, -40%); z-index: 1;">
+            <p class="century_gothic" style="text-align: center; font-size: 16px; letter-spacing: 0.05em; line-height: 0.95rem; white-space: nowrap;">
                 <span style="color: #d95293">{{ $data['name'] }}</span> is throwing a super fun house playdate, and {{ $data['gender']['subject_pronoun'] }}<br>
                 has invited all {{ $data['gender']['possessive_adjective'] }} friends. On their way to <span style="color: #d95293">{{ $data['name'] }}’s</span><br>
                 house, they spot a bunch of houses, each with its own<br>
