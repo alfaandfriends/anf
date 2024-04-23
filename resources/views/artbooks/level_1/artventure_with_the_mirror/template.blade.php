@@ -188,15 +188,15 @@
                 draw their own face
             </p>
         </div>
-        <div style="position: absolute; top: 72.5%; left: 20%; transform: translate(-10%, -40%); z-index: 1;">
+        <div style="position: absolute; top: 72.5%; left: 12%; transform: translate(0%, -40%); z-index: 1;">
             <p class="century_gothic" style="text-align: left; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem; white-space: nowrap;">
                 <span style="color: #d95293;">{{ $data['name'] }}</span> frets.<br>
                 <span style="text-transform: capitalize">{{ $data['gender']['subject_pronoun'] }}</span> cannot draw his face.<br>
                 <span style="text-transform: capitalize">{{ $data['gender']['subject_pronoun'] }}</span> cannot recall what {{ $data['gender']['possessive_adjective'] }} face looks like.<br><br>
                 At the end of the class, everyone is ready to go home.<br>
-                But, <span style="color: #d95293;">{{ $data['name'] }}’s</span> canvas is still blank!<br>
-                Miss Nasha walks to <span style="color: #d95293;">{{ $data['name'] }}</span> and hands {{ $data['gender']['object_pronoun'] }} a fancy gold-coloured<br>
-                mirror. “Cheer up, <span style="color: #d95293;">{{ $data['name'] }}</span>. You just need more reflection of yourself!”<br>
+                But, <span style="color: #d95293;">{{ $data['name'] }}’s</span> canvas is still blank! Miss Nasha walks to<br> 
+                <span style="color: #d95293;">{{ $data['name'] }}</span> and hands {{ $data['gender']['object_pronoun'] }} a fancy gold-coloured mirror. <br>
+                “Cheer up, <span style="color: #d95293;">{{ $data['name'] }}</span>. You just need more reflection of yourself!”<br>
                 Says Miss Nasha.<br>
             </p>
         </div>
@@ -265,21 +265,21 @@
     <div class="page_break"></div>
     <div class="artwork_container">
         <img src="{{ public_path('/images/artbooks/level_1/artventure_with_the_mirror/page_10.jpg') }}" class="artwork_area">
-        <div style="position: absolute; top: 18%; left: 15%; transform: translate(-5%, -50%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
-                Just when <span style="color: #d95293">{{ $data['name'] }}</span> is about to leave, an ice cream appears right before<br>   
-                {{ $data['gender']['possessive_adjective'] }} eyes.<br>   
+        <div style="position: absolute; top: 18%; left: 51.5%; transform: translate(-50%, -50%); z-index: 1;">
+            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem; white-space: nowrap;">
+                Just when <span style="color: #d95293">{{ $data['name'] }}</span> is about to leave, an ice cream appears right<br>
+                before {{ $data['gender']['possessive_adjective'] }} eyes.<br>   
                 “No one is leaving the stall without an ice cream!”<br>   
                 Says the vendor while handing out the cone.<br>   
                 “Is it for me?” <span style="color: #d95293">{{ $data['name'] }}</span> asks, just wanting to be sure.<br>   
                 The vendor nods with a wide smile.
             </p>
         </div>
-        <div style="position: absolute; top: 83.5%; left: 15%; transform: translate(-5%, -50%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem">
+        <div style="position: absolute; top: 83.5%; left: 51.5%; transform: translate(-50%, -50%); z-index: 1;">
+            <p class="century_gothic" style="text-align: center; font-size: 19px; letter-spacing: 0.05em; line-height: 1.1rem; white-space: nowrap;">
                 “Yay, thank you!” <span style="color: #d95293">{{ $data['name'] }}</span> happily takes the ice cream.<br>  
-                The day couldn’t get any better. <span style="color: #d95293">{{ $data['name'] }}</span> gets to discover more about<br>  
-                {{ $data['gender']['reflexive_pronoun'] }} and gets a treat of delicious ice cream.
+                The day couldn’t get any better. <span style="color: #d95293">{{ $data['name'] }}</span> gets to discover more<br>
+                about {{ $data['gender']['reflexive_pronoun'] }} and gets a treat of delicious ice cream.
             </p>
         </div>
     </div>
@@ -300,8 +300,8 @@
             <p class="candy_beans" style="display: inline-block; color: #f68b22;">Artventure</p> 
             <p class="candy_beans" style="display: inline-block; color: #13a8b5;">with the Mirror</p>
         </div>
-        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 48%; left: 24%; transform: translate(-5%, -40%); z-index: 1;">
-            <p class="century_gothic" style="text-align: center; font-size: 16px; letter-spacing: 0.05em; line-height: 0.95rem">
+        <div style="text-align: center; letter-spacing: 0em; position: absolute; top: 48%; left: 50%; transform: translate(-50%, -40%); z-index: 1;">
+            <p class="century_gothic" style="text-align: center; font-size: 16px; letter-spacing: 0.05em; line-height: 0.95rem; white-space: nowrap;">
                 In the Miss Nasha’s Art Class, <span style="color: #d95293">{{ $data['name'] }}</span> with {{ $data['gender']['possessive_adjective'] }} friends<br>
                 dive into a world of shapes, learning how to draw humans<br>
                 and their amazing facial features. Their mission? Create a<br>

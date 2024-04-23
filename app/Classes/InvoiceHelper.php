@@ -42,7 +42,7 @@ class InvoiceHelper {
 
         /* Calculate total fee */
         $totalFee = $invoice_items->sum(function ($item) {
-            $registration_fee   =   $item['include_registration_fee'] ? $item['registration_fee'] : 0;
+            $registration_fee   =   isset($item['include_registration_fee']) ? $item['registration_fee'] : 0;
             $material_fee       =   $item['include_material_fee'] ? $item['material_fee'] : 0;
 
             return $item['programme_fee'] + $registration_fee + $material_fee;
