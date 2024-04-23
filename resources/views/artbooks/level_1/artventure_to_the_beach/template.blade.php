@@ -92,7 +92,7 @@
     <div class="page_break"></div>
     <div class="page_break"></div>
     <div class="position: relative;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; border: 1px solid">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
             <div style="text-align: center; margin-bottom: 30px;">
                 <span class="century_gothic bold" style="font-size: 40px; letter-spacing: 0.05rem; line-height: 2rem; white-space: nowrap">{{ $data['name'] }}'s Artventure<br> to the Beach</span>
             </div>
