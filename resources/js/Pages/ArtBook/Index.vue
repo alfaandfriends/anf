@@ -118,7 +118,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 Kindly wait as the system is in the process of creating your art book, this might take a minute...
                             </div>
                             <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-                                <div class="bg-indigo-600 text-xs font-medium text-indigo-100 text-center p-0.5 leading-none rounded-full h-2" :style="'width: ' + this.current_progress + '%'"></div>
+                                <div class="bg-indigo-600 text-xs font-medium text-indigo-100 text-center p-0.5 leading-none rounded-full h-2" :style="'width: ' + current_progress + '%'"></div>
                             </div>
                         </div>
                     </template>
