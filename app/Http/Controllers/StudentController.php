@@ -166,9 +166,10 @@ class StudentController extends Controller
         $programme_list     =   ProgrammeHelper::programmes();
         $method_list        =   DB::table('class_methods')->get();
         $promos             =   DB::table('promotions')
+                                    ->join('countries', 'promotions.country_id', '=', 'countries.id')
                                     ->join('promotion_types', 'promotions.type_id', '=', 'promotion_types.id')
                                     ->join('promotion_durations', 'promotions.duration_id', '=', 'promotion_durations.id')
-                                    ->select('promotions.id as promo_id', 'promotions.name as promo_name', 'promotion_types.id as type_id', 
+                                    ->select('countries.country_code', 'promotions.id as promo_id', DB::raw('CONCAT(promotions.name, (countries.country_code)) as promo_name'), 'promotion_types.id as type_id', 
                                             'promotion_types.name as type_name', 'promotions.value as value', 'promotion_durations.id as duration_id', 
                                             'promotion_durations.name as duration_name', 'promotion_durations.duration as duration_count')
                                     ->get();
@@ -303,14 +304,15 @@ class StudentController extends Controller
 
     public function edit(Request $request)
     {
-        // $promos             =   DB::table('promotions')->get();
         $promos             =   DB::table('promotions')
-        ->join('promotion_types', 'promotions.type_id', '=', 'promotion_types.id')
-        ->join('promotion_durations', 'promotions.duration_id', '=', 'promotion_durations.id')
-        ->select('promotions.id as promo_id', 'promotions.name as promo_name', 'promotion_types.id as type_id', 
-                'promotion_types.name as type_name', 'promotions.value as value', 'promotion_durations.id as duration_id', 
-                'promotion_durations.name as duration_name', 'promotion_durations.duration as duration_count')
-        ->get();
+                                    ->join('countries', 'promotions.country_id', '=', 'countries.id')
+                                    ->join('promotion_types', 'promotions.type_id', '=', 'promotion_types.id')
+                                    ->join('promotion_durations', 'promotions.duration_id', '=', 'promotion_durations.id')
+                                    ->select('countries.country_code', 'promotions.id as promo_id', DB::raw('CONCAT(promotions.name, " (", countries.country_code, ")") as promo_name'), 'promotion_types.id as type_id', 
+                                            'promotion_types.name as type_name', 'promotions.value as value', 'promotion_durations.id as duration_id', 
+                                            'promotion_durations.name as duration_name', 'promotion_durations.duration as duration_count')
+                                    ->get();
+                                    
         $student_info       =   DB::table('students')
                                     ->join('children', 'students.children_id', '=', 'children.id')
                                     ->join('genders', 'children.gender_id', '=', 'genders.id')
