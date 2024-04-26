@@ -194,30 +194,88 @@ Breadcrumbs::for('progress_report.settings', function (BreadcrumbTrail $trail) {
     $trail->push('Settings', route('progress_report.settings'));
 });
 
-Breadcrumbs::for('progress_report.settings.math.levels', function (BreadcrumbTrail $trail) {
-    $trail->parent('progress_report.settings');
-    $trail->push('Levels', route('progress_report.settings.math.levels'));
-});
+    /* Math */
+    Breadcrumbs::for('progress_report.settings.math.levels', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Levels', route('progress_report.settings.math.levels'));
+    });
 
-Breadcrumbs::for('progress_report.settings.math.terms_books', function (BreadcrumbTrail $trail) {
-    $trail->parent('progress_report.settings');
-    $trail->push('Terms / Books', route('progress_report.settings.math.terms_books'));
-});
+    Breadcrumbs::for('progress_report.settings.math.terms_books', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Terms / Books', route('progress_report.settings.math.terms_books'));
+    });
 
-Breadcrumbs::for('progress_report.settings.math.units', function (BreadcrumbTrail $trail) {
-    $trail->parent('progress_report.settings');
-    $trail->push('Units', route('progress_report.settings.math.units'));
-});
+    Breadcrumbs::for('progress_report.settings.math.units', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Units', route('progress_report.settings.math.units'));
+    });
 
-Breadcrumbs::for('progress_report.settings.math.lessons', function (BreadcrumbTrail $trail) {
-    $trail->parent('progress_report.settings');
-    $trail->push('Lessons', route('progress_report.settings.math.lessons'));
-});
+    Breadcrumbs::for('progress_report.settings.math.lessons', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Lessons', route('progress_report.settings.math.lessons'));
+    });
 
-Breadcrumbs::for('progress_report.settings.math.objectives', function (BreadcrumbTrail $trail) {
-    $trail->parent('progress_report.settings');
-    $trail->push('Objectives', route('progress_report.settings.math.objectives'));
-});
+    Breadcrumbs::for('progress_report.settings.math.objectives', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Objectives', route('progress_report.settings.math.objectives'));
+    });
+
+    /* Coding & Robotics */
+    Breadcrumbs::for('progress_report.settings.coding_robotics.levels', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Levels', route('progress_report.settings.coding_robotics.levels'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.coding_robotics.lessons', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Lessons', route('progress_report.settings.coding_robotics.lessons'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.coding_robotics.topics', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Topics', route('progress_report.settings.coding_robotics.topics'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.coding_robotics.objectives', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Objectives', route('progress_report.settings.coding_robotics.objectives'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.coding_robotics.activities_procedures', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Activities & Procedures', route('progress_report.settings.coding_robotics.activities_procedures'));
+    });
+
+    /* Digital Art */
+    Breadcrumbs::for('progress_report.settings.digital_art.levels', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Levels', route('progress_report.settings.digital_art.levels'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.digital_art.themes', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Themes', route('progress_report.settings.digital_art.themes'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.digital_art.lessons', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Lessons', route('progress_report.settings.digital_art.lessons'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.digital_art.activities', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Activities', route('progress_report.settings.digital_art.activities'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.digital_art.outcomes', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Outcomes', route('progress_report.settings.digital_art.outcomes'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.digital_art.objectives', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Objectives', route('progress_report.settings.digital_art.objectives'));
+    });
 
 /* Teacher Resources */
 Breadcrumbs::for('teacher_resources', function (BreadcrumbTrail $trail) {
@@ -308,8 +366,6 @@ Breadcrumbs::for('dt.settings.details.edit', function (BreadcrumbTrail $trail) {
     $trail->push('Edit Question', route('dt.settings.details.edit'));
 });
 
-
-
 /* Fee Invoices */
 Breadcrumbs::for('fee.invoices', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
@@ -324,6 +380,17 @@ Breadcrumbs::for('fee.invoices.create', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('fee.invoices.edit', function (BreadcrumbTrail $trail) {
     $trail->parent('fee.invoices');
     $trail->push('Edit Invoice', route('fee.invoices.edit'));
+});
+
+/* Promotions */
+Breadcrumbs::for('fee.promos', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Promotions', route('fee.promos'));
+});
+
+Breadcrumbs::for('fee.promos.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('fee.promos');
+    $trail->push('Add Promotion', route('fee.promos.create'));
 });
 
 /* Products */
