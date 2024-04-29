@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-// Broadcast::channel('approval.{id}', function ($user, $id) {
-//     return (int) $user->id === (int) $id;
-// });
+Broadcast::channel('test.{user_id}', function ($user_id) {
+    return (int) auth()->id() === (int) $user_id;
+});
 
-// Broadcast::channel('approval', function () {
+// Broadcast::channel('test', function () {
 //     return true;
 // });
 
