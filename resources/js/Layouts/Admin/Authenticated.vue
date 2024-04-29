@@ -124,6 +124,19 @@ export default {
                 }
             });
         },
+        subscribeNotifications(){
+            Echo.leave('test')
+            Echo.channel('test')
+            .listen('Test', (data) => {
+                this.$page.props.user_has_notifications = true
+                this.$page.props.user_notifications.unshift({
+                    'id': 'test',
+                    'panel_icon': '',
+                    'panel_content': 'This is a test',
+                    'created_at': ''
+                })
+            });
+        },
         subscribeApprovalChannel(){
             /* approvals */
             this.$page.props.user_has_roles.forEach((role_id)=>{
@@ -150,8 +163,9 @@ export default {
         }
     },
     mounted() {
-        this.subscribeGlobalChannel()
-        this.subscribeApprovalChannel()
+        // this.subscribeGlobalChannel()
+        this.subscribeNotifications()
+        // this.subscribeApprovalChannel()
         // if(this.$page.props.auth.first_time_login == 1 && this.$page.props.auth.profile_updated == 1){
         //     this.$vgt.start(0);
         // }
@@ -306,7 +320,7 @@ export default {
                                                                     <span class="text-black">{{ notification.panel_content }}</span>
                                                                 </div>
                                                                 <div class="flex min-w-[70px]">
-                                                                    <TimeAgo class="text-indigo-500" :datetime="notification.created_at"></TimeAgo>
+                                                                    <TimeAgo class="text-indigo-500" v-if="notification.created_at != ''" :datetime="notification.created_at"></TimeAgo>
                                                                 </div>
                                                             </div>
                                                         </BreezeDropdownLink>

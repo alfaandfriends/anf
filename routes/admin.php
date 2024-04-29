@@ -1,5 +1,8 @@
 <?php
 
+use App\Events\Notifications;
+use App\Events\Test;
+use App\Events\TestNotify;
 use App\Http\Controllers\ArtGalleryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CentreController;
@@ -32,6 +35,9 @@ use Inertia\Inertia;
 
 
 Route::middleware(['auth', 'device'])->group(function(){
+    Route::get('/send', function(){
+        event(new Test('asdasdasda'));
+    });
     Route::prefix('admin')->group(function () {
         /* User Impersonation */
         Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate');
