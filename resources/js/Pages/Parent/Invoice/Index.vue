@@ -1,5 +1,5 @@
 <template>
-    <Head title="Invoices" />
+    <Head title="Fee Invoices" />
     <Authenticated>
         <div class="overflow-x-auto no-scrollbar">
             <div class="bg-white shadow rounded-lg border">

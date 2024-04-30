@@ -41,7 +41,7 @@ const images = ref([
 </style>
 
 <template>
-    <Head title="Art Gallery" />
+    <Head title="Art Book" />
     <Authenticated>
         <div class="bg-white overflow-hidden shadow rounded-lg border p-6 min-h-[600px]">
             <div class="flex flex-col md:flex-row lg:flex-row justify-start md:justify-between lg:justify-between items-start md:items-center">
