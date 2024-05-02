@@ -14,9 +14,11 @@ import SimpleModal from '@/Components/Parent/SimpleModal.vue';
             <main class="flex flex-col bg-indigo-50 relative h-full justify-between mt-20 md:mt-0">
                 <div class="bg-orange-50 h-full">
                     <div class="flex justify-center">
-                        <div class="flex-1 max-w-4xl overflow-y-auto p-3 mb-10">
-                            <slot/>
-                        </div>
+                            <div class="flex-1 max-w-2xl p-3">
+                                <!-- <simplebar data-simplebar-auto-hide="true"> -->
+                                    <slot/>
+                                <!-- </simplebar> -->
+                            </div>
                     </div>
                 </div>
                 <Footer />
@@ -40,8 +42,15 @@ import SimpleModal from '@/Components/Parent/SimpleModal.vue';
         </div>
     </div>
 </template>
+
 <script>
+import simplebar from 'simplebar-vue';
+import 'simplebar-vue/dist/simplebar.min.css';
+
 export default {
+    components: {
+        simplebar,
+    },
     data(){
         return{
             show_modal: this.$page.props.flash.type ? true : false
