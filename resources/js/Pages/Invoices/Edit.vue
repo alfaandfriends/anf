@@ -314,7 +314,7 @@ export default {
                     total += materialFee - materialDiscount;
                 }
                 var total_promo =   0
-                if(item.promos){
+                if(item.promos && Array.isArray(item.promos)){
                     for (const promo of item.promos) {
                         if(promo.type_id === 1){
                             total_promo += (programmeFee * promo.value / 100)
