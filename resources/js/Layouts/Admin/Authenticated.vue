@@ -418,8 +418,7 @@ export default {
             <!-- Footer -->
             <div class="flex justify-between items-center py-5 px-6 bg-slate-700 text-white">
                 <div class="">
-                    <span class="text-sm font-extrabold">&copy; </span>
-                    <span class="text-sm">{{ new Date().getFullYear() + ' ' + $page.props.app_name }}</span>
+                    <span class="text-sm">{{ new Date().getFullYear() }} &copy; ALFA and Friends</span>
                 </div>
             </div>
             <!-- component -->

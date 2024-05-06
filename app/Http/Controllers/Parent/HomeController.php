@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Parent;
 
+use App\Classes\PostHelper;
 use App\Classes\StudentHelper;
 use App\Http\Controllers\Controller;
 use DB;
@@ -29,10 +30,13 @@ class HomeController extends Controller
         $student_id =   $request->session()->get('current_active_child.student_id');
         if($student_id){
             $academics  =   StudentHelper::studentAcademicDetails($student_id);
+            $posts      =   PostHelper::getPosts();
+            // dd($posts);
         }
 
         return Inertia::render('Parent/Home',[
-            'academics'    =>  $academics ?? ''
+            'academics'     =>  $academics ?? '',
+            'posts'         =>  $posts ?? [],
         ]);
     }
 

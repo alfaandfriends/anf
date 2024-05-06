@@ -2,11 +2,11 @@
     <div class="fixed top-0 inset-x-0 z-50 text-gray-700 bg-white md:top-0 md:sticky">
         <Disclosure as="nav" class="text-white bg-indigo-600" v-slot="{ open }">
             <div class="max-w-4xl px-5 mx-auto">
-                <div class="flex items-center justify-between h-20 md:h-16">
+                <div class="flex items-center justify-between h-16 md:h-20">
                     <div class="flex items-center">
                         <!-- Logo -->
                         <a class="flex items-center space-x-4 font-bold select-none" :href="route('parent.home')">
-                            <img class="object-scale-down h-12" src="/images/anf-logo-main-2x.png" alt="">
+                            <img class="object-scale-down h-10 md:h-12" src="/images/anf-logo-main-2x.png" alt="">
                         </a>
                     </div>
                     <div class="flex">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\ParentHelper;
 use App\Classes\ProgrammeHelper;
 use App\Classes\StudentHelper;
 use App\Http\Controllers\ChildrenController;
@@ -23,6 +24,11 @@ Route::middleware(['auth'])->group(function(){
     /* Programmes */
     Route::prefix('programmes')->group(function () {
         Route::get('get-programme-levels/{programme_id}', [ProgrammeHelper::class, 'getProgrammeLevels'])->name('get_programme_levels');
+    });
+
+    /* Parents */
+    Route::prefix('parents')->group(function () {
+        Route::get('find', [ParentHelper::class, 'getParents'])->name('parents.find');
     });
 
     /* Childrens */

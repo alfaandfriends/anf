@@ -45,6 +45,7 @@ class ProfileController extends Controller
         $user_info    =   User::where('ID', auth()->user()->ID)->first();
 
         if($request->file('profile_photo')){
+            dd($request->file('profile_photo'));
             Storage::delete($user_info->user_photo);
             $file   =   $request->file('profile_photo') ? $request->file('profile_photo') : $request->profile_photo['file'];
             $path   =   Storage::putFileAs('profile_photo', $file, $file->getClientOriginalName());

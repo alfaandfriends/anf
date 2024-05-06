@@ -1,9 +1,9 @@
 <template>
     <!-- Menu Position Top (Desktop and Tablet) -->
     <!-- Menu Position Bottom (Mobile) -->
-    <nav class="fixed overflow-x-auto inset-x-0 bottom-0 z-20 bg-white border border-t md:border-gray-200 md:border-b-2 md:top-16 md:sticky">
+    <nav class="fixed overflow-x-auto inset-x-0 bottom-0 z-20 bg-white border border-t md:border-gray-200 md:border-b-2 md:top-[5rem] md:sticky">
         <simplebar data-simplebar-auto-hide="true" class="flex items-center md:justify-center max-w-4xl px-3 mx-auto">
-            <div class="flex mt-1">
+            <div class="flex mt-1 andika-bold">
                 <div class="flex-1 group">
                     <a 
                         :href="route('parent.home')" 
