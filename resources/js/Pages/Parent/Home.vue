@@ -26,7 +26,7 @@ background: #555; /* Color of the handle when hovered */
 <template>
     <Head title="Home" />
     <Authenticated>
-        <!-- <div class="bg-white overflow-hidden shadow rounded-lg border">
+        <div class="bg-white overflow-hidden shadow rounded-lg border">
             <div class="px-6 md:px-6 py-5">
                 <span class="text-lg leading-6 text-gray-900 font-semibold">
                     Academy Information
@@ -59,8 +59,8 @@ background: #555; /* Color of the handle when hovered */
             <div class="border-t border-gray-200 px-6 py-4" v-else>
                 <span class="italic">Sorry, this little cutie is not a student.</span>
             </div>
-        </div> -->
-        <div class="flex flex-col bg-white p-3 shadow-md rounded">
+        </div>
+        <!-- <div class="flex flex-col bg-white p-3 shadow-md rounded">
             <textarea class="bg-white border border-gray-300 p-2 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="5" placeholder="What's happening today?" v-model="form.status_text"></textarea>
             <div class="flex justify-between pt-2">
                 <div class="flex space-x-2">
@@ -171,7 +171,7 @@ background: #555; /* Color of the handle when hovered */
                     <button class="px-4 py-2 text-xs bg-indigo-600 hover:bg-indigo-700 text-white rounded">Comment</button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </Authenticated>
     
     <SimpleModal v-if="show_upload_modal" :open="show_upload_modal" @close:modal="show_upload_modal = false" :disable_overlay="true" class="flex flex-col space-y-4 w-5/6 md:w-3/6 xl:w-2/6 2xl:w-3/12 px-6 py-8">
