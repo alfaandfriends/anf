@@ -617,7 +617,7 @@ export default {
                     const { include_registration_fee, registration_fee, include_material_fee, material_fee, programme_fee, promos } = feeObject.fee_info;
                     const registration_fee_amount  =    include_registration_fee ? Number(registration_fee) : 0;
                     const material_fee_amount      =    include_material_fee ? Number(material_fee) : 0;
-                    console.log(promos)
+                    
                     const totalPercentValuePromo = promos.reduce((accumulator, currentValue) => 
                         currentValue.type_id === 1 ? accumulator + currentValue.value : accumulator, 0);
                     const totalFixedValuePromo = promos.reduce((accumulator, currentValue) => 

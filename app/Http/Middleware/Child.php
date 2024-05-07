@@ -17,8 +17,8 @@ class Child
      */
     public function handle(Request $request, Closure $next)
     {
-        $children               =   Inertia::getShared('user_has_children');
-
+        $children               =   collect(Inertia::getShared('user_has_children'));
+        
         $child_session_data = [
             'child_id'   => '',
             'child_name' => '',
@@ -27,14 +27,14 @@ class Child
         
         if (count($children) > 0) {
             $existingSessionData = $request->session()->get('current_active_child', []);
-        
-            if (empty($existingSessionData) || $existingSessionData['child_id'] === '') {
+            if (!isset($existingSessionData['child_id']) || !$children->contains('child_id', $existingSessionData['child_id']) || empty($existingSessionData) || $existingSessionData['child_id'] === '') {
                 $child_session_data = [
                     'child_id'   => $children->pluck('child_id')->first(),
                     'child_name' => $children->pluck('child_name')->first(),
                     'student_id' => $children->pluck('student_id')->first(),
                 ];
-            } else {
+            } 
+            else {
                 $child_session_data = $existingSessionData;
             }
         }

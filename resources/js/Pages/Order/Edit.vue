@@ -270,7 +270,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                 </div>                 
             </template>
             <template v-slot:content>
-                <div class="p-4 md:p-6 overflow-y-auto no-scrollbar">
+                <div class="p-4 md:p-6 overflow-y-auto scrollbar">
                     <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                         <div class="mb-4">
                             <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Product Name <span class="text-red-500">*</span></label>
@@ -472,7 +472,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                 </div>                    
             </template>
             <template v-slot:content>
-                <div class="p-4 md:p-6 overflow-y-auto no-scrollbar">
+                <div class="p-4 md:p-6 overflow-y-auto scrollbar">
                     <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4">
                         <div class="mb-4">
                             <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Status <span class="text-red-500">*</span></label>

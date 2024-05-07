@@ -96,7 +96,7 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>                 
             </template>
             <template v-slot:content>
-                <div class="p-6 overflow-y-auto no-scrollbar">
+                <div class="p-6 overflow-y-auto scrollbar">
                     <div class="grid grid-rows-1">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="mb-3">

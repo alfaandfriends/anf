@@ -622,6 +622,7 @@ class StudentController extends Controller
                             ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.id')
                             ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
                             ->select('students.id', 'children.name', 'wpvt_users.user_address')
+                            ->limit(5)
                             ->get();
 
         return $students;

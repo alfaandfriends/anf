@@ -63,11 +63,11 @@ background: #555; /* Color of the handle when hovered */
         <div class="flex justify-center">
             <div class="flex-1 max-w-2xl">
                 <div class="flex mb-3">
-                    <div class="flex items-center space-x-2 bg-indigo-100 rounded px-3 py-2 font-semibold w-full cursor-pointer transform scale-100 hover:scale-105 duration-200 select-none" @click="showUploadModal">
+                    <div class="flex items-center space-x-2 bg-indigo-100 rounded px-3 py-2 font-semibold w-full cursor-pointer transform scale-100 hover:scale-105 duration-200 select-none" @click="showCreatePost">
                         <img width="44" height="44" src="https://img.icons8.com/dusk/64/create-new.png" alt="create-new"/>
                         <div class="flex flex-col">
                             <span>Create New Post</span>
-                            <span class="text-xs text-gray-700">Share student's daily activity with the parents</span>
+                            <span class="text-xs text-gray-700">Share student activities, notices, announcements or reminder with parents.</span>
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@ background: #555; /* Color of the handle when hovered */
                     <textarea class="bg-white border border-gray-300 p-2 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="5" placeholder="What's happening today?" v-model="form.status_text"></textarea>
                     <div class="flex justify-between pt-2">
                         <div class="flex space-x-2">
-                            <div class="self-center space-x-2 bg-blue-200 rounded px-3 py-2 text-xs font-semibold cursor-pointer transform hover:scale-105" @click="showUploadModal">
+                            <div class="self-center space-x-2 bg-blue-200 rounded px-3 py-2 text-xs font-semibold cursor-pointer transform hover:scale-105" @click="showCreatePost">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
                                     <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/>
                                 </svg>
@@ -99,8 +99,7 @@ background: #555; /* Color of the handle when hovered */
                         <img class="object-cover w-12 h-12 border-2 border-gray-300 rounded-full" src="https://images.unsplash.com/photo-1517070208541-6ddc4d3efbcb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&faces=1&faceindex=1&facepad=2.5&w=500&h=500&q=80">
                         <div class="flex justify-between items-center flex-1 px-4 font-bold leading-tight">
                             <span class="text-slate-800 text-balance font-extrabold">{{ post.post_author_name }}</span>
-                            <span class="ml-2 text-xs font-normal text-gray-500">{{ post.created_at }} </span>
-                            <TimeAgo class="text-indigo-500" :datetime="post.post_date"></TimeAgo>
+                            <TimeAgo class="text-gray-500 text-xs" :datetime="post.post_date"></TimeAgo>
                         </div>
                     </div>
                     <hr>
@@ -192,43 +191,77 @@ background: #555; /* Color of the handle when hovered */
         </div>
     </Authenticated>
     
-    <SimpleModal v-if="show_upload_modal" :open="show_upload_modal" @close:modal="show_upload_modal = false" :disable_overlay="false" class="flex flex-col space-y-4 w-5/6 md:w-3/6 xl:w-2/6 2xl:w-3/12 px-6 py-8">
-        <div class="flex flex-col justify-center items-start space-y-4" v-if="!generating">
-            <textarea class="bg-white border border-gray-300 p-2 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="3" placeholder="What's happening today?" v-model="form.photo.text"></textarea>
+    <SimpleModal :isOpen="show_create_post" @close="this.show_create_post = false">
+        <template #header v-if="!show_add_tag">Create Post</template>
+        <div class="flex flex-col justify-center items-start space-y-4" v-if="!show_add_tag">
+            <textarea class="bg-white border border-gray-300 p-2 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="3" placeholder="What's happening today?" v-model="form.caption"></textarea>
+            <!-- <div class="overflow-x-auto scrollbar"> -->
+            <div class="w-full" v-if="form.photos.length">
+                <div class="overflow-x-auto scrollbar pb-3">
+                    <div class="flex space-x-4">
+                        <div class="relative" v-for="(photo, photo_index) in form.photos" :key="photo_index">
+                            <div class="relative w-28 h-28">
+                                <img :src="photo.url" class="w-full h-full" />
+                                <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black bg-opacity-50">
+                                    <button class="text-xs py-1 px-2 rounded text-red-500 font-semibold bg-white" @click="removePhoto(photo_index)">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="flex items-center justify-center w-full">
-                <label v-if="!form.photo.url" for="dropzone-file" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhoto">
+                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhoto">
                     <div class="flex flex-col items-center justify-center py-6">
-                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <svg class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                         </svg>
-                        <p class="text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span></p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 ">
+                            <span class="font-semibold">Click to upload</span>
+                        </p>
+                        <span class="text-xs text-center text-slate-500">Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on image to select multiple images</span>
                     </div>
-                    <input id="dropzone-file" type="file" class="hidden" />
+                    <input id="dropzone-file" type="file" class="hidden" multiple/>
                 </label>
-                <div class="relative" v-else>
-                    <img class="relative" ref="input" :src="form.photo.url">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="absolute -right-2 -top-2 w-6 h-6 bg-white rounded-full text-red-500 hover:text-red-600 cursor-pointer" fill="currentColor" @click="removePhoto" v-if="form.photo.url">
-                        <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/>
-                    </svg>
-                </div>
             </div> 
-            <div class="flex flex-col w-full">
-                <label class="text-xs text-left mb-2" for="">Tag Parent</label>
+            <div class="flex w-full">
+                <div class="flex space-x-1 items-center text-white bg-blue-600 py-2 px-3 rounded cursor-pointer" @click="showAddTag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="h-5 w-5 text-white" fill="currentColor">
+                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c10 0 18.8-4.9 24.2-12.5l-99.2-99.2c-14.9-14.9-23.3-35.1-23.3-56.1v-33c-15.9-4.7-32.8-7.2-50.3-7.2H178.3zM384 224c-17.7 0-32 14.3-32 32v82.7c0 17 6.7 33.3 18.7 45.3L478.1 491.3c18.7 18.7 49.1 18.7 67.9 0l73.4-73.4c18.7-18.7 18.7-49.1 0-67.9L512 242.7c-12-12-28.3-18.7-45.3-18.7H384zm24 80a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/>
+                    </svg>
+                    <span class="text-sm">Tags</span>
+                </div>
+            </div>
+            <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(form.photos.length || form.caption) && form.tagged_parent.length ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" :disabled="(!form.caption || !form.photos.length) && !form.tagged_parent" @click="post">Post</button>
+            <button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_create_post = false">Cancel</button>
+        </div>
+        <div class="" v-if="show_add_tag">
+            <div class="flex items-center mb-2 rounded-t text-xl font-semibold dark:text-white text-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-5 w-5 cursor-pointer" fill="currentColor" @click="show_add_tag = false">
+                    <path d="M177.5 414c-8.8 3.8-19 2-26-4.6l-144-136C2.7 268.9 0 262.6 0 256s2.7-12.9 7.5-17.4l144-136c7-6.6 17.2-8.4 26-4.6s14.5 12.5 14.5 22l0 72 288 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32l-288 0 0 72c0 9.6-5.7 18.2-14.5 22z"/>
+                </svg>
+                <h3 class="flex-1 text-center text-lg">Tag Students</h3>
+            </div>
+            <hr class="mb-3">
+            <div class="">
                 <Multiselect 
-                    v-debounce:1s="findParents"
+                    v-debounce:1s="findStudentss"
+                    :mode="'tags'"
+                    @open="showAddTag"
                     v-model="form.tagged_parent" 
-                    :loading="loading.parents"
-                    :options="parent_list"
-                    valueProp="parent_id"
-                    placeholder="Please enter at least 2 characters"
-                    label="parent_name"
-                    :noOption="false"
+                    :loading="loading.students"
+                    :options="student_list"
+                    valueProp="id"
+                    placeholder="Please enter at least 1 characters"
+                    label="name"
                     :noOptionsText="'No results'"
                     :noResultsText="'No results'"
-                    :closeOnSelect="true"
+                    :closeOnSelect="false"
                     :canDeselect="false"
                     :searchable="true"
-                    :minChars="2"
+                    :minChars="1"
                     :classes="{
                         container: 'relative mx-auto w-full flex items-center justify-end box-border rounded border-gray-200 shadow-sm cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none mt-0',
                         containerDisabled: 'cursor-default bg-gray-100',
@@ -238,12 +271,13 @@ background: #555; /* Color of the handle when hovered */
                         singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border rtl:left-auto rtl:right-0 rtl:pl-0 rtl:pr-3.5',
                         singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                         multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 rtl:left-auto rtl:right-0 rtl:pl-0 rtl:pr-3.5',
-                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded pl-3.5 rtl:pl-0 rtl:pr-3.5',
+                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded pl-3.5 rtl:pl-0 rtl:pr-3.5 h-10',
                         tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2 rtl:pl-0 rtl:pr-2',
-                        tag: 'bg-green-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
+                        tag: 'bg-indigo-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
                         tagDisabled: 'pr-2 opacity-50 rtl:pl-2',
+                        tagWrapper: 'overflow-hidden overflow-ellipsis',
                         tagRemove: 'flex items-center justify-center p-1 mx-0.5 rounded-sm hover:bg-black hover:bg-opacity-10 group',
-                        tagRemoveIcon: 'bg-multiselect-remove bg-center bg-no-repeat opacity-30 inline-block w-3 h-3 group-hover:opacity-60',
+                        tagRemoveIcon: 'multiselect-tag-remove-icon bg-center bg-no-repeat opacity-30 inline-block w-3 h-3 group-hover:opacity-60 hover:scale-105',
                         tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full',
                         tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
                         tagsSearchCopy: 'invisible whitespace-pre-wrap inline-block h-px',
@@ -251,36 +285,26 @@ background: #555; /* Color of the handle when hovered */
                         caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
                         caretOpen: 'rotate-180 pointer-events-auto',
                         clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 rtl:pr-0 rtl:pl-3.5',
-                        clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                        clearIcon: 'multiselect-tag-remove-icon w-10 h-4 py-px box-content inline-block',
                         dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                        dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
-                        dropdownHidden: 'hidden',
+                        dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t ',
+                        dropdownHidden: '',
                         options: 'flex flex-col p-0 m-0 list-none',
                         optionsTop: '',
-                        group: 'p-0 m-0',
-                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-1 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                        groupLabelPointable: 'cursor-pointer',
-                        groupLabelPointed: 'bg-gray-300 text-gray-700',
-                        groupLabelSelected: 'bg-indigo-600 text-white',
-                        groupLabelDisabled: 'bg-gray-100 text-gray-300 cursor-not-allowed',
-                        groupLabelSelectedPointed: 'bg-indigo-600 text-white opacity-90',
-                        groupLabelSelectedDisabled: 'text-indigo-100 bg-indigo-600 bg-opacity-50 cursor-not-allowed',
-                        groupOptions: 'p-0 m-0',
                         option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
                         optionPointed: 'text-gray-800 bg-gray-100',
                         optionSelected: 'text-white bg-indigo-500',
                         optionDisabled: 'text-gray-300 cursor-not-allowed',
                         optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
                         optionSelectedDisabled: 'text-indigo-100 bg-indigo-500 bg-opacity-50 cursor-not-allowed',
-                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left text-sm',
+                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left text-sm',
                         fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                         spacer: 'h-9 py-px box-content',
-                    }" 
-                /> 
+                    }"
+                >
+                </Multiselect>
             </div>
-            <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="form.photo.text && form.photo.file && form.tagged_parent ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" :disabled="!form.photo.text && !form.photo.file && !form.tagged_parent" @click="post">Post</button>
-            <button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_upload_modal = false">Cancel</button>
         </div>
     </SimpleModal>
 </template>
@@ -307,70 +331,17 @@ export default {
   },
   data() {
     return {
-        show_upload_modal: false,
-        show_image: false,
+        show_create_post: false,
+        show_add_tag: false,
         loading:{
-            parents: false,
+            students: false,
         },
-        parent_list: [],
+        student_list: [],
         form:{
-            status_text: '',
-            photo: {
-                text: '',
-                url: '',
-                file: '',
-            },
-            tagged_parent: ''
+            caption: '',
+            photos: [],
+            tagged_parent: []
         },
-        posts: [{
-            image: 'image_1.png',
-            caption: 'Day 1 - Amazing artwork from this student.',
-            liked: false,
-            created_by: 'Noob Master',
-            created_at: '2024-05-01'
-        },{
-            image: 'image_2.png',
-            caption: 'True artist does exist.',
-            liked: true,
-            created_by: 'Pajeet',
-            created_at: '2024-04-20'
-        },{
-            image: 'image_3.png',
-            caption: "Artistic at it's final. Can't wait for the upcoming competition for Digital Art's Student!",
-            liked: false,
-            created_by: 'China Number 1',
-            created_at: '2024-04-13'
-        },{
-            image: 'image_3.png',
-            caption: "Artistic at it's final. Can't wait for the upcoming competition for Digital Art's Student!",
-            liked: false,
-            created_by: 'China Number 1',
-            created_at: '2024-04-13'
-        },{
-            image: 'image_3.png',
-            caption: "Artistic at it's final. Can't wait for the upcoming competition for Digital Art's Student!",
-            liked: false,
-            created_by: 'China Number 1',
-            created_at: '2024-04-13'
-        },{
-            image: 'image_3.png',
-            caption: "Artistic at it's final. Can't wait for the upcoming competition for Digital Art's Student!",
-            liked: false,
-            created_by: 'China Number 1',
-            created_at: '2024-04-13'
-        },{
-            image: 'image_3.png',
-            caption: "Artistic at it's final. Can't wait for the upcoming competition for Digital Art's Student!",
-            liked: false,
-            created_by: 'China Number 1',
-            created_at: '2024-04-13'
-        },{
-            image: 'image_3.png',
-            caption: "Artistic at it's final. Can't wait for the upcoming competition for Digital Art's Student!",
-            liked: false,
-            created_by: 'China Number 1',
-            created_at: '2024-04-13'
-        }],
     }
   },
   methods: {
@@ -380,20 +351,27 @@ export default {
     toggleComment(post_index){
         this.posts[post_index].show_comment = !this.posts[post_index].show_comment
     },
-    showUploadModal(){
-        this.show_upload_modal = true
+    showCreatePost(){
+        this.show_create_post = true
+    },
+    showAddTag(){
+        this.show_add_tag = true
     },
     changePhoto({ target }) {
         const { files } = target;
         if (files && files.length > 0) {
-            this.read(files[0], target)
-            .then((data) => {
-                console.log(files[0])
-                this.form.photo.url     =   data.url
-                this.form.photo.file    =   files[0]
-                this.show_image         = true;
+            const filesArray = Array.from(files);
+            filesArray.forEach((file)=>{
+                this.read(file, target)
+                .then((data) => {
+                    this.form.photos.push({
+                        'name' :Date.now() + Math.floor(Math.random() * 1000),
+                        'url' :data.url,
+                        'file':file
+                    })
+                })
+                .catch(this.alert);
             })
-            .catch(this.alert);
         }
     },
     read(file, event) {
@@ -411,29 +389,28 @@ export default {
                         url: URL.createObjectURL(file),
                     });
                 } else {
-                    reject(new Error('Your browser is not supported.'));
+                    alert('Your browser is not supported.');
                 }
             } else {
-                reject(new Error(`Please select a valid image file.`));
-                // reject(new Error(`Please ${event ? event.type : 'choose'} an image file.`));
+                alert(`Please select a valid image file.`);
             }
         });
     },
-    removePhoto(){
-        this.form.photo.url     = ''
-        this.form.photo.file    = ''
+    removePhoto(photo_index){
+        this.form.photos.splice(photo_index, 1)
     },
-    findParents(query){
+    findStudentss(query){
         if(query){
-            this.loading.parents = true
-            axios.get(route('parents.find'), {
+            this.loading.students = true
+            axios.get(route('students.find'), {
                 params: {
                     'keyword': query
                 }
             })
             .then((res) => {
-                this.parent_list = res.data.length > 0 ? res.data : []
-                this.loading.parents = false
+                console.log(res)
+                this.student_list = res.data.length > 0 ? res.data : []
+                this.loading.students = false
             });
         }
     },

@@ -4,7 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <div class="overflow-y-auto no-scrollbar modal-main" id="invoice" ref="invoice">
+    <div class="overflow-y-auto scrollbar modal-main" id="invoice" ref="invoice">
         <div class="flex flex-col justify-between divide-y p-8 min-h-screen">
             <div class="flex flex-col flex-grow">
                 <div class="flex flex-row justify-between">

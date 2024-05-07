@@ -181,7 +181,7 @@ export default {
         <!-- Sidebar -->
         <div class="flex min-h-screen bg-gray-50 step-1">
             <!-- Sidebar Menu -->
-            <nav class="fixed bg-gray-900 w-[18rem] top-0 left-0 z-30 transition h-full origin-left overflow-y-auto no-scrollbar transform sm:translate-x-0" :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }">
+            <nav class="fixed bg-gray-900 w-[18rem] top-0 left-0 z-30 transition h-full origin-left overflow-y-auto scrollbar transform sm:translate-x-0" :class="{ '-translate-x-full': !sideBar, 'translate-x-0': sideBar }">
                 <div class="flex justify-center border-b border-dotted">
                 <!-- Logo -->
                     <div class="shrink-0 flex items-center">
@@ -311,7 +311,7 @@ export default {
                                                 </span>
                                             </template>
                                             <template #content>
-                                                <div class="overflow-y-auto max-h-60 no-scrollbar divide-y divide-dashed" v-if="$page.props.user_notifications.length">
+                                                <div class="overflow-y-auto max-h-60 scrollbar divide-y divide-dashed" v-if="$page.props.user_notifications.length">
                                                     <div class="flex justify-center" v-for="notification, index in $page.props.user_notifications" :key="notification.id">
                                                         <BreezeDropdownLink :href="route('view_notification', {'id' : notification.id})" :class="notification.seen != 1 ? 'bg-blue-200 hover:bg-blue-300' : 'bg-white hover:bg-gray-100'">
                                                             <div class="flex justify-between items-center py-2">

@@ -183,7 +183,7 @@ const images = ref([
                     <template v-else v-for="artwork, lesson in artworks">
                         <p class="mt-10">{{ lesson }}</p>
                         <hr class="my-4 border-gray-600">
-                        <div class="flex overflow-x-scroll py-4 no-scrollbar w-full">
+                        <div class="flex overflow-x-scroll py-4 scrollbar w-full">
                             <div class="flex space-x-4">
                                 <div v-for="(image, index) in artwork" :key="index" class="relative w-52 h-52 flex flex-col justify-center">
                                     <img :src="'/storage/art_gallery/'+image.filename" class="object-fill w-52 h-52 rounded-lg cursor-pointer" alt="Click to view larger image" @click="showImage(image.filename, image.activity)"/>

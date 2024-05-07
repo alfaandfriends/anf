@@ -197,8 +197,6 @@ export default {
             if (files && files.length > 0) {
                 this.read(files[0], target)
                 .then((data) => {
-                    console.log(data.url)
-                    console.log(files[0])
                     this.form.thumbnail.image_url =   data.url
                     this.form.thumbnail.file      =   files[0]
                 })
@@ -227,7 +225,6 @@ export default {
         },
         change(event) {
             const files = event.target.files;
-            console.log(files)
 
             // Create an empty object to represent the folder structure
             const folderTree = {};

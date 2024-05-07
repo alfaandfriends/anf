@@ -247,7 +247,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
                     </div>
                 </div>
-                <div class="p-6 overflow-y-auto no-scrollbar space-y-4" v-else>
+                <div class="p-6 overflow-y-auto scrollbar space-y-4" v-else>
                     <template v-if="resource_data.media_type_id == 1">
                         <div class="flex justify-center" v-html="resource_data.content"></div>
                     </template>

@@ -31,12 +31,12 @@
                                             <button class="shadow-md inline-flex items-center border border-transparent rounded font-semibold text-xs text-white uppercase tracking-widest focus:outline-none transition ease-in-out duration-150 cursor-pointer" :class="route().current('notifications', {'filter':'unread'}) ? 'bg-indigo-700 px-2 py-1' : 'bg-indigo-400 py-1 px-2'" @click="showReadNotifications()">Unread</button>
                                             <button class="shadow-md inline-flex items-center border border-transparent rounded font-semibold text-xs text-white uppercase tracking-widest focus:outline-none transition ease-in-out duration-150 cursor-pointer" :class="route().current('notifications', {'filter':'read'}) ? 'bg-indigo-700 px-2 py-1' : 'bg-indigo-400 py-1 px-2'" @click="showUnreadNotifications()">Read</button>
                                         </div>
-                                        <div class="bg-indigo-100 h-[70vh] overflow-hidden overflow-y-auto no-scrollbar" v-if="!$page.props.notifications.length">
+                                        <div class="bg-indigo-100 h-[70vh] overflow-hidden overflow-y-auto scrollbar" v-if="!$page.props.notifications.length">
                                             <div aria-label="Message list" class="h-full text-center pt-6">
                                                 <span class="text-sm text-gray-500 font-semibold">No notification</span>
                                             </div>
                                         </div>
-                                        <div class="bg-white h-[70vh] overflow-hidden hover:overflow-y-auto no-scrollbar w-full" v-else @scroll="onScroll">
+                                        <div class="bg-white h-[70vh] overflow-hidden hover:overflow-y-auto scrollbar w-full" v-else @scroll="onScroll">
                                             <div aria-label="Message list" class="h-full">
                                                 <ul role="list" class="border-b border-gray-200 divide-y divide-gray-200">
                                                     <li v-for="notification in $page.props.notifications" :key="notification.id" :class="[route().current('view_notification', {'id': notification.id}) ? 'bg-indigo-50' : '', notification.seen ? '' : 'bg-indigo-200']" class="relative cursor-pointer bg-white py-5 px-6 hover:bg-indigo-50" @click="viewNotification(notification.id)">
@@ -69,7 +69,7 @@
                                         <div class="flex h-[74vh] justify-center items-center bg-white" v-if="!$page.props.user_notifications.length">
                                             <img src="/images/no_notification_yet.png" class="h-1/3 w-1/5" alt="">
                                         </div>
-                                        <div class="flex justify-center h-[74vh] overflow-y-auto no-scrollbar" v-else>
+                                        <div class="flex justify-center h-[74vh] overflow-y-auto scrollbar" v-else>
                                             <slot>
                                             </slot>
                                         </div>

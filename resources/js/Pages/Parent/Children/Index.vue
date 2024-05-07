@@ -1,63 +1,65 @@
 <template>
     <Head title="Home" />
     <Authenticated>
-        <div class="hidden md:flex lg:flex justify-end mb-3">
-            <BreezeButton type="button" buttonType="info" @click="showAddChild">Add Child</BreezeButton>
-        </div>
-        <div class="overflow-x-auto no-scrollbar">
-            <div class="bg-white shadow rounded-lg border">
-                <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-gray-700 capitalize bg-gray-200">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Age
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Gender
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center">
-                                Status
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center">
-                                Action
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="bg-white border-b" v-if="!$page.props.children_list || !$page.props.children_list.length">
-                            <td class="text-center py-4" colspan="10">
-                                No record found.
-                            </td>
-                        </tr>
-                        <tr class="bg-white border-b hover:bg-gray-50" v-else v-for="child, invoice_index in $page.props.children_list">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ child.name }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ moment(child.dob).format('DD/MM/Y') }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ child.gender }}
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <span class="text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap" :class="child.student_id ? 'text-green-500 bg-green-100' : 'text-red-500 bg-red-100'">{{ child.student_id ? 'Enrolled' : 'Not Enrolled' }}</span>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <button type="button" @click="!child.student_id ? deleteChild(child.id) : ''" class="font-medium px-3 py-1 rounded whitespace-nowrap" :class="!child.student_id ? 'text-white bg-red-600 hover:bg-red-700 cursor-pointer' : 'text-white bg-red-300 cursor-not-allowed'">Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="flex items-end justify-end fixed bottom-24 right-4 md:hidden lg:hidden">
-                <button class="bg-indigo-600 hover:bg-indigo-600 text-white font-semibold p-3 rounded-full shadow-lg" @click="showAddChild">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-                    </svg>
-                </button>
+        <div class="flex justify-center">
+            <div class="flex-1 max-w-4xl">
+                <div class="hidden md:flex lg:flex justify-end mb-3">
+                    <BreezeButton type="button" buttonType="info" @click="showAddChild">Add Child</BreezeButton>
+                </div>
+                <div class="bg-white shadow rounded-lg border">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-gray-700 capitalize bg-gray-200">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Age
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Gender
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-center">
+                                    Status
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-center">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b" v-if="!$page.props.children_list || !$page.props.children_list.length">
+                                <td class="text-center py-4" colspan="10">
+                                    No record found.
+                                </td>
+                            </tr>
+                            <tr class="bg-white border-b hover:bg-gray-50" v-else v-for="child, invoice_index in $page.props.children_list">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ child.name }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ moment(child.dob).format('DD/MM/Y') }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ child.gender }}
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap" :class="child.student_id ? 'text-green-500 bg-green-100' : 'text-red-500 bg-red-100'">{{ child.student_id ? 'Enrolled' : 'Not Enrolled' }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <button type="button" @click="!child.student_id ? deleteChild(child.id) : ''" class="font-medium px-3 py-1 rounded whitespace-nowrap" :class="!child.student_id ? 'text-white bg-red-600 hover:bg-red-700 cursor-pointer' : 'text-white bg-red-300 cursor-not-allowed'">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="flex items-end justify-end fixed bottom-24 right-4 md:hidden lg:hidden">
+                    <button class="bg-indigo-600 hover:bg-indigo-600 text-white font-semibold p-3 rounded-full shadow-lg" @click="showAddChild">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
         <ConfirmationModal 
