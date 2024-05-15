@@ -6,7 +6,7 @@ use App\Classes\StudentHelper;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DownloadController;
-use App\Http\Controllers\Parent\ArtGalleryController;
+use App\Http\Controllers\ArtGalleryController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ProgressReportController;
 use Illuminate\Support\Facades\Request;
@@ -42,6 +42,12 @@ Route::middleware(['auth'])->group(function(){
         Route::get('find-digital-art-students', [StudentController::class, 'findDigitalArtStudents'])->name('students.find_digital_art_students');
         Route::get('fees/{id}', [StudentHelper::class, 'getStudentFees'])->name('students.fees');
     });
+
+    /* Art Gallery Options */
+    Route::get('/art-gallery/get_levels/{id}', [ArtGalleryController::class, 'getLevels'])->name('art_gallery.get_levels')->withoutMiddleware('device');
+    Route::get('/art-gallery/get_themes/{id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes')->withoutMiddleware('device');
+    Route::get('/art-gallery/get_lessons/{id}', [ArtGalleryController::class, 'getLessons'])->name('art_gallery.get_lessons')->withoutMiddleware('device');
+    Route::get('/art-gallery/get_activities/{id}', [ArtGalleryController::class, 'getActivities'])->name('art_gallery.get_activities')->withoutMiddleware('device');
 
     /* Math Select Options */
     Route::get('/progress-report/math/get-units/{term_book_id}', [ProgressReportController::class, 'getMathUnits'])->name('progress_report.get_math_units');

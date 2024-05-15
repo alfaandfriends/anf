@@ -6,6 +6,7 @@ use App\Http\Controllers\Parent\ChildrenController;
 use App\Http\Controllers\Parent\ArtGalleryController;
 use App\Http\Controllers\Parent\InvoiceController;
 use App\Http\Controllers\Parent\HomeController;
+use App\Http\Controllers\Parent\PostController;
 use App\Http\Controllers\Parent\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,6 +24,8 @@ Route::middleware(['auth', 'child'])->group(function(){
         /* Home */
         Route::get('home', [HomeController::class, 'index'])->name('home');
         Route::post('switch-child', [HomeController::class, 'switchChild'])->name('switch_child');
+        Route::post('create-post', [PostController::class, 'createPost'])->name('create_post');
+        Route::post('like-post', [PostController::class, 'likePost'])->name('like_post')->middleware('throttle:240,1');
 
         /* Invoices */
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');

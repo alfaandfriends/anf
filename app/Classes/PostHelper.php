@@ -10,40 +10,35 @@ class PostHelper {
 
     public static function getPosts()
     {
-        $student_id     =   request()->session()->get('current_active_child.student_id');
-        $posts =   DB::table('student_posts')
-                        ->leftJoin('student_post_tags', 'student_post_tags.post_id', '=', 'student_posts.id')
-                        ->leftJoin('student_post_likes', 'student_post_likes.post_id', '=', 'student_posts.id')
-                        ->leftJoin('wpvt_users', 'student_posts.created_by', '=', 'wpvt_users.ID')
-                        ->where('student_post_tags.tagged_student_id', $student_id)
-                        ->select(
-                            'student_posts.id as post_id',
-                            'student_posts.post_title as post_title',
-                            'student_posts.image_filename as post_image',
-                            'student_posts.created_by as post_author',
-                            'student_posts.created_at as post_date',
-                            'wpvt_users.display_name as post_author_name',
-                            'student_post_tags.id as tag_id',
-                            'student_post_tags.post_id as tag_post_id',
-                            'student_post_tags.tagged_student_id as tag_student_id',
-                            'student_post_likes.id as liked_id',
-                            'student_post_likes.post_id as liked_post_id',
-                            'student_post_likes.liked_by as liked_user_id',
-                        )
-                        ->get();
-                        
-        $posts_collection = collect($posts);
-        foreach($posts as $post){
-            $info['post_id']            =   $post->post_id;
-            $info['post_title']         =   $post->post_title;
-            $info['post_image']         =   $post->post_image;
-            $info['post_author']        =   $post->post_author;
-            $info['post_author_name']   =   $post->post_author_name;
-            $info['post_date']          =   $post->post_date;
-            $info['tagged_students']    =   $posts_collection->where('tag_post_id', $post->post_id)->select('tag_id', 'tag_post_id', 'tag_student_id')->toArray();
-            $info['liked_by']           =   $posts_collection->where('liked_post_id', $post->post_id)->select('liked_id', 'liked_post_id', 'liked_user_id')->toArray();
-            $data[]                     =   $info;
+        $posts      =   DB::table('student_posts')
+                            ->leftJoin('wpvt_users', 'student_posts.created_by', '=', 'wpvt_users.ID')
+                            ->select(
+                                'student_posts.id as post_id',
+                                'student_posts.post_title as post_title',
+                                'student_posts.created_by as post_author',
+                                'student_posts.created_at as post_date',
+                                'wpvt_users.display_name as post_author_name')
+                            ->paginate(2);
+
+        $post_ids   =   $posts->pluck('post_id');
+        $images     =   DB::table('student_post_images')->whereIn('student_post_images.post_id', $post_ids)->get()->groupBy('post_id');
+        $tags       =   DB::table('student_post_tags')->whereIn('student_post_tags.post_id', $post_ids)->get()->groupBy('post_id');
+        $likes      =   DB::table('student_post_likes')->whereIn('student_post_likes.post_id', $post_ids)->whereNull('deleted_at')->get()->groupBy('post_id');
+                         
+        if($posts->isNotEmpty()){    
+            foreach($posts as $post){
+                $info['post_id']            =   $post->post_id;
+                $info['post_title']         =   $post->post_title;
+                $info['post_author']        =   $post->post_author;
+                $info['post_author_name']   =   $post->post_author_name;
+                $info['post_date']          =   $post->post_date;
+                $info['post_images']        =   isset($images[$post->post_id]) ? $images[$post->post_id] : [];
+                $info['post_tags']          =   isset($tags[$post->post_id]) ? $tags[$post->post_id] : [];
+                $info['post_likes']         =   isset($likes[$post->post_id]) ? $likes[$post->post_id] : [];
+                $data[]                     =   $info;
+            }           
+            return $data;
         }
-        return $data;
+        return [];
     }
 }

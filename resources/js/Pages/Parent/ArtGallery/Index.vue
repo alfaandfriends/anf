@@ -209,7 +209,7 @@ const images = ref([
             </div>
         </div>
     </Authenticated>
-    <SimpleModal v-if="show_upload" :open="show_upload" @close:modal="show_upload = false" class="h-screen w-full sm:w-4/6 md:h-auto md:w-2/6 p-4 overflow-y-auto" :disable_overlay="disable_overlay">
+    <SimpleModal :isOpen="show_upload" @close="this.show_upload = false">
         <form class="p-4">
             <h1 class="md:font-semibold md:text-xl">Upload Artwork</h1>
             <hr class="my-4 border-gray-600">
@@ -261,7 +261,7 @@ const images = ref([
             <img :src="image.file" class="object-scale-down rounded-lg" alt="">
         </div>
     </SimpleModal>
-    <SimpleModal v-if="show_confirmation" :open="show_confirmation" @close:modal="show_confirmation = false" class="md:w-3/12">
+    <SimpleModal :isOpen="show_confirmation" @close="this.show_confirmation = false">
         <div class="relative text-center p-6">
             <button @click="show_confirmation = false" type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
