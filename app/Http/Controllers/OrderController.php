@@ -37,7 +37,7 @@ class OrderController extends Controller
             $query->where('wpvt_users.display_name', 'LIKE', '%'.request('search').'%');
         }   
 
-        return Inertia::render('Order/Index', [
+        return Inertia::render('Admin/Order/Index', [
             'filter'        =>  request()->all('search', 'status'),
             'status'        =>  $status,
             'orders'        =>  $query->paginate(10)
@@ -49,7 +49,7 @@ class OrderController extends Controller
         $status             =   OrderHelper::getStatus();
         $shipping_providers =   OrderHelper::getShippingProviders();
 
-        return Inertia::render('Order/Create', [
+        return Inertia::render('Admin/Order/Create', [
             'status'                =>  $status,
             'shipping_providers'    =>  $shipping_providers,
         ]);
@@ -106,7 +106,7 @@ class OrderController extends Controller
                                 ->where('orders.id', $request->order_id)
                                 ->first();
                                 
-        return Inertia::render('Order/Edit', [
+        return Inertia::render('Admin/Order/Edit', [
             'order_info'            =>  $order_info,
             'status'                =>  $status,
             'shipping_providers'    =>  $shipping_providers,

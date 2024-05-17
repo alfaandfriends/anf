@@ -28,7 +28,7 @@ class DiagnosticTestController extends Controller
         $ages                   =   DB::table('diagnostic_test_ages')->get();
         $children               =   auth()->check() ?  DB::table('children')->where('parent_id', auth()->user()->ID)->get() : [];
 
-        return Inertia::render('DiagnosticTests/Run/'.$template, [
+        return Inertia::render('Admin/DiagnosticTests/Run/'.$template, [
             'diagnostic_test_list'  => $diagnostic_test_list,
             'languages'             => $languages,
             'ages'                  => $ages,
@@ -74,7 +74,7 @@ class DiagnosticTestController extends Controller
         $diagnostic_test_categories         =   DB::table('diagnostic_test_categories')->where('dt_id', $dt_id)->select(['id', 'name'])->orderBy('id')->get();
         $diagnostic_test_chart_info         =   DB::table('diagnostic_test_chart_info')->where('language_id', $request->form_data['language'])->get();
 
-        return Inertia::render('DiagnosticTests/Run/'.$template, [
+        return Inertia::render('Admin/DiagnosticTests/Run/'.$template, [
             'form_data'                         =>  $request->form_data,
             'dt_details'                        =>  $dt_details,
             'final_message'                     =>  $final_message,
@@ -235,7 +235,7 @@ class DiagnosticTestController extends Controller
                         'children.name as student_name',
                         'children.date_of_birth as student_dob'])->get();
 
-        return Inertia::render('DiagnosticTests/SavedResults/Index', [
+        return Inertia::render('Admin/DiagnosticTests/SavedResults/Index', [
             'filter'        => request()->all('search', 'centre_id'),
             'saved_results'       => $query->paginate(10),
         ]);
@@ -279,7 +279,7 @@ class DiagnosticTestController extends Controller
         $transformedData = $answer_collection->all();
         $paginationData = new LengthAwarePaginator($transformedData, $answer_record->total(), $answer_record->perPage(), $answer_record->currentPage(), ['path' => $answer_record->path()]);
 
-        return Inertia::render('DiagnosticTests/SavedResults/Details', [
+        return Inertia::render('Admin/DiagnosticTests/SavedResults/Details', [
             'result_id'     =>  $request->result_id,
             'filter'        =>  request()->all('search'),
             'answer_record' =>  $paginationData
@@ -361,7 +361,7 @@ class DiagnosticTestController extends Controller
                                             ->orderBy('age_id')
                                             ->paginate(10);
 
-            return Inertia::render('DiagnosticTests/Index', [
+            return Inertia::render('Admin/DiagnosticTests/Index', [
                 'filter'                => request()->all('search', 'language_id', 'age_id'),
                 'languages'             => $languages,
                 'ages'                  => $ages,
@@ -378,7 +378,7 @@ class DiagnosticTestController extends Controller
                                     ->get();
             $chart_types    =   DB::table('chart_types')->get();
 
-            return Inertia::render('DiagnosticTests/Create', [
+            return Inertia::render('Admin/DiagnosticTests/Create', [
                 'dt_list'           => $dt_list,
                 'languages'         => $languages,
                 'ages'              => $ages,
@@ -423,7 +423,7 @@ class DiagnosticTestController extends Controller
             $ages                   =   DB::table('diagnostic_test_ages')->get();
             $chart_types            =   DB::table('chart_types')->get();
 
-            return Inertia::render('DiagnosticTests/Edit', [
+            return Inertia::render('Admin/DiagnosticTests/Edit', [
                 'diagnostic_test_info'  => $diagnostic_test_info,
                 'dt_list'               => $dt_list,
                 'languages'             => $languages,
@@ -521,7 +521,7 @@ class DiagnosticTestController extends Controller
             $diagnostic_test_list           =   DB::table('diagnostic_test_questions')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
             $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
 
-            return Inertia::render('DiagnosticTests/Details/Index', [
+            return Inertia::render('Admin/DiagnosticTests/Details/Index', [
                 'diagnostic_test_id'            => $request->dt_id,
                 'diagnostic_test_list'          => $diagnostic_test_list,
                 'diagnostic_test_categories'    => $diagnostic_test_categories
@@ -533,7 +533,7 @@ class DiagnosticTestController extends Controller
             $diagnostic_test_list           =   DB::table('diagnostic_test_questions')->where('dt_id', $request->dt_id)->orderBy('ordering', 'asc')->get();
             $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
 
-            return Inertia::render('DiagnosticTests/Details/Create', [
+            return Inertia::render('Admin/DiagnosticTests/Details/Create', [
                 'diagnostic_test_id' => $request->dt_id,
                 'diagnostic_test_list' => $diagnostic_test_list,
                 'diagnostic_test_categories' => $diagnostic_test_categories,
@@ -627,7 +627,7 @@ class DiagnosticTestController extends Controller
             $diagnostic_test_answers        =   DB::table('diagnostic_test_answers')->where('question_id', $request->test_id)->first();
             $diagnostic_test_categories     =   DB::table('diagnostic_test_categories')->where('dt_id', $request->dt_id)->get();
 
-            return Inertia::render('DiagnosticTests/Details/Edit', [
+            return Inertia::render('Admin/DiagnosticTests/Details/Edit', [
                 'redirect_url'                  => url()->current(),
                 'test_id' => $test_id,
                 'dt_id' => $dt_id,
@@ -810,7 +810,7 @@ class DiagnosticTestController extends Controller
 
     /* Diagnostic Test Categories */
         public function dtCategoriesCreate(Request $request){
-            return Inertia::render('DiagnosticTests/Categories/Create', [
+            return Inertia::render('Admin/DiagnosticTests/Categories/Create', [
                 'diagnostic_test_id' => $request->dt_id
             ]);
         }
@@ -834,7 +834,7 @@ class DiagnosticTestController extends Controller
         public function dtCategoriesEdit(Request $request){
             $category_info = DB::table('diagnostic_test_categories')->where('id', $request->category_id)->first();
 
-            return Inertia::render('DiagnosticTests/Categories/Edit', [
+            return Inertia::render('Admin/DiagnosticTests/Categories/Edit', [
                 'category_info' => $category_info
             ]);
         }
@@ -893,7 +893,7 @@ class DiagnosticTestController extends Controller
             $answer_record->total_correct_answers   =   collect($answer_record->answer_record)->where('correct', true)->count();
             $answer_record->total_answers           =   count($answer_record->answer_record);
 
-            return Inertia::render('DiagnosticTests/SavedResults/Report', [
+            return Inertia::render('Admin/DiagnosticTests/SavedResults/Report', [
                 'result_id'     =>  $result_id,
                 'answer_record' =>  $answer_record
             ]);
@@ -904,7 +904,7 @@ class DiagnosticTestController extends Controller
     public function dtLanguages(){
         $languages  =   DB::table('diagnostic_test_languages')->paginate(10);
 
-        return Inertia::render('DiagnosticTests/Settings/Index', [
+        return Inertia::render('Admin/DiagnosticTests/Settings/Index', [
             'languages' =>  $languages
         ]);
     }

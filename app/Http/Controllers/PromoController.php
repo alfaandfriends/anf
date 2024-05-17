@@ -30,7 +30,7 @@ class PromoController extends Controller
                                     'promotions.value as promotion_value')
                                 ->paginate(10);
 
-        return Inertia::render('Promos/Index', [
+        return Inertia::render('Admin/Promos/Index', [
             'filter'        => request()->all('search'),
             'promo_list'    => $promo_list
         ]);
@@ -41,7 +41,7 @@ class PromoController extends Controller
         $durations  =   DB::table('promotion_durations')->get();
         $types  =   DB::table('promotion_types')->get();
 
-        return Inertia::render('Promos/Create', [
+        return Inertia::render('Admin/Promos/Create', [
             'countries' => $countries,
             'durations' => $durations,
             'types'     => $types

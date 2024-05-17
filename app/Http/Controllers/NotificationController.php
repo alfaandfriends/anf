@@ -27,7 +27,7 @@ class NotificationController extends Controller
 
         $notifications = NotificationHelper::getNotificationsWithFilter($filter);
         
-        return Inertia::render('Notifications/Index', [
+        return Inertia::render('Admin/Notifications/Index', [
             'notifications' => $notifications,
         ]);
     }
@@ -55,7 +55,7 @@ class NotificationController extends Controller
         $user_notifications =   NotificationHelper::getCurrentUserNotifications();
         
         if($user_notifications->contains($request->id)){
-            return Inertia::render('Notifications/Templates/'.$notification_data->template_path, [
+            return Inertia::render('Admin/Notifications/Templates/'.$notification_data->template_path, [
                 'user_has_notifications'    => count(collect(Inertia::getShared('user_notifications'))->where('seen', 0)) > 0 ? true : false,
                 'user_notifications'        => Inertia::getShared('user_notifications'),
                 'notifications'             => NotificationHelper::getNotificationsWithFilter($filter),

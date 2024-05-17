@@ -44,7 +44,7 @@ class ExternalUserManagementController extends Controller
             $query->where('wpvt_users.display_name', 'LIKE', '%'.$request->search.'%');
         }
 
-        return Inertia::render('ExternalUserManagement/DivisionManagers/Index', [
+        return Inertia::render('Admin/ExternalUserManagement/DivisionManagers/Index', [
             'filter'                => request()->all('search', 'centre_id'),
             'division_managers'     => $query->paginate(10),
         ]);
@@ -56,7 +56,7 @@ class ExternalUserManagementController extends Controller
             $user_info      =   DB::table('wpvt_users')->where('id', $request->user_id)->first();
             $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
 
-            return Inertia::render('ExternalUserManagement/DivisionManagers/ManageUser',[
+            return Inertia::render('Admin/ExternalUserManagement/DivisionManagers/ManageUser',[
                 'user_id'       => $request->user_id,
                 'user_info'     => $user_info,
                 'user_centres'  => $user_centres,
@@ -106,7 +106,7 @@ class ExternalUserManagementController extends Controller
             $query->where('wpvt_users.display_name', 'LIKE', '%'.$request->search.'%');
         }
 
-        return Inertia::render('ExternalUserManagement/CentreManagers/Index', [
+        return Inertia::render('Admin/ExternalUserManagement/CentreManagers/Index', [
             'filter'                => request()->all('search'),
             'centre_managers'     => $query->paginate(10),
         ]);
@@ -118,7 +118,7 @@ class ExternalUserManagementController extends Controller
             $user_info      =   User::find($request->user_id);
             $user_centre    =   DB::table('user_has_centres')->where('user_id', $request->user_id)->first();
 
-            return Inertia::render('ExternalUserManagement/CentreManagers/ManageUser',[
+            return Inertia::render('Admin/ExternalUserManagement/CentreManagers/ManageUser',[
                 'user_id'       => $request->user_id,
                 'user_info'     => $user_info,
                 'user_centre'     => $user_centre,
@@ -167,7 +167,7 @@ class ExternalUserManagementController extends Controller
             $query->where('wpvt_users.display_name', 'LIKE', '%'.$request->search.'%');
         }
 
-        return Inertia::render('ExternalUserManagement/Edupreneurs/Index', [
+        return Inertia::render('Admin/ExternalUserManagement/Edupreneurs/Index', [
             'filter'        => request()->all('search'),
             'edupreneurs'     => $query->paginate(10),
         ]);
@@ -179,7 +179,7 @@ class ExternalUserManagementController extends Controller
             $user_info      =   DB::table('wpvt_users')->where('id', $request->user_id)->first();
             $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
 
-            return Inertia::render('ExternalUserManagement/Edupreneurs/ManageUser',[
+            return Inertia::render('Admin/ExternalUserManagement/Edupreneurs/ManageUser',[
                 'user_id'       => $request->user_id,
                 'user_info'     => $user_info,
                 'user_centres'  => $user_centres,
@@ -230,7 +230,7 @@ class ExternalUserManagementController extends Controller
             $query->where('wpvt_users.display_name', 'LIKE', '%'.$request->search.'%');
         }
 
-        return Inertia::render('ExternalUserManagement/Teachers/Index', [
+        return Inertia::render('Admin/ExternalUserManagement/Teachers/Index', [
             'filter'    => request()->all('search'),
             'teachers'  => $query->paginate(10),
         ]);
@@ -242,7 +242,7 @@ class ExternalUserManagementController extends Controller
             $user_info      =   DB::table('wpvt_users')->where('id', $request->user_id)->first();
             $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
 
-            return Inertia::render('ExternalUserManagement/Teachers/ManageUser',[
+            return Inertia::render('Admin/ExternalUserManagement/Teachers/ManageUser',[
                 'user_id'       => $request->user_id,
                 'user_info'     => $user_info,
                 'user_centres'  => $user_centres,

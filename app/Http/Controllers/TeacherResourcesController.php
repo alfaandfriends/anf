@@ -42,7 +42,7 @@ class TeacherResourcesController extends Controller
 
         $programmes     =   ProgrammeHelper::programmes();
         
-        return Inertia::render('TeacherResources/Index', [
+        return Inertia::render('Admin/TeacherResources/Index', [
             'filter'            =>  request()->all('search', 'programme_id', 'level', 'language'),
             'teacher_resources' =>  $query->paginate(10),
             'levels'            =>  $levels,
@@ -58,7 +58,7 @@ class TeacherResourcesController extends Controller
         $media_types    =   DB::table('teacher_resource_media_types')->get();
         $levels         =   DB::table('teacher_resources_levels')->get();
 
-        return Inertia::render('TeacherResources/Create', [
+        return Inertia::render('Admin/TeacherResources/Create', [
             'programmes'    =>  $programmes,
             'languages'     =>  $languages,
             'media_types'   =>  $media_types,
@@ -112,7 +112,7 @@ class TeacherResourcesController extends Controller
         $resource_info  =   DB::table('teacher_resources')->where('id', $request->resource_id)->first();
         $levels         =   DB::table('teacher_resources_levels')->get();
 
-        return Inertia::render('TeacherResources/Edit', [
+        return Inertia::render('Admin/TeacherResources/Edit', [
             'id'                =>  $request->resource_id,
             'programmes'        =>  $programmes,
             'languages'         =>  $languages,

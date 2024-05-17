@@ -55,7 +55,7 @@ class ArtGalleryController extends Controller
                             // ->toSql();
                             ->paginate(10);
                             
-        return Inertia::render('ArtGallery/Index', [
+        return Inertia::render('Admin/ArtGallery/Index', [
             'filter'    =>  request()->all('search', 'level', 'theme', 'status'),
             'levels'    =>  $levels,
             'themes'    =>  $themes,
@@ -68,7 +68,7 @@ class ArtGalleryController extends Controller
         $levels =   DB::table('art_levels')->get();
         $themes =   DB::table('art_themes')->where('level_id', 1)->get();
 
-        return Inertia::render('ArtGallery/Create',[
+        return Inertia::render('Admin/ArtGallery/Create',[
             'levels'  => $levels,
             'themes'  => $themes
         ]);
@@ -125,7 +125,7 @@ class ArtGalleryController extends Controller
     public function levels(){
         $levels = $this->getLevels();
 
-        return Inertia::render('ArtGallery/Setting/Levels', [
+        return Inertia::render('Admin/ArtGallery/Setting/Levels', [
             'levels' => $levels,
         ]);
     }
@@ -133,7 +133,7 @@ class ArtGalleryController extends Controller
     public function themes(Request $request){
         $themes = $this->getThemes($request->level_id);
 
-        return Inertia::render('ArtGallery/Setting/Themes', [
+        return Inertia::render('Admin/ArtGallery/Setting/Themes', [
             'level_id'  => $request->level_id,
             'themes'    => $themes,
         ]);
@@ -142,7 +142,7 @@ class ArtGalleryController extends Controller
     public function lessons(Request $request){
         $lessons = $this->getLessons($request->theme_id);
 
-        return Inertia::render('ArtGallery/Setting/Lessons', [
+        return Inertia::render('Admin/ArtGallery/Setting/Lessons', [
             'level_id'  => $request->level_id,
             'theme_id'  => $request->theme_id,
             'lessons'   => $lessons,
@@ -152,7 +152,7 @@ class ArtGalleryController extends Controller
     public function activities(Request $request){
         $activities = $this->getActivities($request->lesson_id);
 
-        return Inertia::render('ArtGallery/Setting/Activities', [
+        return Inertia::render('Admin/ArtGallery/Setting/Activities', [
             'level_id'      => $request->level_id,
             'theme_id'      => $request->theme_id,
             'lesson_id'     => $request->lesson_id,

@@ -29,13 +29,13 @@ class PermissionController extends Controller
             $permissions[$permission_key]['permission_sub']     = $permission_sub;
         }
         
-        return Inertia::render('Permissions/Index', [
+        return Inertia::render('Admin/Permissions/Index', [
             'permissions' => $permissions
         ]);
     }
 
     public function create(){
-        return Inertia::render('Permissions/Create');
+        return Inertia::render('Admin/Permissions/Create');
     }
 
     public function store(Request $request){
@@ -66,7 +66,7 @@ class PermissionController extends Controller
         $permission_info        =   Permission::where('id', $request->permission_id)->first();
         $sub_permissions        =   collect(Permission::where('parent_id', $request->permission_id)->select(['id', 'name'])->get())->toArray();
         
-        return Inertia::render('Permissions/Edit', [
+        return Inertia::render('Admin/Permissions/Edit', [
             'permission_id'     => $request->permission_id,
             'permission_info'   => $permission_info,
             'sub_permissions'   => $sub_permissions,

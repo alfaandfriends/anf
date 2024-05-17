@@ -37,7 +37,7 @@ class UserController extends Controller
         $user_has_role  =   UserHasRoles::get()->keyBy('user_id');
         $role_list      =   Role::get()->keyBy('id');
 
-        return Inertia::render('Users/Index', [
+        return Inertia::render('Admin/Users/Index', [
             'filter'=>request()->all('search'),
             'user_list' => $results,
             'user_has_role' => $user_has_role,
@@ -51,7 +51,7 @@ class UserController extends Controller
         $gender_list    =   DB::table('genders')->get();
         $countries      =   DB::table('countries')->get();
 
-        return Inertia::render('Users/Create',[
+        return Inertia::render('Admin/Users/Create',[
             'roles'         => $roles,
             'gender_list'   => $gender_list,
             'countries' => $countries,
@@ -152,7 +152,7 @@ class UserController extends Controller
         $children       =   DB::table('children')->where('parent_id', $request->user_id)->get();
         $countries      =   DB::table('countries')->get();
 
-        return Inertia::render('Users/Edit', [
+        return Inertia::render('Admin/Users/Edit', [
             'user_info'     => $user_info,
             'roles'         => $roles,
             'user_roles'    => $user_roles,

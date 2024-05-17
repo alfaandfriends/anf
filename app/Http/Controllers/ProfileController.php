@@ -26,7 +26,7 @@ class ProfileController extends Controller
                             
         $countries = DB::table('countries')->get();
         
-        return Inertia::render('Profile/Create', [
+        return Inertia::render('Admin/Profile/Create', [
             'user_info' => $user_info,
             'countries' => $countries
         ]);

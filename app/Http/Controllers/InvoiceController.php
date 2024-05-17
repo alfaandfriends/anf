@@ -86,7 +86,7 @@ class InvoiceController extends Controller
 
         $programmes =   ProgrammeHelper::programmes();
         
-        return Inertia::render('Invoices/Index', [
+        return Inertia::render('Admin/Invoices/Index', [
             'filter'        =>  request()->all('search', 'centre_id', 'programme_id', 'date'),
             'invoices'      =>  $query->paginate(10),
             'programmes'    =>  $programmes,
@@ -99,7 +99,7 @@ class InvoiceController extends Controller
         $levels         =   ProgrammeHelper::distinctLevels();
         $payment_status =   InvoiceHelper::invoiceStatus();
 
-        return Inertia::render('Invoices/Create', [
+        return Inertia::render('Admin/Invoices/Create', [
             'programmes'        =>  $programmes,
             'fee_types'         =>  $fee_types,
             'levels'            =>  $levels,
@@ -223,7 +223,7 @@ class InvoiceController extends Controller
 
         $invoice_status  =   InvoiceHelper::invoiceStatus();
 
-        return Inertia::render('Invoices/Edit', [
+        return Inertia::render('Admin/Invoices/Edit', [
             'invoice_data'      =>  $invoice_data,
             'invoice_status'    =>  $invoice_status,
             'params'            =>  $request->params

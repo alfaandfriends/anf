@@ -11,13 +11,12 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import { Inertia } from '@inertiajs/inertia'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { vue3Debounce } from 'vue-debounce';
 import  VueHtmlToPaper from './Plugins/VueHtmlToPaper'
 import {useLoading} from 'vue-loading-overlay'
 import {LoadingPlugin} from 'vue-loading-overlay';
 import axios from 'axios';
-
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
 /* Intercept axios request */
 axios.interceptors.response.use(
@@ -66,17 +65,17 @@ InertiaProgress.init({
 });
 
 /* Loading */
-const $loading = useLoading({
-    container: null,
-    loader: 'bars',
-    lockScroll: false,
-    zIndex: 9999,
-    opacity: 0.2,
-    color: '#4f46e5',
-    backgroundColor: 'black'
-});
+// const $loading = useLoading({
+//     container: null,
+//     loader: 'bars',
+//     lockScroll: false,
+//     zIndex: 9999,
+//     opacity: 0.2,
+//     color: '#4f46e5',
+//     backgroundColor: 'black'
+// });
 
-var loader
+// var loader
 
-Inertia.on('start', () => loader = $loading.show() )
-Inertia.on('finish', () => loader.hide() )
+// Inertia.on('start', () => loader = $loading.show() )
+// Inertia.on('finish', () => loader.hide() )

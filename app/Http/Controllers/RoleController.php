@@ -26,14 +26,14 @@ class RoleController extends Controller
                                 'role_groups.name as role_group_name',
                             ])->get();
         
-        return Inertia::render('Roles/Index', [
+        return Inertia::render('Admin/Roles/Index', [
             'roles'         => $roles,
         ]);
     }
 
     public function create(){
         $role_groups    =   DB::table('role_groups')->get();
-        return Inertia::render('Roles/Create', [
+        return Inertia::render('Admin/Roles/Create', [
             'role_groups'   => $role_groups
         ]);
     }
@@ -69,7 +69,7 @@ class RoleController extends Controller
                             ])->where('roles.id', $request->role_id)->first();
         $role_groups    =   DB::table('role_groups')->get();
 
-        return Inertia::render('Roles/Edit', [
+        return Inertia::render('Admin/Roles/Edit', [
             'roles' => $roles,
             'role_groups'   => $role_groups
         ]);
@@ -125,7 +125,7 @@ class RoleController extends Controller
         }
         $role_permissions   =   RoleHasPermissions::where('role_id', $request->role_id)->get('permission_id')->keyBy('permission_id');
 
-        return Inertia::render('Roles/AssignPermissions', [
+        return Inertia::render('Admin/Roles/AssignPermissions', [
             'role_id' => $request->role_id,
             'permissions' => $permissions,
             'role_permissions' => $role_permissions,

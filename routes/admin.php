@@ -448,13 +448,5 @@ Route::middleware(['auth', 'device'])->group(function(){
         Route::get('/notifications/view', [NotificationController::class, 'viewNotification'])->name('view_notification');
         Route::get('/notifications/show-more', [NotificationController::class, 'showMoreNotifications'])->name('show_more_notifications');
         Route::delete('/notifications/delete', [NotificationController::class, 'deleteNotification'])->name('delete_notification');
-
-        /* Temporary Disabled */
-        Route::get('/settings/class_types', [SettingController::class, 'classTypeList'])->name('settings.class_types');
-        Route::get('/settings/class_types/create', [SettingController::class, 'addClassType'])->name('settings.class_types.create');
-        Route::post('/settings/class_types/store', [SettingController::class, 'storeClassType'])->name('settings.class_types.store');
-        Route::get('/settings/class_types/edit', [SettingController::class, 'editClassType'])->name('settings.class_types.edit');
-        Route::post('/settings/class_types/update', [SettingController::class, 'updateClassType'])->name('settings.class_types.update');
-        Route::delete('/settings/class_types/destroy/{id}', [SettingController::class, 'destroyClassType'])->name('settings.class_types.destroy');
     });
 });

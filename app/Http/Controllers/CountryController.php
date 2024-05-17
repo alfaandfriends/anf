@@ -14,13 +14,13 @@ class CountryController extends Controller
         public function index(){
             $country_list  =   DB::table('countries')->paginate(10);
 
-            return Inertia::render('Country/Index',[
+            return Inertia::render('Admin/Country/Index',[
                 'country_list' => $country_list,
             ]);
         }
 
         public function create(){
-            return Inertia::render('Country/Create');
+            return Inertia::render('Admin/Country/Create');
         }
 
         public function store(Request $request){

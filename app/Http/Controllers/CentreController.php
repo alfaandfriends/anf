@@ -40,7 +40,7 @@ class CentreController extends Controller
                             ->orderBy('centres.label')
                             ->paginate(10);
 
-        return Inertia::render('CentreManagement/Centres/Index', [
+        return Inertia::render('Admin/CentreManagement/Centres/Index', [
             'filter'    => request()->only('search'),
             'centres'   => $results,
         ]);
@@ -49,7 +49,7 @@ class CentreController extends Controller
     public function create(Request $request)
     {
         $countries  =   DB::table('countries')->get();
-        return Inertia::render('CentreManagement/Centres/Create', [
+        return Inertia::render('Admin/CentreManagement/Centres/Create', [
             'countries' => $countries
         ]);
     }
@@ -115,7 +115,7 @@ class CentreController extends Controller
                                         ->first();         
             $centre_images      =   DB::table('centre_images')->where('centre_id', $request->centre_id)->get();
     
-            return Inertia::render('CentreManagement/Centres/Edit', [
+            return Inertia::render('Admin/CentreManagement/Centres/Edit', [
                 'centre_info' => $centre_info,
                 'centre_images' => $centre_images,
                 'countries' => $countries,

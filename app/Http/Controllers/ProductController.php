@@ -19,7 +19,7 @@ class ProductController extends Controller
             $query->where('products.name', 'LIKE', '%'.request('search').'%');
         }   
 
-        return Inertia::render('Product/Index', [
+        return Inertia::render('Admin/Product/Index', [
             'filter'        =>  request()->all('search'),
             'products'      =>  $query->paginate(10)
         ]);
@@ -27,7 +27,7 @@ class ProductController extends Controller
 
     public function create()
     {
-        return Inertia::render('Product/Create');
+        return Inertia::render('Admin/Product/Create');
     }
     public function store(Request $request)
     {
@@ -179,7 +179,7 @@ class ProductController extends Controller
                                             ->orderBy('id')
                                             ->get();
 
-        return Inertia::render('Product/Edit', [
+        return Inertia::render('Admin/Product/Edit', [
             'product'                   => $product,
             'product_variations'        => $product_variations,
             'product_sub_variations'    => $product_sub_variations,

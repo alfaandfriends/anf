@@ -16,14 +16,14 @@ class MathManipulativesController extends Controller
     {
         $math_manipulatives =   DB::table('math_manipulatives')->get();
 
-        return Inertia::render('MathManipulatives/Index', [
+        return Inertia::render('Admin/MathManipulatives/Index', [
             'math_manipulatives' => $math_manipulatives
         ]);
     }
 
     public function play(Request $request)
     {   
-        return Inertia::render('MathManipulatives/Play', [
+        return Inertia::render('Admin/MathManipulatives/Play', [
             'name'   =>  $request->name
         ]);
     }
@@ -32,14 +32,14 @@ class MathManipulativesController extends Controller
     {
         $math_manipulatives =   DB::table('math_manipulatives')->paginate(10);
         
-        return Inertia::render('MathManipulatives/Configuration/Index', [
+        return Inertia::render('Admin/MathManipulatives/Configuration/Index', [
             'math_manipulatives' => $math_manipulatives
         ]);
     }
 
     public function configurationCreate()
     {
-        return Inertia::render('MathManipulatives/Configuration/Create');
+        return Inertia::render('Admin/MathManipulatives/Configuration/Create');
     }
 
     public function configurationStore(Request $request)

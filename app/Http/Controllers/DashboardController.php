@@ -57,7 +57,7 @@ class DashboardController extends Controller
                                                 ->whereMonth('student_fees.created_at', '=', Carbon::now()->subMonth(1)->format('m'))
                                                 ->distinct()->select('students.id')->get();
 
-        return Inertia::render('Dashboard',[
+        return Inertia::render('Admin/Dashboard',[
             'filters'                       =>  request()->all('centre_status', 'student_status'),
             'total_centres'                 =>  $total_centres,
             'online_students_this_month'    =>  count($online_students_this_month),

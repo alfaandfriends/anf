@@ -24,7 +24,7 @@ class ArtBookController extends Controller
                             ->groupBy('level_name')
                             ->toArray();
 
-        return Inertia::render('ArtBook/Index',[
+        return Inertia::render('Admin/ArtBook/Index',[
             'artbooks'    =>  $artbooks,
         ]);
     }

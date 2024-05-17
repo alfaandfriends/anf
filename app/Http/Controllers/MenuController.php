@@ -26,7 +26,7 @@ class MenuController extends Controller
             $menu_id          =   request('menu_id');
         }
 
-        return Inertia::render('Menus/Index', [
+        return Inertia::render('Admin/Menus/Index', [
             'menus'           => $menus,
             'sub_menus'       => $sub_menus,
             'show_sub_menu'   => $show_sub_menu,
@@ -38,7 +38,7 @@ class MenuController extends Controller
     {
         $menu_sections  =   DB::table('menu_sections')->get();
 
-        return Inertia::render('Menus/AddMenu', [
+        return Inertia::render('Admin/Menus/AddMenu', [
             'menu_sections' => $menu_sections
         ]);
     }
@@ -76,7 +76,7 @@ class MenuController extends Controller
 
     public function addSubMenu()
     {
-        return Inertia::render('Menus/AddSubMenu', [
+        return Inertia::render('Admin/Menus/AddSubMenu', [
             'menu_id'       =>   request('menu_id'),
             'url_redirect'  =>   url()->previous()
         ]);
@@ -113,7 +113,7 @@ class MenuController extends Controller
         $menus          =   Menu::getMenu(request('menu_id'));
         $menu_sections  =   DB::table('menu_sections')->get();
 
-        return Inertia::render('Menus/EditMenu',[
+        return Inertia::render('Admin/Menus/EditMenu',[
             'menus'         =>  $menus,
             'menu_sections' => $menu_sections
         ]);
@@ -154,7 +154,7 @@ class MenuController extends Controller
         $sub_menus          =   Menu::getSubMenu(request('menu_id'), $by_parent_menu_id=false);
         $url_redirect       =   url()->previous();
 
-        return Inertia::render('Menus/EditSubMenu',[
+        return Inertia::render('Admin/Menus/EditSubMenu',[
             'sub_menus'     =>  $sub_menus,
             'url_redirect'  =>  $url_redirect
         ]);

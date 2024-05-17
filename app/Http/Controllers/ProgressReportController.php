@@ -80,7 +80,7 @@ class ProgressReportController extends Controller
         $query->where('student_fees.centre_id', '=', $request->centre_id);
         $query->where('students.status', '=', 1);
         
-        return Inertia::render('ProgressReport/Index', [
+        return Inertia::render('Admin/ProgressReport/Index', [
             'filter'            =>  request()->all('search', 'centre_id', 'programme_id', 'date', 'programme_level'),
             'progress_reports'  =>  $query->groupBy('progress_reports.id')->paginate(10),
             'programmes'        =>  $programmes,
@@ -120,7 +120,7 @@ class ProgressReportController extends Controller
                                             'progress_report_status.class as attendance_status_class_name', 'progress_report_status.name as attendance_status_name')
                                     ->where('progress_report_id', $request->progress_report_id)->orderBy('progress_report_details.date')->get();
         
-        return Inertia::render('ProgressReport/Templates/'.$config_info->vue_template, [
+        return Inertia::render('Admin/ProgressReport/Templates/'.$config_info->vue_template, [
             'progress_report_id'    =>  $request->progress_report_id,
             'report_details'        =>  $report_details,
             'student_info'          =>  $student_info,
@@ -274,13 +274,13 @@ class ProgressReportController extends Controller
 
     /* Settings */
         public function settings(){
-            return Inertia::render('ProgressReport/Settings/Index');
+            return Inertia::render('Admin/ProgressReport/Settings/Index');
         }
         
         /* Math Levels*/
             public function mathLevels(){
                 $levels     =   DB::table('pr_math_levels')->get();
-                return Inertia::render('ProgressReport/Settings/Math/Levels', [
+                return Inertia::render('Admin/ProgressReport/Settings/Math/Levels', [
                     'levels'    =>  $levels
                 ]);
             }
@@ -321,7 +321,7 @@ class ProgressReportController extends Controller
         /* Math Terms Books*/
             public function mathTermsBooks(Request $request){
                 $terms_books     =   DB::table('pr_math_terms_books')->where('level_id', $request->level_id)->get();
-                return Inertia::render('ProgressReport/Settings/Math/TermsBooks', [
+                return Inertia::render('Admin/ProgressReport/Settings/Math/TermsBooks', [
                     'level_id'       =>     $request->level_id,
                     'terms_books'    =>     $terms_books
                 ]);
@@ -364,7 +364,7 @@ class ProgressReportController extends Controller
         /* Math Units*/
             public function mathUnits(Request $request){
                 $units     =   DB::table('pr_math_units')->where('term_book_id', $request->term_book_id)->get();
-                return Inertia::render('ProgressReport/Settings/Math/Units', [
+                return Inertia::render('Admin/ProgressReport/Settings/Math/Units', [
                     'level_id'      =>     $request->level_id,
                     'term_book_id'  =>     $request->term_book_id,
                     'units'         =>     $units
@@ -408,7 +408,7 @@ class ProgressReportController extends Controller
         /* Math Lessons*/
             public function mathLessons(Request $request){
                 $lessons     =   DB::table('pr_math_lessons')->where('unit_id', $request->unit_id)->get();
-                return Inertia::render('ProgressReport/Settings/Math/Lessons', [
+                return Inertia::render('Admin/ProgressReport/Settings/Math/Lessons', [
                     'level_id'      =>     $request->level_id,
                     'term_book_id'  =>     $request->term_book_id,
                     'unit_id'       =>     $request->unit_id,
@@ -453,7 +453,7 @@ class ProgressReportController extends Controller
         /* Math Objectives*/
             public function mathObjectives(Request $request){
                 $objectives     =   DB::table('pr_math_objectives')->where('lesson_id', $request->lesson_id)->get();
-                return Inertia::render('ProgressReport/Settings/Math/Objectives', [
+                return Inertia::render('Admin/ProgressReport/Settings/Math/Objectives', [
                     'level_id'      =>     $request->level_id,
                     'term_book_id'  =>     $request->term_book_id,
                     'unit_id'       =>     $request->unit_id,
@@ -501,7 +501,7 @@ class ProgressReportController extends Controller
         /* Coding Robotics Levels*/
             public function codingRoboticsLevels(){
                 $levels     =   DB::table('pr_coding_levels')->get();
-                return Inertia::render('ProgressReport/Settings/CodingRobotics/Levels', [
+                return Inertia::render('Admin/ProgressReport/Settings/CodingRobotics/Levels', [
                     'levels'    =>  $levels
                 ]);
             }
@@ -542,7 +542,7 @@ class ProgressReportController extends Controller
         /* Coding Robotics Lessons*/
             public function codingRoboticsLessons(Request $request){
                 $lessons     =   DB::table('pr_coding_lessons')->where('level_id', $request->level_id)->get();
-                return Inertia::render('ProgressReport/Settings/CodingRobotics/Lessons', [
+                return Inertia::render('Admin/ProgressReport/Settings/CodingRobotics/Lessons', [
                     'level_id'      =>      $request->level_id,
                     'lessons'       =>      $lessons
                 ]);
@@ -585,7 +585,7 @@ class ProgressReportController extends Controller
         /* Coding Robotics Topics*/
             public function codingRoboticsTopics(Request $request){
                 $topics     =   DB::table('pr_coding_topics')->where('lesson_id', $request->lesson_id)->get();
-                return Inertia::render('ProgressReport/Settings/CodingRobotics/Topics', [
+                return Inertia::render('Admin/ProgressReport/Settings/CodingRobotics/Topics', [
                     'level_id'  =>  $request->level_id,
                     'lesson_id' =>  $request->lesson_id,
                     'topics'   =>  $topics
@@ -629,7 +629,7 @@ class ProgressReportController extends Controller
         /* Coding Robotics Objectives*/
             public function codingRoboticsObjectives(Request $request){
                 $objectives     =   DB::table('pr_coding_objectives')->where('topic_id', $request->topic_id)->get();
-                return Inertia::render('ProgressReport/Settings/CodingRobotics/Objectives', [
+                return Inertia::render('Admin/ProgressReport/Settings/CodingRobotics/Objectives', [
                     'level_id'      =>  $request->level_id,
                     'lesson_id'     =>  $request->lesson_id,
                     'topic_id'      =>  $request->topic_id,
@@ -674,7 +674,7 @@ class ProgressReportController extends Controller
         /* Coding Robotics Activities Procedures*/
             public function codingRoboticsActivitiesProcedures(Request $request){
                 $activities_procedures     =   DB::table('pr_coding_activities_procedures')->where('objective_id', $request->objective_id)->get();
-                return Inertia::render('ProgressReport/Settings/CodingRobotics/ActivitiesProcedures', [
+                return Inertia::render('Admin/ProgressReport/Settings/CodingRobotics/ActivitiesProcedures', [
                     'level_id'              =>  $request->level_id,
                     'lesson_id'             =>  $request->lesson_id,
                     'topic_id'              =>  $request->topic_id,
@@ -722,7 +722,7 @@ class ProgressReportController extends Controller
         /* Digital Art Levels*/
             public function digitalArtLevels(){
                 $levels     =   DB::table('pr_art_levels')->get();
-                return Inertia::render('ProgressReport/Settings/DigitalArt/Levels', [
+                return Inertia::render('Admin/ProgressReport/Settings/DigitalArt/Levels', [
                     'levels'    =>  $levels
                 ]);
             }
@@ -763,7 +763,7 @@ class ProgressReportController extends Controller
         /* Digital Art Themes*/
             public function digitalArtThemes(Request $request){
                 $themes     =   DB::table('pr_art_themes')->where('level_id', $request->level_id)->get();
-                return Inertia::render('ProgressReport/Settings/DigitalArt/Themes', [
+                return Inertia::render('Admin/ProgressReport/Settings/DigitalArt/Themes', [
                     'level_id'      =>      $request->level_id,
                     'themes'       =>      $themes
                 ]);
@@ -806,7 +806,7 @@ class ProgressReportController extends Controller
         /* Digital Art Lessons*/
             public function digitalArtLessons(Request $request){
                 $lessons     =   DB::table('pr_art_lessons')->where('theme_id', $request->theme_id)->get();
-                return Inertia::render('ProgressReport/Settings/DigitalArt/Lessons', [
+                return Inertia::render('Admin/ProgressReport/Settings/DigitalArt/Lessons', [
                     'level_id'      =>      $request->level_id,
                     'theme_id'      =>      $request->theme_id,
                     'lessons'       =>      $lessons
@@ -850,7 +850,7 @@ class ProgressReportController extends Controller
         /* Digital Art Activities*/
             public function digitalArtActivities(Request $request){
                 $activities     =   DB::table('pr_art_activities')->where('lesson_id', $request->lesson_id)->get();
-                return Inertia::render('ProgressReport/Settings/DigitalArt/Activities', [
+                return Inertia::render('Admin/ProgressReport/Settings/DigitalArt/Activities', [
                     'level_id'      =>      $request->level_id,
                     'theme_id'      =>      $request->theme_id,
                     'lesson_id'     =>      $request->lesson_id,
@@ -895,7 +895,7 @@ class ProgressReportController extends Controller
         /* Digital Art Outcomes*/
             public function digitalArtOutcomes(Request $request){
                 $outcomes     =   DB::table('pr_art_outcomes')->where('activity_id', $request->activity_id)->get();
-                return Inertia::render('ProgressReport/Settings/DigitalArt/Outcomes', [
+                return Inertia::render('Admin/ProgressReport/Settings/DigitalArt/Outcomes', [
                     'level_id'      =>      $request->level_id,
                     'theme_id'      =>      $request->theme_id,
                     'lesson_id'     =>      $request->lesson_id,
@@ -941,7 +941,7 @@ class ProgressReportController extends Controller
         /* Digital Art Objectives*/
             public function digitalArtObjectives(Request $request){
                 $objectives     =   DB::table('pr_art_objectives')->where('outcome_id', $request->outcome_id)->get();
-                return Inertia::render('ProgressReport/Settings/DigitalArt/Objectives', [
+                return Inertia::render('Admin/ProgressReport/Settings/DigitalArt/Objectives', [
                     'level_id'      =>      $request->level_id,
                     'theme_id'      =>      $request->theme_id,
                     'lesson_id'     =>      $request->lesson_id,
