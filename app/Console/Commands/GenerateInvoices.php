@@ -63,6 +63,9 @@ class GenerateInvoices extends Command
                                             'promotions.value as value')
                                         ->get());
 
+            event(new DatabaseTransactionEvent($students_promos));
+                                
+
             $added_material_collection  =   $raw_collection->map(function ($item) use ($students_promos) {
                 $promos = $students_promos->filter(function ($promo) use ($item) {
                     return $promo->duration_remaining >= 0 && $promo->student_fee_id === $item->student_fee_id;
@@ -82,8 +85,9 @@ class GenerateInvoices extends Command
                     "promos" => $promosArray,
                 ]);
             });
+            event(new DatabaseTransactionEvent($added_material_collection));
 
-            DB::table('student_fee_promotions')->delete();
+            // DB::table('student_fee_promotions')->delete();
 
             $finalized = $added_material_collection->groupBy('student_id')->map(function ($raw_data) {
                 return $raw_data->groupBy('fee_id')->map(function ($fee_info) {
