@@ -64,7 +64,6 @@ class GenerateInvoices extends Command
                                             'promotions.value as value')
                                         ->get());
 
-            Log::info('Logging an array:', $students_promos->toArray());
                                 
 
             $added_material_collection  =   $raw_collection->map(function ($item) use ($students_promos) {
@@ -86,6 +85,7 @@ class GenerateInvoices extends Command
                     "promos" => $promosArray,
                 ]);
             });
+            Log::info('Logging an array:', $added_material_collection->toArray());
 
             // DB::table('student_fee_promotions')->delete();
 
