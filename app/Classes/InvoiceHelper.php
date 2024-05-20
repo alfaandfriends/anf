@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Rfc4122\FieldsInterface;
@@ -47,6 +48,7 @@ class InvoiceHelper {
 
             return $item['programme_fee'] + $registration_fee + $material_fee;
         });
+        Log::info('totalFee:', $totalFee->toArray());
         
         /* Calculate total promo */
         $totalPromo =   0;
@@ -62,7 +64,9 @@ class InvoiceHelper {
                 }
             }
         }
+        Log::info('totalPromo:', $totalPromo->toArray());
         $totalFee = $totalFee - $totalPromo;
+        Log::info('totalFee:', $totalFee->toArray());
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];
