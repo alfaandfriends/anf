@@ -63,7 +63,8 @@ class GenerateInvoices extends Command
                                             'promotions.value as value')
                                         ->get());
 
-            event(new DatabaseTransactionEvent($students_promos));
+            $log_data =   json_encode($students_promos);
+            event(new DatabaseTransactionEvent($log_data));
                                 
 
             $added_material_collection  =   $raw_collection->map(function ($item) use ($students_promos) {
@@ -85,6 +86,7 @@ class GenerateInvoices extends Command
                     "promos" => $promosArray,
                 ]);
             });
+            $log_data =   json_encode($students_promos);
             event(new DatabaseTransactionEvent($added_material_collection));
 
             // DB::table('student_fee_promotions')->delete();

@@ -28,10 +28,9 @@ class DatabaseTransactionListener
      */
     public function handle($event)
     {
+        // Log information before the transaction starts
         if (auth()->check()) {
-            $userId = auth()->user()->ID;
-            $eventData = is_array($event->data) ? json_encode($event->data) : $event->data;
-            Log::info("$userId: $eventData");
+            Log::info(auth()->user()->ID.': '.$event->data);
         }
     }
 }
