@@ -48,7 +48,7 @@ class InvoiceHelper {
 
             return $item['programme_fee'] + $registration_fee + $material_fee;
         });
-        Log::info('totalFee:', $totalFee->toArray());
+        Log::info('totalFee:', $totalFee);
         
         /* Calculate total promo */
         $totalPromo =   0;
@@ -64,9 +64,9 @@ class InvoiceHelper {
                 }
             }
         }
-        Log::info('totalPromo:', $totalPromo->toArray());
+        Log::info('totalPromo:', $totalPromo);
         $totalFee = $totalFee - $totalPromo;
-        Log::info('totalFee:', $totalFee->toArray());
+        Log::info('totalFee:', $totalFee);
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];
