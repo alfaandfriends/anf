@@ -64,7 +64,7 @@ class InvoiceHelper {
                 }
             }
         }
-        Log::info('totalPromo:', $invoice_items->toArray());
+        // Log::info('totalPromo:', $invoice_items->toArray());
         $totalFee = $totalFee - $totalPromo;
         Log::info('totalFee:', [$totalFee]);
         
