@@ -12,6 +12,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GenerateInvoices extends Command
 {
@@ -63,7 +64,7 @@ class GenerateInvoices extends Command
                                             'promotions.value as value')
                                         ->get());
 
-            event(new DatabaseTransactionEvent('Test'));
+            Log::info('Logging an array:', []);
 
 
             $log_data =   json_encode($students_promos);
