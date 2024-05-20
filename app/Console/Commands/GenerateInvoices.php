@@ -63,6 +63,9 @@ class GenerateInvoices extends Command
                                             'promotions.value as value')
                                         ->get());
 
+            event(new DatabaseTransactionEvent('Test'));
+
+
             $log_data =   json_encode($students_promos);
             event(new DatabaseTransactionEvent($log_data));
                                 
