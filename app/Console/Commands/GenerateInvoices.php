@@ -64,7 +64,7 @@ class GenerateInvoices extends Command
                                             'promotions.value as value')
                                         ->get());
 
-            Log::info('Logging an array:', $students_promos);
+            Log::info('Logging an array:', $students_promos->toArray());
                                 
 
             $added_material_collection  =   $raw_collection->map(function ($item) use ($students_promos) {
