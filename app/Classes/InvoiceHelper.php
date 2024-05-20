@@ -52,6 +52,7 @@ class InvoiceHelper {
         /* Calculate total promo */
         $totalPromo =   0;
         foreach($invoice_items as $fee_key => $fee){
+            Log::info('', [$invoice_items]);
             Log::info('', [$fee]);
             if (isset($fee['promos'])) { // Check if 'promos' key exists
                 foreach($fee['promos'] as $promo_key => $promo){
