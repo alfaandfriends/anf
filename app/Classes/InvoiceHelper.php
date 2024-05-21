@@ -62,7 +62,7 @@ class InvoiceHelper {
                     }
                 }
             }
-            Log::info('', $fee);
+            Log::info('', $fee['promos']);
             if (isset($fee->promos)) { // Check if 'promos' key exists
                 foreach($fee->promos as $promo_key => $promo){
                     if($promo->type_id === 1){
