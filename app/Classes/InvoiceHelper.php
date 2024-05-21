@@ -57,10 +57,11 @@ class InvoiceHelper {
                     Log::info('', [$promo['type_id']]);
                     Log::info('', [$fee['programme_fee']]);
                     Log::info('', [$promo['value']]);
-                    if($promo['type_id'] === 1){
+                    if($promo['type_id'] == 1){
                         $totalPromo += ($fee['programme_fee'] * $promo['value'] / 100);
+                        Log::info('', [$totalPromo['value']]);
                     }
-                    if($promo['type_id'] === 2){
+                    if($promo['type_id'] == 2){
                         $totalPromo += $promo['value'];
                     }
                 }
