@@ -56,12 +56,12 @@ class InvoiceHelper {
                 foreach($fee['promos'] as $promo_key => $promo){
                     if($promo['type_id'] == 1){
                         $promoAmount    =   $fee['programme_fee'] * $promo['value'] / 100;
-                        Log::info('', [$promoAmount]);
                         $totalPromo += $promoAmount;
+                        Log::info('', [$totalPromo]);
                     }
                     if($promo['type_id'] == 2){
-                        Log::info('', [$promo['value']]);
                         $totalPromo += $promo['value'];
+                        Log::info('', [$totalPromo]);
                     }
                 }
             }
