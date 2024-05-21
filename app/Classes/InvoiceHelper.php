@@ -65,7 +65,6 @@ class InvoiceHelper {
             }
         }
         $totalFee = $totalFee - $totalPromo;
-        Log::info('', [$totalFee]);
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];
