@@ -85,9 +85,8 @@ class GenerateInvoices extends Command
                     "promos" => $promosArray,
                 ]);
             });
-            // Log::info('totalFee:', [$added_material_collection]);
 
-            // DB::table('student_fee_promotions')->delete();
+            DB::table('student_fee_promotions')->delete();
 
             $finalized = $added_material_collection->groupBy('student_id')->map(function ($raw_data) {
                 return $raw_data->groupBy('fee_id')->map(function ($fee_info) {
