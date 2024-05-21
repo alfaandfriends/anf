@@ -57,16 +57,15 @@ class InvoiceHelper {
                     if($promo['type_id'] == 1){
                         $promoAmount    =   $fee['programme_fee'] * $promo['value'] / 100;
                         $totalPromo += $promoAmount;
-                        Log::info('', [$totalPromo]);
                     }
                     if($promo['type_id'] == 2){
                         $totalPromo += $promo['value'];
-                        Log::info('', [$totalPromo]);
                     }
                 }
             }
         }
         $totalFee = $totalFee - $totalPromo;
+        Log::info('', [$totalFee]);
         
         $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];
