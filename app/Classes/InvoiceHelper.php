@@ -49,6 +49,7 @@ class InvoiceHelper {
             return $item['programme_fee'] + $registration_fee + $material_fee;
         });
         
+        Log::info('', [$invoice_items]);
         /* Calculate total promo */
         $totalPromo =   0;
         foreach($invoice_items as $fee_key => $fee){
