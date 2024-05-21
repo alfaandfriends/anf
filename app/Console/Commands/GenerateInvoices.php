@@ -12,6 +12,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GenerateInvoices extends Command
 {
@@ -63,6 +64,8 @@ class GenerateInvoices extends Command
                                             'promotions.value as value')
                                         ->get());
 
+                                
+
             $added_material_collection  =   $raw_collection->map(function ($item) use ($students_promos) {
                 $promos = $students_promos->filter(function ($promo) use ($item) {
                     return $promo->duration_remaining >= 0 && $promo->student_fee_id === $item->student_fee_id;
@@ -82,8 +85,9 @@ class GenerateInvoices extends Command
                     "promos" => $promosArray,
                 ]);
             });
+            // Log::info('totalFee:', [$added_material_collection]);
 
-            DB::table('student_fee_promotions')->delete();
+            // DB::table('student_fee_promotions')->delete();
 
             $finalized = $added_material_collection->groupBy('student_id')->map(function ($raw_data) {
                 return $raw_data->groupBy('fee_id')->map(function ($fee_info) {
