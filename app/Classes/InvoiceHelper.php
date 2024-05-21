@@ -54,14 +54,13 @@ class InvoiceHelper {
         foreach($invoice_items as $fee_key => $fee){
             if (isset($fee['promos'])) { // Check if 'promos' key exists
                 foreach($fee['promos'] as $promo_key => $promo){
-                    Log::info('', [$promo['type_id']]);
-                    Log::info('', [$fee['programme_fee']]);
-                    Log::info('', [$promo['value']]);
                     if($promo['type_id'] == 1){
-                        $totalPromo += ($fee['programme_fee'] * $promo['value'] / 100);
-                        Log::info('', [$totalPromo['value']]);
+                        $promoAmount    =   $fee['programme_fee'] * $promo['value'] / 100;
+                        Log::info('', [$promoAmount]);
+                        $totalPromo += $promoAmount;
                     }
                     if($promo['type_id'] == 2){
+                        Log::info('', [$promo['value']]);
                         $totalPromo += $promo['value'];
                     }
                 }
