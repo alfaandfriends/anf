@@ -18,7 +18,7 @@
         <!-- success message -->
         <Transition name="toast-animate">
             <template v-if="toastData.type == 'success' && visible">
-                <div class="top-10 fixed right-10 z-40 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-green-600 cursor-pointer" @click="closeToast" :class="class">
+                <div class="top-10 z-50 fixed right-10 flex items-center justify-between max-w-sm p-4 bg-white border rounded-md shadow-sm shadow-green-600 cursor-pointer" @click="closeToast" :class="class">
                     <div class="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"

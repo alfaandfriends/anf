@@ -18,6 +18,7 @@ import {useLoading} from 'vue-loading-overlay'
 import {LoadingPlugin} from 'vue-loading-overlay';
 import axios from 'axios';
 
+
 /* Intercept axios request */
 axios.interceptors.response.use(
     response => response,

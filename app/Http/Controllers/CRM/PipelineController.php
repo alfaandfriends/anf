@@ -148,11 +148,11 @@ class PipelineController extends Controller
                 
             DB::commit();
         
-            return redirect()->route('crm.sales.pipelines');
+            return redirect()->route('crm.sales.pipelines')->with(['type' => 'success', 'message' => 'Data has been added']);
         } catch (Exception $e) {
             Log::error('Insert pipeline failed: ' . $e->getMessage());
             DB::rollBack();
-            return redirect()->route('crm.sales.pipelines');
+            return redirect()->route('crm.sales.pipelines')->with(['type' => 'error', 'message' => 'An error has occured']);
         }
         
     }
@@ -306,14 +306,12 @@ class PipelineController extends Controller
                 
             DB::commit();
         
-            return redirect()->route('crm.sales.pipelines');
+            return redirect()->route('crm.sales.pipelines')->with(['type' => 'success', 'message' => 'Data has been updated']);
         } catch (Exception $e) {
             Log::error('Insert pipeline failed: ' . $e->getMessage());
             DB::rollBack();
-            return redirect()->route('crm.sales.pipelines');
+            return redirect()->route('crm.sales.pipelines')->with(['type' => 'error', 'message' => 'An error has occured']);
         }
-        
-        dd($request->all());
     }
 
     public function destroy($id){

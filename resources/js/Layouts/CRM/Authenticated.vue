@@ -213,7 +213,9 @@
     
     <!-- Content -->
     <div class="w-full h-screen lg:ps-64 flex flex-col justify-between">
+      
         <div class="p-4 sm:py-6 sm:px-8 space-y-4 sm:space-y-6">
+            <Toast :toastData="$page.props.flash"></Toast>
             <slot></slot>
         </div>
         <footer class="bg-white border-t shadow w-full z-50">
@@ -232,6 +234,7 @@ import BreezeApplicationLogo from '../../Components/ApplicationLogo.vue'
 import { Link } from '@inertiajs/inertia-vue3'
 import BreezeNavLink from '../../Components/NavLink.vue'
 import { HSStaticMethods } from "preline";
+import Toast from '@/Components/Toast.vue'
 
 HSStaticMethods.autoInit();
 
@@ -250,7 +253,7 @@ observer.observe(document.body, {
 
 export default {
 	components: {
-		BreezeApplicationLogo, Link, BreezeNavLink
-	}
+		BreezeApplicationLogo, Link, BreezeNavLink, Toast
+	},
 }
 </script>

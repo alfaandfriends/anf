@@ -26,8 +26,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
 							</button>
 						</div>
 						<div class="overflow-hidden">
-							<table class="min-w-full divide-y divide-gray-200">
-								<thead class="bg-gray-200">
+							<table class="min-w-full divide-y divide-gray-100">
+								<thead class="bg-gray-100">
 									<tr>
 										<th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">#</th>
 										<th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">School Name</th>
@@ -39,7 +39,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
 										<th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Action</th>
 									</tr>
 								</thead>
-								<tbody class="divide-y divide-gray-200">
+								<tbody class="divide-y divide-gray-100">
 									<tr class="hover:bg-gray-50" v-if="$page.props.pipelines.data.length" v-for="pipeline, pipeline_index in $page.props.pipelines.data">
 										<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800" width="1%">{{ pipeline_index + 1 }}</td>
 										<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800" width="20%">{{ pipeline.school_name }}</td>
