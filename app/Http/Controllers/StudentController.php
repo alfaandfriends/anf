@@ -76,7 +76,7 @@ class StudentController extends Controller
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
         ]);
 
-        return Inertia::render('CentreManagement/Students/Index', [
+        return Inertia::render('Admin/CentreManagement/Students/Index', [
             'filter'        => request()->all('search', 'centre_id'),
             'students'       => $query->paginate(10),
         ]);
@@ -112,7 +112,7 @@ class StudentController extends Controller
         
         $query->where('students.status', 0);
 
-        return Inertia::render('CentreManagement/Students/Inactive', [
+        return Inertia::render('Admin/CentreManagement/Students/Inactive', [
             'filter'        => request()->all('search', 'centre_id'),
             'students'       => $query->paginate(10),
         ]);
@@ -155,7 +155,7 @@ class StudentController extends Controller
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
         ]);
 
-        return Inertia::render('CentreManagement/Students/Unassigned', [
+        return Inertia::render('Admin/CentreManagement/Students/Unassigned', [
             'filter'        => request()->all('search', 'centre_id'),
             'students'       => $query->paginate(10),
         ]);
@@ -175,7 +175,7 @@ class StudentController extends Controller
                                     ->get();
 
 
-        return Inertia::render('CentreManagement/Students/Create', [
+        return Inertia::render('Admin/CentreManagement/Students/Create', [
             'programme_list'    => $programme_list,
             'method_list'       => $method_list,
             'promos'            => $promos,
@@ -484,7 +484,7 @@ class StudentController extends Controller
         $method_list        =   DB::table('class_methods')->get();
         $fee_status        =   DB::table('student_fee_status')->get();
         
-        return Inertia::render('CentreManagement/Students/Edit', [
+        return Inertia::render('Admin/CentreManagement/Students/Edit', [
             'student_info'          =>  $student_info,
             'student_academics'     =>  $student_academics,
             'gender_list'           =>  $gender_list,

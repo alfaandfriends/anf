@@ -1,1 +1,0 @@
-import{o as t,s as o}from"./app-4d4cbe7d.js";import{B as r}from"./Authenticated-e099aa55.js";import"./ApplicationLogo-7e99a00b.js";import"./NavLink-9d0a350c.js";import"./_plugin-vue_export-helper-c27b6911.js";const n={__name:"Dashboard",setup(e){return(a,p)=>(t(),o(r))}};export{n as default};

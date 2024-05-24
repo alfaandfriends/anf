@@ -279,4 +279,10 @@ class UserController extends Controller
 
         return $users;
     }
+
+    public function getUsernameEmail(Request $request){
+        $users  =   DB::table('wpvt_users')->where('display_name', 'LIKE', '%'.$request->keyword.'%')->orWhere('user_email', 'LIKE', '%'.$request->keyword.'%')->select('ID as value', 'display_name', 'user_email')->limit(10)->get();
+
+        return $users;
+    }
 }

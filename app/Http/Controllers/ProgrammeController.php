@@ -28,7 +28,7 @@ class ProgrammeController extends Controller
 
         $programmes    =   $query->paginate(10);
         
-        return Inertia::render('CentreManagement/Programmes/Index', [
+        return Inertia::render('Admin/CentreManagement/Programmes/Index', [
             'filter'            => request()->all('search'),
             'programme_list'    => $programmes,
         ]);
@@ -39,7 +39,7 @@ class ProgrammeController extends Controller
         $class_types        =   DB::table('class_types')->get()->keyBy('id');
         $class_types_detail =   DB::table('class_types_detail')->get();
 
-        return Inertia::render('CentreManagement/Programmes/Create',[
+        return Inertia::render('Admin/CentreManagement/Programmes/Create',[
             'class_types'           =>  $class_types,
             'class_types_detail'    =>  $class_types_detail,
             'countries'             =>  $countries,
@@ -131,7 +131,7 @@ class ProgrammeController extends Controller
             $programme_level->product_sub_variation['option_name']  =   $programme_level->product_sub_variation_name;
         }
                                     
-        return Inertia::render('CentreManagement/Programmes/Edit', [
+        return Inertia::render('Admin/CentreManagement/Programmes/Edit', [
             'programme_data'        => $programme_data,
             'programme_info'        => $programme_info,
             'class_types'           => $class_types,

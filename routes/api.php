@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('find-users', [UserController::class, 'getUsers'])->name('users.find');
+Route::get('find-username-email', [UserController::class, 'getUsernameEmail'])->name('users.find_username_email');
 Route::get('find-email/{email}', [UserController::class, 'emailExist']);
 Route::get('find-username/{username}', [UserController::class, 'usernameExist']);
 Route::get('find-products', [ProductHelper::class, 'getProducts'])->name('products.find_products');

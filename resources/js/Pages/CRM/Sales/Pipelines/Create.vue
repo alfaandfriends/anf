@@ -20,30 +20,54 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
 <template>
     <BreezeAuthenticatedLayout>
         <div class="flex flex-col">
-            <h1 class="block text-2xl font-bold text-indigo-600 sm:text-2xl dark:text-white mb-8 underline">Add Pipeline</h1>
+            <h1 class="block text-2xl font-bold text-indigo-600 sm:text-2xl dark:text-white underline mb-8">Add Pipeline</h1>
+            <div class="bg-red-50 border border-red-200 text-sm text-red-800 rounded-lg p-4 mb-4" role="alert" v-if="$page.props.errors && Object.keys($page.props.errors).length > 0">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <svg class="flex-shrink-0 size-4 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="m15 9-6 6"></path>
+                      <path d="m9 9 6 6"></path>
+                    </svg>
+                  </div>
+                  <div class="ms-4">
+                    <h3 class="text-sm font-semibold">
+                      Error
+                    </h3>
+                    <div class="mt-2 text-sm text-red-700">
+                      <ul class="list-disc space-y-1 ps-5">
+                        <li v-for="(error, index) in $page.props.errors" :key="index">
+                            {{ error }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
             <!-- Basic Information -->
             <div class="grid grid-cols-1 mb-2">
                 <h2 class="text-base font-semibold leading-7 text-indigo-500 mb-3">Basic Information</h2>
                 <!-- <hr class="mb-1 border-indigo-400 border-dashed"> -->
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-2 mb-6">
-                <div class="mb-2 col-span-2 sm:col-span-1">
+                <div class="mb-2 col-span-2 sm:col-span-1" v-if="$page.props.can.assign_pipeline_user">
                     <label for="student_id" class="block text-sm font-semibold text-gray-700"> Assign To </label>
                     <div class="mt-1 flex rounded-md shadow-sm">
                         <Multiselect 
                         v-model="form.assign_to"
-                        valueProp="ID"
+                        valueProp="value"
+                        label="display_name"
                         placeholder="Search assignee's name"
-                        :options="$page.props.allowed_centres"
-                        :searchable="true"
                         noOptionsText="Nothing found"
                         noResultsText="Nothing found"
                         :clearOnSelect="true"
-                        :canClear="false"
-                        :canDeselect="false"
-                        :internal-search="false"
-                        trackBy="label"
-                        label="label"
+                        :filter-results="false"
+                        :min-chars="1"
+                        :resolve-on-load="false"
+                        :loading="searching_username_email"
+                        :searchable="true"
+                        v-debounce:1s="findUsernameEmail"
+                        :options="user_list.options"
                         :classes="{
                             container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-[40px]',
                             containerDisabled: 'cursor-default bg-gray-100',
@@ -71,7 +95,11 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                             spacer: 'h-9 py-px box-content',
                         }"
-                    />
+                        > 
+                        <template #option="{ option }">
+                            <span><strong>{{ option.display_name }}</strong><br><small>{{ option.user_email ? option.user_email : 'Email not available' }}</small></span>
+                        </template>
+                    </Multiselect>
                     </div>
                 </div>
                 <div class="mb-2 col-span-2 sm:col-span-1">
@@ -470,7 +498,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                 <!-- <hr class="mb-3 border-indigo-400 border-dashed"> -->
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-2 mb-6">
-                <div class="mb-4">
+                <div class="mb-4" v-if="!form.quotation">
                     <label for="principal_name" class="block text-sm font-semibold text-gray-700"> Quotation </label>
                     <form class="mt-1 max-w-sm">
                         <label for="file-input" class="sr-only">Choose file</label>
@@ -478,10 +506,31 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                             file:bg-gray-50 file:border-0
                             file:me-4
                             file:py-3 file:px-4
-                            " @change="handleFileUpload">
-                        </form>
+                            " @change="handleQuotationFileUpload">
+                    </form>
+                </div> 
+                <div v-else>
+                    <label for="principal_name" class="mb-1 block text-sm font-semibold text-gray-700"> Quotation </label>
+                    <div class="mb-2 flex justify-between items-center shadow-border shadow rounded-lg shadow-gray-300 px-6 py-3">
+                        <div class="flex items-center">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white">{{ form.quotation.name }}</p>
+                            </div>
+                        </div>
+                        <div class="items-center">
+                            <a class="text-gray-500 hover:text-gray-800 cursor-pointer" @click="form.quotation = ''">
+                                <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                    <line x1="10" x2="10" y1="11" y2="17"></line>
+                                    <line x1="14" x2="14" y1="11" y2="17"></line>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-4">
+                <div class="mb-4" v-if="!form.contract">
                     <label for="principal_name" class="block text-sm font-semibold text-gray-700"> Contract </label>
                     <form class="mt-1 max-w-sm">
                         <label for="file-input" class="sr-only">Choose file</label>
@@ -489,16 +538,37 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                             file:bg-gray-50 file:border-0
                             file:me-4
                             file:py-3 file:px-4
-                            " @change="handleFileUpload">
+                            " @change="handleContractFileUpload">
                         </form>
+                </div>
+                <div v-else>
+                    <label for="principal_name" class="mb-1 block text-sm font-semibold text-gray-700"> Contract </label>
+                    <div class="mb-2 flex justify-between items-center shadow-border shadow rounded-lg shadow-gray-300 px-6 py-3">
+                        <div class="flex items-center">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800 dark:text-white">{{ form.contract.name }}</p>
+                            </div>
+                        </div>
+                        <div class="items-center">
+                            <a class="text-gray-500 hover:text-gray-800 cursor-pointer" @click="form.contract = ''">
+                                <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                    <line x1="10" x2="10" y1="11" y2="17"></line>
+                                    <line x1="14" x2="14" y1="11" y2="17"></line>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr class="mb-3"></hr>
             <div class="flex justify-end space-x-2">
-                <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:hover:bg-white/20 dark:text-white dark:hover:text-white">
+                <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:hover:bg-white/20 dark:text-white dark:hover:text-white" @click="$inertia.get(route('crm.sales.pipelines'))">
                     Cancel
                 </button>
-                <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" @click="submit">
+                <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50 disabled:pointer-events-none" @click="submit">
                     Save
                 </button>
             </div>
@@ -510,6 +580,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
 <script>
 import Datepicker from '@vuepic/vue-datepicker';
 import Multiselect from '@vueform/multiselect'
+import { debounce } from 'vue-debounce'
 
 export default {
     components: {
@@ -518,8 +589,13 @@ export default {
     data(){
         return {
             selected_program: '',
+            searching_username_email: false,
+            user_list: {
+                value: [],
+                options: []
+            },
             form: {
-                assign_to: '',
+                assign_to: this.$page.props.can.assign_pipeline_user ? '' : this.$page.props.auth.user.ID,
                 date_start: '',
                 lead_source: '',
                 school_name: '',
@@ -535,14 +611,8 @@ export default {
                 progress_percentage: '',
                 case_status: [],
                 signed_up_programs: [],
-                quotation: {
-                    name: '',
-                    file: ''
-                },
-                contract: {
-                    name: '',
-                    file: ''
-                }
+                quotation: '',
+                contract: ''
             }
         }
     },
@@ -578,29 +648,41 @@ export default {
             this.form.signed_up_programs.sort((a, b) => a.id - b.id);
 
         },
-        handleFileUpload(event) {
+        handleQuotationFileUpload(event) {
             const file = event.target.files[0];
             if (file && file.type === 'application/pdf') {
-                console.log('PDF file uploaded:', file);
+                this.form.quotation = file
             } else {
                 alert('Please select a PDF file.');
                 event.target.value = '';
+            }
+        },
+        handleContractFileUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                this.form.contract = file
+            } else {
+                alert('Please select a PDF file.');
+                event.target.value = '';
+            }
+        },
+        findUsernameEmail(query){
+            if(query){
+                this.searching_username_email = true
+                axios.get(route('users.find_username_email'), {
+                    params: {
+                        'keyword': query
+                    }
+                })
+                .then((res) => {
+                    this.user_list.options = res.data
+                    this.searching_username_email = false
+                });
             }
         },
         submit(){
             this.$inertia.post(route('crm.sales.pipelines.store'), this.form)
         }
     },
-    // mounted(){
-    //     this.$page.props.case_status.forEach((case_status)=>{
-    //         this.case_status.push({
-    //             'id': case_status.id,
-    //             'name': case_status.name,
-    //             'checked': false,
-    //             'id': case_status.id,
-    //         })
-    //         console.log(case_status)
-    //     })
-    // }
 }
 </script>

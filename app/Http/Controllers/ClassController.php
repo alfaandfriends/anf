@@ -64,7 +64,7 @@ class ClassController extends Controller
                             ->orderBy('programme_id')->orderBy('level')->orderBy('class_type_id')->orderBy('class_day_id')->orderBy('start_time')
                             ->paginate(10);
 
-        return Inertia::render('CentreManagement/Classes/Index', [
+        return Inertia::render('Admin/CentreManagement/Classes/Index', [
             'filter'            => request()->all('search', 'centre_id', 'day'),
             'days_of_the_week'  => $days_of_the_week,
             'classes'           => $results,
@@ -77,7 +77,7 @@ class ClassController extends Controller
         $day_list           =   DB::table('class_days')->get();
         $method_list        =   DB::table('class_methods')->get();
 
-        return Inertia::render('CentreManagement/Classes/Create', [
+        return Inertia::render('Admin/CentreManagement/Classes/Create', [
             'programme_list'    => $programme_list,
             'day_list'          => $day_list,
             'method_list'       => $method_list,
@@ -147,7 +147,7 @@ class ClassController extends Controller
         $type_list          =   DB::table('class_types')->get();
         $method_list        =   DB::table('class_methods')->get();
         
-        return Inertia::render('CentreManagement/Classes/Edit', [
+        return Inertia::render('Admin/CentreManagement/Classes/Edit', [
             'class_info'        =>  $class_info,
             'class_types'       =>  $class_types,
             'class_levels'      =>  $class_levels,
