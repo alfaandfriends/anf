@@ -166,12 +166,10 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <input type="text" name="transaction_id" id="transaction_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.transaction_id ? 'border-red-300' : 'border-gray-300'" v-model="form.payment.transaction_id" autocomplete="off">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="grid grid-cols-1">
                                         <div class="mb-4">
                                             <label for="student_name" class="block text-sm font-bold text-gray-700"> Proof of Payment </label>
                                             <div class="mt-1 items-center space-x-2 w-full">
-                                                <div class="mb-4" v-if="!form.payment.proof.url.length"> 
+                                                <div class="" v-if="!form.payment.proof.url.length"> 
                                                     <label class="block focus:ring-0 focus:border-gray-300">
                                                         <span class="sr-only">Browse File</span>
                                                         <input type="file" ref="file_input" class="focus:ring-0 border rounded-md block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 focus:outline-none" :class="$page.props.errors.proof ? 'border-red-300' : 'border-gray-300'" @change="uploadFile"/>
@@ -192,6 +190,12 @@ import BreezeButton from '@/Components/Button.vue';
                                                         </button>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="transaction_id" class="block text-sm font-bold text-gray-700"> Remark </label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <textarea type="text" name="transaction_id" id="transaction_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.transaction_id ? 'border-red-300' : 'border-gray-300'" v-model="form.payment.remark" autocomplete="off"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -243,7 +247,8 @@ export default {
                         url: this.$page.props.invoice_data.payment_proof ? this.$page.props.invoice_data.payment_proof : '',
                         file: '',
                         delete_previous: false
-                    }
+                    },
+                    remark: this.$page.props.invoice_data.remark,
                 }
             },
         }

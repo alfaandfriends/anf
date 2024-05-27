@@ -214,7 +214,7 @@ class InvoiceController extends Controller
                                 ->join('children', 'students.children_id', '=', 'children.id')
                                 ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                             'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.status as status',
-                                            'invoices.payment_date', 'invoices.payment_transaction_id', 'invoices.payment_proof')
+                                            'invoices.payment_date', 'invoices.payment_transaction_id', 'invoices.payment_proof', 'invoices.remark')
                                 ->where('invoices.id', $request->invoice_id)->first();
         // dd(!$invoice_data);
         if(!$invoice_data){
@@ -350,6 +350,7 @@ class InvoiceController extends Controller
             'payment_date'              =>  Carbon::parse($request->payment['date'])->format('Y-m-d'),
             'payment_transaction_id'    =>  $request->payment['transaction_id'],
             'payment_proof'             =>  $request->file('payment.proof') ? $filename : $invoice_record->payment_proof,
+            'remark'                    =>  $request->payment['remark'],
         ]);
                 
         $log_data =   'Updated invoice ID '.$request->invoice_id;

@@ -12,6 +12,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GenerateInvoices extends Command
 {
@@ -62,6 +63,8 @@ class GenerateInvoices extends Command
                                             'promotion_types.name as type_name', 
                                             'promotions.value as value')
                                         ->get());
+
+                                
 
             $added_material_collection  =   $raw_collection->map(function ($item) use ($students_promos) {
                 $promos = $students_promos->filter(function ($promo) use ($item) {

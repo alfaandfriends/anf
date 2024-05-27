@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Rfc4122\FieldsInterface;
@@ -53,10 +54,11 @@ class InvoiceHelper {
         foreach($invoice_items as $fee_key => $fee){
             if (isset($fee['promos'])) { // Check if 'promos' key exists
                 foreach($fee['promos'] as $promo_key => $promo){
-                    if($promo['type_id'] === 1){
-                        $totalPromo += ($fee['programme_fee'] * $promo['value'] / 100);
+                    if($promo['type_id'] == 1){
+                        $promoAmount    =   $fee['programme_fee'] * $promo['value'] / 100;
+                        $totalPromo += $promoAmount;
                     }
-                    if($promo['type_id'] === 2){
+                    if($promo['type_id'] == 2){
                         $totalPromo += $promo['value'];
                     }
                 }
