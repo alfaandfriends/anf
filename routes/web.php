@@ -18,7 +18,7 @@ Route::prefix('diagnostic-test')->group(function () {
     Route::get('/public', [DiagnosticTestController::class, 'dtMain'])->name('public.diagnostic_test');
     Route::post('/start', [DiagnosticTestController::class, 'dtStart'])->name('diagnostic_test.run');
     Route::get('/new-level', [DiagnosticTestController::class, 'dtNewLevel'])->name('diagnostic_test.new_level');
-    Route::get('/report/{id}', [DiagnosticTestController::class, 'report'])->name('diagnostic_test.report');
+    Route::get('/report/{id}', [DiagnosticTestController::class, 'report'])->name('diagnostic_test.report')->withoutMiddleware('auth');
     Route::post('/save-result', [DiagnosticTestController::class, 'saveDtResult'])->name('diagnostic_test.save_result');
     Route::delete('/delete-result/{id}', [DiagnosticTestController::class, 'deleteDtResult'])->name('diagnostic_test.delete_result');
 });
