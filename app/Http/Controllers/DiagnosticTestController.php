@@ -149,7 +149,7 @@ class DiagnosticTestController extends Controller
             ];
         }
 
-        // if(app()->environment('production')){
+        if(app()->environment('production')){
             /* Send Email to User*/
             $parentNotification = new ResultToParent($reports);
             Mail::to($request->parent_email)->send($parentNotification);
@@ -161,7 +161,7 @@ class DiagnosticTestController extends Controller
                 foreach ($users as $user) {
                     $info    =   [
                         'pic_name'              =>  $user->display_name,
-                        'student_name'          =>  $request->student_name, 
+                        'student_name'          =>  $request->student_name,
                         'student_age'           =>  $student_age,
                         'dt_title'              =>  $request->dt_title,
                         'test_date'             =>  Carbon::now()->format('d/m/Y'),
@@ -175,7 +175,7 @@ class DiagnosticTestController extends Controller
                     Mail::to($user->user_email)->send($picNotification);
                 }
             }
-        // }
+        }
 
         if($request->input('edu_teacher_email')){
             $edu_teacher      =   User::where('user_email', $emails)->first();

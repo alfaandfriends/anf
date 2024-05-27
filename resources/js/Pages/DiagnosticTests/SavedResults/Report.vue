@@ -7,7 +7,7 @@ import BreezeButton from '@/Components/Button.vue';
     <Head title="Diagnostic Test Report" />
     <div class="flex flex-col items-center p-3 space-y-4">
         <div class="mt-16" v-show="!finish_loading_report">
-            Please wait, Loading Report...
+            Please wait while report is loading...
         </div>
         <div class="border border-gray-700 w-[210mm]" v-show="finish_loading_report">
             <div class="flex flex-col justify-between space-y-2 bg-white p-3" id="report" ref="report">
