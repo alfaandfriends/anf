@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Route;
 
     Route::middleware('auth')->group(function () {
         Route::prefix('crm')->group(function () {
-            Route::get('/', [DashboardController::class, 'index'])->name('crm');
+            Route::get('/', function () {
+                return redirect()->route('crm.dashboard');
+            });
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('crm.dashboard');
 
             Route::prefix('sales')->group(function () {

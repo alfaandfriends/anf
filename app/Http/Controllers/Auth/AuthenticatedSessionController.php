@@ -65,6 +65,7 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/login');
     }
+
     /**
      * Display the login view.
      *
@@ -115,6 +116,40 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/admin/login');
     }
+    
+    /**
+     * Display the login view.
+     *
+     * @return \Inertia\Response
+     */
+    public function createCRM()
+    {
+        return Inertia::render('Auth/CRM/Login', [
+            'canResetPassword' => Route::has('password.request'),
+            'status' => session('status'),
+        ]);
+    }
+
+    /**
+     * Handle an incoming authentication request.
+     *
+     * @param  \App\Http\Requests\Auth\LoginRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeCRM(LoginRequest $request)
+    {
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+        // if(auth()->user()->is_admin){
+        return redirect('/crm/dashboard');
+        // return redirect()->intended(RouteServiceProvider::HOME);
+        // }
+        // else{
+        //     return redirect('diagnostic_test');
+        // }
+    }
 
     /**
      * Destroy an authenticated session.
@@ -122,6 +157,17 @@ class AuthenticatedSessionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
+    public function destroyCRM(Request $request)
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/crm/login');
+    }
+
     public function impersonate($user_name){
         $user   =   User::where('user_login', $user_name)->first();
         if($user){

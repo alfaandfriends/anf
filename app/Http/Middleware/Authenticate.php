@@ -18,6 +18,9 @@ class Authenticate extends Middleware
             if($request->segment(1) == 'admin'){
                 return route('admin.login');
             }
+            if($request->segment(1) == 'crm'){
+                return route('crm.login');
+            }
             return route('login');
         }
     }

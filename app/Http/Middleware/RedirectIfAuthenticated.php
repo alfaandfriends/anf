@@ -26,6 +26,9 @@ class RedirectIfAuthenticated
                 if($request->segment(1) == 'admin'){
                     return redirect(RouteServiceProvider::ADMIN_HOME);
                 }
+                if($request->segment(1) == 'crm'){
+                    return redirect(RouteServiceProvider::CRM_HOME);
+                }
                 return redirect(RouteServiceProvider::HOME);
             }
         }

@@ -36,6 +36,14 @@ Route::middleware('guest')->group(function () {
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
 
+    
+    /****************************************************** CRM **********************************************************/
+    Route::get('crm/login', [AuthenticatedSessionController::class, 'createCRM'])->name('crm.login');
+
+    Route::post('crm/login', [AuthenticatedSessionController::class, 'storeCRM']);
+
+    Route::get('crm/forgot-password', [PasswordResetLinkController::class, 'createCRM'])->name('crm.password.request');
+
 
     /****************************************************** Shared **********************************************************/
 
@@ -50,6 +58,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    /****************************************************** CRM **********************************************************/
+    Route::post('/crm/logout', [AuthenticatedSessionController::class, 'destroyCRM'])->name('crm.logout');
+
     /****************************************************** Admin **********************************************************/
     Route::post('/admin/logout', [AuthenticatedSessionController::class, 'destroyAdmin'])->name('admin.logout');
 

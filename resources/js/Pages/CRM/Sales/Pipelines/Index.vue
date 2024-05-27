@@ -63,7 +63,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
 								</tbody>
 							</table>
 						</div>
-						<Pagination :page_data="$page.props.pipelines" :params="params" />
+						<Pagination :page_data="$page.props.pipelines" :params="params" class="bg-gray-100"/>
 					</div>
 				</div>
 			</div>

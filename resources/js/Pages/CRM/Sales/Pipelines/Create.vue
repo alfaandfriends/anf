@@ -87,10 +87,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                             options: 'flex flex-col p-0 m-0 list-none w-full',
                             optionsTop: 'flex-col-reverse',
                             option: 'flex items-center justify-start box-border text-left cursor-pointer text-slate-700 leading-snug py-2 px-3',
-                            optionPointed: 'text-slate-800 bg-blue-100',
-                            optionSelected: 'text-slate-800 bg-blue-100',
+                            optionPointed: 'text-slate-800 bg-indigo-50',
+                            optionSelected: 'text-slate-800 bg-indigo-50',
                             optionDisabled: 'text-gray-300 cursor-not-allowed',
-                            optionSelectedPointed: 'text-slate-800 bg-blue-100',
+                            optionSelectedPointed: 'text-slate-800 bg-indigo-50',
                             optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                             spacer: 'h-9 py-px box-content',
@@ -150,10 +150,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                             options: 'flex flex-col p-0 m-0 list-none w-full',
                             optionsTop: 'flex-col-reverse',
                             option: 'flex items-center justify-start box-border text-left cursor-pointer text-slate-700 leading-snug py-2 px-3',
-                            optionPointed: 'text-slate-800 bg-blue-100',
-                            optionSelected: 'text-slate-800 bg-blue-100',
+                            optionPointed: 'text-slate-800 bg-indigo-50',
+                            optionSelected: 'text-slate-800 bg-indigo-50',
                             optionDisabled: 'text-gray-300 cursor-not-allowed',
-                            optionSelectedPointed: 'text-slate-800 bg-blue-100',
+                            optionSelectedPointed: 'text-slate-800 bg-indigo-50',
                             optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                             spacer: 'h-9 py-px box-content',
@@ -209,10 +209,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                             options: 'flex flex-col p-0 m-0 list-none w-full',
                             optionsTop: 'flex-col-reverse',
                             option: 'flex items-center justify-start box-border text-left cursor-pointer text-slate-700 leading-snug py-2 px-3',
-                            optionPointed: 'text-slate-800 bg-blue-100',
-                            optionSelected: 'text-slate-800 bg-blue-100',
+                            optionPointed: 'text-slate-800 bg-indigo-50',
+                            optionSelected: 'text-slate-800 bg-indigo-50',
                             optionDisabled: 'text-gray-300 cursor-not-allowed',
-                            optionSelectedPointed: 'text-slate-800 bg-blue-100',
+                            optionSelectedPointed: 'text-slate-800 bg-indigo-50',
                             optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                             spacer: 'h-9 py-px box-content',
@@ -306,10 +306,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                             options: 'flex flex-col p-0 m-0 list-none w-full',
                             optionsTop: 'flex-col-reverse',
                             option: 'flex items-center justify-start box-border text-left cursor-pointer text-slate-700 leading-snug py-2 px-3',
-                            optionPointed: 'text-slate-800 bg-blue-100',
-                            optionSelected: 'text-slate-800 bg-blue-100',
+                            optionPointed: 'text-slate-800 bg-indigo-50',
+                            optionSelected: 'text-slate-800 bg-indigo-50',
                             optionDisabled: 'text-gray-300 cursor-not-allowed',
-                            optionSelectedPointed: 'text-slate-800 bg-blue-100',
+                            optionSelectedPointed: 'text-slate-800 bg-indigo-50',
                             optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                             spacer: 'h-9 py-px box-content',
@@ -332,7 +332,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-2 mb-6">
                 <div class="mb-4">
-                    <label for="principal_name" class="block text-sm font-semibold text-gray-700"> Progress Percentage</label>
+                    <label class="block text-sm font-semibold text-gray-700"> Progress Percentage</label>
                     <div class="mt-1 flex rounded-md shadow-sm">
                         <Multiselect 
                         v-model="form.progress_percentage"
@@ -365,10 +365,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                             options: 'flex flex-col p-0 m-0 list-none w-full',
                             optionsTop: 'flex-col-reverse',
                             option: 'flex items-center justify-start box-border text-left cursor-pointer text-slate-700 leading-snug py-2 px-3',
-                            optionPointed: 'text-slate-800 bg-blue-100',
-                            optionSelected: 'text-slate-800 bg-blue-100',
+                            optionPointed: 'text-slate-800 bg-indigo-50',
+                            optionSelected: 'text-slate-800 bg-indigo-50',
                             optionDisabled: 'text-gray-300 cursor-not-allowed',
-                            optionSelectedPointed: 'text-slate-800 bg-blue-100',
+                            optionSelectedPointed: 'text-slate-800 bg-indigo-50',
                             optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
                             fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                             spacer: 'h-9 py-px box-content',
@@ -499,7 +499,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-2 mb-6">
                 <div class="mb-4" v-if="!form.quotation">
-                    <label for="principal_name" class="block text-sm font-semibold text-gray-700"> Quotation </label>
+                    <label class="block text-sm font-semibold text-gray-700"> Quotation </label>
                     <form class="mt-1 max-w-sm">
                         <label for="file-input" class="sr-only">Choose file</label>
                         <input type="file" name="file-input" id="file-input" class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-gray-300    focus:ring-0 disabled:opacity-50 disabled:pointer-events-none
@@ -510,7 +510,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                     </form>
                 </div> 
                 <div v-else>
-                    <label for="principal_name" class="mb-1 block text-sm font-semibold text-gray-700"> Quotation </label>
+                    <label class="mb-1 block text-sm font-semibold text-gray-700"> Quotation </label>
                     <div class="mb-2 flex justify-between items-center shadow-border shadow rounded-lg shadow-gray-300 px-6 py-3">
                         <div class="flex items-center">
                             <div>
@@ -531,7 +531,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                     </div>
                 </div>
                 <div class="mb-4" v-if="!form.contract">
-                    <label for="principal_name" class="block text-sm font-semibold text-gray-700"> Contract </label>
+                    <label class="block text-sm font-semibold text-gray-700"> Contract </label>
                     <form class="mt-1 max-w-sm">
                         <label for="file-input" class="sr-only">Choose file</label>
                         <input type="file" name="file-input" id="file-input" class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-gray-300    focus:ring-0 disabled:opacity-50 disabled:pointer-events-none
@@ -542,7 +542,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
                         </form>
                 </div>
                 <div v-else>
-                    <label for="principal_name" class="mb-1 block text-sm font-semibold text-gray-700"> Contract </label>
+                    <label class="mb-1 block text-sm font-semibold text-gray-700"> Contract </label>
                     <div class="mb-2 flex justify-between items-center shadow-border shadow rounded-lg shadow-gray-300 px-6 py-3">
                         <div class="flex items-center">
                             <div>

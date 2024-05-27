@@ -30,10 +30,10 @@
                   <p class="text-sm font-medium text-gray-800">{{$page.props.auth.user.display_name}}</p>
                 </div>
                 <div class="mt-2 py-2 first:pt-0 last:pb-0">
-                  <a :href="route('admin.logout')" method="post" class="flex space-x-2 items-center px-4 py-2 transition cursor-pointer group hover:bg-indigo-100 rounded">
+                  <Link :href="route('crm.logout')" method="post" as="button" class="w-full flex space-x-2 items-center px-4 py-2 transition cursor-pointer group hover:bg-indigo-100 rounded">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="16" width="16"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg>
 					<span>Logout</span>
-                  </a>
+                  </Link>
                   <!-- <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500" href="#">
                     <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                     Purchases
@@ -187,7 +187,7 @@
     
     
           <li class="hs-accordion" :class="route().current('crm.sales.*') ? 'active' : ''" id="projects-accordion">
-            <button type="button" class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-neutral-700 rounded-lg hover:bg-indigo-100" :class="route().current('crm.sales.*') ? 'hs-accordion-active:bg-indigo-100' : ''">
+            <button type="button" class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-neutral-700 rounded-lg hover:text-indigo-600" :class="route().current('crm.sales.*') ? 'hs-accordion-active:text-indigo-600 font-semibold' : ''">
               <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
               Sales
     
