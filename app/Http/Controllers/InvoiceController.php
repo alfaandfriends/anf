@@ -253,7 +253,7 @@ class InvoiceController extends Controller
 
     public function feeInvoiceUpdate(Request $request){
 
-        if($request->payment['proofs_to_delete']){
+        if(isset($request->payment['proofs_to_delete']) && $request->payment['proofs_to_delete']){
             $invoice_attachments     =   DB::table('invoice_attachments')->whereIn('id', $request->payment['proofs_to_delete'])->get();
             foreach($invoice_attachments as $data){
                 Storage::delete('proof_of_payment/'.$data->attachment);
@@ -261,7 +261,7 @@ class InvoiceController extends Controller
             DB::table('invoice_attachments')->whereIn('id', $request->payment['proofs_to_delete'])->delete();
         }
         
-        if($request->payment['proofs']){
+        if(isset($request->payment['proofs']) && $request->payment['proofs']){
             foreach($request->payment['proofs'] as $proof_key=>$proof){
                 if($request->file('payment.proofs.'.$proof_key.'.file')){
                     $file = $request->file('payment.proofs.'.$proof_key.'.file');
