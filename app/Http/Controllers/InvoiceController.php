@@ -214,9 +214,11 @@ class InvoiceController extends Controller
                                 ->join('children', 'students.children_id', '=', 'children.id')
                                 ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                             'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.status as status',
-                                            'invoices.payment_date', 'invoices.payment_transaction_id', 'invoices.payment_proof', 'invoices.remark')
+                                            'invoices.payment_date', 'invoices.payment_transaction_id', 'invoices.remark')
                                 ->where('invoices.id', $request->invoice_id)->first();
-        // dd(!$invoice_data);
+
+        $invoice_attachments    =   DB::table('invoice_attachments')->where('invoice_id', $request->invoice_id)->get();
+        
         if(!$invoice_data){
             return redirect(route('fee.invoices'))->with(['type' => 'error', 'message' => 'Invoice not found.']);
         }
@@ -224,9 +226,10 @@ class InvoiceController extends Controller
         $invoice_status  =   InvoiceHelper::invoiceStatus();
 
         return Inertia::render('Invoices/Edit', [
-            'invoice_data'      =>  $invoice_data,
-            'invoice_status'    =>  $invoice_status,
-            'params'            =>  $request->params
+            'invoice_data'          =>  $invoice_data,
+            'invoice_attachments'   =>  $invoice_attachments,
+            'invoice_status'        =>  $invoice_status,
+            'params'                =>  $request->params
         ]);
     }
 
@@ -249,108 +252,36 @@ class InvoiceController extends Controller
     }
 
     public function feeInvoiceUpdate(Request $request){
-        $invoice_record     =   DB::table('invoices')->where('id', $request->invoice_id)->first();
 
-        if($request->payment['proof']['delete_previous']){
-            $file_deleted   =   Storage::delete('proof_of_payment/'.$invoice_record->payment_proof);
-            $invoice_record->payment_proof  =   '';
+        if($request->payment['proofs_to_delete']){
+            $invoice_attachments     =   DB::table('invoice_attachments')->whereIn('id', $request->payment['proofs_to_delete'])->get();
+            foreach($invoice_attachments as $data){
+                Storage::delete('proof_of_payment/'.$data->attachment);
+            }
+            DB::table('invoice_attachments')->whereIn('id', $request->payment['proofs_to_delete'])->delete();
         }
+        
+        if($request->payment['proofs']){
+            foreach($request->payment['proofs'] as $proof_key=>$proof){
+                if($request->file('payment.proofs.'.$proof_key.'.file')){
+                    $file = $request->file('payment.proofs.'.$proof_key.'.file');
+                    $original_name = $file->getClientOriginalName();
+                    $filename = mt_rand(1, 1000) . '_' . time() . '_' . $original_name;
+                    Storage::putFileAs('proof_of_payment', $request->file('payment.proofs.'.$proof_key.'.file'), $filename);
 
-        if($request->file('payment.proof.file')){
-            $file = $request->file('payment.proof.file');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
-            Storage::putFileAs('proof_of_payment', $request->file('payment.proof.file'), $filename);
+                    DB::table('invoice_attachments')->insert([
+                        'invoice_id'        =>  $request->invoice_id,
+                        'date'              =>  Carbon::parse($proof['date'])->format('Y-m-d'),
+                        'transaction_id'    =>  $proof['transaction_id'],
+                        'attachment'        =>  $filename,
+                        'remark'            =>  $proof['remark'],
+                    ]);
+                }
+            }
         }
-        // if((int)$request->invoice_amount !== (int)$invoice_record->amount && $request->payment['status'] == 1){
-        //     $student_country    =   StudentHelper::getStudentCountryId($invoice_record->student_id);
-        //     if($student_country == self::$malaysia){
-        //         $bill_collection_id     =   config('app.billplz.collection_id');
-        //         $bill_email             =   env('APP_ENV') == 'local' ? 'abdulraof628@gmail.com' : StudentHelper::getStudentEmail($invoice_record->student_id);
-        //         $bill_mobile            =   '';
-        //         $bill_name              =   StudentHelper::getStudentName($invoice_record->student_id);
-        //         $bill_amount            =   $request->invoice_amount * 100;
-        //         $bill_callback          =   route('fee.invoices.callback.my');
-        //         $bill_description       =   'Invoice Number: '.$invoice_record->invoice_number;
-        //         $bill_response          =   Billplz::bill()->create($bill_collection_id, $bill_email, $bill_mobile, $bill_name, $bill_amount, $bill_callback, $bill_description, [
-        //                                         'due_at'    =>  $invoice_record->due_date,
-        //                                         'redirect_url' => route('fee.invoices.check_status')
-        //                                     ]); 
-                          
-        //         if($bill_response->getStatusCode() == 200){
-        //             $invoice_id =   DB::table('invoices')->where('id', $request->invoice_id)->update([
-        //                                 'amount'            => $request->invoice_amount,
-        //                                 'bill_id'           => $bill_response->toArray()['id'],
-        //                                 'payment_url'       => env('VITE_BILLPLZ_ENDPOINT').$bill_response->toArray()['id'],
-        //                             ]);
-        //         }
-    
-        //     }
-        //     else if($student_country == self::$indonesia){
-        //         $endpoint           =   env('VITE_DOKU_ENDPOINT');
-        //         $target_path        =   env('VITE_DOKU_TARGET_PATH');
-        //         $secret_key         =   env('VITE_DOKU_SECRET_KEY');
-        //         $client_id          =   env('VITE_DOKU_CLIENT_ID');
-        //         $request_id         =   Uuid::uuid1()->toString();
-        //         $request_timestamp  =   Carbon::now()->format('Y-m-d\TH:i:s\Z');
-                
-        //         $request_body = array (
-        //             "order" => array(
-        //                 "amount"            =>  $request->invoice_amount,
-        //                 "invoice_number"    =>  $invoice_record->invoice_number,
-        //                 "callback_url"      =>  route('parent.invoices'),
-        //                 "auto_redirect"     =>  true,
-        //             ),
-        //             "payment" => array(
-        //                 "payment_due_date" => 43800 // 1 month
-        //             )
-        //         );
-    
-        //         $digest_hash = base64_encode(hash('sha256', json_encode($request_body, JSON_NUMERIC_CHECK), true));
-                
-        //         $signature_component  = "Client-Id:".$client_id."\n".
-        //                                 "Request-Id:".$request_id."\n" .
-        //                                 "Request-Timestamp:".$request_timestamp."\n".
-        //                                 "Request-Target:".$target_path."\n".
-        //                                 "Digest:".$digest_hash;
-                            
-        //         $signature = base64_encode(hash_hmac('sha256', $signature_component, $secret_key, true));
-            
-        //         try {
-        //             $response = Http::withHeaders([
-        //                 'Client-Id'         =>  $client_id,
-        //                 'Request-Id'        =>  $request_id,
-        //                 'Request-Timestamp' =>  $request_timestamp,
-        //                 'Signature'         =>  "HMACSHA256=" . $signature,
-        //             ])->post($endpoint, $request_body);
-    
-        //             $response_data  =   json_decode($response->body());
-    
-        //             if($response->status() == 200){
-        //                 $invoice_id =   DB::table('invoices')->where('id', $request->invoice_id)->update([
-        //                     'amount'            => $request->invoice_amount,
-        //                     'bill_id'           => $response_data->response->payment->token_id,
-        //                     'payment_url'       => $response_data->response->payment->url,
-        //                 ]);
-        //             }
-        //         } catch (RequestException $e) {
-        //             event(new DatabaseTransactionEvent($e));
-        //         }
-        //     }
-        // }
-        // else{
-        //     DB::table('invoices')->where('id', $request->invoice_id)->update([
-        //         'amount'            => $request->invoice_amount,
-        //     ]);
-        // }
 
         DB::table('invoices')->where('id', $request->invoice_id)->update([
-            // 'invoice_items'             =>  json_encode($request->invoice_items, JSON_NUMERIC_CHECK),
             'status'                    =>  $request->payment['status'],
-            'payment_date'              =>  Carbon::parse($request->payment['date'])->format('Y-m-d'),
-            'payment_transaction_id'    =>  $request->payment['transaction_id'],
-            'payment_proof'             =>  $request->file('payment.proof') ? $filename : $invoice_record->payment_proof,
-            'remark'                    =>  $request->payment['remark'],
         ]);
                 
         $log_data =   'Updated invoice ID '.$request->invoice_id;
