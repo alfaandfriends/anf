@@ -5,8 +5,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/CRM/Authenticated.vue';
 
 <template>
     <BreezeAuthenticatedLayout>
-        <div class="grid grid-cols-4">
+        <div class="grid grid-cols-1 lg:grid-cols-4">
             <div class="col-span-1">
+                <label for="">Demo Chart</label>
                 <canvas id="bar-chart"></canvas>
             </div>
         </div>
