@@ -30,7 +30,7 @@ class DatabaseTransactionListener
     {
         // Log information before the transaction starts
         if (auth()->check()) {
-            Log::info(auth()->user()->ID.': '.$event->data);
+            Log::info(auth()->user()->user_email.' : '.$event->data);
         }
     }
 }

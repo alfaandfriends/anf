@@ -169,7 +169,7 @@ class StudentController extends Controller
                                     ->join('countries', 'promotions.country_id', '=', 'countries.id')
                                     ->join('promotion_types', 'promotions.type_id', '=', 'promotion_types.id')
                                     ->join('promotion_durations', 'promotions.duration_id', '=', 'promotion_durations.id')
-                                    ->select('countries.country_code', 'promotions.id as promo_id', DB::raw('CONCAT(promotions.name, (countries.country_code)) as promo_name'), 'promotion_types.id as type_id', 
+                                    ->select('countries.country_code', 'promotions.id as promo_id', DB::raw('CONCAT(promotions.name, " (", countries.country_code, ")") as promo_name'), 'promotion_types.id as type_id', 
                                             'promotion_types.name as type_name', 'promotions.value as value', 'promotion_durations.id as duration_id', 
                                             'promotion_durations.name as duration_name', 'promotion_durations.duration as duration_count')
                                     ->get();

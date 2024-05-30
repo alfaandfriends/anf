@@ -74,47 +74,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <h1 class="text-indigo-800 font-bold">Principal's Information</h1>
-                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
-                                        <div class="mb-4">
-                                            <div class="flex justify-between">
-                                                <label for="about" class="block text-sm text-gray-700 font-bold"> Email <span class="text-red-500">*</span></label>
-                                                <label for="" class="font-medium text-sm text-indigo-600" v-if="search.email && checking_email"> Checking Email...</label>
-                                                <label for="about" class="font-medium text-sm" v-if="search.email && !checking_email" :class="email_exist ? 'text-green-700' : 'text-red-700'"> {{ email_exist ? 'Email found!' : 'Email not found!'}} </label>
-                                            </div>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="email" 
-                                                    v-debounce:1s="findUser" 
-                                                    @keyup="checkEmail" 
-                                                    class="focus:ring-0 focus:border-gray-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" 
-                                                    :class="[($page.props.errors.principal_user_email ? 'border-red-300' : 'border-gray-300'), ((search.email && !email_exist && !checking_email) ? 'border-red-300' : 'border-gray-300'), ((search.email && email_exist) ? 'border-green-400' : 'border-gray-300')]" 
-                                                    v-model="search.email" autocomplete="none"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div class="mb-4">
-                                            <label for="full_name" class="block text-sm text-gray-700 font-bold"> Full Name <span class="text-red-500">*</span> </label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="full_name" id="full_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.display_name : ''" autocomplete="none"/>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="principal_contact" class="block text-sm text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="principal_contact" id="principal_contact" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.user_contact : ''" autocomplete="none"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="grid grid-rows-2 grid-cols-1 grid-flow-col gap-4">
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
@@ -181,12 +140,12 @@
                                                 </div>
                                                 <div class="flex-column pl-1 pt-6">
                                                     <div class="flex flex-col space-y-1">
-                                                        <BreezeButton class="py-1 px-2 bg-green-500 hover:bg-green-600 rounded text-white shadow" @click="select_cropped_image()" title="Select cropped image">
+                                                        <BreezeButton class="py-1 px-2 rounded shadow" @click="select_cropped_image()" title="Select cropped image">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                                                             </svg>
                                                         </BreezeButton>
-                                                        <BreezeButton class="py-1 px-2 bg-blue-500 hover:bg-blue-600 rounded text-white shadow" @click="reselect_image()" title="Reselect an image">
+                                                        <BreezeButton class="py-1 px-2 rounded shadow" @click="reselect_image()" title="Reselect an image">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                             </svg>
@@ -204,8 +163,8 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
                                                 </div>
-                                                <img :src="image_data.image_src" class="rounded-lg" alt="">
-                                                <label for="" class="text-sm capitalize text-slate-500">{{ image_data.type }}</label>
+                                                <img :src="image_data.image_path" class="rounded-lg" alt="">
+                                                <label for="" class="text-sm capitalize text-slate-500">{{ image_data.image_type }}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -425,7 +384,7 @@ export default {
                     cropper.getCroppedCanvas().toBlob((blob) => {
                         var link = URL.createObjectURL(blob);   
                         var image_file = this.blobToFile(blob, this.data.name)
-                        this.form.image_list.unshift({'image_src': link, 'image_file': image_file, 'type': this.data.view_type})
+                        this.form.image_list.unshift({'image_path': link, 'image_file': image_file, 'image_type': this.data.view_type})
                     }, 'image/jpeg', 0.1 );
                     this.show_front_upload = true
                     this.show_inside_upload = true
@@ -444,7 +403,7 @@ export default {
                 if(max_inside_image.length < 5){
                     cropper.getCroppedCanvas().toBlob((blob) => {
                         var link = URL.createObjectURL(blob);
-                        this.form.image_list.push({'name': this.data.name, 'image_src': link, 'image_file': blob, 'type': this.data.view_type})
+                        this.form.image_list.push({'name': this.data.name, 'image_path': link, 'image_file': blob, 'image_type': this.data.view_type})
                     }, 'image/jpeg', 0.1 );
                     this.show_front_upload = true
                     this.show_inside_upload = true
@@ -468,23 +427,6 @@ export default {
             blob.name = fileName;
             return blob;
         },
-        findUser(){
-            axios.get(route('centres.find_user'), {
-                params: {
-                    'principal_email': this.search.email
-                }
-            })
-            .then((res) => {
-                this.email_exist = res.data
-                this.form.principal_user_id = res.data.ID
-                this.checking_email = false
-            });
-        },
-        checkEmail(){
-            this.checking_email = true
-            this.email_exist = ''
-            this.form.principal_user_id = ''
-        }
     },
 }
 </script>
