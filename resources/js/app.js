@@ -19,6 +19,7 @@ import axios from 'axios';
 
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
+
 /* Intercept axios request */
 axios.interceptors.response.use(
     response => response,
