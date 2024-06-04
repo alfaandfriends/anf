@@ -212,9 +212,10 @@ class InvoiceController extends Controller
         $invoice_data   =   DB::table('invoices')
                                 ->join('students', 'invoices.student_id', '=', 'students.id')
                                 ->join('children', 'students.children_id', '=', 'children.id')
+                                ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
                                 ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
                                             'invoices.date_issued', 'invoices.due_date', 'invoices.payment_url', 'invoices.amount', 'invoices.status as status',
-                                            'invoices.payment_date', 'invoices.payment_transaction_id', 'invoices.remark')
+                                            'invoices.payment_date', 'invoices.payment_transaction_id', 'invoices.remark', 'wpvt_users.user_email')
                                 ->where('invoices.id', $request->invoice_id)->first();
 
         $invoice_attachments    =   DB::table('invoice_attachments')->where('invoice_id', $request->invoice_id)->get();
