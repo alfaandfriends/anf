@@ -72,6 +72,14 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-1">
+                                    <div class="mb-4">
+                                        <label for="payment_link_recipt" class="block text-sm font-bold text-gray-700"> Payment Link / Receipt </label>
+                                        <div class="mt-1">
+                                            <BreezeButton @click="openPaymentLink()">View</BreezeButton>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1">
                                     <div class="mb-10">
                                         <table class="w-full">
                                             <thead>
@@ -445,6 +453,9 @@ export default {
                 'remark': this.attachment.remark,
             })
             this.show_add_attachment = false
+        },
+        openPaymentLink(){ 
+            window.open(this.$page.props.invoice_data.payment_url, '_blank');
         }
     },
     mounted(){
