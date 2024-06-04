@@ -1395,7 +1395,7 @@ export default {
                 return
             }
             if(!is_transfer_student){
-                const programme_already_added_form   = this.current_fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.student_fee_status == '');
+                const programme_already_added_form   = this.current_fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.student_fee_status == '');
                 console.log(this.programme_already_added_form);
                 console.log(this.current_fee);
                 console.log(programme_id)
