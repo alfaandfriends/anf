@@ -1396,9 +1396,6 @@ export default {
             }
             if(!is_transfer_student){
                 const programme_already_added_form   = this.current_fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.student_fee_status == '');
-                console.log(this.programme_already_added_form);
-                console.log(this.current_fee);
-                console.log(programme_id)
                 if(programme_already_added_form){
                     alert('This programme already been added. Please remove the previous one first or set the status.')
                     if(event.target.checked){
