@@ -71,7 +71,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-4">
+                                <!-- <div class="grid grid-cols-2 gap-4">
                                     <div class="mb-4">
                                         <label for="parent_email" class="block text-sm font-bold text-gray-700"> Parent Email </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
@@ -84,7 +84,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <BreezeButton @click="openPaymentLink()">View</BreezeButton>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="grid grid-cols-1">
                                     <div class="mb-10">
                                         <table class="w-full">
@@ -160,6 +160,37 @@ import BreezeButton from '@/Components/Button.vue';
                                         <span class="text-2xl font-bold text-indigo-500">{{ $page.props.invoice_data.amount }}</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md h-full">
+                                <div class="mb-5">
+                                    <div class="flex justify-between items-end mb-2">
+                                        <h1 class="font-bold text-indigo-800">Online Payment (Billplz)</h1>
+                                    </div>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full">
+                                            <thead>
+                                                <tr class="bg-gray-600">
+                                                    <th class="text-left text-white text-sm py-2 px-4" width="10%">Payment Date</th>
+                                                    <th class="text-left text-white text-sm py-2 px-4" width="15%">Email</th>
+                                                    <th class="text-center text-white text-sm py-2 px-4" width="20%">Receipt</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="$page.props.bill_info.paid">
+                                                    <td class="border text-sm py-2 px-4 whitespace-nowrap">{{ moment($page.props.bill_info.paid_at).format('DD/MM/Y') }}</td>
+                                                    <td class="border text-sm py-2 px-4 whitespace-nowrap">{{ $page.props.bill_info.email }}</td>
+                                                    <td class="border text-sm py-2 px-4 text-center">
+                                                        <BreezeButton buttonType="info" @click="openPaymentLink()">View</BreezeButton>
+                                                    </td>
+                                                </tr>
+                                                <tr v-else>
+                                                    <td class="border text-sm text-center py-2 px-4 text-gray-600" colspan="10">No Records</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                             </div>
                             <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md h-full">
                                 <div class="mb-5">
@@ -462,7 +493,7 @@ export default {
             this.show_add_attachment = false
         },
         openPaymentLink(){ 
-            window.open(this.$page.props.invoice_data.payment_url, '_blank');
+            window.open(this.$page.props.bill_info.url, '_blank');
         }
     },
     mounted(){
