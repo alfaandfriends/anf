@@ -17,7 +17,26 @@ import {useLoading} from 'vue-loading-overlay'
 import {LoadingPlugin} from 'vue-loading-overlay';
 import axios from 'axios';
 
+
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+
+import { HSStaticMethods } from "preline";
+
+HSStaticMethods.autoInit();
+
+const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+        HSStaticMethods.autoInit();
+    }
+});
+
+observer.observe(document.body, {
+    attributes: true,
+    subtree: true,
+    childList: true,
+    characterData: true,
+});
+
 
 
 /* Intercept axios request */
@@ -52,6 +71,7 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(VueHtmlToPaper)
+            .use(LoadingPlugin)
             .use(LoadingPlugin)
             .directive('debounce', vue3Debounce({
                 lock: true,
