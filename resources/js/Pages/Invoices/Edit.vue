@@ -71,17 +71,15 @@ import BreezeButton from '@/Components/Button.vue';
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-1">
+                                <div class="grid grid-cols-2 gap-4">
                                     <div class="mb-4">
                                         <label for="parent_email" class="block text-sm font-bold text-gray-700"> Parent Email </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
                                             <input disabled type="text" name="parent_email" id="parent_email" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" v-model="$page.props.invoice_data.user_email" autocomplete="off">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="grid grid-cols-1">
                                     <div class="mb-4">
-                                        <label for="payment_link_recipt" class="block text-sm font-bold text-gray-700"> Payment Link / Receipt (Billplz)</label>
+                                        <label for="payment_link_recipt" class="block text-sm font-bold text-gray-700"> Online Payment Link / Receipt (Billplz)</label>
                                         <div class="mt-1">
                                             <BreezeButton @click="openPaymentLink()">View</BreezeButton>
                                         </div>
@@ -143,7 +141,8 @@ import BreezeButton from '@/Components/Button.vue';
                                         </table>
                                     </div>
                                 </div>
-                                <div class=" border-b border-dashed border-indigo-900 mb-5"></div>
+                                <!-- <div class=" border-b border-dashed border-indigo-900 mb-5"></div> -->
+                                <!-- <hr> -->
                                 <div class="grid grid-cols-3">
                                     <div class="mb-4 text-left">
                                         <label for="payment_status" class="block text-sm font-bold text-gray-700"> Payment Status </label>
