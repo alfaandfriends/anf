@@ -224,11 +224,14 @@ class InvoiceController extends Controller
 
         $invoice_attachments    =   DB::table('invoice_attachments')->where('invoice_id', $request->invoice_id)->get();
         $invoice_status         =   InvoiceHelper::invoiceStatus();
-        $bill_info = Billplz::bill()->get($invoice_data->bill_id)->getContent();
+
+        if(env('production')){
+            $bill_info = Billplz::bill()->get($invoice_data->bill_id)->getContent();
+        }
 
         return Inertia::render('Invoices/Edit', [
             'invoice_data'          =>  $invoice_data,
-            'bill_info'             =>  $bill_info,
+            'bill_info'             =>  $bill_info ?? '',
             'invoice_attachments'   =>  $invoice_attachments,
             'invoice_status'        =>  $invoice_status,
             'params'                =>  $request->params

@@ -80,7 +80,7 @@ class ProgrammeController extends Controller
                 ]);
             }
         }
-        $log_data =   'Created programme ID '.$programme_id;
+        $log_data =   'Created programme ' . $request->programme_name  . ' : ' . json_encode($request->all());
         event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'New programme added successfully!']);
@@ -199,6 +199,13 @@ class ProgrammeController extends Controller
             'status'        =>  $request->programme_active,
             'updated_at'    =>  Carbon::now(),
         ]);
+        $log_data =   'Updated programme ' . $request->programme_name  . ' : ' . json_encode([
+            'name'          =>  $request->programme_name,
+            'country_id'    =>  $request->programme_country,
+            'status'        =>  $request->programme_active,
+            'updated_at'    =>  Carbon::now(),
+        ]);
+        event(new DatabaseTransactionEvent($log_data));
 
         foreach($request->programme_info as $key=>$info){
             if(!isset($info['programme_level_id'])){
@@ -219,18 +226,19 @@ class ProgrammeController extends Controller
                         'fee_amount'            =>  $fee['value'],
                     ]);
                 }
-                $log_data =   'Added fees for programme ID '.$request->programme_id;
+                $log_data =   "Added programme " . $request->programme_name  . "'s fee " . ' : ' . json_encode($info);
                 event(new DatabaseTransactionEvent($log_data));
             }
         }
+
         
-        $log_data =   'Updated programme ID '.$request->programme_id;
-        event(new DatabaseTransactionEvent($log_data));
+
         return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme updated successfully !']);
     }
 
     public function destroyProgramme($id){
         
+        $programme_name =   DB::table('programmes')->where('id', $id)->pluck('name')->first();
         /* Check if programme can be deleted */
         $programme_is_deletable   =   ProgrammeHelper::checkProgrammeIsDeletable($id);
         if(!$programme_is_deletable){
@@ -259,7 +267,7 @@ class ProgrammeController extends Controller
             ->join('programme_level_fees','programme_level_fees.programme_level_id','=','programme_levels.id')
             ->where('programmes.id', $id)->delete();
 
-        $log_data =   'Deleted programme ID '.$id;
+        $log_data =   'Deleted programme ' . $programme_name;
         event(new DatabaseTransactionEvent($log_data));
 
         return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme deleted successfully !']);
@@ -267,8 +275,9 @@ class ProgrammeController extends Controller
 
     public function destroyFee($id){
         try {
-            $programme_id   =   DB::table('programme_levels')->where('programme_levels.id', $id)->pluck('programme_id')->first();
-            $fee_count      =   DB::table('programme_levels')->where('programme_levels.programme_id', $programme_id)->count();
+            $programme_level_info   =   DB::table('programme_levels')->where('id', $id)->first();
+            $programme_info         =   DB::table('programmes')->where('id', $programme_level_info->programme_id)->first();
+            $fee_count              =   DB::table('programme_levels')->where('programme_levels.programme_id', $programme_level_info->programme_id)->count();
             
             if($fee_count < 2){
                 return back()->with(['type'=>'error', 'message'=>'Please add new fee before deleting the last one.']);
@@ -278,9 +287,8 @@ class ProgrammeController extends Controller
                 ->join('programme_level_fees','programme_level_fees.programme_level_id','=','programme_levels.id')
                 ->where('programme_levels.id', $id)->delete();
 
-            $log_data =   'Deleted fee ID '.$id;
+            $log_data =   'Deleted fee for programme ' . $programme_info->name . ' : ' . json_encode($programme_level_info);
             event(new DatabaseTransactionEvent($log_data));
-        
 
             return back()->with(['type'=>'success', 'message'=>'Fee deleted successfully !']);
         } catch (\Throwable $th) {

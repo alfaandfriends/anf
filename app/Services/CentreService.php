@@ -61,19 +61,7 @@ class CentreService
             'last_certificate_count'    => 0,
         ]);
 
-        $log_data =   'Created centre ' . $request->centre_name . ' : ' . json_encode([
-            'country_id'                => $request->centre_country,
-            'label'                     => $request->centre_name,
-            'phone'                     => $request->centre_contact_number,
-            'email'                     => $request->centre_email,
-            'address'                   => $request->centre_address,
-            'is_active'                 => $request->centre_active,
-            'last_enrollment_count'     => 0,
-            'last_invoice_count'        => 0,
-            'last_payment_count'        => 0,
-            'last_admission_count'      => 0,
-            'last_certificate_count'    => 0,
-        ], true) ;
+        $log_data =   'Created centre ' . $request->centre_name . ' : ' . json_encode($request->all()) ;
         event(new DatabaseTransactionEvent($log_data));
 
         $this->uploadImages($centre_id, $request);
@@ -98,19 +86,7 @@ class CentreService
             'is_active' => $request->centre_active,
         ]);
 
-        $log_data =   'Updated centre ' . $request->centre_name . ' : ' . json_encode([
-            'country_id'                => $request->centre_country,
-            'label'                     => $request->centre_name,
-            'phone'                     => $request->centre_contact_number,
-            'email'                     => $request->centre_email,
-            'address'                   => $request->centre_address,
-            'is_active'                 => $request->centre_active,
-            'last_enrollment_count'     => 0,
-            'last_invoice_count'        => 0,
-            'last_payment_count'        => 0,
-            'last_admission_count'      => 0,
-            'last_certificate_count'    => 0,
-        ], true) ;
+        $log_data =   'Updated centre ' . $request->centre_name . ' : ' . json_encode($request->all()) ;
         event(new DatabaseTransactionEvent($log_data));
 
         $this->uploadImages($request->centre_id, $request);
