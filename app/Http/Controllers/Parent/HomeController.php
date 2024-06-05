@@ -30,8 +30,8 @@ class HomeController extends Controller
         $student_id =   $request->session()->get('current_active_child.student_id');
         if($student_id){
             $academics  =   StudentHelper::studentAcademicDetails($student_id);
-            $posts      =   PostHelper::getPosts();
         }
+        $posts      =   PostHelper::getPosts($student_id);
 
         return Inertia::render('Parent/Home',[
             'academics'     =>  $academics ?? '',

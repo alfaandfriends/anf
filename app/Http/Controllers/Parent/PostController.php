@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -24,7 +25,8 @@ class PostController extends Controller
             /* Photos */
             foreach($request->photos as $photo){
                 $file       =   $photo['file'];
-                $filename  =   $photo['name'].'.'.$file->getClientOriginalExtension();
+                $extension  =   $file->getClientOriginalExtension(); // Get the image extension
+                $filename   =   Str::uuid() . '.' . $extension;
 
                 Storage::putFileAs('posts',$file, $filename);
 
