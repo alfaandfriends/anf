@@ -983,7 +983,7 @@ import BreezeButton from '@/Components/Button.vue';
         <Modal :showModal="open_existing_class_promo_modal" @hideModal="open_existing_class_promo_modal = false" :modalType="'xs'">
             <template v-slot:header>
                 <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
-                    <h3 class="text-gray-900 text-xl font-semibold">                
+                    <h3 class="text-gray-900 font-semibold">                
                         Add Promos
                     </h3>        
                     <button type="button" @click="open_existing_class_promo_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
@@ -993,6 +993,9 @@ import BreezeButton from '@/Components/Button.vue';
             </template>
             <template v-slot:content>
                 <div class="p-6">
+                    <div class="mb-3 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert">
+                        <span class="font-bold">Note: </span> Student's current invoice will be deleted including uploaded proof of payment attachments.
+                    </div>
                     <div class="mb-4">
                         <div class="mt-1 flex rounded-md.shadow-sm">
                             <Multiselect 
@@ -1015,14 +1018,14 @@ import BreezeButton from '@/Components/Button.vue';
                                     containerOpen: 'rounded-b-none',
                                     containerOpenTop: 'rounded-t-none',
                                     containerActive: 'border border-indigo-300',
-                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border text-sm',
                                     singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                     multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                    search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5',
-                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
+                                    search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-sm font-sans bg-white rounded-md pl-3.5',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500 text-sm',
                                     clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
                                     clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdown: 'max-h-24 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
                                     dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
                                     dropdownHidden: 'hidden',
                                     options: 'flex flex-col p-0 m-0 list-none w-full',
@@ -1034,9 +1037,9 @@ import BreezeButton from '@/Components/Button.vue';
                                     groupLabelSelected: 'bg-gray-100 text-black',
                                     groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
                                     groupOptions: 'p-0 m-0',
-                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-sm leading-snug py-2 px-3',
                                     optionPointed: 'text-gray-800 bg-gray-100',
-                                    optionSelected: 'text-white bg-indigo-500',
+                                    optionSelected: 'text-white bg-indigo-500 text-sm',
                                     optionDisabled: 'text-gray-300 cursor-not-allowed',
                                     optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
                                     optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
@@ -1058,7 +1061,7 @@ import BreezeButton from '@/Components/Button.vue';
         <Modal :showModal="open_new_class_promo_modal" @hideModal="open_new_class_promo_modal = false" :modalType="'xs'">
             <template v-slot:header>
                 <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
-                    <h3 class="text-gray-900 text-xl font-semibold">                
+                    <h3 class="text-gray-900 font-semibold">                
                         Add Promos
                     </h3>        
                     <button type="button" @click="open_new_class_promo_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
@@ -1090,14 +1093,14 @@ import BreezeButton from '@/Components/Button.vue';
                                     containerOpen: 'rounded-b-none',
                                     containerOpenTop: 'rounded-t-none',
                                     containerActive: 'border border-indigo-300',
-                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border text-sm',
                                     singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
                                     multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                    search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5',
-                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
+                                    search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-sm font-sans bg-white rounded-md pl-3.5',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500 text-sm',
                                     clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
                                     clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdown: 'max-h-24 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
                                     dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
                                     dropdownHidden: 'hidden',
                                     options: 'flex flex-col p-0 m-0 list-none w-full',
@@ -1109,9 +1112,9 @@ import BreezeButton from '@/Components/Button.vue';
                                     groupLabelSelected: 'bg-gray-100 text-black',
                                     groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
                                     groupOptions: 'p-0 m-0',
-                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-sm leading-snug py-2 px-3',
                                     optionPointed: 'text-gray-800 bg-gray-100',
-                                    optionSelected: 'text-white bg-indigo-500',
+                                    optionSelected: 'text-white bg-indigo-500 text-sm',
                                     optionDisabled: 'text-gray-300 cursor-not-allowed',
                                     optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
                                     optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
@@ -1392,7 +1395,7 @@ export default {
                 return
             }
             if(!is_transfer_student){
-                const programme_already_added_form   = this.current_fee.find(item => item.fee_info.programme_id === programme_id && item.fee_info.student_fee_status == '');
+                const programme_already_added_form   = this.current_fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.student_fee_status == '');
                 if(programme_already_added_form){
                     alert('This programme already been added. Please remove the previous one first or set the status.')
                     if(event.target.checked){

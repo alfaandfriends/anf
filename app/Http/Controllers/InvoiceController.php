@@ -209,24 +209,29 @@ class InvoiceController extends Controller
     }
 
     public function feeInvoiceEdit(Request $request){
-        $invoice_data   =   DB::table('invoices')
-                                ->join('students', 'invoices.student_id', '=', 'students.id')
-                                ->join('children', 'students.children_id', '=', 'children.id')
-                                ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
-                                            'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 'invoices.status as status',
-                                            'invoices.payment_date', 'invoices.payment_transaction_id', 'invoices.remark')
-                                ->where('invoices.id', $request->invoice_id)->first();
-
-        $invoice_attachments    =   DB::table('invoice_attachments')->where('invoice_id', $request->invoice_id)->get();
-        
+        $invoice_data           =   DB::table('invoices')
+                                        ->join('students', 'invoices.student_id', '=', 'students.id')
+                                        ->join('children', 'students.children_id', '=', 'children.id')
+                                        ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
+                                        ->select('invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'children.name as student_name', 
+                                                    'invoices.date_issued', 'invoices.due_date', 'invoices.bill_id', 'invoices.payment_url', 'invoices.amount', 'invoices.status as status',
+                                                    'invoices.payment_date', 'invoices.payment_transaction_id', 'invoices.remark', 'wpvt_users.user_email')
+                                        ->where('invoices.id', $request->invoice_id)->first();
+                                        
         if(!$invoice_data){
             return redirect(route('fee.invoices'))->with(['type' => 'error', 'message' => 'Invoice not found.']);
         }
 
-        $invoice_status  =   InvoiceHelper::invoiceStatus();
+        $invoice_attachments    =   DB::table('invoice_attachments')->where('invoice_id', $request->invoice_id)->get();
+        $invoice_status         =   InvoiceHelper::invoiceStatus();
+
+        if(env('production')){
+            $bill_info = Billplz::bill()->get($invoice_data->bill_id)->getContent();
+        }
 
         return Inertia::render('Invoices/Edit', [
             'invoice_data'          =>  $invoice_data,
+            'bill_info'             =>  $bill_info ?? '',
             'invoice_attachments'   =>  $invoice_attachments,
             'invoice_status'        =>  $invoice_status,
             'params'                =>  $request->params
@@ -253,7 +258,7 @@ class InvoiceController extends Controller
 
     public function feeInvoiceUpdate(Request $request){
 
-        if($request->payment['proofs_to_delete']){
+        if(isset($request->payment['proofs_to_delete']) && $request->payment['proofs_to_delete']){
             $invoice_attachments     =   DB::table('invoice_attachments')->whereIn('id', $request->payment['proofs_to_delete'])->get();
             foreach($invoice_attachments as $data){
                 Storage::delete('proof_of_payment/'.$data->attachment);
@@ -261,7 +266,7 @@ class InvoiceController extends Controller
             DB::table('invoice_attachments')->whereIn('id', $request->payment['proofs_to_delete'])->delete();
         }
         
-        if($request->payment['proofs']){
+        if(isset($request->payment['proofs']) && $request->payment['proofs']){
             foreach($request->payment['proofs'] as $proof_key=>$proof){
                 if($request->file('payment.proofs.'.$proof_key.'.file')){
                     $file = $request->file('payment.proofs.'.$proof_key.'.file');

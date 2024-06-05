@@ -7,13 +7,6 @@ use Inertia\Inertia;
 
 class CentreHelper {
 
-    public static function getUserAllowedCentres()
-    {
-        $user_allowed_centres   =   collect(Inertia::getShared('allowed_centres'));
-
-        return $user_allowed_centres;
-    }
-
     public static function getCentreInfo($centre_id)
     {
         $centre_info                =   collect(DB::table('centres')

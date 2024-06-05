@@ -74,47 +74,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <h1 class="text-indigo-800 font-bold">Principal's Information</h1>
-                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
-                                        <div class="mb-4">
-                                            <div class="flex justify-between">
-                                                <label for="about" class="block text-sm text-gray-700 font-bold"> Email <span class="text-red-500">*</span></label>
-                                                <label for="" class="font-medium text-sm text-indigo-600" v-if="search.email && checking_email"> Checking Email...</label>
-                                                <label for="about" class="font-medium text-sm" v-if="search.email && !checking_email" :class="email_exist ? 'text-green-700' : 'text-red-700'"> {{ email_exist ? 'Email found!' : 'Email not found!'}} </label>
-                                            </div>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="email" 
-                                                    v-debounce:1s="findUser" 
-                                                    @keyup="checkEmail" 
-                                                    class="focus:ring-0 focus:border-gray-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" 
-                                                    :class="[($page.props.errors.principal_user_email ? 'border-red-300' : 'border-gray-300'), ((search.email && !email_exist && !checking_email) ? 'border-red-300' : 'border-gray-300'), ((search.email && email_exist) ? 'border-green-400' : 'border-gray-300')]" 
-                                                    v-model="search.email" autocomplete="none"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div class="mb-4">
-                                            <label for="full_name" class="block text-sm text-gray-700 font-bold"> Full Name <span class="text-red-500">*</span> </label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="full_name" id="full_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.display_name : ''" autocomplete="none"/>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="principal_contact" class="block text-sm text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="principal_contact" id="principal_contact" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300 bg-gray-100" disabled :value="email_exist != null ? email_exist.user_contact : ''" autocomplete="none"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="grid grid-rows-2 grid-cols-1 grid-flow-col gap-4">
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
@@ -181,12 +140,12 @@
                                                 </div>
                                                 <div class="flex-column pl-1 pt-6">
                                                     <div class="flex flex-col space-y-1">
-                                                        <BreezeButton type="button" class="py-1 px-2 bg-green-500 hover:bg-green-600 rounded text-white shadow" @click="select_cropped_image()" title="Select cropped image">
+                                                        <BreezeButton type="button" class="py-1 px-2 rounded shadow" @click="select_cropped_image()" title="Select cropped image">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                                                             </svg>
                                                         </BreezeButton>
-                                                        <BreezeButton type="button" class="py-1 px-2 bg-blue-500 hover:bg-blue-600 rounded text-white shadow" @click="reselect_image()" title="Reselect an image">
+                                                        <BreezeButton type="button" class="py-1 px-2 rounded shadow" @click="reselect_image()" title="Reselect an image">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                             </svg>
@@ -313,13 +272,7 @@ export default {
     },
     methods: {
         submit() {
-            const loading = this.$loading.show();
-            this.$inertia.post(route('centres.update'), this.form, { 
-                preserveState: true,
-                onFinish: visit => {
-                    loading.hide();
-                }
-            })
+            this.$inertia.post(route('centres.update'), this.form, { preserveState: true })
         },
         read(file, event) {
             return new Promise((resolve, reject) => {
@@ -480,23 +433,6 @@ export default {
             blob.name = fileName;
             return blob;
         },
-        findUser(){
-            axios.get(route('centres.find_user'), {
-                params: {
-                    'principal_email': this.search.email
-                }
-            })
-            .then((res) => {
-                this.email_exist = res.data
-                this.form.principal_user_id = res.data.ID
-                this.checking_email = false
-            });
-        },
-        checkEmail(){
-            this.checking_email = true
-            this.email_exist = ''
-            this.form.principal_user_id = ''
-        }
     },
 }
 </script>

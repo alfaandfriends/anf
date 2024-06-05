@@ -60,9 +60,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::post('/centres/update', [CentreController::class, 'update'])->name('centres.update')->middleware('permission:edit_centres');
             Route::delete('/centres/destroy/{id}', [CentreController::class, 'destroy'])->name('centres.destroy')->middleware('permission:delete_centres');
             Route::delete('/centres/image/destroy/{id}', [CentreController::class, 'destroyImage'])->name('centres.destroy_image')->middleware('permission:delete_centres');
-            Route::get('/centres/images', [CentreController::class, 'getCentreImages'])->name('centres.get_images')->middleware('permission:view_centres');
-            // Route::get('/centres/find-user', [CentreController::class, 'findUser'])->name('centres.find_user')->middleware('permission:view_centres');
-
+            
             /* Division Manager */
             Route::get('/division-manager', [ExternalUserManagementController::class, 'divisionManagerList'])->name('division_manager')->middleware('permission:view_division_manager');
             Route::get('/division-manager/manage', [ExternalUserManagementController::class, 'manageDivisionManager'])->name('division_manager.manage')->middleware('permission:manage_division_manager');

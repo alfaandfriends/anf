@@ -59,7 +59,6 @@ import BreezeButton from '@/Components/Button.vue';
                             </td>
                             <td class="px-6 py-4 text-sm font-medium">
                                 <div class="flex justify-center space-x-2">
-                                    <!-- <BreezeButton :buttonType="'blue'" title="View Images" @click="viewImages(centre.centre_id)" v-if="$page.props.can.view_centres">View Images</BreezeButton> -->
                                     <BreezeButton :buttonType="'info'" class="px-4 py-1" title="Edit School" @click="editCentre(centre.centre_id)" v-if="$page.props.can.edit_centres">Edit</BreezeButton>
                                     <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.centre_id)" v-if="$page.props.can.delete_centres">Delete</BreezeButton>
                                 </div>
@@ -81,11 +80,6 @@ import BreezeButton from '@/Components/Button.vue';
                 :confirmationData="confirmationData"
             >
             </ConfirmationModal>
-            <ImageBox
-                @closeImagebox="closeImage"
-                :images="images"
-                :openLightbox="isOpenImagebox"
-            ></ImageBox>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
@@ -96,24 +90,16 @@ import { SearchIcon, TrashIcon, PencilIcon, PhotographIcon } from '@heroicons/vu
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
-import ImageBox from "@alfaandfriends/image-light-box";
 import { debounce } from 'vue-debounce'
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon, PhotographIcon, ImageBox, Pagination,
+        SearchIcon, TrashIcon, PencilIcon, PhotographIcon, Pagination,
         ConfirmationModal, Head, Link,
     },
     props: {
         filter: Object,
         centre_images: Object
-    },
-    created(){
-        this.images.push({
-            thumb: "https://media.istockphoto.com/vectors/no-image-available-sign-vector-id1138179183?k=20&m=1138179183&s=612x612&w=0&h=iJ9y-snV_RmXArY4bA-S4QSab0gxfAMXmXwn5Edko1M=",
-            src: "https://media.istockphoto.com/vectors/no-image-available-sign-vector-id1138179183?k=20&m=1138179183&s=612x612&w=0&h=iJ9y-snV_RmXArY4bA-S4QSab0gxfAMXmXwn5Edko1M=",
-            caption: "Not Available",
-        })
     },
     data(){
         return{
@@ -130,7 +116,6 @@ export default {
             params: {
                 search: this.filter.search ? this.filter.search : '',
             },
-            images: [],
         }
     },
     methods: {
@@ -141,19 +126,6 @@ export default {
         },
         editCentre(centre_id){
             this.$inertia.get(route('centres.edit'), {centre_id: centre_id}, { preserveState: true})
-        },
-        viewImages(centre_id){
-            axios.get(this.route('centres.get_images'), {
-                params: {
-                    'centre_id': centre_id
-                }})
-                .then((response)=>{
-                    this.images = ''
-                    this.images = []
-                    this.images = response.data
-                    this.isOpenImagebox = true
-                    document.body.classList.add('overflow-hidden')
-                })
         },
         closeImage(){
             this.isOpenImagebox = false

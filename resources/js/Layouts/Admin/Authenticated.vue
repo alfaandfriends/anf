@@ -403,10 +403,9 @@ export default {
                             <label for="impersonate_username" class="text-white 2xl:text-sm sm:text-md font-bold">Username</label>
                             <div class="flex space-x-2 items-center">
                                 <input type="text" id="impersonate_username" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username" autocomplete="none">
-                                <BreezeButton @click="impersonate" class="hidden sm:block bg-blue-600 hover:bg-blue-700 py-2 px-4">Change User</BreezeButton>
-                                <BreezeButton @click="impersonate" class="sm:hidden bg-blue-600 hover:bg-blue-700 p-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                <BreezeButton tooltip="Switch User" @click="impersonate" class="px-3 py-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 512 512">
+                                        <path d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96H320v32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32V64H160C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96H192V352c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V448H352c88.4 0 160-71.6 160-160z"/>
                                     </svg>
                                 </BreezeButton>
                             </div>

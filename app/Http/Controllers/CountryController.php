@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\DatabaseTransactionEvent;
+use App\Services\CountryService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,9 +11,16 @@ use Inertia\Inertia;
 
 class CountryController extends Controller
 {
+    public $countryService;
+
+    public function __construct(CountryService $countryService)
+    {
+        $this->countryService   =   $countryService;
+    }
+
     /* Countries */
         public function index(){
-            $country_list  =   DB::table('countries')->paginate(10);
+            $country_list  =   $this->countryService->getPaginatedCountries(10);
 
             return Inertia::render('Country/Index',[
                 'country_list' => $country_list,

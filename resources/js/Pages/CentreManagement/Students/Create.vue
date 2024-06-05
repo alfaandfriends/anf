@@ -417,7 +417,7 @@ import BreezeButton from '@/Components/Button.vue';
         <Modal :showModal="open_promo_modal" @hideModal="open_promo_modal = false" :modalType="'xs'">
             <template v-slot:header>
                 <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
-                    <h3 class="text-gray-900 text-xl font-semibold">                
+                    <h3 class="text-gray-900 font-semibold">                
                         Add Promos
                     </h3>        
                     <button type="button" @click="open_promo_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
@@ -445,37 +445,37 @@ import BreezeButton from '@/Components/Button.vue';
                                         errors.centre ? 
                                         'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
                                         'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
-                                    containerDisabled: 'cursor-default bg-gray-100',
-                                    containerOpen: 'rounded-b-none',
-                                    containerOpenTop: 'rounded-t-none',
-                                    containerActive: 'border border-indigo-300',
-                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                    multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                    search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5',
-                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
-                                    clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                    clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                    dropdownHidden: 'hidden',
-                                    options: 'flex flex-col p-0 m-0 list-none w-full',
-                                    optionsTop: 'flex-col-reverse',
-                                    group: 'p-0 m-0',
-                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                    groupLabelPointable: 'cursor-pointer',
-                                    groupLabelPointed: 'bg-gray-300 text-black-700',
-                                    groupLabelSelected: 'bg-gray-100 text-black',
-                                    groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                    groupOptions: 'p-0 m-0',
-                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                    optionPointed: 'text-gray-800 bg-gray-100',
-                                    optionSelected: 'text-white bg-indigo-500',
-                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                    spacer: 'h-9 py-px box-content',
+                                        containerDisabled: 'cursor-default bg-gray-100',
+                                        containerOpen: 'rounded-b-none',
+                                        containerOpenTop: 'rounded-t-none',
+                                        containerActive: 'border border-indigo-300',
+                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border text-sm',
+                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                        multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
+                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-sm font-sans bg-white rounded-md pl-3.5',
+                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500 text-sm',
+                                        clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
+                                        clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                        dropdown: 'max-h-24 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                        dropdownHidden: 'hidden',
+                                        options: 'flex flex-col p-0 m-0 list-none w-full',
+                                        optionsTop: 'flex-col-reverse',
+                                        group: 'p-0 m-0',
+                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                        groupLabelPointable: 'cursor-pointer',
+                                        groupLabelPointed: 'bg-gray-300 text-black-700',
+                                        groupLabelSelected: 'bg-gray-100 text-black',
+                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                        groupOptions: 'p-0 m-0',
+                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-sm leading-snug py-2 px-3',
+                                        optionPointed: 'text-gray-800 bg-gray-100',
+                                        optionSelected: 'text-white bg-indigo-500 text-sm',
+                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                        spacer: 'h-9 py-px box-content',
                                 }"
                             />
                         </div>
