@@ -710,6 +710,7 @@ export default {
         //     });
         // },
         getPlusFee(event, class_id, class_type, programme_id, programme_level_id){
+            this.form.fee = []
             if(this.fetching_fee){
                 return
             }
