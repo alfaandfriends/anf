@@ -135,7 +135,7 @@ background: #555; /* Color of the handle when hovered */
                       
                           <template #addons>
                             <Navigation v-if="post.post_images.length > 1"/>
-                            <Pagination v-if="post.post_images.length > 1"/>
+                            <!-- <Pagination v-if="post.post_images.length > 1"/> -->
                           </template>
                         </Carousel>
                       <!-- </template> -->
