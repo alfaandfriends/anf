@@ -27,7 +27,7 @@ class PostHelper {
                                         $query->where('student_post_tags.tagged_student_id', $student_id);
                                     })
                                     ->when($is_admin, function($query){
-                                        $query->where('student_posts.created_by', auth()->id());
+                                        $query->where('student_posts.created_by', auth()->id())->distinct('student_posts.id');
                                     })
                                     ->paginate(2);
     

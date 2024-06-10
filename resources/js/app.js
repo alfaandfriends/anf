@@ -97,7 +97,7 @@ InertiaProgress.init({
 //     backgroundColor: 'black'
 // });
 
-var loader
+// var loader
 
-Inertia.on('start', () => loader = $loading.show() )
-Inertia.on('finish', () => loader.hide() )
+// Inertia.on('start', () => loader = $loading.show() )
+// Inertia.on('finish', () => loader.hide() )

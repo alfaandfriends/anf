@@ -62,6 +62,11 @@ background: #555; /* Color of the handle when hovered */
         </div> -->
         <div class="flex justify-center">
             <div class="flex-1 max-w-2xl">
+                <div class="bg-indigo-100 border-t border-b border-indigo-500 text-indigo-700 px-4 py-3" role="alert">
+                    <p class="font-bold">You have pending fee payment
+                        <button class="ml-3 self-center text-sm px-2 py-1 border border-indigo-300 rounded bg-white">Pay now</button>
+                    </p>
+                </div>
                 <div class="flex mb-3" v-if="$page.props.can.create_posts">
                     <div class="flex items-center space-x-2 bg-indigo-100 rounded px-3 py-2 font-semibold w-full cursor-pointer transform scale-100 hover:scale-105 duration-200 select-none" @click="showCreatePost">
                         <img width="44" height="44" src="https://img.icons8.com/dusk/64/create-new.png" alt="create-new"/>
@@ -121,7 +126,7 @@ background: #555; /* Color of the handle when hovered */
                     <hr>
                     <span class="text-sm text-slate-800">{{ post.post_title }}</span>
                     <!-- <template> -->
-                        <Carousel v-if="post.post_images.length">
+                        <Carousel v-if="post.post_images.length" :mouseDrag="post.post_images.length > 1" :touchDrag="post.post_images.length > 1">
                           <Slide v-for="image, image_index in post.post_images" :key="image">
                             <div class="carousel__item h-full">
                                 <img :src="'storage/posts/' + image.image_filename" class="select-none h-full" @dblclick="toggleLike(post_index, post.post_id)">
@@ -129,8 +134,8 @@ background: #555; /* Color of the handle when hovered */
                           </Slide>
                       
                           <template #addons>
-                            <Navigation />
-                            <Pagination />
+                            <Navigation v-if="post.post_images.length > 1"/>
+                            <Pagination v-if="post.post_images.length > 1"/>
                           </template>
                         </Carousel>
                       <!-- </template> -->
@@ -282,17 +287,18 @@ background: #555; /* Color of the handle when hovered */
             <hr class="mb-3">
             <div class="">
                 <Multiselect 
-                    v-debounce:1s="findStudentss"
+                    v-debounce:1s="findStudents"
                     :mode="'tags'"
                     @open="showAddTag"
                     v-model="form.tagged_students" 
                     :loading="loading.students"
                     :options="student_list"
                     valueProp="id"
-                    placeholder="Please enter at least 1 characters"
+                    placeholder="Search for students"
                     label="name"
-                    :noOptionsText="'No results'"
-                    :noResultsText="'No results'"
+                    :noOptionsText="'No items'"
+                    :noResultsText="'No items'"
+                    :show-options="false"
                     :closeOnSelect="false"
                     :canDeselect="false"
                     :searchable="true"
@@ -321,7 +327,7 @@ background: #555; /* Color of the handle when hovered */
                         caretOpen: 'rotate-180 pointer-events-auto',
                         clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 rtl:pr-0 rtl:pl-3.5',
                         clearIcon: 'multiselect-tag-remove-icon w-10 h-4 py-px box-content inline-block',
-                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                        dropdown: 'max-h-44 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b scrollbar',
                         dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t ',
                         dropdownHidden: '',
                         options: 'flex flex-col p-0 m-0 list-none',
@@ -454,7 +460,7 @@ export default {
     removePhoto(photo_index){
         this.form.photos.splice(photo_index, 1)
     },
-    findStudentss(query){
+    findStudents(query){
         if(query){
             this.loading.students = true
             axios.get(route('students.find'), {
