@@ -62,12 +62,13 @@ background: #555; /* Color of the handle when hovered */
         </div> -->
         <div class="flex justify-center">
             <div class="flex-1 max-w-2xl">
-                <div class="bg-indigo-100 border-t border-b border-indigo-500 text-indigo-700 px-4 py-3" role="alert">
-                    <p class="font-bold">You have pending fee payment
-                        <button class="ml-3 self-center text-sm px-2 py-1 border border-indigo-300 rounded bg-white">Pay now</button>
-                    </p>
-                </div>
-                <div class="flex mb-3" v-if="$page.props.can.create_posts">
+                <!-- <div class="bg-indigo-100 border-t border-b border-indigo-500 text-indigo-700 px-4 py-3 mb-3" role="alert">
+                    <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 text-sm">
+                        <p class="font-bold">You have pending fee payment</p>
+                        <button class="ml-3 self-center text-sm px-2 pb-1.5 pt-1 border border-indigo-300 rounded bg-white hover:shadow">Pay now</button>
+                    </div>
+                </div> -->
+                <!-- <div class="flex mb-3" v-if="$page.props.can.create_posts">
                     <div class="flex items-center space-x-2 bg-indigo-100 rounded px-3 py-2 font-semibold w-full cursor-pointer transform scale-100 hover:scale-105 duration-200 select-none" @click="showCreatePost">
                         <img width="44" height="44" src="https://img.icons8.com/dusk/64/create-new.png" alt="create-new"/>
                         <div class="flex flex-col">
@@ -75,7 +76,7 @@ background: #555; /* Color of the handle when hovered */
                             <span class="text-xs text-gray-700">Share student activities, notices, announcements or reminder with parents.</span>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- <div class="flex flex-col bg-white p-3 shadow-md rounded">
                     
                     <textarea class="bg-white border border-gray-300 p-2 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="5" placeholder="What's happening today?" v-model="form.status_text"></textarea>
@@ -99,13 +100,19 @@ background: #555; /* Color of the handle when hovered */
                         </div>
                     </div>
                 </div> -->
-                <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded" v-for="post, post_index in $page.props.posts">
+                <div class="flex items-center space-y-3 bg-white pb-3 pt-2.5 px-4 shadow-md rounded-xl">
+                    <h2 class="md:text-2xl mx-1 font-extrabold">Stories</h2>
+                </div>
+                <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl" v-for="post, post_index in $page.props.posts">
                     <div class="flex flex-row text-sm items-center">
-                        <img class="object-cover w-12 h-12 border-2 border-gray-300 rounded-full select-none" src="https://images.unsplash.com/photo-1517070208541-6ddc4d3efbcb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&faces=1&faceindex=1&facepad=2.5&w=500&h=500&q=80">
-                        <div class="flex justify-between items-center flex-1 px-4 font-bold leading-tight select-none">
-                            <span class="text-slate-800 text-balance font-extrabold">{{ post.post_author_name }}</span>
+                        <!-- <img class="object-cover w-12 h-12 border-2 border-gray-300 rounded-full select-none" src="https://images.unsplash.com/photo-1517070208541-6ddc4d3efbcb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&faces=1&faceindex=1&facepad=2.5&w=500&h=500&q=80"> -->
+                        <div class="flex justify-between items-center flex-1 font-bold leading-tight select-none">
+                            <div class="flex flex-col mx-1">
+                                <span class="text-slate-900 md:text-lg font-bold">{{ post.post_author_name }}</span>
+                                <span class="text-xs font-medium text-slate-500">ALFA and Friends Maths</span>
+                            </div>
                             <div class="flex items-center">
-                                <TimeAgo class="text-gray-500 text-xs" :datetime="post.post_date"></TimeAgo>
+                                <TimeAgo class="text-gray-500 font-medium text-xs" :datetime="post.post_date"></TimeAgo>
                             </div>
                         </div>
                         <Menu as="div" class="relative inline-block text-left" v-if="$page.props.can.create_posts">

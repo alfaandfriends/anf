@@ -1388,6 +1388,7 @@ export default {
         //     });
         // },
         getPlusFee(event, class_id, class_type, programme_id, is_transfer_student = false){
+            this.form.fee = []
             if(this.fetching_fee){
                 return
             }

@@ -2,11 +2,32 @@
     <Head title="Home" />
     <Authenticated>
         <div class="flex justify-center">
-            <div class="flex-1 max-w-4xl">
-                <div class="hidden md:flex lg:flex justify-end mb-3">
-                    <BreezeButton type="button" buttonType="info" @click="showAddChild">Add Child</BreezeButton>
+            <div class="flex-1 max-w-lg space-y-4">
+                <div class="relative flex flex-col items-center p-6 rounded-2xl border-2 border-gray-400 bg-white shadow-md hover:bg-indigo-50 cursor-pointer" v-if="$page.props.user_has_children.length" v-for="info in $page.props.user_has_children" @click="switchChild(info.child_id, info.child_name, info.student_id)">
+                    <h3 class="text-xl font-extrabold mb-1 text-center">{{ info.name }}</h3>
+                    <span class="text-sm">{{ getAge(moment(info.dob).format('DD/MM/Y')) }} Years Old</span>
+                    <span class="text-sm">{{ moment(info.dob).format('Do MMMM Y') }}</span>
+                    <span class="text-sm mb-3">{{ info.gender }}</span>
+                    <h3 class="text-sm text-gray-500">2 active classes</h3>
+                    <h3 class="text-sm text-gray-500">ANFC Bangi</h3>
+                    <div class="absolute left-5 inset-y-1/2 transform -translate-y-1/2 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-400" fill="currentColor" viewBox="0 0 512 512" v-if="!switching && info.child_id == $page.props.current_active_child.child_id">
+                            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-400 animate-spin" fill="currentColor" viewBox="0 0 512 512" v-if="switching && info.child_id == $page.props.current_active_child.child_id">
+                            <path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/>
+                        </svg>
+                    </div>
                 </div>
-                <div class="bg-white shadow rounded-lg border">
+                <div class="flex justify-center mb-3">
+                    <BreezeButton type="button" buttonType="info" @click="showAddChild">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                            <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+                        </svg>
+                        Add Child
+                    </BreezeButton>
+                </div>
+                <!-- <div class="bg-white shadow rounded-lg border">
                     <table class="w-full text-sm text-left text-gray-500">
                         <thead class="text-gray-700 capitalize bg-gray-200">
                             <tr>
@@ -52,14 +73,14 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="flex items-end justify-end fixed bottom-24 right-4 md:hidden lg:hidden">
+                </div> -->
+                <!-- <div class="flex items-end justify-end fixed bottom-24 right-4 md:hidden lg:hidden">
                     <button class="bg-indigo-600 hover:bg-indigo-600 text-white font-semibold p-3 rounded-full shadow-lg" @click="showAddChild">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
                         </svg>
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
         <ConfirmationModal 
@@ -136,6 +157,7 @@ export default {
     data(){
         return{
             isOpen: false,
+            switching: false,
             confirmationAlert: '',
             confirmationTitle: '',
             confirmationText: '',
@@ -204,7 +226,24 @@ export default {
                     },
                 })
             }
-        }
+        },
+        getAge(dob){
+            const birthDate = moment(dob, 'YYYY-MM-DD');
+            const today = moment();
+            return today.diff(birthDate, 'years');
+        },
+        switchChild(child_id, child_name, student_id){
+            if(this.switching || child_id == this.$page.props.current_active_child.child_id){
+                return
+            }
+            this.switching = true
+            axios.post(route('parent.switch_child', {child_id: child_id, child_name: child_name, student_id: student_id}))
+            .then(response => {
+                if(response.data){
+                    location.reload()
+                }
+            });
+        },
     }
 }
 </script>

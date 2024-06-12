@@ -10,10 +10,10 @@ import Announcement from '@/Components/Parent/Announcement.vue';
     <div class="flex andika-regular">
         <div class="min-h-screen bg-gray-100 w-full">
             <!-- Page Content -->
-            <Announcement />
+            <!-- <Announcement /> -->
             <Header />
             <Navigation />
-            <main class="flex flex-col bg-indigo-50 relative h-full justify-between">
+            <main class="flex flex-col bg-indigo-50 relative h-full justify-between mt-16 md:mt-0">
                 <div class="bg-orange-50 h-full p-3">
                     <slot/>
                 </div>
