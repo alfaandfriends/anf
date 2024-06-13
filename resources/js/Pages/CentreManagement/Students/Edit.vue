@@ -555,8 +555,8 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 <div class="space-y-2">
                                     <template v-for="fee, fee_index in form.fee">
-                                        <div class="grid grid-cols-1 lg:grid-cols-8 rounded-lg overflow-hidden border-2 bg-white border-indigo-500 border-dashed">
-                                            <div class="col-span-4 p-6">
+                                        <div class="grid grid-cols-1 rounded-lg overflow-hidden border-2 bg-white border-indigo-500 border-dashed">
+                                            <div class="p-6">
                                                 <h3 class="flex space-x-4 items-center text-lg text-left uppercase leading-8 font-extrabold text-gray-900 sm:leading-9">
                                                     <img src="/images/school.png" class="w-16 h-16" alt="">
                                                     <span class="flex flex-col">
@@ -594,7 +594,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-span-4 p-3 bg-indigo-50 space-y-4">
+                                            <div class="p-3 bg-indigo-50 space-y-4">
                                                 <div class="flex flex-col bg-white px-4 py-1 rounded-lg border border-gray-500">
                                                     <div class="flex flex-wrap items-center space-x-4 mt-3 pb-3 pl-2">
                                                         <h3 class="flex items-center font-semibold text-sm space-x-2 whitespace-nowrap">
@@ -623,98 +623,39 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <span class="text-xs font-semibold text-blue-500">No Promo applied.</span>
                                                     </div>
                                                 </div>
-                                                <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900 p-3">
-                                                    <!-- <div class="flex justify-center">
-                                                        <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded cursor-pointer" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                        <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
-                                                    </div> -->
-                                                    <div class="flex">
-                                                        <input :id="'registration_fee'+fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
-                                                        <label :for="'registration_fee'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Registration Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</label>
+                                                
+                                                <div class="grid grid-cols-1 2xl:grid-cols-2 px-3 gap-y-4 text-xl leading-none font-extrabold text-gray-900">
+                                                    <div class="col-span-2 2xl:col-span-1" v-if="fee.fee_info.registration_fee != 0">
+                                                        <div class="grid grid-cols-12">
+                                                            <input type="checkbox" class="text-sm col-span-1 cursor-pointer border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
+                                                            <label class="col-span-11 text-sm ml-3 font-medium leading-5 text-gray-800 select-none">Registration Fee: <span class="font-bold">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</span></label>
+                                                            <div class="col-start-2 col-span-11 mt-3" v-if="fee.fee_info.include_registration_fee">
+                                                                <label :for="'registration_fee_discount'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Discount (if any): </label>
+                                                                <input min="0" :id="'registration_fee_discount'+fee_index" type="number" class="text-sm rounded font-normal h-8" placeholder="Discount" v-if="fee.fee_info.include_registration_fee && (fee.fee_info.registration_fee && fee.fee_info.registration_fee != 0)" v-model="fee.fee_info.registration_fee_discount">
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="flex">
-                                                        <input :id="'material_fee'+fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                        <label :for="'material_fee'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Material Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                    <div class="col-span-2 2xl:col-span-1" v-if="fee.fee_info.material_fee != 0">
+                                                        <div class="grid grid-cols-12">
+                                                            <input type="checkbox" class="col-span-1 cursor-pointer bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                            <label class="col-span-11 text-sm ml-3 font-medium leading-5 text-gray-800 select-none">Material Fee: <span class="font-bold">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</span></label>
+                                                            <div class="col-start-2 col-span-11 mt-3" v-if="fee.fee_info.include_material_fee">
+                                                                <label :for="'material_fee_discount'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none">Discount (if any): </label>
+                                                                <input min="0" :id="'material_fee_discount'+fee_index" type="number" class="text-sm rounded font-normal h-8" placeholder="Discount" v-if="fee.fee_info.include_material_fee && (fee.fee_info.material_fee && fee.fee_info.material_fee != 0)" v-model="fee.fee_info.material_fee_discount">
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="flex justify-center items-center">
-                                                        <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
-                                                        <span class="leading-7 font-medium text-gray-700">/month</span>
+                                                    <div class="col-span-2">
+                                                        <div class="flex items-center justify-end text-2xl mt-3">
+                                                            <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
+                                                            <span class="leading-7 font-medium text-gray-700">/month</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </template>
                                 </div>
-                                <!-- <div class="space-y-2">
-                                    <template v-for="fee, fee_index in form.fee">
-                                        <div class="flex justify-between max-w-lg mx-auto rounded-lg overflow-hidden lg:max-w-none lg:flex border-2 bg-white border-indigo-500 border-dashed">
-                                            <div class="p-6">
-                                                <h3 class="flex space-x-4 items-center text-lg text-left uppercase leading-8 font-extrabold text-gray-900 sm:leading-9">
-                                                    <img src="/images/school.png" class="w-16 h-16" alt="">
-                                                    <span class="flex flex-col">
-                                                        <span>{{ fee.fee_info.programme_name }}</span>
-                                                        <span class="font-semibold text-sm">Level {{ fee.fee_info.programme_level }}</span>
-                                                    </span>
-                                                </h3>
-                                                <div class="mt-3">
-                                                    <ul class="flex flex-wrap gap-8">
-                                                        <li class="flex items-start lg:col-span-1">
-                                                            <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
-                                                                <span class="text-sm font-bold underline">Centre</span>
-                                                                <span class="text-sm font-semibold">{{ fee.fee_info.centre_name }}</span>
-                                                            </p>
-                                                        </li>
-                                                        <li class="flex items-start lg:col-span-1">
-                                                            <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
-                                                                <span class="text-sm font-bold underline">Class Fee</span>
-                                                                <span class="text-sm font-semibold">{{ fee.fee_info.programme_type }}</span>
-                                                            </p>
-                                                        </li>
-                                                        <li class="flex items-start lg:col-span-1">
-                                                            <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
-                                                                <span class="text-sm font-bold underline">Class Method</span>
-                                                                <span class="text-sm font-semibold">{{ fee.fee_info.class_method }}</span>
-                                                            </p>
-                                                        </li>
-                                                        <li class="flex items-start lg:col-span-1">
-                                                            <p class="flex flex-col space-y-1 text-lg leading-5 text-gray-700 text-left">
-                                                                <span class="text-sm font-bold underline">Classes</span>
-                                                                <div class="grid grid-cols-1 gap-2">
-                                                                    <div class="flex space-x-4 text-sm border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
-                                                                        <div class="flex items-center space-x-2">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
-                                                                                <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/>
-                                                                            </svg>
-                                                                            <span>{{ classes.class_day }}</span>
-                                                                        </div>
-                                                                        <div class="flex items-center space-x-2">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
-                                                                                <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
-                                                                            </svg>
-                                                                            <span>{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </p>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="flex flex-col justify-center py-8 px-12 text-center bg-indigo-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center">
-                                                <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900">
-                                                    <div class="flex">
-                                                        <input :id="fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                        <label :for="fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Include Material: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
-                                                    </div>
-                                                    <div class="flex justify-center space-y items-center">
-                                                        <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.programme_fee }}</span>
-                                                        <span class="leading-7 font-medium text-gray-700">/month</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div> -->
                             </div>
                             <div class="px-2" v-else-if="list.available_classes.length && !form.fee.length && !no_fee_found">
                                 <div id="alert-border-1" class="flex items-center p-4 text-blue-800 border-t-4 border-blue-300 bg-blue-50 dark:text-blue-400 dark:bg-gray-800 dark:border-blue-800" role="alert">
@@ -1298,23 +1239,32 @@ export default {
         'form.fee': {
             handler(){
                 this.total_amount = 0;
-                for (const feeObject of this.form.fee) {
+                this.form.fee.forEach((feeObject) => {
+                    const { 
+                        include_registration_fee, 
+                        registration_fee, 
+                        registration_fee_discount, 
+                        include_material_fee, 
+                        material_fee, 
+                        material_fee_discount, 
+                        programme_fee, 
+                        promos 
+                    } = feeObject.fee_info;
 
-                    // Calculate fee amount after applying promos
-                    // let fee_amount = include_material_fee ? Number(programme_fee) + Number(material_fee) : Number(programme_fee);
+                    const registration_fee_amount = include_registration_fee ? Number(registration_fee) : 0;
+                    const registration_discount = registration_fee_discount != "" && registration_fee_discount > 0 ? Number(registration_fee_discount) : 0;
+                    const material_fee_amount = include_material_fee ? Number(material_fee) : 0;
+                    const material_discount = material_fee_discount != "" && material_fee_discount > 0 ? Number(material_fee_discount) : 0;
 
-                    const { include_registration_fee, registration_fee, include_material_fee, material_fee, programme_fee, promos } = feeObject.fee_info;
-                    const registration_fee_amount  =    include_registration_fee ? Number(registration_fee) : 0;
-                    const material_fee_amount      =    include_material_fee ? Number(material_fee) : 0;
-                    console.log(promos)
                     const totalPercentValuePromo = promos.reduce((accumulator, currentValue) => 
-                        currentValue.type_id === 1 ? accumulator + currentValue.value : accumulator, 0);
+                        currentValue.type_id === 1 ? accumulator + currentValue.value : accumulator, 0
+                    );
                     const totalFixedValuePromo = promos.reduce((accumulator, currentValue) => 
-                        currentValue.type_id === 2 ? accumulator + currentValue.value : accumulator, 0);
+                        currentValue.type_id === 2 ? accumulator + currentValue.value : accumulator, 0
+                    );
 
-                    // this.total_amount             +=    Number(programme_fee) + registration_fee_amount + material_fee_amount;
-                    this.total_amount = Number(programme_fee) - totalFixedValuePromo - (this.total_amount * totalPercentValuePromo / 100) + Number(registration_fee_amount) + Number(material_fee_amount);
-                }
+                    this.total_amount += Number(programme_fee) - totalFixedValuePromo - (this.total_amount * totalPercentValuePromo / 100) + (Number(registration_fee_amount) - Number(registration_discount)) + (Number(material_fee_amount) - Number(material_discount));
+                });
             },
             deep: true
         }
@@ -1340,6 +1290,7 @@ export default {
                 this.searching.class = true   
                 this.enable_container.show_fee = false
                 this.list.available_classes = []
+
                 axios.get(route('classes.find'), {
                     'params': {
                         'centre_id': this.form.centre_id,

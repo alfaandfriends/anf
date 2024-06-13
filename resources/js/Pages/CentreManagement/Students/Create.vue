@@ -355,7 +355,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <span class="text-xs font-semibold text-blue-500">No Promo applied.</span>
                                                         </div>
                                                     </div>
-                                                    <div class="grid grid-cols-1 2xl:grid-cols-2 gap-y-4 text-xl leading-none font-extrabold text-gray-900">
+                                                    <div class="grid grid-cols-1 2xl:grid-cols-2 px-3 gap-y-4 text-xl leading-none font-extrabold text-gray-900">
                                                         <div class="col-span-2 2xl:col-span-1" v-if="fee.fee_info.registration_fee != 0">
                                                             <div class="grid grid-cols-12">
                                                                 <input type="checkbox" class="text-sm col-span-1 cursor-pointer border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
@@ -377,7 +377,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                             </div>
                                                         </div>
                                                         <div class="col-span-2">
-                                                            <div class="flex items-center justify-end">
+                                                            <div class="flex items-center justify-end text-2xl mt-3">
                                                                 <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
                                                                 <span class="leading-7 font-medium text-gray-700">/month</span>
                                                             </div>
