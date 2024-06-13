@@ -88,8 +88,7 @@
         </thead>
         <tbody style="border: 1px solid black">
             <tr>
-                <td style="padding-top:0.5rem; font-size: 13px; padding-left:1rem; padding-right:1rem;">
-                </td>
+                <td style="padding-top:0.2rem; font-size: 13px; padding-left:1rem; padding-right:1rem;" colspan="3">&nbsp;</td>
             </tr>
             @foreach ($data['invoice_items'] as $key=>$item)
                 <tr>
@@ -110,7 +109,7 @@
                         {{ $item->programme_fee }}.00
                     </td>
                 </tr>
-                @if($item->include_registration_fee)
+                @if($item->include_registration_fee && $item->registration_fee != 0)
                 <tr>
                     <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
                         - Registration Fee
@@ -123,7 +122,7 @@
                     </td>
                 </tr>
                 @endif
-                @if($item->include_material_fee)
+                @if($item->include_material_fee && $item->material_fee != 0)
                     <tr>
                         <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
                             - Material fee
@@ -161,6 +160,9 @@
                         </td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                </tr>
             @endforeach
         </tbody>
         <tfoot>
