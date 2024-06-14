@@ -48,17 +48,19 @@ class ProgrammeController extends Controller
 
     public function storeProgramme(Request $request){
         $request->validate([
-            'programme_name'        => 'required|max:255',
-            'programme_country'     => 'required',
+            'programme_name'            => 'required|max:255',
+            'programme_country'         => 'required',
+            'progress_report_required'  => 'required',
         ]);
 
         if(empty($request->programme_info)){
             return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level !']);
         }
         $programme_id    =   DB::table('programmes')->insertGetId([
-            'name'          =>  $request->programme_name,
-            'country_id'    =>  $request->programme_country,
-            'status'        =>  $request->programme_active,
+            'name'                      =>  $request->programme_name,
+            'country_id'                =>  $request->programme_country,
+            'status'                    =>  $request->programme_active,
+            'progress_report_required'  =>  $request->progress_report_required,
         ]);
 
         foreach($request->programme_info as $key=>$info){
@@ -142,8 +144,9 @@ class ProgrammeController extends Controller
 
     public function updateProgramme(Request $request){
         $request->validate([
-            'programme_name'        => 'required|max:255',
-            'programme_country'     => 'required',
+            'programme_name'            => 'required|max:255',
+            'programme_country'         => 'required',
+            'progress_report_required'  => 'required',
         ]);
 
         if(empty($request->programme_info)){
@@ -194,16 +197,18 @@ class ProgrammeController extends Controller
         // }
 
         DB::table('programmes')->where('id', $request->programme_id)->update([
-            'name'          =>  $request->programme_name,
-            'country_id'    =>  $request->programme_country,
-            'status'        =>  $request->programme_active,
-            'updated_at'    =>  Carbon::now(),
+            'name'                      =>  $request->programme_name,
+            'country_id'                =>  $request->programme_country,
+            'status'                    =>  $request->programme_active,
+            'progress_report_required'  =>  $request->progress_report_required,
+            'updated_at'                =>  Carbon::now(),
         ]);
         $log_data =   'Updated programme ' . $request->programme_name  . ' : ' . json_encode([
-            'name'          =>  $request->programme_name,
-            'country_id'    =>  $request->programme_country,
-            'status'        =>  $request->programme_active,
-            'updated_at'    =>  Carbon::now(),
+            'name'                      =>  $request->programme_name,
+            'country_id'                =>  $request->programme_country,
+            'status'                    =>  $request->programme_active,
+            'progress_report_required'  =>  $request->progress_report_required,
+            'updated_at'                =>  Carbon::now(),
         ]);
         event(new DatabaseTransactionEvent($log_data));
 
