@@ -27,7 +27,7 @@
         <Disclosure as="nav" class="text-white bg-indigo-600" v-slot="{ open }">
             <div class="max-w-4xl px-5 mx-auto">
                 <div class="flex justify-between gap-5 items-center h-16 md:h-20">
-                    <div class="max-w-xs w-full text-center sm:text-lg font-semibold truncate">
+                    <div class="max-w-xs w-full text-center  text-md font-semibold truncate">
                         {{ $page.props.current_active_child.child_name }}
                     </div>
                     <div class="text-right">

@@ -286,10 +286,10 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 <div class="space-y-2">
                                     <template v-for="fee, fee_index in form.fee">
-                                        <div class="grid grid-cols-1 lg:grid-cols-8 rounded-lg overflow-hidden border-2 bg-white border-indigo-500 border-dashed">
+                                        <div class="grid grid-cols-1 2xl:grid-cols-8 rounded-lg overflow-hidden border-2 bg-white border-indigo-500 border-dashed">
                                             <div class="col-span-3 p-6">
-                                                <h3 class="flex space-x-4 items-center text-lg text-left uppercase leading-8 font-extrabold text-gray-900 sm:leading-9">
-                                                    <img src="/images/school.png" class="w-16 h-16" alt="">
+                                                <h3 class="flex 2xl:space-x-4 items-center text-lg text-left uppercase leading-8 font-extrabold text-gray-900 sm:leading-9">
+                                                    <img src="/images/school.png" class="w-16 h-16 hidden 2xl:block" alt="">
                                                     <span class="flex flex-col">
                                                         <span>{{ fee.fee_info.programme_name }}</span>
                                                         <span class="font-semibold text-sm">Level {{ fee.fee_info.programme_level }}</span>
@@ -355,18 +355,32 @@ import BreezeButton from '@/Components/Button.vue';
                                                             <span class="text-xs font-semibold text-blue-500">No Promo applied.</span>
                                                         </div>
                                                     </div>
-                                                    <div class="flex flex-col gap-4 justify-center text-xl leading-none font-extrabold text-gray-900">
-                                                        <div class="flex">
-                                                            <input :id="'registration_fee'+fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
-                                                            <label :for="'registration_fee'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Registration Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</label>
+                                                    <div class="grid grid-cols-1 2xl:grid-cols-2 px-3 gap-y-4 text-xl leading-none font-extrabold text-gray-900">
+                                                        <div class="col-span-2 2xl:col-span-1" v-if="fee.fee_info.registration_fee != 0">
+                                                            <div class="grid grid-cols-12">
+                                                                <input type="checkbox" class="text-sm col-span-1 cursor-pointer border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
+                                                                <label class="col-span-11 text-sm ml-3 font-medium leading-5 text-gray-800 select-none">Registration Fee: <span class="font-bold">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</span></label>
+                                                                <div class="col-start-2 col-span-11 mt-3" v-if="fee.fee_info.include_registration_fee">
+                                                                    <label :for="'registration_fee_discount'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Discount (if any): </label>
+                                                                    <input min="0" :id="'registration_fee_discount'+fee_index" type="number" class="text-sm rounded font-normal h-8" placeholder="Discount" v-if="fee.fee_info.include_registration_fee && (fee.fee_info.registration_fee && fee.fee_info.registration_fee != 0)" v-model="fee.fee_info.registration_fee_discount">
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="flex">
-                                                            <input :id="'material_fee'+fee_index" type="checkbox" class="bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                            <label :for="'material_fee'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Material Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                                        <div class="col-span-2 2xl:col-span-1" v-if="fee.fee_info.material_fee != 0">
+                                                            <div class="grid grid-cols-12">
+                                                                <input type="checkbox" class="col-span-1 cursor-pointer bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
+                                                                <label class="col-span-11 text-sm ml-3 font-medium leading-5 text-gray-800 select-none">Material Fee: <span class="font-bold">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</span></label>
+                                                                <div class="col-start-2 col-span-11 mt-3" v-if="fee.fee_info.include_material_fee">
+                                                                    <label :for="'material_fee_discount'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none">Discount (if any): </label>
+                                                                    <input min="0" :id="'material_fee_discount'+fee_index" type="number" class="text-sm rounded font-normal h-8" placeholder="Discount" v-if="fee.fee_info.include_material_fee && (fee.fee_info.material_fee && fee.fee_info.material_fee != 0)" v-model="fee.fee_info.material_fee_discount">
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="flex justify-center items-center">
-                                                            <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
-                                                            <span class="leading-7 font-medium text-gray-700">/month</span>
+                                                        <div class="col-span-2">
+                                                            <div class="flex items-center justify-end text-2xl mt-3">
+                                                                <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
+                                                                <span class="leading-7 font-medium text-gray-700">/month</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -609,23 +623,32 @@ export default {
         'form.fee': {
             handler(){
                 this.total_amount = 0;
-                for (const feeObject of this.form.fee) {
+                this.form.fee.forEach((feeObject) => {
+                    const { 
+                        include_registration_fee, 
+                        registration_fee, 
+                        registration_fee_discount, 
+                        include_material_fee, 
+                        material_fee, 
+                        material_fee_discount, 
+                        programme_fee, 
+                        promos 
+                    } = feeObject.fee_info;
 
-                    // Calculate fee amount after applying promos
-                    // let fee_amount = include_material_fee ? Number(programme_fee) + Number(material_fee) : Number(programme_fee);
+                    const registration_fee_amount = include_registration_fee ? Number(registration_fee) : 0;
+                    const registration_discount = registration_fee_discount != "" && registration_fee_discount > 0 ? Number(registration_fee_discount) : 0;
+                    const material_fee_amount = include_material_fee ? Number(material_fee) : 0;
+                    const material_discount = material_fee_discount != "" && material_fee_discount > 0 ? Number(material_fee_discount) : 0;
 
-                    const { include_registration_fee, registration_fee, include_material_fee, material_fee, programme_fee, promos } = feeObject.fee_info;
-                    const registration_fee_amount  =    include_registration_fee ? Number(registration_fee) : 0;
-                    const material_fee_amount      =    include_material_fee ? Number(material_fee) : 0;
-                    
                     const totalPercentValuePromo = promos.reduce((accumulator, currentValue) => 
-                        currentValue.type_id === 1 ? accumulator + currentValue.value : accumulator, 0);
+                        currentValue.type_id === 1 ? accumulator + currentValue.value : accumulator, 0
+                    );
                     const totalFixedValuePromo = promos.reduce((accumulator, currentValue) => 
-                        currentValue.type_id === 2 ? accumulator + currentValue.value : accumulator, 0);
+                        currentValue.type_id === 2 ? accumulator + currentValue.value : accumulator, 0
+                    );
 
-                    // this.total_amount             +=    Number(programme_fee) + registration_fee_amount + material_fee_amount;
-                    this.total_amount = Number(programme_fee) - totalFixedValuePromo - (this.total_amount * totalPercentValuePromo / 100) + Number(registration_fee_amount) + Number(material_fee_amount);
-                }
+                    this.total_amount += Number(programme_fee) - totalFixedValuePromo - (this.total_amount * totalPercentValuePromo / 100) + (Number(registration_fee_amount) - Number(registration_discount)) + (Number(material_fee_amount) - Number(material_discount));
+                });
             },
             deep: true
         },
@@ -662,6 +685,14 @@ export default {
                 this.searching.class = true   
                 this.enable_container.show_fee = false
                 this.list.available_classes = []
+
+                /* If found same programme, delete the old fee */
+                this.selected_plus_class[this.search_form.programme_id] = []
+                const fee_index =   this.form.fee.findIndex(fee => fee.fee_info.programme_id === this.search_form.programme_id)
+                if(fee_index != -1){
+                    this.form.fee.splice(fee_index, 1);
+                }
+                
                 axios.get(route('classes.find'), {
                     'params': {
                         'centre_id': this.form.centre_id,
@@ -679,53 +710,13 @@ export default {
                 });
             }
         },
-        // getNormalFee(class_id, class_type_id, programme_id, programme_level_id){
-        //     if(this.fetching_fee){
-        //         return
-        //     }
-        //     const only_one_class_allowed   = this.form.fee.find(item => item.fee_info.class_type_id == 1 && item.fee_info.class_type_id == class_type_id && item.fee_info.programme_id == programme_id);
-        //     if(only_one_class_allowed){
-        //         alert('Only one class is allowed for normal class.')
-        //         this.searching.fee = false
-        //         return
-        //     }
-        //     const programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type_id);
-        //     if(programme_already_added){
-        //         alert('This programme already been added. Please remove the previous one first.')
-        //         this.searching.fee = false
-        //         return
-        //     }
-        //     this.fetching_fee = true
-        //     axios.get(route('programmes.get_fee'), {
-        //         'params': {
-        //             'class_id' : class_id,
-        //             'programme_level_id' : programme_level_id,
-        //         }
-        //     })
-        //     .then((res) => {
-        //         this.form.fee.push(res.data)
-        //         this.scrollToElement('class_fee')
-        //         this.searching.fee = false
-        //         this.fetching_fee = false
-        //     });
-        // },
         getPlusFee(event, class_id, class_type, programme_id, programme_level_id){
-            this.form.fee = []
             if(this.fetching_fee){
                 return
             }
             if(this.disable_check_box){
                 return
             }
-            // const  programme_already_added   = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type);
-            // if(programme_already_added){
-            //     alert('This programme already been added. Please remove the previous one first.')
-            //     if(event.target.checked){
-            //         event.target.checked = false
-            //     }
-            //     this.searching.fee = false
-            //     return
-            // }
 
             this.disable_check_box = true
 

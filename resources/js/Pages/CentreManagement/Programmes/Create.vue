@@ -33,7 +33,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <h1 class="text-indigo-800 font-bold">Programme Information</h1>
                                         <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
                                     </div>
-                                    <div class="grid grid-cols-2 sm:grid-cols-0 gap-0 sm:gap-4">
+                                    <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4">
                                         <div class="mb-4">
                                             <label for="programme_name" class="block text-sm text-gray-700 font-bold"> Programme Name <span class="text-red-500">*</span></label>
                                             <div class="mt-1 flex rounded-md shadow-sm">
@@ -46,6 +46,15 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <select type="text" name="programme_country" id="programme_country" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_country ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_country" autocomplete="none">
                                                     <option value="">Select a country</option>
                                                     <option :value="country.id" v-for="country in $page.props.countries">{{ country.name }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="progress_report_required" class="block text-sm text-gray-700 font-bold"> Progress Report Required <span class="text-red-500">*</span></label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <select type="text" name="progress_report_required" id="progress_report_required" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.progress_report_required ? 'border-red-300' : 'border-gray-300'" v-model="form.progress_report_required" autocomplete="none">
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -408,6 +417,7 @@ export default {
                 programme_name: '',
                 programme_country: '',
                 programme_info: [],
+                progress_report_required: 0,
                 programme_active: true,
             },
             fee_form: {
