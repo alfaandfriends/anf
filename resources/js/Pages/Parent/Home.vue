@@ -101,7 +101,7 @@ background: #555; /* Color of the handle when hovered */
                     </div>
                 </div> -->
                 <div class="flex items-center space-y-3 bg-white pb-3 pt-2.5 px-4 shadow-md rounded-xl">
-                    <h2 class="md:text-2xl mx-1 font-extrabold">Stories</h2>
+                    <h2 class="text-lg md:text-2xl mx-1 font-extrabold">Stories</h2>
                 </div>
                 <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl" v-for="post, post_index in $page.props.posts">
                     <div class="flex flex-row text-sm items-center">
@@ -115,20 +115,6 @@ background: #555; /* Color of the handle when hovered */
                                 <TimeAgo class="text-gray-500 font-medium text-xs" :datetime="post.post_date"></TimeAgo>
                             </div>
                         </div>
-                        <Menu as="div" class="relative inline-block text-left" v-if="$page.props.can.create_posts">
-                            <MenuButton class="inline-flex grow-1 self-center w-full rounded-md bg-white text-sm font-semibold text-gray-900 hover:bg-gray-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 128 512">
-                                    <path d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/>
-                                </svg>
-                            </MenuButton>
-                            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                                <MenuItems class="absolute right-0 z-10 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <div class="py-2 px-4 text-center">
-                                    <span class="text-red-500 hover:text-red-600 cursor-pointer rounded font-bold">Delete</span>
-                                </div>
-                                </MenuItems>
-                            </transition>
-                        </Menu>
                     </div>
                     <hr>
                     <span class="text-sm text-slate-800">{{ post.post_title }}</span>

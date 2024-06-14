@@ -1,7 +1,7 @@
 <template>
     <div class="fixed inset-x-0 bottom-0 z-20 bg-white border border-t md:border-gray-200 md:border-b-2 md:top-[5rem] md:sticky"> 
         <Disclosure as="nav" class="text-white bg-white" v-slot="{ open }">
-            <div class="max-w-3xl px-5 mx-auto">
+            <div class="max-w-2xl mx-auto">
                 <Menu as="div" class="flex justify-between items-center h-16 md:h-20">
                     <div class="">
                         <a 

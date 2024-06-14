@@ -34,9 +34,6 @@ Route::middleware(['auth', 'child'])->group(function(){
         /* Invoices */
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
 
-        /* Invoices */
-        Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
-
         /* Art Gallery */
         Route::get('art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery');
         Route::post('art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store');

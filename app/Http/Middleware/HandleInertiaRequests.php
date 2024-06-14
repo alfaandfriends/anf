@@ -178,8 +178,9 @@ class HandleInertiaRequests extends Middleware
     public function userHasChildren(){
         $user_has_children =   collect(DB::table('children')
                                 ->leftJoin('students', 'students.children_id', '=', 'children.id')
+                                ->leftJoin('genders', 'children.gender_id', '=', 'genders.id')
                                 ->where('parent_id', Auth::id())
-                                ->select('students.id as student_id', 'children.id as child_id', 'children.name as child_name')
+                                ->select('students.id as student_id', 'children.id as child_id', 'children.name as child_name', 'genders.name as child_gender', 'children.date_of_birth as child_dob')
                                 ->get());
         return $user_has_children;
     }

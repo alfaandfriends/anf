@@ -3,21 +3,19 @@
     <Authenticated>
         <div class="flex justify-center">
             <div class="flex-1 max-w-lg space-y-4">
-                <div class="relative flex flex-col items-center p-6 rounded-2xl border-2 border-gray-400 bg-white shadow-md hover:bg-indigo-50 cursor-pointer" v-if="$page.props.user_has_children.length" v-for="info in $page.props.user_has_children" @click="switchChild(info.child_id, info.child_name, info.student_id)">
-                    <h3 class="text-xl font-extrabold mb-1 text-center">{{ info.name }}</h3>
-                    <span class="text-sm">{{ getAge(moment(info.dob).format('DD/MM/Y')) }} Years Old</span>
-                    <span class="text-sm">{{ moment(info.dob).format('Do MMMM Y') }}</span>
-                    <span class="text-sm mb-3">{{ info.gender }}</span>
-                    <h3 class="text-sm text-gray-500">2 active classes</h3>
-                    <h3 class="text-sm text-gray-500">ANFC Bangi</h3>
-                    <div class="absolute left-5 inset-y-1/2 transform -translate-y-1/2 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-400" fill="currentColor" viewBox="0 0 512 512" v-if="!switching && info.child_id == $page.props.current_active_child.child_id">
-                            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-400 animate-spin" fill="currentColor" viewBox="0 0 512 512" v-if="switching && info.child_id == $page.props.current_active_child.child_id">
-                            <path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/>
-                        </svg>
-                    </div>
+                <div class="relative flex flex-col items-center px-4 py-4 rounded-2xl border-2 border-gray-400 bg-white shadow-md hover:bg-indigo-50 cursor-pointer" v-if="$page.props.user_has_children.length" v-for="info in $page.props.user_has_children" @click="switchChild(info.child_id, info.child_name, info.student_id)">
+                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400" v-if="!switching && info.child_id == $page.props.current_active_child.child_id">Currently Viewing</span>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400" v-if="switching && info.child_id == $page.props.current_active_child.child_id">Switching...</span>
+                    <span class="flex items-center text-md font-extrabold mb-1 text-center space-x-2">
+                        {{ info.child_name }}
+                    </span>
+                    <span class="text-sm">{{ moment(info.child_dob).format('Do MMMM Y') }} (<span class="text-sm">{{ getAge(moment(info.child_dob).format('DD/MM/Y')) }} years old</span>)</span>
+                    <span class="text-sm mb-3">{{ info.child_gender }}</span>
+                    <h3 class="text-sm text-gray-500">{{ $page.props.children_class_info[info.student_id] ? $page.props.children_class_info[info.student_id].length + ' active class' : 'No class' }}</h3>
+                    <h3 class="text-sm text-gray-500 mb-3">{{ $page.props.children_class_info[info.student_id] ? $page.props.children_class_info[info.student_id][0].label : 'No centre' }}</h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-6 w-6" fill="currentColor" @click="!info.student_id ? deleteChild(info.child_id) : ''" :class="!info.student_id ? 'text-red-600 hover:text-red-700 cursor-pointer' : 'text-red-300 cursor-not-allowed'">
+                        <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/>
+                    </svg>
                 </div>
                 <div class="flex justify-center mb-3">
                     <BreezeButton type="button" buttonType="info" @click="showAddChild">
@@ -95,10 +93,11 @@
             :confirmationData="confirmationData"
         >
         </ConfirmationModal>
-        <SimpleModal v-if="show_add_child" :open="show_add_child" @close:modal="show_add_child = false" class="w-full sm:h-auto sm:w-4/6 md:h-auto md:w-2/6 p-4 overflow-y-auto" :disable_overlay="disable_overlay">
-            <form class="p-4">
-                <h1 class="md:font-semibold md:text-xl">Add Child</h1>
-                <hr class="my-4 border-gray-600">
+        <SimpleModal :isOpen="show_add_child" @close="show_add_child = false">
+            <template #header>
+                Add Child
+            </template>
+            <div class="">
                 <label class="font-medium text-gray-900 text-sm md:text-md">Name</label>
                 <input type="text" class="mt-1 focus:ring-0 focus:border-gray-300 flex-1 block w-full rounded-md mb-4 text-sm md:text-md" :class="!errors.name ? 'border-gray-300' : 'border-red-300'" v-model="child_form.name">
                 <label class="font-medium text-gray-900 text-sm md:text-md">Date of Birth</label>
@@ -133,7 +132,7 @@
                     </BreezeButton>
                     <BreezeButton type="button" buttonType="gray" @click="show_add_child = false" v-if="!adding">Cancel</BreezeButton>
                 </div>
-            </form>
+            </div>
         </SimpleModal>
     </Authenticated>
 </template>
@@ -178,6 +177,7 @@ export default {
     },
     methods: {
         deleteChild(child_id){
+            console.log(child_id)
             this.confirmationAlert  = 'danger',
             this.confirmationTitle  = 'Warning',
             this.confirmationText   = "This child will be deleted permanently, are you sure want to proceed?",
