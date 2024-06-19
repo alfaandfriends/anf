@@ -2,7 +2,7 @@
     <div class="fixed inset-x-0 bottom-0 z-20 bg-white border border-t md:border-gray-200 md:border-b-2 md:top-[5rem] md:sticky"> 
         <Disclosure as="nav" class="text-white bg-white" v-slot="{ open }">
             <div class="max-w-2xl mx-auto">
-                <Menu as="div" class="flex justify-evenly items-center font-semibold h-16 md:h-20">
+                <Menu as="div" class="flex justify-evenly items-center font-medium h-16 md:h-20">
                     <div class="">
                         <a 
                             :href="route('parent.home')" 
@@ -38,7 +38,7 @@
                     </div>
                     <div class="relative">
                         <MenuButton
-                        :class="(route().current('parent.class')) ? 'text-indigo-500' : 'text-gray-500'" 
+                        :class="(route().current('parent.stories')) ? 'text-indigo-500' : 'text-gray-500'" 
                             class=" flex flex-col space-y-1 items-center justify-center text-center mx-auto px-4 pt-2 w-full text-gray-500 group-hover:text-indigo-500 border-b-2 border-transparent group-hover:border-indigo-500"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 576 512">
@@ -60,7 +60,7 @@
                                 <div class="px-2 py-1" v-if="$page.props.children_classes.length" v-for="child_class in $page.props.children_classes">
                                     <MenuItem v-slot="{ active }">
                                         <button
-                                        @click="$inertia.get(route('parent.class', child_class.programme_id))"
+                                        @click="$inertia.get(route('parent.stories', child_class.programme_id))"
                                         class="text-gray-600 group hover:bg-indigo-500 hover:text-white flex justify-left w-full items-center rounded-md px-2 py-2 text-sm"
                                         >
                                         {{ child_class.programme_name }}

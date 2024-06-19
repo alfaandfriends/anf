@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Parent;
 
+use App\Classes\PostHelper;
 use App\Http\Controllers\Controller;
 use Hashids\Hashids;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ClassController extends Controller
+class StoryController extends Controller
 {
     public function index(Request $request){
         
@@ -19,10 +20,14 @@ class ClassController extends Controller
             return back()->with(['type' => 'error', 'message' => 'Unable to fetch class data']);
         }
         
+        $student_id     =   $request->session()->get('current_active_child.student_id');
+        
+        $posts          =   PostHelper::getPosts($student_id);
         $programme_info =   DB::table('programmes')->where('id', $programme_id[0])->first();
 
         return Inertia::render('Parent/Class/Index', [
-            'programme_info' => $programme_info
+            'programme_info' => $programme_info,
+            'posts'          => $posts ?? []
         ]);
     }
 }

@@ -61,7 +61,7 @@ background: #555; /* Color of the handle when hovered */
             </div>
         </div> -->
         <div class="flex justify-center">
-            <div class="flex-1 max-w-lg">
+            <div class="flex-1 max-w-xl">
                 <!-- <div class="bg-indigo-100 border-t border-b border-indigo-500 text-indigo-700 px-4 py-3 mb-3" role="alert">
                     <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 text-sm">
                         <p class="font-bold">You have pending fee payment</p>
@@ -100,7 +100,7 @@ background: #555; /* Color of the handle when hovered */
                         </div>
                     </div>
                 </div> -->
-                <div class="flex items-center space-y-3 bg-white pb-3 pt-2.5 px-4 shadow-md rounded-xl">
+                <div class="flex items-center space-y-3 bg-white pb-3 pt-2.5 px-4 shadow rounded-xl">
                     <h2 class="text-lg md:text-2xl mx-1 font-extrabold">Stories</h2>
                 </div>
                 <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl" v-for="post, post_index in $page.props.posts">

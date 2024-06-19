@@ -2,7 +2,7 @@
     <Head title="Home" />
     <Authenticated>
         <div class="flex justify-center">
-            <div class="flex-1 max-w-lg space-y-4">
+            <div class="flex-1 max-w-xl space-y-4">
                 <div class="relative flex flex-col items-center px-4 py-4 rounded-2xl border-2 border-gray-400 bg-white shadow-md hover:bg-indigo-50 cursor-pointer" v-if="$page.props.user_has_children.length" v-for="info in $page.props.user_has_children" @click="switchChild(info.child_id, info.child_name, info.student_id)">
                     <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400" v-if="!switching && info.child_id == $page.props.current_active_child.child_id">Currently Viewing</span>
                     <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400" v-if="switching && info.child_id == $page.props.current_active_child.child_id">Switching...</span>

@@ -4,12 +4,12 @@ use App\Classes\ArtBookHelper;
 use App\Http\Controllers\Parent\ArtBookController;
 use App\Http\Controllers\Parent\ChildrenController;
 use App\Http\Controllers\Parent\ArtGalleryController;
-use App\Http\Controllers\Parent\ClassController;
 use App\Http\Controllers\Parent\InvoiceController;
 use App\Http\Controllers\Parent\HomeController;
 use App\Http\Controllers\Parent\MessageController;
 use App\Http\Controllers\Parent\PostController;
 use App\Http\Controllers\Parent\ProfileController;
+use App\Http\Controllers\Parent\StoryController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -32,8 +32,8 @@ Route::middleware(['auth', 'child'])->group(function(){
         /* Message */
         Route::get('messages', [MessageController::class, 'index'])->name('messages');
 
-        /* Classes */
-        Route::get('class/{id}', [ClassController::class, 'index'])->name('class');
+        /* Stories */
+        Route::get('stories/{id}', [StoryController::class, 'index'])->name('stories');
 
         /* Invoices */
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
