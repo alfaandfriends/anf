@@ -8,7 +8,10 @@ use Inertia\Middleware;
 use App\Models\Menu;
 use App\Models\Permission;
 use App\Models\UserHasRoles;
+use Carbon\Carbon;
+use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 class HandleInertiaRequests extends Middleware
@@ -49,6 +52,7 @@ class HandleInertiaRequests extends Middleware
             $user_notifications     =   $this->userNotifications();
             $user_has_roles         =   $this->userHasRoles();
             $user_has_children      =   $this->userHasChildren();
+            $children_classes      =    $this->childrenClasses();
         }
         
         return array_merge(parent::share($request), [
@@ -71,7 +75,8 @@ class HandleInertiaRequests extends Middleware
             'user_has_notifications' => $user_has_notification ?? '',
             'allowed_centres' => $allowed_centres ?? '',
             'user_has_roles' => $user_has_roles ?? '',
-            'user_has_children' => $user_has_children ?? '',
+            'user_has_children' => $user_has_children ?? [],
+            'children_classes' => $children_classes ?? [],
         ]);
     }
 
@@ -182,6 +187,26 @@ class HandleInertiaRequests extends Middleware
                                 ->where('parent_id', Auth::id())
                                 ->select('students.id as student_id', 'children.id as child_id', 'children.name as child_name', 'genders.name as child_gender', 'children.date_of_birth as child_dob')
                                 ->get());
+
         return $user_has_children;
+    }
+
+    public function childrenClasses(){
+        $children_classes =   collect(DB::table('student_fees')
+                                ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                ->leftJoin('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                ->leftJoin('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                ->where('student_fees.student_id', session()->get('current_active_child.student_id'))
+                                ->whereYear('student_fees.created_at', Carbon::now()->format('Y'))
+                                ->whereMonth('student_fees.created_at', Carbon::now()->format('m'))
+                                ->select('programmes.id as programme_id', 'programmes.name as programme_name')
+                                ->get()
+                                ->map(function ($item) {
+                                    $hashids = new Hashids('', 10);
+                                    $item->programme_id = $hashids->encode($item->programme_id);
+                                    return $item;
+                                }));
+
+        return $children_classes;
     }
 }

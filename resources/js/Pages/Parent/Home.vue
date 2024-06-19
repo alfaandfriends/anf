@@ -61,7 +61,7 @@ background: #555; /* Color of the handle when hovered */
             </div>
         </div> -->
         <div class="flex justify-center">
-            <div class="flex-1 max-w-2xl">
+            <div class="flex-1 max-w-lg">
                 <!-- <div class="bg-indigo-100 border-t border-b border-indigo-500 text-indigo-700 px-4 py-3 mb-3" role="alert">
                     <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 text-sm">
                         <p class="font-bold">You have pending fee payment</p>

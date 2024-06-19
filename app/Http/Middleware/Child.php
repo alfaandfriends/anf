@@ -20,9 +20,10 @@ class Child
         $children               =   collect(Inertia::getShared('user_has_children'));
         
         $child_session_data = [
-            'child_id'   => '',
-            'child_name' => '',
-            'student_id' => '',
+            'child_id'      => '',
+            'child_name'    => '',
+            'student_id'    => '',
+            'classes'       => [],
         ];
         
         if (count($children) > 0) {
@@ -32,6 +33,7 @@ class Child
                     'child_id'   => $children->pluck('child_id')->first(),
                     'child_name' => $children->pluck('child_name')->first(),
                     'student_id' => $children->pluck('student_id')->first(),
+                    'classes' => $children->pluck('classes'),
                 ];
             } 
             else {

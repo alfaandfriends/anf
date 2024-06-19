@@ -4,6 +4,7 @@ use App\Classes\ArtBookHelper;
 use App\Http\Controllers\Parent\ArtBookController;
 use App\Http\Controllers\Parent\ChildrenController;
 use App\Http\Controllers\Parent\ArtGalleryController;
+use App\Http\Controllers\Parent\ClassController;
 use App\Http\Controllers\Parent\InvoiceController;
 use App\Http\Controllers\Parent\HomeController;
 use App\Http\Controllers\Parent\MessageController;
@@ -30,6 +31,9 @@ Route::middleware(['auth', 'child'])->group(function(){
 
         /* Message */
         Route::get('messages', [MessageController::class, 'index'])->name('messages');
+
+        /* Classes */
+        Route::get('class/{id}', [ClassController::class, 'index'])->name('class');
 
         /* Invoices */
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');

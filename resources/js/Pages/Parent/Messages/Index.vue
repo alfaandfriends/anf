@@ -2,8 +2,8 @@
     <Head title="Fee Invoices" />
     <Authenticated>
         <div class="flex justify-center">
-            <div class="flex-1 max-w-4xl overflow-auto justify-center">
-                <div class="flex justify-center py-10">
+            <div class="flex-1 max-w-lg overflow-auto justify-center">
+                <div class="flex justify-center py-10 bg-white rounded-lg">
                     <span class="text-lg text-gray-500">Coming Soon...</span>
                 </div>
             </div>
