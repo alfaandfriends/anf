@@ -20,10 +20,22 @@ class FeeHelper {
                             ->where('students.status', 1)
                             ->whereMonth('student_fees.created_at', '=', now()->subMonth()->format('m'))
                             ->orderByDesc('student_fees.id')
-                            ->select('students.id as student_id', 'student_fees.id as student_fee_id', 'programme_level_fees.id as fee_id', 'centres.id as centre_id', 'centres.label as centre_name', 
-                                    'class_methods.name as class_method', 'programme_levels.material_fee', 'programmes.id as programme_id', 
-                                    'class_types_detail.class_type_id', 'programme_level_fees.fee_amount as programme_fee', 'programmes.name as programme_name', 
-                                    'class_types_detail.label as programme_type', 'programme_levels.level as programme_level', 'programme_levels.registration_fee', 'classes.id as class_id')
+                            ->select(
+                                'students.id as student_id', 
+                                'student_fees.id as student_fee_id', 
+                                'programme_level_fees.id as fee_id', 
+                                'centres.id as centre_id', 
+                                'centres.label as centre_name', 
+                                'class_methods.name as class_method', 
+                                'programme_levels.material_fee', 
+                                'programmes.id as programme_id', 
+                                'class_types_detail.class_type_id', 
+                                DB::raw('IF(student_fees.use_old_fee = 1, programme_level_fees.fee_amount, programme_level_fees.new_fee_amount) as programme_fee'),
+                                'programmes.name as programme_name', 
+                                'class_types_detail.label as programme_type', 
+                                'programme_levels.level as programme_level', 
+                                'programme_levels.registration_fee', 
+                                'classes.id as class_id')
                             ->get();
 
         return $fees;

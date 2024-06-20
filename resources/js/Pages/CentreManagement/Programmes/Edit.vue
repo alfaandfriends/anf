@@ -73,14 +73,15 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="border-b border-dashed border-indigo-900 mt-3"></div>
                                     </div>
                                     <div class="    overflow-hidden border border-gray-800 rounded-t-sm rounded-b-none mt-3">
-                                        <table class="shadow shadow-gray-500 min-w-full divide-y divide-gray-800">
+                                        <table class="shadow shadow-gray-500 min-w-full divide-y divide-gray-800 text-sm">
                                             <thead class="bg-slate-700 text-white">
                                                 <tr>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Level</th>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Class Type</th>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Registration Fee</th>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Material Fee</th>
-                                                    <th class="px-4 py-1 text-center border border-gray-400">Fee</th>
+                                                    <th class="px-4 py-1 text-center border border-gray-400">Old Fee</th>
+                                                    <th class="px-4 py-1 text-center border border-gray-400">New Fee</th>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Material</th>
                                                     <th class="px-4 py-1 text-center border border-gray-400">Action</th>
                                                 </tr>
@@ -90,28 +91,38 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <td colspan="8" class="py-4 text-center font-semibold text-sm italic">No Fees added.</td>
                                                 </tr>
                                                 <tr else class="hover:bg-gray-200" v-for="info, index in form.programme_info">
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.level }}</td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ $page.props.class_types[form.programme_info[index].class_type].name}}</td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.registration_fee }}</td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.material_fee }}</td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700 w-3/12">
-                                                        <div class="flex space-x-4">
+                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700" width="1%">{{ info.level }}</td>
+                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700" width="8%">{{ $page.props.class_types[form.programme_info[index].class_type].name}}</td>
+                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700" width="10%">{{ info.registration_fee }}</td>
+                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700" width="8%">{{ info.material_fee }}</td>
+                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700" width="16%">
+                                                        <!-- <div class="flex space-x-4"> -->
                                                             <div class="flex flex-col items-start">
                                                                 <p class="text-sm text-gray-700" v-for="fee in info.fees">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-bold">{{ fee.value }}</span></p>
+                                                            </div>
+                                                            <!-- <div class="flex flex-1 flex-col justify-center items-end">
+                                                                <span class="font-semibold text-yellow-600 hover:underline cursor-pointer" @click="editFee(index, info.programme_level_id ? false : true)">Edit</span>
+                                                            </div> -->
+                                                        <!-- </div> -->
+                                                    </td>
+                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700" width="20%">
+                                                        <div class="flex space-x-4">
+                                                            <div class="flex flex-col items-start">
+                                                                <p class="text-sm text-gray-700" v-for="fee in info.fees">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-bold">{{ fee.new_fee_amount }}</span></p>
                                                             </div>
                                                             <div class="flex flex-1 flex-col justify-center items-end">
                                                                 <span class="font-semibold text-yellow-600 hover:underline cursor-pointer" @click="editFee(index, info.programme_level_id ? false : true)">Edit</span>
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td class="px-4 py-2 text-left border border-gray-400">
+                                                    <td class="px-4 py-2 text-left border border-gray-400" width="13%">
                                                         <div class="flex flex-col">
                                                             <p class="text-sm text-gray-700 font-normal underline"><span class="font-bold">{{ info.product.name }}</span></p>
                                                             <p class="text-sm text-gray-700 italic">Variation : <span class="font-semibold">{{ info.product_variation.option_name ? info.product_variation.option_name : '-' }}</span></p>
                                                             <p class="text-sm text-gray-700 italic">Sub Variation : <span class="font-semibold">{{ info.product_sub_variation.option_name ? info.product_sub_variation.option_name : '-' }}</span></p>
                                                         </div>
                                                     </td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400">
+                                                    <td class="px-4 py-2 text-center border border-gray-400" width="5%">
                                                         <BreezeButton buttonType="danger" @click="deleteLevel(info.programme_level_id, index)" v-if="$page.props.can.delete_programmes">Delete</BreezeButton>
                                                     </td>
                                                 </tr>
@@ -419,7 +430,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="grow" v-for="fee in fee_edit_form.data">
                                     <label for="programme_material_fee" class="block text-sm text-gray-700 font-bold">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }}<span class="text-red-500">*</span></label>
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="number" min="0" name="programme_material_fee" id="programme_material_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.material_fee.error ? 'border-red-300' : 'border-gray-300'" v-model="fee.value" autocomplete="off"/>
+                                        <input type="number" min="0" name="programme_material_fee" id="programme_material_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.material_fee.error ? 'border-red-300' : 'border-gray-300'" v-model="fee.new_fee_amount" autocomplete="off"/>
                                     </div>
                                 </div>
                             </div>
