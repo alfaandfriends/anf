@@ -43,10 +43,10 @@ class InvoiceHelper {
 
         /* Calculate total fee */
         $totalFee = $invoice_items->sum(function ($item) {
-            $registration_fee           =   isset($item['include_registration_fee']) ? $item['registration_fee'] : 0;
-            $registration_fee_discount  =   isset($item['registration_fee_discount']) ? $item['registration_fee_discount'] : 0;
-            $material_fee               =   isset($item['include_material_fee']) ? $item['material_fee'] : 0;
-            $material_fee_discount      =   isset($item['material_fee_discount']) ? $item['material_fee_discount'] : 0;
+            $registration_fee           =   isset($item['include_registration_fee']) && $item['include_material_fee'] == true ? $item['registration_fee'] : 0;
+            $registration_fee_discount  =   isset($item['registration_fee_discount']) && $item['include_material_fee'] == true ? $item['registration_fee_discount'] : 0;
+            $material_fee               =   isset($item['include_material_fee']) && $item['include_material_fee'] == true ? $item['material_fee'] : 0;
+            $material_fee_discount      =   isset($item['material_fee_discount']) && $item['include_material_fee'] == true ? $item['material_fee_discount'] : 0;
 
             return $item['programme_fee'] + ($registration_fee - $registration_fee_discount) + ($material_fee - $material_fee_discount);
         });

@@ -100,7 +100,7 @@ background: #555; /* Color of the handle when hovered */
                         </div>
                     </div>
                 </div> -->
-                <div class="flex items-center space-y-3 bg-white pb-3 pt-2.5 px-4 shadow rounded-xl">
+                <div class="flex items-center space-y-3 bg-white pb-3 pt-2.5 px-4 shadow rounded-xl" v-if="$page.props.posts.length">
                     <h2 class="text-lg md:text-2xl mx-1 font-extrabold">Stories</h2>
                 </div>
                 <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl" v-for="post, post_index in $page.props.posts">

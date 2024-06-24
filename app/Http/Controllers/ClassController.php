@@ -277,10 +277,11 @@ class ClassController extends Controller
 
     public function getClassLevels(Request $request){
         $class_levels   =   DB::table('programme_levels')
-                                ->select(['id', 'level'])
-                                ->where('programme_id', $request->programme_id)
-                                ->where('class_type_id', $request->class_type)
-                                ->orderBy('level')
+                                ->distinct()
+                                ->select(['programme_levels.id', 'programme_levels.level'])
+                                ->where('programme_levels.programme_id', $request->programme_id)
+                                ->where('programme_levels.class_type_id', $request->class_type)
+                                ->orderBy('programme_levels.level')
                                 ->get();
         return $class_levels;
     }

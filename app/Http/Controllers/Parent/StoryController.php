@@ -17,7 +17,7 @@ class StoryController extends Controller
         $programme_id   =   $hashids->decode($request->segment(2));
 
         if(count($programme_id) < 1){
-            return back()->with(['type' => 'error', 'message' => 'Unable to fetch class data']);
+            return redirect(route('parent.home'))->with(['type' => 'error', 'message' => 'Unable to fetch class data']);
         }
         
         $student_id     =   $request->session()->get('current_active_child.student_id');
@@ -26,8 +26,9 @@ class StoryController extends Controller
         $programme_info =   DB::table('programmes')->where('id', $programme_id[0])->first();
 
         return Inertia::render('Parent/Class/Index', [
-            'programme_info' => $programme_info,
-            'posts'          => $posts ?? []
+            'programme_info'    => $programme_info,
+            'programme_id'      => $request->segment(2),
+            'posts'             => $posts ?? []
         ]);
     }
 }

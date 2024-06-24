@@ -9,6 +9,7 @@ use App\Http\Controllers\Parent\HomeController;
 use App\Http\Controllers\Parent\MessageController;
 use App\Http\Controllers\Parent\PostController;
 use App\Http\Controllers\Parent\ProfileController;
+use App\Http\Controllers\Parent\ProgressReportController;
 use App\Http\Controllers\Parent\StoryController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,8 +36,11 @@ Route::middleware(['auth', 'child'])->group(function(){
         /* Stories */
         Route::get('stories/{id}', [StoryController::class, 'index'])->name('stories');
 
+        /* Progress Reports */
+        Route::get('progress-reports/{id}', [ProgressReportController::class, 'index'])->name('progress_reports');
+
         /* Invoices */
-        Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
+        Route::get('invoices/{id}', [InvoiceController::class, 'index'])->name('invoices');
 
         /* Art Gallery */
         Route::get('art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery');

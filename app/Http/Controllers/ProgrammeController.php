@@ -79,6 +79,7 @@ class ProgrammeController extends Controller
                     'programme_level_id'    =>  $programme_level_id,
                     'class_type_detail_id'  =>  $fee['class_type_detail_id'],
                     'fee_amount'            =>  $fee['value'],
+                    'new_fee_amount'        =>  $fee['value'],
                 ]);
             }
         }
@@ -111,7 +112,7 @@ class ProgrammeController extends Controller
                                         
         $programme_level_fees   =   DB::table('programme_level_fees')
                                         ->whereIn('programme_level_id', $programme_info->pluck('programme_level_id'))
-                                        ->select('id', 'programme_level_id', 'class_type_detail_id', 'fee_amount')
+                                        ->select('id', 'programme_level_id', 'class_type_detail_id', 'fee_amount', 'new_fee_amount')
                                         ->get();
                                         
         foreach($programme_info as $programme_level){
@@ -120,6 +121,7 @@ class ProgrammeController extends Controller
                     $info['fee_id']                 =   $programme_level_fee->id;
                     $info['class_type_detail_id']   =   $programme_level_fee->class_type_detail_id;
                     $info['value']                  =   $programme_level_fee->fee_amount;
+                    $info['new_fee_amount']         =   $programme_level_fee->new_fee_amount;
                     $programme_level->fees[]        =   $info;
                 }
             }
@@ -229,6 +231,7 @@ class ProgrammeController extends Controller
                         'programme_level_id'    =>  $programme_level_id,
                         'class_type_detail_id'  =>  $fee['class_type_detail_id'],
                         'fee_amount'            =>  $fee['value'],
+                        'new_fee_amount'        =>  $fee['value'],
                     ]);
                 }
                 $log_data =   "Added programme " . $request->programme_name  . "'s fee " . ' : ' . json_encode($info);
@@ -313,10 +316,10 @@ class ProgrammeController extends Controller
                                 ->join('programme_level_fees', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                                 ->join('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
                                 ->select(   'programmes.id as programme_id', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 
-                                            'programme_levels.material_fee', 'programme_levels.registration_fee', 'programme_level_fees.id as fee_id', 'programme_level_fees.fee_amount as programme_fee', 
+                                            'programme_levels.material_fee', 'programme_levels.registration_fee', 'programme_level_fees.id as fee_id', 'programme_level_fees.new_fee_amount as programme_fee', 
                                             'class_types_detail.label as programme_type', 'centres.id as centre_id', 'centres.label as centre_name', 
                                             'class_types.id as class_type_id', 'class_methods.name as class_method', 'countries.currency_symbol')
-                                ->where('programme_level_fees.fee_amount', '>', 0);
+                                ->where('programme_level_fees.new_fee_amount', '>', 0);
                         
         if($request->class_id){
             $fee_info_query->where('classes.id', $request->class_id);
@@ -382,7 +385,7 @@ class ProgrammeController extends Controller
     public function updateFee(Request $request){
         foreach($request->fee_edit_form['data'] as $key=>$data){
             DB::table('programme_level_fees')->where('id', $data['fee_id'])->update([
-                'fee_amount' => $data['value']
+                'new_fee_amount' => $data['new_fee_amount']
             ]);
         }
 
