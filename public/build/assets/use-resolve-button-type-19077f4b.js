@@ -1,5 +1,0 @@
-<<<<<<< HEAD:public/build/assets/use-resolve-button-type-4aed63cd.js
-import{o as u}from"./keyboard-39c9e581.js";import{z as r,A as l,$ as f}from"./app-864f64ce.js";function a(t,n){if(t)return t;let e=n??"button";if(typeof e=="string"&&e.toLowerCase()==="button")return"button"}function v(t,n){let e=r(a(t.value.type,t.value.as));return l(()=>{e.value=a(t.value.type,t.value.as)}),f(()=>{var o;e.value||u(n)&&u(n)instanceof HTMLButtonElement&&!((o=u(n))!=null&&o.hasAttribute("type"))&&(e.value="button")}),e}export{v as s};
-=======
-import{o as u}from"./keyboard-361618b8.js";import{z as r,A as l,$ as f}from"./app-6f86c80f.js";function a(t,n){if(t)return t;let e=n??"button";if(typeof e=="string"&&e.toLowerCase()==="button")return"button"}function v(t,n){let e=r(a(t.value.type,t.value.as));return l(()=>{e.value=a(t.value.type,t.value.as)}),f(()=>{var o;e.value||u(n)&&u(n)instanceof HTMLButtonElement&&!((o=u(n))!=null&&o.hasAttribute("type"))&&(e.value="button")}),e}export{v as s};
->>>>>>> c2529f1455e20904eed99f089d92c14252739910:public/build/assets/use-resolve-button-type-19077f4b.js

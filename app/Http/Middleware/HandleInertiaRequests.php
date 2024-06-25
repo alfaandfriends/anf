@@ -77,6 +77,7 @@ class HandleInertiaRequests extends Middleware
             'user_has_roles' => $user_has_roles ?? '',
             'user_has_children' => $user_has_children ?? [],
             'children_classes' => $children_classes ?? [],
+            'session_data' => session()->all() ?? [],
         ]);
     }
 

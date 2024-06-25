@@ -1,29 +1,30 @@
 <template>
     <Head title="Home" />
     <div class="fixed w-full flex justify-center top-[4rem] md:top-[10rem] font-extrabold bg-white border border-gray-300 py-3 z-20">
-        <span>{{ $page.props.programme_info.name }}</span>
+        <span>{{ $page.props.current_active_programme.name }}</span>
     </div>
     <Authenticated>
-        <div class="max-w-xl mx-auto bg-white rounded-lg px-4 mt-14">
+        <div class="max-w-xl mx-auto border shadow bg-white rounded-lg px-4 mt-14">
             <simplebar data-simplebar-auto-hide="true">
-                <div class="flex space-x-8 md:space-x-10 pt-3 pb-4 font-medium">
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.stories') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.stories', $page.props.programme_id))">
+                <div class="flex justify-evenly sm:justify-center space-x-8 md:space-x-10 pt-3 pb-4 font-medium">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.stories') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.stories', $page.props.current_active_programme.encrypted_id))">
                         <img src="/images/parents/stories.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Stories</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.progress_reports') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.progress_reports', $page.props.programme_id))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.progress_reports') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.progress_reports'))">
                         <img src="/images/parents/progress_report.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Progress Report</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.invoices') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.invoices', $page.props.programme_id))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.invoices') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.invoices'))">
                         <img src="/images/parents/fee_invoice.png" class="w-10 h-10" alt="">
-                        <span class="text-sm">Fee Invoice</span>
+                        <span class="text-sm">Invoices</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap">
+                    <!-- <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" v-if="$page.props.programme_info.id == 3 || $page.props.programme_info.id == 5"> -->
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_gallery') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_gallery'))">
                         <img src="/images/parents/art_gallery.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Art Gallery</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_book') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_book', $page.props.current_active_programme.id))">
                         <img src="/images/parents/art_book.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Art Book</span>
                     </div>
@@ -31,7 +32,7 @@
             </simplebar>
         </div>
         <div class="max-w-xl mx-auto mt-5">
-            <div class="flex items-center space-y-3 bg-white pb-3 pt-2.5 px-4 shadow rounded-xl" v-if="$page.props.posts.length">
+            <div class="flex items-center space-y-3" v-if="$page.props.posts.length">
                 <h2 class="text-lg md:text-xl mx-1 font-extrabold">Stories</h2>
             </div>
             <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl" v-for="post, post_index in $page.props.posts">
@@ -165,26 +166,6 @@ export default {
             errors: []
         }
     },
-    methods: {
-        toggleLike(post_index, post_id){
-            if(this.isLikedByCurrentStudent(post_index)){
-                const like_index    =   this.$page.props.posts[post_index].post_likes.findIndex(like => like.liked_by === this.$page.props.current_active_child.student_id);
-                this.$page.props.posts[post_index].post_likes.splice(like_index, 1)
-            }
-            else{
-                this.$page.props.posts[post_index].post_likes.push({
-                    'liked_by' : this.$page.props.current_active_child.student_id
-                })
-            }
-            axios.post(route('parent.like_post'), {'post_id': post_id, 'to_delete' : !this.isLikedByCurrentStudent(post_index)})
-            .then(response => {
-                console.log(response)
-            });
-        },
-        isLikedByCurrentStudent(post_index){
-        return this.$page.props.posts[post_index].post_likes.some(student => student.liked_by == this.$page.props.current_active_child.student_id);
-        }
-    }
 }
 </script>
 

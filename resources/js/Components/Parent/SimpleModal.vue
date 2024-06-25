@@ -29,7 +29,7 @@
             <div class="fixed inset-0 w-screen overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4">
             <DialogPanel
-                class="w-full max-w-3xl transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all z-10 min-h-80"
+                class="max-w-3xl transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all z-10"
             >
                 <DialogTitle as="div" v-if="$slots.header">
                     <div class="flex items-center justify-between mb-2 rounded-t text-lg font-semibold text-slate-800 dark:text-white">

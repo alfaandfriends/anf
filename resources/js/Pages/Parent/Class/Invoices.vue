@@ -1,56 +1,50 @@
 <template>
     <Head title="Home" />
     <div class="fixed w-full flex justify-center top-[4rem] md:top-[10rem] font-extrabold bg-white border border-gray-300 py-3 z-20">
-        <span>{{ $page.props.programme_info.name }}</span>
+        <span>{{ $page.props.session_data.current_active_programme.name }}</span>
     </div>
     <Authenticated>
-        <div class="max-w-xl mx-auto bg-white rounded-lg px-4 mt-14">
+        <div class="max-w-xl mx-auto border shadow bg-white rounded-lg px-4 mt-14">
             <simplebar data-simplebar-auto-hide="true">
-                <div class="flex space-x-8 md:space-x-10 pt-3 pb-4 font-medium">
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.stories') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.stories', $page.props.programme_id))">
+                <div class="flex justify-evenly sm:justify-center space-x-8 md:space-x-10 pt-3 pb-4 font-medium">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.stories') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.stories', $page.props.session_data.current_active_programme.encrypted_id))">
                         <img src="/images/parents/stories.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Stories</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.progress_reports') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.progress_reports', $page.props.programme_id))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.progress_reports') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.progress_reports'))">
                         <img src="/images/parents/progress_report.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Progress Report</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.invoices') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.invoices', $page.props.programme_id))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.invoices') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.invoices'))">
                         <img src="/images/parents/fee_invoice.png" class="w-10 h-10" alt="">
-                        <span class="text-sm">Fee Invoice</span>
-                    </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap">
-                        <img src="/images/parents/art_gallery.png" class="w-10 h-10" alt="">
-                        <span class="text-sm">Art Gallery</span>
-                    </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap">
-                        <img src="/images/parents/art_book.png" class="w-10 h-10" alt="">
-                        <span class="text-sm">Art Book</span>
+                        <span class="text-sm">Invoices</span>
                     </div>
                 </div>
             </simplebar>
         </div>
-        <div class="max-w-xl mx-auto mt-5">
-            <div class="flex items-center space-y-3 bg-white pb-3 pt-2.5 px-4 shadow rounded-xl" v-if="$page.props.invoices">
+        <div class="max-w-xl mx-auto mt-10">
+            <div class="flex items-center space-y-3" v-if="$page.props.invoices">
                 <h2 class="text-lg md:text-xl mx-1 font-extrabold">Invoices</h2>
             </div>
             <div class="mt-3">
-                <div class="bg-white shadow rounded-lg border max-h-screen overflow-y-auto">
-                    <ul class="divide-y divide-slate-200 dark:divide-zink-500 px-4 py-3">
-                        <li class="flex items-center gap-3 py-2 first:pt-0 last:pb-0" v-for="invoice, invoice_index in $page.props.invoices">
-                            <div class="grow">
-                                <h6 class="font-semibold text-sm">Invoice No: {{ invoice.invoice_number }}</h6>
-                                <p class="text-slate-500 text-sm dark:text-zink-200">Date Issued: {{ moment(invoice.due_date).format('DD MMM Y') }}</p>
-                                <p class="text-slate-500 text-sm dark:text-zink-200">Due Date: {{ moment(invoice.due_date).format('DD MMM Y') }}</p>
-                                <p class="text-slate-500 text-sm dark:text-zink-200">Amount: {{ invoice.amount }}</p>
-                                <p class="text-sm dark:text-zink-200">Status: <span :class="[invoice.status_text_color]">{{ invoice.status }}</span></p>
-                            </div>
-                            <div class="shrink-0">
-                                <a v-if="invoice.status_id == 1" :href="invoice.payment_url" class="text-sm cursor-pointer font-medium px-3 py-1 text-indigo-600 rounded bg-indigo-100 hover:bg-indigo-200 hover:rounded whitespace-nowrap">Pay Now</a>
-                                <a v-if="invoice.status_id == 2" class="text-sm cursor-pointer font-medium px-3 py-1 text-blue-600 bg-blue-100 hover:bg-blue-200 rounded whitespace-nowrap" @click="generating[invoice_index] ? '' : viewInvoice(invoice.id, invoice_index)">{{ generating[invoice_index] ? 'Generating...' : 'View' }}</a>
-                            </div>
-                        </li>
-                    </ul>
+                <div class="bg-white shadow rounded-lg border">
+                    <simplebar data-simplebar-auto-hide="true" class=" max-h-screen">
+                        <ul class="divide-y divide-slate-200 dark:divide-zink-500 px-6 py-4">
+                            <li class="flex items-center gap-3 py-2 first:pt-0 last:pb-0" v-for="invoice, invoice_index in $page.props.invoices">
+                                <div class="grow">
+                                    <h6 class="font-semibold text-sm">Invoice No: {{ invoice.invoice_number }}</h6>
+                                    <p class="text-slate-500 text-sm font-medium">Date Issued: {{ moment(invoice.due_date).format('DD MMM Y') }}</p>
+                                    <p class="text-slate-500 text-sm font-medium">Due Date: {{ moment(invoice.due_date).format('DD MMM Y') }}</p>
+                                    <p class="text-slate-500 text-sm font-medium">Amount: {{ invoice.amount }}</p>
+                                    <p class="text-sm font-medium">Status: <span :class="[invoice.status_text_color]">{{ invoice.status }}</span></p>
+                                </div>
+                                <div class="shrink-0">
+                                    <a v-if="invoice.status_id == 1" :href="invoice.payment_url" class="text-sm cursor-pointer font-medium px-3 py-1 text-indigo-600 rounded bg-indigo-100 hover:bg-indigo-200 hover:rounded whitespace-nowrap">Pay Now</a>
+                                    <a v-if="invoice.status_id == 2" class="text-sm cursor-pointer font-medium px-3 py-1 text-blue-600 bg-blue-100 hover:bg-blue-200 rounded whitespace-nowrap" @click="generating[invoice_index] ? '' : viewInvoice(invoice.id, invoice_index)">{{ generating[invoice_index] ? 'Generating...' : 'View' }}</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </simplebar>
                 </div>
             </div>
         </div>

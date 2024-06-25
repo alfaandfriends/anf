@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Parent;
 
 use App\Http\Controllers\Controller;
+use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -11,14 +12,18 @@ use Inertia\Response;
 
 class ArtGalleryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if(!session('current_active_programme.id')){
+            return redirect(route('parent.home'))->with(['type' => 'error', 'message' => 'Unable to fetch class data']);
+        }
+
         $levels     =   $this->getLevels();
         $themes     =   DB::table('art_themes')->where('level_id', 1)->get();
 
-        return Inertia::render('Parent/ArtGallery/Index',[
-            'levels'    =>  $levels,
-            'themes'    =>  $themes
+        return Inertia::render('Parent/Class/ArtGallery',[
+            'levels'            =>  $levels,
+            'themes'            =>  $themes
         ]);
     }
 
@@ -86,8 +91,9 @@ class ArtGalleryController extends Controller
                             ->where('student_art_gallery.student_id', $request->session()->get('current_active_child.student_id'))
                             ->select('student_art_gallery.id', 'art_levels.name as level', 'art_themes.name as theme', 'art_lessons.name as lesson', 'art_activities.name as activity', 'student_art_gallery.filename', 'art_themes.art_book_active')
                             ->get();
+                        
         $artworks   =   collect($result)->groupBy('lesson');
-        
-        return $artworks;
+
+        return response()->json($artworks); // Ensure the response is JSON
     }
 }

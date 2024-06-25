@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware(['auth', 'child'])->group(function(){
+
     /* Onboard */
     Route::get('onboarding', [HomeController::class, 'onboarding'])->name('onboarding');
+
     Route::middleware(['onboard'])->prefix('/')->name('parent.')->group(function () {
         
         /* Profile */
@@ -37,22 +39,20 @@ Route::middleware(['auth', 'child'])->group(function(){
         Route::get('stories/{id}', [StoryController::class, 'index'])->name('stories');
 
         /* Progress Reports */
-        Route::get('progress-reports/{id}', [ProgressReportController::class, 'index'])->name('progress_reports');
+        Route::get('progress-reports', [ProgressReportController::class, 'index'])->name('progress_reports');
 
         /* Invoices */
-        Route::get('invoices/{id}', [InvoiceController::class, 'index'])->name('invoices');
+        Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
 
         /* Art Gallery */
         Route::get('art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery');
         Route::post('art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store');
         Route::delete('art-gallery/delete/{id}', [ArtGalleryController::class, 'destroy'])->name('art_gallery.destroy');
-
-        /* Art Gallery */
-        Route::get('/art-gallery/get-artworks', [ArtGalleryController::class, 'getArtworks'])->name('art_gallery.get_artworks');
+        Route::get('art-gallery/get-artworks', [ArtGalleryController::class, 'getArtworks'])->name('art_gallery.get_artworks');
     
         /* Art Book */
-        Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book');
         Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate');
+        Route::get('/art-book/{id}', [ArtBookController::class, 'index'])->name('art_book');
         
         /* Art Gallery Select Options */
         Route::get('/art-gallery/get-levels', [ArtGalleryController::class, 'getLevels'])->name('art_gallery.get_levels');

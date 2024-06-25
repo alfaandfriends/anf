@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Parent;
 use App\Classes\ArtBookHelper;
 use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -12,12 +13,24 @@ use Illuminate\Support\Str;
 
 class ArtBookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        
+        $hashids = new Hashids('', 10);
+        $programme_id   =   $hashids->decode($request->segment(2));
+    
+        if(count($programme_id) < 1){
+            return redirect(route('parent.home'))->with(['type' => 'error', 'message' => 'Unable to fetch class data']);
+        }
+    
+        $programme_info =   DB::table('programmes')->where('id', $programme_id[0])->first();
+
         $levels     =   ArtBookHelper::getLevels();
 
-        return Inertia::render('Parent/ArtBook/Index',[
-            'levels'    =>  $levels,
+        return Inertia::render('Parent/Class/ArtBook',[
+            'programme_info'    => $programme_info,
+            'programme_id'      => $request->segment(2),
+            'levels'            =>  $levels,
         ]);
     }
 
