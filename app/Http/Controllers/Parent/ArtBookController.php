@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Parent;
 use App\Classes\ArtBookHelper;
 use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
