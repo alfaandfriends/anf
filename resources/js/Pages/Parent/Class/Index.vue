@@ -13,7 +13,7 @@
                     </div>
                     <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.progress_reports') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.progress_reports'))">
                         <img src="/images/parents/progress_report.png" class="w-10 h-10" alt="">
-                        <span class="text-sm">Progress Report</span>
+                        <span class="text-sm">Progress Reports</span>
                     </div>
                     <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.invoices') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.invoices'))">
                         <img src="/images/parents/fee_invoice.png" class="w-10 h-10" alt="">
@@ -24,7 +24,7 @@
                         <img src="/images/parents/art_gallery.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Art Gallery</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_book') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_book', $page.props.current_active_programme.id))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_book') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_book'))">
                         <img src="/images/parents/art_book.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Art Book</span>
                     </div>
@@ -35,7 +35,10 @@
             <div class="flex items-center space-y-3" v-if="$page.props.posts.length">
                 <h2 class="text-lg md:text-xl mx-1 font-extrabold">Stories</h2>
             </div>
-            <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl" v-for="post, post_index in $page.props.posts">
+            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.posts.length">
+                <span class="text-slate-500">No Stories Found</span>
+            </div>
+            <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl text-sm" v-for="post, post_index in $page.props.posts">
                 <div class="flex flex-row text-sm items-center">
                     <div class="flex justify-between items-center flex-1 font-bold leading-tight select-none">
                         <div class="flex flex-col mx-1">
@@ -64,12 +67,6 @@
                     <div class="flex justify-end">
                         <button class="px-4 py-2 text-xs bg-indigo-600 hover:bg-indigo-700 text-white rounded">Comment</button>
                     </div>
-                </div>
-            </div>
-            <div class="" v-if="!$page.props.posts.length">
-                <div class="flex flex-col items-center justify-center mt-20">
-                    <img width="80" height="80" src="https://img.icons8.com/dusk/64/activity-feed.png" alt="activity-feed"/>
-                    <span class="text-slate-500 text-lg">Couldn't find any posts yet.</span>
                 </div>
             </div>
         </div>

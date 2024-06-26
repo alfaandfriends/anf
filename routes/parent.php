@@ -51,8 +51,8 @@ Route::middleware(['auth', 'child'])->group(function(){
         Route::get('art-gallery/get-artworks', [ArtGalleryController::class, 'getArtworks'])->name('art_gallery.get_artworks');
     
         /* Art Book */
+        Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book');
         Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate');
-        Route::get('/art-book/{id}', [ArtBookController::class, 'index'])->name('art_book');
         
         /* Art Gallery Select Options */
         Route::get('/art-gallery/get-levels', [ArtGalleryController::class, 'getLevels'])->name('art_gallery.get_levels');

@@ -7,24 +7,24 @@
         <div class="max-w-xl mx-auto border shadow bg-white rounded-lg px-4 mt-14">
             <simplebar data-simplebar-auto-hide="true">
                 <div class="flex justify-evenly sm:justify-center space-x-8 md:space-x-10 pt-3 pb-4 font-medium">
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.stories') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.stories', $page.props.programme_id))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.stories') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.stories', $page.props.session_data.current_active_programme.encrypted_id))">
                         <img src="/images/parents/stories.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Stories</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.progress_reports') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.progress_reports', $page.props.programme_id))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.progress_reports') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.progress_reports'))">
                         <img src="/images/parents/progress_report.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Progress Report</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.invoices') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.invoices', $page.props.programme_id))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.invoices') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.invoices'))">
                         <img src="/images/parents/fee_invoice.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Invoices</span>
                     </div>
                     <!-- <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" v-if="$page.props.programme_info.id == 3 || $page.props.programme_info.id == 5"> -->
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_gallery') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_gallery', $page.props.programme_id))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_gallery') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_gallery'))">
                         <img src="/images/parents/art_gallery.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Art Gallery</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_book') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_book'))">
                         <img src="/images/parents/art_book.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Art Book</span>
                     </div>

@@ -13,18 +13,30 @@
                     </div>
                     <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.progress_reports') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.progress_reports'))">
                         <img src="/images/parents/progress_report.png" class="w-10 h-10" alt="">
-                        <span class="text-sm">Progress Report</span>
+                        <span class="text-sm">Progress Reports</span>
                     </div>
                     <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.invoices') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.invoices'))">
                         <img src="/images/parents/fee_invoice.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Invoices</span>
                     </div>
+                    <!-- <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" v-if="$page.props.programme_info.id == 3 || $page.props.programme_info.id == 5"> -->
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_gallery') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_gallery'))">
+                        <img src="/images/parents/art_gallery.png" class="w-10 h-10" alt="">
+                        <span class="text-sm">Art Gallery</span>
+                    </div>
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_book') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_book'))">
+                        <img src="/images/parents/art_book.png" class="w-10 h-10" alt="">
+                        <span class="text-sm">Art Book</span>
+                    </div>
                 </div>
             </simplebar>
         </div>
         <div class="max-w-xl mx-auto mt-10">
-            <div class="flex items-center space-y-3" v-if="$page.props.progress_reports">
+            <div class="flex items-center space-y-3" v-if="$page.props.progress_reports.length">
                 <h2 class="text-lg md:text-xl mx-1 font-extrabold">Progress Reports</h2>
+            </div>
+            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.progress_reports.length">
+                <span class="text-slate-500">No Progress Reports Found</span>
             </div>
             <div class="mt-3">
                 <div class="bg-white shadow rounded-lg border">

@@ -17,13 +17,22 @@ class ArtGalleryController extends Controller
         if(!session('current_active_programme.id')){
             return redirect(route('parent.home'))->with(['type' => 'error', 'message' => 'Unable to fetch class data']);
         }
-
+        
         $levels     =   $this->getLevels();
-        $themes     =   DB::table('art_themes')->where('level_id', 1)->get();
-
+        
+        $artworks     =   DB::table('student_art_gallery')
+                            ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
+                            ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
+                            ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
+                            ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
+                            ->where('student_art_gallery.level_id', 1)
+                            ->where('student_art_gallery.student_id', $request->session()->get('current_active_child.student_id'))
+                            ->select('student_art_gallery.id', 'art_levels.name as level', 'art_themes.name as theme', 'art_lessons.name as lesson', 'art_activities.name as activity', 'student_art_gallery.filename', 'art_themes.art_book_active')
+                            ->get();
+                            
         return Inertia::render('Parent/Class/ArtGallery',[
-            'levels'            =>  $levels,
-            'themes'            =>  $themes
+            'levels'    =>  $levels,
+            'artworks'  =>  $artworks,
         ]);
     }
 
@@ -87,7 +96,6 @@ class ArtGalleryController extends Controller
                             ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
                             ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
                             ->where('student_art_gallery.level_id', $request->level_id)
-                            ->where('student_art_gallery.theme_id', $request->theme_id)
                             ->where('student_art_gallery.student_id', $request->session()->get('current_active_child.student_id'))
                             ->select('student_art_gallery.id', 'art_levels.name as level', 'art_themes.name as theme', 'art_lessons.name as lesson', 'art_activities.name as activity', 'student_art_gallery.filename', 'art_themes.art_book_active')
                             ->get();
