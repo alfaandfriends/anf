@@ -9,7 +9,7 @@ use App\Models\Menu;
 use App\Models\Permission;
 use App\Models\UserHasRoles;
 use Carbon\Carbon;
-use Hashids;
+use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
