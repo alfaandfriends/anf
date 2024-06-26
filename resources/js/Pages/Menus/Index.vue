@@ -17,7 +17,7 @@
                                 Add Menu
                             </BreezeButton>
                         </div>
-                        <div class="shadow overflow-hidden overflow-x-auto hover:no-scrollbar border-b border-gray-200 sm:rounded-lg">
+                        <div class="shadow overflow-hidden overflow-x-auto hover:scrollbar border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200 w-full    ">
                                 <thead class="bg-gray-300">
                                     <tr>
@@ -94,7 +94,7 @@
                             <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg focus:ring-0 focus:border-gray-300 appearance-none  block pl-10"
                                     type="text" v-model="params.search" placeholder="Search"> -->
                         </div>
-                        <div class="shadow overflow-hidden overflow-x-auto hover:no-scrollbar border-b border-gray-200 sm:rounded-lg">
+                        <div class="shadow overflow-hidden overflow-x-auto hover:scrollbar border-b border-gray-200 sm:rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200 w-full">
                                 <thead class="bg-gray-300">
                                     <tr>

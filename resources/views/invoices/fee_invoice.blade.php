@@ -109,7 +109,7 @@
                         {{ $item->programme_fee }}.00
                     </td>
                 </tr>
-                @if($item->include_registration_fee && $item->registration_fee != 0)
+                @if(isset($item->include_registration_fee) && $item->include_registration_fee && $item->registration_fee != 0)
                 <tr>
                     <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
                         - Registration Fee
@@ -136,30 +136,32 @@
                     </tr>
                 @endif
                 <tr ></tr>
-                @foreach($item->promos as $promo_index=>$promo)
-                    <tr>
-                        <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
-                            <div>
-                                - {{ $promo->promo_name }} (Promotion)
-                            </div>
-                        </td>
-                        <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
-                            <div>
-                                @if($promo->type_id == 1)
-                                    {{ $promo->value * $item->programme_fee / 100 }}.00
-                                @endif
-                                @if($promo->type_id == 2)
-                                    {{ $promo->value }}.00
-                                @endif
-                            </div>
-                        </td>
-                        <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
-                            <div>
-                                0.00
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
+                @if(isset($item->promos))
+                    @foreach($item->promos as $promo_index=>$promo)
+                        <tr>
+                            <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="left">
+                                <div>
+                                    - {{ $promo->promo_name }} (Promotion)
+                                </div>
+                            </td>
+                            <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
+                                <div>
+                                    @if($promo->type_id == 1)
+                                        {{ $promo->value * $item->programme_fee / 100 }}.00
+                                    @endif
+                                    @if($promo->type_id == 2)
+                                        {{ $promo->value }}.00
+                                    @endif
+                                </div>
+                            </td>
+                            <td style="padding-left: 10px; padding-right: 10px; font-size: 13px; padding-left:1rem; padding-right:1rem;" align="right">
+                                <div>
+                                    0.00
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
                 <tr>
                     <td colspan="3">&nbsp;</td>
                 </tr>

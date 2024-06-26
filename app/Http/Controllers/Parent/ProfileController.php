@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Parent;
 
 use App\Http\Controllers\Controller;
 use Corcel\Model\User;
-use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ProfileController extends Controller

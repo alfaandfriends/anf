@@ -151,7 +151,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
         </div>
         <Modal :showModal="show_tracking_status" :modalType="'sm'" @hideModal="show_tracking_status = false">
             <template v-slot:content>
-                <div class="p-4 md:p-6 overflow-y-auto no-scrollbar">
+                <div class="p-4 md:p-6 overflow-y-auto scrollbar">
                     <body class="bg-gray-50">
                         <div class="container">
                             <div class="flex flex-col text-gray-50">

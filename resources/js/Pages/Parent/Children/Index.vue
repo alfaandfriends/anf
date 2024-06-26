@@ -1,63 +1,87 @@
 <template>
     <Head title="Home" />
     <Authenticated>
-        <div class="hidden md:flex lg:flex justify-end mb-3">
-            <BreezeButton type="button" buttonType="info" @click="showAddChild">Add Child</BreezeButton>
-        </div>
-        <div class="overflow-x-auto no-scrollbar">
-            <div class="bg-white shadow rounded-lg border">
-                <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-gray-700 capitalize bg-gray-200">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Age
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Gender
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center">
-                                Status
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center">
-                                Action
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="bg-white border-b" v-if="!$page.props.children_list || !$page.props.children_list.length">
-                            <td class="text-center py-4" colspan="10">
-                                No record found.
-                            </td>
-                        </tr>
-                        <tr class="bg-white border-b hover:bg-gray-50" v-else v-for="child, invoice_index in $page.props.children_list">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ child.name }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ moment(child.dob).format('DD/MM/Y') }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ child.gender }}
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <span class="text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap" :class="child.student_id ? 'text-green-500 bg-green-100' : 'text-red-500 bg-red-100'">{{ child.student_id ? 'Enrolled' : 'Not Enrolled' }}</span>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <button type="button" @click="!child.student_id ? deleteChild(child.id) : ''" class="font-medium px-3 py-1 rounded whitespace-nowrap" :class="!child.student_id ? 'text-white bg-red-600 hover:bg-red-700 cursor-pointer' : 'text-white bg-red-300 cursor-not-allowed'">Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="flex items-end justify-end fixed bottom-24 right-4 md:hidden lg:hidden">
-                <button class="bg-indigo-600 hover:bg-indigo-600 text-white font-semibold p-3 rounded-full shadow-lg" @click="showAddChild">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        <div class="flex justify-center">
+            <div class="flex-1 max-w-xl space-y-4">
+                <div class="relative flex flex-col items-center px-4 py-4 rounded-2xl border-2 border-gray-400 bg-white shadow-md hover:bg-indigo-50 cursor-pointer" v-if="$page.props.user_has_children.length" v-for="info in $page.props.user_has_children" @click="switchChild(info.child_id, info.child_name, info.student_id)">
+                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400" v-if="!switching && info.child_id == $page.props.current_active_child.child_id">Currently Viewing</span>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400" v-if="switching && info.child_id == $page.props.current_active_child.child_id">Switching...</span>
+                    <span class="flex items-center text-md font-extrabold mb-1 text-center space-x-2">
+                        {{ info.child_name }}
+                    </span>
+                    <span class="text-sm">{{ moment(info.child_dob).format('Do MMMM Y') }} (<span class="text-sm">{{ getAge(moment(info.child_dob).format('DD/MM/Y')) }} years old</span>)</span>
+                    <span class="text-sm mb-3">{{ info.child_gender }}</span>
+                    <h3 class="text-sm text-gray-500">{{ $page.props.children_class_info[info.student_id] ? $page.props.children_class_info[info.student_id].length + ' active class' : 'No class' }}</h3>
+                    <h3 class="text-sm text-gray-500 mb-3">{{ $page.props.children_class_info[info.student_id] ? $page.props.children_class_info[info.student_id][0].label : 'No centre' }}</h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-6 w-6" fill="currentColor" @click="!info.student_id ? deleteChild(info.child_id) : ''" :class="!info.student_id ? 'text-red-600 hover:text-red-700 cursor-pointer' : 'text-red-300 cursor-not-allowed'">
+                        <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/>
                     </svg>
-                </button>
+                </div>
+                <div class="flex justify-center py-10 text-slate-500 text-lg" v-else>
+                    No child has been added.
+                </div>
+                <div class="flex justify-center mb-3">
+                    <BreezeButton type="button" buttonType="info" @click="showAddChild">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                            <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+                        </svg>
+                        Add Child
+                    </BreezeButton>
+                </div>
+                <!-- <div class="bg-white shadow rounded-lg border">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-gray-700 capitalize bg-gray-200">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Age
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Gender
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-center">
+                                    Status
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-center">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b" v-if="!$page.props.children_list || !$page.props.children_list.length">
+                                <td class="text-center py-4" colspan="10">
+                                    No record found.
+                                </td>
+                            </tr>
+                            <tr class="bg-white border-b hover:bg-gray-50" v-else v-for="child, invoice_index in $page.props.children_list">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ child.name }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ moment(child.dob).format('DD/MM/Y') }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ child.gender }}
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap" :class="child.student_id ? 'text-green-500 bg-green-100' : 'text-red-500 bg-red-100'">{{ child.student_id ? 'Enrolled' : 'Not Enrolled' }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <button type="button" @click="!child.student_id ? deleteChild(child.id) : ''" class="font-medium px-3 py-1 rounded whitespace-nowrap" :class="!child.student_id ? 'text-white bg-red-600 hover:bg-red-700 cursor-pointer' : 'text-white bg-red-300 cursor-not-allowed'">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> -->
+                <!-- <div class="flex items-end justify-end fixed bottom-24 right-4 md:hidden lg:hidden">
+                    <button class="bg-indigo-600 hover:bg-indigo-600 text-white font-semibold p-3 rounded-full shadow-lg" @click="showAddChild">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                        </svg>
+                    </button>
+                </div> -->
             </div>
         </div>
         <ConfirmationModal 
@@ -72,10 +96,11 @@
             :confirmationData="confirmationData"
         >
         </ConfirmationModal>
-        <SimpleModal v-if="show_add_child" :open="show_add_child" @close:modal="show_add_child = false" class="w-full sm:h-auto sm:w-4/6 md:h-auto md:w-2/6 p-4 overflow-y-auto" :disable_overlay="disable_overlay">
-            <form class="p-4">
-                <h1 class="md:font-semibold md:text-xl">Add Child</h1>
-                <hr class="my-4 border-gray-600">
+        <SimpleModal :isOpen="show_add_child" @close="show_add_child = false">
+            <template #header>
+                Add Child
+            </template>
+            <div class="">
                 <label class="font-medium text-gray-900 text-sm md:text-md">Name</label>
                 <input type="text" class="mt-1 focus:ring-0 focus:border-gray-300 flex-1 block w-full rounded-md mb-4 text-sm md:text-md" :class="!errors.name ? 'border-gray-300' : 'border-red-300'" v-model="child_form.name">
                 <label class="font-medium text-gray-900 text-sm md:text-md">Date of Birth</label>
@@ -110,7 +135,7 @@
                     </BreezeButton>
                     <BreezeButton type="button" buttonType="gray" @click="show_add_child = false" v-if="!adding">Cancel</BreezeButton>
                 </div>
-            </form>
+            </div>
         </SimpleModal>
     </Authenticated>
 </template>
@@ -134,6 +159,7 @@ export default {
     data(){
         return{
             isOpen: false,
+            switching: false,
             confirmationAlert: '',
             confirmationTitle: '',
             confirmationText: '',
@@ -154,6 +180,7 @@ export default {
     },
     methods: {
         deleteChild(child_id){
+            console.log(child_id)
             this.confirmationAlert  = 'danger',
             this.confirmationTitle  = 'Warning',
             this.confirmationText   = "This child will be deleted permanently, are you sure want to proceed?",
@@ -202,7 +229,24 @@ export default {
                     },
                 })
             }
-        }
+        },
+        getAge(dob){
+            const birthDate = moment(dob, 'YYYY-MM-DD');
+            const today = moment();
+            return today.diff(birthDate, 'years');
+        },
+        switchChild(child_id, child_name, student_id){
+            if(this.switching || child_id == this.$page.props.current_active_child.child_id){
+                return
+            }
+            this.switching = true
+            axios.post(route('parent.switch_child', {child_id: child_id, child_name: child_name, student_id: student_id}))
+            .then(response => {
+                if(response.data){
+                    location.reload()
+                }
+            });
+        },
     }
 }
 </script>

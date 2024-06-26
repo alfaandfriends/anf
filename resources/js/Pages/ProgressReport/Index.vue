@@ -315,7 +315,7 @@ import BreezeButton from '@/Components/Button.vue';
         />
         <Modal :showModal="show_progress_report" :modalType="'lg'" @hideModal="show_progress_report = false">
             <template v-slot:content>
-                <div class="p-6 overflow-y-auto no-scrollbar">
+                <div class="p-6 overflow-y-auto scrollbar">
                     <div class="flex justify-center">
                         <component :is="component.file" v-if="component.file" :data="component.data"/>
                     </div>

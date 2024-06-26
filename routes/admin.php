@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\StoryHelper;
 use App\Events\Notifications;
 use App\Events\Test;
 use App\Events\TestNotify;
@@ -19,6 +20,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ArtBookController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgrammeController;
@@ -26,6 +28,7 @@ use App\Http\Controllers\ProgressReportController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StoryController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherResourcesController;
 use App\Http\Controllers\UserController;
@@ -120,7 +123,6 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::post('/add-promo', [StudentController::class, 'addPromo'])->name('students.add_promo')->middleware('permission:view_students|create_students|edit_students');
             Route::delete('/delete-promo', [StudentController::class, 'deletePromo'])->name('students.delete_promo')->middleware('permission:view_students|create_students|edit_students');
 
-            
             Route::get('/generate-monthly', [StudentController::class, 'generateMonthly'])->name('students.generate_monthly')->middleware('permission:view_students');
             
             /* Art Gallery */
@@ -133,10 +135,12 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book')->middleware('permission:view_art_book');
             Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate')->middleware('permission:create_art_book');
 
-            Route::get('/art-gallery/get_levels/{id}', [ArtGalleryController::class, 'getLevels'])->name('art_gallery.get_levels')->middleware('permission:view_art_gallery')->withoutMiddleware('device');
-            Route::get('/art-gallery/get_themes/{id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes')->middleware('permission:view_art_gallery')->withoutMiddleware('device');
-            Route::get('/art-gallery/get_lessons/{id}', [ArtGalleryController::class, 'getLessons'])->name('art_gallery.get_lessons')->middleware('permission:view_art_gallery')->withoutMiddleware('device');
-            Route::get('/art-gallery/get_activities/{id}', [ArtGalleryController::class, 'getActivities'])->name('art_gallery.get_activities')->middleware('permission:view_art_gallery')->withoutMiddleware('device');
+            /* Posts */
+            Route::middleware('permission:story_access')->group(function () {
+                Route::get('/stories', [StoryController::class, 'index'])->name('stories')->middleware('permission:view_stories');
+                Route::get('/stories/create', [StoryController::class, 'create'])->name('stories.create')->middleware('permission:create_stories');
+                Route::get('/stories/store', [StoryController::class, 'store'])->name('stories.store')->middleware('permission:create_stories');
+            });
 
             /* Setting */
                 /* Level, Theme, Lesson, Activity List */
@@ -167,7 +171,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             /* Progress Report */
             Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report')->middleware('permission:view_progress_report');
             Route::get('/progress-report/details', [ProgressReportController::class, 'details'])->name('progress_report.details')->middleware('permission:view_progress_report');
-            Route::get('/progress-report/full-reports', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports')->middleware('permission:view_progress_report');
+            Route::get('/progress-report/full-reports', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports')->withoutMiddleware(['permission:student_access', 'device']);
             Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store')->middleware('permission:view_progress_report');
             Route::post('/progress-report/summary/store', [ProgressReportController::class, 'storeSummary'])->name('progress_report.store_summary')->middleware('permission:view_progress_report');
                 /* Settings */

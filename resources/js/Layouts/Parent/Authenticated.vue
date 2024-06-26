@@ -3,23 +3,19 @@ import Header from '@/Components/Parent/Header.vue'
 import Footer from '@/Components/Parent/Footer.vue'
 import Navigation from '@/Components/Parent/Navigation.vue'
 import SimpleModal from '@/Components/Parent/SimpleModal.vue';
+import Announcement from '@/Components/Parent/Announcement.vue';
 </script>
 
 <template>
-    <div class="flex">
+    <div class="flex andika-regular">
         <div class="min-h-screen bg-gray-100 w-full">
             <!-- Page Content -->
+            <!-- <Announcement /> -->
             <Header />
             <Navigation />
-            <main class="flex flex-col bg-indigo-50 relative h-full justify-between mt-20 md:mt-0">
-                <div class="bg-orange-50 h-full">
-                    <div class="flex justify-center">
-                            <div class="flex-1 max-w-2xl p-3">
-                                <!-- <simplebar data-simplebar-auto-hide="true"> -->
-                                    <slot/>
-                                <!-- </simplebar> -->
-                            </div>
-                    </div>
+            <main class="flex flex-col bg-indigo-50 relative h-full justify-between mt-16 md:mt-0">
+                <div class="bg-orange-50 h-full p-3">
+                    <slot/>
                 </div>
                 <Footer />
                 <!-- Payment Modal -->

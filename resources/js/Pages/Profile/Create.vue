@@ -35,8 +35,8 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="grid grid-cols-1 sm:grid-cols-0 gap-0">
                                         <div class="mb-5 flex items-center" v-show="show_profile_photo">
                                             <span class="inline-block h-20 w-20 rounded-full border overflow-hidden bg-gray-100">
-                                                <img v-if="$page.props.user_info || user_image" :src="user_image" alt="">
-                                                <svg v-else class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                <img class="h-full w-full" v-if="$page.props.auth.user.user_photo != '' || data.url" :src="user_image" alt="">
+                                                <svg v-else class="h-full w-full text-gray-300 border-2 border-gray-300 rounded-full" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                                                 </svg>
                                             </span>
@@ -61,14 +61,14 @@ import BreezeButton from '@/Components/Button.vue';
                                                     </div>
                                                     <div class="flex-column pl-1 pt-6">
                                                         <div class="flex-row pb-1">
-                                                            <BreezeButton type="button" class="py-1 px-2 bg-green-500 hover:bg-green-600 rounded text-white shadow" @click="select_cropped_image()" title="Select cropped image">
+                                                            <BreezeButton type="button" class="py-1 px-2" @click="select_cropped_image()" title="Select cropped image">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                                                                 </svg>
                                                             </BreezeButton>
                                                         </div>
                                                         <div class="flex-row">
-                                                            <BreezeButton type="button" class="py-1 px-2 bg-blue-500 hover:bg-blue-600 rounded text-white shadow" @click="reselect_image()" title="Reselect an image">
+                                                            <BreezeButton type="button" buttonType="gray" class="py-1 px-2" @click="reselect_image()" title="Reselect an image">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                                 </svg>
@@ -338,7 +338,10 @@ export default {
             user_image: this.$page.props.user_info ? '/storage/'+this.$page.props.user_info.user_photo : '',
             image_file_name: '',    
             form: {
-                profile_photo: '',
+                profile_photo: {
+                    name: '',
+                    file: ''
+                },
                 full_name: this.$page.props.user_info ? this.$page.props.user_info.display_name : '',
                 calling_code: this.$page.props.user_info ? this.$page.props.user_info.user_calling_code : '',
                 contact_number: this.$page.props.user_info ? this.$page.props.user_info.user_contact : '',
@@ -450,8 +453,8 @@ export default {
             if (files && files.length > 0) {
                 this.read(files[0], target)
                 .then((data) => {
-                    this.image_file_name = data.name
-                    this.selected_image    =   data.url
+                    this.image_file_name    = data.name
+                    this.selected_image     =   data.url
                     this.show_profile_photo = false
                     this.show_image = true
                     this.update(data)
@@ -470,9 +473,10 @@ export default {
         },
         select_cropped_image(){
             cropper.getCroppedCanvas().toBlob((blob) => {
-                var image_file = this.blobToFile(blob, this.data.name)
-                this.form.profile_photo = image_file;
                 this.user_image = URL.createObjectURL(blob)
+                var image_file = this.blobToFile(blob, this.data.name)
+                this.form.profile_photo.file = image_file;
+                this.form.profile_photo.name = this.data.name;
             }, 'image/jpeg', 0.1 );
             this.show_profile_photo = true
             this.show_image = false

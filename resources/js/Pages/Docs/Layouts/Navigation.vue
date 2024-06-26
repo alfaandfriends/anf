@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 
 <template>
     <div class="fixed top-[3.5rem] h-screen shadow-xl4 left-0 lg:relative lg:top-0 lg:h-auto lg:px-0 lg:block lg:shadow-none">
-        <nav class="overflow-y-auto no-scrollbar h-screen p-6 w-64 pr-8 text-base lg:text-sm bg-gray-800">
+        <nav class="overflow-y-auto scrollbar h-screen p-6 w-64 pr-8 text-base lg:text-sm bg-gray-800">
             <ul role="list" class="">
                 <li>
                     <h3 class="font-semibold tracking-tight text-white">

@@ -12,11 +12,18 @@ use Illuminate\Support\Str;
 
 class ArtBookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $levels     =   ArtBookHelper::getLevels();
+        if(!session('current_active_programme.id')){
+            return redirect(route('parent.home'))->with(['type' => 'error', 'message' => 'Unable to fetch class data']);
+        }
 
-        return Inertia::render('Parent/ArtBook/Index',[
+        $art_gallery_controller =   new ArtGalleryController();
+        $art_books              =   $art_gallery_controller->getThemes(1);
+        $levels                 =   ArtBookHelper::getLevels();
+
+        return Inertia::render('Parent/Class/ArtBook',[
+            'art_books' =>  $art_books,
             'levels'    =>  $levels,
         ]);
     }

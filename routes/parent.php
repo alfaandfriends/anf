@@ -1,18 +1,25 @@
 <?php
 
 use App\Classes\ArtBookHelper;
+use App\Classes\StoryHelper;
 use App\Http\Controllers\Parent\ArtBookController;
 use App\Http\Controllers\Parent\ChildrenController;
 use App\Http\Controllers\Parent\ArtGalleryController;
 use App\Http\Controllers\Parent\InvoiceController;
 use App\Http\Controllers\Parent\HomeController;
+use App\Http\Controllers\Parent\MessageController;
+use App\Http\Controllers\Parent\PostController;
 use App\Http\Controllers\Parent\ProfileController;
+use App\Http\Controllers\Parent\ProgressReportController;
+use App\Http\Controllers\Parent\StoryController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware(['auth', 'child'])->group(function(){
+
     /* Onboard */
     Route::get('onboarding', [HomeController::class, 'onboarding'])->name('onboarding');
+
     Route::middleware(['onboard'])->prefix('/')->name('parent.')->group(function () {
         
         /* Profile */
@@ -23,17 +30,26 @@ Route::middleware(['auth', 'child'])->group(function(){
         /* Home */
         Route::get('home', [HomeController::class, 'index'])->name('home');
         Route::post('switch-child', [HomeController::class, 'switchChild'])->name('switch_child');
+        Route::post('create-post', [StoryHelper::class, 'createPost'])->name('create_post');
+        Route::post('like-post', [StoryHelper::class, 'likePost'])->name('like_post')->middleware('throttle:240,1');
+
+        /* Message */
+        Route::get('messages', [MessageController::class, 'index'])->name('messages');
+
+        /* Stories */
+        Route::get('stories/{id}', [StoryController::class, 'index'])->name('stories');
+
+        /* Progress Reports */
+        Route::get('progress-reports', [ProgressReportController::class, 'index'])->name('progress_reports');
 
         /* Invoices */
-        Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
+        Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
 
         /* Art Gallery */
         Route::get('art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery');
         Route::post('art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store');
         Route::delete('art-gallery/delete/{id}', [ArtGalleryController::class, 'destroy'])->name('art_gallery.destroy');
-
-        /* Art Gallery */
-        Route::get('/art-gallery/get-artworks', [ArtGalleryController::class, 'getArtworks'])->name('art_gallery.get_artworks');
+        Route::get('art-gallery/get-artworks', [ArtGalleryController::class, 'getArtworks'])->name('art_gallery.get_artworks');
     
         /* Art Book */
         Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book');

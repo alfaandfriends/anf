@@ -87,17 +87,17 @@ InertiaProgress.init({
 });
 
 /* Loading */
-const $loading = useLoading({
-    container: null,
-    loader: 'bars',
-    lockScroll: false,
-    zIndex: 9999,
-    opacity: 0.2,
-    color: '#4f46e5',
-    backgroundColor: 'black'
-});
+// const $loading = useLoading({
+//     container: null,
+//     loader: 'bars',
+//     lockScroll: false,
+//     zIndex: 9999,
+//     opacity: 0.2,
+//     color: '#4f46e5',
+//     backgroundColor: 'black'
+// });
 
-var loader
+// var loader
 
-Inertia.on('start', () => loader = $loading.show() )
-Inertia.on('finish', () => loader.hide() )
+// Inertia.on('start', () => loader = $loading.show() )
+// Inertia.on('finish', () => loader.hide() )

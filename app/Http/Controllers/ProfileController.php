@@ -44,10 +44,9 @@ class ProfileController extends Controller
 
         $user_info    =   User::where('ID', auth()->user()->ID)->first();
 
-        if($request->file('profile_photo')){
+        if(isset($request->file('profile_photo')['file'])){
             Storage::delete($user_info->user_photo);
-            $file   =   $request->file('profile_photo') ? $request->file('profile_photo') : $request->profile_photo['file'];
-            $path   =   Storage::putFileAs('profile_photo', $file, $file->getClientOriginalName());
+            $path   =   Storage::putFile('profile_photo', $request->file('profile_photo')['file']);
             User::where('ID', auth()->user()->ID)
                 ->update([
                     'user_photo'        => $path,
