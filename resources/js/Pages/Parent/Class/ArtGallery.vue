@@ -35,9 +35,6 @@
             <div class="flex items-center space-y-3" v-if="$page.props.artworks">
                 <h2 class="text-lg md:text-xl mx-1 font-extrabold">Art Gallery</h2>
             </div>
-            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.artworks">
-                <span class="text-slate-500">No Artworks Found</span>
-            </div>
             <div class="mb-3 flex flex-col space-y-2 justify-between items-end mt-3">
                 <Multiselect 
                     v-model="filter.level_id" 
@@ -100,7 +97,7 @@
                     }" 
                 /> 
             </div>
-            <div class="bg-white overflow-hidden shadow rounded-lg border p-6">
+            <div class="bg-white overflow-hidden shadow rounded-lg border p-6" v-if="$page.props.artworks.length && !searching.artworks">
                 <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                     <div v-for="artwork in $page.props.artworks">
                         <img class="object-cover object-center w-full h-40 max-w-full rounded-lg cursor-pointer"
@@ -109,6 +106,12 @@
                         />
                     </div>
                 </div>
+            </div>
+            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.artworks.length && !searching.artworks">
+                <span class="text-slate-500">No Artworks Found</span>
+            </div>
+            <div class="flex justify-center mx-1 mt-10" v-if="searching.artworks">
+                <span class="text-slate-500">Searching for student's artworks...</span>
             </div>
         </div>
     </Authenticated>
@@ -157,33 +160,29 @@ export default {
             filter: {
                 level_id: 1,
             },
+            searching: {
+                artworks: false
+            }
         }
     },
     watch: {
         'filter.level_id': {
             handler(){
-                this.searching.themes = true
-                axios.get(route('parent.art_gallery.get_themes', this.filter.level_id))
-                .then(response => {
-                    this.filter.theme_id = ''
-                    this.option.themes = response.data;
-                    this.searching.themes = false
-                })
+                this.getArtwork()
             },
             deep: true
         },
     },
     methods: {
         getArtwork(){
-            if(this.filter.level_id && this.filter.theme_id){
+            if(this.filter.level_id){
                 if(this.searching.artworks){
                     return
                 }
                 this.searching.artworks = true
                 axios.get(route('parent.art_gallery.get_artworks'), { params: this.filter })
                 .then(response => {
-                    this.init       = false
-                    this.artworks   =   response.data
+                    this.$page.props.artworks   =   response.data
                     this.searching.artworks  = false
                 })
             }
