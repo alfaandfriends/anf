@@ -9,7 +9,7 @@ use App\Models\Menu;
 use App\Models\Permission;
 use App\Models\UserHasRoles;
 use Carbon\Carbon;
-use Hashids\Hashids;
+use Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -207,7 +207,7 @@ class HandleInertiaRequests extends Middleware
                                     $item->programme_id = $hashids->encode($item->programme_id);
                                     return $item;
                                 }));
-
+        //  dd($children_classes);                       
         return $children_classes;
     }
 }
