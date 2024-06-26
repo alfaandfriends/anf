@@ -97,15 +97,15 @@
                     }" 
                 /> 
             </div>
-            <div class="bg-white overflow-hidden shadow rounded-lg border p-6 min-h-[600px]" v-if="!searching.art_book_themes && this.$page.props.art_books.length">
+            <div class="bg-white overflow-hidden shadow rounded-lg border p-6 min-h-[600px]" v-if="!searching.art_book_themes && $page.props.art_books.length">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-2">
-                    <div class="w-full space-y-4 p-4 bg-white border border-gray-200 rounded-lg shadow-sm shadow-gray-400" v-for="artbook in this.$page.props.art_books">
+                    <div class="w-full space-y-4 p-4 bg-white border border-gray-200 rounded-lg shadow-sm shadow-gray-400" v-for="artbook in $page.props.art_books">
                         <img :src="'/images/' + artbook.art_book_assets + 'thumbnail.jpg'" alt="">
                         <button type="button" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="openDownloadModal(artbook.id)">Select</button>
                     </div>
                 </div>
             </div>
-            <div class="flex justify-center mx-1 mt-10" v-if="!searching.art_book_themes && !this.$page.props.art_books.length">
+            <div class="flex justify-center mx-1 mt-10" v-if="!searching.art_book_themes && !$page.props.art_books.length">
                 <span class="text-slate-500">No Art Books Found</span>
             </div>
             <div class="flex justify-center mx-1 mt-10" v-if="searching.art_book_themes">
