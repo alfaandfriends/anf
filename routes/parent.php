@@ -1,6 +1,7 @@
 <?php
 
 use App\Classes\ArtBookHelper;
+use App\Classes\StoryHelper;
 use App\Http\Controllers\Parent\ArtBookController;
 use App\Http\Controllers\Parent\ChildrenController;
 use App\Http\Controllers\Parent\ArtGalleryController;
@@ -29,8 +30,8 @@ Route::middleware(['auth', 'child'])->group(function(){
         /* Home */
         Route::get('home', [HomeController::class, 'index'])->name('home');
         Route::post('switch-child', [HomeController::class, 'switchChild'])->name('switch_child');
-        Route::post('create-post', [PostController::class, 'createPost'])->name('create_post');
-        Route::post('like-post', [PostController::class, 'likePost'])->name('like_post')->middleware('throttle:240,1');
+        Route::post('create-post', [StoryHelper::class, 'createPost'])->name('create_post');
+        Route::post('like-post', [StoryHelper::class, 'likePost'])->name('like_post')->middleware('throttle:240,1');
 
         /* Message */
         Route::get('messages', [MessageController::class, 'index'])->name('messages');

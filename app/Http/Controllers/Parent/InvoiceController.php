@@ -3,13 +3,8 @@
 namespace App\Http\Controllers\Parent;
 
 use App\Classes\InvoiceHelper;
-use App\Classes\PostHelper;
-use App\Classes\ProgrammeHelper;
 use App\Http\Controllers\Controller;
-use Hashids\Hashids;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class InvoiceController extends Controller

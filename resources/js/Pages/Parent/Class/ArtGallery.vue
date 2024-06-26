@@ -19,12 +19,11 @@
                         <img src="/images/parents/fee_invoice.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Invoices</span>
                     </div>
-                    <!-- <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" v-if="$page.props.programme_info.id == 3 || $page.props.programme_info.id == 5"> -->
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_gallery') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_gallery'))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_gallery') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_gallery'))" v-if="$page.props.session_data.current_active_programme.id == 3 || $page.props.session_data.current_active_programme.id == 5">
                         <img src="/images/parents/art_gallery.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Art Gallery</span>
                     </div>
-                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_book') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_book'))">
+                    <div class="flex flex-col items-center cursor-pointer hover:scale-105 duration-150 whitespace-nowrap" :class="route().current('parent.art_book') ? 'font-extrabold' : ''" @click="$inertia.get(route('parent.art_book'))" v-if="$page.props.session_data.current_active_programme.id == 3 || $page.props.session_data.current_active_programme.id == 5">
                         <img src="/images/parents/art_book.png" class="w-10 h-10" alt="">
                         <span class="text-sm">Art Book</span>
                     </div>

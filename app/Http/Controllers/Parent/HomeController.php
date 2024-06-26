@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Parent;
 
-use App\Classes\PostHelper;
+use App\Classes\StoryHelper;
 use App\Classes\StudentHelper;
 use App\Http\Controllers\Controller;
 use DB;
@@ -31,7 +31,7 @@ class HomeController extends Controller
         if($student_id){
             $academics  =   StudentHelper::studentAcademicDetails($student_id);
         }
-        $posts      =   PostHelper::getPosts($student_id);
+        $posts      =   StoryHelper::getPosts($student_id);
 
         return Inertia::render('Parent/Home',[
             'academics'     =>  $academics ?? '',

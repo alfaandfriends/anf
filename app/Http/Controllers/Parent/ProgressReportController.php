@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Parent;
 
-use App\Classes\PostHelper;
 use App\Http\Controllers\Controller;
-use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;

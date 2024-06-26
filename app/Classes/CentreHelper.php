@@ -13,6 +13,7 @@ class CentreHelper {
                                             ->leftJoin('centre_images', 'centres.id', '=', 'centre_images.centre_id')
                                             ->where('centres.id', $centre_id)
                                             ->select([  'centres.ID as centre_id', 
+                                                        'centres.country_id as centre_country_id', 
                                                         'centres.label as centre_name', 
                                                         'centres.phone as centre_contact_number', 
                                                         'centres.email as centre_email', 
