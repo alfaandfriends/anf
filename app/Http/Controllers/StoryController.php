@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\CentreHelper;
 use App\Classes\ProgrammeHelper;
+use App\Classes\StoryHelper;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -24,17 +25,14 @@ class StoryController extends Controller
                 return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
             }
         }
-        
 
-        if($request->centre_id){
-            $centre_info    =   CentreHelper::getCentreInfo($request->centre_id);
-            // dd($centre_info['centre_country_id']);
-            ProgrammeHelper::programmes($centre_info['centre_country_id']);
-        }
+        $programmes =   ProgrammeHelper::programmes();
+        $stories    =   StoryHelper::getStories($request->centre_id, $request->programme_id);
 
         return Inertia::render('Stories/Index',[
             'filter'        =>  request()->all('search', 'centre_id', 'theme', 'status'),
-            // 'programmes'    =>  $programmes,
+            'programmes'    =>  $programmes,
+            'stories'       =>  $stories,
             'themes'        =>  [],
             'arts'          =>  [],
         ]);
