@@ -30,8 +30,8 @@
                 </div>
             </simplebar>
         </div>
-        <div class="max-w-xl mx-auto mt-10">
-            <div class="flex items-center space-y-3" v-if="$page.props.artworks">
+        <div class="max-w-xl mx-auto mt-10" @scroll="handleScroll()"  ref="scrollContainer">
+            <div class="flex items-center space-y-3" v-if="$page.props.artworks.data">
                 <h2 class="text-lg md:text-xl mx-1 font-extrabold">Art Gallery</h2>
             </div>
             <div class="mb-3 flex flex-col space-y-2 justify-between items-end mt-3">
@@ -96,9 +96,9 @@
                     }" 
                 /> 
             </div>
-            <div class="bg-white overflow-hidden shadow rounded-lg border p-6" v-if="$page.props.artworks.length && !searching.artworks">
+            <div class="bg-white overflow-hidden shadow rounded-lg border p-6" v-if="$page.props.artworks.data.length && !searching.artworks">
                 <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                    <div v-for="artwork in $page.props.artworks">
+                    <div v-for="artwork in $page.props.artworks.data">
                         <img class="object-cover object-center w-full h-40 max-w-full rounded-lg cursor-pointer"
                             :src="'/storage/art_gallery/'+artwork.filename"
                              @click="showImage(artwork.filename, artwork.activity)"
@@ -106,7 +106,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.artworks.length && !searching.artworks">
+            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.artworks.data.length && !searching.artworks">
                 <span class="text-slate-500">No Artworks Found</span>
             </div>
             <div class="flex justify-center mx-1 mt-10" v-if="searching.artworks">
@@ -161,7 +161,8 @@ export default {
             },
             searching: {
                 artworks: false
-            }
+            },
+            loading: false
         }
     },
     watch: {
@@ -181,7 +182,7 @@ export default {
                 this.searching.artworks = true
                 axios.get(route('parent.art_gallery.get_artworks'), { params: this.filter })
                 .then(response => {
-                    this.$page.props.artworks   =   response.data
+                    this.$page.props.artworks.data   =   response.data
                     this.searching.artworks  = false
                 })
             }
@@ -191,6 +192,14 @@ export default {
 
             this.lightbox.open         = !this.lightbox.open
         },
+        handleScroll() {
+            console.log('yes')
+            const scrollContainer = this.$refs.scrollContainer;
+            if(scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight - 10) {
+                // this.fetchPosts();
+                console.log('yes')
+            }
+        }
     }
 }
 </script>

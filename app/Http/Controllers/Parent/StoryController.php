@@ -33,11 +33,11 @@ class StoryController extends Controller
 
         $student_id     =   $request->session()->get('current_active_child.student_id');
         
-        $posts          =   StoryHelper::getPosts($student_id);
-
+        $stories          =   StoryHelper::getStudentStories($student_id);
+        
         return Inertia::render('Parent/Class/Index', [
             'current_active_programme'    =>  session('current_active_programme'),
-            'posts'                       =>  $posts ?? []
+            'stories'                       =>  $stories ?? []
         ]);
     }
 }

@@ -27,15 +27,11 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        $student_id =   $request->session()->get('current_active_child.student_id');
-        if($student_id){
-            $academics  =   StudentHelper::studentAcademicDetails($student_id);
-        }
-        $posts      =   StoryHelper::getPosts($student_id);
+        $stories          =   StoryHelper::getStudentStories(null, true);
 
         return Inertia::render('Parent/Home',[
-            'academics'     =>  $academics ?? '',
-            'posts'         =>  $posts ?? [],
+            'academics' =>  $academics ?? '',
+            'stories'   =>  $stories ?? [],
         ]);
     }
 

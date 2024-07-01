@@ -28,7 +28,7 @@ class ArtGalleryController extends Controller
                             ->where('student_art_gallery.level_id', 1)
                             ->where('student_art_gallery.student_id', $request->session()->get('current_active_child.student_id'))
                             ->select('student_art_gallery.id', 'art_levels.name as level', 'art_themes.name as theme', 'art_lessons.name as lesson', 'art_activities.name as activity', 'student_art_gallery.filename', 'art_themes.art_book_active')
-                            ->get();
+                            ->paginate(4);
                             
         return Inertia::render('Parent/Class/ArtGallery',[
             'levels'    =>  $levels,

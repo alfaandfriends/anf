@@ -31,37 +31,53 @@
             </simplebar>
         </div>
         <div class="max-w-xl mx-auto mt-5">
-            <div class="flex items-center space-y-3" v-if="$page.props.posts.length">
+            <div class="flex items-center space-y-3" v-if="$page.props.stories.data.length">
                 <h2 class="text-lg md:text-xl mx-1 font-extrabold">Stories</h2>
             </div>
-            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.posts.length">
+            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.stories.data.length">
                 <span class="text-slate-500">No Stories Found</span>
             </div>
-            <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl text-sm" v-for="post, post_index in $page.props.posts">
+            <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl text-sm" v-for="story, story_index in $page.props.stories.data">
                 <div class="flex flex-row text-sm items-center">
                     <div class="flex justify-between items-center flex-1 font-bold leading-tight select-none">
-                        <div class="flex flex-col mx-1">
-                            <span class="text-slate-900 md:text-md font-bold">{{ post.post_author_name }}</span>
-                            <span class="text-xs font-medium text-slate-500">ALFA and Friends Maths</span>
+                        <div class="flex flex-col">
+                            <span class="text-slate-900 md:text-md font-bold">{{ story.story_author_name }}</span>
+                            <span class="text-xs font-medium text-slate-500">{{ story.story_programme_name }}</span>
                         </div>
                         <div class="flex items-center">
-                            <TimeAgo class="text-gray-500 font-medium text-xs" :datetime="post.post_date"></TimeAgo>
+                            <TimeAgo class="text-gray-500 font-medium text-xs" :datetime="story.story_date"></TimeAgo>
                         </div>
                     </div>
                 </div>
                 <hr>
-                <span class="text-sm text-slate-800">{{ post.post_title }}</span>
-                <Carousel v-if="post.post_images.length" :mouseDrag="post.post_images.length > 1" :touchDrag="post.post_images.length > 1">
-                    <Slide v-for="image, image_index in post.post_images" :key="image">
+                <span class="text-sm text-slate-800">{{ story.story_title }}</span>
+                <Carousel v-if="story.images" :mouseDrag="story.images.length > 1" :touchDrag="story.images.length > 1">
+                    <Slide v-for="image, image_index in story.images" :key="image">
                     <div class="carousel__item h-full">
-                        <img :src="'/storage/posts/' + image.image_filename" class="select-none h-full" @dblclick="toggleLike(post_index, post.post_id)">
+                        <img :src="'/storage/stories/' + image.image_filename" class="select-none h-full" @dblclick="toggleLike(story_index, story.story_id)">
                     </div>
                     </Slide>
                     <template #addons>
-                    <Navigation v-if="post.post_images.length > 1"/>
+                    <Navigation v-if="story.images.length > 1"/>
                     </template>
                 </Carousel>
-                <div class="" v-if="post.show_comment">
+                <div class="flex items-center space-x-4">
+                    <div class="" v-if="!$page.props.can.create_stories">
+                        <svg v-if="isLikedByParent(story_index)" @click="toggleLike(story_index, story.story_id)" xmlns="http://www.w3.org/2000/svg" class="inline-block h-6 w-6 text-red-500 cursor-pointer" fill="currentColor" viewBox="0 0 512 512">
+                            <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
+                        </svg>
+                        <svg v-else @click="toggleLike(story_index, story.story_id)" xmlns="http://www.w3.org/2000/svg" class="inline-block h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer" fill="currentColor" viewBox="0 0 512 512">
+                            <path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-semibold select-none" v-if="isLikedByParent(story_index) && !$page.props.can.create_stories">You liked this</span>
+                    <!-- <div class="" @click="toggleComment(story_index)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-7 w-7 text-gray-500 hover:text-red-500 cursor-pointer" fill="currentColor" viewBox="0 0 512 512">
+                            <path d="M123.6 391.3c12.9-9.4 29.6-11.8 44.6-6.4c26.5 9.6 56.2 15.1 87.8 15.1c124.7 0 208-80.5 208-160s-83.3-160-208-160S48 160.5 48 240c0 32 12.4 62.8 35.7 89.2c8.6 9.7 12.8 22.5 11.8 35.5c-1.4 18.1-5.7 34.7-11.3 49.4c17-7.9 31.1-16.7 39.4-22.7zM21.2 431.9c1.8-2.7 3.5-5.4 5.1-8.1c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208s-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6c-15.1 6.6-32.3 12.6-50.1 16.1c-.8 .2-1.6 .3-2.4 .5c-4.4 .8-8.7 1.5-13.2 1.9c-.2 0-.5 .1-.7 .1c-5.1 .5-10.2 .8-15.3 .8c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c4.1-4.2 7.8-8.7 11.3-13.5c1.7-2.3 3.3-4.6 4.8-6.9c.1-.2 .2-.3 .3-.5z"/>
+                        </svg>
+                    </div> -->
+                </div>
+                <div class="" v-if="story.show_comment">
                     <textarea class="bg-white border border-gray-300 p-2 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="2" placeholder="Drop a comment..."></textarea>
                     <div class="flex justify-end">
                         <button class="px-4 py-2 text-xs bg-indigo-600 hover:bg-indigo-700 text-white rounded">Comment</button>
@@ -69,99 +85,53 @@
                 </div>
             </div>
         </div>
-        <ConfirmationModal 
-            :show="isOpen" 
-            @close="isOpen = false"
-            :confirmationAlert="confirmationAlert"
-            :confirmationTitle="confirmationTitle"
-            :confirmationText="confirmationText"
-            :confirmationButton="confirmationButton"
-            :confirmationMethod="confirmationMethod"
-            :confirmationRoute="confirmationRoute"
-            :confirmationData="confirmationData"
-        >
-        </ConfirmationModal>
-        <SimpleModal :isOpen="show_add_child" @close="show_add_child = false">
-            <template #header>
-                Add Child
-            </template>
-            <div class="">
-                <label class="font-medium text-gray-900 text-sm md:text-md">Name</label>
-                <input type="text" class="mt-1 focus:ring-0 focus:border-gray-300 flex-1 block w-full rounded-md mb-4 text-sm md:text-md" :class="!errors.name ? 'border-gray-300' : 'border-red-300'" v-model="child_form.name">
-                <label class="font-medium text-gray-900 text-sm md:text-md">Date of Birth</label>
-                <div class="mt-1 flex rounded-md shadow-sm">
-                    <Datepicker class="w-full rounded-lg shadow-sm mb-4 " 
-                        :style="errors.dob ? '--dp-border-color: #FCA5A5' : '--dp-border-color: #D1D5DB'" 
-                        input-class-name="date-picker"
-                        v-model="child_form.dob" 
-                        :enable-time-picker="false"
-                        :auto-apply="true" 
-                        :format="'dd/MM/yyyy'"
-                    />
-                </div>
-                <label class="font-medium text-gray-900 text-sm md:text-md">Gender</label>
-                <div class="mt-1 flex rounded-md shadow-sm">
-                    <select name="gender" id="gender" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm cursor-pointer" :class="!errors.gender ? 'border-gray-300' : 'border-red-300'" v-model="child_form.gender" autocomplete="none">
-                        <option value="">-- Select Gender --</option>
-                        <option :value="gender.id" v-for="(gender, index) in $page.props.gender_list" :key="index">{{ gender.name }}</option>
-                    </select>
-                </div>
-                <hr class="my-5">
-                <div class="flex justify-end items-center space-x-2">
-                    <BreezeButton @click="addChild" buttonType="info" class="px-4 py-2">
-                        <div v-if="adding" class="flex space-x-2">
-                            <svg aria-hidden="true" class="inline w-4 h-4 text-gray-200 animate-spin fill-indigo-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-                            </svg>
-                            <span>Adding...</span>
-                        </div>
-                        <span v-else>Add</span>
-                    </BreezeButton>
-                    <BreezeButton type="button" buttonType="gray" @click="show_add_child = false" v-if="!adding">Cancel</BreezeButton>
-                </div>
-            </div>
-        </SimpleModal>
     </Authenticated>
 </template>
 
 <script setup>
 import Authenticated from '@/Layouts/Parent/Authenticated.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import BreezeButton from '@/Components/Button.vue'
-import SimpleModal from '@/Components/Parent/SimpleModal.vue';
 import simplebar from 'simplebar-vue';
 import 'simplebar-vue/dist/simplebar.min.css';
 </script>
 
 <script>
+import TimeAgo from '@/Components/TimeAgo.vue'
+import 'vue3-carousel/dist/carousel.css'
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 
 export default {
     components: {
-        simplebar
+        simplebar, TimeAgo, Carousel, Slide, Pagination, Navigation,
     },
     data(){
         return{
-            isOpen: false,
-            switching: false,
-            confirmationAlert: '',
-            confirmationTitle: '',
-            confirmationText: '',
-            confirmationButton: '',
-            confirmationMethod: '',
-            confirmationRoute: '',
-            confirmationData: '',
-            show_add_child: false,
-            adding: false,
-            disable_overlay: false,
-            child_form: {
-                name: '',
-                gender: '',
-                dob: ''
-            },
-            errors: []
         }
     },
+    methods: {
+        isLikedByParent(story_index){
+            if(this.$page.props.stories.data[story_index].likes.length){
+                return this.$page.props.stories.data[story_index].likes.some(like => like.like_author_id === this.$page.props.auth.user.ID);
+            }
+            return false
+        },
+        toggleLike(story_index, story_id){
+            if(this.isLikedByParent(story_index)){
+                const like_index    =   this.$page.props.stories.data[story_index].likes.findIndex(like => like.like_author_id === this.$page.props.auth.user.ID);
+                this.$page.props.stories.data[story_index].likes.splice(like_index, 1)
+            }
+            else{
+                this.$page.props.stories.data[story_index].likes.push({
+                    'like_author_id' : this.$page.props.auth.user.ID
+                })
+            }
+            
+            axios.post(route('parent.like_story'), {'story_id': story_id, 'to_delete' : !this.isLikedByParent(story_index)})
+            .then(response => {
+                console.log(response)
+            });
+        }
+    }
 }
 </script>
 

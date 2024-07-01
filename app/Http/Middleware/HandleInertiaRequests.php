@@ -200,6 +200,7 @@ class HandleInertiaRequests extends Middleware
                                 ->where('student_fees.student_id', session()->get('current_active_child.student_id'))
                                 ->whereYear('student_fees.created_at', Carbon::now()->format('Y'))
                                 ->whereMonth('student_fees.created_at', Carbon::now()->format('m'))
+                                ->whereNull('student_fees.status')
                                 ->select('programmes.id as programme_id', 'programmes.name as programme_name')
                                 ->get()
                                 ->map(function ($item) {
