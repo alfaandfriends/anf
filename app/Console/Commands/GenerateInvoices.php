@@ -162,7 +162,7 @@ class GenerateInvoices extends Command
                     }
                     
                     /* Create progress report */
-                    $progress_report_required   =   (bool) DB::table('programmes')->where('id', $fee['fee_info']['programme_id'])->pluck('progress_report_required')->first();
+                    $progress_report_required   =   DB::table('programmes')->where('id', $fee['programme_id'])->pluck('progress_report_required')->first();
                     if($progress_report_required){
                         $progress_report_config_id  =   $progress_report_configs->where('programme_id', $fee['programme_id'])->pluck('id')->first();
                         $progress_report_id =   DB::table('progress_reports')->insertGetId([
