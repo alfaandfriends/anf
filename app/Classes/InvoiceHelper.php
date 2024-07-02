@@ -182,17 +182,17 @@ class InvoiceHelper {
         // }
     }
     
-    public static function getStudentFeeInvoices($student_id)
+    public static function getStudentFeeInvoices()
     {
         $fee_invoices   =   DB::table('invoices')
                                 ->join('invoice_status', 'invoices.status', '=', 'invoice_status.id')
-                                ->where('student_id', $student_id)
+                                ->where('student_id', session('current_active_child.student_id'))
                                 ->select(   'invoices.id', 'invoices.invoice_number', 'invoices.invoice_items', 'invoices.date_issued', 'invoices.due_date', 'invoices.amount', 
                                             'invoice_status.id as status_id','invoice_status.name as status', 'invoice_status.bg_color as status_bg_color', 
                                             'invoices.bill_id', 'invoices.payment_url', 'invoice_status.text_color as status_text_color')
                                 ->whereNot('invoices.status', 4)
-                                ->orderBy('invoices.date_issued')
-                                ->get();
+                                ->orderByDesc('invoices.date_issued')
+                                ->paginate(10);
 
         return $fee_invoices;
     }

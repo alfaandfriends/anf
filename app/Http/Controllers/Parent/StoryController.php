@@ -30,14 +30,12 @@ class StoryController extends Controller
                 'name'          => $programme_info->name
             ]
         ]);
-
-        $student_id     =   $request->session()->get('current_active_child.student_id');
         
-        $stories          =   StoryHelper::getStudentStories($student_id);
+        $stories                        =   StoryHelper::getStudentStories($for_current_student = true);
         
         return Inertia::render('Parent/Class/Index', [
             'current_active_programme'    =>  session('current_active_programme'),
-            'stories'                       =>  $stories ?? []
+            'stories'                     =>  $stories ?? []
         ]);
     }
 }
