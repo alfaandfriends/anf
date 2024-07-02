@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Parent;
 
+use App\Classes\ArtGalleryHelper;
 use App\Http\Controllers\Controller;
 use Hashids\Hashids;
 use Illuminate\Http\Request;
@@ -20,15 +21,7 @@ class ArtGalleryController extends Controller
         
         $levels     =   $this->getLevels();
         
-        $artworks     =   DB::table('student_art_gallery')
-                            ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
-                            ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
-                            ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
-                            ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
-                            ->where('student_art_gallery.level_id', 1)
-                            ->where('student_art_gallery.student_id', $request->session()->get('current_active_child.student_id'))
-                            ->select('student_art_gallery.id', 'art_levels.name as level', 'art_themes.name as theme', 'art_lessons.name as lesson', 'art_activities.name as activity', 'student_art_gallery.filename', 'art_themes.art_book_active')
-                            ->paginate(4);
+        $artworks   =   ArtGalleryHelper::getStudentArtworks(1);
                             
         return Inertia::render('Parent/Class/ArtGallery',[
             'levels'    =>  $levels,

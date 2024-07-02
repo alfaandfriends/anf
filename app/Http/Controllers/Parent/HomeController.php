@@ -27,7 +27,7 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        $stories          =   StoryHelper::getStudentStories(null, true);
+        $stories          =   StoryHelper::getStudentStories();
 
         return Inertia::render('Parent/Home',[
             'academics' =>  $academics ?? '',

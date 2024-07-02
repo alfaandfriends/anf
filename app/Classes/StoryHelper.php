@@ -5,13 +5,14 @@ namespace App\Classes;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class StoryHelper {
     
-    public static function getStories($centre_id = null, $programme_id = null, $student_id = null){
+    public static function getStories($centre_id = null, $programme_id = null){
         $user_centres   =   DB::table('user_has_centres')->where('user_id', auth()->id())->get()->pluck('centre_id');
         $is_admin       =   (bool)auth()->user()->is_admin;
 
@@ -38,6 +39,7 @@ class StoryHelper {
                             })
                             ->groupBy('stories.id')
                             ->paginate(10);
+                    
 
         $storiesCollection  = collect($stories->items());
         $storyIds           = $storiesCollection->pluck('story_id');
@@ -79,24 +81,22 @@ class StoryHelper {
             $stories->currentPage(),
             ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
         );
-
         return $stories;
     }
 
-    public static function getStudentStories($student_id = null, $all_children = false){
-        $enrolled_child_student_ids      =   DB::table('students')
-                                        ->leftJoin('children', 'students.children_id', '=', 'children.id')
-                                        ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
-                                        ->select('students.id')
-                                        ->where('wpvt_users.ID', auth()->id())
-                                        ->get()->pluck('id');
-                                        
+    public static function getStudentStories($for_current_student = false){
+        $enrolled_child_student_ids =   DB::table('students')
+                                            ->leftJoin('children', 'students.children_id', '=', 'children.id')
+                                            ->leftJoin('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
+                                            ->select('students.id')
+                                            ->where('wpvt_users.ID', auth()->id())
+                                            ->get()->pluck('id')->toArray();
+
         /* Get stories */
         $stories    =   DB::table('stories')
-                            ->leftJoin('wpvt_users', 'stories.created_by', '=', 'wpvt_users.ID')
-                            ->leftJoin('story_likes', 'story_likes.story_id', '=', 'stories.id')
-                            ->leftJoin('story_students', 'story_students.story_id', '=', 'stories.id')
-                            ->leftJoin('programmes', 'stories.programme_id', '=', 'programmes.id')
+                            ->join('wpvt_users', 'stories.created_by', '=', 'wpvt_users.ID')
+                            ->join('story_students', 'story_students.story_id', '=', 'stories.id')
+                            ->join('programmes', 'stories.programme_id', '=', 'programmes.id')
                             ->select(
                                 'stories.id as story_id',
                                 'stories.title as story_title',
@@ -105,15 +105,17 @@ class StoryHelper {
                                 'wpvt_users.display_name as story_author_name',
                                 'programmes.name as story_programme_name',
                             )
-                            ->when($student_id && $all_children == false, function($query) use ($student_id){
-                                $query->where('story_students.student_id', $student_id)->where('stories.programme_id', session('current_active_programme.id'));
+                            ->whereIn('story_students.student_id', $enrolled_child_student_ids)
+                            ->when($for_current_student, function($query){
+                                $query->where('story_students.student_id', session('current_active_child.student_id'))
+                                        ->where('stories.programme_id', session('current_active_programme.id'));
                             })
-                            ->when($all_children == true, function($query) use ($enrolled_child_student_ids){
+                            ->when(!$for_current_student, function($query) use ($enrolled_child_student_ids){
                                 $query->whereIn('story_students.student_id', $enrolled_child_student_ids);
                             })
-                            ->groupBy('stories.id')
-                            ->paginate(10);
-
+                            ->orderByDesc('stories.created_at')
+                            ->paginate(3);
+                            
         $storiesCollection  = collect($stories->items());
         $storyIds           = $storiesCollection->pluck('story_id');
 
@@ -155,7 +157,7 @@ class StoryHelper {
             $stories->currentPage(),
             ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
         );
-        // dd($stories);
+        
         return $stories;
     }
 

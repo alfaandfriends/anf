@@ -31,21 +31,19 @@
             </simplebar>
         </div>
         <div class="max-w-xl mx-auto mt-10">
-            <div class="flex items-center space-y-3" v-if="$page.props.invoices.length">
+            <div class="flex items-center space-y-3" v-if="$page.props.invoices.data.length">
                 <h2 class="text-lg md:text-xl mx-1 font-extrabold">Invoices</h2>
             </div>
-            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.invoices.length">
+            <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.invoices.data.length">
                 <span class="text-slate-500">No Invoices Found</span>
             </div>
             <div class="mt-3">
                 <div class="bg-white shadow rounded-lg border">
-                    <simplebar data-simplebar-auto-hide="true" class=" max-h-screen">
+                    <simplebar data-simplebar-auto-hide="true" class="max-h-96" @scroll="handleInvoiceScroll" ref="invoice_container">
                         <ul class="divide-y divide-slate-200 dark:divide-zink-500 px-6 py-4">
-                            <li class="flex items-center gap-3 py-2 first:pt-0 last:pb-0" v-for="invoice, invoice_index in $page.props.invoices">
+                            <li class="flex items-center gap-3 py-2 first:pt-0 last:pb-0" v-for="invoice, invoice_index in $page.props.invoices.data">
                                 <div class="grow">
                                     <h6 class="font-bold text-sm">{{ moment(invoice.due_date).format('MMMM Y') }} (<span class="font-semibold text-blue-700">{{ invoice.invoice_number }}</span>)</h6>
-                                    <!-- <p class="text-slate-500 text-sm font-medium">Date Issued: {{ moment(invoice.due_date).format('DD MMM Y') }}</p>
-                                    <p class="text-slate-500 text-sm font-medium">Due Date: {{ moment(invoice.due_date).format('DD MMM Y') }}</p> -->
                                     <p class="text-slate-500 text-sm font-medium">Amount: {{ invoice.amount }}</p>
                                     <p class="text-sm font-medium">Status: <span :class="[invoice.status_text_color]">{{ invoice.status }}</span></p>
                                 </div>
@@ -53,7 +51,15 @@
                                     <a v-if="invoice.status_id == 1" :href="invoice.payment_url" class="text-sm cursor-pointer font-medium px-3 py-1 text-indigo-600 rounded bg-indigo-100 hover:bg-indigo-200 hover:rounded whitespace-nowrap">Pay Now</a>
                                     <a v-if="invoice.status_id == 2" class="text-sm cursor-pointer font-medium px-3 py-1 text-blue-600 bg-blue-100 hover:bg-blue-200 rounded whitespace-nowrap" @click="generating[invoice_index] ? '' : viewInvoice(invoice.id, invoice_index)">{{ generating[invoice_index] ? 'Generating...' : 'View' }}</a>
                                 </div>
-                            </li>
+                            </li> 
+                            <div class="flex items-center justify-between pt-5 animate-pulse" v-if="loading.invoices">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-52 mb-2.5"></div>
+                                    <div class="w-28 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+                                    <div class="w-20 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-14"></div>
+                            </div>
                         </ul>
                     </simplebar>
                 </div>
@@ -88,6 +94,9 @@ export default {
                 date_issued: '',
                 due_date: '',
                 total_amount: ''
+            },
+            loading: {
+                invoices: false
             }
         }
     },
@@ -143,9 +152,36 @@ export default {
         pay(billing_id){
             window.location.href = import.meta.env.VITE_BILLPLZ_ENDPOINT+billing_id
         },
+        handleInvoiceScroll() {
+            const container = this.$refs.invoice_container.$el.querySelector('.simplebar-content-wrapper');
+            const scrollTop = container.scrollTop;
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
+            
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                if(this.$page.props.invoices.next_page_url){
+                    if(!this.loading.invoices){
+                        this.loading.invoices = true
+                        axios.get(route('parent.student_invoices'), {
+                            params: {
+                                page: this.$page.props.invoices.current_page + 1
+                            }
+                        })
+                        .then((res) => {
+                            res.data.data.forEach((item)=>{
+                                this.$page.props.invoices.data.push(item)
+                            })
+                            this.$page.props.invoices.current_page   =    res.data.current_page
+                            this.$page.props.invoices.next_page_url  =    res.data.next_page_url
+                            this.loading.invoices = false
+                        });
+                    }
+                }
+            }
+        }
     },
     mounted(){
-        this.$page.props.invoices.forEach(element => {
+        this.$page.props.invoices.data.forEach(element => {
             this.generating.push(false)
         });
     }

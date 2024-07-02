@@ -15,7 +15,7 @@ class InvoiceController extends Controller
             return redirect(route('parent.home'))->with(['type' => 'error', 'message' => 'Unable to fetch class data']);
         }
 
-        $invoices =   InvoiceHelper::getStudentFeeInvoices($request->session()->get('current_active_child.student_id'));
+        $invoices =   InvoiceHelper::getStudentFeeInvoices();
         
         return Inertia::render('Parent/Class/Invoices', [
             'invoices'          =>  $invoices,

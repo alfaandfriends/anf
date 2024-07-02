@@ -97,14 +97,36 @@
                 /> 
             </div>
             <div class="bg-white overflow-hidden shadow rounded-lg border p-6" v-if="$page.props.artworks.data.length && !searching.artworks">
-                <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                    <div v-for="artwork in $page.props.artworks.data">
-                        <img class="object-cover object-center w-full h-40 max-w-full rounded-lg cursor-pointer"
-                            :src="'/storage/art_gallery/'+artwork.filename"
-                             @click="showImage(artwork.filename, artwork.activity)"
-                        />
+                <simplebar data-simplebar-auto-hide="true" class="max-h-96" @scroll="handleArtworkScroll" ref="artwork_container">
+                    <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+                        <div v-for="artwork in $page.props.artworks.data">
+                            <img class="object-cover object-center w-full h-40 max-w-full rounded-lg cursor-pointer"
+                                :src="'/storage/art_gallery/'+artwork.filename"
+                                @click="showImage(artwork.filename, artwork.activity)"
+                            />
+                        </div>
                     </div>
-                </div>
+                    <div class="grid grid-cols-2 gap-4 md:grid-cols-3 mt-4" v-if="loading.artworks">
+                        <div class="flex items-center justify-center h-40 mb-4 bg-gray-200 rounded animate-pulse">
+                            <svg class="w-10 h-10 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z"/>
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                            </svg>
+                        </div>
+                        <div class="flex items-center justify-center h-40 mb-4 bg-gray-200 rounded animate-pulse">
+                            <svg class="w-10 h-10 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z"/>
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                            </svg>
+                        </div>
+                        <div class="flex items-center justify-center h-40 mb-4 bg-gray-200 rounded animate-pulse">
+                            <svg class="w-10 h-10 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z"/>
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </simplebar>
             </div>
             <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.artworks.data.length && !searching.artworks">
                 <span class="text-slate-500">No Artworks Found</span>
@@ -162,7 +184,9 @@ export default {
             searching: {
                 artworks: false
             },
-            loading: false
+            loading: {
+                artworks: false
+            }
         }
     },
     watch: {
@@ -192,12 +216,31 @@ export default {
 
             this.lightbox.open         = !this.lightbox.open
         },
-        handleScroll() {
-            console.log('yes')
-            const scrollContainer = this.$refs.scrollContainer;
-            if(scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight - 10) {
-                // this.fetchPosts();
-                console.log('yes')
+        handleArtworkScroll() {
+            const container = this.$refs.artwork_container.$el.querySelector('.simplebar-content-wrapper');
+            const scrollTop = container.scrollTop;
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
+            
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                if(this.$page.props.artworks.next_page_url){
+                    if(!this.loading.artworks){
+                        this.loading.artworks = true
+                        axios.get(route('parent.student_artworks', this.filter.level_id), {
+                            params: {
+                                page: this.$page.props.artworks.current_page + 1
+                            }
+                        })
+                        .then((res) => {
+                            res.data.data.forEach((item)=>{
+                                this.$page.props.artworks.data.push(item)
+                            })
+                            this.$page.props.artworks.current_page   =    res.data.current_page
+                            this.$page.props.artworks.next_page_url  =    res.data.next_page_url
+                            this.loading.artworks = false
+                        });
+                    }
+                }
             }
         }
     }

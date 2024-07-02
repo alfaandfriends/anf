@@ -1,6 +1,9 @@
 <?php
 
 use App\Classes\ArtBookHelper;
+use App\Classes\ArtGalleryHelper;
+use App\Classes\InvoiceHelper;
+use App\Classes\ProgressReportHelper;
 use App\Classes\StoryHelper;
 use App\Http\Controllers\Parent\ArtBookController;
 use App\Http\Controllers\Parent\ChildrenController;
@@ -58,5 +61,11 @@ Route::middleware(['auth', 'child'])->group(function(){
         /* Art Gallery Select Options */
         Route::get('/art-gallery/get-levels', [ArtGalleryController::class, 'getLevels'])->name('art_gallery.get_levels');
         Route::get('/art-gallery/get-themes/{level_id}', [ArtGalleryController::class, 'getThemes'])->name('art_gallery.get_themes');
+
+        /* Get Data */
+        Route::get('parent-student-stories/{student_id?}', [StoryHelper::class, 'getStudentStories'])->name('student_stories');
+        Route::get('student-progress-reports', [ProgressReportHelper::class, 'getStudentProgressReports'])->name('student_progress_reports');
+        Route::get('student-invoices', [InvoiceHelper::class, 'getStudentFeeInvoices'])->name('student_invoices');
+        Route::get('student-artworks/{levels}', [ArtGalleryHelper::class, 'getStudentArtworks'])->name('student_artworks');
     });
 });
