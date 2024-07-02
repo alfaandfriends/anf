@@ -37,7 +37,7 @@
             <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.invoices.data.length">
                 <span class="text-slate-500">No Invoices Found</span>
             </div>
-            <div class="mt-3">
+            <div class="mt-3" v-if="$page.props.invoices.data.length">
                 <div class="bg-white shadow rounded-lg border">
                     <simplebar data-simplebar-auto-hide="true" class="max-h-96" @scroll="handleInvoiceScroll" ref="invoice_container">
                         <ul class="divide-y divide-slate-200 dark:divide-zink-500 px-6 py-4">

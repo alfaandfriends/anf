@@ -37,7 +37,7 @@
             <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.stories.data.length">
                 <span class="text-slate-500">No Stories Found</span>
             </div>
-            <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl text-sm" v-for="story, story_index in $page.props.stories.data">
+            <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl text-sm" v-if="$page.props.stories.data.length" v-for="story, story_index in $page.props.stories.data">
                 <div class="flex flex-row text-sm items-center">
                     <div class="flex justify-between items-center flex-1 font-bold leading-tight select-none">
                         <div class="flex flex-col">
