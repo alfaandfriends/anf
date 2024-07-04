@@ -175,7 +175,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="text-sm font-medium text-gray-900">{{ moment(result.story_date).format('DD MMM Y') }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="py-1 px-2 border border-indigo-500 bg-indigo-100 rounded-md text-indigo-600 cursor-pointer text-xs font-semibold" @click="show_likes_modal = true">{{ result.reaction_count }} Reactions</span>
+                                    <span class="py-1 px-2 border border-indigo-500 bg-indigo-100 rounded-md text-indigo-600 cursor-default text-xs font-semibold" @click="show_likes_modal = true">{{ result.reaction_count }} Reactions</span>
                                 </td>
                                 <!-- <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="py-1 px-2 border border-blue-500 bg-blue-100 rounded-md text-blue-600 cursor-pointer text-xs font-semibold" @click="show_comments_modal = true">{{ result.reaction_count }} Comments</span>

@@ -121,33 +121,43 @@ class StoryHelper {
         $storyIds           = $storiesCollection->pluck('story_id');
 
         /* Get images */
-        $images  = DB::table('story_images')
-                    ->whereIn('story_id', $storyIds)
-                    ->select('story_id', 'image_filename')
-                    ->get()
-                    ->groupBy('story_id');
+        $images     =   DB::table('story_images')
+                            ->whereIn('story_id', $storyIds)
+                            ->select('story_id', 'image_filename')
+                            ->get()
+                            ->groupBy('story_id');
 
         /* Get likes */
-        $likes  = DB::table('story_likes')
-                    ->leftJoin('wpvt_users', 'story_likes.liked_by', '=', 'wpvt_users.ID')
-                    ->whereIn('story_likes.story_id', $storyIds)
-                    ->whereNull('deleted_at')
-                    ->select('story_likes.story_id', 'wpvt_users.ID as like_author_id', 'wpvt_users.display_name as like_author_name')
-                    ->get()
-                    ->groupBy('story_id');
+        $likes      =   DB::table('story_likes')
+                            ->leftJoin('wpvt_users', 'story_likes.liked_by', '=', 'wpvt_users.ID')
+                            ->whereIn('story_likes.story_id', $storyIds)
+                            ->whereNull('deleted_at')
+                            ->select('story_likes.story_id', 'wpvt_users.ID as like_author_id', 'wpvt_users.display_name as like_author_name')
+                            ->get()
+                            ->groupBy('story_id');
 
         /* Get Students */
-        $students  = DB::table('story_students')
-                    ->whereIn('story_id', $storyIds)
-                    ->select('story_id', 'student_id')
-                    ->get()
-                    ->groupBy('story_id');
+        $students   =   DB::table('story_students')
+                            ->leftJoin('wpvt_users', 'story_students.student_id', '=', 'wpvt_users.ID')
+                            ->whereIn('story_id', $storyIds)
+                            ->select('story_id', 'student_id')
+                            ->get()
+                            ->groupBy('story_id');
+
+        /* Get Comments */
+        $comments   =   DB::table('story_comments')
+                            ->leftJoin('wpvt_users', 'story_comments.comment_by', '=', 'wpvt_users.ID')
+                            ->whereIn('story_comments.story_id', $storyIds)
+                            ->select('story_comments.story_id', 'story_comments.comment', 'story_comments.comment_by as comment_user_id', 'wpvt_users.display_name as comment_user_name', 'story_comments.created_at')
+                            ->get()
+                            ->groupBy('story_id');
 
         /* Insert into existing array */
-        $storiesCollection = $storiesCollection->map(function($story) use ($likes, $students, $images) {
+        $storiesCollection = $storiesCollection->map(function($story) use ($likes, $students, $images, $comments) {
             $story->images      = $images->get($story->story_id, collect())->toArray();
             $story->likes       = $likes->get($story->story_id, collect())->toArray();
             $story->students    = $students->get($story->story_id, collect())->toArray();
+            $story->comments    = $comments->get($story->story_id, collect())->toArray();
             return $story;
         });
 
@@ -282,6 +292,26 @@ class StoryHelper {
             DB::commit(); 
 
             return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+    }
+
+    public function commentStory(Request $request){
+        DB::beginTransaction();
+
+        try {
+            if($request->comment && $request->story_id){
+                DB::table('story_comments')->insert([
+                    'awd'      =>  $request->story_id,
+                    'comment'       =>  $request->comment,
+                    'comment_by'    =>  auth()->id()
+                ]);
+
+                DB::commit();
+                return true;
+            }
+            return false;
         } catch (\Exception $e) {
             DB::rollback();
         }

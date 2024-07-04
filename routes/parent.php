@@ -41,6 +41,7 @@ Route::middleware(['auth', 'child'])->group(function(){
 
         /* Stories */
         Route::get('stories/{id}', [StoryController::class, 'index'])->name('stories');
+        Route::post('/stories/comments/store', [StoryHelper::class, 'commentStory'])->name('stories.comments.store');
 
         /* Progress Reports */
         Route::get('progress-reports', [ProgressReportController::class, 'index'])->name('progress_reports');
