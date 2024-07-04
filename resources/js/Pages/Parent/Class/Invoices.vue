@@ -43,7 +43,7 @@
                         <ul class="divide-y divide-slate-200 dark:divide-zink-500 px-6 py-4">
                             <li class="flex items-center gap-3 py-2 first:pt-0 last:pb-0" v-for="invoice, invoice_index in $page.props.invoices.data">
                                 <div class="grow">
-                                    <h6 class="font-bold text-sm">{{ moment(invoice.due_date).format('MMMM Y') }} (<span class="font-semibold text-blue-700">{{ invoice.invoice_number }}</span>)</h6>
+                                    <h6 class="font-bold text-sm">{{ moment(invoice.date_issued).format('MMMM Y') }} (<span class="font-semibold text-blue-700">{{ invoice.invoice_number }}</span>)</h6>
                                     <p class="text-slate-500 text-sm font-medium">Amount: {{ invoice.amount }}</p>
                                     <p class="text-sm font-medium">Status: <span :class="[invoice.status_text_color]">{{ invoice.status }}</span></p>
                                 </div>
