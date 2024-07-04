@@ -139,7 +139,9 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::middleware('permission:story_access')->group(function () {
                 Route::get('/stories', [StoryController::class, 'index'])->name('stories')->middleware('permission:view_stories');
                 Route::get('/stories/create', [StoryController::class, 'create'])->name('stories.create')->middleware('permission:create_stories');
-                Route::get('/stories/store', [StoryController::class, 'store'])->name('stories.store')->middleware('permission:create_stories');
+                Route::post('/stories/store', [StoryHelper::class, 'createPost'])->name('stories.store')->middleware('permission:create_stories');
+                Route::post('/stories/update', [StoryHelper::class, 'editPost'])->name('stories.update')->middleware('permission:edit_stories');
+                Route::delete('/stories/destroy{id}', [StoryHelper::class, 'deletePost'])->name('stories.destroy')->middleware('permission:delete_stories');
             });
 
             /* Setting */
