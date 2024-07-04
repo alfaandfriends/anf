@@ -20,12 +20,14 @@ class StoryHelper {
         $stories    =   DB::table('stories')
                             ->leftJoin('wpvt_users', 'stories.created_by', '=', 'wpvt_users.ID')
                             ->leftJoin('story_likes', 'story_likes.story_id', '=', 'stories.id')
+                            ->join('programmes', 'stories.programme_id', '=', 'programmes.id')
                             ->select(
                                 'stories.id as story_id',
                                 'stories.title as story_title',
                                 'stories.created_at as story_date',
                                 'stories.created_by as story_author_id',
                                 'wpvt_users.display_name as story_author_name',
+                                'programmes.id as story_programme_id',
                                 DB::raw('count(story_likes.story_id) as reaction_count')
                             )
                             ->when(!$is_admin, function($query) use ($user_centres){
@@ -40,14 +42,13 @@ class StoryHelper {
                             ->groupBy('stories.id')
                             ->paginate(10);
                     
-
         $storiesCollection  = collect($stories->items());
         $storyIds           = $storiesCollection->pluck('story_id');
 
         /* Get images */
         $images  = DB::table('story_images')
                     ->whereIn('story_id', $storyIds)
-                    ->select('story_id', 'image_filename')
+                    ->select('id', 'story_id', 'image_filename')
                     ->get()
                     ->groupBy('story_id');
 
@@ -55,14 +56,14 @@ class StoryHelper {
         $likes  = DB::table('story_likes')
                     ->leftJoin('wpvt_users', 'story_likes.liked_by', '=', 'wpvt_users.ID')
                     ->whereIn('story_likes.story_id', $storyIds)
-                    ->select('story_likes.story_id', 'wpvt_users.ID as like_author_id', 'wpvt_users.display_name as like_author_name')
+                    ->select('story_likes.id', 'story_likes.story_id', 'wpvt_users.ID as like_author_id', 'wpvt_users.display_name as like_author_name')
                     ->get()
                     ->groupBy('story_id');
 
         /* Get Students */
         $students  = DB::table('story_students')
                     ->whereIn('story_id', $storyIds)
-                    ->select('story_id', 'student_id')
+                    ->select('id', 'story_id', 'student_id')
                     ->get()
                     ->groupBy('story_id');
 
@@ -218,6 +219,49 @@ class StoryHelper {
             DB::rollback();
         }
     }
+
+    public static function editPost(Request $request){
+        DB::beginTransaction();
+
+        try {
+            /* Post */
+            DB::table('stories')->where('id', $request->story_id)->update([
+                'programme_id'  =>  $request->programme_id,
+                'title'         =>  $request->caption,
+            ]);
+
+            /* Photos */
+            if($request->file('photos')){
+                foreach($request->file('photos') as $key=>$photo){
+                    $file       =   $photo['file'];
+                    $extension  =   $file->getClientOriginalExtension(); // Get the image extension
+                    $filename   =   Str::uuid() . '.' . $extension;
+    
+                    Storage::putFileAs('stories',$file, $filename);
+    
+                    DB::table('story_images')->insert([
+                        'story_id'          =>  $request->story_id,
+                        'image_filename'    =>  $filename,
+                    ]);
+                }
+            }
+
+            /* Delete Photos */
+            if(!empty($request->photos_to_delete)){
+                $photos_to_delete   =   DB::table('story_images')->whereIn('id', $request->photos_to_delete)->get();
+                foreach($photos_to_delete as $key=>$photo){
+                    Storage::delete('stories/'.$photo->image_filename);
+                }
+                DB::table('story_images')->whereIn('id', $request->photos_to_delete)->delete();
+            }
+
+            DB::commit(); 
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+    }
     
     public static function likeStory(Request $request){
         DB::beginTransaction();
@@ -238,6 +282,26 @@ class StoryHelper {
             DB::commit(); 
 
             return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+    }
+
+    public static function deletePost($id){
+        DB::beginTransaction();
+
+        try {
+            $photos_to_delete   =   DB::table('story_images')->where('story_id', $id)->get();
+            if(!empty($photos_to_delete)){
+                foreach($photos_to_delete as $key=>$photo){
+                    Storage::delete('stories/'.$photo->image_filename);
+                }
+                DB::table('stories')->where('id', $id)->delete();
+            }
+
+            DB::commit(); 
+
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
         }
