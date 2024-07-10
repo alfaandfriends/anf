@@ -86,7 +86,7 @@ background: #555; /* Color of the handle when hovered */
                     </div>
                     <hr>
                     <span class="text-sm text-slate-800">{{ story.story_title }}</span>
-                    <Carousel v-if="story.images" :mouseDrag="story.images.length > 1" :touchDrag="story.images.length > 1">
+                    <Carousel v-if="story.images.length" :mouseDrag="story.images.length > 1" :touchDrag="story.images.length > 1">
                         <Slide v-for="image, image_index in story.images" :key="image">
                         <div class="carousel__item h-full">
                             <img :src="'/storage/stories/' + image.image_filename" class="select-none h-full" @dblclick="toggleLike(story_index, story.story_id)">
@@ -106,26 +106,30 @@ background: #555; /* Color of the handle when hovered */
                             </svg>
                         </div>
                         <!-- <span class="text-xs font-semibold select-none" v-if="isLikedByParent(story_index) && !$page.props.can.create_stories">You liked this</span> -->
-                        <div class="" @click="toggleComment(story_index)">
+                        <div class="" @click="toggleComment()">
                             <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer" fill="currentColor" viewBox="0 0 512 512">
                                 <path d="M123.6 391.3c12.9-9.4 29.6-11.8 44.6-6.4c26.5 9.6 56.2 15.1 87.8 15.1c124.7 0 208-80.5 208-160s-83.3-160-208-160S48 160.5 48 240c0 32 12.4 62.8 35.7 89.2c8.6 9.7 12.8 22.5 11.8 35.5c-1.4 18.1-5.7 34.7-11.3 49.4c17-7.9 31.1-16.7 39.4-22.7zM21.2 431.9c1.8-2.7 3.5-5.4 5.1-8.1c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208s-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6c-15.1 6.6-32.3 12.6-50.1 16.1c-.8 .2-1.6 .3-2.4 .5c-4.4 .8-8.7 1.5-13.2 1.9c-.2 0-.5 .1-.7 .1c-5.1 .5-10.2 .8-15.3 .8c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c4.1-4.2 7.8-8.7 11.3-13.5c1.7-2.3 3.3-4.6 4.8-6.9c.1-.2 .2-.3 .3-.5z"/>
                             </svg>
                         </div>
                     </div>
                     <div class="space-y-2" v-if="show_comment">
-                        <div class="flex-col w-full mx-auto bg-white shadow border border-gray-300 px-4 py-3 rounded-lg space-y-2 divide-y">
-                            <div class="flex flex-row pt-1 md-10" v-if="story.comments.length" v-for="comment in story.comments">
-                                <div class="flex-col mt-1">
-                                    <div class="flex items-center flex-1 font-bold leading-tight">{{ comment.comment_user_name }}
-                                        <span class="text-xs font-normal text-gray-500 ml-2">
-                                            <TimeAgo class="text-gray-500 font-medium text-xs" :datetime="comment.created_at"></TimeAgo>
-                                        </span>
-                                    </div>
-                                    <div class="flex-1 text-sm font-medium leading-loose text-gray-600">
-                                        {{ comment.comment }}
+                        <div class="flex-col w-full mx-auto bg-white shadow border border-gray-300 px-4 py-3 rounded-lg" v-if="story.comments.length">
+                            <simplebar data-simplebar-auto-hide="true" class="max-h-96">
+                                <div class="divide-y space-y-2">
+                                    <div class="flex flex-row pt-1 md-10" v-for="comment in story.comments">
+                                        <div class="flex-col mt-1">
+                                            <div class="flex items-center flex-1 font-bold leading-tight">{{ comment.comment_user_name }}
+                                                <span class="text-xs font-normal text-gray-500 ml-2">
+                                                    <TimeAgo class="text-gray-500 font-medium text-xs" :datetime="comment.created_at" :key="comment.created_at"></TimeAgo>
+                                                </span>
+                                            </div>
+                                            <div class="flex-1 text-sm font-medium leading-loose text-gray-600">
+                                                {{ comment.comment }}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </simplebar>
                         </div>
                         <textarea class="bg-white border border-gray-300 p-2 px-3.5 rounded-lg w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="2" placeholder="Drop a comment..." :key="story_index" v-model="comments[story_index]"></textarea>
                         <div class="flex justify-end" @click="postComment(story_index, story.story_id)">
@@ -219,6 +223,8 @@ import TimeAgo from '@/Components/TimeAgo.vue'
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import axios from 'axios'
+import moment from 'moment';
+import 'moment-timezone';
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
@@ -270,7 +276,7 @@ export default {
         .then(response => {
         });
     },
-    toggleComment(story_index){
+    toggleComment(){
         this.show_comment = !this.show_comment
     },
     showCreatePost(){
@@ -327,7 +333,6 @@ export default {
                 }
             })
             .then((res) => {
-                console.log(res)
                 this.student_list = res.data.length > 0 ? res.data : []
                 this.loading.students = false
             });
@@ -339,12 +344,14 @@ export default {
     postComment(story_index, story_id){
         axios.post(route('parent.stories.comments.store'), {'story_id': story_id, 'comment' : this.comments[story_index]})
         .then(response => {
-            // if(response.data){
-            //     this.$page.props.stories[story_index].comments.push({
-            //         '': this.comments
-            //     })
-            // }
-            // console.log(response)
+            if(response.data){
+                this.$page.props.stories.data[story_index].comments.unshift({
+                    'comment': this.comments[story_index],
+                    'comment_user_name': this.$page.props.auth.user.display_name,
+                    'created_at': moment().tz('Asia/Kuala_Lumpur').format('YYYY-MM-DD HH:mm:ss')
+                })
+                this.comments[story_index] = ''
+            }
         });
     },
     handleScroll() {

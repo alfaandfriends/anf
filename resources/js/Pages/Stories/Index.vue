@@ -144,7 +144,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="39%">Title</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Date</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Reactions</th>
-                                <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Comment</th> -->
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Comment</th>
                                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Action</th>
                             </tr>
                         </thead>
@@ -152,10 +152,10 @@ import BreezeButton from '@/Components/Button.vue';
                             <tr v-if="!$page.props.stories.data.length">
                                 <td class="text-center" colspan="10">
                                     <div class="p-3">
-                                        No Record Found! 
+                                        No Record Found!
                                     </div>
                                 </td>
-                            </tr> 
+                            </tr>
                             <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.stories.data" :key="result.id">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-700">{{ index+1 }}</div>
@@ -175,11 +175,11 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="text-sm font-medium text-gray-900">{{ moment(result.story_date).format('DD MMM Y') }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="py-1 px-2 border border-indigo-500 bg-indigo-100 rounded-md text-indigo-600 cursor-default text-xs font-semibold" @click="show_likes_modal = true">{{ result.reaction_count }} Reactions</span>
+                                    <span class="py-1 px-2 border border-indigo-500 bg-indigo-100 rounded-md text-indigo-600 cursor-pointer text-xs font-semibold" @click="openLikesModal(index)">{{ result.reaction_count }} Reactions</span>
                                 </td>
-                                <!-- <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="py-1 px-2 border border-blue-500 bg-blue-100 rounded-md text-blue-600 cursor-pointer text-xs font-semibold" @click="show_comments_modal = true">{{ result.reaction_count }} Comments</span>
-                                </td> -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="py-1 px-2 border border-blue-500 bg-blue-100 rounded-md text-blue-600 cursor-pointer text-xs font-semibold" @click="openCommentsModal(index)">{{ result.comment_count }} Comments</span>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center space-x-2">
                                         <BreezeButton buttonType="warning" @click="openEditStoryModal(index)" v-if="$page.props.can.edit_stories">Edit</BreezeButton>
@@ -193,8 +193,8 @@ import BreezeButton from '@/Components/Button.vue';
                 <Pagination :page_data="$page.props.stories" :params="params"></Pagination>
             </div>
             <ConfirmationModal 
-                :show="isOpen" 
-                @close="isOpen = false"
+                :show="open_delete_modal" 
+                @close="open_delete_modal = false"
                 confirmationAlert="danger"
                 confirmationTitle="Delete Story"
                 confirmationText="Are you sure want to delete this story?"
@@ -203,11 +203,6 @@ import BreezeButton from '@/Components/Button.vue';
                 :confirmationRoute="confirmationRoute"
                 :confirmationData="confirmationData"
             />
-            <FsLightbox
-                :toggler="lightbox.open"
-                :sources="lightbox.src"
-                :exitFullscreenOnClose="true"
-	        />
             <Modal :showModal="show_add_story_modal" modalType="sm" @hideModal="show_add_story_modal = false">
                 <template v-slot:header>
                     <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
@@ -221,7 +216,7 @@ import BreezeButton from '@/Components/Button.vue';
                 </template>
                 <template v-slot:content>
                     <div class="p-3">
-                        <div class="flex flex-col justify-center items-start space-y-4" v-if="!show_add_tag">
+                        <div class="flex flex-col justify-center items-start space-y-2" v-if="!show_add_tag">
                             <Multiselect 
                                 v-model="form.programme_id"
                                 valueProp="id"
@@ -268,16 +263,203 @@ import BreezeButton from '@/Components/Button.vue';
                                         noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                         fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                                     }"
-                            >
-                                <template #singlelabel="{ value }">
-                                    <div class="multiselect-single-label">
-                                        {{ value.name }}
-                                    </div>
-                                </template>
-                                <template #option="{ option }">
-                                    {{ option.name }} ({{ option.country_name }})
-                                </template>
-                            </Multiselect>
+                            />
+                            <Multiselect 
+                                v-model="form.centre_id"
+                                valueProp="ID"
+                                :appendNewOption="false"
+                                :searchable="true"
+                                :options="$page.props.centres"
+                                :clearOnSelect="true"
+                                :closeOnDeselect="true"
+                                :canClear="false"
+                                :canDeselect="false"
+                                trackBy="label"
+                                label="label"
+                                placeholder="Select centre"
+                                :classes="{
+                                    container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                    containerDisabled: 'cursor-default bg-gray-100',
+                                    containerOpen: 'rounded-b-none',
+                                    containerActive: 'border-2 border-indigo-300',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                    search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                    clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                    clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                    spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                    dropdownHidden: 'hidden',
+                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                    group: 'p-0 m-0',
+                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                    groupLabelPointable: 'cursor-pointer',
+                                    groupLabelPointed: 'bg-gray-300 text-black-700',
+                                    groupLabelSelected: 'bg-gray-100 text-black',
+                                    groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                    groupOptions: 'p-0 m-0',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                    optionSelected: 'text-white bg-indigo-500',
+                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                }"
+                            />
+                            <div class="w-full grid grid-cols-1 2xl:grid-cols-2 gap-2">
+                                <Multiselect 
+                                    v-model="find.class_type_id"
+                                    valueProp="id"
+                                    :appendNewOption="false"
+                                    :searchable="true"
+                                    :options="$page.props.class_types"
+                                    :clearOnSelect="true"
+                                    :closeOnDeselect="true"
+                                    :canClear="false"
+                                    :canDeselect="false"
+                                    trackBy="name"
+                                    label="name"
+                                    placeholder="Select class type (optional)"
+                                    :classes="{
+                                        container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                        containerDisabled: 'cursor-default bg-gray-100',
+                                        containerOpen: 'rounded-b-none',
+                                        containerActive: 'border-2 border-indigo-300',
+                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                        search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                        clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                        clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                        spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                        dropdownHidden: 'hidden',
+                                        options: 'flex flex-col p-0 m-0 list-none w-full',
+                                        group: 'p-0 m-0',
+                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                        groupLabelPointable: 'cursor-pointer',
+                                        groupLabelPointed: 'bg-gray-300 text-black-700',
+                                        groupLabelSelected: 'bg-gray-100 text-black',
+                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                        groupOptions: 'p-0 m-0',
+                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                        optionPointed: 'text-gray-800 bg-gray-100',
+                                        optionSelected: 'text-white bg-indigo-500',
+                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                    }"
+                                />
+                                <Multiselect 
+                                    v-model="find.level"
+                                    valueProp="id"
+                                    :appendNewOption="false"
+                                    :searchable="true"
+                                    :options="$page.props.programmes"
+                                    :clearOnSelect="true"
+                                    :closeOnDeselect="true"
+                                    :canClear="false"
+                                    :canDeselect="false"
+                                    trackBy="name"
+                                    label="name"
+                                    placeholder="Select level (optional)"
+                                    :classes="{
+                                        container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                        containerDisabled: 'cursor-default bg-gray-100',
+                                        containerOpen: 'rounded-b-none',
+                                        containerActive: 'border-2 border-indigo-300',
+                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                        search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                        clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                        clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                        spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                        dropdownHidden: 'hidden',
+                                        options: 'flex flex-col p-0 m-0 list-none w-full',
+                                        group: 'p-0 m-0',
+                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                        groupLabelPointable: 'cursor-pointer',
+                                        groupLabelPointed: 'bg-gray-300 text-black-700',
+                                        groupLabelSelected: 'bg-gray-100 text-black',
+                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                        groupOptions: 'p-0 m-0',
+                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                        optionPointed: 'text-gray-800 bg-gray-100',
+                                        optionSelected: 'text-white bg-indigo-500',
+                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                    }"
+                                />
+                            </div>
+                            <Multiselect
+                                mode="multiple"
+                                v-model="form.students"
+                                valueProp="id"
+                                :multiple="true"
+                                :searchable="true"
+                                :options="students"
+                                :closeOnSelect="false"
+                                :clearOnSelect="false"
+                                :canClear="false"
+                                :hideSelected="false"
+                                :groups="true"
+                                groupOptions="options"
+                                groupLabel="select_all"
+                                :groupSelect="true"
+                                placeholder="Select students"
+                                trackBy="name"
+                                label="name"
+                                :classes="{
+                                    container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                    containerDisabled: 'cursor-default bg-gray-100',
+                                    containerOpen: 'rounded-b-none',
+                                    containerActive: 'border-2 border-indigo-300',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                    multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug',
+                                    search: 'p-0    w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug text-gray-500',
+                                    clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                    clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                    spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                    dropdownHidden: 'hidden',
+                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                    group: 'p-0 m-0',
+                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-100 cursor-default leading-normal text-indigo-500',
+                                    groupLabelPointable: 'cursor-pointer',
+                                    groupLabelPointed: 'text-black-700 text-indigo-600',
+                                    groupLabelSelected: 'bg-gray-100',
+                                    groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                    groupOptions: 'p-0 m-0',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                    optionSelected: 'text-white bg-indigo-500',
+                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                }"
+                            />
                             <textarea class="bg-white border border-gray-300 p-3 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="3" placeholder="What's happening today?" v-model="form.caption"></textarea>
                             <div class="w-full" v-if="form.photos.length">
                                 <div class="overflow-x-auto scrollbar pb-3">
@@ -421,7 +603,7 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                 </template>
             </Modal >
-            <!-- <Modal :showModal="show_likes_modal" modalType="sm" @hideModal="show_likes_modal = false">
+            <Modal :showModal="show_likes_modal" modalType="xs" @hideModal="show_likes_modal = false">
                 <template v-slot:header>
                     <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
                         <h3 class="text-gray-900 text font-semibold">                
@@ -433,9 +615,13 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>                 
                 </template>
                 <template v-slot:content>
-                    <div class="">
-                        <div class="flex justify-center w-full">
-                            <img :src="artwork.file_location" class="object-scale-down" alt="">
+                    <div class="divide-y px-4 text-slate-600">
+                        <div class="flex items-center justify-between py-2" v-if="list.likes.length" v-for="like in list.likes">
+                            <div class="text-slate-800 text-sm font-medium">{{ like.like_author_name}}</div>
+                            <TimeAgo class="text-slate-400 text-xs" :datetime="like.like_date" :key="like.like_date"></TimeAgo>
+                        </div>
+                        <div class="py-2 text-sm" v-else>
+                            <span>No one has liked this story yet.</span>
                         </div>
                     </div>
                 </template>
@@ -457,9 +643,18 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>                 
                 </template>
                 <template v-slot:content>
-                    <div class="">
-                        <div class="flex justify-center w-full">
-                            <img :src="artwork.file_location" class="object-scale-down" alt="">
+                    <div class="divide-y px-4 text-slate-600">
+                        <div class="flex items-center justify-between py-2" v-if="list.comments.length" v-for="comment in list.comments">
+                            <div class="flex flex-col">
+                                <div class="text-slate-800 text-sm font-semibold">{{ comment.comment_user_name}}</div>
+                                <blockquote class="text-slate-800 text-xs font-medium italic">
+                                    <p>{{ comment.comment}}</p>
+                                </blockquote>
+                            </div>
+                            <TimeAgo class="text-slate-400 text-xs" :datetime="comment.comment_date" :key="comment.comment_date"></TimeAgo>
+                        </div>
+                        <div class="py-2 text-sm" v-else>
+                            <span>There are no comments on this story yet.</span>
                         </div>
                     </div>
                 </template>
@@ -468,7 +663,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <BreezeButton buttonType="gray" @click="show_comments_modal = false">Close</BreezeButton>
                     </div>
                 </template>
-            </Modal> -->
+            </Modal>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
@@ -484,6 +679,7 @@ import { debounce } from 'vue-debounce'
 import Multiselect from '@vueform/multiselect'
 import FsLightbox from "fslightbox-vue/v3";
 import moment from "moment";
+import TimeAgo from '@/Components/TimeAgo.vue'
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
@@ -491,36 +687,43 @@ const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Modal, Pagination, Multiselect, FsLightbox
+        ConfirmationModal, Head, Link, Modal, Pagination, Multiselect, FsLightbox, TimeAgo, 
     },
     props: {
         filter: Object,
     },
     data(){
         return{
-            isOpen: false,
-            searching: false,
+            open_delete_modal: false,
             show_add_story_modal: false,
             show_edit_story_modal: false,
             show_likes_modal: false,
             show_comments_modal: false,
             confirmationData: '',
             confirmationRoute: '',
-            lightbox: {
-                open: false,
-                src: [],
+            loading: {
+                class_types: false,
+                levels: false,
+                students: false
             },
-            student_status: [{
-                'id' : 1,
-                'name' : 'Active'
-            },{
-                'id' : 0,
-                'name' : 'Inactive'
+            find: {
+                class_type_id: '',
+                level: '',
+            },
+            list: {
+                likes: [],
+                comments: [],
+            },
+            students: [{
+                select_all: 'Select all',
+                options: []
             }],
             form:{
                 programme_id: '',
+                centre_id: '',
                 caption: '',
                 photos: [],
+                students: [],
             },
             form_edit:{
                 story_id: '',
@@ -533,14 +736,38 @@ export default {
                 search: this.filter.search ? this.filter.search : '',
                 centre_id: this.filter.centre_id ? this.filter.centre_id : '',
                 programme_id: this.filter.programme_id ? this.filter.programme_id : '',
-                theme: this.filter.theme ? this.filter.theme : '',
-                status: this.filter.status ? this.filter.status : '',
             },
-            imageExists: false,
-            artwork:{
-                lesson: '',
-                activity: '',
-                file_location: ''
+        }
+    },
+    watch: {
+        'form.programme_id': {
+            handler(){
+                if(this.form.programme_id && this.form.centre_id){
+                    this.find.class_type_id = ''
+                    this.find.level = ''
+                    this.students[0].options = []
+                    this.form.students = []
+
+                    axios.get(route('programmes.get_students', [this.form.programme_id, this.form.centre_id]))
+                    .then(response => {
+                        this.students[0].options = response.data
+                    })
+                }
+            }
+        },
+        'form.centre_id': {
+            handler(){
+                if(this.form.programme_id && this.form.centre_id){
+                    this.find.class_type_id = ''
+                    this.find.level = ''
+                    this.students[0].options = []
+                    this.form.students = []
+
+                    axios.get(route('programmes.get_students', [this.form.programme_id, this.form.centre_id]))
+                    .then(response => {
+                        this.students[0].options = response.data
+                    })
+                }
             }
         }
     },
@@ -553,8 +780,17 @@ export default {
             this.form_edit.programme_id =   this.$page.props.stories.data[index].story_programme_id
             this.form_edit.caption      =   this.$page.props.stories.data[index].story_title
             this.form_edit.photos       =   this.$page.props.stories.data[index].images
-            // console.log(index)
             this.show_edit_story_modal = true
+        },
+        openLikesModal(index){
+            this.list.likes = []
+            this.list.likes = this.$page.props.stories.data[index].likes
+            this.show_likes_modal = true
+        },
+        openCommentsModal(index){
+            this.list.comments = []
+            this.list.comments = this.$page.props.stories.data[index].comments
+            this.show_comments_modal = true
         },
         changePhoto({ target }) {
             const { files } = target;
@@ -631,22 +867,10 @@ export default {
                 this.$inertia.post(route('stories.update'), this.form_edit, {preserveState: false})
             }
         },
-        // viewArtwork(artwork_file_location){
-        //     fetch(window.location.origin+'/storage/art_gallery/'+artwork_file_location)
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             this.lightbox.src = [window.location.origin+'/images/no_image.jpg']
-        //         }
-        //         else{
-        //             this.lightbox.src  = [window.location.origin+'/storage/art_gallery/'+artwork_file_location]
-        //         }
-        //         this.lightbox.open         = !this.lightbox.open
-        //     })
-        // },
         deleteStory(story_id){
             this.confirmationRoute = 'stories.destroy'
             this.confirmationData = story_id
-            this.isOpen = true
+            this.open_delete_modal = true
         },
         search(){
             this.$inertia.get(this.route('stories'), this.params, {replace: true, preserveState: true});

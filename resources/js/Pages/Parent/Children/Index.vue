@@ -1,5 +1,5 @@
 <template>
-    <Head title="Home" />
+    <Head title="Kids" />
     <Authenticated>
         <div class="flex justify-center">
             <div class="flex-1 max-w-xl space-y-4">

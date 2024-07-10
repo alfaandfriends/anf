@@ -1,5 +1,7 @@
 <?php
 
+use App\Classes\ClassHelper;
+use App\Classes\ProgrammeHelper;
 use App\Classes\StoryHelper;
 use App\Events\Notifications;
 use App\Events\Test;
@@ -43,8 +45,8 @@ Route::middleware(['auth', 'device'])->group(function(){
     });
     Route::prefix('admin')->group(function () {
         /* User Impersonation */
-        Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate');
-        Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate');
+        Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate')->withoutMiddleware('device');
+        Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate')->withoutMiddleware('device');
 
         /* Dashboard */
         Route::get('/', function () {
@@ -96,6 +98,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:delete_programmes');
             Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:edit_programmes|delete_programmes');
             Route::patch('/programmes/fee/update', [ProgrammeController::class, 'updateFee'])->name('programmes.fee.update')->middleware('permission:edit_programmes');
+            Route::get('/programmes/get-students/{programme_id}/{centre_id}', [ProgrammeHelper::class, 'getStudents'])->name('programmes.get_students');
 
             /* Classes */
             Route::get('/classes', [ClassController::class, 'index'])->name('classes')->middleware('permission:view_classes');
@@ -104,6 +107,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:edit_classes');
             Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:edit_classes');
             Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:delete_classes');
+            Route::get('/classes/get-class-levels/{programme_id}/{class_type_id}', [ClassHelper::class, 'getClassLevels'])->name('classes.get_class_levels');
         });
 
         /* Students */

@@ -11,7 +11,7 @@ import { ViewGridIcon, CogIcon, ChevronRightIcon, LogoutIcon, XIcon, MenuIcon } 
 import Toast from '@/Components/Toast.vue'
 import Breadcrumbs from '@/Components/Breadcrumbs.vue'
 import TimeAgo from '@/Components/TimeAgo.vue'
-import Toggle from '@vueform/toggle';
+import Toggle from '@vueform/toggle'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
 
@@ -191,7 +191,10 @@ export default {
                     </div>
                     <span class="flex justify-center items-center px-4 py-5 text-white font-bold">{{ $page.props.app_name }}</span>
                 </div>
-                <nav class="text-sm font-medium text-gray-500 p-3 space-y-4 my-3">
+                <nav class="text-sm font-medium text-gray-500 p-3 space-y-4 mb-3 mt-1">
+                    <div class="flex justify-center">
+                        <span class="px-3 py-1 bg-indigo-50 rounded-md text-sm text-slate-800 scale-95 hover:scale-100 duration-200 cursor-pointer select-none" @click="$inertia.get(route('parent.home'))">Go to Front Site</span>
+                    </div>
                     <div class="space-y-1" v-for="section, section_key in $page.props.menu">
                         <p class="uppercase text-gray-100 text-xs mb-3">{{ section.name }}</p>
                         <template v-for="menu, menu_key in section.menus">

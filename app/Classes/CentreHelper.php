@@ -43,4 +43,22 @@ class CentreHelper {
         }
         return false;
     }
+
+    public static function getUserCentres($country_id = null){
+
+        if(auth()->user()->is_admin){
+            $centres    =   DB::table('centres')
+                                ->when($country_id, function($query) use ($country_id){
+                                    $query->where('country_id', $country_id);
+                                })
+                                ->orderBy('label')
+                                ->where('is_active', 1)
+                                ->get();
+        }
+        else{
+            $centres    =   DB::table('user_has_centres')->where('user_id', auth()->id())->get()->pluck('centre_id');
+        }
+
+        return $centres;
+    }
 }

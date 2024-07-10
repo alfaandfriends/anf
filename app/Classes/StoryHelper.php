@@ -20,6 +20,7 @@ class StoryHelper {
         $stories    =   DB::table('stories')
                             ->leftJoin('wpvt_users', 'stories.created_by', '=', 'wpvt_users.ID')
                             ->leftJoin('story_likes', 'story_likes.story_id', '=', 'stories.id')
+                            ->leftJoin('story_comments', 'story_comments.story_id', '=', 'stories.id')
                             ->join('programmes', 'stories.programme_id', '=', 'programmes.id')
                             ->select(
                                 'stories.id as story_id',
@@ -28,7 +29,8 @@ class StoryHelper {
                                 'stories.created_by as story_author_id',
                                 'wpvt_users.display_name as story_author_name',
                                 'programmes.id as story_programme_id',
-                                DB::raw('count(story_likes.story_id) as reaction_count')
+                                DB::raw('count(story_likes.story_id) as reaction_count'),
+                                DB::raw('count(story_comments.story_id) as comment_count')
                             )
                             ->when(!$is_admin, function($query) use ($user_centres){
                                 $query->whereIn('stories.centre_id', $user_centres);
@@ -46,32 +48,42 @@ class StoryHelper {
         $storyIds           = $storiesCollection->pluck('story_id');
 
         /* Get images */
-        $images  = DB::table('story_images')
-                    ->whereIn('story_id', $storyIds)
-                    ->select('id', 'story_id', 'image_filename')
-                    ->get()
-                    ->groupBy('story_id');
+        $images     =   DB::table('story_images')
+                            ->whereIn('story_id', $storyIds)
+                            ->select('id', 'story_id', 'image_filename')
+                            ->get()
+                            ->groupBy('story_id');
 
         /* Get likes */
-        $likes  = DB::table('story_likes')
-                    ->leftJoin('wpvt_users', 'story_likes.liked_by', '=', 'wpvt_users.ID')
-                    ->whereIn('story_likes.story_id', $storyIds)
-                    ->select('story_likes.id', 'story_likes.story_id', 'wpvt_users.ID as like_author_id', 'wpvt_users.display_name as like_author_name')
-                    ->get()
-                    ->groupBy('story_id');
+        $likes      =   DB::table('story_likes')
+                            ->leftJoin('wpvt_users', 'story_likes.liked_by', '=', 'wpvt_users.ID')
+                            ->whereIn('story_likes.story_id', $storyIds)
+                            ->select('story_likes.id', 'story_likes.story_id', 'wpvt_users.ID as like_author_id', 'wpvt_users.display_name as like_author_name', 'story_likes.created_at as like_date')
+                            ->get()
+                            ->groupBy('story_id');
 
         /* Get Students */
-        $students  = DB::table('story_students')
-                    ->whereIn('story_id', $storyIds)
-                    ->select('id', 'story_id', 'student_id')
-                    ->get()
-                    ->groupBy('story_id');
+        $students   =   DB::table('story_students')
+                            ->whereIn('story_id', $storyIds)
+                            ->select('id', 'story_id', 'student_id')
+                            ->get()
+                            ->groupBy('story_id');
+
+        /* Get Comments */
+        $comments   =   DB::table('story_comments')
+                            ->leftJoin('wpvt_users', 'story_comments.comment_by', '=', 'wpvt_users.ID')
+                            ->whereIn('story_comments.story_id', $storyIds)
+                            ->select('story_comments.story_id', 'story_comments.comment', 'story_comments.comment_by as comment_user_id', 'wpvt_users.display_name as comment_user_name', 'story_comments.created_at as comment_date')
+                            ->orderByDesc('story_comments.id')
+                            ->get()
+                            ->groupBy('story_id');
 
         /* Insert into existing array */
-        $storiesCollection = $storiesCollection->map(function($story) use ($likes, $students, $images) {
+        $storiesCollection = $storiesCollection->map(function($story) use ($likes, $students, $images, $comments) {
             $story->images      = $images->get($story->story_id, collect())->toArray();
             $story->likes       = $likes->get($story->story_id, collect())->toArray();
             $story->students    = $students->get($story->story_id, collect())->toArray();
+            $story->comments    = $comments->get($story->story_id, collect())->toArray();
             return $story;
         });
 
@@ -149,6 +161,7 @@ class StoryHelper {
                             ->leftJoin('wpvt_users', 'story_comments.comment_by', '=', 'wpvt_users.ID')
                             ->whereIn('story_comments.story_id', $storyIds)
                             ->select('story_comments.story_id', 'story_comments.comment', 'story_comments.comment_by as comment_user_id', 'wpvt_users.display_name as comment_user_name', 'story_comments.created_at')
+                            ->orderByDesc('story_comments.id')
                             ->get()
                             ->groupBy('story_id');
 
@@ -201,17 +214,19 @@ class StoryHelper {
                             ]);
 
             /* Photos */
-            foreach($request->photos as $photo){
-                $file       =   $photo['file'];
-                $extension  =   $file->getClientOriginalExtension(); // Get the image extension
-                $filename   =   Str::uuid() . '.' . $extension;
-
-                Storage::putFileAs('stories',$file, $filename);
-
-                DB::table('story_images')->insert([
-                    'story_id'          =>  $story_id,
-                    'image_filename'    =>  $filename,
-                ]);
+            if(!empty($request->photos)){
+                foreach($request->photos as $photo){
+                    $file       =   $photo['file'];
+                    $extension  =   $file->getClientOriginalExtension(); // Get the image extension
+                    $filename   =   Str::uuid() . '.' . $extension;
+    
+                    Storage::putFileAs('stories',$file, $filename);
+    
+                    DB::table('story_images')->insert([
+                        'story_id'          =>  $story_id,
+                        'image_filename'    =>  $filename,
+                    ]);
+                }
             }
 
             /* Students */
@@ -297,15 +312,16 @@ class StoryHelper {
         }
     }
 
-    public function commentStory(Request $request){
+    public static function commentStory(Request $request){
         DB::beginTransaction();
 
         try {
             if($request->comment && $request->story_id){
-                DB::table('story_comments')->insert([
-                    'awd'      =>  $request->story_id,
+                $id =   DB::table('story_comments')->insertGetId([
+                    'story_id'      =>  $request->story_id,
                     'comment'       =>  $request->comment,
-                    'comment_by'    =>  auth()->id()
+                    'comment_by'    =>  auth()->id(),
+                    'created_at'    =>  Carbon::now()
                 ]);
 
                 DB::commit();
