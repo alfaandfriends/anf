@@ -56,7 +56,13 @@ class CentreHelper {
                                 ->get();
         }
         else{
-            $centres    =   DB::table('user_has_centres')->where('user_id', auth()->id())->get()->pluck('centre_id');
+            $user_centres    =   DB::table('user_has_centres')->where('user_id', auth()->id())->get()->pluck('centre_id');
+
+            $centres    =   DB::table('centres')
+                                ->orderBy('label')
+                                ->whereIn('ID', $user_centres)
+                                ->where('is_active', 1)
+                                ->get();
         }
 
         return $centres;

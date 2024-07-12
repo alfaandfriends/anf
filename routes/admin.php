@@ -98,7 +98,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:delete_programmes');
             Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:edit_programmes|delete_programmes');
             Route::patch('/programmes/fee/update', [ProgrammeController::class, 'updateFee'])->name('programmes.fee.update')->middleware('permission:edit_programmes');
-            Route::get('/programmes/get-students/{programme_id}/{centre_id}', [ProgrammeHelper::class, 'getStudents'])->name('programmes.get_students');
+            Route::get('/programmes/get-students/{programme_id}/{centre_id}/{level_id?}', [ProgrammeHelper::class, 'getStudents'])->name('programmes.get_students')->withoutMiddleware('device');
 
             /* Classes */
             Route::get('/classes', [ClassController::class, 'index'])->name('classes')->middleware('permission:view_classes');
@@ -107,7 +107,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:edit_classes');
             Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:edit_classes');
             Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:delete_classes');
-            Route::get('/classes/get-class-levels/{programme_id}/{class_type_id}', [ClassHelper::class, 'getClassLevels'])->name('classes.get_class_levels');
+            Route::get('/classes/get-class-levels/{programme_id}/{class_type_id}', [ClassHelper::class, 'getClassLevels'])->name('classes.get_class_levels')->withoutMiddleware('device');
         });
 
         /* Students */
@@ -140,7 +140,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate')->middleware('permission:create_art_book');
 
             /* Posts */
-            Route::middleware('permission:story_access')->group(function () {
+            Route::middleware('permission:story_access')->withoutMiddleware('device')->group(function () {
                 Route::get('/stories', [StoryController::class, 'index'])->name('stories')->middleware('permission:view_stories');
                 Route::get('/stories/create', [StoryController::class, 'create'])->name('stories.create')->middleware('permission:create_stories');
                 Route::post('/stories/store', [StoryHelper::class, 'createPost'])->name('stories.store')->middleware('permission:create_stories');

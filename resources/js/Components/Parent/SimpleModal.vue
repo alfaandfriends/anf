@@ -1,6 +1,6 @@
 <template>
-<TransitionRoot appear :show="isOpen" as="template">
-    <Dialog as="div" @close="closeModal" class="relative z-50" static="true">
+<TransitionRoot :show="isOpen">
+    <Dialog as="div" class="relative z-30">
     <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -8,7 +8,8 @@
         enter-to="opacity-100"
         leave="duration-200 ease-in"
         leave-from="opacity-100"
-        leave-to="opacity-0"
+        leave-to="opacity-0" 
+        static="true"
     >
         <div class="fixed inset-0 bg-black/40" />
     </TransitionChild>
@@ -74,7 +75,11 @@ export default {
         TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle,
     },
     props: {
-        isOpen: Boolean
+        isOpen: Boolean,
+        static: {
+            type: Boolean,
+            default: true
+        }
     },
     methods: {
         closeModal() {

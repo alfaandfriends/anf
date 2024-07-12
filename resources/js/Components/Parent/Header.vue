@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed top-0 inset-x-0 z-50 text-gray-700 bg-white md:top-0 md:sticky">
+    <div class="fixed top-0 inset-x-0 z-30 text-gray-700 bg-white md:top-0 md:sticky">
         <Disclosure as="nav" class="text-white bg-indigo-600" v-slot="{ open }">
             <div class="max-w-3xl px-5 sm:px-3 mx-auto">
                 <div class="flex justify-between gap-5 items-center h-16 md:h-20">
@@ -59,7 +59,7 @@
             </div>
             <!-- Mobile Menu -->
             <DisclosurePanel class="md:hidden lg:hidden">
-                <div class="bg-white shadow-md z-50">
+                <div class="bg-white shadow-md">
                     <!-- Header -->
                     <div class="flex items-center p-5 mb-2 border-b">
                         <div class="font-medium text-gray-700">

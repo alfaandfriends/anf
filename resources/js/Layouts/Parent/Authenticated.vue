@@ -10,7 +10,7 @@ import Announcement from '@/Components/Parent/Announcement.vue';
     <div class="min-h-screen bg-gray-100 flex flex-col justify-between w-full andika-regular">
         <Header />
         <Navigation />
-        <div class="fixed w-full bottom-16 md:bottom-14 z-20">
+        <!-- <div class="fixed w-full bottom-16 md:bottom-14 z-20"> -->
             <div class="px-6 py-3 bg-blue bg-red-500 space-y-4 md:flex md:space-y-0 justify-between items-center mt-16 md:mt-0" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
                 <span class="text-white text-sm font-semibold italic whitespace-nowrap">Warning: Please use this feature with caution!</span>
                 <form @submit.prevent="impersonate" class="flex flex-col lg:flex-row w-full space-x-2 items-center md:justify-end lg:justify-end">
@@ -24,9 +24,9 @@ import Announcement from '@/Components/Parent/Announcement.vue';
                         </BreezeButton>
                     </div>
                 </form>
-            </div>
+            <!-- </div> -->
         </div>
-        <main class="flex-grow flex-col bg-orange-50 relative justify-start mt-16 mb-16 md:mb-0 md:mt-0 py-5 px-3">
+        <main class="flex-grow flex-col bg-orange-50 relative justify-start mb-16 md:mb-0 md:mt-0 py-5 px-3">
             <slot/>
             <SimpleModal :open="$page.props.flash.type === null ? false : true" @close:modal="$page.props.flash.type = null" class="md:w-2/6">
                 <div class="text-center flex flex-col items-center justify-start space-y-2 p-6">

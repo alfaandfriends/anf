@@ -31,7 +31,7 @@ class StoryController extends Controller
             ]
         ]);
         
-        $stories                        =   StoryHelper::getStudentStories($for_current_student = true);
+        $stories                        =   StoryHelper::getStudentStories(true);
         
         return Inertia::render('Parent/Class/Index', [
             'current_active_programme'    =>  session('current_active_programme'),

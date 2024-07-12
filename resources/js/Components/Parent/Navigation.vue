@@ -14,7 +14,7 @@
                                 <span class="block text-sm pb-1">Home</span>
                         </a>
                     </div>
-                    <div class="">
+                    <div class="" v-if="$page.props.can.view_kids">
                         <a 
                             :href="route('parent.children')" 
                             :class="(route().current('parent.children')) ? 'text-indigo-500' : 'text-gray-500'" 
@@ -25,7 +25,7 @@
                                 <span class="block text-sm pb-1 whitespace-nowrap">Kids</span>
                         </a>
                     </div>
-                    <div class="">
+                    <div class="" v-if="$page.props.can.view_messages">
                         <a 
                             :href="route('parent.messages')" 
                             :class="(route().current('parent.messages')) ? 'text-indigo-500' : 'text-gray-500'" 
@@ -36,7 +36,7 @@
                                 <span class="block text-sm pb-1 whitespace-nowrap">Messages</span>
                         </a>
                     </div>
-                    <div class="relative">
+                    <div class="relative" v-if="$page.props.can.view_class">
                         <MenuButton
                         :class="(route().current('parent.stories')) ? 'text-indigo-500' : 'text-gray-500'" 
                             class=" flex flex-col space-y-1 items-center justify-center text-center mx-auto px-4 pt-2 w-full text-gray-500 group-hover:text-indigo-500 border-b-2 border-transparent group-hover:border-indigo-500"
