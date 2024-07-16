@@ -175,10 +175,10 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="text-sm font-medium text-gray-900">{{ moment(result.story_date).format('DD MMM Y') }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="py-1 px-2 border border-indigo-500 bg-indigo-100 rounded-md text-indigo-600 cursor-pointer text-xs font-semibold" @click="openLikesModal(index)">{{ result.reaction_count }} Reactions</span>
+                                    <span class="py-1 px-2 border border-indigo-500 bg-indigo-100 rounded-md text-indigo-600 cursor-pointer text-xs font-semibold" @click="openLikesModal(index)">{{ result.likes.length }} Reactions</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="py-1 px-2 border border-blue-500 bg-blue-100 rounded-md text-blue-600 cursor-pointer text-xs font-semibold" @click="openCommentsModal(index)">{{ result.comment_count }} Comments</span>
+                                    <span class="py-1 px-2 border border-blue-500 bg-blue-100 rounded-md text-blue-600 cursor-pointer text-xs font-semibold" @click="openCommentsModal(index)">{{ result.comments.length }} Comments</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center space-x-2">
@@ -835,7 +835,7 @@ import BreezeButton from '@/Components/Button.vue';
                 <template v-slot:header>
                     <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
                         <h3 class="text-gray-900 text font-semibold">                
-                            Likes
+                            Reactions
                         </h3>       
                         <button type="button" @click="show_likes_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -879,7 +879,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <p>{{ comment.comment}}</p>
                                 </blockquote>
                             </div>
-                            <TimeAgo class="text-slate-400 text-xs" :datetime="comment.comment_date" :key="comment.comment_date"></TimeAgo>
+                            <TimeAgo class="text-slate-400 text-xs" :datetime="comment.created_at" :key="comment.created_at"></TimeAgo>
                         </div>
                         <div class="py-2 text-sm" v-else>
                             <span>There are no comments on this story yet.</span>
@@ -913,6 +913,7 @@ import Multiselect from '@vueform/multiselect'
 import FsLightbox from "fslightbox-vue/v3";
 import moment from "moment";
 import TimeAgo from '@/Components/TimeAgo.vue'
+import Compressor from 'compressorjs';
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
@@ -1170,11 +1171,20 @@ export default {
                 filesArray.forEach((file)=>{
                     this.read(file, target)
                     .then((data) => {
-                        this.add_story.form.photos.push({
-                            'name' :Date.now() + Math.floor(Math.random() * 1000),
-                            'url' :data.url,
-                            'file':file
-                        })
+                        new Compressor(file, {
+                            quality: 0.8,
+                            height: 1000,
+                            width: 1000,
+                            success: (result) => {
+                                const blobUrl = URL.createObjectURL(result);
+                                const new_file   =   this.blobToFile(result, Date.now()+'.jpg')
+                                this.add_story.form.photos.push({
+                                    'name'  :Date.now() + Math.floor(Math.random() * 1000),
+                                    'url'   :blobUrl,
+                                    'file'  :new_file
+                                })
+                            },
+                        });
                     })
                     .catch(this.alert);
                 })
@@ -1185,15 +1195,24 @@ export default {
             if (files && files.length > 0) {
                 const filesArray = Array.from(files);
                 filesArray.forEach((file)=>{
-                    this.read(file, target)
-                    .then((data) => {
-                        this.edit_story.form.photos.push({
-                            'name' :Date.now() + Math.floor(Math.random() * 1000),
-                            'url' :data.url,
-                            'file':file
-                        })
-                    })
-                    .catch(this.alert);
+                    new Compressor(file, {
+                        quality: 0.8,
+                        height: 1000,
+                        width: 1000,
+                        success: (result) => {
+                            const blobUrl   = URL.createObjectURL(result);
+                            const new_file  = this.blobToFile(result, Date.now()+'.jpg')
+                            this.edit_story.form.photos.push({
+                                'name' :Date.now() + Math.floor(Math.random() * 1000),
+                                'url' :blobUrl,
+                                'file':new_file
+                            })
+                        },
+                    });
+                    // this.read(file, target)
+                    // .then((data) => {
+                    // })
+                    // .catch(this.alert);
                 })
             }
         },
@@ -1250,6 +1269,10 @@ export default {
             this.lightbox.src   = image.url ? [image.url] : [window.location.origin+'/storage/stories/' + image.image_filename]
             this.lightbox.open  = !this.lightbox.open
         },
+        blobToFile(blob, filename) {
+            const file = new File([blob], filename, { type: blob.type });
+            return file;
+        }
     }
 }
 </script>

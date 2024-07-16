@@ -81,7 +81,7 @@ background: #555; /* Color of the handle when hovered */
                             </div>
                             <div class="flex items-center">
                                 <TimeAgo class="text-gray-500 font-medium text-xs" :datetime="story.story_date"></TimeAgo>
-                                <Menu as="div" class="relative inline-block text-left">
+                                <Menu as="div" class="relative inline-block text-left" v-if="$page.props.can.view_student_stories">
                                     <MenuButton class="pl-3 py-3">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 128 512">
                                             <path d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/>

@@ -16,8 +16,8 @@ class StoryHelper {
         /* Get stories */
         $stories    =   DB::table('stories')
                             ->join('wpvt_users', 'stories.created_by', '=', 'wpvt_users.ID')
-                            ->leftJoin('story_likes', 'story_likes.story_id', '=', 'stories.id')
-                            ->leftJoin('story_comments', 'story_comments.story_id', '=', 'stories.id')
+                            ->join('story_likes', 'story_likes.story_id', '=', 'stories.id')
+                            ->join('story_comments', 'story_comments.story_id', '=', 'stories.id')
                             ->join('programmes', 'stories.programme_id', '=', 'programmes.id')
                             ->select(
                                 'stories.id as story_id',
