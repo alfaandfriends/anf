@@ -28,13 +28,7 @@ background: #555; /* Color of the handle when hovered */
     <Authenticated @scroll="handleScroll">
         <div class="flex justify-center">
             <div class="flex-1 max-w-xl">
-                <!-- <div class="bg-indigo-100 border-t border-b border-indigo-500 text-indigo-700 px-4 py-3 mb-3" role="alert">
-                    <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 text-sm">
-                        <p class="font-bold">You have pending fee payment</p>
-                        <button class="ml-3 self-center text-sm px-2 pb-1.5 pt-1 border border-indigo-300 rounded bg-white hover:shadow">Pay now</button>
-                    </div>
-                </div> -->
-                <div class="flex" v-if="$page.props.can.create_stories">
+                <div class="flex mb-3" v-if="$page.props.can.create_stories">
                     <div class="flex items-center space-x-2 bg-indigo-100 rounded px-3 py-2 font-semibold w-full cursor-pointer transform scale-100 hover:scale-105 duration-200 select-none" @click="showCreatePost">
                         <img width="44" height="44" src="https://img.icons8.com/dusk/64/create-new.png" alt="create-new"/>
                         <div class="flex flex-col">
@@ -43,29 +37,6 @@ background: #555; /* Color of the handle when hovered */
                         </div>
                     </div>
                 </div>
-                <!-- <div class="flex flex-col bg-white p-3 shadow-md rounded">
-                    
-                    <textarea class="bg-white border border-gray-300 p-2 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="5" placeholder="What's happening today?" v-model="form.status_text"></textarea>
-                    <div class="flex justify-between pt-2">
-                        <div class="flex space-x-2">
-                            <div class="self-center space-x-2 bg-blue-200 rounded px-3 py-2 text-xs font-semibold cursor-pointer transform hover:scale-105" @click="showCreatePost">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
-                                    <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/>
-                                </svg>
-                                <span class="inline-block">Photo</span>
-                            </div>
-                            <div class="self-center space-x-2 bg-green-200 rounded px-3 py-2 text-xs font-semibold cursor-pointer transform hover:scale-105">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
-                                    <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"/>
-                                </svg>
-                                <span class="inline-block">Tag Parent</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2 ">
-                            <button class="px-4 py-2 text-sm text-white rounded" :class="!form.status_text ? 'bg-indigo-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'" :disabled="!form.status_text">Post</button>
-                        </div>
-                    </div>
-                </div> -->
                 <div class="flex items-center space-y-3" v-if="$page.props.stories.data.length">
                     <h2 class="text-lg md:text-xl mx-1 font-extrabold">Stories</h2>
                 </div>
@@ -399,18 +370,20 @@ background: #555; /* Color of the handle when hovered */
                         valueProp="id"
                         :multiple="true"
                         :searchable="true"
-                        :options="add_story.students"
+                        :options="add_story.students[0].options.length ? add_story.students : []"
                         :closeOnSelect="false"
                         :clearOnSelect="true"
                         :canClear="false"
                         :hideSelected="false"
-                        :groups="true"
+                        :groups="add_story.students[0].options.length ? true : false"
                         groupOptions="options"
-                        groupLabel="select_all"
-                        :groupSelect="true"
+                        :groupLabel="add_story.students[0].options.length ? 'select_all' : null "
+                        :groupSelect="add_story.students[0].options.length ? true : false"
                         placeholder="Select students"
                         trackBy="name"
                         label="name"
+                        :noOptionsText="'No students found'"
+                        :noResultsText="'No students found'"
                         :classes="{
                             container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm p-0',
                             containerDisabled: 'cursor-default bg-gray-100',
@@ -713,18 +686,20 @@ background: #555; /* Color of the handle when hovered */
                         valueProp="id"
                         :multiple="true"
                         :searchable="true"
-                        :options="edit_story.students"
+                        :options="edit_story.students[0].options.length ? edit_story.students : []"
                         :closeOnSelect="false"
                         :clearOnSelect="true"
                         :canClear="false"
                         :hideSelected="false"
-                        :groups="true"
+                        :groups="edit_story.students[0].options.length ? true : false"
                         groupOptions="options"
-                        groupLabel="select_all"
-                        :groupSelect="true"
+                        :groupLabel="edit_story.students[0].options.length ? 'select_all' : null "
+                        :groupSelect="edit_story.students[0].options.length ? true : false"
                         placeholder="Select students"
                         trackBy="name"
                         label="name"
+                        :noOptionsText="'No students found'"
+                        :noResultsText="'No students found'"
                         :classes="{
                             container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm p-0',
                             containerDisabled: 'cursor-default bg-gray-100',
@@ -801,7 +776,7 @@ background: #555; /* Color of the handle when hovered */
                             <input id="dropzone-file-2" type="file" class="hidden" multiple/>
                         </label>
                     </div> 
-                    <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(edit_story.form.photos.length || edit_story.form.caption) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="savePost">Save</button>
+                    <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(edit_story.form.photos.length || edit_story.form.caption) && edit_story.form.students.length ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="savePost">Save</button>
                     <button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_edit_story_modal = false">Cancel</button>
                 </div>
             </div>
@@ -1046,7 +1021,6 @@ export default {
         handler(){
             this.edit_story.students[0].options = []
             this.edit_story.form.students = []
-            console.log(this.edit_story.form.programme_id)
             if(this.edit_story.form.programme_id && this.edit_story.form.centre_id && this.edit_story.find.levels){
                 axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id, this.edit_story.find.levels]))
                 .then(response => {
@@ -1155,7 +1129,6 @@ export default {
                         success: (result) => {
                             const blobUrl   = URL.createObjectURL(result);
                             const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
-                            console.log(new_file)
                             this.add_story.form.photos.push({
                                 'name'  :Date.now() + Math.floor(Math.random() * 1000),
                                 'url'   :blobUrl,
@@ -1182,7 +1155,6 @@ export default {
                         success: (result) => {
                             const blobUrl   = URL.createObjectURL(result);
                             const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
-                            console.log(new_file)
                             this.edit_story.form.photos.push({
                                 'name'  :Date.now() + Math.floor(Math.random() * 1000),
                                 'url'   :blobUrl,
@@ -1210,7 +1182,7 @@ export default {
         }
     },
     savePost(){
-        if(this.edit_story.form.caption || this.edit_story.form.photos.length){
+        if((this.edit_story.form.caption || this.edit_story.form.photos.length) && this.edit_story.form.students.length > 0){
             this.$inertia.post(route('stories.update'), this.edit_story.form, {preserveState: false})
         }
     },

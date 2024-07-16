@@ -423,18 +423,20 @@ import BreezeButton from '@/Components/Button.vue';
                                 valueProp="id"
                                 :multiple="true"
                                 :searchable="true"
-                                :options="add_story.students"
+                                :options="add_story.students[0].options.length ? add_story.students : []"
                                 :closeOnSelect="false"
                                 :clearOnSelect="true"
                                 :canClear="false"
                                 :hideSelected="false"
-                                :groups="true"
+                                :groups="add_story.students[0].options.length ? true : false"
                                 groupOptions="options"
-                                groupLabel="select_all"
-                                :groupSelect="true"
+                                :groupLabel="add_story.students[0].options.length ? 'select_all' : null "
+                                :groupSelect="add_story.students[0].options.length ? true : false"
                                 placeholder="Select students"
                                 trackBy="name"
                                 label="name"
+                                :noOptionsText="'No students found'"
+                                :noResultsText="'No students found'"
                                 :classes="{
                                     container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm p-0',
                                     containerDisabled: 'cursor-default bg-gray-100',
@@ -737,18 +739,20 @@ import BreezeButton from '@/Components/Button.vue';
                                 valueProp="id"
                                 :multiple="true"
                                 :searchable="true"
-                                :options="edit_story.students"
+                                :options="edit_story.students[0].options.length ? edit_story.students : []"
                                 :closeOnSelect="false"
                                 :clearOnSelect="true"
                                 :canClear="false"
                                 :hideSelected="false"
-                                :groups="true"
+                                :groups="edit_story.students[0].options.length ? true : false"
                                 groupOptions="options"
-                                groupLabel="select_all"
-                                :groupSelect="true"
+                                :groupLabel="edit_story.students[0].options.length ? 'select_all' : null "
+                                :groupSelect="edit_story.students[0].options.length ? true : false"
                                 placeholder="Select students"
                                 trackBy="name"
                                 label="name"
+                                :noOptionsText="'No students found'"
+                                :noResultsText="'No students found'"
                                 :classes="{
                                     container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm p-0',
                                     containerDisabled: 'cursor-default bg-gray-100',
@@ -825,7 +829,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <input id="dropzone-file-2" type="file" class="hidden" multiple/>
                                 </label>
                             </div> 
-                            <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(edit_story.form.photos.length || edit_story.form.caption) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="savePost">Save</button>
+                            <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(edit_story.form.photos.length || edit_story.form.caption) && edit_story.form.students.length ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="savePost">Save</button>
                             <button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_edit_story_modal = false">Cancel</button>
                         </div>
                     </div>
@@ -1118,7 +1122,6 @@ export default {
             handler(){
                 this.edit_story.students[0].options = []
                 this.edit_story.form.students = []
-                console.log(this.edit_story.form.programme_id)
                 if(this.edit_story.form.programme_id && this.edit_story.form.centre_id && this.edit_story.find.levels){
                     axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id, this.edit_story.find.levels]))
                     .then(response => {
@@ -1178,7 +1181,6 @@ export default {
                             success: (result) => {
                                 const blobUrl   = URL.createObjectURL(result);
                                 const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
-                                console.log(new_file)
                                 this.add_story.form.photos.push({
                                     'name'  :Date.now() + Math.floor(Math.random() * 1000),
                                     'url'   :blobUrl,
@@ -1255,7 +1257,7 @@ export default {
             }
         },
         savePost(){
-            if(this.edit_story.form.caption || this.edit_story.form.photos.length){
+            if((this.edit_story.form.caption || this.edit_story.form.photos.length) && this.edit_story.form.students.length > 0){
                 this.$inertia.post(route('stories.update'), this.edit_story.form, {preserveState: false})
             }
         },

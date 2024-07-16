@@ -63,7 +63,7 @@ export default {
     },
     methods: {
         onScroll(event) {
-            this.$emit('scroll', event); // Emit 'scroll' event to parent component
+            this.$emit('scroll', event); 
         },
         impersonate(){
             if(this.username){

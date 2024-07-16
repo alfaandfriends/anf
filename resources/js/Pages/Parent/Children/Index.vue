@@ -180,7 +180,6 @@ export default {
     },
     methods: {
         deleteChild(child_id){
-            console.log(child_id)
             this.confirmationAlert  = 'danger',
             this.confirmationTitle  = 'Warning',
             this.confirmationText   = "This child will be deleted permanently, are you sure want to proceed?",
