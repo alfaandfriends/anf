@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Spatie\Browsershot\Browsershot;
+use Spatie\LaravelPdf\Facades\Pdf;
+
+use function Spatie\LaravelPdf\Support\pdf;
 
 class DiagnosticTestController extends Controller
 {
@@ -1023,4 +1027,18 @@ class DiagnosticTestController extends Controller
             return back()->with(['type'=>'error', 'message'=>'Cannot proceed, this language is being used!']);
         }
     }
+
+    // public function test(){
+    //     $pdfContent = Browsershot::html('<h1>Hello World</h1>')
+    //     ->setNodeBinary("C:/Program Files/nodejs/node.exe")
+    //     ->setNpmBinary("C:/Program Files/nodejs/node_modules/npm/bin")
+    //     ->timeout(60000) // Set timeout to 60 seconds
+    //     ->format('A4')
+    //     ->margins(10, 10, 10, 10)
+    //     ->pdf();
+
+    //     return response($pdfContent)
+    //         ->header('Content-Type', 'application/pdf')
+    //         ->header('Content-Disposition', 'inline; filename="document.pdf"');
+    // }
 }

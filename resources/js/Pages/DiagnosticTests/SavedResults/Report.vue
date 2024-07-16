@@ -11,7 +11,7 @@ import BreezeButton from '@/Components/Button.vue';
         </div>
     </div>
     <!-- <div class="flex justify-center" v-show="finish_loading_report"> -->
-        <div class="flex justify-center w-[215mm] mx-2 my-2" v-show="finish_loading_report">
+        <div class="flex justify-center w-[215mm] mx-2 my-2 md:mx-auto" v-show="finish_loading_report">
             <div class="flex flex-col items-center space-y-4">
                 <div class="border border-gray-700 w-[210mm]">
                     <div class="flex flex-col justify-between space-y-2 bg-white p-3" id="report" ref="report">

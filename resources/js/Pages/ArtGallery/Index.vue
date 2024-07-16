@@ -177,7 +177,7 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>
             </div>
             <div class="overflow-x-auto">
-                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <div class="shadow overflow-x-auto border-b border-gray-200 sm:rounded-lg">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-300">
                             <tr>

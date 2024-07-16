@@ -22,6 +22,7 @@ Route::prefix('diagnostic-test')->group(function () {
     Route::post('/save-result', [DiagnosticTestController::class, 'saveDtResult'])->name('diagnostic_test.save_result');
     Route::delete('/delete-result/{id}', [DiagnosticTestController::class, 'deleteDtResult'])->name('diagnostic_test.delete_result');
 });
+// Route::get('/test', [DiagnosticTestController::class, 'test'])->name('diagnostic_test.authenticated');
 
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
