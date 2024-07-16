@@ -1176,8 +1176,9 @@ export default {
                             height: 1000,
                             width: 1000,
                             success: (result) => {
-                                const blobUrl = URL.createObjectURL(result);
-                                const new_file   =   this.blobToFile(result, Date.now()+'.jpg')
+                                const blobUrl   = URL.createObjectURL(result);
+                                const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
+                                console.log(new_file)
                                 this.add_story.form.photos.push({
                                     'name'  :Date.now() + Math.floor(Math.random() * 1000),
                                     'url'   :blobUrl,
@@ -1195,24 +1196,25 @@ export default {
             if (files && files.length > 0) {
                 const filesArray = Array.from(files);
                 filesArray.forEach((file)=>{
-                    new Compressor(file, {
-                        quality: 0.8,
-                        height: 1000,
-                        width: 1000,
-                        success: (result) => {
-                            const blobUrl   = URL.createObjectURL(result);
-                            const new_file  = this.blobToFile(result, Date.now()+'.jpg')
-                            this.edit_story.form.photos.push({
-                                'name' :Date.now() + Math.floor(Math.random() * 1000),
-                                'url' :blobUrl,
-                                'file':new_file
-                            })
-                        },
-                    });
-                    // this.read(file, target)
-                    // .then((data) => {
-                    // })
-                    // .catch(this.alert);
+                    this.read(file, target)
+                    .then((data) => {
+                        new Compressor(file, {
+                            quality: 0.8,
+                            height: 1000,
+                            width: 1000,
+                            success: (result) => {
+                                const blobUrl   = URL.createObjectURL(result);
+                                const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
+                                console.log(new_file)
+                                this.edit_story.form.photos.push({
+                                    'name'  :Date.now() + Math.floor(Math.random() * 1000),
+                                    'url'   :blobUrl,
+                                    'file'  :new_file
+                                })
+                            },
+                        });
+                    })
+                    .catch(this.alert);
                 })
             }
         },

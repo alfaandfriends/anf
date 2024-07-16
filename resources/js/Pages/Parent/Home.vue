@@ -841,6 +841,7 @@ import moment from 'moment';
 import 'moment-timezone';
 import FsLightbox from "fslightbox-vue/v3";
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import Compressor from 'compressorjs';
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
@@ -1147,11 +1148,21 @@ export default {
             filesArray.forEach((file)=>{
                 this.read(file, target)
                 .then((data) => {
-                    this.add_story.form.photos.push({
-                        'name' :Date.now() + Math.floor(Math.random() * 1000),
-                        'url' :data.url,
-                        'file':file
-                    })
+                    new Compressor(file, {
+                        quality: 0.8,
+                        height: 1000,
+                        width: 1000,
+                        success: (result) => {
+                            const blobUrl   = URL.createObjectURL(result);
+                            const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
+                            console.log(new_file)
+                            this.add_story.form.photos.push({
+                                'name'  :Date.now() + Math.floor(Math.random() * 1000),
+                                'url'   :blobUrl,
+                                'file'  :new_file
+                            })
+                        },
+                    });
                 })
                 .catch(this.alert);
             })
@@ -1164,11 +1175,21 @@ export default {
             filesArray.forEach((file)=>{
                 this.read(file, target)
                 .then((data) => {
-                    this.edit_story.form.photos.push({
-                        'name' :Date.now() + Math.floor(Math.random() * 1000),
-                        'url' :data.url,
-                        'file':file
-                    })
+                    new Compressor(file, {
+                        quality: 0.8,
+                        height: 1000,
+                        width: 1000,
+                        success: (result) => {
+                            const blobUrl   = URL.createObjectURL(result);
+                            const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
+                            console.log(new_file)
+                            this.edit_story.form.photos.push({
+                                'name'  :Date.now() + Math.floor(Math.random() * 1000),
+                                'url'   :blobUrl,
+                                'file'  :new_file
+                            })
+                        },
+                    });
                 })
                 .catch(this.alert);
             })
@@ -1228,6 +1249,10 @@ export default {
         this.confirmationData = story_id
         this.show_delete = true
     },
+    blobToFile(blob, filename) {
+        const file = new File([blob], filename, { type: blob.type });
+        return file;
+    }
   }
 }
 </script>

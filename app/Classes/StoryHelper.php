@@ -16,8 +16,6 @@ class StoryHelper {
         /* Get stories */
         $stories    =   DB::table('stories')
                             ->join('wpvt_users', 'stories.created_by', '=', 'wpvt_users.ID')
-                            ->join('story_likes', 'story_likes.story_id', '=', 'stories.id')
-                            ->join('story_comments', 'story_comments.story_id', '=', 'stories.id')
                             ->join('programmes', 'stories.programme_id', '=', 'programmes.id')
                             ->select(
                                 'stories.id as story_id',
@@ -28,8 +26,6 @@ class StoryHelper {
                                 'programmes.id as story_programme_id',
                                 'programmes.name as story_programme_name',
                                 'stories.centre_id as story_centre_id',
-                                DB::raw('count(story_likes.story_id) as reaction_count'),
-                                DB::raw('count(story_comments.story_id) as comment_count')
                             )
                             ->when($centre_id, function($query) use ($centre_id){
                                 $query->where('stories.centre_id', $centre_id);
@@ -40,7 +36,7 @@ class StoryHelper {
                             ->where('stories.created_by', auth()->id())
                             ->groupBy('stories.id')
                             ->paginate(10);
-                    
+                            
         $storiesCollection  = collect($stories->items());
         $storyIds           = $storiesCollection->pluck('story_id');
 
