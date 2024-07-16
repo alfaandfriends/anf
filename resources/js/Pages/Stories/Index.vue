@@ -144,7 +144,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="39%">Title</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Date</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Reactions</th>
-                                <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Comment</th> -->
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Comment</th>
                                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="15%">Action</th>
                             </tr>
                         </thead>
@@ -152,10 +152,10 @@ import BreezeButton from '@/Components/Button.vue';
                             <tr v-if="!$page.props.stories.data.length">
                                 <td class="text-center" colspan="10">
                                     <div class="p-3">
-                                        No Record Found! 
+                                        No Record Found!
                                     </div>
                                 </td>
-                            </tr> 
+                            </tr>
                             <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.stories.data" :key="result.id">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-700">{{ index+1 }}</div>
@@ -175,11 +175,11 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="text-sm font-medium text-gray-900">{{ moment(result.story_date).format('DD MMM Y') }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="py-1 px-2 border border-indigo-500 bg-indigo-100 rounded-md text-indigo-600 cursor-pointer text-xs font-semibold" @click="show_likes_modal = true">{{ result.reaction_count }} Reactions</span>
+                                    <span class="py-1 px-2 border border-indigo-500 bg-indigo-100 rounded-md text-indigo-600 cursor-pointer text-xs font-semibold" @click="openLikesModal(index)">{{ result.likes.length }} Reactions</span>
                                 </td>
-                                <!-- <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="py-1 px-2 border border-blue-500 bg-blue-100 rounded-md text-blue-600 cursor-pointer text-xs font-semibold" @click="show_comments_modal = true">{{ result.reaction_count }} Comments</span>
-                                </td> -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="py-1 px-2 border border-blue-500 bg-blue-100 rounded-md text-blue-600 cursor-pointer text-xs font-semibold" @click="openCommentsModal(index)">{{ result.comments.length }} Comments</span>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center space-x-2">
                                         <BreezeButton buttonType="warning" @click="openEditStoryModal(index)" v-if="$page.props.can.edit_stories">Edit</BreezeButton>
@@ -193,8 +193,8 @@ import BreezeButton from '@/Components/Button.vue';
                 <Pagination :page_data="$page.props.stories" :params="params"></Pagination>
             </div>
             <ConfirmationModal 
-                :show="isOpen" 
-                @close="isOpen = false"
+                :show="open_delete_modal" 
+                @close="open_delete_modal = false"
                 confirmationAlert="danger"
                 confirmationTitle="Delete Story"
                 confirmationText="Are you sure want to delete this story?"
@@ -203,11 +203,6 @@ import BreezeButton from '@/Components/Button.vue';
                 :confirmationRoute="confirmationRoute"
                 :confirmationData="confirmationData"
             />
-            <FsLightbox
-                :toggler="lightbox.open"
-                :sources="lightbox.src"
-                :exitFullscreenOnClose="true"
-	        />
             <Modal :showModal="show_add_story_modal" modalType="sm" @hideModal="show_add_story_modal = false">
                 <template v-slot:header>
                     <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
@@ -221,9 +216,9 @@ import BreezeButton from '@/Components/Button.vue';
                 </template>
                 <template v-slot:content>
                     <div class="p-3">
-                        <div class="flex flex-col justify-center items-start space-y-4" v-if="!show_add_tag">
+                        <div class="flex flex-col justify-center items-start space-y-2" v-if="!show_add_tag">
                             <Multiselect 
-                                v-model="form.programme_id"
+                                v-model="add_story.form.programme_id"
                                 valueProp="id"
                                 :appendNewOption="false"
                                 :searchable="true"
@@ -268,79 +263,68 @@ import BreezeButton from '@/Components/Button.vue';
                                         noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                         fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                                     }"
-                            >
-                                <template #singlelabel="{ value }">
-                                    <div class="multiselect-single-label">
-                                        {{ value.name }}
-                                    </div>
-                                </template>
-                                <template #option="{ option }">
-                                    {{ option.name }} ({{ option.country_name }})
-                                </template>
-                            </Multiselect>
-                            <textarea class="bg-white border border-gray-300 p-3 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="3" placeholder="What's happening today?" v-model="form.caption"></textarea>
-                            <div class="w-full" v-if="form.photos.length">
-                                <div class="overflow-x-auto scrollbar pb-3">
-                                    <div class="flex space-x-4">
-                                        <div class="relative" v-for="(photo, photo_index) in form.photos" :key="photo_index">
-                                            <div class="relative w-28 h-28">
-                                                <img :src="photo.url" class="w-full h-full rounded-lg" />
-                                                <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-lg">
-                                                    <button class="text-xs py-1 px-2 rounded text-red-500 font-semibold bg-white" @click="removePhoto(photo_index)">
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-center w-full">
-                                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhoto">
-                                    <div class="flex flex-col items-center justify-center py-6">
-                                        <svg class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                        </svg>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400 ">
-                                            <span class="font-semibold">Click to upload</span>
-                                        </p>
-                                        <span class="text-xs text-center text-slate-500">Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images to select multiple</span>
-                                    </div>
-                                    <input id="dropzone-file" type="file" class="hidden" multiple/>
-                                </label>
-                            </div> 
-                            <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(form.photos.length || form.caption) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="post">Post</button>
-                            <button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_add_story_modal = false">Cancel</button>
-                        </div>
-                    </div>
-                </template>
-            </Modal >
-            <Modal :showModal="show_edit_story_modal" modalType="sm" @hideModal="show_edit_story_modal = false">
-                <template v-slot:header>
-                    <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
-                        <h3 class="text-gray-900 text font-semibold">                
-                            Edit Story
-                        </h3>       
-                        <button type="button" @click="show_edit_story_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                        </button>
-                    </div>                 
-                </template>
-                <template v-slot:content>
-                    <div class="p-3">
-                        <div class="flex flex-col justify-center items-start space-y-4" v-if="!show_add_tag">
+                            />
                             <Multiselect 
-                                v-model="form_edit.programme_id"
-                                valueProp="id"
+                                v-model="add_story.form.centre_id"
+                                valueProp="ID"
                                 :appendNewOption="false"
                                 :searchable="true"
-                                :options="$page.props.programmes"
+                                :options="$page.props.centres"
                                 :clearOnSelect="true"
                                 :closeOnDeselect="true"
                                 :canClear="false"
                                 :canDeselect="false"
-                                trackBy="name"
-                                label="name"
+                                trackBy="label"
+                                label="label"
+                                placeholder="Select centre"
+                                :classes="{
+                                    container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                    containerDisabled: 'cursor-default bg-gray-100',
+                                    containerOpen: 'rounded-b-none',
+                                    containerActive: 'border-2 border-indigo-300',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                    search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                    clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                    clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                    spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                    dropdownHidden: 'hidden',
+                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                    group: 'p-0 m-0',
+                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                    groupLabelPointable: 'cursor-pointer',
+                                    groupLabelPointed: 'bg-gray-300 text-black-700',
+                                    groupLabelSelected: 'bg-gray-100 text-black',
+                                    groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                    groupOptions: 'p-0 m-0',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                    optionSelected: 'text-white bg-indigo-500',
+                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                }"
+                            />
+                            <div class="w-full grid grid-cols-1 2xl:grid-cols-2 gap-2">
+                                <Multiselect 
+                                    v-model="add_story.find.class_types"
+                                    valueProp="id"
+                                    :appendNewOption="false"
+                                    :searchable="true"
+                                    :options="$page.props.class_types"
+                                    :clearOnSelect="true"
+                                    :closeOnDeselect="true"
+                                    :canClear="false"
+                                    :canDeselect="true"
+                                    trackBy="name"
+                                    label="name"
+                                    placeholder="Select class type (optional)"
                                     :classes="{
                                         container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
                                         containerDisabled: 'cursor-default bg-gray-100',
@@ -374,27 +358,457 @@ import BreezeButton from '@/Components/Button.vue';
                                         noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
                                         fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
                                     }"
-                            >
-                                <template #singlelabel="{ value }">
-                                    <div class="multiselect-single-label">
-                                        {{ value.name }}
+                                />
+                                <Multiselect 
+                                    v-model="add_story.find.levels"
+                                    valueProp="id"
+                                    :appendNewOption="false"
+                                    :searchable="true"
+                                    :options="add_story.list.levels"
+                                    :clearOnSelect="true"
+                                    :closeOnDeselect="true"
+                                    :canClear="false"
+                                    :canDeselect="true"
+                                    trackBy="level"
+                                    label="level"
+                                    placeholder="Select level (optional)"
+                                    :classes="{
+                                        container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                        containerDisabled: 'cursor-default bg-gray-100',
+                                        containerOpen: 'rounded-b-none',
+                                        containerActive: 'border-2 border-indigo-300',
+                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                        search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                        clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                        clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                        spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                        dropdownHidden: 'hidden',
+                                        options: 'flex flex-col p-0 m-0 list-none w-full',
+                                        group: 'p-0 m-0',
+                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                        groupLabelPointable: 'cursor-pointer',
+                                        groupLabelPointed: 'bg-gray-300 text-black-700',
+                                        groupLabelSelected: 'bg-gray-100 text-black',
+                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                        groupOptions: 'p-0 m-0',
+                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                        optionPointed: 'text-gray-800 bg-gray-100',
+                                        optionSelected: 'text-white bg-indigo-500',
+                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                    }"
+                                >
+                                    <template v-slot:singlelabel="{ value }">
+                                        <div class="multiselect-single-label">
+                                            Level {{ value.level }}
+                                        </div>
+                                    </template>
+                                    <template v-slot:option="{ option }">
+                                        Level {{ option.level }}
+                                    </template>
+                                </Multiselect>
+                            </div>
+                            <Multiselect
+                                id="students"
+                                mode="multiple"
+                                v-model="add_story.form.students"
+                                valueProp="id"
+                                :multiple="true"
+                                :searchable="true"
+                                :options="add_story.students[0].options.length ? add_story.students : []"
+                                :closeOnSelect="false"
+                                :clearOnSelect="true"
+                                :canClear="false"
+                                :hideSelected="false"
+                                :groups="add_story.students[0].options.length ? true : false"
+                                groupOptions="options"
+                                :groupLabel="add_story.students[0].options.length ? 'select_all' : null "
+                                :groupSelect="add_story.students[0].options.length ? true : false"
+                                placeholder="Select students"
+                                trackBy="name"
+                                label="name"
+                                :noOptionsText="'No students found'"
+                                :noResultsText="'No students found'"
+                                :classes="{
+                                    container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm p-0',
+                                    containerDisabled: 'cursor-default bg-gray-100',
+                                    containerOpen: 'rounded-b-none',
+                                    containerActive: 'border-2 border-indigo-300',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                    multipleLabel: 'pl-3 flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug',
+                                    search: 'pl-3 w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                    clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                    clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                    spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                    dropdownHidden: 'hidden',
+                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                    group: 'p-0 m-0',
+                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-medium cursor-default leading-normal text-slate-800',
+                                    groupLabelPointable: 'cursor-pointer',
+                                    groupLabelPointed: 'text-slate-800',
+                                    groupLabelSelected: 'text-slate-800',
+                                    groupLabelSelectedPointed: 'text-slate-80',
+                                    groupOptions: 'p-0 m-0',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                    optionPointed: 'text-slate-800 bg-indigo-50',
+                                    optionSelected: 'text-slate-800 bg-indigo-200',
+                                    optionSelectedPointed: 'text-slate-800 bg-indigo-200',
+                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                }"
+                                >
+                                <template v-slot:multiplelabel="{ values }">
+                                    <div class="multiselect-multiple-label">
+                                      {{ values.length }} {{ values.length > 1 ? 'students'  :'student' }} selected
                                     </div>
-                                </template>
-                                <template #option="{ option }">
-                                    {{ option.name }} ({{ option.country_name }})
-                                </template>
+                                  </template>
                             </Multiselect>
-                            <textarea class="bg-white border border-gray-300 p-3 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="3" placeholder="What's happening today?" v-model="form_edit.caption"></textarea>
-                            <div class="w-full" v-if="form_edit.photos.length">
+                            <textarea class="bg-white border border-gray-300 p-3 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="3" placeholder="What's happening today?" v-model="add_story.form.caption"></textarea>
+                            <div class="w-full" v-if="add_story.form.photos.length">
                                 <div class="overflow-x-auto scrollbar pb-3">
                                     <div class="flex space-x-4">
-                                        <div class="relative" v-for="(photo, photo_index) in form_edit.photos" :key="photo_index">
+                                        <div class="relative" v-for="(photo, photo_index) in add_story.form.photos" :key="photo_index">
                                             <div class="relative w-28 h-28">
-                                                <img :src="photo.url ? photo.url : '/storage/stories/' + photo.image_filename" class="w-full h-full rounded-lg" />
+                                                <img :src="photo.url" class="w-full h-full rounded-lg" />
                                                 <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-lg">
-                                                    <button class="text-xs py-1 px-2 rounded text-red-500 font-semibold bg-white" @click="removePhotoEditStory(photo_index)">
-                                                        Delete
-                                                    </button>
+                                                    <div class="flex flex-col space-y-2">
+                                                        <button class="text-xs py-1 px-2 rounded text-indigo-500 font-semibold bg-white" @click="viewImage(photo)">
+                                                            View
+                                                        </button>
+                                                        <button class="text-xs py-1 px-2 rounded text-red-500 font-semibold bg-white" @click="removePhoto(photo_index)">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-center w-full">
+                                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhoto">
+                                    <div class="flex flex-col items-center justify-center py-6">
+                                        <svg class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                        </svg>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 ">
+                                            <span class="font-semibold">Click to upload</span>
+                                        </p>
+                                        <span class="text-xs text-center text-slate-500">Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images to select multiple</span>
+                                    </div>
+                                    <input id="dropzone-file" type="file" class="hidden" multiple/>
+                                </label>
+                            </div> 
+                            <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(add_story.form.photos.length || add_story.form.caption) && add_story.form.students.length ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="post">Post</button>
+                            <button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_add_story_modal = false">Cancel</button>
+                        </div>
+                    </div>
+                </template>
+            </Modal >
+            <Modal :showModal="show_edit_story_modal" modalType="sm" @hideModal="show_edit_story_modal = false">
+                <template v-slot:header>
+                    <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
+                        <h3 class="text-gray-900 text font-semibold">                
+                            Edit Story
+                        </h3>
+                        <button type="button" @click="show_edit_story_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                    </div>                 
+                </template>
+                <template v-slot:content>
+                    <div class="p-3">
+                        <div class="flex flex-col justify-center items-start space-y-4" v-if="!show_add_tag">
+                            <Multiselect 
+                                v-model="edit_story.form.programme_id"
+                                valueProp="id"
+                                :appendNewOption="false"
+                                :searchable="true"
+                                :options="$page.props.programmes"
+                                :clearOnSelect="true"
+                                :closeOnDeselect="true"
+                                :canClear="false"
+                                :canDeselect="false"
+                                trackBy="name"
+                                label="name"
+                                placeholder="Select programme"
+                                    :classes="{
+                                        container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                        containerDisabled: 'cursor-default bg-gray-100',
+                                        containerOpen: 'rounded-b-none',
+                                        containerActive: 'border-2 border-indigo-300',
+                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                        search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                        clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                        clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                        spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                        dropdownHidden: 'hidden',
+                                        options: 'flex flex-col p-0 m-0 list-none w-full',
+                                        group: 'p-0 m-0',
+                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                        groupLabelPointable: 'cursor-pointer',
+                                        groupLabelPointed: 'bg-gray-300 text-black-700',
+                                        groupLabelSelected: 'bg-gray-100 text-black',
+                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                        groupOptions: 'p-0 m-0',
+                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                        optionPointed: 'text-gray-800 bg-gray-100',
+                                        optionSelected: 'text-white bg-indigo-500',
+                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                    }"
+                            />
+                            <Multiselect 
+                                v-model="edit_story.form.centre_id"
+                                valueProp="ID"
+                                :appendNewOption="false"
+                                :searchable="true"
+                                :options="$page.props.centres"
+                                :clearOnSelect="true"
+                                :closeOnDeselect="true"
+                                :canClear="false"
+                                :canDeselect="false"
+                                trackBy="label"
+                                label="label"
+                                placeholder="Select centre"
+                                :classes="{
+                                    container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                    containerDisabled: 'cursor-default bg-gray-100',
+                                    containerOpen: 'rounded-b-none',
+                                    containerActive: 'border-2 border-indigo-300',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                    search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                    clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                    clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                    spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                    dropdownHidden: 'hidden',
+                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                    group: 'p-0 m-0',
+                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                    groupLabelPointable: 'cursor-pointer',
+                                    groupLabelPointed: 'bg-gray-300 text-black-700',
+                                    groupLabelSelected: 'bg-gray-100 text-black',
+                                    groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                    groupOptions: 'p-0 m-0',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                    optionPointed: 'text-gray-800 bg-gray-100',
+                                    optionSelected: 'text-white bg-indigo-500',
+                                    optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                    optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                }"
+                            />
+                            <div class="w-full grid grid-cols-1 2xl:grid-cols-2 gap-2">
+                                <Multiselect 
+                                    v-model="edit_story.find.class_types"
+                                    valueProp="id"
+                                    :appendNewOption="false"
+                                    :searchable="true"
+                                    :options="$page.props.class_types"
+                                    :clearOnSelect="true"
+                                    :closeOnDeselect="true"
+                                    :canClear="false"
+                                    :canDeselect="true"
+                                    trackBy="name"
+                                    label="name"
+                                    placeholder="Select class type (optional)"
+                                    :classes="{
+                                        container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                        containerDisabled: 'cursor-default bg-gray-100',
+                                        containerOpen: 'rounded-b-none',
+                                        containerActive: 'border-2 border-indigo-300',
+                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                        search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                        clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                        clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                        spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                        dropdownHidden: 'hidden',
+                                        options: 'flex flex-col p-0 m-0 list-none w-full',
+                                        group: 'p-0 m-0',
+                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                        groupLabelPointable: 'cursor-pointer',
+                                        groupLabelPointed: 'bg-gray-300 text-black-700',
+                                        groupLabelSelected: 'bg-gray-100 text-black',
+                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                        groupOptions: 'p-0 m-0',
+                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                        optionPointed: 'text-gray-800 bg-gray-100',
+                                        optionSelected: 'text-white bg-indigo-500',
+                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                    }"
+                                />
+                                <Multiselect 
+                                    v-model="edit_story.find.levels"
+                                    valueProp="id"
+                                    :appendNewOption="false"
+                                    :searchable="true"
+                                    :options="edit_story.list.levels"
+                                    :clearOnSelect="true"
+                                    :closeOnDeselect="true"
+                                    :canClear="false"
+                                    :canDeselect="true"
+                                    trackBy="level"
+                                    label="level"
+                                    placeholder="Select level (optional)"
+                                    :classes="{
+                                        container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
+                                        containerDisabled: 'cursor-default bg-gray-100',
+                                        containerOpen: 'rounded-b-none',
+                                        containerActive: 'border-2 border-indigo-300',
+                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                        search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                        clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                        clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                        spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                        dropdownHidden: 'hidden',
+                                        options: 'flex flex-col p-0 m-0 list-none w-full',
+                                        group: 'p-0 m-0',
+                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                        groupLabelPointable: 'cursor-pointer',
+                                        groupLabelPointed: 'bg-gray-300 text-black-700',
+                                        groupLabelSelected: 'bg-gray-100 text-black',
+                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                        groupOptions: 'p-0 m-0',
+                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                        optionPointed: 'text-gray-800 bg-gray-100',
+                                        optionSelected: 'text-white bg-indigo-500',
+                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                    }"
+                                >
+                                    <template v-slot:singlelabel="{ value }">
+                                        <div class="multiselect-single-label">
+                                            Level {{ value.level }}
+                                        </div>
+                                    </template>
+                                    <template v-slot:option="{ option }">
+                                        Level {{ option.level }}
+                                    </template>
+                                </Multiselect>
+                            </div>
+                            <Multiselect
+                                id="edit_students"
+                                mode="multiple"
+                                v-model="edit_story.form.students"
+                                valueProp="id"
+                                :multiple="true"
+                                :searchable="true"
+                                :options="edit_story.students[0].options.length ? edit_story.students : []"
+                                :closeOnSelect="false"
+                                :clearOnSelect="true"
+                                :canClear="false"
+                                :hideSelected="false"
+                                :groups="edit_story.students[0].options.length ? true : false"
+                                groupOptions="options"
+                                :groupLabel="edit_story.students[0].options.length ? 'select_all' : null "
+                                :groupSelect="edit_story.students[0].options.length ? true : false"
+                                placeholder="Select students"
+                                trackBy="name"
+                                label="name"
+                                :noOptionsText="'No students found'"
+                                :noResultsText="'No students found'"
+                                :classes="{
+                                    container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm p-0',
+                                    containerDisabled: 'cursor-default bg-gray-100',
+                                    containerOpen: 'rounded-b-none',
+                                    containerActive: 'border-2 border-indigo-300',
+                                    singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
+                                    singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                    multipleLabel: 'pl-3 flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug',
+                                    search: 'pl-3 w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
+                                    placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
+                                    clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
+                                    clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                    spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
+                                    dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                    dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                    dropdownHidden: 'hidden',
+                                    options: 'flex flex-col p-0 m-0 list-none w-full',
+                                    group: 'p-0 m-0',
+                                    groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-medium cursor-default leading-normal text-slate-800',
+                                    groupLabelPointable: 'cursor-pointer',
+                                    groupLabelPointed: 'text-slate-800',
+                                    groupLabelSelected: 'text-slate-800',
+                                    groupLabelSelectedPointed: 'text-slate-80',
+                                    groupOptions: 'p-0 m-0',
+                                    option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
+                                    optionPointed: 'text-slate-800 bg-indigo-50',
+                                    optionSelected: 'text-slate-800 bg-indigo-200',
+                                    optionSelectedPointed: 'text-slate-800 bg-indigo-200',
+                                    optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                    noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
+                                    fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                }"
+                                >
+                                <template v-slot:multiplelabel="{ values }">
+                                    <div class="multiselect-multiple-label">
+                                      {{ values.length }} {{ values.length > 1 ? 'students'  :'student' }} selected
+                                    </div>
+                                  </template>
+                            </Multiselect>
+                            <textarea class="bg-white border border-gray-300 p-3 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="3" placeholder="What's happening today?" v-model="edit_story.form.caption"></textarea>
+                            <div class="w-full" v-if="edit_story.form.photos.length">
+                                <div class="overflow-x-auto scrollbar pb-3">
+                                    <div class="flex space-x-4">
+                                        <div class="relative" v-for="(photo, photo_index) in edit_story.form.photos" :key="photo_index">
+                                            <div class="relative w-28 h-28">
+                                                <img :src="photo.url ? photo.url : '/storage/stories/' + photo.image_filename" class="w-full h-full rounded-lg object-cover" />
+                                                <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-lg">
+                                                    <div class="flex flex-col space-y-2">
+                                                        <button class="text-xs py-1 px-2 rounded text-indigo-500 font-semibold bg-white" @click="viewImage(photo)">
+                                                            View
+                                                        </button>
+                                                        <button class="text-xs py-1 px-2 rounded text-red-500 font-semibold bg-white" @click="removePhotoEditStory(photo_index)">
+                                                            Delete
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -415,17 +829,17 @@ import BreezeButton from '@/Components/Button.vue';
                                     <input id="dropzone-file-2" type="file" class="hidden" multiple/>
                                 </label>
                             </div> 
-                            <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(form_edit.photos.length || form_edit.caption) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="savePost">Save</button>
+                            <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(edit_story.form.photos.length || edit_story.form.caption) && edit_story.form.students.length ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="savePost">Save</button>
                             <button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_edit_story_modal = false">Cancel</button>
                         </div>
                     </div>
                 </template>
             </Modal >
-            <!-- <Modal :showModal="show_likes_modal" modalType="sm" @hideModal="show_likes_modal = false">
+            <Modal :showModal="show_likes_modal" modalType="xs" @hideModal="show_likes_modal = false">
                 <template v-slot:header>
                     <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
                         <h3 class="text-gray-900 text font-semibold">                
-                            Likes
+                            Reactions
                         </h3>       
                         <button type="button" @click="show_likes_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -433,9 +847,13 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>                 
                 </template>
                 <template v-slot:content>
-                    <div class="">
-                        <div class="flex justify-center w-full">
-                            <img :src="artwork.file_location" class="object-scale-down" alt="">
+                    <div class="divide-y px-4 text-slate-600">
+                        <div class="flex items-center justify-between py-2" v-if="likes.length" v-for="like in likes">
+                            <div class="text-slate-800 text-sm font-medium">{{ like.like_author_name}}</div>
+                            <TimeAgo class="text-slate-400 text-xs" :datetime="like.like_date" :key="like.like_date"></TimeAgo>
+                        </div>
+                        <div class="py-2 text-sm" v-else>
+                            <span>No one has liked this story yet.</span>
                         </div>
                     </div>
                 </template>
@@ -457,9 +875,18 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>                 
                 </template>
                 <template v-slot:content>
-                    <div class="">
-                        <div class="flex justify-center w-full">
-                            <img :src="artwork.file_location" class="object-scale-down" alt="">
+                    <div class="divide-y px-4 text-slate-600">
+                        <div class="flex items-center justify-between py-2" v-if="comments.length" v-for="comment in comments">
+                            <div class="flex flex-col">
+                                <div class="text-slate-800 text-sm font-semibold">{{ comment.comment_user_name}}</div>
+                                <blockquote class="text-slate-800 text-xs font-medium italic">
+                                    <p>{{ comment.comment}}</p>
+                                </blockquote>
+                            </div>
+                            <TimeAgo class="text-slate-400 text-xs" :datetime="comment.created_at" :key="comment.created_at"></TimeAgo>
+                        </div>
+                        <div class="py-2 text-sm" v-else>
+                            <span>There are no comments on this story yet.</span>
                         </div>
                     </div>
                 </template>
@@ -468,7 +895,12 @@ import BreezeButton from '@/Components/Button.vue';
                         <BreezeButton buttonType="gray" @click="show_comments_modal = false">Close</BreezeButton>
                     </div>
                 </template>
-            </Modal> -->
+            </Modal>
+            <FsLightbox
+                :toggler="lightbox.open"
+                :sources="lightbox.src"
+                :exitFullscreenOnClose="true"
+            />
         </div>
     </BreezeAuthenticatedLayout>
 </template>
@@ -484,6 +916,8 @@ import { debounce } from 'vue-debounce'
 import Multiselect from '@vueform/multiselect'
 import FsLightbox from "fslightbox-vue/v3";
 import moment from "moment";
+import TimeAgo from '@/Components/TimeAgo.vue'
+import Compressor from 'compressorjs';
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
@@ -491,56 +925,215 @@ const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Modal, Pagination, Multiselect, FsLightbox
+        ConfirmationModal, Head, Link, Modal, Pagination, Multiselect, FsLightbox, TimeAgo, 
     },
     props: {
         filter: Object,
     },
     data(){
         return{
-            isOpen: false,
-            searching: false,
+            open_delete_modal: false,
             show_add_story_modal: false,
             show_edit_story_modal: false,
             show_likes_modal: false,
             show_comments_modal: false,
             confirmationData: '',
             confirmationRoute: '',
+            likes: [],
+            comments: [],
             lightbox: {
                 open: false,
                 src: [],
             },
-            student_status: [{
-                'id' : 1,
-                'name' : 'Active'
-            },{
-                'id' : 0,
-                'name' : 'Inactive'
-            }],
-            form:{
-                programme_id: '',
-                caption: '',
-                photos: [],
+            add_story: {
+                find: {
+                    class_types: '',
+                    levels: '',
+                },
+                list: {
+                    class_types: [],
+                    levels: [],
+                },
+                students: [{
+                    select_all: 'Select all',
+                    options: []
+                }],
+                form:{
+                    programme_id: '',
+                    centre_id: '',
+                    caption: '',
+                    photos: [],
+                    students: [],
+                },
             },
-            form_edit:{
-                story_id: '',
-                programme_id: '',
-                caption: '',
-                photos: [],
-                photos_to_delete: [],
+            edit_story: {
+                find: {
+                    class_types: '',
+                    levels: '',
+                },
+                list: {
+                    class_types: [],
+                    levels: [],
+                },
+                students: [{
+                    select_all: 'Select all',
+                    options: []
+                }],
+                form:{
+                    story_id: '',
+                    programme_id: '',
+                    centre_id: '',
+                    caption: '',
+                    photos: [],
+                    students: [],
+                    photos_to_delete: [],
+                },
             },
             params: {
                 search: this.filter.search ? this.filter.search : '',
                 centre_id: this.filter.centre_id ? this.filter.centre_id : '',
                 programme_id: this.filter.programme_id ? this.filter.programme_id : '',
-                theme: this.filter.theme ? this.filter.theme : '',
-                status: this.filter.status ? this.filter.status : '',
             },
-            imageExists: false,
-            artwork:{
-                lesson: '',
-                activity: '',
-                file_location: ''
+        }
+    },
+    watch: {
+        'add_story.form.programme_id': {
+            handler(){
+                if(this.add_story.form.programme_id && this.add_story.form.centre_id){
+                    this.add_story.find.class_types = ''
+                    this.add_story.find.levels = ''
+                    this.add_story.students[0].options = []
+                    this.add_story.form.students = []
+
+                    axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id]))
+                    .then(response => {
+                        this.add_story.students[0].options = response.data
+                    })
+                }
+            }
+        },
+        'add_story.form.centre_id': {
+            handler(){
+                if(this.add_story.form.programme_id && this.add_story.form.centre_id){
+                    this.add_story.find.class_types = ''
+                    this.add_story.find.levels = ''
+                    this.add_story.students[0].options = []
+                    this.add_story.form.students = []
+
+                    axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id]))
+                    .then(response => {
+                        this.add_story.students[0].options = response.data
+                    })
+                }
+            }
+        },
+        'add_story.find.class_types': {
+            handler(){
+                this.add_story.find.levels = ''
+                this.add_story.list.levels = []
+                if(this.add_story.form.programme_id && this.add_story.form.centre_id && this.add_story.find.class_types){
+                    this.add_story.students[0].options = []
+                    this.add_story.form.students = []
+
+                    axios.get(route('classes.get_class_levels', [this.add_story.form.programme_id, this.add_story.find.class_types]))
+                    .then(response => {
+                        this.add_story.list.levels = response.data
+                    })
+                }
+                else{
+                    axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id]))
+                    .then(response => {
+                        this.add_story.students[0].options = response.data
+                    })
+                }
+            }
+        },
+        'add_story.find.levels': {
+            handler(){
+                this.add_story.students[0].options = []
+                this.add_story.form.students = []
+
+                if(this.add_story.form.programme_id && this.add_story.form.centre_id && this.add_story.find.levels){
+                    axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id, this.add_story.find.levels]))
+                    .then(response => {
+                        this.add_story.students[0].options = response.data
+                    })
+                }
+                else{
+                    axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id]))
+                    .then(response => {
+                        this.add_story.students[0].options = response.data
+                    })
+                }
+            }
+        },
+        'edit_story.form.programme_id': {
+            handler(){
+                if(this.edit_story.form.programme_id && this.edit_story.form.centre_id){
+                    this.edit_story.find.class_types = ''
+                    this.edit_story.find.levels = ''
+                    this.edit_story.students[0].options = []
+                    this.edit_story.form.students = []
+
+                    axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
+                    .then(response => {
+                        this.edit_story.students[0].options = response.data
+                    })
+                }
+            }
+        },
+        'edit_story.form.centre_id': {
+            handler(){
+                if(this.edit_story.form.programme_id && this.edit_story.form.centre_id){
+                    this.edit_story.find.class_types = ''
+                    this.edit_story.find.levels = ''
+                    this.edit_story.students[0].options = []
+                    this.edit_story.form.students = []
+
+                    axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
+                    .then(response => {
+                        this.edit_story.students[0].options = response.data
+                    })
+                }
+            }
+        },
+        'edit_story.find.class_types': {
+            handler(){
+                this.edit_story.find.levels = ''
+                this.edit_story.list.levels = []
+                if(this.edit_story.form.programme_id && this.edit_story.form.centre_id && this.edit_story.find.class_types){
+                    this.edit_story.students[0].options = []
+                    this.edit_story.form.students = []
+
+                    axios.get(route('classes.get_class_levels', [this.edit_story.form.programme_id, this.edit_story.find.class_types]))
+                    .then(response => {
+                        this.edit_story.list.levels = response.data
+                    })
+                }
+                else{
+                    axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
+                    .then(response => {
+                        this.edit_story.students[0].options = response.data
+                    })
+                }
+            }
+        },
+        'edit_story.find.levels': {
+            handler(){
+                this.edit_story.students[0].options = []
+                this.edit_story.form.students = []
+                if(this.edit_story.form.programme_id && this.edit_story.form.centre_id && this.edit_story.find.levels){
+                    axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id, this.edit_story.find.levels]))
+                    .then(response => {
+                        this.edit_story.students[0].options = response.data
+                    })
+                }
+                else{
+                    axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
+                    .then(response => {
+                        this.edit_story.students[0].options = response.data
+                    })
+                }
             }
         }
     },
@@ -549,12 +1142,30 @@ export default {
             this.show_add_story_modal = true
         },
         openEditStoryModal(index){
-            this.form_edit.story_id =   this.$page.props.stories.data[index].story_id
-            this.form_edit.programme_id =   this.$page.props.stories.data[index].story_programme_id
-            this.form_edit.caption      =   this.$page.props.stories.data[index].story_title
-            this.form_edit.photos       =   this.$page.props.stories.data[index].images
-            // console.log(index)
-            this.show_edit_story_modal = true
+            this.edit_story.form.story_id     =   this.$page.props.stories.data[index].story_id
+            this.edit_story.form.programme_id =   this.$page.props.stories.data[index].story_programme_id
+            this.edit_story.form.centre_id    =   this.$page.props.stories.data[index].story_centre_id
+            this.edit_story.form.caption      =   this.$page.props.stories.data[index].story_title
+            this.edit_story.form.photos       =   this.$page.props.stories.data[index].images
+
+            axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
+            .then(response => {
+                this.edit_story.students[0].options =   []
+                this.edit_story.students[0].options =   response.data
+                this.edit_story.form.students       =   this.$page.props.stories.data[index].students.map(student => student.student_id);
+            })
+
+            this.show_edit_story_modal  =   true
+        },
+        openLikesModal(index){
+            this.likes = []
+            this.likes = this.$page.props.stories.data[index].likes
+            this.show_likes_modal = true
+        },
+        openCommentsModal(index){
+            this.comments = []
+            this.comments = this.$page.props.stories.data[index].comments
+            this.show_comments_modal = true
         },
         changePhoto({ target }) {
             const { files } = target;
@@ -563,11 +1174,20 @@ export default {
                 filesArray.forEach((file)=>{
                     this.read(file, target)
                     .then((data) => {
-                        this.form.photos.push({
-                            'name' :Date.now() + Math.floor(Math.random() * 1000),
-                            'url' :data.url,
-                            'file':file
-                        })
+                        new Compressor(file, {
+                            quality: 0.8,
+                            height: 1000,
+                            width: 1000,
+                            success: (result) => {
+                                const blobUrl   = URL.createObjectURL(result);
+                                const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
+                                this.add_story.form.photos.push({
+                                    'name'  :Date.now() + Math.floor(Math.random() * 1000),
+                                    'url'   :blobUrl,
+                                    'file'  :new_file
+                                })
+                            },
+                        });
                     })
                     .catch(this.alert);
                 })
@@ -580,11 +1200,21 @@ export default {
                 filesArray.forEach((file)=>{
                     this.read(file, target)
                     .then((data) => {
-                        this.form_edit.photos.push({
-                            'name' :Date.now() + Math.floor(Math.random() * 1000),
-                            'url' :data.url,
-                            'file':file
-                        })
+                        new Compressor(file, {
+                            quality: 0.8,
+                            height: 1000,
+                            width: 1000,
+                            success: (result) => {
+                                const blobUrl   = URL.createObjectURL(result);
+                                const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
+                                console.log(new_file)
+                                this.edit_story.form.photos.push({
+                                    'name'  :Date.now() + Math.floor(Math.random() * 1000),
+                                    'url'   :blobUrl,
+                                    'file'  :new_file
+                                })
+                            },
+                        });
                     })
                     .catch(this.alert);
                 })
@@ -613,43 +1243,39 @@ export default {
             });
         },
         removePhoto(photo_index){
-            this.form.photos.splice(photo_index, 1)
+            this.add_story.form.photos.splice(photo_index, 1)
         },
         removePhotoEditStory(photo_index){
-            if(this.form_edit.photos[photo_index].id){
-                this.form_edit.photos_to_delete.push(this.form_edit.photos[photo_index].id)
+            if(this.edit_story.form.photos[photo_index].id){
+                this.edit_story.form.photos_to_delete.push(this.edit_story.form.photos[photo_index].id)
             }
-            this.form_edit.photos.splice(photo_index, 1)
+            this.edit_story.form.photos.splice(photo_index, 1)
         },
         post(){
-            if(this.form.caption || this.form.photos.length){
-                this.$inertia.post(route('stories.store'), this.form, {preserveState: false})
+            if((this.add_story.form.caption || this.add_story.form.photos.length) && this.add_story.form.students.length > 0){
+                this.$inertia.post(route('stories.store'), this.add_story.form, {preserveState: false})
             }
         },
         savePost(){
-            if(this.form_edit.caption || this.form_edit.photos.length){
-                this.$inertia.post(route('stories.update'), this.form_edit, {preserveState: false})
+            if((this.edit_story.form.caption || this.edit_story.form.photos.length) && this.edit_story.form.students.length > 0){
+                this.$inertia.post(route('stories.update'), this.edit_story.form, {preserveState: false})
             }
         },
-        // viewArtwork(artwork_file_location){
-        //     fetch(window.location.origin+'/storage/art_gallery/'+artwork_file_location)
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             this.lightbox.src = [window.location.origin+'/images/no_image.jpg']
-        //         }
-        //         else{
-        //             this.lightbox.src  = [window.location.origin+'/storage/art_gallery/'+artwork_file_location]
-        //         }
-        //         this.lightbox.open         = !this.lightbox.open
-        //     })
-        // },
         deleteStory(story_id){
             this.confirmationRoute = 'stories.destroy'
             this.confirmationData = story_id
-            this.isOpen = true
+            this.open_delete_modal = true
         },
         search(){
             this.$inertia.get(this.route('stories'), this.params, {replace: true, preserveState: true});
+        },
+        viewImage(image){
+            this.lightbox.src   = image.url ? [image.url] : [window.location.origin+'/storage/stories/' + image.image_filename]
+            this.lightbox.open  = !this.lightbox.open
+        },
+        blobToFile(blob, filename) {
+            const file = new File([blob], filename, { type: blob.type });
+            return file;
         }
     }
 }

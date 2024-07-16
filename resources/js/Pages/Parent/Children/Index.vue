@@ -1,5 +1,5 @@
 <template>
-    <Head title="Home" />
+    <Head title="Kids" />
     <Authenticated>
         <div class="flex justify-center">
             <div class="flex-1 max-w-xl space-y-4">
@@ -180,7 +180,6 @@ export default {
     },
     methods: {
         deleteChild(child_id){
-            console.log(child_id)
             this.confirmationAlert  = 'danger',
             this.confirmationTitle  = 'Warning',
             this.confirmationText   = "This child will be deleted permanently, are you sure want to proceed?",

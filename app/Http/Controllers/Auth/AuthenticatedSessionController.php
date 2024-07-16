@@ -133,11 +133,13 @@ class AuthenticatedSessionController extends Controller
                 auth()->user()->impersonate($user);
             }
 
-            $request = Request::capture();
-            if($request->segment(1) == 'admin'){
-                return Redirect('/admin/dashboard');
-            }
-            return Redirect('/');
+            return redirect()->back();
+
+            // $request = Request::capture();
+            // if($request->segment(1) == 'admin'){
+            //     return Redirect('/admin/dashboard');
+            // }
+            // return Redirect('/');
         }
         return back()->with(['type'=>'error', 'message'=>'User not found !']);
     }

@@ -1,5 +1,5 @@
 <template>
-    <Head title="Home" />
+    <Head title="Art Gallery" />
     <div class="fixed w-full flex justify-center top-[4rem] md:top-[10rem] font-extrabold bg-white border border-gray-300 py-3 z-20">
         <span>{{ $page.props.session_data.current_active_programme.name }}</span>
     </div>

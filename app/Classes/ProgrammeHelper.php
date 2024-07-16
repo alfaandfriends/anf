@@ -2,7 +2,9 @@
 
 namespace App\Classes;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use PDO;
 
 class ProgrammeHelper {
 
@@ -79,5 +81,26 @@ class ProgrammeHelper {
                                 ->first();
 
         return $programme_id;
+    }
+
+    public static function getStudents($programme_id, $centre_id, $level = null){
+        $student_ids    =   DB::table('student_fees')
+                                ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                ->join('students', 'student_fees.student_id', '=', 'students.id')
+                                ->join('children', 'students.children_id', '=', 'children.id')
+                                ->select('students.id', 'children.name')
+                                ->where('programmes.id', $programme_id)
+                                ->where('student_fees.centre_id', $centre_id)
+                                ->when($level, function($query) use ($level){
+                                    $query->where('programme_levels.id', $level);
+                                })
+                                ->whereNull('student_fees.status')
+                                ->whereYear('student_fees.created_at', '=', Carbon::now()->format('Y'))
+                                ->whereMonth('student_fees.created_at', '=', Carbon::now()->format('m'))
+                                ->get();
+
+        return $student_ids;
     }
 }

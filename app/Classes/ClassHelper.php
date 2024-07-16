@@ -69,4 +69,16 @@ class ClassHelper {
 
         return true;
     }
+
+    public static function getClassTypes(){
+        $class_types    =   DB::table('class_types')->select('id', 'name')->get();
+
+        return $class_types;
+    }
+
+    public static function getClassLevels($programme_id, $class_type_id){
+        $class_levels    =   DB::table('programme_levels')->where('programme_id', $programme_id)->where('class_type_id', $class_type_id)->get();
+        
+        return $class_levels;
+    }
 }
