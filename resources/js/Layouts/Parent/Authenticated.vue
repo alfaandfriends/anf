@@ -24,8 +24,8 @@ import Announcement from '@/Components/Parent/Announcement.vue';
                         </BreezeButton>
                     </div>
                 </form>
-            <!-- </div> -->
-        </div>
+            </div>
+        <!-- </div> -->
         <main class="flex-grow flex-col bg-orange-50 relative justify-start mb-16 md:mb-0 md:mt-0 py-5 px-3">
             <slot/>
             <SimpleModal :open="$page.props.flash.type === null ? false : true" @close:modal="$page.props.flash.type = null" class="md:w-2/6">

@@ -34,7 +34,7 @@ background: #555; /* Color of the handle when hovered */
                         <button class="ml-3 self-center text-sm px-2 pb-1.5 pt-1 border border-indigo-300 rounded bg-white hover:shadow">Pay now</button>
                     </div>
                 </div> -->
-                <div class="flex mb-3" v-if="$page.props.can.create_stories">
+                <div class="flex" v-if="$page.props.can.create_stories">
                     <div class="flex items-center space-x-2 bg-indigo-100 rounded px-3 py-2 font-semibold w-full cursor-pointer transform scale-100 hover:scale-105 duration-200 select-none" @click="showCreatePost">
                         <img width="44" height="44" src="https://img.icons8.com/dusk/64/create-new.png" alt="create-new"/>
                         <div class="flex flex-col">
@@ -69,7 +69,7 @@ background: #555; /* Color of the handle when hovered */
                 <div class="flex items-center space-y-3" v-if="$page.props.stories.data.length">
                     <h2 class="text-lg md:text-xl mx-1 font-extrabold">Stories</h2>
                 </div>
-                <div class="flex justify-center mx-1 mt-10" v-if="!$page.props.stories.data.length">
+                <div class="flex justify-center mx-1 mt-20" v-if="!$page.props.stories.data.length">
                     <span class="text-slate-500">No Stories Found</span>
                 </div>
                 <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl text-sm" v-if="$page.props.stories.data.length" v-for="story, story_index in $page.props.stories.data">
