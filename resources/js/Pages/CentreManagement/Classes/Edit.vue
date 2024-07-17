@@ -253,7 +253,7 @@ export default {
                 if(this.form.programme_id && this.form.class_type){
                     this.disable_class_levels = true
                     this.form.programme_level_id = ''
-                    axios.get(route('classes.get_class_levels'), {
+                    axios.get(route('classes.get_class_levels', [this.form.programme_id, this.form.class_type]), {
                         params: {
                             'programme_id': this.form.programme_id,
                             'class_type': this.form.class_type

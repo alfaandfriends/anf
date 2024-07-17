@@ -1028,17 +1028,7 @@ class DiagnosticTestController extends Controller
         }
     }
 
-    // public function test(){
-    //     $pdfContent = Browsershot::html('<h1>Hello World</h1>')
-    //     ->setNodeBinary("C:/Program Files/nodejs/node.exe")
-    //     ->setNpmBinary("C:/Program Files/nodejs/node_modules/npm/bin")
-    //     ->timeout(60000) // Set timeout to 60 seconds
-    //     ->format('A4')
-    //     ->margins(10, 10, 10, 10)
-    //     ->pdf();
-
-    //     return response($pdfContent)
-    //         ->header('Content-Type', 'application/pdf')
-    //         ->header('Content-Disposition', 'inline; filename="document.pdf"');
-    // }
+    public function test(){
+        return view('welcome');
+    }
 }
