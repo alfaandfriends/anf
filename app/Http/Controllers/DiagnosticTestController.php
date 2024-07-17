@@ -1026,9 +1026,4 @@ class DiagnosticTestController extends Controller
             return back()->with(['type'=>'error', 'message'=>'Cannot proceed, this language is being used!']);
         }
     }
-
-    public function test(){
-        $pdf = PDF::setPaper('a4', 'portrait')->loadView('diagnostic_test.report');
-        return $pdf->stream();
-    }
 }

@@ -296,7 +296,9 @@ class ClassController extends Controller
                             ->join('class_methods', 'classes.class_method_id', '=', 'class_methods.id')
                             ->where('classes.centre_id', $request->centre_id)
                             ->where('programme_levels.programme_id', $request->programme_id)
-                            ->where('programme_levels.class_type_id', $request->class_type)
+                            ->when($request->class_type == 1 || $request->class_type == 3, function($query) use ($request){
+                                $query->whereIn('programme_levels.class_type_id', [1, 3]);
+                            })
                             ->where('programme_levels.level', $request->class_level)
                             ->where('classes.class_method_id', $request->class_method)
                             ->select(['classes.id as class_id', 'class_days.name as class_day', 'programme_levels.id as programme_level_id', 'programme_levels.class_type_id as class_type', 'classes.start_time', 'classes.end_time', 'classes.capacity', 'programmes.id as programme_id'])
