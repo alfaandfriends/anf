@@ -107,7 +107,6 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/classes/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:edit_classes');
             Route::post('/classes/update', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:edit_classes');
             Route::delete('/classes/destroy/{id}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:delete_classes');
-            Route::get('/classes/get-class-levels/{programme_id}/{class_type_id}', [ClassHelper::class, 'getClassLevels'])->name('classes.get_class_levels')->withoutMiddleware('device');
         });
 
         /* Students */
@@ -139,13 +138,14 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book')->middleware('permission:view_art_book');
             Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate')->middleware('permission:create_art_book');
 
-            /* Posts */
+            /* Stories */
             Route::middleware('permission:story_access')->withoutMiddleware('device')->group(function () {
                 Route::get('/stories', [StoryController::class, 'index'])->name('stories')->middleware('permission:view_stories');
                 Route::get('/stories/create', [StoryController::class, 'create'])->name('stories.create')->middleware('permission:create_stories');
                 Route::post('/stories/store', [StoryHelper::class, 'createPost'])->name('stories.store')->middleware('permission:create_stories');
                 Route::post('/stories/update', [StoryHelper::class, 'editPost'])->name('stories.update')->middleware('permission:edit_stories');
                 Route::delete('/stories/destroy{id}', [StoryHelper::class, 'deletePost'])->name('stories.destroy')->middleware('permission:delete_stories');
+                Route::get('/stories/get-class-levels/{programme_id}/{class_type_id}', [ClassHelper::class, 'getClassLevels'])->name('stories.get_class_levels');
             });
 
             /* Setting */

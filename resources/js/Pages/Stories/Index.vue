@@ -1035,7 +1035,7 @@ export default {
                     this.add_story.students[0].options = []
                     this.add_story.form.students = []
 
-                    axios.get(route('classes.get_class_levels', [this.add_story.form.programme_id, this.add_story.find.class_types]))
+                    axios.get(route('stories.get_class_levels', [this.add_story.form.programme_id, this.add_story.find.class_types]))
                     .then(response => {
                         this.add_story.list.levels = response.data
                     })
@@ -1105,7 +1105,7 @@ export default {
                     this.edit_story.students[0].options = []
                     this.edit_story.form.students = []
 
-                    axios.get(route('classes.get_class_levels', [this.edit_story.form.programme_id, this.edit_story.find.class_types]))
+                    axios.get(route('stories.get_class_levels', [this.edit_story.form.programme_id, this.edit_story.find.class_types]))
                     .then(response => {
                         this.edit_story.list.levels = response.data
                     })

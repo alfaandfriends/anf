@@ -6,6 +6,7 @@ use App\Classes\DiagnosticTestHelper;
 use App\Events\DatabaseTransactionEvent;
 use App\Mail\DiagnosticTest\ResultToParent;
 use App\Mail\DiagnosticTest\ResultToPIC;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Corcel\Model\User;
 use Illuminate\Http\Request;
@@ -14,8 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Spatie\Browsershot\Browsershot;
-use Spatie\LaravelPdf\Facades\Pdf;
 
 use function Spatie\LaravelPdf\Support\pdf;
 
@@ -1029,6 +1028,7 @@ class DiagnosticTestController extends Controller
     }
 
     public function test(){
-        return view('welcome');
+        $pdf = PDF::setPaper('a4', 'portrait')->loadView('diagnostic_test.report');
+        return $pdf->stream();
     }
 }
