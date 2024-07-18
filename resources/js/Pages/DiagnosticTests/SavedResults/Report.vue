@@ -13,7 +13,7 @@ import BreezeButton from '@/Components/Button.vue';
     <!-- <div class="flex justify-center" v-show="finish_loading_report"> -->
         <div class="flex justify-center w-[215mm] mx-2 my-2 md:mx-auto" v-show="finish_loading_report">
             <div class="flex flex-col items-center space-y-4">
-                <div class="border border-gray-700 w-[210mm]">
+                <div class="w-[210mm]">
                     <div class="flex flex-col justify-between space-y-2 bg-white p-3" id="report" ref="report">
                         <div class="grid grid-rows-1">
                             <div class="flex justify-center">
@@ -171,9 +171,6 @@ export default {
         }
     },
     methods: {
-        async waitTwoSeconds() {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-        },
         viewReport(){
             const dt_id = this.$page.props.answer_record.dt_id
             const total_answers = this.$page.props.answer_record.total_answers

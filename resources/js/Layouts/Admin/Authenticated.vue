@@ -13,7 +13,7 @@ import Breadcrumbs from '@/Components/Breadcrumbs.vue'
 import TimeAgo from '@/Components/TimeAgo.vue'
 import Toggle from '@vueform/toggle'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
+// import 'vue3-perfect-scrollbar/dist/style.css'
 
 export default {
     components: {

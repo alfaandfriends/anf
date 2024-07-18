@@ -192,7 +192,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <span>Delete</span>
                                             </span>
                                         </div>
-                                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-2">
+                                        <div class="flex flex-col">
                                             <div class="col-span-1 lg:col-span-12">
                                                 <div class="flex flex-col lg:flex-row flex-wrap lg:items-center font-bold lg:space-x-2">
                                                     <span class="text-md"> {{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }}) </span>
@@ -201,7 +201,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                     <span class="text-xs whitespace-nowrap font-semibold text-blue-600"> {{ fee.fee_info.class_method }} </span>
                                                 </div>
                                             </div>
-                                            <div class="col-span-1 lg:col-span-12">
+                                            <div class="flex flex-col md:flex-row gap-2">
                                                 <div class="px-4 py-3 rounded border border-indigo-500 border-dashed bg-indigo-50">
                                                     <label for="fee_status" class="block text-sm font-bold text-gray-700"> Classes </label>
                                                     <div class="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4 mt-1">
@@ -221,29 +221,23 @@ import BreezeButton from '@/Components/Button.vue';
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-span-1 lg:col-span-12">
-                                                <!-- <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mt-3"> -->
-                                                    <div class="px-4 py-3 rounded border border-indigo-500 border-dashed bg-indigo-50">
-                                                        <label for="fee_status" class="block text-sm font-bold text-gray-700 space-x-2"> 
-                                                            <span>Promos</span> 
-                                                            <button @click="showExistingClassPromoModal(fee_index, fee.fee_info.fee_id, fee.fee_info.student_fee_id)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 bg-white hover:bg-indigo-50 whitespace-nowrap">Add Promo</button>
-                                                        </label>
-                                                        <simplebar v-if="fee.fee_info.promos.length" data-simplebar-auto-hide="true" class="mt-3 pb-3">
-                                                            <span class="flex space-x-2 items-center justify-center rounded-md bg-indigo-200 px-2.5 py-1 font-semibold text-indigo-800 transform hover:scale-105 duration-200" v-for="applied_promo, promo_index in fee.fee_info.promos">
-                                                                <p class="whitespace-nowrap text-xs">{{ applied_promo.promo_name }}</p>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" @click="deleteExistingClassPromo(fee.fee_info.fee_id, fee.fee_info.student_fee_id, applied_promo.promo_id, applied_promo.student_fee_promo_id)" class="h-4 w-4 text-red-600 cursor-pointer">
-                                                                    <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
-                                                                </svg>
-                                                            </span>
-                                                        </simplebar>
-                                                        <div class="py-2 text-gray-600 text-xs font-semibold" v-else>
-                                                            No promo applied.
-                                                        </div>
+                                                <div class="px-4 py-3 rounded border border-indigo-500 border-dashed bg-indigo-50">
+                                                    <label for="fee_status" class="block text-sm font-bold text-gray-700 space-x-2"> 
+                                                        <span>Promos</span> 
+                                                        <button @click="showExistingClassPromoModal(fee_index, fee.fee_info.fee_id, fee.fee_info.student_fee_id)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 bg-white hover:bg-indigo-50 whitespace-nowrap">Add Promo</button>
+                                                    </label>
+                                                    <simplebar v-if="fee.fee_info.promos.length" data-simplebar-auto-hide="true" class="mt-3 pb-3">
+                                                        <span class="flex space-x-2 items-center justify-center rounded-md bg-indigo-200 px-2.5 py-1 font-semibold text-indigo-800 transform hover:scale-105 duration-200" v-for="applied_promo, promo_index in fee.fee_info.promos">
+                                                            <p class="whitespace-nowrap text-xs">{{ applied_promo.promo_name }}</p>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" @click="deleteExistingClassPromo(fee.fee_info.fee_id, fee.fee_info.student_fee_id, applied_promo.promo_id, applied_promo.student_fee_promo_id)" class="h-4 w-4 text-red-600 cursor-pointer">
+                                                                <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
+                                                            </svg>
+                                                        </span>
+                                                    </simplebar>
+                                                    <div class="py-2 text-gray-600 text-xs font-semibold" v-else>
+                                                        No promo applied.
                                                     </div>
                                                 </div>
-                                                <!-- </div> -->
-                                            <div class="col-span-1 lg:col-span-12">
                                                 <div class="px-4 py-3 rounded border border-indigo-500 border-dashed bg-indigo-50">
                                                     <div class="flex items-center space-x-2">
                                                         <div class="">
