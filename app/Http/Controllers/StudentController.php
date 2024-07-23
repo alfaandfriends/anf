@@ -546,10 +546,7 @@ class StudentController extends Controller
     {
         $invoice_data       =   DB::table('invoices')->where('id', $request->invoice_id)->first();
         if(!$invoice_data){
-            DB::table('student_fees')
-                ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
-                ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
-                ->where('student_fees.invoice_id', $request->invoice_id)->delete();
+            DB::table('student_fees')->where('student_fees.invoice_id', $request->invoice_id)->delete();
         }
         else{
             $invoice_items      =   collect(json_decode($invoice_data->invoice_items, true));
@@ -569,8 +566,8 @@ class StudentController extends Controller
             /* Delete related records */
             if($invoice_items->count() <= 1){
                 DB::table('student_fees')
-                    ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
-                    ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
+                    ->leftJoin('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
+                    ->leftJoin('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
                     ->where('student_fees.invoice_id', $request->invoice_id)->delete();
                 DB::table('invoices')->where('id', $request->invoice_id)->delete();
                 DB::table('orders')->where('invoice_id', $request->invoice_id)->delete();
@@ -585,8 +582,8 @@ class StudentController extends Controller
                 /* Remove fee in table */
                 DB::table('invoices')->where('id', $request->invoice_id)->delete(); 
                 DB::table('student_fees')
-                    ->join('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
-                    ->join('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
+                    ->leftJoin('student_classes', 'student_classes.student_fee_id', '=', 'student_fees.id')
+                    ->leftJoin('progress_reports', 'progress_reports.student_fee_id', '=', 'student_fees.id')
                     ->where('student_fees.id', $request->student_fee_id)->delete();
                 DB::table('orders')->where('invoice_id', $request->invoice_id)->delete();
                 
