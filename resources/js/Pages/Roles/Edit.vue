@@ -49,7 +49,7 @@
                                         </div>
                                         <div class="flex flex-row-reverse items-center">
                                             <div class="flex space-x-2">
-                                                <BreezeButton buttonType="gray" :route="route('roles')">
+                                                <BreezeButton buttonType="gray" :url="route('roles')">
                                                     Cancel
                                                 </BreezeButton>
                                                 <BreezeButton type="submit" :disabled="form.processing" >

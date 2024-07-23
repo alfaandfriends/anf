@@ -10,7 +10,7 @@ import BreezeButton from '@/Components/Button.vue';
         <template #header></template>
         <div class="py-4 px-4">
             <div class="flex justify-end mb-3" v-if="$page.props.can.create_teacher_resources">
-                <BreezeButton :route="route('teacher_resources.create')">New Resource</BreezeButton>
+                <BreezeButton :url="route('teacher_resources.create')">New Resource</BreezeButton>
             </div>
             <hr class="my-3 border border-dashed border-gray-400">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
@@ -167,7 +167,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </Multiselect>
                 </div>
                 <div class="w-full">
-                    <BreezeButton buttonType="gray" class="py-2 px-3" :route="route('teacher_resources')">Clear Search</BreezeButton>
+                    <BreezeButton buttonType="gray" class="py-2 px-3" :url="route('teacher_resources')">Clear Search</BreezeButton>
                 </div>
             </div>
             <div class="overflow-x-auto">

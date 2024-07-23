@@ -22,7 +22,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <!-- <Tooltip :raw_HTML="categories_tooltip"></Tooltip> -->
                                             </div>
                                             <div class="flex justify-start mb-2">
-                                                <BreezeButton :route="route('dt.settings.categories.create', {'dt_id': $page.props.diagnostic_test_id})">
+                                                <BreezeButton :url="route('dt.settings.categories.create', {'dt_id': $page.props.diagnostic_test_id})">
                                                     New Category
                                                 </BreezeButton>
                                             </div>
@@ -65,7 +65,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <Tooltip :raw_HTML="conditions_tooltip"></Tooltip>
                                         </div>
                                         <div class="flex justify-start mb-2">
-                                            <BreezeButton :route="route('dt.settings.conditions.create', {'dt_id': $page.props.diagnostic_test_id})">
+                                            <BreezeButton :url="route('dt.settings.conditions.create', {'dt_id': $page.props.diagnostic_test_id})">
                                                 New Condition
                                             </BreezeButton>
                                         </div>
@@ -107,7 +107,7 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
                                             <h1 class="text-indigo-800 font-bold">Questions</h1>
                                             <div class="flex justify-start mb-2">
-                                                <BreezeButton :route="route('dt.settings.details.create', {'dt_id': $page.props.diagnostic_test_id})">
+                                                <BreezeButton :url="route('dt.settings.details.create', {'dt_id': $page.props.diagnostic_test_id})">
                                                     New Question
                                                 </BreezeButton>
                                             </div>

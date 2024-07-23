@@ -8,9 +8,9 @@ import BreezeButton from '@/Components/Button.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="py-4 px-4">
-            <div class="flex justify-end mb-3" v-if="$page.props.can.create_centres">
-                <BreezeButton :route="route('centres.create')">New Centre</BreezeButton>
+        <!-- <div class="max-w-2xl"> -->
+            <div class="flex justify-end my-1" v-if="$page.props.can.create_centres">
+                <BreezeButton :url="route('centres.create')">New Centre</BreezeButton>
             </div>
             <hr class="my-3 border border-dashed border-gray-400">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
@@ -20,67 +20,99 @@ import BreezeButton from '@/Components/Button.vue';
                     </svg>
                     <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" v-debounce:800ms="search" v-model="params.search">
                 </div>
+            </div> 
+            <div class="p-3 bg-white rounded">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                        <TableHead class="w-[100px]">#</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Address</TableHead>
+                        <TableHead>Country</TableHead>
+                        <TableHead class="text-right">Status</TableHead>
+                        <TableHead class="text-right">Action</TableHead>
+                        <TableHead class="text-right">Action</TableHead>
+                        <TableHead class="text-right">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow>
+                        <TableCell class="font-medium whitespace-nowrap">
+                            INV001
+                        </TableCell>
+                        <TableCell class="whitespace-nowrap">Paid</TableCell>
+                        <TableCell class="whitespace-nowrap">Credit Card</TableCell>
+                        <TableCell class="whitespace-nowrap">Credit Card</TableCell>
+                        <TableCell class="whitespace-nowrap">Credit Card</TableCell>
+                        <TableCell class="whitespace-nowrap">Credit Card</TableCell>
+                        <TableCell class="whitespace-nowrap">Credit Card</TableCell>
+                        <TableCell class="text-right whitespace-nowrap">
+                            $250.00
+                        </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
             </div>
-            <div class="overflow-x-auto rounded">
-                <table class="divide-y divide-gray-200">
-                    <thead class="bg-gray-300">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="1%">#</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Name</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="7%">Address</th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Country</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Status</th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-if="!$page.props.centres.data.length">
-                            <td class="text-center" colspan="10">
-                                <div class="p-3">
-                                    No Record Found! 
-                                </div>
-                            </td>
-                        </tr> 
-                        <tr class="hover:bg-gray-200" v-for="centre, index in $page.props.centres.data">
-                            <td class="px-6 py-3">
-                                <span class="font-semibold text-black text-sm dark:text-white">{{ index + 1 }}</span>
-                            </td>
-                            <td class="px-6 py-3">
-                                <span class="font-semibold whitespace-nowrap sm:whitespace-break-spaces text-sm">{{ centre.centre_name }}</span>
-                            </td>
-                            <td class="px-6 py-3">
-                                <span class="font-semibold whitespace-nowrap sm:whitespace-break-spaces text-sm">{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</span>
-                            </td>
-                            <td class="px-6 py-3 text-center">
-                                <span class="font-semibold whitespace-nowrap sm:whitespace-break-spaces text-sm">{{ centre.country_name ? centre.country_name : 'Not Set' }}</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full whitespace-nowrap" :class="centre.centre_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.centre_status == 1 ? 'Active' : 'Not Active' }} </span>
-                            </td>
-                            <td class="px-6 py-4 text-sm font-medium">
-                                <div class="flex justify-center space-x-2">
-                                    <BreezeButton :buttonType="'info'" class="px-4 py-1" title="Edit School" @click="editCentre(centre.centre_id)" v-if="$page.props.can.edit_centres">Edit</BreezeButton>
-                                    <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.centre_id)" v-if="$page.props.can.delete_centres">Delete</BreezeButton>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <Pagination :page_data="$page.props.centres" :params="params"></Pagination>
-            <ConfirmationModal 
-                :show="isOpen" 
-                @close="isOpen = false"
-                confirmationAlert="danger"
-                confirmationTitle="Delete Centre"
-                confirmationText="Are you sure want to delete this centre?"
-                confirmationButton="Delete"
-                confirmationMethod="delete"
-                :confirmationRoute="confirmationRoute"
-                :confirmationData="confirmationData"
-            >
-            </ConfirmationModal>
-        </div>
+        <!-- </div> -->
+        <!-- <div class="overflow-x-auto rounded">
+            <table class="divide-y divide-gray-200">
+                <thead class="bg-gray-300">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="1%">#</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="7%">Address</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider max-w-xs" width="5%">Country</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Status</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" width="2%">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr v-if="!$page.props.centres.data.length">
+                        <td class="text-center" colspan="10">
+                            <div class="p-3">
+                                No Record Found! 
+                            </div>
+                        </td>
+                    </tr> 
+                    <tr class="hover:bg-gray-200" v-for="centre, index in $page.props.centres.data">
+                        <td class="px-6 py-3">
+                            <span class="font-semibold text-black text-sm dark:text-white">{{ index + 1 }}</span>
+                        </td>
+                        <td class="px-6 py-3">
+                            <span class="font-semibold whitespace-nowrap sm:whitespace-break-spaces text-sm">{{ centre.centre_name }}</span>
+                        </td>
+                        <td class="px-6 py-3">
+                            <span class="font-semibold whitespace-nowrap sm:whitespace-break-spaces text-sm">{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</span>
+                        </td>
+                        <td class="px-6 py-3 text-center">
+                            <span class="font-semibold whitespace-nowrap sm:whitespace-break-spaces text-sm">{{ centre.country_name ? centre.country_name : 'Not Set' }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full whitespace-nowrap" :class="centre.centre_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.centre_status == 1 ? 'Active' : 'Not Active' }} </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-medium">
+                            <div class="flex justify-center space-x-2">
+                                <BreezeButton :buttonType="'info'" class="px-4 py-1" title="Edit School" @click="editCentre(centre.centre_id)" v-if="$page.props.can.edit_centres">Edit</BreezeButton>
+                                <BreezeButton :buttonType="'danger'" title="Delete School" @click="deleteCentre(centre.centre_id)" v-if="$page.props.can.delete_centres">Delete</BreezeButton>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> -->
+        <Pagination :page_data="$page.props.centres" :params="params"></Pagination>
+        <ConfirmationModal 
+            :show="isOpen" 
+            @close="isOpen = false"
+            confirmationAlert="danger"
+            confirmationTitle="Delete Centre"
+            confirmationText="Are you sure want to delete this centre?"
+            confirmationButton="Delete"
+            confirmationMethod="delete"
+            :confirmationRoute="confirmationRoute"
+            :confirmationData="confirmationData"
+        >
+        </ConfirmationModal>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -91,11 +123,26 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
 import { debounce } from 'vue-debounce'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table'
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon, PhotographIcon, Pagination,
-        ConfirmationModal, Head, Link,
+        ConfirmationModal, Head, Link,Table,
+        TableBody,
+        TableCaption,
+        TableCell,
+        TableHead,
+        TableHeader,
+        TableRow,
     },
     props: {
         filter: Object,

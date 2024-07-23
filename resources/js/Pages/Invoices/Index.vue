@@ -26,7 +26,7 @@ import BreezeButton from '@/Components/Button.vue';
         <template #header></template>
         <div class="py-4 px-4">
             <!-- <div class="flex justify-end mb-3" v-if="$page.props.can.create_fee_invoices">
-                <BreezeButton :route="route('fee.invoices.create', {'params': params})">New invoice</BreezeButton>
+                <BreezeButton :url="route('fee.invoices.create', {'params': params})">New invoice</BreezeButton>
             </div>
             <hr class="my-3 border border-dashed border-gray-400"> -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
@@ -188,7 +188,7 @@ import BreezeButton from '@/Components/Button.vue';
                     />
                 </div>
                 <div class="relative w-full self-center">
-                    <BreezeButton buttonType="gray" class="py-2 px-3" :route="route('fee.invoices')">Clear Search</BreezeButton>
+                    <BreezeButton buttonType="gray" class="py-2 px-3" :url="route('fee.invoices')">Clear Search</BreezeButton>
                 </div>
             </div>
             <div class="overflow-x-auto">

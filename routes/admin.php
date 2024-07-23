@@ -39,7 +39,7 @@ use Inertia\Inertia;
 
 
 
-Route::middleware(['auth', 'device'])->group(function(){
+Route::middleware(['auth'])->group(function(){
     Route::get('/send', function(){
         event(new Test('asdasdasda'));
     });

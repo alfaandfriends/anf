@@ -10,7 +10,7 @@
         <template #header></template>
         <div class="py-4 px-4">
             <div class="flex justify-end mb-3" v-if="$page.props.can.create_programmes">
-                <BreezeButton :route="route('programmes.create')">New Programme</BreezeButton>
+                <BreezeButton :url="route('programmes.create')">New Programme</BreezeButton>
             </div>
             <hr class="my-3 border border-dashed border-gray-400">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">

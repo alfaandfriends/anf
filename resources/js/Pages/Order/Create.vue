@@ -246,7 +246,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <BreezeButton :route="route('orders')" buttonType="gray">Cancel</BreezeButton>
+                                        <BreezeButton :url="route('orders')" buttonType="gray">Cancel</BreezeButton>
                                         <BreezeButton @click="storeOrder">Create Order</BreezeButton>
                                     </div>
                                 </div>

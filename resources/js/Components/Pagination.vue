@@ -1,40 +1,50 @@
 <template v-if="page_data.data.length">
-        <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-200">
-            <div class="flex-1 flex justify-between sm:hidden">
-                <a :href="page_data.prev_page_url" v-if="page_data.prev_page_url" @click="handleClick($event, page_data.prev_page_url)" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
-                <a :href="page_data.next_page_url"  v-if="page_data.next_page_url" @click="handleClick($event, page_data.prev_page_url)" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
-            </div>
-            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                <div>
-                    <p class="text-sm text-gray-700">
-                        Showing
-                        <span class="font-medium">{{ page_data.from }}</span>
-                        to
-                        <span class="font-medium">{{ page_data.to }}</span>
-                        of
-                        <span class="font-medium">{{ page_data.total }}</span>
-                        results
-                    </p>
-                </div>
-                <div>
-                    <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                        <a v-for="(link, key) in page_data.links"
-                            :key="key"
-                            :href="link.url !== null && link.url !== '' ? link.url + (this.url ? '&' + this.url : '') : null"
-                            :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
-                                                : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
-                                                                                        : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
-                            v-html="link.label"
-                        >
-                        </a>
-                    </nav>
-                </div>
-            </div>
-        </div>
+    <div class="text-center">
+        <Pagination v-slot="{ page }" :total="page_data.total" :sibling-count="1" show-edges :default-page="page_data.current_page">
+            <PaginationList v-slot="{ items }" class="flex items-center gap-1">
+                <PaginationFirst />
+            
+                <template v-for="(item, index) in items">
+                    <PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.value" as-child @click="$inertia.get(page_data.path + '?page=' + item.value)">
+                        <Button class="w-10 h-10 p-0" :variant="item.value === page_data.current_page ? 'default' : 'outline'">
+                            {{ item.value }}
+                        </Button>
+                    </PaginationListItem>
+                    <PaginationEllipsis v-else :key="item.type" :index="index" />
+                </template>
+            
+                <PaginationLast />
+            </PaginationList>
+        </Pagination>
+    </div>
 </template>
 
 <script>
+import {
+    Pagination,
+    PaginationEllipsis,
+    PaginationFirst,
+    PaginationLast,
+    PaginationList,
+    PaginationListItem,
+    PaginationNext,
+    PaginationPrev,
+} from '@/Components/ui/pagination'
+
+import {
+    Button,
+} from '@/components/ui/button'
     export default {
+    components: {
+        Pagination,
+        PaginationEllipsis,
+        PaginationFirst,
+        PaginationLast,
+        PaginationList,
+        PaginationListItem,
+        PaginationNext,
+        PaginationPrev, Button
+    },
         data(){
             return{
                 url: ''

@@ -77,7 +77,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
                                     <div class="flex items-center justify-end">
                                         <div class="flex space-x-2">
-                                            <BreezeButton buttonType="gray" :route="route('teacher_resources')">Cancel</BreezeButton>
+                                            <BreezeButton buttonType="gray" :url="route('teacher_resources')">Cancel</BreezeButton>
                                             <BreezeButton type="submit">Save</BreezeButton>
                                         </div>
                                     </div>

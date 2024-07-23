@@ -10,7 +10,7 @@ import BreezeButton from '@/Components/Button.vue';
         <template #header></template>
         <div class="py-4 px-4">
             <div class="flex justify-end mb-3" v-if="$page.props.can.create_country">
-                <BreezeButton :route="route('countries.create')">New Country</BreezeButton>
+                <BreezeButton :url="route('countries.create')">New Country</BreezeButton>
             </div>
             <hr class="my-3 border border-dashed border-gray-400">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">

@@ -244,7 +244,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <div class="p-5 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex items-center justify-end">
                                         <div class="flex space-x-2">
-                                            <BreezeButton buttonType="gray" :route="route('fee.invoices', $page.props.params)">Cancel</BreezeButton>
+                                            <BreezeButton buttonType="gray" :url="route('fee.invoices', $page.props.params)">Cancel</BreezeButton>
                                             <BreezeButton type="submit">Save</BreezeButton>
                                         </div>
                                     </div>

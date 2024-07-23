@@ -135,7 +135,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 <MatrixSorting v-if="form.question_type == 3" @receivedData="appendToForm" :prop_answers="[]" action="create"></MatrixSorting>
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex items-end justify-end space-x-2">
-                                        <BreezeButton buttonType="gray" :route="redirect_url">Cancel</BreezeButton>
+                                        <BreezeButton buttonType="gray" :url="redirect_url">Cancel</BreezeButton>
                                         <BreezeButton @click="submit">Save </BreezeButton>
                                     </div>
                                 </div>

@@ -3,7 +3,7 @@
 </script>
 <template>
     <div class="flex pb-2 justify-end">
-        <BreezeButton class="py-3" :route="route('settings.class_types.create')">New Class Type</BreezeButton>
+        <BreezeButton class="py-3" :url="route('settings.class_types.create')">New Class Type</BreezeButton>
     </div>
     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">

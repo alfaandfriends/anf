@@ -21,7 +21,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </span>
                                 <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" placeholder="Search" v-model="params.search">
                             </div> -->
-                            <BreezeButton :route="route('math_manipulatives.configuration.create')">New Math Manipulative</BreezeButton>
+                            <BreezeButton :url="route('math_manipulatives.configuration.create')">New Math Manipulative</BreezeButton>
                         </div>
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                                 <table class="min-w-full divide-y divide-gray-200">

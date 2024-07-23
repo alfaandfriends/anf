@@ -185,7 +185,7 @@
                                     "/>
                                 </div>
                                 <div class="flex space-x-2">
-                                    <BreezeButton buttonType="gray" :route="route('centres')">Cancel</BreezeButton>
+                                    <BreezeButton buttonType="gray" :url="route('centres')">Cancel</BreezeButton>
                                     <BreezeButton type="submit">Add Centre</BreezeButton>
                                 </div>
                             </div>

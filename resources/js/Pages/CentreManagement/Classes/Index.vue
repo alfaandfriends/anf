@@ -121,7 +121,7 @@ import BreezeButton from '@/Components/Button.vue';
                     />
                 </div>
                 <div class="w-full self-center">
-                    <BreezeButton buttonType="gray" class="py-2 px-3" :route="route('classes')">Clear Search</BreezeButton>
+                    <BreezeButton buttonType="gray" class="py-2 px-3" :url="route('classes')">Clear Search</BreezeButton>
                 </div>
             </div>
             <div class="overflow-x-auto">

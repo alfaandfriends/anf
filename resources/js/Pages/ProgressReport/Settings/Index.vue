@@ -38,7 +38,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center space-x-2">
-                                        <BreezeButton buttonType="warning" :route="route(result.url)">Configure</BreezeButton>
+                                        <BreezeButton buttonType="warning" :url="route(result.url)">Configure</BreezeButton>
                                     </div>
                                 </td>
                             </tr>

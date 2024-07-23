@@ -114,7 +114,7 @@ const setStep = (step) => {
                                         <hr class="mt-10">
                                     </div>
                                     <div class="flex items-center justify-between space-x-2 px-10">
-                                        <BreezeButton v-if="currentStep === 1" :route="route('products')" buttonType="gray">Cancel</BreezeButton>
+                                        <BreezeButton v-if="currentStep === 1" :url="route('products')" buttonType="gray">Cancel</BreezeButton>
                                         <BreezeButton v-if="currentStep === 1" @click="setStep(2)">Next</BreezeButton>
                                         <BreezeButton v-if="currentStep === 2" @click="setStep(1)" buttonType="gray">Back</BreezeButton>
                                         <BreezeButton v-if="currentStep === 2" type="submit">Create</BreezeButton>

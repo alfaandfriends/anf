@@ -132,7 +132,7 @@ import BreezeButton from '@/Components/Button.vue';
                     </Multiselect>
                 </div>
                 <div class="w-full self-center">
-                    <BreezeButton buttonType="gray" class="py-2 px-3" :route="route('art_gallery')">Clear Search</BreezeButton>
+                    <BreezeButton buttonType="gray" class="py-2 px-3" :url="route('art_gallery')">Clear Search</BreezeButton>
                 </div>
             </div>
             <div class="overflow-x-auto">

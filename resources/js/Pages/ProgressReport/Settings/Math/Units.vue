@@ -12,7 +12,7 @@ import BreezeButton from '@/Components/Button.vue';
             
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
-                    <BreezeButton buttonType="gray" :route="route('progress_report.settings.math.terms_books', {'level_id': $page.props.level_id})">Back</BreezeButton>
+                    <BreezeButton buttonType="gray" :url="route('progress_report.settings.math.terms_books', {'level_id': $page.props.level_id})">Back</BreezeButton>
                     <BreezeButton @click="create">New Unit</BreezeButton>
                 </div>
             </div>

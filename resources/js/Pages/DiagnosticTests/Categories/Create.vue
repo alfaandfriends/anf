@@ -28,7 +28,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
                                     <div class="flex items-end justify-end space-x-2">
-                                        <BreezeButton buttonType="gray" :route="route('dt.settings.details', {'dt_id': diagnostic_test_id})">Cancel</BreezeButton>
+                                        <BreezeButton buttonType="gray" :url="route('dt.settings.details', {'dt_id': diagnostic_test_id})">Cancel</BreezeButton>
                                         <BreezeButton type="submit">Save </BreezeButton>
                                     </div>
                                 </div>
