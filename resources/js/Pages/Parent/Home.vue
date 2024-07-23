@@ -163,7 +163,7 @@ background: #555; /* Color of the handle when hovered */
         </template>
         <template v-slot:content>
             <div class="p-3">
-                <div class="flex flex-col justify-center items-start space-y-2" v-if="!show_add_tag">
+                <div class="flex flex-col justify-center items-start space-y-2">
                     <Multiselect 
                         v-model="add_story.form.programme_id"
                         valueProp="id"
@@ -479,7 +479,7 @@ background: #555; /* Color of the handle when hovered */
         </template>
         <template v-slot:content>
             <div class="p-3">
-                <div class="flex flex-col justify-center items-start space-y-4" v-if="!show_add_tag">
+                <div class="flex flex-col justify-center items-start space-y-4">
                     <Multiselect 
                         v-model="edit_story.form.programme_id"
                         valueProp="id"

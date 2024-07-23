@@ -86,16 +86,12 @@
 
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems } from '@headlessui/vue'
-import { UserCircleIcon, CogIcon, CalendarIcon, QuestionMarkCircleIcon } from '@heroicons/vue/solid'
-import Notification from '@/Components/Notification.vue'
-import Cart from '@/Components/Cart.vue'
+import { UserCircleIcon } from '@heroicons/vue/solid'
 import BreezeNavLink from '@/Components/NavLink.vue'
 
 export default {
     name: 'Header',
     components: {
-        Notification,
-        Cart,
         Disclosure,
         DisclosureButton,
         DisclosurePanel,
@@ -103,8 +99,6 @@ export default {
         MenuButton,
         MenuItems,
         UserCircleIcon,
-        CogIcon,
-        QuestionMarkCircleIcon, 
         BreezeNavLink,
     },
     data(){

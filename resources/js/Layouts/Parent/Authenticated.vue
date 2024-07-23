@@ -4,6 +4,7 @@ import Footer from '@/Components/Parent/Footer.vue'
 import Navigation from '@/Components/Parent/Navigation.vue'
 import SimpleModal from '@/Components/Parent/SimpleModal.vue';
 import Announcement from '@/Components/Parent/Announcement.vue';
+import BreezeButton from '@/Components/Button.vue'
 </script>
 
 <template>
@@ -58,6 +59,8 @@ export default {
     },
     data(){
         return{
+            username: '',
+            show_add_tag: false,
             show_modal: this.$page.props.flash.type ? true : false
         }
     },
