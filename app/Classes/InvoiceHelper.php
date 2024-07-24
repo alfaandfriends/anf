@@ -142,11 +142,11 @@ class InvoiceHelper {
                         'Request-Timestamp' =>  $request_timestamp,
                         'Signature'         =>  "HMACSHA256=" . $signature,
                     ])->post($endpoint, $request_body);
+                    event(new DatabaseTransactionEvent($response));
     
                     $response_data  =   json_decode($response->body());
     
                     if($response->status() == 200){
-                        event(new DatabaseTransactionEvent('success'));
                         $invoice_id =   DB::table('invoices')->insertGetId([
                             'student_id'        => $student_id,
                             'invoice_number'    => $invoice_number,
