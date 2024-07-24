@@ -41,7 +41,6 @@ class InvoiceHelper {
 
         $invoice_items      =   collect($invoice_data['invoice_items']);
 
-        event(new DatabaseTransactionEvent($invoice_items));
         /* Calculate total fee */
         $totalFee = $invoice_items->sum(function ($item) {
             $registration_fee           =   isset($item['include_registration_fee']) && $item['include_material_fee'] == true ? $item['registration_fee'] : 0;

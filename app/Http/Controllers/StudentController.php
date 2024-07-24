@@ -665,6 +665,7 @@ class StudentController extends Controller
             $invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_id);
         
             $new_invoice_id =   InvoiceHelper::newFeeInvoice($invoice_data);
+            event(new DatabaseTransactionEvent($new_invoice_id));
 
             foreach($request->fee as $fee_index=>$fee){
                 /* Create Fee */
