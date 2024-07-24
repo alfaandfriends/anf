@@ -74,12 +74,6 @@ class InvoiceHelper {
         $invoice_number     =   Carbon::now()->year.'-'.$invoice_number;
         $date_admission     =   $invoice_data['date_admission'];
         $currency           =   $invoice_data['currency'];
-        event(new DatabaseTransactionEvent($due_date));
-        event(new DatabaseTransactionEvent($student_id));
-        event(new DatabaseTransactionEvent($student_country));
-        event(new DatabaseTransactionEvent($invoice_number));
-        event(new DatabaseTransactionEvent($date_admission));
-        event(new DatabaseTransactionEvent($currency));
         
         // if(env('APP_ENV') == 'production'){
             if($student_country == self::$malaysia){
@@ -152,6 +146,7 @@ class InvoiceHelper {
                     $response_data  =   json_decode($response->body());
     
                     if($response->status() == 200){
+                        event(new DatabaseTransactionEvent('success'));
                         $invoice_id =   DB::table('invoices')->insertGetId([
                             'student_id'        => $student_id,
                             'invoice_number'    => $invoice_number,
