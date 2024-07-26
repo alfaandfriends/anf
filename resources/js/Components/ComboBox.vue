@@ -42,9 +42,14 @@
 
 <script>
 import { CaretSortIcon, CheckIcon } from '@radix-icons/vue'
+import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from '@/Components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 
 export default {
-  components: {CaretSortIcon, CheckIcon},
+  components: { 
+    CaretSortIcon, CheckIcon, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut,
+    Popover, PopoverContent, PopoverTrigger
+  },
   props: {
     items: {
       type: Array,

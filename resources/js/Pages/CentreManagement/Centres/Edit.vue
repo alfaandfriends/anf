@@ -34,10 +34,8 @@
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="mb-4">
-                                            <label for="centre_name" class="block text-sm text-gray-700 font-bold"> Centre Name <span class="text-red-500">*</span> </label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="centre_name" id="centre_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_name ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_name" autocomplete="off"/>
-                                            </div>
+                                            <Label>Full Name<span class="text-red-500">*</span></Label>
+                                            <Input type="text" :error="$page.props.errors.centre_name" v-model="form.centre_name"></Input>
                                         </div>
                                         <div class="mb-4">
                                             <label for="centre_country" class="block text-sm text-gray-700 font-bold"> Centre Country <span class="text-red-500">*</span> </label>

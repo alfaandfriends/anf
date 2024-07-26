@@ -111,7 +111,7 @@ class InvoiceHelper {
                 $secret_key         =   env('VITE_DOKU_SECRET_KEY');
                 $client_id          =   env('VITE_DOKU_CLIENT_ID');
                 $request_id         =   Uuid::uuid1()->toString();
-                $request_timestamp  =   Carbon::now()->format('Y-m-d\TH:i:s\Z');
+                $request_timestamp  =   Carbon::now('UTC')->format('Y-m-d\TH:i:s\Z');
                 
                 $request_body = array (
                     "order" => array(

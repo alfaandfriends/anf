@@ -19,25 +19,19 @@ import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/Components/ui/card'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
-import { Sheet, SheetContent, SheetTrigger } from '@/Components/ui/sheet'
-import { ScrollArea } from '@/Components/ui/scroll-area'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from '@/Components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
+import { Checkbox } from '@/Components/ui/checkbox'
 import ComboBox from '@/Components/ComboBox.vue'
 
 /* Intercept axios request */
-axios.interceptors.response.use(
-    response => response,
-    error => {
-      if (error.response && error.response.status === 401 || error.response && error.response.status === 419) {
-        window.location.href = '/login';
-      }
-      return Promise.reject(error);
-    }
-);
+// axios.interceptors.response.use(
+//     response => response,
+//     error => {
+//       if (error.response && error.response.status === 401 || error.response && error.response.status === 419) {
+//         window.location.href = '/login';
+//       }
+//       return Promise.reject(error);
+//     }
+// );
 
 /* Main */
 createInertiaApp({
@@ -55,39 +49,8 @@ createInertiaApp({
             .component('Label', Label)
             .component('Input', Input)
             .component('Textarea', Textarea)
-            .component('Card', Card)
-            .component('CardContent', CardContent)
-            .component('CardDescription', CardDescription)
-            .component('CardHeader', CardHeader)
-            .component('CardTitle', CardTitle)
-            .component('CardFooter', CardFooter)
             .component('Button', Button)
-            .component('DropdownMenu', DropdownMenu)
-            .component('DropdownMenuContent', DropdownMenuContent)
-            .component('DropdownMenuItem', DropdownMenuItem)
-            .component('DropdownMenuLabel', DropdownMenuLabel)
-            .component('DropdownMenuSeparator', DropdownMenuSeparator)
-            .component('DropdownMenuTrigger', DropdownMenuTrigger)
-            .component('Sheet', Sheet)
-            .component('SheetContent', SheetContent)
-            .component('SheetTrigger', SheetTrigger)
-            .component('ScrollArea', ScrollArea)
-            .component('Accordion', Accordion)
-            .component('AccordionContent', AccordionContent)
-            .component('AccordionItem', AccordionItem)
-            .component('AccordionTrigger', AccordionTrigger)
-            .component('Command', Command)
-            .component('CommandDialog', CommandDialog)
-            .component('CommandEmpty', CommandEmpty)
-            .component('CommandGroup', CommandGroup)
-            .component('CommandInput', CommandInput)
-            .component('CommandItem', CommandItem)
-            .component('CommandList', CommandList)
-            .component('CommandSeparator', CommandSeparator)
-            .component('CommandShortcut', CommandShortcut)
-            .component('Popover', Popover)
-            .component('PopoverContent', PopoverContent)
-            .component('PopoverTrigger', PopoverTrigger)
+            .component('Checkbox', Checkbox)
             .component('ComboBox', ComboBox)
             .mount(el);
     },

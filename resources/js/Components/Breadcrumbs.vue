@@ -1,5 +1,5 @@
 <template>
-    <Breadcrumb class="mb-1 shadow p-3 rounded-md bg-white">
+    <Breadcrumb class="mb-1 shadow p-3 rounded-md bg-white font-semibold">
         <BreadcrumbList v-if="breadcrumbs">
             <template v-for="(breadcrumb, index) in breadcrumbs" :key="index">
                 <BreadcrumbSeparator v-if="index >= 1"/>
