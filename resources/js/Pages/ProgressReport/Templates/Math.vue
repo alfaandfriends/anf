@@ -26,64 +26,62 @@ import BreezeButton from '@/Components/Button.vue';
         <template #header></template>
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
-                <form @submit.prevent="submit">
-                    <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <StudentInformation></StudentInformation>
-                            </div>
+                <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
+                    <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                        <div class="sm:row-span-3">
+                            <StudentInformation></StudentInformation>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <h1 class="font-bold text-indigo-800 self-end">Progress Report Listing</h1>
-                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="overflow-x-auto">
-                                            <table class="table-auto min-w-full divide-y divide-gray-200">
-                                                <thead class="bg-gray-300">
-                                                    <tr>
-                                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Date</th>
-                                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Status</th>
-                                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="bg-white divide-y divide-gray-200">
-                                                    <tr v-if="!$page.props.progress_reports.length">
-                                                        <td class="text-center" colspan="10">
-                                                            <div class="p-3">
-                                                                No Record Found! 
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.progress_reports" :key="result.report_id">
-                                                        <td class="px-4 py-2 whitespace-nowrap">
-                                                            <div class="text-sm font-medium text-gray-700">
-                                                                {{ moment(result.date).format('DD/MM/Y') }}
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                                            <span class="inline-flex items-center justify-center px-2 py-1 text-xs rounded" :class="result.attendance_status_class_name">{{ result.attendance_status_name }}</span>
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                                            <BreezeButton buttonType="blue" @click="viewProgressReport(index)">View / Update</BreezeButton>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                    </div>
+                    <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
+                        <div class="sm:row-span-3">
+                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+                                <div class="mb-5">
+                                    <h1 class="font-bold text-indigo-800 self-end">Progress Report Listing</h1>
+                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="overflow-x-auto">
+                                        <table class="table-auto min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-gray-300">
+                                                <tr>
+                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Date</th>
+                                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Status</th>
+                                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                <tr v-if="!$page.props.progress_reports.length">
+                                                    <td class="text-center" colspan="10">
+                                                        <div class="p-3">
+                                                            No Record Found! 
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.progress_reports" :key="result.report_id">
+                                                    <td class="px-4 py-2 whitespace-nowrap">
+                                                        <div class="text-sm font-medium text-gray-700">
+                                                            {{ moment(result.date).format('DD/MM/Y') }}
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs rounded" :class="result.attendance_status_class_name">{{ result.attendance_status_name }}</span>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                                        <BreezeButton buttonType="blue" @click="viewProgressReport(index)">View / Update</BreezeButton>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <FeedbackSummary :report_details="$page.props.report_details"/>
                     </div>
-                </form>
+                    <FeedbackSummary :report_details="$page.props.report_details"/>
+                </div>
             </div>
         </div>
-        <Modal :showModal="show_progress_report" :modalType="'lg'" @hideModal="show_progress_report = false">
+        <Modal v-if="show_progress_report" :showModal="show_progress_report" :modalType="'lg'" @hideModal="show_progress_report = false">
             <template v-slot:header>
                 <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">          
                     <h3 class="text-gray-900 text-xl font-semibold">                
@@ -99,9 +97,10 @@ import BreezeButton from '@/Components/Button.vue';
                     <div class="grid grid-rows-1">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Date </label>
+                                <span for="date" class="block text-sm font-bold text-gray-700"> Date </span>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
                                     <Datepicker :class="'w-full rounded-lg shadow-sm'" 
+                                                id="date"
                                                 input-class-name="math-report-date-picker focus:ring-0"
                                                 :style="$page.props.errors.date ? '--dp-border-color: #fa9e9e' : '--dp-border-color: #cccccc'" 
                                                 :enableTimePicker="false"
@@ -118,9 +117,10 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="grid grid-cols-1 gap-4">
                             <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Term / Book </label>
+                                <span for="term_book_id" class="block text-sm font-bold text-gray-700"> Term / Book </span>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
                                     <Multiselect 
+                                        id="term_book_id"
                                         @select="getUnits(search.term_book_id)"
                                         v-model="search.term_book_id"
                                         valueProp="id"
@@ -161,47 +161,10 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="grid grid-cols-1 gap-4">
                             <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Unit </label>
+                                <span for="unit_id" class="block text-sm font-bold text-gray-700"> Unit </span>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
-                                <!-- <Multiselect
-                                    mode="tags"
-                                    v-model="search.unit_id"
-                                    trackBy="name"
-                                    label="name"
-                                    placeholder="Please Select"
-                                    :close-on-select="false"
-                                    :min-chars="1"
-                                    :options="options.units"
-                                    :canClear="false"
-                                    :searchable="false"
-                                    valueProp="id"
-                                    :classes="{
-                                        container: 'relative mx-auto w-full flex items-center justify-start box-border cursor-pointer rounded-sm bg-white text-base leading-snug border border-gray-300' ,
-                                        containerDisabled: 'cursor-not_allowed bg-gray-100 border focus:border-gray-200 h-10',
-                                        containerOpen: 'rounded-b-none',
-                                        containerOpenTop: 'rounded-t-none',
-                                        containerActive: 'border border-gray-300',
-                                        search: 'w-full absolute inset-0 border-gray-300 focus:outline-none focus:border-transparent focus:ring-0 appearance-none text-base font-sans bg-white rounded-sm',
-                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                        dropdownHidden: 'hidden',
-                                        options: 'flex flex-col p-0 m-0 list-none w-full',
-                                        optionsTop: 'flex-col-reverse',
-                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3 text-sm',
-                                        optionPointed: 'text-gray-800 bg-gray-100',
-                                        optionSelected: 'text-white bg-indigo-500',
-                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                        noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                        noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                        wrapper: 'flex w-full p-2 items-center justify-between',
-                                        tagWrapper: 'flex w-full justify-center',
-                                        tags: 'flex flex-wrap gap-2 items-center justify-start',
-                                        tag: 'flex text-sm items-center bg-indigo-300 rounded pl-3 pr-1 py-1',
-                                    }"
-                                /> -->
                                     <Multiselect 
+                                        id="unit_id"
                                         @select="getLessons(search.unit_id)"
                                         v-model="search.unit_id"
                                         valueProp="id"
@@ -245,10 +208,11 @@ import BreezeButton from '@/Components/Button.vue';
                         <div class="grid grid-cols-12 gap-4">
                             <div class="col-span-11">
                                 <div class="mb-3">
-                                    <label for="title" class="block text-sm font-bold text-gray-700"> Lesson </label>
+                                    <span for="lesson_id" class="block text-sm font-bold text-gray-700"> Lesson </span>
                                     <div class="mt-1 flex rounded-md.shadow-sm">
                                         <Multiselect 
-                                            :option-height="104" :custom-label="customLabel"
+                                            id="lesson_id"
+                                            :option-height="104"
                                             v-model="search.lesson_id"
                                             valueProp="id"
                                             :appendNewOption="false"
@@ -290,7 +254,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                             <div class="col-span-1 self-end">
                                 <div class="mb-3">
-                                    <label for="" class="block text-sm font-bold text-gray-700"> </label>
+                                    <span class="block text-sm font-bold text-gray-700"></span>
                                     <div class="mt-1 flex rounded-md.shadow-sm">
                                         <BreezeButton class="py-3 px-4" buttonType="info" @click="addItem">
                                             <div class="flex items-center">
@@ -307,7 +271,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="grid grid-cols-1 py-3">
                             <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Objectives </label>
+                                <span class="block text-sm font-bold text-gray-700"> Objectives </span>
                             </div>
                             <div class="grid grid-cols-1 divide-y divide-neutral-200 border-x border-t border-b mb-3" v-if="!form.report_data">
                                 <div class="p-3">No objectives found.</div>
@@ -320,7 +284,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <div class="space-y-2 ml-2 text-sm">
                                                 <div class="flex space-x-4 items-center justify-between">
                                                     <span class="text-slate-700 font-bold font-sans">{{ data.term_book_name }}</span>
-                                                    <label class="text-red-500 hover:text-red-600 cursor-pointer uppercase font-bold hover:underline" @click="deleteItem(index)">Delete</label>
+                                                    <span class="text-red-500 hover:text-red-600 cursor-pointer uppercase font-bold hover:underline" @click="deleteItem(index)">Delete</span>
                                                 </div>
                                                 <div class="border border-b-black border-dashed"></div>
                                                 <div class="flex space-x-2">
@@ -350,15 +314,15 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="grid grid-cols-1">
                             <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Comments </label>
+                                <span class="block text-sm font-bold text-gray-700"> Comments </span>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
-                                    <textarea class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="4" v-model="form.comments" placeholder="What you see is what you get..."></textarea>
+                                    <textarea id="comments" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="4" v-model.lazy="form.comments" placeholder="What you see is what you get..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Status </label>
+                                <span class="block text-sm font-bold text-gray-700"> Status </span>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
                                     <select name="attendance_status" id="attendance_status" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.attendance_status ? 'border-red-300' : 'border-gray-300'" v-model="form.attendance_status" autocomplete="off">
                                         <option :value="attendance_status.id" v-for="attendance_status, index in $page.props.attendance_status">{{ attendance_status.name }}</option>
