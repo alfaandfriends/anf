@@ -1,4 +1,5 @@
 const animate = require("tailwindcss-animate")
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -22,6 +23,11 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        nunito: ['Nunito', ...defaultTheme.fontFamily.sans],
+        andika: ['Andika', ...defaultTheme.fontFamily.sans],
+        noto: ['Noto Sans', ...defaultTheme.fontFamily.sans],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

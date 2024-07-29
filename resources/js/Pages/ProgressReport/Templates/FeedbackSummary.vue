@@ -12,12 +12,12 @@ import BreezeButton from '@/Components/Button.vue';
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div class="mb-4">
-                        <label class="block text-sm font-bold text-gray-700 mb-1">What's Next</label>
-                        <textarea class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="3" cols="" v-model="form.upcoming_feedback"></textarea>
+                        <label for="upcoming_feedback" class="block text-sm font-bold text-gray-700 mb-1">What's Next</label>
+                        <textarea id="upcoming_feedback" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="3" cols="" v-model="form.upcoming_feedback"></textarea>
                     </div>
                     <div class="mb-4">
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Need Improvement On</label>
-                        <textarea class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="3" cols="" v-model="form.improvement_feedback"></textarea>
+                        <label for="improvement_feedback" class="block text-sm font-bold text-gray-700 mb-1">Need Improvement On</label>
+                        <textarea id="improvement_feedback" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="3" cols="" v-model="form.improvement_feedback"></textarea>
                     </div>
                 </div>
                 <div class="flex justify-end">

@@ -10,8 +10,8 @@
         <CaretSortIcon class="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>
-    <PopoverContent class="flex w-full p-0">
-      <Command shouldFilter={true}>
+    <PopoverContent class="flex w-full p-0 min-w-[var(--radix-popover-trigger-width)]">
+      <Command>
         <CommandInput class="h-9" :placeholder="searchPlaceholder" v-model="searchQuery" />
         <CommandEmpty class="py-4">{{ loading ? 'Searching...' : 'No results found.' }}</CommandEmpty>
         <CommandList>
@@ -122,3 +122,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.popover-content-width-same-as-its-trigger{
+  width: "var(--radix-popover-trigger-width)";
+  max-height: "var(--radix-popover-content-available-height)";
+}
+</style>

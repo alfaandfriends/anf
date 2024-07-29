@@ -22,53 +22,34 @@
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <Card>
-            <template #title>
-                <h3 class="text-base">Centre Information</h3>
-            </template>
+            <template #title>Centre Information</template>
             <template #content>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 2xl:grid-cols-2 gap-2">
                     <div class="mb-4">
                         <Label>Centre Name<span class="text-red-500">*</span></Label>
                         <Input type="text" :error="$page.props.errors.centre_name" v-model="form.centre_name"></Input>
                     </div>
                     <div class="mb-4">
-                        <label for="centre_country" class="block text-sm text-gray-700 font-bold"> Centre Country <span class="text-red-500">*</span> </label>
-                        <div class="mt-1 flex rounded-md shadow-sm">
-                            <select type="text" name="centre_country" id="centre_country" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_country ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_country" autocomplete="none">
-                                <option value="">Select a country</option>
-                                <option :value="country.id" v-for="country in $page.props.countries">{{ country.name }}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                    <div class="mb-4">
-                        <label for="centre_contact" class="block text-sm text-gray-700 font-bold"> Centre Contact Number <span class="text-red-500">*</span></label>
-                        <div class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text" name="centre_contact" id="centre_contact" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_contact_number" autocomplete="none"/>
-                        </div>
+                        <Label>Centre Country<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.countries" label-property="name" value-property="id" v-model="form.centre_country" select-placeholder="Select Country" search-placeholder="Search country..."></ComboBox>
                     </div>
                     <div class="mb-4">
-                        <label for="centre_email" class="block text-sm text-gray-700 font-bold"> Centre Email </label>
-                        <div class="mt-1 flex rounded-md shadow-sm">
-                            <input type="email" name="centre_email" id="centre_email" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_email ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_email" autocomplete="none"/>
-                        </div>
+                        <Label>Centre Contact Number<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.centre_contact_number" v-model="form.centre_contact_number"></Input>
                     </div>
-                </div>
-                <div class="grid grid-cols-1 gap-4">
                     <div class="mb-4">
-                        <label for="centre_address" class="block text-sm text-gray-700 font-bold"> Centre Address <span class="text-red-500">*</span></label>
-                        <div class="mt-1">
-                            <textarea id="centre_address" name="centre_address" rows="3" class="shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.centre_address ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_address" autocomplete="none"/>
-                        </div>  
+                        <Label>Centre Email<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.centre_email" v-model="form.centre_email"></Input>
+                    </div>
+                    <div class="mb-4 2xl:col-span-2">
+                        <Label>Centre Address<span class="text-red-500">*</span></Label>
+                        <Textarea type="text" :error="$page.props.errors.centre_address" v-model="form.centre_address"></Textarea>
                     </div>
                 </div>
             </template>
         </Card>
         <Card>
-            <template #title>
-                <h3 class="text-base">Centre Photos</h3>
-            </template>
+            <template #title>Centre Photos</template>
             <template #content>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="mb-4" v-show="show_front_upload">
@@ -114,7 +95,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-wrap space-y-4 sm:space-x-6">
+                <div class="flex flex-wrap space-y-4 2xl:space-y-0 2xl:space-x-6">
                     <div class="overflow-x-auto" v-show="show_image">
                         <label class="block text-sm text-gray-900 font-bold"> Crop Image</label>
                         <div class="w-96 h-60 mt-1">
@@ -144,7 +125,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-wrap space-y-4 sm:space-x-6">
+                <div class="flex flex-wrap space-y-4 2xl:space-y-0 2xl:space-x-6">
                     <div class="sm:col-span-2 self-center flex flex-wrap gap-4 py-3" v-show="form.image_list.length">
                         <div class="relative h-32 w-32 rounded mr-3 mt-3 text-center shadow-sm shadow-gray-400 border" v-for="(image_data, index) in form.image_list" :key="index">
                             <div class="absolute bg-red-500 p-2 shadow rounded-full text-white z-10 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">
@@ -189,6 +170,7 @@ import Toggle from '@vueform/toggle';
 import Cropper from 'cropperjs';    
 import { debounce } from 'vue-debounce'
 import Card from '@/Components/Card.vue'
+import Textarea from '@/Components/ui/textarea/Textarea.vue';
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;

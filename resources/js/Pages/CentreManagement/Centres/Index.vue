@@ -37,11 +37,11 @@ import BreezeButton from '@/Components/Button.vue';
                             </TableCell>
                         </TableRow> 
                         <TableRow v-for="centre, index in $page.props.centres.data">
-                            <TableCell>{{ index + 1 }}</TableCell>
-                            <TableCell>{{ centre.centre_name }}</TableCell>
-                            <TableCell>{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</TableCell>
-                            <TableCell>{{ centre.country_name ? centre.country_name : 'Not Set' }}</TableCell>
-                            <TableCell class="text-center">
+                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ index + 1 }}</TableCell>
+                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ centre.centre_name }}</TableCell>
+                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</TableCell>
+                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ centre.country_name ? centre.country_name : 'Not Set' }}</TableCell>
+                            <TableCell class="text-center cursor-pointer" @click="editCentre(centre.centre_id)">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full whitespace-nowrap" :class="centre.centre_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.centre_status == 1 ? 'Active' : 'Not Active' }} </span>
                             </TableCell>
                             <TableCell class="text-center">

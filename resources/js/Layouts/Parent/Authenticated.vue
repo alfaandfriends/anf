@@ -8,7 +8,7 @@ import BreezeButton from '@/Components/Button.vue'
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100 flex flex-col justify-between w-full andika-regular">
+    <div class="min-h-screen bg-gray-100 flex flex-col justify-between w-full font-andika">
         <Header />
         <Navigation />
         <!-- <div class="fixed w-full bottom-16 md:bottom-14 z-20"> -->

@@ -22,12 +22,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
     <BreezeAuthenticatedLayout>
         <template #header></template>
         <Card footerClass="border-t px-6 py-4 justify-end">
-            <template #title>
-                <h3 class="text-base">Profile Information</h3>
-            </template>
+            <template #title>Profile Information</template>
             <template #content>
                 <form @submit.prevent="submit">
-                    <div class="grid grid-cols-1 sm:grid-cols-0 gap-0">
+                    <div class="grid grid-cols-1 gap-0">
                         <div class="mb-5 flex items-center" v-show="show_profile_photo">
                             <span class="inline-block h-20 w-20 rounded-full border overflow-hidden bg-gray-100">
                                 <img class="h-full w-full" v-if="$page.props.auth.user.user_photo != '' || data.url" :src="user_image" alt="">
@@ -88,7 +86,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         </div>
                         <div class="">
                             <Label>State<span class="text-red-500">*</span></Label>
-                            <ComboBox :items="state_list" v-model="form.country_state" select-placeholder="Select Country" search-placeholder="Search state..." :loading="loading.state"></ComboBox>
+                            <ComboBox :items="state_list" v-model="form.country_state" select-placeholder="Select State" search-placeholder="Search state..." :loading="loading.state"></ComboBox>
                         </div>
                         <div class="">
                             <Label>Address<span class="text-red-500">*</span></Label>
@@ -102,11 +100,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             </template>
         </Card>
         <Card>
-            <template #title>
-                <h3 class="text-base">Security</h3>
-            </template>
+            <template #title>Security</template>
             <template #content>
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-0 sm:gap-4">
+                <div class="grid grid-cols-1 2xl:grid-cols-4 gap-0 sm:gap-4">
                     <div class="mb-4">
                         <Label>Current Password<span class="text-red-500">*</span></Label>
                         <Input type="password" :error="$page.props.errors.current_password" v-model="security_form.current_password"></Input>
@@ -213,7 +209,9 @@ export default {
                 if(this.form.country_id){
                     /* Set calling code and state list*/
                     this.setCountryData(this.form.country_id)
-
+                    if(this.form.country_id != this.$page.props.user_info.user_country_id){
+                        this.clearState()
+                    }
                 }
             },
             immediate: true

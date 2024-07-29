@@ -89,7 +89,7 @@ export default {
 </script>
 
 <template>
-    <div class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <div class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] font-noto">
         <div class="hidden border-r bg-white shadow md:block">
         <div class="flex h-full flex-col">
             <div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">

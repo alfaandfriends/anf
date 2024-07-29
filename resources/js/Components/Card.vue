@@ -1,8 +1,10 @@
 <template>
     <Card class="w-full">
         <CardHeader v-if="$slots.title">
-            <CardTitle class="text-2xl">
-                <slot name="title"></slot>
+            <CardTitle>
+                <h3 class="font-semibold leading-none tracking-tight">
+                    <slot name="title"></slot>
+                </h3>
             </CardTitle>
             <CardDescription v-if="$slots.description">
                 <slot name="description"></slot>

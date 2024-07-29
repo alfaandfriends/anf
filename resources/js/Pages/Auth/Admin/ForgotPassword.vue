@@ -21,9 +21,7 @@ const submit = () => {
     <BreezeGuestLayout>
         <Head title="Forgot Password" />
         <Card>
-            <template #title>
-                <h3>Forgot Password</h3>
-            </template>
+            <template #title>Forgot Password</template>
             <template #description>
                 Please enter your email address, and we will send you a password reset link that will allow you to reset your password.
             </template>

@@ -27,9 +27,7 @@ const submit = () => {
     <BreezeGuestLayout>
         <Head title="Reset Password" />
         <Card>
-            <template #title>
-                <h3>Reset Password</h3>
-            </template>
+            <template #title>Reset Password</template>
             <template #description>
                 Please enter your email and set a new password.
             </template>
