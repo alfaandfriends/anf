@@ -139,6 +139,7 @@ class GenerateInvoices extends Command
                         'centre_id'         =>  $fee['centre_id'],
                         'fee_id'            =>  $fee['fee_id'],
                         'invoice_id'        =>  $new_invoice_id,
+                        'use_old_fee'       =>  $fee['use_old_fee'],
                         'admission_date'    =>  Carbon::now()->startOfMonth()->format('Y-m-d'),
                         'created_at'        =>  Carbon::now()->startOfMonth()->format('Y-m-d')
                     ]);
