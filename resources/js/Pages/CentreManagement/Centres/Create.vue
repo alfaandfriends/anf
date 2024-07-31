@@ -26,24 +26,24 @@
             <template #content>
                 <div class="grid grid-cols-1 2xl:grid-cols-2 gap-2">
                     <div class="mb-4">
-                        <Label>Centre Name<span class="text-red-500">*</span></Label>
-                        <Input type="text" :error="$page.props.errors.centre_name" v-model="form.centre_name"></Input>
+                        <Label>Name<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.name" v-model="form.name"></Input>
                     </div>
                     <div class="mb-4">
-                        <Label>Centre Country<span class="text-red-500">*</span></Label>
-                        <ComboBox :items="$page.props.countries" label-property="name" value-property="id" v-model="form.centre_country" select-placeholder="Select Country" search-placeholder="Search country..."></ComboBox>
+                        <Label>Country<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.countries" label-property="name" value-property="id" :error="$page.props.errors.country" v-model="form.country" select-placeholder="Select Country" search-placeholder="Search country..."></ComboBox>
                     </div>
                     <div class="mb-4">
-                        <Label>Centre Contact Number<span class="text-red-500">*</span></Label>
-                        <Input type="text" :error="$page.props.errors.centre_contact_number" v-model="form.centre_contact_number"></Input>
+                        <Label>Contact Number<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.contact_number" v-model="form.contact_number"></Input>
                     </div>
                     <div class="mb-4">
-                        <Label>Centre Email<span class="text-red-500">*</span></Label>
-                        <Input type="text" :error="$page.props.errors.centre_email" v-model="form.centre_email"></Input>
+                        <Label>Email<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.email" v-model="form.email"></Input>
                     </div>
                     <div class="mb-4 2xl:col-span-2">
-                        <Label>Centre Address<span class="text-red-500">*</span></Label>
-                        <Textarea type="text" :error="$page.props.errors.centre_address" v-model="form.centre_address"></Textarea>
+                        <Label>Address<span class="text-red-500">*</span></Label>
+                        <Textarea :error="$page.props.errors.address" v-model="form.address"></Textarea>
                     </div>
                 </div>
             </template>
@@ -53,7 +53,7 @@
             <template #content>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="mb-4" v-show="show_front_upload">
-                        <label class="block text-sm text-gray-700 font-bold"> Centre Front View  (1 Image)</label>
+                        <Label>Centre Front View  (1 Image)</Label>
                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                             @change="change_front"
                             @dragover="dragover_front"
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="mb-4" v-show="show_inside_upload">
-                        <label class="block text-sm text-gray-700 font-bold"> Centre Inside View  (Max: 5 Images)</label>
+                        <Label>Centre Inside View  (Max: 5 Images)</Label>
                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                             @change="change_inside"
                             @dragover="dragover_inside"
@@ -97,7 +97,7 @@
                 </div>
                 <div class="flex flex-wrap space-y-4 2xl:space-y-0 2xl:space-x-6">
                     <div class="overflow-x-auto" v-show="show_image">
-                        <label class="block text-sm text-gray-900 font-bold"> Crop Image</label>
+                        <Label>Crop Image</Label>
                         <div class="w-96 h-60 mt-1">
                             <img class="image" ref="input" :src="image">
                         </div>
@@ -105,7 +105,7 @@
                     <div class="" v-show="show_image">
                         <div class="flex flex-row justify-center">
                             <div class="flex-column text-center">
-                                <label class="block text-sm text-gray-900 font-bold"> Image Preview </label>
+                                <Label>Image Preview</Label>
                                 <div class="preview h-52 w-96 mt-1"></div>
                             </div>
                             <div class="flex-column pl-1 pt-6">
@@ -127,14 +127,14 @@
                 </div>
                 <div class="flex flex-wrap space-y-4 2xl:space-y-0 2xl:space-x-6">
                     <div class="sm:col-span-2 self-center flex flex-wrap gap-4 py-3" v-show="form.image_list.length">
-                        <div class="relative h-32 w-32 rounded mr-3 mt-3 text-center shadow-sm shadow-gray-400 border" v-for="(image_data, index) in form.image_list" :key="index">
+                        <div class="relative h-32 w-32 mr-3 mt-3 text-center shadow-sm" v-for="(image_data, index) in form.image_list" :key="index">
                             <div class="absolute bg-red-500 p-2 shadow rounded-full text-white z-10 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
                             </div>
                             <img :src="image_data.image_path" class="rounded-lg" alt="">
-                            <label for="" class="text-sm capitalize text-slate-500">{{ image_data.image_type }}</label>
+                            <Label>{{ image_data.image_type }}</Label>
                         </div>
                     </div>
                 </div>
@@ -143,20 +143,13 @@
         <Card>
             <template #content>
                 <div class="flex items-center justify-between">
-                    <div class="flex space-x-2">
-                        <label for="" class="block text-sm text-gray-700">Active</label>
-                        <Toggle v-model="form.centre_active" 
-                            :classes="{
-                                container: 'inline-block',
-                                toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
-                                toggleOn: 'bg-green-500 border-green-500 justify-start text-white',
-                                toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
-                            }
-                        "/>
+                    <div class="flex space-x-2 items-center">
+                        <Label>Active</Label>
+                        <Switch v-model="form.active"></Switch>
                     </div>
                     <div class="flex space-x-2">
-                        <Button variant="outline" :url="route('centres')">Cancel</Button>
-                        <Button type="submit">Add Centre</Button>
+                        <Button variant="outline" @click="$inertia.get(route('centres'))">Cancel</Button>
+                        <Button @click="submit">Save</Button>
                     </div>
                 </div>
             </template>
@@ -166,11 +159,9 @@
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Toggle from '@vueform/toggle';
 import Cropper from 'cropperjs';    
 import { debounce } from 'vue-debounce'
 import Card from '@/Components/Card.vue'
-import Textarea from '@/Components/ui/textarea/Textarea.vue';
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
@@ -179,7 +170,7 @@ let cropper = null
 
 export default {
     components: {
-        Link, Toggle, Cropper
+        Link, Cropper
     },
     data() {
         return {
@@ -194,12 +185,12 @@ export default {
             image: '',
             email_exist: '',
             form: {
-                centre_name: '',
-                centre_country: '',
-                centre_contact_number: '',
-                centre_email: '',
-                centre_address: '',
-                centre_active: true,
+                name: '',
+                country: '',
+                contact_number: '',
+                email: '',
+                address: '',
+                active: true,
                 principal_user_id: '',
                 image_list: [],
             },

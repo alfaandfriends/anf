@@ -20,6 +20,7 @@ import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
+import { Switch } from '@/Components/ui/switch'
 import ComboBox from '@/Components/ComboBox.vue'
 
 /* Intercept axios request */
@@ -51,6 +52,7 @@ createInertiaApp({
             .component('Textarea', Textarea)
             .component('Button', Button)
             .component('Checkbox', Checkbox)
+            .component('Switch', Switch)
             .component('ComboBox', ComboBox)
             .mount(el);
     },

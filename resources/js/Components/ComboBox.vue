@@ -38,6 +38,9 @@
       </Command>
     </PopoverContent>
   </Popover>
+  <p class="text-sm text-red-500 font-semibold" v-if="error">
+    {{ error }}
+  </p>
 </template>
 
 <script>
@@ -83,6 +86,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    error: { type: null },
   },
   data() {
     return {

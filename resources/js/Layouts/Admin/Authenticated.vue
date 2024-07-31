@@ -36,7 +36,8 @@ export default {
             selected: '',
             notifications: [],
             username: '',
-            darkMode: false
+            darkMode: false,
+            currentToast: null,
         }
     },
     methods: {
@@ -67,22 +68,26 @@ export default {
             if(this.username){
                 this.$inertia.get(route('impersonate', this.username))
             }
-        },
-        showToast(message, type) {
-            toast({
-                description: message,
-                variant: type
-            });
         }
     },
     created(){
         this.initMenu()
     },
-    mounted() {
-        const flash = this.$page.props.flash;
-
-        if (flash && flash.message) {
-            this.showToast(flash.message, flash.type);
+    mounted(){
+        this.$nextTick(() => {
+            const { flash } = this.$page.props;
+            if (flash && flash.type && flash.message) {
+                this.currentToast = toast({
+                    description: flash.message,
+                    variant: flash.type,
+                });
+                // console.log(this.currentToast)
+            }
+        });
+    },
+    beforeUnmount() {
+        if (this.currentToast) {
+            this.currentToast.dismiss();
         }
     },
 }
@@ -259,9 +264,9 @@ export default {
                     </form>
                 </div>
                 <slot/>
-                <Toaster />
+                <Toaster v-if="$page.props.flash.type"/>
             </main>
-            <div class="flex justify-center border-t items-center py-5 px-6 bg-gray-50 text-slate-900 font-bold">
+            <div class="flex justify-center border-t items-center py-5 px-6 bg-white text-slate-900 font-bold">
                 <span class="text-sm">{{ new Date().getFullYear() }} &copy; ALFA and Friends</span>
             </div>
         </div>
