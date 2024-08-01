@@ -364,7 +364,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <div class="mb-3">
                                 <label for="title" class="block text-sm font-bold text-gray-700"> Comments </label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
-                                    <textarea class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="4" v-model="form.comments"></textarea>
+                                    <textarea class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="4" v-model.lazy="form.comments"></textarea>
                                 </div>
                             </div>
                         </div>
