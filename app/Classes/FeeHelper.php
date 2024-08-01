@@ -31,6 +31,7 @@ class FeeHelper {
                                 'programmes.id as programme_id', 
                                 'class_types_detail.class_type_id', 
                                 DB::raw('IF(student_fees.use_old_fee = 1, programme_level_fees.fee_amount, programme_level_fees.new_fee_amount) as programme_fee'),
+                                'student_fees.use_old_fee', 
                                 'programmes.name as programme_name', 
                                 'class_types_detail.label as programme_type', 
                                 'programme_levels.level as programme_level', 

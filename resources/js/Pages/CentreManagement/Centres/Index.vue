@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -37,7 +36,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </TableCell>
                         </TableRow> 
                         <TableRow v-for="centre, index in $page.props.centres.data">
-                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ index + 1 }}</TableCell>
+                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ $page.props.centres.from + index }}</TableCell>
                             <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ centre.centre_name }}</TableCell>
                             <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</TableCell>
                             <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ centre.country_name ? centre.country_name : 'Not Set' }}</TableCell>
@@ -73,7 +72,6 @@ import BreezeButton from '@/Components/Button.vue';
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
 import { debounce } from 'vue-debounce'
 import { MagnifyingGlassIcon } from '@radix-icons/vue'
@@ -88,7 +86,7 @@ import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';
 
 export default {
     components: {
-        Pagination, DeleteConfirmation, ConfirmationModal, Head, Link,Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow,
+        Pagination, DeleteConfirmation, Head, Link,Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow,
     },
     data(){
         return{

@@ -1,7 +1,7 @@
 <template>
-    <div class="text-center" v-if="page_data.data.length">
+    <div v-if="page_data.data.length">
         <Pagination v-slot="{ page }" :total="page_data.total" :sibling-count="1" show-edges :default-page="page_data.current_page">
-            <PaginationList v-slot="{ items }" class="flex items-center gap-1">
+            <PaginationList v-slot="{ items }" class="flex justify-center items-center gap-1">
                 <PaginationFirst @click="$inertia.get(generatePageUrl(page_data.first_page_url))" />
                 <PaginationPrev @click="$inertia.get(generatePageUrl(page_data.prev_page_url))" />
             

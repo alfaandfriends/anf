@@ -16,7 +16,7 @@
             </slot>
         </CardContent>
         <template v-if="$slots.footer">
-            <CardFooter :class="footerClass">
+            <CardFooter class="flex justify-end space-x-2">
                 <slot name="footer">
                 </slot>
             </CardFooter>
@@ -26,15 +26,4 @@
 
 <script setup>
     import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card'
-</script>
-
-<script>
-export default {
-    props: {
-        footerClass: {
-            type: String,
-            default: ''
-        }
-    }
-}
 </script>

@@ -54,7 +54,7 @@ class ExternalUserManagementController extends Controller
     {
         if(in_array($request->user_id, $this->division_managers)){
             $user_info      =   DB::table('wpvt_users')->where('id', $request->user_id)->first();
-            $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
+            $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get()->pluck('centre_id');
 
             return Inertia::render('ExternalUserManagement/DivisionManagers/ManageUser',[
                 'user_id'       => $request->user_id,
@@ -79,7 +79,7 @@ class ExternalUserManagementController extends Controller
         $log_data =   "Updated division manager's centre access for user ID ".$request->user_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('division_manager'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
+        return redirect(route('division_manager'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function centreManagerList(Request $request)
@@ -139,7 +139,7 @@ class ExternalUserManagementController extends Controller
         $log_data =   "Updated centre manager's centre access for user ID ".$request->user_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('centre_manager'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
+        return redirect(route('centre_manager'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function edupreneurList(Request $request)
@@ -177,7 +177,7 @@ class ExternalUserManagementController extends Controller
     {
         if(in_array($request->user_id, $this->edupreneurs)){
             $user_info      =   DB::table('wpvt_users')->where('id', $request->user_id)->first();
-            $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
+            $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get()->pluck('centre_id');
 
             return Inertia::render('ExternalUserManagement/Edupreneurs/ManageUser',[
                 'user_id'       => $request->user_id,
@@ -202,7 +202,7 @@ class ExternalUserManagementController extends Controller
         $log_data =   "Updated edupreneur's centre access for user ID ".$request->user_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('edupreneurs'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
+        return redirect(route('edupreneurs'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function teacherList(Request $request)
@@ -240,7 +240,7 @@ class ExternalUserManagementController extends Controller
     {
         if(in_array($request->user_id, $this->teachers)){
             $user_info      =   DB::table('wpvt_users')->where('id', $request->user_id)->first();
-            $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get('centre_id')->keyBy('centre_id');
+            $user_centres   =   DB::table('user_has_centres')->where('user_id', $request->user_id)->get()->pluck('centre_id');
 
             return Inertia::render('ExternalUserManagement/Teachers/ManageUser',[
                 'user_id'       => $request->user_id,
@@ -265,7 +265,7 @@ class ExternalUserManagementController extends Controller
         $log_data =   "Updated teacher's centre access for user ID ".$request->user_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('teachers'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
+        return redirect(route('teachers'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
 

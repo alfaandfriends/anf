@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -32,7 +31,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </TableCell>
                         </TableRow> 
                         <TableRow v-for="user, index in $page.props.centre_managers.data">
-                            <TableCell class="cursor-pointer" @click="manageUser(user.id)">{{ index + 1 }}</TableCell>
+                            <TableCell class="cursor-pointer" @click="manageUser(user.id)">{{ $page.props.centre_managers.from + index }}</TableCell>
                             <TableCell class="cursor-pointer" @click="manageUser(user.id)">{{ user.name }}</TableCell>
                             <TableCell class="cursor-pointer" @click="manageUser(user.id)">{{ user.email }}</TableCell>
                             <TableCell class="text-center">

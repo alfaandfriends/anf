@@ -1,6 +1,5 @@
 <script setup>
     import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-    import BreezeButton from '@/Components/Button.vue';
 </script>
 <style>
     .image {

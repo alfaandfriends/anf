@@ -21,7 +21,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <Card footerClass="border-t px-6 py-4 justify-end">
+        <Card>
             <template #title>Profile Information</template>
             <template #content>
                 <form @submit.prevent="submit">
@@ -126,11 +126,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import { ref } from 'vue'
-import Multiselect from '@vueform/multiselect'
 import Cropper from 'cropperjs';
-import { CaretSortIcon, CheckIcon } from '@radix-icons/vue'
-import { cn } from '@/lib/utils'
 import ComboBox from '@/Components/ComboBox.vue'
 import Card from '@/Components/Card.vue'
 

@@ -81,7 +81,6 @@ export default {
                     description: flash.message,
                     variant: flash.type,
                 });
-                // console.log(this.currentToast)
             }
         });
     },

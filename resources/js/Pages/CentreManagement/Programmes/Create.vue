@@ -22,46 +22,29 @@ import BreezeButton from '@/Components/Button.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
+        <Card>
+            <template #title>Programme Information</template>
+            <template #content>
+                <div class="grid grid-cols-1 2xl:grid-cols-3 gap-2">
+                    <div class="mb-4">
+                        <Label>Name<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.programme_name" v-model="form.programme_name"></Input>
+                    </div>
+                    <div class="mb-4">
+                        <Label>Country<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.countries" label-property="name" value-property="id" :error="$page.props.errors.programme_country" v-model="form.programme_country" select-placeholder="Select Country" search-placeholder="Search country..."></ComboBox>
+                    </div>
+                    <div class="mb-4">
+                        <Label>Progress Report Required<span class="text-red-500">*</span></Label>
+                        <ComboBox :items='[{"id": 0, "name": "No"},{"id": 1, "name": "Yes"}]' label-property="name" value-property="id" :error="$page.props.errors.country" v-model="form.country" select-placeholder="Please Select" search-placeholder="Search..."></ComboBox>
+                    </div>
+                </div>
+            </template>
+        </Card>
         <div class="md:grid md:grid-cols-2">
             <div class="md:mt-0 md:col-span-2">
                 <form @submit.prevent="submit">
                     <div class="px-4 py-5 space-y-6 sm:p-6">
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <h1 class="text-indigo-800 font-bold">Programme Information</h1>
-                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                    </div>
-                                    <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4">
-                                        <div class="mb-4">
-                                            <label for="programme_name" class="block text-sm text-gray-700 font-bold"> Programme Name <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="programme_name" id="programme_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_name ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_name" autocomplete="off"/>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="programme_country" class="block text-sm text-gray-700 font-bold"> Programme Country <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select type="text" name="programme_country" id="programme_country" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_country ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_country" autocomplete="none">
-                                                    <option value="">Select a country</option>
-                                                    <option :value="country.id" v-for="country in $page.props.countries">{{ country.name }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="progress_report_required" class="block text-sm text-gray-700 font-bold"> Progress Report Required <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select type="text" name="progress_report_required" id="progress_report_required" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.progress_report_required ? 'border-red-300' : 'border-gray-300'" v-model="form.progress_report_required" autocomplete="none">
-                                                    <option value="0">No</option>
-                                                    <option value="1">Yes</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
                             <div class="sm:row-span-3">
                                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
@@ -139,7 +122,7 @@ import BreezeButton from '@/Components/Button.vue';
                 </form>
             </div>
         </div>
-        <Modal :showModal="show.add_fee" modalType="sm" @hideModal="show.add_fee = false">
+        <!-- <Modal :showModal="show.add_fee" modalType="sm" @hideModal="show.add_fee = false">
             <template v-slot:header>
                 <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">     
                     <h3 class="text-gray-900 text-xl font-semibold">                
@@ -394,7 +377,35 @@ import BreezeButton from '@/Components/Button.vue';
                     <BreezeButton buttonType="info" @click="addFee">Add Fee</BreezeButton>
                 </div>
             </template>
-        </Modal>
+        </Modal> -->
+        <Dialog v-model:modelValue="show.add_fee">
+            <template #default>
+                <DialogTrigger as-child>
+                  <Button variant="outline">Edit Profile</Button>
+                </DialogTrigger>
+                <DialogContent class="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Edit profile</DialogTitle>
+                    <DialogDescription>
+                      Make changes to your profile here. Click save when you're done.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div class="grid gap-4 py-4">
+                    <div class="grid grid-cols-4 items-center gap-4">
+                      <Label for="name" class="text-right">Name</Label>
+                      <Input id="name" value="Pedro Duarte" class="col-span-3" />
+                    </div>
+                    <div class="grid grid-cols-4 items-center gap-4">
+                      <Label for="username" class="text-right">Username</Label>
+                      <Input id="username" value="@peduarte" class="col-span-3" />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button @click="show.add_fee = false">Save changes</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </template>
+        </Dialog>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -403,9 +414,11 @@ import BreezeButton from '@/Components/Button.vue';
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Toggle from '@vueform/toggle';
-import Modal from '@/Components/Modal.vue'
+// import Modal from '@/Components/Modal.vue'
 import Multiselect from '@vueform/multiselect'
 import { debounce } from 'vue-debounce'
+import Card from '@/Components/Card.vue'
+import Dialog from '@/Components/DialogModal.vue'
 
 export default {
     components: {
