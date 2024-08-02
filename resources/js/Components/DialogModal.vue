@@ -1,35 +1,39 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineEmits, defineProps } from 'vue';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/Components/ui/dialog';
+import { CaretSortIcon, CheckIcon } from '@radix-icons/vue'
 
-// Props for controlling the dialog open state
 const props = defineProps({
-  modelValue: Boolean
-})
+  modelValue: {
+    type: Boolean,
+    default: false
+  },
+  classProp: {
+    type: String,
+    default: ''
+  }
+});
 
-// Emits to notify parent about state changes
-const emit = defineEmits(['update:modelValue'])
-
-const isOpen = ref(props.modelValue)
-
-// Watch for changes in modelValue prop to update internal state
-watch(() => props.modelValue, (newValue) => {
-  isOpen.value = newValue
-})
-
-// Function to close the dialog
-const closeDialog = () => {
-  emit('update:modelValue', false)
-}
-
-// Function to open the dialog
-const openDialog = () => {
-  emit('update:modelValue', true)
-}
+const emit = defineEmits(['update:modelValue', 'close']);
 </script>
 
 <template>
-  <!-- Replace `Dialog` with the actual dialog implementation that supports open/close states -->
-  <DialogComponent :open="isOpen" @close="closeDialog" @open="openDialog">
-    <slot></slot>
-  </DialogComponent>
+  <Dialog :open="modelValue">
+    <DialogContent :class="['sm:max-w-[425px] max-h-[90dvh] p-0 flex flex-col', classProp]">
+      <DialogHeader class="p-6 pb-0">
+        <DialogTitle class="text-lg font-semibold" v-if="$slots.title">
+          <slot name="title"></slot>
+        </DialogTitle>
+        <DialogDescription>
+          <slot name="description"></slot>
+        </DialogDescription>
+      </DialogHeader>
+      <div class="flex-1 overflow-y-auto px-6">
+        <slot name="content"></slot>
+      </div>
+      <DialogFooter class="p-6 pt-0" v-if="$slots.footer">
+        <slot name="footer"></slot>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>

@@ -15,7 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel @click="$emit('close', true)">Cancel</AlertDialogCancel>
-        <AlertDialogAction @click="handleRoute">Continue</AlertDialogAction>
+        <AlertDialogAction class="bg-red-600 hover:bg-red-500" @click="handleRoute">Continue</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
@@ -33,6 +33,8 @@ export default {
         handleRoute(){
           if (this.id && this.routeName) {
             this.$inertia.delete(route(this.routeName, this.id), {
+              preserveState: false,
+              preserveScroll: true,
               onSuccess: () => {
                 this.$emit('close', true); 
               }

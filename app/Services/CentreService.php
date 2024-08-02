@@ -48,12 +48,12 @@ class CentreService
         ]);
         
         $centre_id  =   DB::table('centres')->insertGetId([
-            'country_id'                => $request->centre_country,
+            'country_id'                => $request->country,
             'label'                     => $request->name,
-            'phone'                     => $request->centre_contact_number,
-            'email'                     => $request->centre_email,
-            'address'                   => $request->centre_address,
-            'is_active'                 => $request->centre_active,
+            'phone'                     => $request->contact_number,
+            'email'                     => $request->email,
+            'address'                   => $request->address,
+            'is_active'                 => $request->active,
             'last_enrollment_count'     => 0,
             'last_invoice_count'        => 0,
             'last_payment_count'        => 0,

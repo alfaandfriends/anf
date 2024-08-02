@@ -12,7 +12,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 <MagnifyingGlassIcon class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input type="text" placeholder="Search" class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" v-debounce:800ms="search" v-model="params.search"/>
             </div>
-            <Button @click="$inertia.get(route('centres.create'))" v-if="$page.props.can.create_centres">New Centre</Button>
+            <Button @click="$inertia.get(route('centres.create'))" v-if="$page.props.can.create_centres">
+                <PlusCircle class="h-4 w-4" />
+                <span class="ml-1 hidden sm:block">New Centre</span>
+            </Button>
         </div>
         <Card>
             <template #content>
@@ -31,7 +34,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         <TableRow v-if="!$page.props.centres.data.length">
                             <TableCell class="text-center" colspan="10">
                                 <div class="p-3">
-                                    No Record Found! 
+                                    No Record Found 
                                 </div>
                             </TableCell>
                         </TableRow> 
@@ -75,7 +78,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import Pagination from '@/Components/Pagination.vue'
 import { debounce } from 'vue-debounce'
 import { MagnifyingGlassIcon } from '@radix-icons/vue'
-import { MoreVertical } from 'lucide-vue-next';
+import { MoreVertical, PlusCircle } from 'lucide-vue-next';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 import DropdownMenu from '@/Components/ui/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuTrigger from '@/Components/ui/dropdown-menu/DropdownMenuTrigger.vue';

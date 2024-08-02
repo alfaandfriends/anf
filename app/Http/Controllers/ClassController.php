@@ -113,7 +113,7 @@ class ClassController extends Controller
         $log_data =   'Create class ID '.$class_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class added successfully !']);
+        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function edit(Request $request)
@@ -229,7 +229,7 @@ class ClassController extends Controller
         $log_data =   'Updated class ID '.$request->class_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class updated successfully !']);
+        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function destroy($id)
@@ -237,7 +237,7 @@ class ClassController extends Controller
         /* Check if programme can be deleted */
         $class_is_deletable   =   ClassHelper::checkClassIsDeletable($id);
         if(!$class_is_deletable){
-            return redirect(route('classes'))->with(['type' => 'error', 'message' => 'There are students in this class!']);
+            return redirect(route('classes'))->with(['type' => 'error', 'message' => 'Sorry, there are students in this class.']);
         }
 
         /* Check if user is admin */
@@ -261,7 +261,7 @@ class ClassController extends Controller
         $log_data =   'Deleted class ID '.$id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class deleted successfully !']);
+        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 
     public function getClassTypes(Request $request){

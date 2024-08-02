@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 <style>
   input[type='number']::-webkit-inner-spin-button,
@@ -36,396 +35,163 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                     <div class="mb-4">
                         <Label>Progress Report Required<span class="text-red-500">*</span></Label>
-                        <ComboBox :items='[{"id": 0, "name": "No"},{"id": 1, "name": "Yes"}]' label-property="name" value-property="id" :error="$page.props.errors.country" v-model="form.country" select-placeholder="Please Select" search-placeholder="Search..."></ComboBox>
+                        <ComboBox :items='[{"id": 0, "name": "No"},{"id": 1, "name": "Yes"}]' label-property="name" value-property="id" :error="$page.props.errors.progress_report_required" v-model="form.progress_report_required" select-placeholder="Please Select" search-placeholder="Search..."></ComboBox>
                     </div>
                 </div>
             </template>
         </Card>
-        <div class="md:grid md:grid-cols-2">
-            <div class="md:mt-0 md:col-span-2">
-                <form @submit.prevent="submit">
-                    <div class="px-4 py-5 space-y-6 sm:p-6">
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <div class="flex justify-between items-end">
-                                            <h1 class="text-indigo-800 font-bold">Programme Levels and Fees</h1>
-                                            <BreezeButton buttonType="info" @click="showAddFee">Add Fee</BreezeButton>
-                                        </div>  
-                                        <div class="border-b border-dashed border-indigo-900 mt-3"></div>
-                                    </div>
-                                    <div class="    overflow-hidden border border-gray-800 rounded-t-sm rounded-b-none mt-3">
-                                        <table class="shadow shadow-gray-500 min-w-full divide-y divide-gray-800">
-                                            <thead class="bg-slate-700 text-white">
-                                                <tr>
-                                                    <th class="px-4 py-1 text-center border border-gray-400">Level</th>
-                                                    <th class="px-4 py-1 text-center border border-gray-400">Class Type</th>
-                                                    <th class="px-4 py-1 text-center border border-gray-400">Registration Fee</th>
-                                                    <th class="px-4 py-1 text-center border border-gray-400">Material Fee</th>
-                                                    <th class="px-4 py-1 text-center border border-gray-400">Fee</th>
-                                                    <th class="px-4 py-1 text-center border border-gray-400">Material</th>
-                                                    <th class="px-4 py-1 text-center border border-gray-400">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-if="!form.programme_info.length">
-                                                    <td colspan="8" class="py-4 text-center font-semibold text-sm italic">No Fees added.</td>
-                                                </tr>
-                                                <tr else class="hover:bg-gray-200" v-for="info, index in form.programme_info">
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.level }}</td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ $page.props.class_types[form.programme_info[index].class_type].name}}</td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.registration_fee }}</td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">{{ info.material_fee }}</td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400 text-sm text-gray-700">
-                                                        <div class="flex" v-for="fee in info.fees">
-                                                            <p class="text-sm text-gray-700">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-semibold">{{ fee.value }}</span></p>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-4 py-2 text-left border border-gray-400">
-                                                        <div class="flex flex-col">
-                                                            <p class="text-sm text-gray-700 font-normal underline"><span class="font-semibold">{{ info.product.name }}</span></p>
-                                                            <p class="text-sm text-gray-700 italic">Variation : <span class="font-semibold">{{ info.product_variation.option_name ? info.product_variation.option_name : '-' }}</span></p>
-                                                            <p class="text-sm text-gray-700 italic">Sub Variation : <span class="font-semibold">{{ info.product_sub_variation.option_name ? info.product_sub_variation.option_name : '-' }}</span></p>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-4 py-2 text-center border border-gray-400">
-                                                        <BreezeButton buttonType="danger" @click="deleteLevel(index)">Delete</BreezeButton>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                            <div class="flex justify-between items-center">
-                                <div class="flex space-x-2">
-                                    <label for="programme_status" class="block font-bold text-gray-700">Active</label>
-                                    <Toggle v-model="form.programme_active" id="programme_status"
-                                        :classes="{
-                                            container: 'inline-block',
-                                            toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
-                                            toggleOn: 'bg-green-500 border-green-500 justify-start text-white',
-                                            toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
-                                        }
-                                    "/>
-                                </div>
-                                <div class="flex space-x-2">
-                                    <BreezeButton buttonType="gray" :url="route('programmes')">Cancel</BreezeButton>
-                                    <BreezeButton @click="submit()">Save</BreezeButton>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- <Modal :showModal="show.add_fee" modalType="sm" @hideModal="show.add_fee = false">
-            <template v-slot:header>
-                <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">     
-                    <h3 class="text-gray-900 text-xl font-semibold">                
-                        Add New Fee   
-                    </h3>        
-                    <button type="button" @click="show.add_fee = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                    </button>
-                </div>                 
+        <Card>
+            <template #title>
+                <div class="flex justify-between items-center">
+                    Programme Levels and Fees
+                    <Button buttonType="info" @click="showAddFee">
+                        <PlusCircle class="mr-1 h-4 w-4" />Add Fee
+                    </Button>
+                </div>  
             </template>
-            <template v-slot:content>
-                <div class="overflow-y-auto p-6" ref="scrollableDiv">
-                    <div class="flex flex-col space-y-4">
-                        <div class="">
-                            <div class="mb-5">
-                                <h1 class="text-indigo-800 font-bold">Fee Information</h1>
-                                <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-0 gap-0 sm:gap-4 items-end mb-3">
-                                <div class="grow">
-                                    <label for="programme_level" class="block text-sm text-gray-700 font-bold"> Level <span class="text-red-500">*</span></label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                        <select name="programme_level" id="programme_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.level.error ? 'border-red-300' : 'border-gray-300'" v-model="fee_form.level" autocomplete="off">
-                                            <option value="">Please select a level</option>
-                                            <option :value="level" v-for="level in 10">Level {{ level }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="grow">
-                                    <label for="registration_fee" class="block text-sm text-gray-700 font-bold"> Registration Fee <span class="text-red-500">*</span></label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="number" min="0" name="registration_fee" id="registration_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.registration_fee.error ? 'border-red-300' : 'border-gray-300'" v-model="fee_form.registration_fee" autocomplete="off"/>
-                                    </div>
-                                </div>
-                                <div class="grow">
-                                    <label for="programme_material_fee" class="block text-sm text-gray-700 font-bold"> Material Fee <span class="text-red-500">*</span></label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                        <input type="number" min="0" name="programme_material_fee" id="programme_material_fee" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.material_fee.error ? 'border-red-300' : 'border-gray-300'" v-model="fee_form.material_fee" autocomplete="off"/>
-                                    </div>
-                                </div>
-                                <div class="grow">
-                                    <label for="class_type" class="block text-sm text-gray-700 font-bold"> Class Type <span class="text-red-500">*</span></label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                        <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="validation.class_type.error ? 'border-red-300' : 'border-gray-300'" v-model="fee_form.class_type" autocomplete="off">
-                                            <option value="">-- Select Type --</option>
-                                            <option :value="class_type.id" v-for="(class_type, index) in $page.props.class_types" :key="index">{{ class_type.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="grow" v-for="class_types_detail, index in list.class_types_detail">
-                                    <label for="class_type_detail" class="block text-sm text-gray-700 font-bold"> {{ class_types_detail.label }} <span class="text-red-500">*</span></label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                    <input type="number" min="1" name="class_type_detail" id="class_type_detail" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.class_type_detail ? 'border-red-300' : 'border-gray-300'" v-model="fee_form.fees[index].value" autocomplete="off"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="">
-                            <div class="mb-5">
-                                <h1 class="text-indigo-800 font-bold">Material Information</h1>
-                                <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                            </div>
-                            <div class="grid grid-cols-1">
-                                <div class="mb-4">
-                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Product Name </label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                        <Multiselect 
-                                            ref="multiselect"
-                                            v-debounce:1s="findProducts"
-                                            v-model="search_product_form.product_id"
-                                            @select="findProductVariations"
-                                            @open="this.scrollToEnd()"
-                                            valueProp="id"
-                                            :loading="loading.products"
-                                            placeholder="Please enter some keywords"
-                                            :options="list.products"
-                                            :searchable="true"
-                                            noOptionsText="Nothing found"
-                                            noResultsText="Nothing found"
-                                            :clearOnSelect="true"
-                                            :canClear="false"
-                                            :canDeselect="false"
-                                            :internal-search="false"
-                                            trackBy="name"
-                                            label="name"
-                                            :classes="{
-                                                container: 
-                                                    validation.product.error ? 
-                                                    'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10':
-                                                    'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10',
-                                                containerDisabled: 'cursor-default bg-gray-100',
-                                                containerOpen: 'rounded-b-none',
-                                                containerOpenTop: 'rounded-t-none',
-                                                containerActive: 'border border-indigo-300',
-                                                singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                                singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                                multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 sm:text-sm font-sans bg-white rounded-md pl-3.5',
-                                                placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
-                                                clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                                clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                                dropdownHidden: 'hidden',
-                                                options: 'flex flex-col p-0 m-0 list-none w-full',
-                                                optionsTop: 'flex-col-reverse',
-                                                group: 'p-0 m-0',
-                                                groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                                groupLabelPointable: 'cursor-pointer',
-                                                groupLabelPointed: 'bg-gray-300 text-black-700',
-                                                groupLabelSelected: 'bg-gray-100 text-black',
-                                                groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                                groupOptions: 'p-0 m-0',
-                                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                                optionPointed: 'text-gray-800 bg-gray-100',
-                                                optionSelected: 'text-white bg-indigo-500',
-                                                optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                                fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                                spacer: 'h-9 py-px box-content',
-                                            }"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="mb-4" v-if="show.product_variations">
-                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Variation </label>
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                        <Multiselect 
-                                            v-model="search_product_form.product_variation_id"
-                                            @select="findProductSubVariations"
-                                            @open="this.scrollToEnd()"
-                                            valueProp="id"
-                                            :loading="loading.product_variations"
-                                            placeholder="Select a variation"
-                                            :options="list.product_variations"
-                                            :searchable="true"
-                                            noOptionsText="Nothing found"
-                                            noResultsText="Nothing found"
-                                            :clearOnSelect="true"
-                                            :canClear="false"
-                                            :canDeselect="false"
-                                            :internal-search="false"
-                                            trackBy="option_name"
-                                            label="option_name"
-                                            :classes="{
-                                                container: 
-                                                    validation.product_variation.error ? 
-                                                    'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10':
-                                                    'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10',
-                                                containerDisabled: 'cursor-default bg-gray-100',
-                                                containerOpen: 'rounded-b-none',
-                                                containerOpenTop: 'rounded-t-none',
-                                                containerActive: 'border border-indigo-300',
-                                                singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                                singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                                multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 sm:text-sm font-sans bg-white rounded-md pl-3.5',
-                                                placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
-                                                clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                                clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                                dropdownHidden: 'hidden',
-                                                options: 'flex flex-col p-0 m-0 list-none w-full',
-                                                optionsTop: 'flex-col-reverse',
-                                                group: 'p-0 m-0',
-                                                groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                                groupLabelPointable: 'cursor-pointer',
-                                                groupLabelPointed: 'bg-gray-300 text-black-700',
-                                                groupLabelSelected: 'bg-gray-100 text-black',
-                                                groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                                groupOptions: 'p-0 m-0',
-                                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                                optionPointed: 'text-gray-800 bg-gray-100',
-                                                optionSelected: 'text-white bg-indigo-500',
-                                                optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                                fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                                spacer: 'h-9 py-px box-content',
-                                            }"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="mb-4" v-if="show.product_sub_variations">
-                                    <label for="product_category" class="block text-sm text-gray-700 font-bold mb-2"> Sub Variation </label>
-                                    <div class="mt-1 flex rounded-md shadow-sm z-50">
-                                        <Multiselect 
-                                            v-model="search_product_form.product_sub_variation_id"
-                                            @open="this.scrollToEnd()"
-                                            valueProp="id"
-                                            :loading="loading.product_sub_variations"
-                                            placeholder="Select a sub variation"
-                                            :options="list.product_sub_variations"
-                                            :searchable="true"
-                                            noOptionsText="Nothing found"
-                                            noResultsText="Nothing found"
-                                            :clearOnSelect="true"
-                                            :canClear="false"
-                                            :canDeselect="false"
-                                            :internal-search="false"
-                                            trackBy="option_name"
-                                            label="option_name"
-                                            :classes="{
-                                                container: 
-                                                    validation.product_sub_variation.error ? 
-                                                    'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10':
-                                                    'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white sm:text-sm leading-snug outline-none h-10',
-                                                containerDisabled: 'cursor-default bg-gray-100',
-                                                containerOpen: 'rounded-b-none',
-                                                containerOpenTop: 'rounded-t-none',
-                                                containerActive: 'border border-indigo-300',
-                                                singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                                singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                                multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 sm:text-sm font-sans bg-white rounded-md pl-3.5',
-                                                placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
-                                                clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                                clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                                dropdownHidden: 'hidden',
-                                                options: 'flex flex-col p-0 m-0 list-none w-full',
-                                                optionsTop: 'flex-col-reverse',
-                                                group: 'p-0 m-0',
-                                                groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                                groupLabelPointable: 'cursor-pointer',
-                                                groupLabelPointed: 'bg-gray-300 text-black-700',
-                                                groupLabelSelected: 'bg-gray-100 text-black',
-                                                groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                                groupOptions: 'p-0 m-0',
-                                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                                optionPointed: 'text-gray-800 bg-gray-100',
-                                                optionSelected: 'text-white bg-indigo-500',
-                                                optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                                fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                                spacer: 'h-9 py-px box-content',
-                                            }"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <template #content v-if="groupedItems.length">
+                <Collapsible v-for="item, level in groupedItems">
+                    <template #trigger>Level {{ level }}</template>
+                    <template #content>
+                        <Table class="px-4">
+                            <TableHeader class="bg-gray-100">
+                                <TableRow>
+                                    <TableHead class="px-4">Class Type</TableHead>
+                                    <TableHead>Registration Fee</TableHead>
+                                    <TableHead>Material Fee</TableHead>
+                                    <TableHead>Monthly Fee</TableHead>
+                                    <TableHead>Material</TableHead>
+                                    <TableHead class="text-center">Action</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                <TableRow v-if="!item.length">
+                                    <TableCell class="text-center" colspan="10">
+                                        <div class="p-3">
+                                            No Record Found
+                                        </div>
+                                    </TableCell>
+                                </TableRow> 
+                                <TableRow v-for="info, index in item">
+                                    <TableCell class="px-4">{{ $page.props.class_types[item[index].class_type].name}}</TableCell>
+                                    <TableCell>{{ info.registration_fee }}</TableCell>
+                                    <TableCell>{{ info.material_fee }}</TableCell>
+                                    <TableCell>
+                                        <div class="flex" v-for="fee in info.fees">
+                                            <p class="text-sm text-gray-700">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-semibold">{{ fee.value }}</span></p>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div class="flex flex-col">
+                                            <p class="text-sm text-gray-700 font-normal underline"><span class="font-semibold">{{ info.product.name }}</span></p>
+                                            <p class="text-sm text-gray-700 italic">Variation : <span class="font-semibold">{{ info.product_variation.option_name ? info.product_variation.option_name : '-' }}</span></p>
+                                            <p class="text-sm text-gray-700 italic">Sub Variation : <span class="font-semibold">{{ info.product_sub_variation.option_name ? info.product_sub_variation.option_name : '-' }}</span></p>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell class="text-center">
+                                        <Button variant="destructive" @click="deleteLevel(index)">Delete</Button>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </template>
+                </Collapsible>
+            </template>
+        </Card>
+        <Card>
+            <template #content>
+                <div class="flex items-center justify-between">
+                    <div class="flex space-x-2 items-center">
+                        <Label>Active</Label>
+                        <Switch v-model="form.programme_active"></Switch>
+                    </div>
+                    <div class="flex space-x-2">
+                        <Button variant="outline" @click="$inertia.get(route('programmes'))">Cancel</Button>
+                        <Button @click="submit">Save</Button>
                     </div>
                 </div>
             </template>
-            <template v-slot:footer>
-                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="info" @click="addFee">Add Fee</BreezeButton>
-                </div>
+        </Card>
+        <Dialog v-model:open="show.add_fee">
+            <template #title>Add Fee</template>
+            <template #content>
+                <Collapsible v-model="collapsible.fee">
+                    <template #trigger>Fee Information</template>
+                    <template #content>
+                        <div class="p-1 grid grid-cols-1">
+                            <div class="mb-4">
+                                <Label>Level<span class="text-red-500">*</span></Label>
+                                <ComboBox :items="levels" label-property="name" value-property="id" :error="validation.level.error" v-model="fee_form.level" select-placeholder="Select Level" search-placeholder="Search level..."></ComboBox>
+                            </div>
+                            <div class="mb-4">
+                                <Label>Registration Fee<span class="text-red-500">*</span></Label>
+                                <Input type="number" :error="validation.registration_fee.error" v-model="fee_form.registration_fee"></Input>
+                            </div>
+                            <div class="mb-4">
+                                <Label>Material Fee<span class="text-red-500">*</span></Label>
+                                <Input type="number" :error="validation.material_fee.error" v-model="fee_form.material_fee"></Input>
+                            </div>
+                            <div class="mb-4">
+                                <Label>Class Type<span class="text-red-500">*</span></Label>
+                                <ComboBox :items="Object.values($page.props.class_types)" label-property="name" value-property="id" :error="validation.class_type.error" v-model="fee_form.class_type" select-placeholder="Select Class Type" search-placeholder="Search class type..."></ComboBox>
+                            </div>
+                            <div class="mb-4" v-for="class_types_detail, index in list.class_types_detail">
+                                <Label>{{ class_types_detail.label }}<span class="text-red-500">*</span></Label>
+                                <Input type="number" min="1" :error="$page.props.errors.class_type_detail" v-model="fee_form.fees[index].value"></Input>
+                            </div>
+                        </div>
+                    </template>
+                </Collapsible>
+                <Collapsible v-model="collapsible.material">
+                    <template #trigger>Material Information</template>
+                    <template #content>
+                        <div class="p-1 grid grid-cols-1">
+                            <div class="mb-4">
+                                <Label>Material</Label>
+                                <ComboBox :items="list.products" label-property="name" value-property="id" :error="validation.product.error" :loading="loading.products" @search="findProducts" @select="findProductVariations" v-model="search_product_form.product_id" select-placeholder="Select Material" search-placeholder="Search material..."></ComboBox>
+                            </div>
+                            <div class="mb-4" v-if="show.product_variations">
+                                <Label>Variation<span class="text-red-500">*</span></Label>
+                                <ComboBox :items="list.product_variations" label-property="option_name" value-property="id" :loading="loading.product_variations" :error="validation.product_variation.error" @select="findProductSubVariations" v-model="search_product_form.product_variation_id" select-placeholder="Select Variation" search-placeholder="Search variation..."></ComboBox>
+                            </div>
+                            <div class="mb-4" v-if="show.product_sub_variations">
+                                <Label>Sub Variation<span class="text-red-500">*</span></Label>
+                                <ComboBox :items="list.product_sub_variations" label-property="option_name" value-property="id" :loading="loading.product_sub_variations" :error="validation.product_sub_variation.error" v-model="search_product_form.product_sub_variation_id" select-placeholder="Select Sub Variation" search-placeholder="Search sub variation..."></ComboBox>
+                            </div>
+                        </div>
+                    </template>
+                </Collapsible>
             </template>
-        </Modal> -->
-        <Dialog v-model:modelValue="show.add_fee">
-            <template #default>
-                <DialogTrigger as-child>
-                  <Button variant="outline">Edit Profile</Button>
-                </DialogTrigger>
-                <DialogContent class="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Edit profile</DialogTitle>
-                    <DialogDescription>
-                      Make changes to your profile here. Click save when you're done.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div class="grid gap-4 py-4">
-                    <div class="grid grid-cols-4 items-center gap-4">
-                      <Label for="name" class="text-right">Name</Label>
-                      <Input id="name" value="Pedro Duarte" class="col-span-3" />
-                    </div>
-                    <div class="grid grid-cols-4 items-center gap-4">
-                      <Label for="username" class="text-right">Username</Label>
-                      <Input id="username" value="@peduarte" class="col-span-3" />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button @click="show.add_fee = false">Save changes</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </template>
+            <template #footer>
+                <Button @click="addFee">Add</Button>
+            </template>
         </Dialog>
     </BreezeAuthenticatedLayout>
 </template>
 
-
-
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Toggle from '@vueform/toggle';
-// import Modal from '@/Components/Modal.vue'
-import Multiselect from '@vueform/multiselect'
 import { debounce } from 'vue-debounce'
 import Card from '@/Components/Card.vue'
 import Dialog from '@/Components/DialogModal.vue'
+import Collapsible from '@/Components/Collapsible.vue'
+import { PlusCircle } from 'lucide-vue-next';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 
 export default {
     components: {
-        Head, Link, Toggle
+        Head, Link, Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow,
     },
     data() {
         return {
+            levels: Array.from({ length: 10 }, (_, index) => ({
+                id: index + 1,
+                name: `Level ${index + 1}`
+            })),
+            collapsible: {
+                fee: true,
+                material: false,
+            },
             form: {
                 programme_name: '',
                 programme_country: '',
@@ -500,16 +266,6 @@ export default {
         }
     },
     watch: {
-        // 'fee_form.class_types_detail': {
-        //     handler(){
-        //         this.fee_form.class_types_detail.forEach((item)=>{
-        //             if(item.value == '' || item.value < 1){
-        //                 item.value = 1
-        //             }
-        //         })
-        //     },
-        //     deep: true
-        // },
         'fee_form.class_type': {
             handler(){
                 this.list.class_types_detail = []
@@ -553,6 +309,17 @@ export default {
             }
         },
     },  
+    computed: {
+        groupedItems(){
+            return this.form.programme_info.reduce((acc, item) => {
+                if (!acc[item.level]) {
+                    acc[item.level] = [];
+                }
+                acc[item.level].push(item);
+                return acc;
+            }, {}); 
+        },
+    },
     methods: {
         submit() {
             this.$inertia.post(route('programmes.store'), this.form)
@@ -577,10 +344,10 @@ export default {
             this.show.add_fee   =   true
         },
         addFee(){
-            this.validation.level.error                     = this.fee_form.level == '' ? true : false
+            this.validation.level.error                     = this.fee_form.level === ''
             this.validation.registration_fee.error          = this.fee_form.registration_fee === ''
             this.validation.material_fee.error              = this.fee_form.material_fee === ''
-            this.validation.class_type.error                = this.fee_form.class_type == '' ? true : false
+            this.validation.class_type.error                = this.fee_form.class_type === ''
             this.validation.product.error                   = this.validation.product.required && !Object.keys(this.selected.product).length ? true : false
             this.validation.product_variation.required      = this.selected.product.has_variation == 1 ? true : false
             this.validation.product_variation.error         = this.selected.product.has_variation == 1 && !Object.keys(this.selected.product_variation).length ? true : false
@@ -627,7 +394,7 @@ export default {
             this.fee_form.class_type = ''
             this.fee_form.fees = []
         },
-        findProducts(query){
+        findProducts: debounce(function(query) {
             if(query){
                 this.loading.products = true
                 axios.get(route('products.find_products'), {
@@ -639,12 +406,9 @@ export default {
                     this.list.products = res.data
                     this.loading.products = false
                 })
-                .finally(()=>{
-                    this.scrollToEnd()
-                })
             }
-        },
-        findProductVariations(){
+        }, 1000),
+        findProductVariations: debounce(function(query) {
             this.loading.product_variations = true
             axios.get(route('products.find_product_variations'), {
                 params: {
@@ -655,11 +419,8 @@ export default {
                 this.list.product_variations = res.data
                 this.loading.product_variations = false
             })
-            .finally(()=>{
-                this.scrollToEnd()
-            });
-        },
-        findProductSubVariations(){
+        }, 1000),
+        findProductSubVariations: debounce(function(query) {
             this.loading.product_sub_variations = true
             axios.get(route('products.find_product_sub_variations'), {
                 params: {
@@ -670,17 +431,7 @@ export default {
                 this.list.product_sub_variations = res.data
                 this.loading.product_sub_variations = false
             })
-            .finally(()=>{
-                this.scrollToEnd()
-            });
-        },
-        scrollToEnd() {
-            setTimeout(() => {
-                    const div = this.$refs.scrollableDiv;
-                    div.scrollTop = div.scrollHeight;
-            }, 10);
-
-        },
+        }, 1000)
     }
 }
 </script>

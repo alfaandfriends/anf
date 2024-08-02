@@ -63,7 +63,7 @@ class ProfileController extends Controller
                 'profile_updated'   => true,
             ]);
 
-        return back()->with(['type'=>'success', 'message'=>'Profile has been saved !']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function storeSecurity(Request $request)
@@ -99,7 +99,7 @@ class ProfileController extends Controller
         ])->save();
 
 
-        return back()->with(['type'=>'success', 'message'=>'New Password changed successfully !']);
+        return back()->with(['type'=>'success', 'message'=>'Password has been changed.']);
 
     }
 }

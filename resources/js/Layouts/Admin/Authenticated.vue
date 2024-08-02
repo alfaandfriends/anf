@@ -40,6 +40,19 @@ export default {
             currentToast: null,
         }
     },
+    watch: {
+        '$page.props.flash': {
+            handler() {
+                this.$nextTick(() => {
+                    this.currentToast = toast({
+                        description: this.$page.props.flash.message,
+                        variant: this.$page.props.flash.type,
+                    });
+                });
+            },
+            deep: true, 
+        },
+    },
     methods: {
         initMenu(){
             for (let section_key in this.$page.props.menu) {
@@ -72,6 +85,15 @@ export default {
     },
     created(){
         this.initMenu()
+        this.$nextTick(() => {
+            const { flash } = this.$page.props;
+            if (flash && flash.type && flash.message) {
+                this.currentToast = toast({
+                    description: flash.message,
+                    variant: flash.type,
+                });
+            }
+        });
     },
     mounted(){
         this.$nextTick(() => {

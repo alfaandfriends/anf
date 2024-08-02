@@ -27,7 +27,7 @@ import BreezeButton from '@/Components/Button.vue';
                         <TableRow v-if="!$page.props.edupreneurs.data.length">
                             <TableCell class="text-center" colspan="10">
                                 <div class="p-3">
-                                    No Record Found! 
+                                    No Record Found 
                                 </div>
                             </TableCell>
                         </TableRow> 

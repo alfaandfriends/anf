@@ -11,7 +11,7 @@
             </CardDescription>
         </CardHeader>
         <CardHeader class="py-3" v-else></CardHeader>
-        <CardContent class="grid gap-4">
+        <CardContent class="grid gap-2" v-if="$slots.content">
             <slot name="content">
             </slot>
         </CardContent>

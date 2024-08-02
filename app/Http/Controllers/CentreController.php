@@ -44,7 +44,7 @@ class CentreController extends Controller
         // dd($request->all());
         $this->centreService->createCentre($request);
         
-        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre added successfully !']);
+        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function edit(Request $request)
@@ -66,13 +66,13 @@ class CentreController extends Controller
         $this->centreService->deleteImages($request);
         $this->centreService->updateCentre($request);
 
-        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre updated successfully !']);
+        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function destroy($id)
     {
         $this->centreService->deleteCentre($id);
 
-        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Centre deleted successfully !']);
+        return redirect(route('centres'))->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 }

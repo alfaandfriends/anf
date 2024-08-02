@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -8,7 +7,70 @@ import BreezeButton from '@/Components/Button.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="py-4 px-4">
+        <div class="flex items-center justify-between">
+            <div class="flex space-x-2">
+                <div class="relative">
+                    <MagnifyingGlassIcon class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input type="text" placeholder="Search" class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" v-debounce:800ms="search" v-model="params.search"/>
+                </div>
+                <Button class="border border-slate-700 border-dashed bg-white text-slate-800 hover:bg-slate-50"> 
+                    <Filter class="h-4 w-4" />
+                    <span class="ml-1 hidden sm:block">Filter</span>
+                </Button>
+            </div>
+            <Button @click="$inertia.get(route('programmes.create'))" v-if="$page.props.can.create_classes">
+                <PlusCircle class="h-4 w-4" />
+                <span class="ml-1 hidden sm:block">New Class</span>
+            </Button>
+        </div>
+        <Card>
+            <template #content>
+                <Table>
+                    <TableHeader class="bg-gray-100">
+                        <TableRow>
+                        <TableHead>#</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Country</TableHead>
+                        <TableHead class="text-center">Status</TableHead>
+                        <TableHead class="text-center">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow v-if="!$page.props.classes.data.length">
+                            <TableCell class="text-center" colspan="10">
+                                <div class="p-3">
+                                    No Record Found
+                                </div>
+                            </TableCell>
+                        </TableRow> 
+                        <TableRow v-for="programme, index in $page.props.classes.data">
+                            <TableCell class="cursor-pointer" @click="editProgramme(programme.id)">{{ $page.props.classes.from + index }}</TableCell>
+                            <TableCell class="cursor-pointer" @click="editProgramme(programme.id)">{{ programme.programme_name }}</TableCell>
+                            <TableCell class="cursor-pointer" @click="editProgramme(programme.id)">{{ programme.country }}</TableCell>
+                            <TableCell class="text-center cursor-pointer" @click="editProgramme(programme.id)">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="programme.status == 1 ? ' bg-green-100 text-green-800' : ' bg-red-100 text-red-800'"> {{ programme.status == 1 ? 'Active' : 'Not Active' }} </span>
+                            </TableCell>
+                            <TableCell class="text-center">
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger as-child>
+                                    <Button size="icon" variant="outline" class="h-8 w-8">
+                                        <MoreVertical class="h-3.5 w-3.5" />
+                                        <span class="sr-only">More</span>
+                                    </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem v-if="$page.props.can.edit_classes" @click="editProgramme(programme.id)">Edit</DropdownMenuItem>
+                                        <DropdownMenuItem v-if="$page.props.can.delete_classes" @click="deleteProgramme(programme.id)">Delete</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </template>
+        </Card>
+        <Pagination :page_data="$page.props.classes" :params="params"></Pagination>
+        <!-- <div class="py-4 px-4">
             <div class="flex justify-end mb-3" v-if="$page.props.can.create_classes">
                 <BreezeButton @click="addClass(params.centre_id)">New Class</BreezeButton>
             </div>
@@ -134,7 +196,6 @@ import BreezeButton from '@/Components/Button.vue';
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Level</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Day</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Time</th>
-                                <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Capacity</th> -->
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Type</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
@@ -144,7 +205,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <tr v-if="!$page.props.classes.data.length">
                                 <td class="text-center" colspan="10">
                                     <div class="p-3">
-                                        No Record Found! 
+                                        No Record Found 
                                     </div>
                                 </td>
                             </tr> 
@@ -169,11 +230,6 @@ import BreezeButton from '@/Components/Button.vue';
                                         <span class="pl-2">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
                                     </div>
                                 </td>
-                                <!-- <td class="px-6 py-4 whitespace-nowrap">
-                                    <BreezeButton buttonType="blue" @click="viewStudents(classes.id)">
-                                        <div class="text-sm font-medium text-white">{{ classes.capacity }}</div>
-                                    </BreezeButton>
-                                </td> -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">{{ classes.type }}</div>
                                 </td>
@@ -208,59 +264,29 @@ import BreezeButton from '@/Components/Button.vue';
                 :confirmationData="confirmationData"
             >
             </ConfirmationModal>
-            <VueFinalModal v-model="showModal">
-                    <div id="default-modal" data-modal-show="true" aria-hidden="true" class="overflow-x-hidden overflow-y-auto h-modal md:h-full top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center">
-                        <!-- <div class="relative w-full px-4 h-full md:h-auto"> -->
-                        <div class="absolute top-1/3 px-20">
-                            <!-- Modal content -->
-                            <div class="bg-white rounded-lg shadow relative">
-                                <!-- Modal header -->
-                                <div class="flex items-start justify-between p-5 border-b rounded-t">
-                                    <h3 class="text-gray-900 text-xl lg:text-2xl font-semibold">
-                                        Terms of Service
-                                    </h3>
-                                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
-                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
-                                    </button>
-                                </div>
-                                <!-- Modal body -->
-                                <div class="p-6 space-y-6">
-                                    <p class="text-gray-500 text-base leading-relaxed">
-                                        With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-                                    </p>
-                                    <p class="text-gray-500 text-base leading-relaxed">
-                                        The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
-                                    </p>
-                                </div>
-                                <!-- Modal footer -->
-                                <div class="flex space-x-2 items-center p-6 border-t border-gray-200 rounded-b">
-                                    <button data-modal-toggle="default-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">I accept</button>
-                                    <button data-modal-toggle="default-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">Decline</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </VueFinalModal>
-        </div>
+        </div> -->
     </BreezeAuthenticatedLayout>
 </template>
 
 
 
 <script>
-import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
-import moment from 'moment';
-import Multiselect from '@vueform/multiselect'
-import { $vfm, VueFinalModal, ModalsContainer } from 'vue-final-modal'
 import { debounce } from 'vue-debounce'
+import { MagnifyingGlassIcon } from '@radix-icons/vue'
+import { MoreVertical, PlusCircle, Filter } from 'lucide-vue-next';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
+import DropdownMenu from '@/Components/ui/dropdown-menu/DropdownMenu.vue';
+import DropdownMenuTrigger from '@/Components/ui/dropdown-menu/DropdownMenuTrigger.vue';
+import DropdownMenuContent from '@/Components/ui/dropdown-menu/DropdownMenuContent.vue';
+import DropdownMenuItem from '@/Components/ui/dropdown-menu/DropdownMenuItem.vue';
+import Card from '@/Components/Card.vue'
+import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Multiselect, VueFinalModal, ModalsContainer, Pagination
+        Pagination, DeleteConfirmation, Head, Link, Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow,
     },
     props: {
         filter: Object,
@@ -288,9 +314,9 @@ export default {
             confirmationData: '',
             confirmationRoute: '',
             params: {
-                search: this.filter.search ? this.filter.search : '',
-                centre_id: this.filter.centre_id ? this.filter.centre_id : '',
-                day: this.filter.day ? this.filter.day : '',
+                search: this.$page.props.filter.search ? this.$page.props.filter.search : '',
+                centre_id: this.$page.props.filter.centre_id ? this.$page.props.filter.centre_id : '',
+                day: this.$page.props.filter.day ? this.$page.props.filter.day : '',
             }
         }
     },

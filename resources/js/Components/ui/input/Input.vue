@@ -6,9 +6,8 @@ import { defineProps, defineEmits, useAttrs } from 'vue';
 const props = defineProps({
   defaultValue: { type: [String, Number], required: false },
   modelValue: { type: [String, Number], required: false },
-  type: { type: null },
   class: { type: null, required: false },
-  error: { type: null },
+  error: { type: [String, Boolean] },
   disabled: { type: Boolean, required: false, default: false } // Add disabled prop
 });
 
@@ -37,8 +36,11 @@ const attrs = useAttrs();
       "
       v-bind="attrs"
     />
-    <p class="text-sm text-red-500 font-semibold" v-if="props.error">
-      {{ props.error }}
+    <p class="text-sm text-red-500 font-semibold" v-if="typeof error === 'string'">
+      {{ error }}
+    </p>
+    <p class="text-sm text-red-500 font-semibold" v-if="typeof error === 'boolean' && error === true">
+      This field is required.
     </p>
   </div>
 </template>

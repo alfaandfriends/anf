@@ -1,24 +1,22 @@
 <template>
-    <div v-if="page_data.data.length">
-        <Pagination v-slot="{ page }" :total="page_data.total" :sibling-count="1" show-edges :default-page="page_data.current_page">
-            <PaginationList v-slot="{ items }" class="flex justify-center items-center gap-1">
-                <PaginationFirst @click="$inertia.get(generatePageUrl(page_data.first_page_url))" />
-                <PaginationPrev @click="$inertia.get(generatePageUrl(page_data.prev_page_url))" />
-            
-                <template v-for="(item, index) in items" :key="index">
-                    <PaginationListItem v-if="item.type === 'page'" :value="item.value" as-child @click="$inertia.get(generatePageUrl(page_data.path + '?page=' + item.value))">
-                        <Button class="w-10 h-10 p-0" :variant="item.value === page_data.current_page ? 'default' : 'outline'">
-                            {{ item.value }}
-                        </Button>
-                    </PaginationListItem>
-                    <PaginationEllipsis v-else :key="item.type" :index="index" />
-                </template>
-            
-                <PaginationNext @click="$inertia.get(generatePageUrl(page_data.next_page_url))" />
-                <PaginationLast @click="$inertia.get(generatePageUrl(page_data.last_page_url))" />
-            </PaginationList>
-        </Pagination>
-    </div>
+    <Pagination v-slot="{ page }" :total="page_data.total" :itemsPerPage="10" :siblingCount="2" :default-page="page_data.current_page" v-if="page_data.data.length">
+        <PaginationList v-slot="{ items }" class="flex justify-center items-center gap-1">
+            <PaginationFirst @click="$inertia.get(generatePageUrl(page_data.first_page_url))" />
+            <!-- <PaginationPrev @click="$inertia.get(generatePageUrl(page_data.prev_page_url))" /> -->
+        
+            <template v-for="(item, index) in items" :key="index">
+                <PaginationListItem v-if="item.type === 'page'" :value="item.value" as-child @click="$inertia.get(generatePageUrl(page_data.path + '?page=' + item.value))">
+                    <Button class="w-10 h-10 p-0" :variant="item.value === page_data.current_page ? 'default' : 'outline'">
+                        {{ item.value }}
+                    </Button>
+                </PaginationListItem>
+                <PaginationEllipsis v-else :key="item.type" :index="index" />
+            </template>
+        
+            <!-- <PaginationNext @click="$inertia.get(generatePageUrl(page_data.next_page_url))" /> -->
+            <PaginationLast @click="$inertia.get(generatePageUrl(page_data.last_page_url))" />
+        </PaginationList>
+    </Pagination>
 </template>
 
 <script>

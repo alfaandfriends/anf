@@ -54,7 +54,7 @@ class ProgrammeController extends Controller
         ]);
 
         if(empty($request->programme_info)){
-            return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level !']);
+            return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level.']);
         }
         $programme_id    =   DB::table('programmes')->insertGetId([
             'name'                      =>  $request->programme_name,
@@ -86,7 +86,7 @@ class ProgrammeController extends Controller
         $log_data =   'Created programme ' . $request->programme_name  . ' : ' . json_encode($request->all());
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'New programme added successfully!']);
+        return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function editProgramme(Request $request){
@@ -152,7 +152,7 @@ class ProgrammeController extends Controller
         ]);
 
         if(empty($request->programme_info)){
-            return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level !']);
+            return back()->with(['type'=>'error', 'message'=>'Please add at least 1 level.']);
         }
 
         // if(auth()->user()->is_admin == false){
@@ -241,7 +241,7 @@ class ProgrammeController extends Controller
 
         
 
-        return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme updated successfully !']);
+        return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function destroyProgramme($id){
@@ -250,7 +250,7 @@ class ProgrammeController extends Controller
         /* Check if programme can be deleted */
         $programme_is_deletable   =   ProgrammeHelper::checkProgrammeIsDeletable($id);
         if(!$programme_is_deletable){
-            return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'There are students in this programme!']);
+            return redirect(route('programmes'))->with(['type' => 'error', 'message' => 'Sorry, there are students in this programme.']);
         }
 
         /* Check if user is admin */
@@ -278,7 +278,7 @@ class ProgrammeController extends Controller
         $log_data =   'Deleted programme ' . $programme_name;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Programme deleted successfully !']);
+        return redirect(route('programmes'))->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 
     public function destroyFee($id){
@@ -298,9 +298,9 @@ class ProgrammeController extends Controller
             $log_data =   'Deleted fee for programme ' . $programme_info->name . ' : ' . json_encode($programme_level_info);
             event(new DatabaseTransactionEvent($log_data));
 
-            return back()->with(['type'=>'success', 'message'=>'Fee deleted successfully !']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
         } catch (\Throwable $th) {
-            return back()->with(['type'=>'error', 'message'=>'Deletion failed. The fee might be in used. Please try again.']);
+            return back()->with(['type'=>'error', 'message'=>'Sorry, this fee is currently being used by students.']);
         }
 
     }
@@ -389,6 +389,6 @@ class ProgrammeController extends Controller
             ]);
         }
 
-        return back()->with(['type'=>'success', 'message'=>'Fee amount updated!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been updated.']);
     }
 }

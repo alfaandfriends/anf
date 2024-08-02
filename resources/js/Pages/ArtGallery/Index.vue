@@ -194,7 +194,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <tr v-if="!$page.props.arts.data.length">
                                 <td class="text-center" colspan="10">
                                     <div class="p-3">
-                                        No Record Found! 
+                                        No Record Found 
                                     </div>
                                 </td>
                             </tr> 

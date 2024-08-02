@@ -11,7 +11,7 @@
     </PopoverTrigger>
     <PopoverContent class="flex w-full p-0 min-w-[var(--radix-popover-trigger-width)]">
       <Command>
-        <CommandInput class="h-9" :placeholder="searchPlaceholder" v-model="searchQuery" />
+        <CommandInput class="h-9" :placeholder="searchPlaceholder" v-model="searchQuery" @input="handleInput" />
         <CommandEmpty class="py-4">{{ loading ? 'Searching...' : 'No results found.' }}</CommandEmpty>
         <CommandList>
           <CommandGroup>
@@ -45,8 +45,11 @@
       </Command>
     </PopoverContent>
   </Popover>
-  <p class="text-sm text-red-500 font-semibold" v-if="error">
+  <p class="text-sm text-red-500 font-semibold" v-if="typeof error === 'string'">
     {{ error }}
+  </p>
+  <p class="text-sm text-red-500 font-semibold" v-if="typeof error === 'boolean' && error === true">
+    This field is required.
   </p>
 </template>
 
@@ -61,6 +64,7 @@ export default {
     CaretSortIcon, CheckIcon, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut,
     Popover, PopoverContent, PopoverTrigger
   },
+  emits: ['update:modelValue', 'select', 'search'],
   props: {
     items: {
       type: Array,
@@ -94,7 +98,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    error: { type: null },
+    error: { type: [String, Boolean] },
     multiple: {
       type: Boolean,
       default: false,
@@ -169,6 +173,7 @@ export default {
         this.$emit('update:modelValue', value);
         this.isOpen = false;
       }
+      this.$emit('select', item); // Emit the select event with the selected item
     },
     selectAll() {
       if (this.allSelected) {
@@ -179,6 +184,9 @@ export default {
         );
       }
       this.$emit('update:modelValue', this.selectedItems);
+    },
+    handleInput(event) {
+      this.$emit('search', event.target.value);
     },
   },
 };
