@@ -43,13 +43,14 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
         <Card>
             <template #title>
                 <div class="flex justify-between items-center">
-                    Programme Levels and Fees
+                    Programmes Levels & Fees
                     <Button buttonType="info" @click="showAddFee">
-                        <PlusCircle class="mr-1 h-4 w-4" />Add Fee
+                        <PlusCircle class="h-4 w-4" />
+                        <span class="ml-1 hidden sm:block">Add</span>
                     </Button>
                 </div>  
             </template>
-            <template #content v-if="groupedItems.length">
+            <template #content v-if="form.programme_info">
                 <Collapsible v-for="item, level in groupedItems">
                     <template #trigger>Level {{ level }}</template>
                     <template #content>

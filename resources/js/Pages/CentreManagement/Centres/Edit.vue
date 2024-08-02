@@ -94,18 +94,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-wrap space-y-4 2xl:space-y-0 2xl:space-x-6">
-                    <div class="overflow-x-auto" v-show="show_image">
+                <div class="flex flex-col space-y-4 2xl:space-y-0 2xl:flex-row 2xl:space-x-5 mb-5" v-show="show_image">
+                    <div>
                         <Label>Crop Image</Label>
-                        <div class="w-96 h-60 mt-1">
-                            <img class="image" ref="input" :src="image">
+                        <div class="flex w-full max-w-96">
+                            <img class="text-center image" ref="input" :src="image">
                         </div>
                     </div>
-                    <div class="" v-show="show_image">
+                    <div>
                         <div class="flex flex-row justify-center">
-                            <div class="flex-column text-center">
-                                <Label>Image Preview</Label>
-                                <div class="preview h-52 w-96 mt-1"></div>
+                            <div class="flex-column">
+                                <Label> Image Preview </Label>
+                                <div class="preview h-44 w-44"></div>
                             </div>
                             <div class="flex-column pl-1 pt-6">
                                 <div class="flex flex-col space-y-1">
@@ -124,7 +124,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-wrap space-y-4 2xl:space-y-0 2xl:space-x-6">
+                <div class="flex justify-center 2xl:justify-start flex-wrap space-y-4 2xl:space-y-0 2xl:space-x-6">
                     <div class="sm:col-span-2 self-center flex flex-wrap gap-4 py-3" v-show="form.image_list.length">
                         <div class="relative h-32 w-32 mr-3 mt-3 text-center shadow-sm" v-for="(image_data, index) in form.image_list" :key="index">
                             <div class="absolute bg-red-500 p-2 shadow rounded-full text-white z-10 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">

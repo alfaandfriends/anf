@@ -43,9 +43,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
         <Card>
             <template #title>
                 <div class="flex justify-between items-center">
-                    Programme Levels and Fees
+                    Programmes Levels & Fees
                     <Button buttonType="info" @click="showAddFee">
-                        <PlusCircle class="mr-1 h-4 w-4" />Add Fee
+                        <PlusCircle class="h-4 w-4" />
+                        <span class="ml-1 hidden sm:block">Add</span>
                     </Button>
                 </div>  
             </template>
@@ -96,7 +97,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                         </div>
                                     </TableCell>
                                     <TableCell class="text-center">
-                                        <Button variant="destructive" @click="deleteLevel(info.programme_level_id, index)">Delete</Button>
+                                        <Button variant="destructive" @click="deleteLevel(info.programme_level_id, info.index)">Delete</Button>
                                     </TableCell>
                                 </TableRow>
                             </TableBody>
@@ -311,6 +312,12 @@ export default {
         }
     },
     watch: {
+        'form.programme_info': {
+            handler() {
+                this.groupedItems; 
+            },
+            deep: true, 
+        },
         'fee_form.class_type': {
             handler(){
                 this.list.class_types_detail = []
@@ -356,11 +363,11 @@ export default {
     },  
     computed: {
         groupedItems(){
-            return this.form.programme_info.reduce((acc, item) => {
+            return this.form.programme_info.reduce((acc, item, index) => {
                 if (!acc[item.level]) {
                     acc[item.level] = [];
                 }
-                acc[item.level].push(item);
+                acc[item.level].push({ ...item, index });
                 return acc;
             }, {}); 
         },
