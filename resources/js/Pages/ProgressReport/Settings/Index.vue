@@ -89,6 +89,10 @@ export default {
                 {
                     name: 'Digital Art',
                     url: 'progress_report.settings.digital_art.levels',
+                },
+                {
+                    name: 'Little Bot',
+                    url: 'progress_report.settings.little_bot.levels',
                 }
             ]
         }

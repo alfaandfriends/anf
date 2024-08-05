@@ -65,4 +65,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/progress-report/art/get-learning-outcomes/{activity_id}', [ProgressReportController::class, 'getArtLearningOutcomes'])->name('progress_report.get_art_learning_outcomes');
     Route::get('/progress-report/art/get-objectives/{outcome_id}', [ProgressReportController::class, 'getArtObjectives'])->name('progress_report.get_art_objectives');
 
+    /* Little Bot Select Options */
+    Route::get('/progress-report/little-bot/get-topics/{lesson_id}', [ProgressReportController::class, 'getLittleBotTopics'])->name('progress_report.get_little_bot_topics');
+    Route::get('/progress-report/little-bot/get-objectives/{topic_id}', [ProgressReportController::class, 'getLittleBotObjectives'])->name('progress_report.get_little_bot_objectives');
+
 });
