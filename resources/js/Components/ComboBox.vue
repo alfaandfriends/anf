@@ -11,7 +11,7 @@
     </PopoverTrigger>
     <PopoverContent class="flex w-full p-0 min-w-[var(--radix-popover-trigger-width)]">
       <Command>
-        <CommandInput class="h-9" :placeholder="searchPlaceholder" v-model="searchQuery" @input="handleInput" />
+        <CommandInput type="text" class="h-9" :placeholder="searchPlaceholder" v-model="searchQuery" @input="handleInput"/>
         <CommandEmpty class="py-4">{{ loading ? 'Searching...' : 'No results found.' }}</CommandEmpty>
         <CommandList>
           <CommandGroup>

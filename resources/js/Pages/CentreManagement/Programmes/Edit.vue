@@ -35,7 +35,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </div>
                     <div class="mb-4">
                         <Label>Progress Report Required<span class="text-red-500">*</span></Label>
-                        <ComboBox :items='[{"id": 0, "name": "No"},{"id": 1, "name": "Yes"}]' label-property="name" value-property="id" :error="$page.props.errors.progress_report_required" v-model="form.progress_report_required" select-placeholder="Please Select" search-placeholder="Search..."></ComboBox>
+                        <ComboBox :items='[{"id": 0, "name": "No"},{"id": 1, "name": "Yes"}]' label-property="name" value-property="id" :error="$page.props.errors.progress_report_required" v-model="form.progress_report_required" select-placeholder="Please Select" search-placeholder="Search..." inert></ComboBox>
                     </div>
                 </div>
             </template>
@@ -235,7 +235,7 @@ export default {
                 programme_id: this.$page.props.programme_data ? this.$page.props.programme_data.id  : '',
                 programme_country: this.$page.props.programme_data ? this.$page.props.programme_data.country_id : '',
                 programme_name: this.$page.props.programme_data ? this.$page.props.programme_data.name  : '',
-                progress_report_required: this.$page.props.programme_data ? this.$page.props.programme_data.progress_report_required  : '',
+                progress_report_required: this.$page.props.programme_data ? this.$page.props.programme_data.progress_report_required : '',
                 programme_info: [],
                 programme_active: this.$page.props.programme_data ? !!this.$page.props.programme_data.status  : false,
             },
