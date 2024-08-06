@@ -80,7 +80,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                     :format="'dd/MM/yyyy'"
                                                 />
                                             </div>
-                                            <!-- <Datepicker class="mt-1 rounded-md shadow-sm" :class="errors.dob ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'"  v-model="form.basic_info.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" format="dd/MM/yyyy"/> -->
                                         </div>
                                     </div>
                                 </div>
@@ -150,38 +149,6 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                   </div>
                                 <template v-if="current_tab == 1">
-                                    
-                                    <!-- <div class="px-4 py-3 border border-dashed rounded border-gray-500" v-if="current_fee.length" v-for="fee, fee_index in current_fee">
-                                        <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
-                                            <div class="flex flex-col lg:col-span-8">
-                                                <div>
-                                                    <h5 class="mb-1 text-sm font-bold">{{ moment(fee.fee_info.fee_month).format('MMMM Y') }} - <span class="text-indigo-700">{{ fee.fee_info.programme_name }} (Level {{ fee.fee_info.programme_level }})</span></h5>
-                                                    <span class="text-indigo-700">{{ fee.fee_info.centre_name }}</span>
-                                                    <p class="mb-1 text-slate-700 font-semibold text-sm">
-                                                        <template v-for="(classes, index) in fee.classes">
-                                                            <span v-if="index !== 0" class="mx-2 border-r border-gray-300"></span>
-                                                            <span class="whitespace-nowrap">
-                                                                {{ classes.class_day }} ({{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }})
-                                                            </span>
-                                                        </template>
-                                                    </p>
-                                                    <p class="mb-1 text-slate-700 font-semibold text-sm">Size: <span class="text-slate-800">L</span></p>
-                                                </div>
-                                            </div>
-                                            <div class="flex justify-between lg:flex-col lg:col-end-13 lg:col-span-2">
-                                                <div class="flex justify-end">
-                                                    <div class="mb-auto ltr:lg:text-right rtl:lg:text-left">
-                                                        <span class="text-sm flex items-center space-x-1 bg-red-500 text-white px-2.5 py-1.5 shadow-md rounded transform hover:scale-105 duration-200 cursor-pointer font-semibold" @click="deleteClass(fee.fee_info.student_fee_id, fee.fee_info.invoice_id, fee.fee_info.admission_date, fee.fee_info.centre_id, fee.fee_info.programme_id)">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-4 h-4 text-white" fill="currentColor">
-                                                                <path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/>
-                                                            </svg>
-                                                            <span class="text-xs">Delete</span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                     <article class="rounded border border-dashed border-gray-500 bg-gray-50 p-3" v-if="current_fee.length" v-for="fee, fee_index in current_fee">
                                         <div class="flex justify-between items-center mb-3">
                                             <strong class="rounded border border-blue-500 bg-blue-500 px-3 py-1.5 text-[12px] font-medium text-white">{{ moment(fee.fee_info.fee_month).format('MMMM Y') }}</strong>
@@ -269,7 +236,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <strong class="rounded border border-blue-500 bg-blue-400 px-3 py-1.5 text-[12px] font-medium text-white">{{ moment(fee.fee_month).format('MMMM Y') }}</strong>
                                                 <h3 class="mt-4 text-lg font-medium sm:text-sm space-x-2">
                                                     <span> {{ fee.programme_name }} (Level {{ fee.programme_level }}) </span>
-                                                    <!-- <span class="text-red-500 hover:underline cursor-pointer font-semibold" @click="deleteClass(fee.student_fee_id, fee.fee_id, fee.invoice_id, fee.admission_date)">Delete</span> -->
                                                 </h3>
                                                 <div class="mt-3 flex space-x-4">
                                                     <div class="flex space-x-4 text-xs border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
@@ -526,7 +492,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <td class="px-3 py-2 text-left">{{ classes.capacity}}</td>
                                                         <td class="px-3 py-2 text-center">
                                                             <div class="flex justify-center">
-                                                                <!-- <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id)">Choose</BreezeButton> -->
                                                                 <input class="h-5 w-5 border border-indigo-300 rounded-sm focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
                                                                         type="checkbox" 
                                                                         :checked="checkIfClassSelected(classes.class_id, classes.programme_id)"
@@ -597,9 +562,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                             </svg>
                                                             <span>Applied Promos</span>
                                                         </h3>
-                                                        <!-- <select class="text-xs rounded focus:ring-0 focus:border-indigo-300" v-model="selected_promo">
-                                                            <option v-for="promo in $page.props.promos" :value="promo.id" >{{ promo.name }}</option>
-                                                        </select> -->
                                                         <div @click="showNewClassPromoModal(fee_index)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 hover:bg-indigo-100 whitespace-nowrap">
                                                             Add Promo
                                                         </div>
@@ -640,8 +602,12 @@ import BreezeButton from '@/Components/Button.vue';
                                                         </div>
                                                     </div>
                                                     <div class="col-span-2">
+                                                        <div class="flex items-center justify-end select-none space-x-1">
+                                                            <input id="old_fee" type="checkbox" class="col-span-1 cursor-pointer bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" v-model="fee.fee_info.use_old_fee">
+                                                            <label for="old_fee" class="cursor-pointer text-sm font-semibold align-middle">Use old fee</label>
+                                                        </div>
                                                         <div class="flex items-center justify-end text-2xl mt-3">
-                                                            <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
+                                                            <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.use_old_fee ? fee.fee_info.old_programme_fee : fee.fee_info.programme_fee) }}</span>
                                                             <span class="leading-7 font-medium text-gray-700">/month</span>
                                                         </div>
                                                     </div>
@@ -811,7 +777,6 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <td class="px-2 py-2 text-left">{{ classes.capacity}}</td>
                                                         <td class="px-2 py-2 text-center">
                                                             <div class="flex justify-center">
-                                                                <!-- <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id, true)">Choose</BreezeButton> -->
                                                                 <input class="h-5 w-5 border border-indigo-300 rounded-sm focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
                                                                         type="checkbox" 
                                                                         :checked="checkIfClassSelected(classes.class_id, classes.programme_id)"
@@ -1104,6 +1069,7 @@ export default {
                 value: '',
                 error: false
             },
+            use_old_fee: false,
             current_tab: 1,
             no_fee_found: false,
             show_add_class: false,
@@ -1302,48 +1268,6 @@ export default {
                 });
             }
         },
-        // getNormalFee(class_id, class_type_id, programme_id, programme_level_id, is_transfer_student = false){
-        //     if(this.fetching_fee){
-        //         return
-        //     }
-        //     if(!is_transfer_student){
-        //         // const  only_one_class_allowed_form      = this.form.fee.find(item => item.fee_info.class_type_id == 1 && item.fee_info.class_type_id == class_type_id && item.fee_info.programme_id == programme_id);
-        //         // const  only_one_class_allowed_current   = this.current_fee.find(item => item.fee_info.class_type_id == 1 && item.fee_info.class_type_id == class_type_id && item.fee_info.programme_id == programme_id);
-        //         // if(only_one_class_allowed_form || only_one_class_allowed_current){
-        //         //     alert('Only one class is allowed for normal class.')
-        //         //     this.searching.fee = false
-        //         //     return
-        //         // }
-
-        //         const  programme_already_added_form     = this.form.fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type_id);
-        //         const  programme_already_added_current  = this.current_fee.find(item => item.fee_info.programme_id == programme_id && item.fee_info.class_type_id != class_type_id);
-        //         if(programme_already_added_form || programme_already_added_current){
-        //             alert('This programme already been added. Please remove the previous one first.')
-        //             this.searching.fee = false
-        //             return
-        //         }
-        //     }else{
-        //         if(this.form.fee.length > 0){
-        //             alert('You can only select 1 class to transfer student.')
-        //             return
-        //         }
-        //     }
-            
-        //     this.fetching_fee = true
-        //     axios.get(route('programmes.get_fee'), {
-        //         'params': {
-        //             'class_id' : class_id,
-        //             'programme_level_id' : programme_level_id,
-        //         }
-        //     })
-        //     .then((res) => {
-        //         this.form.fee.push(res.data)
-        //         this.pushMaterialFee(programme_id)
-        //         this.scrollToElement('class_fee')
-        //         this.searching.fee = false
-        //         this.fetching_fee = false
-        //     });
-        // },
         getPlusFee(event, class_id, class_type, programme_id, is_transfer_student = false){
             this.form.fee = []
             if(this.fetching_fee){
