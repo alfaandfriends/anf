@@ -35,7 +35,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </div>
                     <div class="mb-4">
                         <Label>Progress Report Required<span class="text-red-500">*</span></Label>
-                        <ComboBox :items='[{"id": 0, "name": "No"},{"id": 1, "name": "Yes"}]' label-property="name" value-property="id" :error="$page.props.errors.progress_report_required" v-model="form.progress_report_required" select-placeholder="Please Select" search-placeholder="Search..." inert></ComboBox>
+                        <ComboBox :items='[{"id": 0, "name": "No"},{"id": 1, "name": "Yes"}]' label-property="name" value-property="id" :error="$page.props.errors.progress_report_required" v-model="form.progress_report_required" select-placeholder="Please Select" search-placeholder="Search..."></ComboBox>
                     </div>
                 </div>
             </template>
