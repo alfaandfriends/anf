@@ -79,7 +79,7 @@ export default {
       default: 'name',
     },
     valueProperty: {
-      type: String,
+      type: [String, Number],
       default: 'id',
     },
     placeholder: {

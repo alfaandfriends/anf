@@ -96,7 +96,6 @@ class ProgrammeController extends Controller
         $class_type_details =   DB::table('class_types_detail')->get();
 
         $programme_data         =   DB::table('programmes')->where('id', $request->programme_id)->first();
-        dd($programme_data);
         $programme_info         =   DB::table('programme_levels')
                                         ->leftJoin('products', 'programme_levels.material_product_id', '=', 'products.id')
                                         ->leftJoin('product_variations', 'programme_levels.material_product_variation_id', '=', 'product_variations.id')
