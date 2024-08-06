@@ -673,7 +673,7 @@ class StudentController extends Controller
                     'centre_id'         =>  $request->centre_id,
                     'fee_id'            =>  $fee['fee_info']['fee_id'],
                     'invoice_id'        =>  $new_invoice_id,
-                    'use_old_fee'       =>  0,
+                    'use_old_fee'       =>  $fee['fee_info']['use_old_fee'],
                     'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
                 ]);
 

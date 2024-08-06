@@ -316,7 +316,7 @@ class ProgrammeController extends Controller
                                 ->join('programme_level_fees', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                                 ->join('class_types_detail', 'programme_level_fees.class_type_detail_id', '=', 'class_types_detail.id')
                                 ->select(   'programmes.id as programme_id', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 
-                                            'programme_levels.material_fee', 'programme_levels.registration_fee', 'programme_level_fees.id as fee_id', 'programme_level_fees.new_fee_amount as programme_fee', 
+                                            'programme_levels.material_fee', 'programme_levels.registration_fee', 'programme_level_fees.id as fee_id', 'programme_level_fees.new_fee_amount as programme_fee', 'programme_level_fees.fee_amount as old_programme_fee', 
                                             'class_types_detail.label as programme_type', 'centres.id as centre_id', 'centres.label as centre_name', 
                                             'class_types.id as class_type_id', 'class_methods.name as class_method', 'countries.currency_symbol')
                                 ->where('programme_level_fees.new_fee_amount', '>', 0);
@@ -331,6 +331,7 @@ class ProgrammeController extends Controller
         $data['fee_info']                               =   $fee_info_query->first();
         $data['fee_info']->include_material_fee         =   true;
         $data['fee_info']->include_registration_fee     =   true;
+        $data['fee_info']->use_old_fee                  =   false;
         $data['fee_info']->registration_fee_discount    =   0;
         $data['fee_info']->material_fee_discount        =   0;
         $data['fee_info']->programme_fee_discount       =   0;

@@ -278,6 +278,31 @@ Route::middleware(['auth'])->group(function(){
                 Route::post('/progress-report/settings/digital-art/objectives/store', [ProgressReportController::class, 'digitalArtObjectivesStore'])->name('progress_report.settings.digital_art.objectives.store')->middleware('permission:view_progress_report_settings');
                 Route::post('/progress-report/settings/digital-art/objectives/update', [ProgressReportController::class, 'digitalArtObjectivesUpdate'])->name('progress_report.settings.digital_art.objectives.update')->middleware('permission:view_progress_report_settings');
                 Route::delete('/progress-report/settings/digital-art/objectives/destroy/{id}', [ProgressReportController::class, 'digitalArtObjectivesDestroy'])->name('progress_report.settings.digital_art.objectives.destroy')->middleware('permission:view_progress_report_settings');
+
+                
+                /* Little Bot Levels */
+                Route::get('/progress-report/settings/little-bot/levels', [ProgressReportController::class, 'littleBotLevels'])->name('progress_report.settings.little_bot.levels')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/little-bot/levels/store', [ProgressReportController::class, 'littleBotLevelsStore'])->name('progress_report.settings.little_bot.levels.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/little-bot/levels/update', [ProgressReportController::class, 'littleBotLevelsUpdate'])->name('progress_report.settings.little_bot.levels.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/little-bot/levels/destroy/{id}', [ProgressReportController::class, 'littleBotLevelsDestroy'])->name('progress_report.settings.little_bot.levels.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /* Little Bot Lessons */
+                Route::get('/progress-report/settings/little-bot/lessons', [ProgressReportController::class, 'littleBotLessons'])->name('progress_report.settings.little_bot.lessons')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/little-bot/lessons/store', [ProgressReportController::class, 'littleBotLessonsStore'])->name('progress_report.settings.little_bot.lessons.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/little-bot/lessons/update', [ProgressReportController::class, 'littleBotLessonsUpdate'])->name('progress_report.settings.little_bot.lessons.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/little-bot/lessons/destroy/{id}', [ProgressReportController::class, 'littleBotLessonsDestroy'])->name('progress_report.settings.little_bot.lessons.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /* Little Bot Topics */
+                Route::get('/progress-report/settings/little-bot/topics', [ProgressReportController::class, 'littleBotTopics'])->name('progress_report.settings.little_bot.topics')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/little-bot/topics/store', [ProgressReportController::class, 'littleBotTopicsStore'])->name('progress_report.settings.little_bot.topics.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/little-bot/topics/update', [ProgressReportController::class, 'littleBotTopicsUpdate'])->name('progress_report.settings.little_bot.topics.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/little-bot/topics/destroy/{id}', [ProgressReportController::class, 'littleBotTopicsDestroy'])->name('progress_report.settings.little_bot.topics.destroy')->middleware('permission:view_progress_report_settings');
+                
+                /* Little Bot Learning Objectives */
+                Route::get('/progress-report/settings/little-bot/learning-objectives', [ProgressReportController::class, 'littleBotObjectives'])->name('progress_report.settings.little_bot.objectives')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/little-bot/learning-objectives/store', [ProgressReportController::class, 'littleBotObjectivesStore'])->name('progress_report.settings.little_bot.objectives.store')->middleware('permission:view_progress_report_settings');
+                Route::post('/progress-report/settings/little-bot/learning-objectives/update', [ProgressReportController::class, 'littleBotObjectivesUpdate'])->name('progress_report.settings.little_bot.objectives.update')->middleware('permission:view_progress_report_settings');
+                Route::delete('/progress-report/settings/little-bot/learning-objectives/destroy/{id}', [ProgressReportController::class, 'littleBotObjectivesDestroy'])->name('progress_report.settings.little_bot.objectives.destroy')->middleware('permission:view_progress_report_settings');
         });
 
         /* Resources */
