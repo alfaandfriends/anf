@@ -235,7 +235,7 @@ export default {
                 programme_id: this.$page.props.programme_data ? this.$page.props.programme_data.id  : '',
                 programme_country: this.$page.props.programme_data ? this.$page.props.programme_data.country_id : '',
                 programme_name: this.$page.props.programme_data ? this.$page.props.programme_data.name  : '',
-                progress_report_required: this.$page.props.programme_data ? this.$page.props.programme_data.progress_report_required : '',
+                progress_report_required: this.$page.props.programme_data ? Number(this.$page.props.programme_data.progress_report_required) : '',
                 programme_info: [],
                 programme_active: this.$page.props.programme_data ? !!this.$page.props.programme_data.status  : false,
             },
