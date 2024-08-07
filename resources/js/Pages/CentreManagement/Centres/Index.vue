@@ -7,7 +7,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between space-x-1">
             <div class="relative">
                 <MagnifyingGlassIcon class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input type="text" placeholder="Search" class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" v-debounce:800ms="search" v-model="params.search"/>

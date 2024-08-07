@@ -1,18 +1,28 @@
 <template>
   <Popover v-model:open="isOpen">
-    <PopoverTrigger as-child click="togglePopover">
-      <Button
-        variant="outline"
-        class="w-full justify-between"
-      >
-        {{ multiple ? `${selectedItems.length} selected` : (selectedItem ? (isObjectItems ? selectedItem[labelProperty] : selectedItem) : selectPlaceholder) }}
+    <PopoverTrigger as-child @click="togglePopover" :disabled="disabled">
+      <Button variant="outline" class="w-full justify-between">
+        <span class="truncate">
+          {{ multiple 
+            ? `${selectedItems.length} selected` 
+            : (selectedItem ? (isObjectItems ? selectedItem[labelProperty] : selectedItem) : selectPlaceholder) 
+          }}
+        </span>
         <CaretSortIcon class="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>
     <PopoverContent class="flex w-full p-0 min-w-[var(--radix-popover-trigger-width)]">
       <Command>
-        <CommandInput type="text" class="h-9" :placeholder="searchPlaceholder" v-model="searchQuery" @input="handleInput"/>
-        <CommandEmpty class="py-4">{{ loading ? 'Searching...' : 'No results found.' }}</CommandEmpty>
+        <CommandInput 
+          type="text" 
+          class="h-9" 
+          :placeholder="searchPlaceholder" 
+          v-model="searchQuery" 
+          @input="handleInput"
+        />
+        <CommandEmpty class="py-4">
+          {{ loading ? 'Searching...' : 'No results found.' }}
+        </CommandEmpty>
         <CommandList>
           <CommandGroup>
             <!-- Select All Option -->
@@ -30,12 +40,12 @@
                 :class="[
                   'ml-auto h-4 w-4',
                   {
-                    'opacity-100': multiple
-                      ? this.selectedItems.includes(isObjectItems ? item[this.valueProperty] : item)
+                    'opacity-100': multiple 
+                      ? selectedItems.includes(isObjectItems ? item[this.valueProperty] : item)
                       : (isObjectItems ? selectedItem?.[valueProperty] === item[valueProperty] : selectedItem === item),
-                    'opacity-0': !multiple
+                    'opacity-0': !multiple 
                       ? !(isObjectItems ? selectedItem?.[valueProperty] === item[valueProperty] : selectedItem === item)
-                      : !this.selectedItems.includes(isObjectItems ? item[this.valueProperty] : item),
+                      : !selectedItems.includes(isObjectItems ? item[this.valueProperty] : item),
                   },
                 ]"
               />
@@ -48,23 +58,21 @@
   <p class="text-sm text-red-500 font-semibold" v-if="typeof error === 'string'">
     {{ error }}
   </p>
-  <p class="text-sm text-red-500 font-semibold" v-if="typeof error === 'boolean' && error === true">
+  <p class="text-sm text-red-500 font-semibold" v-if="typeof error === 'boolean' && error">
     This field is required.
   </p>
 </template>
 
-
 <script>
 import { CaretSortIcon, CheckIcon } from '@radix-icons/vue'
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from '@/Components/ui/command'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 
 export default {
+  emits: ['search', 'select', 'update:modelValue'],
   components: { 
-    CaretSortIcon, CheckIcon, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut,
-    Popover, PopoverContent, PopoverTrigger
+    CaretSortIcon, CheckIcon, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Popover, PopoverContent, PopoverTrigger
   },
-  emits: ['update:modelValue', 'select', 'search'],
   props: {
     items: {
       type: Array,
@@ -75,7 +83,7 @@ export default {
       required: false,
     },
     labelProperty: {
-      type: String,
+      type: [String, Number], // Accept numbers as well
       default: 'name',
     },
     valueProperty: {
@@ -103,21 +111,21 @@ export default {
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
       isOpen: false,
       searchQuery: '',
-      selectedItems: this.multiple ? (Array.isArray(this.modelValue) ? this.modelValue : []) : this.modelValue || null, // Initialize based on modelValue
+      selectedItems: this.multiple ? (Array.isArray(this.modelValue) ? this.modelValue : []) : this.modelValue || null,
     };
   },
   watch: {
     modelValue(newValue) {
-      if (this.multiple) {
-        this.selectedItems = Array.isArray(newValue) ? newValue : [];
-      } else {
-        this.selectedItems = newValue;
-      }
+      this.selectedItems = this.multiple ? (Array.isArray(newValue) ? newValue : []) : newValue;
     },
   },
   computed: {
@@ -137,17 +145,18 @@ export default {
       }
     },
     filteredItems() {
-      const searchQuery = this.searchQuery.toLowerCase();
-      if (this.isObjectItems) {
-        return this.items.filter(item =>
-          item[this.labelProperty].toLowerCase().includes(searchQuery) ||
-          this.selectedItems.includes(item[this.valueProperty])
-        );
-      }
-      return this.items.filter(item =>
-        item.toLowerCase().includes(searchQuery) ||
-        this.selectedItems.includes(item)
-      );
+      const searchQuery = this.searchQuery.trim().toLowerCase();
+
+      return this.items.filter(item => {
+        const labelValue = this.isObjectItems ? item[this.labelProperty] : item;
+
+        if (typeof labelValue === 'number') {
+          return labelValue.toString().includes(searchQuery);
+        } else if (typeof labelValue === 'string') {
+          return labelValue.toLowerCase().includes(searchQuery);
+        }
+        return false;
+      });
     },
     allSelected() {
       return this.filteredItems.length > 0 && this.filteredItems.every(item =>
@@ -157,7 +166,7 @@ export default {
   },
   methods: {
     togglePopover() {
-      this.isOpen = !this.isOpen; // Toggle the state
+      this.isOpen = !this.isOpen;
     },
     selectItem(item) {
       const value = this.isObjectItems ? item[this.valueProperty] : item;
@@ -173,19 +182,16 @@ export default {
         this.$emit('update:modelValue', value);
         this.isOpen = false;
       }
-      this.$emit('select', item); // Emit the select event with the selected item
+      this.$emit('select', item);
     },
     selectAll() {
-      if (this.allSelected) {
-        this.selectedItems = [];
-      } else {
-        this.selectedItems = this.filteredItems.map(item =>
-          this.isObjectItems ? item[this.valueProperty] : item
-        );
-      }
+      this.selectedItems = this.allSelected ? [] : this.filteredItems.map(item =>
+        this.isObjectItems ? item[this.valueProperty] : item
+      );
       this.$emit('update:modelValue', this.selectedItems);
     },
     handleInput(event) {
+      this.searchQuery = event.target.value; // Update the search query
       this.$emit('search', event.target.value);
     },
   },
@@ -193,8 +199,8 @@ export default {
 </script>
 
 <style>
-.popover-content-width-same-as-its-trigger{
-  width: "var(--radix-popover-trigger-width)";
-  max-height: "var(--radix-popover-content-available-height)";
+.popover-content-width-same-as-its-trigger {
+  width: var(--radix-popover-trigger-width);
+  max-height: var(--radix-popover-content-available-height);
 }
 </style>

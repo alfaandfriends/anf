@@ -100,7 +100,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
         <Card>
             <template #title>Security</template>
             <template #content>
-                <div class="grid grid-cols-1 2xl:grid-cols-3 gap-0 sm:gap-4">
+                <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4">
                     <div>
                         <Label>Current Password<span class="text-red-500">*</span></Label>
                         <Input type="password" :error="$page.props.errors.current_password" v-model="security_form.current_password"></Input>

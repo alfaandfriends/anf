@@ -13,6 +13,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { vue3Debounce } from 'vue-debounce';
 import  VueHtmlToPaper from './Plugins/VueHtmlToPaper'
 import axios from 'axios';
+import { setupCalendar } from 'v-calendar';
 
 /* Shadcn UI */
 import { Label } from '@/Components/ui/label'
@@ -22,6 +23,7 @@ import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { Switch } from '@/Components/ui/switch'
 import ComboBox from '@/Components/ComboBox.vue'
+import Datepicker from '@/Components/Datepicker.vue'
 
 /* Intercept axios request */
 // axios.interceptors.response.use(
@@ -43,6 +45,7 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(VueHtmlToPaper)
+            .use(setupCalendar)
             .directive('debounce', vue3Debounce({
                 lock: true,
             }))
@@ -54,6 +57,7 @@ createInertiaApp({
             .component('Checkbox', Checkbox)
             .component('Switch', Switch)
             .component('ComboBox', ComboBox)
+            .component('Datepicker', Datepicker)
             .mount(el);
     },
 });
