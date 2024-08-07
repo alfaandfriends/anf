@@ -808,12 +808,13 @@ class StudentController extends Controller
     }
 
     public function addPromo(Request $request){
-
+        $student_fee_info   =   collect(DB::table('student_fees')->where('id', $request->student_fee_id)->first())->toArray();
+        $fee_info           =   collect(DB::table('programme_level_fees')->where('id', $student_fee_info['fee_id'])->first())->toArray();
+        $invoice_info       =   json_decode(DB::table('invoices')->where('id', $student_fee_info['invoice_id'])->pluck('invoice_items')->first(), true);
         
-        $fee_info       =   collect(DB::table('student_fees')->where('id', $request->student_fee_id)->first())->toArray();
-        $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info['invoice_id'])->pluck('invoice_items')->first(), true);
-
-        $updated_fees = collect($invoice_info)->map(function ($fee) use ($request){
+        $updated_fees = collect($invoice_info)->map(function ($fee) use ($request, $student_fee_info, $fee_info){
+            $fee['use_old_fee']         =   $student_fee_info['use_old_fee'];
+            $fee['old_programme_fee']   =   $fee['use_old_fee'] ? $fee_info['fee_amount'] : $fee_info['new_fee_amount'];
             if ($fee['fee_id'] === $request->fee_id) {
                 $fee['promos'][] = [
                     "value" => (int)$request->data['value'],
@@ -830,7 +831,7 @@ class StudentController extends Controller
             return $fee;
         });
         
-        DB::table('invoices')->where('id', $fee_info['invoice_id'])->delete(); 
+        DB::table('invoices')->where('id', $student_fee_info['invoice_id'])->delete(); 
         
         DB::table('student_fee_promotions')->insert([
             'student_fee_id'        =>  $request->student_fee_id,
@@ -839,15 +840,15 @@ class StudentController extends Controller
         ]);
         
         /* Create latest Invoice */
-        $new_invoice_data['student_id']         =   $fee_info['student_id'];
-        $new_invoice_data['children_id']        =   StudentHelper::getChildId($fee_info['student_id']);
+        $new_invoice_data['student_id']         =   $student_fee_info['student_id'];
+        $new_invoice_data['children_id']        =   StudentHelper::getChildId($student_fee_info['student_id']);
         $new_invoice_data['invoice_items']      =   $updated_fees;
         $new_invoice_data['date_admission']     =   now()->format('Y-m-d');
-        $new_invoice_data['currency']           =   StudentHelper::getStudentCurrency($fee_info['student_id']);
+        $new_invoice_data['currency']           =   StudentHelper::getStudentCurrency($student_fee_info['student_id']);
     
         $new_invoice_id =   InvoiceHelper::newFeeInvoice($new_invoice_data);
         
-        DB::table('student_fees')->where('invoice_id', $fee_info['invoice_id'])->update([
+        DB::table('student_fees')->where('invoice_id', $student_fee_info['invoice_id'])->update([
             'invoice_id'    =>  $new_invoice_id
         ]);
 
