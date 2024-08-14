@@ -9,6 +9,26 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
+        <div class="flex items-center justify-between">
+            <div class="flex space-x-2">
+                <div class="relative">
+                    <MagnifyingGlassIcon class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input type="text" placeholder="Search" class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" v-debounce:800ms="search" v-model="params.search"/>
+                </div>
+                <Button class="border border-slate-700 border-dashed bg-white text-slate-800 hover:bg-slate-50" @click="showFilters()"> 
+                    <Filter class="h-4 w-4" />
+                    <span class="ml-1 hidden sm:block">Filter</span>
+                </Button>
+            </div>
+            <Button @click="addClass(params.centre_id)" v-if="$page.props.can.create_classes">
+                <PlusCircle class="h-4 w-4" />
+                <span class="ml-1 hidden sm:block">New Class</span>
+            </Button>
+        </div>
+        <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-5 gap-2" v-if="show_filters">
+            <ComboBox :items="$page.props.allowed_centres" label-property="label" value-property="ID" @select="search" v-model="params.centre_id" select-placeholder="Select Centre" search-placeholder="Search centre..."></ComboBox>
+            <ComboBox :items="$page.props.days_of_the_week" label-property="name" value-property="id" @select="search" v-model="params.day" select-placeholder="Day of the Week" search-placeholder="Search day..."></ComboBox>
+        </div>
         <div class="py-4 px-4">
             <div class="flex justify-end mb-3" v-if="$page.props.can.create_orders">
                 <BreezeButton :url="route('orders.create')">Add New Order</BreezeButton>
@@ -185,60 +205,6 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                 </div>
             </template>
         </Modal>
-        <Modal :showModal="show_invoice" modalType="md" @hideModal="show_invoice = false" v-if="show_invoice">
-            <template v-slot:header>
-                <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">   
-                    <h3 class="text-gray-900 text-xl font-semibold">                
-                        Invoice
-                    </h3>   
-                    <button type="button" @click="show_invoice = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                    </button>
-                </div>               
-            </template>
-            <template v-slot:content>
-                <Invoice :invoice_data="invoice_data"></Invoice>
-            </template>
-            <template v-slot:footer>
-                <div class="flex justify-between space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="blue" class="px-4 py-2 space-x-2" @click="print">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-                            <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
-                        </svg>
-                        <span>Print</span>
-                    </BreezeButton>
-                    <BreezeButton buttonType="gray" @click="show_invoice = false">Close</BreezeButton>
-                </div>
-            </template>
-        </Modal>
-        <Modal :showModal="show_packing_slip" modalType="md" @hideModal="show_packing_slip = false" v-if="show_packing_slip">
-            <template v-slot:header>
-                <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">                  
-                    <h3 class="text-gray-900 text-xl font-semibold">                
-                        Packing Slip
-                    </h3>    
-                    <button type="button" @click="show_packing_slip = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                    </button>
-                </div>              
-            </template>
-            <template v-slot:content>
-                <PackingSlip :packing_slip_data="packing_slip_data"></PackingSlip>
-            </template>
-            <template v-slot:footer>
-                <div class="flex justify-between space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="blue" class="px-4 py-2 space-x-2" @click="print">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-                            <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
-                        </svg>
-                        <span>Print</span>
-                    </BreezeButton>
-                    <BreezeButton buttonType="gray" @click="show_packing_slip = false">Close</BreezeButton>
-                </div>
-            </template>
-        </Modal>
     </BreezeAuthenticatedLayout>
 </template>
 
@@ -246,8 +212,6 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
 import Modal from '@/Components/Modal.vue'
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import moment from 'moment'
-import Invoice from '@/Pages/Order/Invoice.vue'
-import PackingSlip from '@/Pages/Order/PackingSlip.vue'
 import { debounce } from 'vue-debounce'
 import Pagination from '@/Components/Pagination.vue'
 import Multiselect from '@vueform/multiselect'
@@ -342,6 +306,9 @@ export default {
             });
             // this.packing_slip_data = this.$page.props.orders.data[index]
             // this.show_packing_slip = true
+        },
+        showFilters(){
+            this.show_filters = !this.show_filters
         },
         search(){
             this.$inertia.get(this.route('orders'), this.params, { replace: true, preserveState: true});

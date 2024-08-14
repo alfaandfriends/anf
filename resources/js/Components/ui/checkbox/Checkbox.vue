@@ -9,18 +9,19 @@ import { CheckIcon } from "@radix-icons/vue";
 import { cn } from "@/lib/utils";
 
 const props = defineProps({
+  modelValue: { type: Array, required: false, default: () => [] },
   defaultChecked: { type: Boolean, required: false },
   checked: { type: [Boolean, String], required: false },
   disabled: { type: Boolean, required: false },
   required: { type: Boolean, required: false },
   name: { type: String, required: false },
-  value: { type: String, required: false },
-  id: { type: String, required: false },
+  value: { type: [Number, String], required: false },
+  id: { type: [Number, String], required: false },
   asChild: { type: Boolean, required: false },
   as: { type: null, required: false },
   class: { type: null, required: false },
 });
-const emits = defineEmits(["update:checked"]);
+const emits = defineEmits(["update:checked", "update:modelValue"]);
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
@@ -29,10 +30,22 @@ const delegatedProps = computed(() => {
 });
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits);
+
+const handleClick = () => {
+  const newValue = props.value;
+  const isChecked = props.modelValue.includes(newValue);
+
+  const newModelValue = isChecked
+    ? props.modelValue.filter(item => item !== newValue)
+    : [...props.modelValue, newValue];
+
+  emits('update:modelValue', newModelValue);
+};
 </script>
 
 <template>
   <CheckboxRoot
+    @click="handleClick"
     v-bind="forwarded"
     :class="
       cn(

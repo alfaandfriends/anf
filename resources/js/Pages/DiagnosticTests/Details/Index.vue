@@ -19,7 +19,6 @@ import BreezeButton from '@/Components/Button.vue';
                                         <div class="flex justify-between border-b border-dashed border-indigo-900 mt-1 items-center mb-4">
                                             <div class="flex items-center space-x-2">
                                                 <h1 class="text-indigo-800 font-bold">Categories</h1>
-                                                <!-- <Tooltip :raw_HTML="categories_tooltip"></Tooltip> -->
                                             </div>
                                             <div class="flex justify-start mb-2">
                                                 <BreezeButton :url="route('dt.settings.categories.create', {'dt_id': $page.props.diagnostic_test_id})">
@@ -165,7 +164,7 @@ import { VueDraggableNext } from 'vue-draggable-next'
 
 export default defineComponent({
     components: {
-        Head, Link, TabGroup, TabList, Tab, TabPanels, TabPanel, ConfirmationModal, TrashIcon, draggable: VueDraggableNext, Tooltip
+        Head, Link, TabGroup, TabList, Tab, TabPanels, TabPanel, ConfirmationModal, TrashIcon, draggable: VueDraggableNext
     },
     props: {
         diagnostic_test_id: String

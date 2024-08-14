@@ -98,14 +98,14 @@ class ClassController extends Controller
             'start_time'            => 'required',
             'end_time'              => 'required',
         ]);
-
+        
         $class_id   =   DB::table('classes')->insertGetId([
             'centre_id'             =>  $request->centre_id,
             'programme_level_id'    =>  $request->programme_level_id,
             'class_day_id'          =>  $request->class_day,
             'class_method_id'       =>  $request->class_method,
-            'start_time'            =>  Carbon::createFromTime($request->start_time['hours'], $request->start_time['minutes'], $request->start_time['seconds'])->format('H:i'),
-            'end_time'              =>  Carbon::createFromTime($request->end_time['hours'], $request->end_time['minutes'], $request->end_time['seconds'])->format('H:i'),
+            'start_time'            =>  Carbon::parse($request->start_time)->setTimezone('Asia/Kuala_Lumpur'),
+            'end_time'              =>  Carbon::parse($request->end_time)->setTimezone('Asia/Kuala_Lumpur'),
             'capacity'              =>  $request->class_capacity,
             'status'                =>  $request->class_status,
         ]);
@@ -219,8 +219,8 @@ class ClassController extends Controller
             'programme_level_id'    =>  $request->programme_level_id,
             'class_day_id'          =>  $request->class_day,
             'class_method_id'       =>  $request->class_method,
-            'start_time'            =>  Carbon::createFromTime($request->start_time['hours'], $request->start_time['minutes'], $request->start_time['seconds'])->format('H:i'),
-            'end_time'              =>  Carbon::createFromTime($request->end_time['hours'], $request->end_time['minutes'], $request->end_time['seconds'])->format('H:i'),
+            'start_time'            =>  Carbon::parse($request->start_time)->setTimezone('Asia/Kuala_Lumpur'),
+            'end_time'              =>  Carbon::parse($request->end_time)->setTimezone('Asia/Kuala_Lumpur'),
             'capacity'              =>  $request->class_capacity,
             'status'                =>  $request->class_status,
             'updated_at'            =>  Carbon::now(),

@@ -11,16 +11,16 @@ import BreezeButton from '@/Components/Button.vue';
         <Card>
             <template #title>Assign Centre</template>
             <template #content>
-                <div class="grid grid-cols-1 2xl:grid-cols-3 gap-2">
-                    <div class="mb-4">
+                <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4">
+                    <div>
                         <Label>Name</Label>
                         <Input type="text" v-model="$page.props.user_info.display_name" disabled></Input>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <Label>Email</Label>
                         <Input type="text" v-model="$page.props.user_info.user_email" disabled></Input>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <Label>Centre<span class="text-red-500">*</span></Label>
                         <ComboBox :multiple="true" :items="$page.props.allowed_centres" label-property="label" value-property="ID" :error="$page.props.errors.centre_id" v-model="selected_centres" select-placeholder="Select Centre" search-placeholder="Search centre..."></ComboBox>
                     </div>

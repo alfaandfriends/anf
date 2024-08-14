@@ -8,8 +8,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Sheet, SheetContent, SheetTrigger } from '@/Components/ui/sheet'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
 import { ScrollArea } from '@/Components/ui/scroll-area'
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from '@/Components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 import Breadcrumbs from '@/Components/Breadcrumbs.vue'
 
 const { toast } = useToast()
@@ -19,8 +17,7 @@ export default {
         CircleUser, Menu,
         BreezeApplicationLogo, Link, Breadcrumbs, useToast, Toaster, DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
         DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, Sheet, SheetContent, SheetTrigger, Accordion, AccordionContent, AccordionItem, 
-        AccordionTrigger, ScrollArea, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, 
-        CommandShortcut, Popover, PopoverContent, PopoverTrigger
+        AccordionTrigger, ScrollArea
     },
     data() {
         return {
@@ -181,74 +178,74 @@ export default {
         <div class="flex flex-col">
             <header class="flex h-14 items-center gap-4 border-b bg-white shadow px-4 lg:h-[60px] lg:px-6">
                 <Sheet>
-                <SheetTrigger as-child>
-                    <Button
-                    variant="outline"
-                    size="icon"
-                    class="shrink-0 md:hidden"
-                    >
-                    <Menu class="h-5 w-5" />
-                    <span class="sr-only">Toggle navigation menu</span>
-                    </Button>
-                </SheetTrigger>
-                <SheetContent side="left" class="flex flex-col p-4">
-                        <Link href="/admin">
-                            <BreezeApplicationLogo class="h-6 fill-current text-gray-500" />
-                            <span class="sr-onlyfont-bold">ALFA and Friends</span>
-                        </Link>
-                        <ScrollArea class="h-screen px-4">
-                            <div class="flex-1">
-                                <nav class="grid items-start text-sm font-medium gap-y-1">
-                                    <template v-for="section, section_key in $page.props.menu">
-                                        <span class="mb-1 text-xs font-semibold">{{ section.name }}</span>
-                                        <div class="mb-3">
-                                            <template v-for="menu, menu_key in section.menus">
-                                                <template v-if="menu.menu_route && menu.menu_status == 1">
-                                                    <Link
-                                                        v-if="$page.props.can[menu.menu_permission]"
-                                                        :href="route(menu.menu_route)"
-                                                        class="flex items-center justify-between mb-1 px-3 py-2 transition cursor-pointer group hover:bg-slate-900 hover:text-slate-200 rounded-lg"
-                                                        :class="route().current() && route().current().startsWith(menu.menu_route) ? 'text-white tracking-wide bg-slate-900' : ''"
-                                                    >
-                                                        <div class="flex items-center">
-                                                            <span class="mr-3 h-6 w-6"><img :src="'/images/' + menu.menu_icon"></span>
-                                                            <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
-                                                        </div>
-                                                    </Link>
+                    <SheetTrigger as-child>
+                        <Button
+                        variant="outline"
+                        size="icon"
+                        class="shrink-0 md:hidden"
+                        >
+                        <Menu class="h-5 w-5" />
+                        <span class="sr-only">Toggle navigation menu</span>
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" class="flex flex-col p-4">
+                            <Link href="/admin" class="flex item-center">
+                                <BreezeApplicationLogo class="h-6 fill-current text-gray-500" />
+                                <span class="font-bold font-noto ml-3">ALFA and Friends</span>
+                            </Link>
+                            <ScrollArea class="h-screen px-4">
+                                <div class="flex-1">
+                                    <nav class="grid items-start text-sm font-medium gap-y-1">
+                                        <template v-for="section, section_key in $page.props.menu">
+                                            <span class="mb-1 text-xs font-semibold">{{ section.name }}</span>
+                                            <div class="mb-3">
+                                                <template v-for="menu, menu_key in section.menus">
+                                                    <template v-if="menu.menu_route && menu.menu_status == 1">
+                                                        <Link
+                                                            v-if="$page.props.can[menu.menu_permission]"
+                                                            :href="route(menu.menu_route)"
+                                                            class="flex items-center justify-between mb-1 px-3 py-2 transition cursor-pointer group hover:bg-slate-900 hover:text-slate-200 rounded-lg"
+                                                            :class="route().current() && route().current().startsWith(menu.menu_route) ? 'text-white tracking-wide bg-slate-900' : ''"
+                                                        >
+                                                            <div class="flex items-center">
+                                                                <span class="mr-3 h-6 w-6"><img :src="'/images/' + menu.menu_icon"></span>
+                                                                <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
+                                                            </div>
+                                                        </Link>
+                                                    </template>
+                                                    <template v-else>
+                                                        <Accordion type="single" collapsible v-if="$page.props.can[menu.menu_permission]" :defaultValue="menu_opened.menu_key == menu_key && menu_opened.section_key == section_key ? `item-${menu_key}` : ''">
+                                                            <AccordionItem :value="`item-${menu_key}`" :class="'border-0'">
+                                                                <AccordionTrigger class="flex items-center justify-between px-3 py-2 transition cursor-pointer group hover:bg-slate-900 hover:text-slate-200 rounded-lg" :class="menu_opened.menu_key == menu_key && menu_opened.section_key == section_key ? 'text-white tracking-wide bg-slate-900' : ''">
+                                                                    <div class="flex items-center">
+                                                                        <span class="mr-3 h-6 w-6"><img :src="'/images/' + menu.menu_icon"></span>
+                                                                        <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
+                                                                    </div>
+                                                                </AccordionTrigger>
+                                                                <AccordionContent>
+                                                                    <div class="pl-9 py-0.5">
+                                                                        <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
+                                                                            <Link 
+                                                                                v-if="$page.props.can[sub_menu.sub_menu_permission] && sub_menu.sub_menu_status == 1"
+                                                                                :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''"
+                                                                                class="flex items-center justify-between mb-1 px-3 py-1.5 transition cursor-pointer group hover:bg-slate-300 hover:text-black rounded-lg"
+                                                                                :class="route().current() && route().current().startsWith(sub_menu.sub_menu_route) ? 'text-black tracking-wide bg-slate-300' : ''"
+                                                                            >
+                                                                                <span class="select-none tracking-wide">{{ sub_menu.sub_menu_name }}</span>
+                                                                            </Link>
+                                                                        </template>
+                                                                    </div>
+                                                                </AccordionContent>
+                                                            </AccordionItem>
+                                                        </Accordion>
+                                                    </template>
                                                 </template>
-                                                <template v-else>
-                                                    <Accordion type="single" collapsible v-if="$page.props.can[menu.menu_permission]" :defaultValue="menu_opened.menu_key == menu_key && menu_opened.section_key == section_key ? `item-${menu_key}` : ''">
-                                                        <AccordionItem :value="`item-${menu_key}`" :class="'border-0'">
-                                                            <AccordionTrigger class="flex items-center justify-between px-3 py-2 transition cursor-pointer group hover:bg-slate-900 hover:text-slate-200 rounded-lg" :class="menu_opened.menu_key == menu_key && menu_opened.section_key == section_key ? 'text-white tracking-wide bg-slate-900' : ''">
-                                                                <div class="flex items-center">
-                                                                    <span class="mr-3 h-6 w-6"><img :src="'/images/' + menu.menu_icon"></span>
-                                                                    <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
-                                                                </div>
-                                                            </AccordionTrigger>
-                                                            <AccordionContent>
-                                                                <div class="pl-9 py-0.5">
-                                                                    <template v-for="(sub_menu, sub_menu_key) in menu.sub_menus">
-                                                                        <Link 
-                                                                            v-if="$page.props.can[sub_menu.sub_menu_permission] && sub_menu.sub_menu_status == 1"
-                                                                            :href="sub_menu.sub_menu_route ? route(sub_menu.sub_menu_route) : ''"
-                                                                            class="flex items-center justify-between mb-1 px-3 py-1.5 transition cursor-pointer group hover:bg-slate-300 hover:text-black rounded-lg"
-                                                                            :class="route().current() && route().current().startsWith(sub_menu.sub_menu_route) ? 'text-black tracking-wide bg-slate-300' : ''"
-                                                                        >
-                                                                            <span class="select-none tracking-wide">{{ sub_menu.sub_menu_name }}</span>
-                                                                        </Link>
-                                                                    </template>
-                                                                </div>
-                                                            </AccordionContent>
-                                                        </AccordionItem>
-                                                    </Accordion>
-                                                </template>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </nav>
-                            </div>
-                        </ScrollArea>
-                </SheetContent>
+                                            </div>
+                                        </template>
+                                    </nav>
+                                </div>
+                            </ScrollArea>
+                    </SheetContent>
                 </Sheet>
                 <div class="w-full flex-1">
                 </div>

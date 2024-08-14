@@ -61,7 +61,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required',
+            'email' => 'required:email',
             'username' => 'required',
             'full_name' => 'required',
             'country_id' => 'required',
@@ -70,6 +70,18 @@ class UserController extends Controller
             'country_state' => 'required',
             'address' => 'required',
         ]);
+        
+        $email_exists = User::where('user_email', $request->email)->exists();
+        $username_exists = User::where('user_login', $request->username)->exists();
+        if($email_exists){
+            return back()->with(['type'=>'error', 'message'=>'Email address has been used.']);
+        }
+        if($username_exists){
+            return back()->with(['type'=>'error', 'message'=>'Username has been taken.']);
+        }
+        if(empty($request->selected_roles)){
+            return back()->with(['type'=>'error', 'message'=>'At least one (1) role is required.']);
+        }
         
         $random_password        =   Str::random(20);
         $hashed_random_password =   Hash::make($random_password);
@@ -128,11 +140,11 @@ class UserController extends Controller
             $log_data =   'Created user ID '.$new_user_id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect(route('users'))->with(['type'=>'success', 'message'=>'Login details has been sent to the registered email !']);
+            return redirect(route('users'))->with(['type'=>'success', 'message'=>'Login details has been sent to the registered email.']);
         }
         catch(Exception $e){
             DB::rollback();
-            return back()->with(['type'=>'error', 'message'=>'An error has occured, please try again !']);
+            return back()->with(['type'=>'error', 'message'=>'An error has occured, please try again.']);
         }
     }
 
@@ -164,12 +176,6 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        if(!$request->form['valid']['email']){
-            return back()->with(['type'=>'error', 'message'=>'Email is invalid or has been used!']);
-        }
-        if(!$request->form['valid']['username']){
-            return back()->with(['type'=>'error', 'message'=>'Username has been taken!']);
-        }
         $user                           =   User::find($request->user_id);
 
         $admin_role                     =   array(1, 2);
@@ -204,9 +210,7 @@ class UserController extends Controller
         // }
         
         User::where('ID', $request->user_id)->update([
-            'user_login'            => $request['form']['username'],
             'user_nicename'         => $request['form']['username'],
-            'user_email'            => $request['form']['email'],
             'user_address'          => $request['form']['address'],
             'user_country_id'       => $request['form']['country_id'],
             'user_contact'          => $request['form']['contact_number'],
@@ -217,7 +221,7 @@ class UserController extends Controller
         $log_data =   'Updated user ID '.$request->user_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('users'))->with(['type'=>'success', 'message'=>'Operation successfull !']);
+        return redirect(route('users'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
 
     }
 
@@ -228,7 +232,7 @@ class UserController extends Controller
         $log_data =   'Deleted user ID '.$user_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect()->back()->with(['type'=>'success', 'message'=>'User deleted successfully !']);
+        return redirect()->back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 
     public function completedTour(Request $request){
@@ -264,7 +268,7 @@ class UserController extends Controller
         $log_data =   'Resetted password for user ID '.$request->data;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect()->back()->with(['type'=>'success', 'message'=>"User's password has been reset successfully! New password will be sent to their email."]);
+        return redirect()->back()->with(['type'=>'success', 'message'=>"New password has been set and sent to their email."]);
     }
 
     public function getUserInfo($user_id)

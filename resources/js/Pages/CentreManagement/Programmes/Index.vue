@@ -14,7 +14,7 @@
             </div>
             <Button @click="$inertia.get(route('programmes.create'))" v-if="$page.props.can.create_programmes">
                 <PlusCircle class="h-4 w-4" />
-                <span class="ml-1 hidden sm:block">New Centre</span>
+                <span class="ml-1 hidden sm:block">New Programme</span>
             </Button>
         </div>
         <Card>

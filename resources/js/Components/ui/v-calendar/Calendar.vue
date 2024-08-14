@@ -280,7 +280,7 @@ const vCalendarSlots = computed(() => {
  * Timepicker styles
  */
 .vc-time-picker {
-  @apply flex flex-col items-center p-2;
+  @apply flex flex-col items-center justify-center;
 }
 .vc-time-picker.vc-invalid {
   @apply pointer-events-none opacity-50;
@@ -292,16 +292,19 @@ const vCalendarSlots = computed(() => {
   @apply mt-1;
 }
 .vc-time-header {
-  @apply flex items-center text-sm font-semibold uppercase mt-1 px-1 leading-6;
+  @apply hidden flex items-center text-sm font-semibold uppercase mt-1 px-1 leading-6;
 }
 .vc-time-select-group {
-  @apply inline-flex items-center px-1 rounded-md bg-primary-foreground border border-solid border-secondary;
+  @apply flex items-center rounded-md bg-primary-foreground h-10 space-x-2 mt-0 bg-white;
 }
 .vc-time-select-group .vc-base-icon {
-  @apply mr-1 text-primary stroke-primary;
+  @apply text-primary stroke-primary ml-2;
+}
+.vc-time-select-group .vc-base-select {
+  @apply border border-gray-400 hover:bg-gray-100 cursor-pointer rounded-md px-1;
 }
 .vc-time-select-group select {
-  @apply bg-primary-foreground p-1 appearance-none outline-none text-center;
+  @apply bg-primary-foreground appearance-none outline-none text-center cursor-pointer;
 }
 .vc-time-weekday {
   @apply text-muted-foreground tracking-wide;

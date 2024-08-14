@@ -23,24 +23,24 @@
         <Card>
             <template #title>Centre Information</template>
             <template #content>
-                <div class="grid grid-cols-1 2xl:grid-cols-2 gap-2">
-                    <div class="mb-4">
+                <div class="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+                    <div>
                         <Label>Name<span class="text-red-500">*</span></Label>
                         <Input type="text" :error="$page.props.errors.name" v-model="form.name"></Input>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <Label>Country<span class="text-red-500">*</span></Label>
                         <ComboBox :items="$page.props.countries" label-property="name" value-property="id" :error="$page.props.errors.country" v-model="form.country" select-placeholder="Select Country" search-placeholder="Search country..."></ComboBox>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <Label>Contact Number<span class="text-red-500">*</span></Label>
                         <Input type="text" :error="$page.props.errors.contact_number" v-model="form.contact_number"></Input>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <Label>Email<span class="text-red-500">*</span></Label>
                         <Input type="text" :error="$page.props.errors.email" v-model="form.email"></Input>
                     </div>
-                    <div class="mb-4 2xl:col-span-2">
+                    <div class="2xl:col-span-2">
                         <Label>Address<span class="text-red-500">*</span></Label>
                         <Textarea :error="$page.props.errors.address" v-model="form.address"></Textarea>
                     </div>

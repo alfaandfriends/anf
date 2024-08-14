@@ -19,8 +19,8 @@ class CountryController extends Controller
     }
 
     /* Countries */
-        public function index(){
-            $country_list  =   $this->countryService->getPaginatedCountries(10);
+        public function index(Request $request){
+            $country_list  =   $this->countryService->getPaginatedCountries(10, $request);
 
             return Inertia::render('Country/Index',[
                 'country_list' => $country_list,

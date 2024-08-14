@@ -1,13 +1,16 @@
 <template>
   <Popover v-model:open="isOpen">
     <PopoverTrigger as-child @click="togglePopover" :disabled="disabled">
-      <Button variant="outline" class="w-full justify-between">
-        <span class="truncate">
-          {{ multiple 
-            ? `${selectedItems.length} selected` 
-            : (selectedItem ? (isObjectItems ? selectedItem[labelProperty] : selectedItem) : selectPlaceholder) 
-          }}
-        </span>
+      <Button variant="outline" class="w-full justify-between px-3">
+        <div class="flex items-center">
+          <span :class="['truncate', selectedItem ? 'font-normal' : 'font-medium']">
+            {{ multiple 
+              ? `${selectedItems.length} selected` 
+              : (selectedItem ? (isObjectItems ? selectedItem[labelProperty] : selectedItem) : selectPlaceholder) 
+            }}
+          </span>
+          <CrossCircledIcon class="ml-2 h-4 w-4 text-red-500 shrink-0 hover:text-red-600 font-semibold" v-if="canClear && modelValue" @click="[$emit('update:modelValue',''), this.$emit('select', '')]" />
+        </div>
         <CaretSortIcon class="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>
@@ -55,23 +58,23 @@
       </Command>
     </PopoverContent>
   </Popover>
-  <p class="text-sm text-red-500 font-semibold" v-if="typeof error === 'string'">
+  <p class="text-xs text-red-500 font-semibold" v-if="typeof error === 'string'">
     {{ error }}
   </p>
-  <p class="text-sm text-red-500 font-semibold" v-if="typeof error === 'boolean' && error">
+  <p class="text-xs text-red-500 font-semibold" v-if="typeof error === 'boolean' && error">
     This field is required.
   </p>
 </template>
 
 <script>
-import { CaretSortIcon, CheckIcon } from '@radix-icons/vue'
+import { CaretSortIcon, CheckIcon, CrossCircledIcon } from '@radix-icons/vue'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 
 export default {
   emits: ['search', 'select', 'update:modelValue'],
   components: { 
-    CaretSortIcon, CheckIcon, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Popover, PopoverContent, PopoverTrigger
+    CaretSortIcon, CheckIcon, CrossCircledIcon, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Popover, PopoverContent, PopoverTrigger
   },
   props: {
     items: {
@@ -112,6 +115,10 @@ export default {
       default: false,
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    canClear: {
       type: Boolean,
       default: false,
     }

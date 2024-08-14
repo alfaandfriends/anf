@@ -50,7 +50,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </Button>
                 </div>  
             </template>
-            <template #content v-if="form.programme_info">
+            <template #content v-if="form.programme_info.length">
                 <Collapsible v-for="item, level in groupedItems">
                     <template #trigger>Level {{ level }}</template>
                     <template #content>

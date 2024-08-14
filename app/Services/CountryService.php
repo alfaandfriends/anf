@@ -10,8 +10,12 @@ class CountryService
         return  DB::table('countries')->get();
     }
 
-    public function getPaginatedCountries($perPage)
+    public function getPaginatedCountries($perPage, $request)
     {
-        return  DB::table('countries')->paginate($perPage);
+        return  DB::table('countries')
+                    ->when($request->search, function ($query) use ($request) {
+                        $query->where('name', 'LIKE', "%$request->search%");
+                    })
+                    ->paginate($perPage);
     }
 }

@@ -28,7 +28,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
       )
     "
   />
-  <p class="text-sm text-red-500 font-semibold" v-if="props.error">
+  <p class="text-xs text-red-500 font-semibold" v-if="props.error">
     {{ props.error }}
   </p>
 </template>
