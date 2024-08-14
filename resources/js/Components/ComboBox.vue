@@ -1,12 +1,12 @@
 <template>
   <Popover v-model:open="isOpen">
-    <PopoverTrigger as-child @click="togglePopover" :disabled="disabled">
-      <Button variant="outline" class="w-full justify-between px-3">
+    <PopoverTrigger as-child @click="togglePopover">
+      <Button variant="outline" class="w-full justify-between px-3" :disabled="disabled">
         <div class="flex items-center">
           <span :class="['truncate', selectedItem ? 'font-normal' : 'font-medium']">
             {{ multiple 
               ? `${selectedItems.length} selected` 
-              : (selectedItem ? (isObjectItems ? selectedItem[labelProperty] : selectedItem) : selectPlaceholder) 
+              : (selectedItem ? (isObjectItems ? selectedItem[labelProperty] : selectPlaceholder) : selectPlaceholder) 
             }}
           </span>
           <CrossCircledIcon class="ml-2 h-4 w-4 text-red-500 shrink-0 hover:text-red-600 font-semibold" v-if="canClear && modelValue" @click="[$emit('update:modelValue',''), this.$emit('select', '')]" />
@@ -142,7 +142,7 @@ export default {
     selectedItem() {
       if (this.multiple) {
         return this.items.filter(item =>
-          this.selectedItems.includes(this.isObjectItems ? item[this.valueProperty] : item)
+          this.selectedItems.includes(this.isObjectItems ? item[this.valueProperty] : item) 
         );
       } else {
         if (this.isObjectItems) {

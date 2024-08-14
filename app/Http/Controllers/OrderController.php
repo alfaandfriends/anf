@@ -86,7 +86,7 @@ class OrderController extends Controller
         $log_data =   'Added order ID '.$order_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('orders'))->with(['type'=>'success', 'message'=>'New order has been created!']);
+        return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
     
     public function edit(Request $request)
@@ -116,7 +116,7 @@ class OrderController extends Controller
     public function update(Request $request)
     {
         if(empty($request->products)){
-            return back()->with(['type'=>'error', 'message'=>'Please add some products.']);
+            return back()->with(['type'=>'error', 'message'=>'Please add at least one (1) product.']);
         }
 
         DB::table('orders')->where('id', $request->order_id)->update([
@@ -132,7 +132,7 @@ class OrderController extends Controller
         $log_data =   'Updated order ID '.$request->order_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Order has been updated!']);
+        return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Order has been saved.']);
     }
     
     public function destroy($id)

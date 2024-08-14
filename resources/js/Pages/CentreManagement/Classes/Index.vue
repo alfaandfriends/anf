@@ -15,7 +15,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 </div>
                 <Button class="border border-slate-700 border-dashed bg-white text-slate-800 hover:bg-slate-50" @click="showFilters()"> 
                     <Filter class="h-4 w-4" />
-                    <span class="ml-1 hidden sm:block">Filter</span>
+                    <span class="ml-1 hidden sm:block">Filters</span>
                 </Button>
             </div>
             <Button @click="addClass(params.centre_id)" v-if="$page.props.can.create_classes">

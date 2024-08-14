@@ -38,7 +38,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </div>
                     <div class="xl:col-span-2 2xl:col-span-2">
                         <Label>Address<span class="text-red-500">*</span></Label>
-                        <Input type="text" :error="$page.props.errors.address" v-model="form.address"></Input>
+                        <Textarea type="text" :error="$page.props.errors.address" v-model="form.address"></Textarea>
                     </div>
                     <div>
                         <Label>Contact Number<span class="text-red-500">*</span></Label>

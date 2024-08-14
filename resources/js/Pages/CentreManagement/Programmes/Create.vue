@@ -24,16 +24,16 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
         <Card>
             <template #title>Programme Information</template>
             <template #content>
-                <div class="grid grid-cols-1 2xl:grid-cols-3 gap-2">
-                    <div class="mb-4">
+                <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4">
+                    <div>
                         <Label>Name<span class="text-red-500">*</span></Label>
                         <Input type="text" :error="$page.props.errors.programme_name" v-model="form.programme_name"></Input>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <Label>Country<span class="text-red-500">*</span></Label>
                         <ComboBox :items="$page.props.countries" label-property="name" value-property="id" :error="$page.props.errors.programme_country" v-model="form.programme_country" select-placeholder="Select Country" search-placeholder="Search country..."></ComboBox>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <Label>Progress Report Required<span class="text-red-500">*</span></Label>
                         <ComboBox :items='[{"id": 0, "name": "No"},{"id": 1, "name": "Yes"}]' label-property="name" value-property="id" :error="$page.props.errors.progress_report_required" v-model="form.progress_report_required" select-placeholder="Please Select" search-placeholder="Search..."></ComboBox>
                     </div>
@@ -44,7 +44,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             <template #title>
                 <div class="flex justify-between items-center">
                     Programmes Levels & Fees
-                    <Button buttonType="info" @click="showAddFee">
+                    <Button @click="showAddFee">
                         <PlusCircle class="h-4 w-4" />
                         <span class="ml-1 hidden sm:block">Add</span>
                     </Button>
