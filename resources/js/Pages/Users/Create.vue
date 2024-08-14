@@ -27,7 +27,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <label for="" class="font-medium text-sm" v-if="!checking_email && form.email !='' & email_valid" :class="email_exist ? 'text-red-700' : 'text-green-700'"> {{ email_exist ? 'Email address has been used.' : 'Email address is available.'}} </label>
                                         </div>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="email" name="username" id="username" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="email_exist || $page.props.errors.email ? 'border-red-300' : 'border-gray-300'" v-debounce:1s="checkEmailExist" @keyup="checkEmail()" v-model="form.email" autocomplete="none"/>
+                                            <input type="email" name="username" id="username" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="email_exist || $page.props.errors.email ? 'border-red-300' : 'border-gray-300'" v-debounce:1s="checkEmailExist" @keyup="checkEmail()" v-model.lazy="form.email" autocomplete="none"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
@@ -37,7 +37,7 @@ import BreezeButton from '@/Components/Button.vue';
                                             <label for="" class="font-medium text-sm" v-if="!checking_username && form.username !=''" :class="username_exist ? 'text-red-700' : 'text-green-700'"> {{ username_exist ? 'Username has been taken.' : 'Username is available.'}} </label>
                                         </div>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="username" id="username" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="username_exist || $page.props.errors.email ? 'border-red-300' : 'border-gray-300'" v-debounce:1s="checkUsernameExist" @keyup="checkUsername()"  v-model="form.username" autocomplete="none"/>
+                                            <input type="text" name="username" id="username" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="username_exist || $page.props.errors.email ? 'border-red-300' : 'border-gray-300'" v-debounce:1s="checkUsernameExist" @keyup="checkUsername()"  v-model.lazy="form.username" autocomplete="none"/>
                                         </div>
                                     </div>
                                 </div>
@@ -45,7 +45,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-4">
                                         <label for="full_name" class="block text-sm text-gray-700 font-bold"> Full Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="full_name" id="full_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.full_name ? 'border-red-300' : 'border-gray-300'" v-model="form.full_name" autocomplete="none"/>
+                                            <input type="text" name="full_name" id="full_name" class="capitalize focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.full_name ? 'border-red-300' : 'border-gray-300'" v-model.lazy="form.full_name" autocomplete="none"/>
                                         </div>
                                     </div>
                                 </div>
@@ -57,7 +57,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 autocomplete="off"
                                                 @change="clearState"
                                                 :canDeselect="false"
-                                                v-model="form.country_id"
+                                                v-model.lazy="form.country_id"
                                                 :loading="loading.country"
                                                 :min-chars="1"
                                                 :delay="1"
@@ -119,14 +119,14 @@ import BreezeButton from '@/Components/Button.vue';
                                                     spacer: 'h-9 py-px box-content',
                                                 }"
                                             />
-                                            <input type="hidden" v-model="form.country">
+                                            <input type="hidden" v-model.lazy="form.country">
                                         </div>
                                     </div>
                                     <div class="mb-4">
                                         <label for="contact_number" class="block text-sm text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span> </label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input class="text-center inline-flex items-center px-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-500 text-sm" v-model="form.calling_code" size="5" disabled>
-                                            <input type="number" name="contact_number" id="contact_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm" :class="$page.props.errors.contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.contact_number" autocomplete="none"/>
+                                            <input class="text-center inline-flex items-center px-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-500 text-sm" v-model.lazy="form.calling_code" size="5" disabled>
+                                            <input type="number" name="contact_number" id="contact_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm" :class="$page.props.errors.contact_number ? 'border-red-300' : 'border-gray-300'" v-model.lazy="form.contact_number" autocomplete="none"/>
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +140,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 :delay="1"
                                                 :searchable="true"
                                                 :loading="loading.state"
-                                                v-model="form.country_state"
+                                                v-model.lazy="form.country_state"
                                                 :noOptionsText="'Please select a state'"
                                                 :options="state_list"
                                                 :canDeselect="false"
@@ -204,7 +204,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-4">
                                         <label for="address" class="block text-sm text-gray-700 font-bold"> Address <span class="text-red-500">*</span></label>
                                         <div class="mt-1">
-                                            <textarea id="address" name="address" rows="3" class="capitalize shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.address ? 'border-red-300' : 'border-gray-300'" v-model="form.address" autocomplete="none"/>
+                                            <textarea id="address" name="address" rows="3" class="capitalize shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.address ? 'border-red-300' : 'border-gray-300'" v-model.lazy="form.address" autocomplete="none"/>
                                         </div>  
                                     </div>
                                 </div>
@@ -226,7 +226,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                         <input type="checkbox" class="h-5 w-5 border border-gray-300 rounded-sm bg-white focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer"
                                                                 :id="role.id" 
                                                                 :value="role.id"
-                                                            v-model="form.selected_roles"
+                                                            v-model.lazy="form.selected_roles"
                                                         >
                                                         <span class="ml-2">{{ role.display_name }}</span>
                                                     </label>
@@ -247,13 +247,13 @@ import BreezeButton from '@/Components/Button.vue';
                                     <div class="mb-4">
                                         <label for="child_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="child_name" id="child_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.child_name ? 'border-red-300' : 'border-gray-300'" v-model="child_form.name" autocomplete="none"/>
+                                            <input type="text" name="child_name" id="child_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.child_name ? 'border-red-300' : 'border-gray-300'" v-model.lazy="child_form.name" autocomplete="none"/>
                                         </div>
                                     </div>
                                     <div class="mb-4">
                                         <label for="gender" class="block text-sm font-bold text-gray-700"> Gender <span class="text-red-500">*</span></label>
                                         <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="gender" id="gender" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.gender ? 'border-red-300' : 'border-gray-300'" v-model="child_form.gender" autocomplete="none">
+                                            <select name="gender" id="gender" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.gender ? 'border-red-300' : 'border-gray-300'" v-model.lazy="child_form.gender" autocomplete="none">
                                                 <option value="">-- Select Gender --</option>
                                                 <option :value="gender.id" v-for="(gender, index) in $page.props.gender_list" :key="index">{{ gender.name }}</option>
                                             </select>
@@ -261,7 +261,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </div>
                                     <div class="mb-4">
                                         <label for="end_time" class="block text-sm font-bold text-gray-700"> Date of Birth <span class="text-red-500">*</span></label>
-                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.dob ? '--dp-border-color: #fa9e9e' : ''" v-model="child_form.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" :format="'dd/MM/yyyy'"/>
+                                        <Datepicker :class="'mt-1 rounded-md shadow-sm'" :style="$page.props.errors.dob ? '--dp-border-color: #fa9e9e' : ''" v-model.lazy="child_form.dob" :enableTimePicker="false" :noToday="true" :autoApply="true" :format="'dd/MM/yyyy'"/>
                                     </div>
                                     <div class="mb-4 self-end">
                                         <BreezeButton class="py-2.5 px-4" @click="addChild">Add Child</BreezeButton>
