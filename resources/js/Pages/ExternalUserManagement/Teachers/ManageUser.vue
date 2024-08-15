@@ -4,7 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Edupreneurs" />
+    <Head title="Teachers" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>

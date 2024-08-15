@@ -15,7 +15,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                 <div class="grid grid-cols-1 2xl:grid-cols-2 gap-4">
                     <div>
                         <Label>Student's Name<span class="text-red-500">*</span></Label>
-                        <ComboBox :items="list.students" label-property="name" value-property="id" :error="!!$page.props.errors.student_id" v-model="form.student_id" @search="findStudents" :loading="loading.students" @select="setAddress" :select-placeholder="$page.props.order_info.student_name" search-placeholder="Search student..." disabled/>
+                        <ComboBox :items="list.students" label-property="name" value-property="id" :error="!!$page.props.errors.student_id" v-model="form.student_id" :select-placeholder="$page.props.order_info.student_name" search-placeholder="Search student..." disabled/>
                     </div>
                     <div>
                         <Label>Address<span class="text-red-500">*</span></Label>
@@ -192,9 +192,6 @@ export default {
     components: {
         Head, Link, Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow,
     },
-    // created(){
-    //     this.findStudents(this.$page.props.order_info.student_name)
-    // },
     data(){
         return{
             tracking_status_input: '',
@@ -316,20 +313,6 @@ export default {
         showTrackingStatus(){
             this.tracking_status_input = ''
             this.show.add_tracking_status = true
-        },
-        findStudents(query){
-            if(query){
-                this.loading.students = true
-                axios.get(route('students.find'), {
-                    params: {
-                        'keyword': query
-                    }
-                })
-                .then((res) => {
-                    this.list.students = res.data
-                    this.loading.students = false
-                });
-            }
         },
         clearStudents(){
             this.list.students = []

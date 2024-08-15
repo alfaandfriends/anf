@@ -3,7 +3,7 @@
     <PopoverTrigger as-child @click="togglePopover">
       <Button variant="outline" class="w-full justify-between px-3" :disabled="disabled">
         <div class="flex items-center">
-          <span :class="['truncate', selectedItem ? 'font-normal' : 'font-medium']">
+          <span :class="['truncate', selectedItem ? '' : 'text-gray-500 font-normal']">
             {{ multiple 
               ? `${selectedItems.length} selected` 
               : (selectedItem ? (isObjectItems ? selectedItem[labelProperty] : selectPlaceholder) : selectPlaceholder) 

@@ -24,7 +24,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             </Button>
         </div>
         <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-5 gap-2" v-if="show_filters">
-            <ComboBox :items="$page.props.allowed_centres" label-property="label" value-property="ID" @select="search" v-model="params.centre_id" select-placeholder="Select Centre" search-placeholder="Search centre..."></ComboBox>
+            <ComboBox :items="$page.props.allowed_centres" label-property="label" value-property="ID" @select="search" v-model="params.centre_id" select-placeholder="Centres" search-placeholder="Search centre..."></ComboBox>
             <ComboBox :items="$page.props.days_of_the_week" label-property="name" value-property="id" @select="search" v-model="params.day" select-placeholder="Day of the Week" search-placeholder="Search day..."></ComboBox>
         </div>
         <Card>

@@ -52,7 +52,7 @@ const increment = () => {
     v-bind="attrs"
   >
     <Label v-if="props.label">{{ props.label }}</Label>
-    <NumberFieldContent>
+    <NumberFieldContent class="min-w-32">
       <NumberFieldDecrement @click="decrement" />
       <NumberFieldInput :value="internalValue" @input="e => internalValue.value = e.target.value" />
       <NumberFieldIncrement @click="increment" />

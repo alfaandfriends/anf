@@ -4,7 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Division Managers" />
+    <Head title="Division Manager" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>

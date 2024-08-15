@@ -3,7 +3,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 </script>
 
 <template>
-    <Head title="Centre Managers" />
+    <Head title="Centre Manager" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
