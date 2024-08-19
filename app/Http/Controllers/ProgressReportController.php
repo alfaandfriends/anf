@@ -119,8 +119,10 @@ class ProgressReportController extends Controller
         $config_info        =   DB::table('progress_report_configs')->where('id', $report_details->progress_report_config_id)->first();
         $progress_reports   =   DB::table('progress_report_details')
                                     ->join('progress_report_status', 'progress_report_details.attendance_status', '=', 'progress_report_status.id')
+                                    ->leftJoin('wpvt_users', 'progress_report_details.teacher_user_id', '=', 'wpvt_users.ID')
                                     ->select('progress_report_details.progress_report_id', 'progress_report_details.id', 'progress_report_details.date', 
                                             'progress_report_details.report_data', 'progress_report_details.comments', 'progress_report_details.attendance_status',
+                                            'progress_report_details.revision', 'progress_report_details.teacher_user_id', 'wpvt_users.display_name', 
                                             'progress_report_status.class as attendance_status_class_name', 'progress_report_status.name as attendance_status_name')
                                     ->where('progress_report_id', $request->progress_report_id)->orderBy('progress_report_details.date')->get();
         
@@ -150,6 +152,8 @@ class ProgressReportController extends Controller
             'report_data'           => json_encode($request->report_data, JSON_NUMERIC_CHECK),
             'comments'              => $request->comments,
             'attendance_status'     => $request->attendance_status,
+            'revision'              => $request->revision,
+            'teacher_user_id'       => $request->teacher_user_id,
         ]);
         $log_data =   'Updated progress report ID '.$request->report_id;
         event(new DatabaseTransactionEvent($log_data));
@@ -185,7 +189,7 @@ class ProgressReportController extends Controller
                                             ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
                                             ->join('progress_report_status', 'progress_report_details.attendance_status', '=', 'progress_report_status.id')
                                             ->select('progress_report_details.date', 'progress_report_details.report_data', 'progress_report_details.comments', 
-                                                    'progress_report_status.name as attendance_status_name')
+                                                    'progress_report_details.revision', 'progress_report_status.name as attendance_status_name')
                                             ->where('progress_reports.student_fee_id', $request->student_fee)->orderBy('progress_report_details.date')->get();
 
         $data['report_template']    =    DB::table('progress_reports')

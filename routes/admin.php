@@ -21,6 +21,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ArtBookController;
+use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
@@ -146,6 +147,13 @@ Route::middleware(['auth', 'device'])->group(function(){
                 Route::post('/stories/update', [StoryHelper::class, 'editPost'])->name('stories.update')->middleware('permission:edit_stories');
                 Route::delete('/stories/destroy{id}', [StoryHelper::class, 'deletePost'])->name('stories.destroy')->middleware('permission:delete_stories');
                 Route::get('/stories/get-class-levels/{programme_id}/{class_type_id}', [ClassHelper::class, 'getClassLevels'])->name('stories.get_class_levels');
+            });
+
+            /* Assessments */
+            Route::middleware('permission:assessment_access')->withoutMiddleware('device')->group(function () {
+                Route::get('/assessments', [AssessmentController::class, 'index'])->name('assessments')->middleware('permission:view_assessments');
+                Route::get('/assessments/create/{id}', [AssessmentController::class, 'create'])->name('assessments.create')->middleware('permission:create_assessments');
+                Route::post('/assessments/store', [AssessmentController::class, 'store'])->name('assessments.store')->middleware('permission:create_assessments');
             });
 
             /* Setting */
