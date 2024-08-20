@@ -174,7 +174,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                                 <small class="text-red-500 font-semibold" v-if="!form.teacher_user_id">This field is required.</small>
                             </div>
-                                <div class="">
+                            <div class="">
                                 <div class="flex items-center 2xl:mt-5">
                                     <input id="revision" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-300 focus:ring-0" v-model="form.revision">
                                     <label for="revision" class="select-none w-full py-3 ml-2 text-sm font-medium text-gray-900 cursor-pointer">Revision</label>
@@ -482,7 +482,7 @@ export default {
             this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data) ? JSON.parse(this.$page.props.progress_reports[index].report_data) : []
             this.form.attendance_status     =   this.$page.props.progress_reports[index].attendance_status
             this.form.comments              =   this.$page.props.progress_reports[index].comments
-            this.form.revision              =   !!this.$page.props.progress_reports[index].revision
+            this.form.revision              =   !!String(this.$page.props.progress_reports[index].revision);
             this.show_progress_report       =   true;
         },
         updateProgressReport() {

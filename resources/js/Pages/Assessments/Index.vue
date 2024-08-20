@@ -4,7 +4,7 @@ import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
-    <Head title="Classes" />
+    <Head title="Assessments" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
@@ -133,7 +133,7 @@ import BreezeButton from '@/Components/Button.vue';
                     <Multiselect 
                         @select="search"
                         @deselect="search"
-                        v-model="params.programme_level"
+                        v-model="params.level"
                         valueProp="level"
                         :appendNewOption="false"
                         :searchable="true"
@@ -213,10 +213,10 @@ import BreezeButton from '@/Components/Button.vue';
                             </tr> 
                             <tr class="hover:bg-gray-200" v-for="(assessment, index) in $page.props.assessments.data" :key="assessment.ID">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-700">{{ ++index }}</div>
+                                    <div class="text-sm text-gray-700">{{ index+1 }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ assessment.student_name }}</div>
+                                    <div class="text-sm font-medium text-gray-900 mb-1">{{ assessment.student_name }}</div>
                                     <div class="flex items-center text-sm space-x-2">
                                         <div class="text-xs px-2 py-1 border text-indigo-700 font-semibold border-indigo-500 rounded bg-indigo-200">
                                             {{ assessment.programme_name }}
@@ -261,7 +261,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <table class="w-full">
                                 <thead>
                                     <tr class="bg-indigo-100">
-                                        <th class="px-3 py-1 border w-6/12 text-left">Units</th>
+                                        <th class="px-3 py-1 border w-6/12 text-left">Unit</th>
                                         <th class="px-3 py-1 border w-3/12 text-center">Pre</th>
                                         <th class="px-3 py-1 border w-3/12 text-center">Post</th>
                                     </tr>
@@ -270,10 +270,10 @@ import BreezeButton from '@/Components/Button.vue';
                                     <tr v-for="unit, index in units" :key="unit.id">
                                         <td class="px-3 py-0.5 whitespace-nowrap">{{ unit.name }}</td>
                                         <td class="px-3 py-0.5 text-center">
-                                            <input class="px-4 h-7 w-full text-center text-xs rounded" type="text" placeholder="score" v-model.lazy="form.assessments[index].pre">
+                                            <input class="px-4 h-7 w-full text-center text-xs rounded placeholder:text-gray-400" type="text" placeholder="score" :value="getAssessmentPre(index)" @change="setAssessmentPre(index, $event.target.value)">
                                         </td>
                                         <td class="px-3 py-0.5 text-center">
-                                            <input class="px-4 h-7 w-full text-center text-xs rounded" type="text" placeholder="score" v-model.lazy="form.assessments[index].post">
+                                            <input class="px-4 h-7 w-full text-center text-xs rounded placeholder:text-gray-400" type="text" placeholder="score" :value="getAssessmentPost(index)" @change="setAssessmentPost(index, $event.target.value)">
                                         </td>
                                     </tr>
                                 </tbody>
@@ -313,16 +313,6 @@ export default {
     props: {
         filter: Object,
     },
-    // watch: {
-    //     params: {
-    //         handler(){
-    //             if(this.params){
-    //                 this.$inertia.get(this.route('assessments'), this.params, { replace: true, preserveState: true});
-    //             }
-    //         },
-    //         deep: true
-    //     }
-    // },
     data(){
         return{
             showModal: false,
@@ -344,21 +334,9 @@ export default {
             units: [],
             form: {
                 student_id: '',
-                programme_level_id: '',
+                programme_level_fee_id: '',
                 assessments: []
             }
-        }
-    },
-    computed: {
-        getPreValue(){
-            this.units.map(unit=>{
-                return this.form.assessments.find(item=>item.id == unit.id)?.post || ''
-            })
-        },
-        getPostValue(){
-            this.units.map(unit=>{
-                return this.form.assessments.find(item=>item.id == unit.id)?.post || ''
-            })
         }
     },
     methods: {
@@ -371,13 +349,14 @@ export default {
             .then((response)=>{
                 this.units = response.data
                 this.form.student_id = this.$page.props.assessments.data[index].student_id
-                this.form.programme_level_id = this.$page.props.assessments.data[index].programme_level_id
+                this.form.programme_level_fee_id = this.$page.props.assessments.data[index].programme_level_fee_id
+                const assessments_data = JSON.parse(this.$page.props.assessments.data[index].assessments)
                 this.units.map(item=>{
                     this.form.assessments.push({    
                         'unit_id': item.id,
                         'unit_name': item.name,
-                        'pre' : '',
-                        'post': '',
+                        'pre' : assessments_data && assessments_data.find(data_unit=>data_unit.unit_id == item.id).pre ? assessments_data.find(data_unit=>data_unit.unit_id == item.id).pre : '',
+                        'post': assessments_data && assessments_data.find(data_unit=>data_unit.unit_id == item.id).post ? assessments_data.find(data_unit=>data_unit.unit_id == item.id).post : '',
                     })
                 })
                 this.showModal = true
@@ -389,6 +368,22 @@ export default {
         search(){
             this.$inertia.get(this.route('assessments'), this.params, { replace: true, preserveState: true});
         },
+        getAssessmentPre(index) {
+            return this.form.assessments[index]?.pre || '';  // Provide a default value if `pre` is undefined
+        },
+        setAssessmentPre(index, value) {
+            if (this.form.assessments[index]) {
+                this.form.assessments[index].pre = value
+            }
+        },
+        getAssessmentPost(index) {
+            return this.form.assessments[index]?.post || '';  // Provide a default value if `post` is undefined
+        },
+        setAssessmentPost(index, value) {
+            if (this.form.assessments[index]) {
+                this.form.assessments[index].post = value
+            }
+        }
     }
 }
 </script>

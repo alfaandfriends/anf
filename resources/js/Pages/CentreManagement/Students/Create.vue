@@ -661,7 +661,7 @@ export default {
             debounce(val => '400ms')(10)
             if(query){
                 this.searching.student = true
-                axios.get(route('teachers.find'), {
+                axios.get(route('children.find'), {
                     params: {
                         'keyword': query
                     }

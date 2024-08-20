@@ -47,6 +47,36 @@
             </tr>   
         </table>
     </div>
+    @php
+        $assessments = json_decode($data['assessments']->assessments);
+    @endphp
+    @if(count($assessments) > 0)
+    <table width="100%" style="margin-top: 20px; page-break-inside: auto; border-top: 2px solid; border-bottom: 2px solid; border-left: 2px solid; border-right: 2px solid;">
+        <thead>
+            <tr>
+                <th width="40%" style="background-color: #B5C0D0; border: 1px solid; padding: 12px; font-size: 12px" colspan="3">Assessments</th>
+            </tr>
+            <tr>
+                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px" rowspan="2">Units</th>
+                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px" colspan="2">Scores</th>
+            </tr>
+            <tr>
+                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px">Pre</th>
+                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px">Post</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($assessments as $item)
+                <tr>
+                    <th width="40%" style="text-align: left; border: 1px solid; padding: 10px; padding-left: 10px; font-size: 12px">{{ $item->unit_name }}</th>
+                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $item->pre }}</th>
+                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $item->post }}</th>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+    <div class="page-break"></div>
+    @endif
     @foreach($data['report_data'] as $key => $report)
         @php
             $report_item = json_decode($report->report_data, true);

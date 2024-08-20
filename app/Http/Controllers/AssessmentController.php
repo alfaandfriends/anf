@@ -23,7 +23,8 @@ class AssessmentController extends Controller
         ]);
         
         $results    =   DB::table('assessments')
-                            ->join('programme_levels', 'assessments.programme_level_id', '=', 'programme_levels.id')
+                            ->join('programme_level_fees', 'assessments.programme_level_fee_id', '=', 'programme_level_fees.id')
+                            ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                             ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
                             ->join('students', 'assessments.student_id', '=', 'students.id')
                             ->join('children', 'students.children_id', '=', 'children.id')
@@ -34,23 +35,23 @@ class AssessmentController extends Controller
                                 });
                             })
                             ->where('assessments.centre_id', '=', $request->centre_id)
+                            ->whereIn('programmes.id', [1, 4])
                             ->when(request('programme_id'), function ($query, $search) {
                                 $query->where('programmes.id', request('programme_id'));
                             })
-                            ->when(request('programme_level'), function ($query, $search) {
-                                $query->where('programme_levels.level', request('programme_level'));
+                            ->when(request('level'), function ($query, $search) {
+                                $query->where('programme_levels.level', request('level'));
                             })
-                            ->select('children.name as student_name', 'students.id as student_id', 'centres.label as centre_name', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 'programme_levels.id as programme_level_id', 'assessments.assessments')
+                            ->select('children.name as student_name', 'students.id as student_id', 'centres.label as centre_name', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 'programme_level_fees.id as programme_level_fee_id', 'assessments.assessments')
                             ->orderBy('student_name')
                             ->orderBy('programme_level')
                             ->paginate(10);
-                            // dd($results);
 
-        $options['programmes'] =   ProgrammeHelper::programmes();
+        $options['programmes'] =   ProgrammeHelper::programmes(null, [1, 4]);
         $options['levels']     =   ProgrammeHelper::distinctLevels();
         
         return Inertia::render('Assessments/Index', [
-            'filter'        =>  request()->all('search', 'centre_id'),
+            'filter'        =>  request()->all('search', 'centre_id', 'programme_id', 'level'),
             'options'       =>  $options,
             'assessments'   =>  $results
         ]);
@@ -68,10 +69,9 @@ class AssessmentController extends Controller
     }
 
     public function store(Request $request){
-        // dd($request);
         DB::table('assessments')
         ->where('student_id', $request->student_id)
-        ->where('programme_level_id', $request->programme_level_id)
+        ->where('programme_level_fee_id', $request->programme_level_fee_id)
         ->update([
             'assessments'   => $request->assessments
         ]);

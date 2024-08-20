@@ -179,10 +179,10 @@ class ProgressReportController extends Controller
                                             ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
                                             ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                                             ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
-                                            ->select('children.name as student_name', 'students.date_joined','programmes.name as programme_name', 
-                                                    'programme_levels.level as programme_level', 'progress_reports.upcoming_feedback', 'progress_reports.improvement_feedback')
+                                            ->select('students.id as student_id', 'children.name as student_name', 'students.date_joined','programmes.name as programme_name', 
+                                                    'programme_levels.level as programme_level', 'programme_level_fees.id as programme_level_fee_id', 'progress_reports.upcoming_feedback', 'progress_reports.improvement_feedback')
                                             ->where('progress_report_details.progress_report_id', $request->progress_report_id)->first();
-                                            
+                                             
         $data['student_data']->date_joined = Carbon::hasFormat($data['student_data']->date_joined, 'Y-m-d') && Carbon::createFromFormat('Y-m-d', $data['student_data']->date_joined)->isValid() ? Carbon::parse($data['student_data']->date_joined)->format('d/m/Y') : 'Not Set';
 
         $data['report_data']        =   DB::table('progress_reports')
@@ -191,6 +191,11 @@ class ProgressReportController extends Controller
                                             ->select('progress_report_details.date', 'progress_report_details.report_data', 'progress_report_details.comments', 
                                                     'progress_report_details.revision', 'progress_report_status.name as attendance_status_name')
                                             ->where('progress_reports.student_fee_id', $request->student_fee)->orderBy('progress_report_details.date')->get();
+
+        $data['assessments']        =   DB::table('assessments')
+                                            ->where('student_id', $data['student_data']->student_id)
+                                            ->where('programme_level_fee_id', $data['student_data']->programme_level_fee_id)
+                                            ->first();   
 
         $data['report_template']    =    DB::table('progress_reports')
                                             ->join('progress_report_configs', 'progress_reports.progress_report_config_id', '=', 'progress_report_configs.id')
