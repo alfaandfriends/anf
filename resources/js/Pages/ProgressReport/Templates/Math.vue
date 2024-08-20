@@ -482,7 +482,7 @@ export default {
             this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data) ? JSON.parse(this.$page.props.progress_reports[index].report_data) : []
             this.form.attendance_status     =   this.$page.props.progress_reports[index].attendance_status
             this.form.comments              =   this.$page.props.progress_reports[index].comments
-            this.form.revision              =   !!String(this.$page.props.progress_reports[index].revision);
+            this.form.revision              =   String(this.$page.props.progress_reports[index].revision);
             this.show_progress_report       =   true;
         },
         updateProgressReport() {
