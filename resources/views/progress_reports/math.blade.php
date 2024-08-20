@@ -47,10 +47,6 @@
             </tr>   
         </table>
     </div>
-    @php
-        $assessments = json_decode($data['assessments']->assessments);
-    @endphp
-    @if(count($assessments) > 0)
     <table width="100%" style="margin-top: 20px; page-break-inside: auto; border-top: 2px solid; border-bottom: 2px solid; border-left: 2px solid; border-right: 2px solid;">
         <thead>
             <tr>
@@ -66,6 +62,9 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $assessments = json_decode($data['assessments']->assessments);
+            @endphp
             @foreach($assessments as $item)
                 <tr>
                     <th width="40%" style="text-align: left; border: 1px solid; padding: 10px; padding-left: 10px; font-size: 12px">{{ $item->unit_name }}</th>
