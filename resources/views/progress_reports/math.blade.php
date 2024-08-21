@@ -63,19 +63,30 @@
         </thead>
         <tbody>
             @php
-                $assessments = json_decode($data['assessments']->assessments);
+                $assessments = json_decode($data['assessments']->assessments) ?? [];
             @endphp
-            @foreach($assessments as $item)
+            @foreach($data['units'] as $item)
+                @php
+                    $pre    =   '';
+                    $post   =   '';
+                    if(count($assessments)){
+                        foreach ($assessments as $assessment) {
+                            if ($assessment->unit_id == $item->id) {
+                                $pre = $assessment->pre;
+                                $post = $assessment->post;
+                            }
+                        }
+                    }
+                @endphp
                 <tr>
-                    <th width="40%" style="text-align: left; border: 1px solid; padding: 10px; padding-left: 10px; font-size: 12px">{{ $item->unit_name }}</th>
-                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $item->pre }}</th>
-                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $item->post }}</th>
+                    <th width="40%" style="text-align: left; border: 1px solid; padding: 10px; padding-left: 10px; font-size: 12px">{{ $item->name }}</th>
+                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $pre }}</th>
+                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $post }}</th>
                 </tr>
             @endforeach
         </tbody>
     </table>
     <div class="page-break"></div>
-    @endif
     @foreach($data['report_data'] as $key => $report)
         @php
             $report_item = json_decode($report->report_data, true);
