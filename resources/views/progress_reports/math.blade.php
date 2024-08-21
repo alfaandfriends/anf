@@ -63,7 +63,7 @@
         </thead>
         <tbody>
             @php
-                $assessments = json_decode($data['assessments']->assessments);
+                $assessments = json_decode($data['assessments']->assessments) ?? [];
             @endphp
             @foreach($data['units'] as $item)
                 @php
