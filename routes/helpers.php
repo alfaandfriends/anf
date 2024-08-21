@@ -1,5 +1,6 @@
 <?php
 
+use App\Classes\GeneralHelper;
 use App\Classes\ParentHelper;
 use App\Classes\ProgrammeHelper;
 use App\Classes\StudentHelper;
@@ -34,6 +35,11 @@ Route::middleware(['auth'])->group(function(){
     /* Childrens */
     Route::prefix('children')->group(function () {
         Route::get('find', [ChildrenController::class, 'findChildren'])->name('children.find');
+    });
+
+    /* Teachers */
+    Route::prefix('teachers')->group(function () {
+        Route::get('find', [GeneralHelper::class, 'findTeachers'])->name('teachers.find');
     });
 
     /* Students */

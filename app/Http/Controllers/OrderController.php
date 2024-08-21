@@ -132,7 +132,7 @@ class OrderController extends Controller
         $log_data =   'Updated order ID '.$request->order_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Order has been saved.']);
+        return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
     
     public function destroy($id)
@@ -142,7 +142,7 @@ class OrderController extends Controller
         $log_data =   'Deleted order ID '.$id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Order has been deleted.']);
+        return redirect(route('orders'))->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 
     public function generateInvoice(Request $request){

@@ -46,6 +46,7 @@ import BreezeButton from '@/Components/Button.vue';
                                                 <thead class="bg-gray-300">
                                                     <tr>
                                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Date</th>
+                                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Teacher Name</th>
                                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Status</th>
                                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Action</th>
                                                     </tr>
@@ -59,14 +60,16 @@ import BreezeButton from '@/Components/Button.vue';
                                                         </td>
                                                     </tr>
                                                     <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.progress_reports" :key="result.report_id">
-                                                        <td class="px-4 py-2 whitespace-nowrap">
+                                                        <td class="px-6 py-2 whitespace-nowrap">
                                                             <div class="text-sm font-medium text-gray-700">
                                                                 {{ moment(result.date).format('DD/MM/Y') }}
                                                             </div>
                                                         </td>
+                                                        <td class="px-6 py-2 whitespace-nowrap">
+                                                            {{ result.display_name }}
+                                                        </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                             <span class="inline-flex items-center justify-center px-2 py-1 text-xs rounded" :class="result.attendance_status_class_name">{{ result.attendance_status_name }}</span>
-                                                            
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                             <BreezeButton buttonType="blue" @click="viewProgressReport(index)">View / Update</BreezeButton>
@@ -98,12 +101,13 @@ import BreezeButton from '@/Components/Button.vue';
             <template v-slot:content>
                 <div class="p-6 overflow-y-auto scrollbar">
                     <div class="grid grid-rows-1">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Date </label>
+                        <div class="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+                            <div class="">
+                                <span for="date" class="block text-sm font-bold text-gray-700"> Date<span class="text-red-500">*</span> </span>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
                                     <Datepicker :class="'w-full rounded-lg shadow-sm'" 
-                                                input-class-name="digital-art-report-date-picker focus:ring-0"
+                                                id="date"
+                                                input-class-name="math-report-date-picker focus:ring-0"
                                                 :style="$page.props.errors.date ? '--dp-border-color: #fa9e9e' : '--dp-border-color: #cccccc'" 
                                                 :enableTimePicker="false"
                                                 :auto-apply="true" 
@@ -112,6 +116,65 @@ import BreezeButton from '@/Components/Button.vue';
                                                 v-model="form.date" 
                                     />
                                 </div>
+                                <small class="text-red-500 font-semibold" v-if="!form.date">This field is required.</small>
+                            </div>
+                            <div class="">
+                                <label for="class_name" class="block text-sm font-bold text-gray-700"> Teacher's Name <span class="text-red-500">*</span></label>
+                                <div class="mt-1 flex rounded-md.shadow-sm">
+                                    <Multiselect 
+                                        v-debounce="findTeachers"
+                                        v-model="form.teacher_user_id"
+                                        valueProp="ID"
+                                        :loading="loading.teachers"
+                                        :placeholder="form.teacher_name"
+                                        :options="list.teachers"
+                                        :searchable="true"
+                                        noOptionsText="Nothing found"
+                                        noResultsText="Nothing found"
+                                        :clearOnSelect="true"
+                                        :canClear="false"
+                                        :canDeselect="false"
+                                        :internal-search="false"
+                                        trackBy="display_name"
+                                        label="display_name"
+                                        :classes="{
+                                            container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none h-[38px]',
+                                            containerDisabled: 'cursor-default bg-gray-100',
+                                            containerOpen: 'rounded-b-none',
+                                            containerOpenTop: 'rounded-t-none',
+                                            containerActive: 'border border-indigo-300',
+                                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
+                                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                                            multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
+                                            search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5 mt-0.5 h-[36px]',
+                                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-700',
+                                            clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
+                                            clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
+                                            dropdownHidden: 'hidden',
+                                            options: 'flex flex-col p-0 m-0 list-none w-full',
+                                            optionsTop: 'flex-col-reverse',
+                                            group: 'p-0 m-0',
+                                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                                            groupLabelPointable: 'cursor-pointer',
+                                            groupLabelPointed: 'bg-gray-300 text-black-700',
+                                            groupLabelSelected: 'bg-gray-100 text-black',
+                                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
+                                            groupOptions: 'p-0 m-0',
+                                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
+                                            optionPointed: 'text-gray-800 bg-gray-100',
+                                            optionSelected: 'text-white bg-indigo-500',
+                                            optionDisabled: 'text-gray-300 cursor-not-allowed',
+                                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
+                                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                                            spacer: 'h-9 py-px box-content',
+                                        }"
+                                    >
+                                    </Multiselect>
+                                </div>
+                                <small class="text-red-500 font-semibold" v-if="!form.teacher_user_id">This field is required.</small>
                             </div>
                         </div>
                         <div class="grid grid-cols-1">
@@ -313,7 +376,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="grid grid-cols-1 py-3">
                             <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Objectives </label>
+                                <label for="title" class="block text-sm font-bold text-gray-700"> Objectives<span class="text-red-500">*</span> </label>
                             </div>
                             <div class="grid grid-cols-1 divide-y divide-neutral-200 border-x border-t border-b mb-3" v-if="!form.report_data">
                                 <div class="p-3 bg-gray-50">No objectives found.</div>
@@ -356,6 +419,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </details>
                                 </div>
                             </div>
+                            <small class="text-red-500 font-semibold" v-if="!form.report_data.length">At least one (1) objective is required.</small>
                         </div>
                         <div class="grid grid-cols-1">
                             <hr class="mb-8 mt-8 border border-dashed border-gray-400">
@@ -370,12 +434,13 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="mb-3">
-                                <label for="title" class="block text-sm font-bold text-gray-700"> Status </label>
+                                <label for="title" class="block text-sm font-bold text-gray-700"> Status<span class="text-red-500">*</span> </label>
                                 <div class="mt-1 flex rounded-md.shadow-sm">
                                     <select name="attendance_status" id="attendance_status" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.attendance_status ? 'border-red-300' : 'border-gray-300'" v-model="form.attendance_status" autocomplete="off">
                                         <option :value="attendance_status.id" v-for="attendance_status, index in $page.props.attendance_status">{{ attendance_status.name }}</option>
                                     </select>
                                 </div>
+                                <small class="text-red-500 font-semibold" v-if="form.attendance_status == 3">This field is required.</small>
                             </div>
                         </div>
                     </div>
@@ -401,6 +466,7 @@ import moment from 'moment';
 import axios from 'axios';
 import Multiselect from '@vueform/multiselect'
 import FeedbackSummary from './FeedbackSummary.vue'
+import { debounce } from 'vue-debounce'
 
 export default {
     components: {
@@ -417,6 +483,9 @@ export default {
                 activities: true,
                 outcomes: true,
             },
+            list: {
+                teachers: [],
+            },
             options: {
                 themes: [],
                 lessons: [],
@@ -429,6 +498,7 @@ export default {
                 lessons: false,
                 activities: false,
                 outcomes: false,
+                teachers: false,
             },
             search: {
                 theme_id: '',
@@ -437,6 +507,7 @@ export default {
                 outcome_id: '',
             },
             form: {
+                teacher_user_id: '',
                 date: '',
                 report_data: [],
                 comments: '',
@@ -448,6 +519,8 @@ export default {
         viewProgressReport(index) {
             this.clearSearch()
             this.form.report_id             =   this.$page.props.progress_reports[index].id
+            this.form.teacher_user_id       =   this.$page.props.progress_reports[index].teacher_user_id
+            this.form.teacher_name          =   this.$page.props.progress_reports[index].display_name
             this.form.date                  =   this.$page.props.progress_reports[index].date
             this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data) ? JSON.parse(this.$page.props.progress_reports[index].report_data) : []
             this.form.attendance_status     =   this.$page.props.progress_reports[index].attendance_status
@@ -455,13 +528,28 @@ export default {
             this.show_progress_report       =   true;
         },
         updateProgressReport() {
+            if(!this.form.date || !this.form.teacher_user_id || !this.form.report_data.length || !this.form.attendance_status){
+                return
+            }
             this.$inertia.post(route('progress_report.store'), this.form, {
-            onBefore: visit => {
-                // this.show_progress_report = false
-            },
-            preserveScroll: true,
-            preserveState: false,
+                preserveScroll: true,
+                preserveState: false,
             });
+        },
+        findTeachers(query){
+            debounce(val => '400ms')(10)
+            if(query){
+                this.loading.teachers = true
+                axios.get(route('teachers.find'), {
+                    params: {
+                        'keyword': query
+                    }
+                })
+                .then((res) => {
+                    this.list.teachers = res.data
+                    this.loading.teachers = false
+                });
+            }
         },
         getLessons(theme_id) {
             this.loading.lessons = true;

@@ -88,14 +88,23 @@
                             
                         </div>
                     </th>
+                </tr> 
+                @if($report->revision)
+                <tr>
+                    <th style="text-align: center; background-color: #F5F7F8; border: 1px solid; padding: 10px; font-size: 12px; font-weight: bold" colspan="3">
+                        <div>REVISION</div>
+                    </th>
                 </tr>
+                @endif
                 @foreach($filteredData as $lesson_name => $topics)
                     @foreach($topics as $topic_name => $objectives)
                         @foreach($objectives as $objective_name => $activities_procedures)
                             <tr>
-                                <th style="text-align: left; background-color: #E1ECC8; border: 1px solid; padding: 10px; font-size: 12px" colspan="3">
+                                <th style="text-align: left; background-color: #F0ECE5; border: 1px solid; padding: 10px; font-size: 12px;" colspan="3">
                                     <div style="margin-bottom: 5px; text-decoration: underline">{{ $lesson_name }} : {{ $topic_name }}</div>
-                                    <div>{{ $objective_name }}</div>
+                                    @if(!$report->revision)
+                                        <div>{{ $objective_name }}</div>
+                                    @endif
                                 </th>
                             </tr>
                             <!-- <tr>

@@ -12,7 +12,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
         <Card>
             <template #title>Order Information</template>
             <template #content>
-                <div class="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4">
                     <div>
                         <Label>Student's Name<span class="text-red-500">*</span></Label>
                         <ComboBox :items="list.students" label-property="name" value-property="id" :error="!!$page.props.errors.student_id" v-model="form.student_id" :select-placeholder="$page.props.order_info.student_name" search-placeholder="Search student..." disabled/>
@@ -20,6 +20,10 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
                     <div>
                         <Label>Address<span class="text-red-500">*</span></Label>
                         <Textarea v-model="form.address" disabled></Textarea>
+                    </div>
+                    <div>
+                        <Label>Status<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.status" label-property="name" value-property="id" v-model="form.status" search-placeholder="Search status..."></ComboBox>
                     </div>
                 </div>
             </template>
@@ -127,15 +131,9 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
         </Card>
         <Card>
             <template #content>
-                <div class="flex items-end space-x-2 justify-between">
-                    <div>
-                        <Label>Status<span class="text-red-500">*</span></Label>
-                        <ComboBox :items="$page.props.status" label-property="name" value-property="id" v-model="form.status" search-placeholder="Search status..."></ComboBox>
-                    </div>
-                    <div class="flex space-x-2">
-                        <Button variant="outline" @click="$inertia.get(route('orders'))">Cancel</Button>
-                        <Button @click="storeOrder">Save</Button>
-                    </div>
+                <div class="flex justify-end space-x-2">
+                    <Button variant="outline" @click="$inertia.get(route('orders'))">Cancel</Button>
+                    <Button @click="storeOrder">Save</Button>
                 </div>
             </template>
         </Card>

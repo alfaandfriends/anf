@@ -47,6 +47,35 @@
             </tr>   
         </table>
     </div>
+    <table width="100%" style="margin-top: 20px; page-break-inside: auto; border-top: 2px solid; border-bottom: 2px solid; border-left: 2px solid; border-right: 2px solid;">
+        <thead>
+            <tr>
+                <th width="40%" style="background-color: #B5C0D0; border: 1px solid; padding: 12px; font-size: 12px" colspan="3">Assessments</th>
+            </tr>
+            <tr>
+                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px" rowspan="2">Units</th>
+                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px" colspan="2">Scores</th>
+            </tr>
+            <tr>
+                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px">Pre</th>
+                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px">Post</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                $assessments = json_decode($data['assessments']->assessments);
+            @endphp
+            @foreach($assessments as $item)
+                <tr>
+                    <th width="40%" style="text-align: left; border: 1px solid; padding: 10px; padding-left: 10px; font-size: 12px">{{ $item->unit_name }}</th>
+                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $item->pre }}</th>
+                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $item->post }}</th>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+    <div class="page-break"></div>
+    @endif
     @foreach($data['report_data'] as $key => $report)
         @php
             $report_item = json_decode($report->report_data, true);
@@ -75,6 +104,13 @@
                         </div>
                     </th>
                 </tr>
+                @if($report->revision)
+                    <tr>
+                        <th style="text-align: center; background-color: #F5F7F8; border: 1px solid; padding: 10px; font-size: 12px; font-weight: bold" colspan="3">
+                            <div>REVISION</div>
+                        </th>
+                    </tr>
+                @endif
                 @foreach($filteredData as $term_book_name => $term_book)
                     <tr>
                         <th style="background-color: #C4D7B2; border: 1px solid; padding: 10px; font-size: 12px">Term / Book</th>
@@ -90,23 +126,25 @@
                         </tr>
                         @foreach($unit as $lesson_name => $lesson)
                             <tr>
-                                <td style=" border: 1px solid; padding: 10px;">
+                                <td style=" border: 1px solid; padding: 10px;" colspan="{{ !$report->revision ? 0 : 3 }}">
                                     <div style="font-weight: bold;"><b>Lesson {{ $lesson_name }}</b></div>
                                 </td>
-                                <td valign="top" style="text-align: justify; border: 1px solid; padding: 10px;" colspan="2">
-                                    @foreach($lesson['objectives'] as $key => $objective)
-                                        <div style="display: block;">
-                                            <div style="display: inline-block; vertical-align: middle; line-height: 20px; ">
-                                                @if($objective['achieved'])
-                                                    <img src="{{ public_path('/images/progress_report/circle-check.svg') }}" width="15px"/>
-                                                @else
-                                                    <img src="{{ public_path('/images/progress_report/circle-cross.svg') }}" width="15px"/>
-                                                @endif
-                                                {{ $objective['name'] }}
+                                @if(!$report->revision)
+                                    <td valign="top" style="text-align: justify; border: 1px solid; padding: 10px;" colspan="2">
+                                        @foreach($lesson['objectives'] as $key => $objective)
+                                            <div style="display: block;">
+                                                <div style="display: inline-block; vertical-align: middle; line-height: 20px; ">
+                                                    @if($objective['achieved'])
+                                                        <img src="{{ public_path('/images/progress_report/circle-check.svg') }}" width="15px"/>
+                                                    @else
+                                                        <img src="{{ public_path('/images/progress_report/circle-cross.svg') }}" width="15px"/>
+                                                    @endif
+                                                    {{ $objective['name'] }}
+                                                </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-                                </td>
+                                        @endforeach
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     @endforeach

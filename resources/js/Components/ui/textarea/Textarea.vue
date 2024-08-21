@@ -35,10 +35,7 @@ const attrs = useAttrs();
       )
     "
   />
-  <p class="text-xs text-red-500 font-semibold" v-if="typeof error === 'string'">
-    {{ error }}
-  </p>
-  <p class="text-xs text-red-500 font-semibold" v-if="typeof error === 'boolean' && error === true">
+  <p class="mt-0.5 text-xs text-red-500 font-semibold" v-if="error">
     This field is required.
   </p>
 </template>

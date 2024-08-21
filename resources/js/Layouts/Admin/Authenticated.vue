@@ -265,7 +265,7 @@ export default {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </header>
-            <main class="flex flex-1 flex-col gap-4 p-4 lg:p-6 bg-gray-50 w-full">
+            <main class="flex flex-1 flex-col gap-4 p-4 lg:p-6 bg-slate-50 w-full">
                 <Breadcrumbs :breadcrumbs="$page.props.breadcrumbs"/>
                 <div class="px-6 py-2 bg-blue bg-red-500 space-y-4 lg:flex lg:space-y-0 justify-center text-center lg:justify-between items-center" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
                     <span class="text-white text-xs font-semibold whitespace-nowrap">Warning: Please use this feature with caution!</span>

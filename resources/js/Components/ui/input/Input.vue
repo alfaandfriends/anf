@@ -23,7 +23,7 @@ const attrs = useAttrs();
 </script>
 
 <template>
-  <div class="flex flex-nowrap items-stretch">
+  <div class="flex flex-col flex-nowrap items-stretch">
     <span v-if="inputGroup"
       class="flex items-center whitespace-nowrap rounded-md border px-3 shadow-sm bg-gray-50 pt-0.5 text-sm font-medium rounded-r-none border-r-0"
       id="addon-wrapping"
@@ -43,10 +43,7 @@ const attrs = useAttrs();
       "
       v-bind="attrs"
     />
-    <p class="text-xs text-red-500 font-semibold" v-if="typeof error === 'string'">
-      {{ error }}
-    </p>
-    <p class="text-xs text-red-500 font-semibold" v-if="typeof error === 'boolean' && error === true">
+    <p class="mt-0.5 text-xs text-red-500 font-semibold" v-if="error">
       This field is required.
     </p>
   </div>

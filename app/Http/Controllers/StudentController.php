@@ -222,6 +222,13 @@ class StudentController extends Controller
                     'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
                 ]);
 
+                /* Create Assessments */
+                DB::table('assessments')->insert([
+                    'student_id'                =>  $student_id,
+                    'centre_id'                 =>  $request->centre_id,
+                    'programme_level_fee_id'    =>  $fee['fee_info']['fee_id'],
+                ]);
+
                 foreach($fee['fee_info']['promos'] as $promo_index=>$promo){
                     DB::table('student_fee_promotions')->insert([
                         'student_fee_id'        =>  $student_fee_id,
@@ -544,6 +551,14 @@ class StudentController extends Controller
 
     public function destroy(Request $request)
     {
+        /* Delete assessments */
+        $student_fee_info   =   DB::table('student_fees')->where('id', $request->student_fee_id)->first();
+        $student_fees_count =   DB::table('student_fees')->where('student_id', $student_fee_info->student_id)->where('fee_id', $student_fee_info->fee_id)->count();
+        if($student_fees_count == 1){
+            DB::table('assessments')->where('student_id', $student_fee_info->student_id)->where('programme_level_fee_id', $student_fee_info->fee_id)->delete();
+        }
+
+        /* Check if invoice exists */
         $invoice_data       =   DB::table('invoices')->where('id', $request->invoice_id)->first();
         if(!$invoice_data){
             DB::table('student_fees')->where('student_fees.invoice_id', $request->invoice_id)->delete();
@@ -677,6 +692,23 @@ class StudentController extends Controller
                     'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
                 ]);
 
+                /* Create assessment */
+                $is_math_programme  =   DB::table('programmes')
+                                            ->join('programme_levels', 'programme_levels.programme_id', '=', 'programmes.id')
+                                            ->join('programme_level_fees', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                            ->whereIn('programmes.id', [1, 4])
+                                            ->where('programme_level_fees.id', $fee['fee_info']['fee_id'])
+                                            ->exists();
+                $assessment_exists  =   DB::table('assessments')->where('student_id', $student_id)->where('programme_level_fee_id', $fee['fee_info']['fee_id'])->exists();
+                
+                if($is_math_programme && !$assessment_exists){
+                    DB::table('assessments')->insert([
+                        'student_id'                =>  $student_id,
+                        'centre_id'                 =>  $request->centre_id,
+                        'programme_level_fee_id'    =>  $fee['fee_info']['fee_id'],
+                    ]);
+                }
+
                 foreach($fee['fee_info']['promos'] as $promo_index=>$promo){
                     DB::table('student_fee_promotions')->insert([
                         'student_fee_id'        =>  $student_fee_id,
@@ -800,6 +832,11 @@ class StudentController extends Controller
                 ]);
             }
         }
+
+        /* Change assessments centre */
+        DB::table('assessments')->where('student_id', $request->student_id)->where('programme_level_fee_id', $request->fee_id)->update([
+            'centre_id' =>  $request->centre_id,
+        ]);
 
         $log_data =   'Transferred student ID '.$request->student_fee_id;
         event(new DatabaseTransactionEvent($log_data));

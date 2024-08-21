@@ -8,12 +8,15 @@ use PDO;
 
 class ProgrammeHelper {
 
-    public static function programmes($country_id = null){
+    public static function programmes($country_id = null, $whereIn = null){
         $programmes =   DB::table('programmes')
                             ->join('countries', 'programmes.country_id', '=', 'countries.id')
                             ->select('programmes.id', 'programmes.name', 'countries.name as country_name')
                             ->when($country_id, function($query) use ($country_id){
                                 $query->where('programmes.country_id', $country_id);
+                            })
+                            ->when($whereIn, function($query) use ($whereIn){
+                                $query->where('programmes.id', $whereIn);
                             })
                             ->get();
 
