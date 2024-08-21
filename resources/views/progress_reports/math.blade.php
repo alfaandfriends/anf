@@ -75,7 +75,6 @@
         </tbody>
     </table>
     <div class="page-break"></div>
-    @endif
     @foreach($data['report_data'] as $key => $report)
         @php
             $report_item = json_decode($report->report_data, true);
