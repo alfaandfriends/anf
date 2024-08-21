@@ -15,7 +15,7 @@ const setStep = (step) => {
 </script>
 
 <template>
-    <Head title="Product" />
+    <Head title="Products" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
