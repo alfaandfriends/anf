@@ -486,7 +486,7 @@ export default {
             this.show_progress_report       =   true;
         },
         updateProgressReport() {
-            if(!this.form.date || this.form.attendance_status == 3 || (this.form.attendance_status == 1 && this.form.report_data.length < 1) || (this.form.attendance_status == 1 && !this.form.teacher_user_id)){
+            if(!this.form.date || this.form.attendance_status == 3 || (this.form.attendance_status == 1 && this.form.report_data.length < 1) || (this.form.attendance_status == 1 && this.form.teacher_user_id == null)){
                 return
             }
             this.$inertia.post(route('progress_report.store'), this.form, {
@@ -587,6 +587,7 @@ export default {
             this.form.report_data.splice(index, 1);
         },
         clearSearch(){
+            this.form.teacher_user_id = ''
             this.search.term_book_id = ''
             this.search.unit_id = []
             this.search.lesson_id = ''
