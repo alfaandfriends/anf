@@ -37,19 +37,6 @@ export default {
             currentToast: null,
         }
     },
-    watch: {
-        '$page.props.flash': {
-            handler() {
-                this.$nextTick(() => {
-                    this.currentToast = toast({
-                        description: this.$page.props.flash.message,
-                        variant: this.$page.props.flash.type,
-                    });
-                });
-            },
-            deep: true, 
-        },
-    },
     methods: {
         initMenu(){
             for (let section_key in this.$page.props.menu) {
@@ -80,31 +67,35 @@ export default {
             }
         }
     },
+    watch: {
+        '$page.props.flash': {
+            handler(new_value, old_value){
+                if(new_value.type != null && new_value.message != null){
+                    this.$nextTick(()=>{
+                        this.currentToast = toast({
+                            description: new_value.message,
+                            variant: new_value.type,
+                        });
+                    })
+                }
+            },
+            immediate: true
+        }
+    },
     created(){
         this.initMenu()
-        this.$nextTick(() => {
-            const { flash } = this.$page.props;
-            if (flash && flash.type && flash.message) {
-                this.currentToast = toast({
-                    description: flash.message,
-                    variant: flash.type,
-                });
-            }
-        });
     },
     mounted(){
-        this.$nextTick(() => {
-            const { flash } = this.$page.props;
-            if (flash && flash.type && flash.message) {
-                this.currentToast = toast({
-                    description: flash.message,
-                    variant: flash.type,
-                });
-            }
-        });
+        const { flash } = this.$page.props;
+        if(flash.type != null && flash.message != null) {
+            this.currentToast = toast({
+                description: flash.message,
+                variant: flash.type,
+            });
+        }
     },
     beforeUnmount() {
-        if (this.currentToast) {
+        if(this.currentToast){
             this.currentToast.dismiss();
         }
     },
