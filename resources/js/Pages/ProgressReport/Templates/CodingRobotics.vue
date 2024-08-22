@@ -581,6 +581,7 @@ export default {
             this.form.report_data.splice(index, 1);
         },
         clearSearch(){
+            this.form.teacher_user_id = ''
             this.search.term_book_id = ''
             this.search.topic_id = ''
             this.search.lesson_id = ''
