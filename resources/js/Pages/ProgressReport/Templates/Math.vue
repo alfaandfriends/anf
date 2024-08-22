@@ -486,7 +486,7 @@ export default {
             this.show_progress_report       =   true;
         },
         updateProgressReport() {
-            if(!this.form.date || !this.form.attendance_status || (this.form.attendance_status == 3 && !this.form.report_data.length) || (this.form.attendance_status == 3 && !this.form.teacher_user_id)){
+            if(!this.form.date || this.form.attendance_status == 3 || (this.form.attendance_status == 1 && this.form.report_data.length < 1) || (this.form.attendance_status == 1 && !this.form.teacher_user_id)){
                 return
             }
             this.$inertia.post(route('progress_report.store'), this.form, {
