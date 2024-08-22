@@ -172,7 +172,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     >
                                     </Multiselect>
                                 </div>
-                                <small class="text-red-500 font-semibold" v-if="!form.teacher_user_id">This field is required.</small>
+                                <small class="text-red-500 font-semibold" v-if="form.attendance_status == 1 && !form.teacher_user_id">This field is required.</small>
                             </div>
                             <div class="">
                                 <div class="flex items-center 2xl:mt-5">
@@ -486,7 +486,7 @@ export default {
             this.show_progress_report       =   true;
         },
         updateProgressReport() {
-            if(!this.form.date || !this.form.teacher_user_id || !this.form.attendance_status || (this.form.attendance_status == 3 && !this.form.report_data.length)){
+            if(!this.form.date || !this.form.attendance_status || (this.form.attendance_status == 3 && !this.form.report_data.length) || (this.form.attendance_status == 3 && !this.form.teacher_user_id)){
                 return
             }
             this.$inertia.post(route('progress_report.store'), this.form, {
