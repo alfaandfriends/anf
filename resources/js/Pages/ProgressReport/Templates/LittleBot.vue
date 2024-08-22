@@ -314,7 +314,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </details>
                                 </div>
                             </div>
-                            <small class="text-red-500 font-semibold" v-if="!form.report_data.length">At least one (1) objective is required.</small>
+                            <small class="text-red-500 font-semibold" v-if="!form.report_data.length && form.attendance_status == 1">At least one (1) objective is required.</small>
                         </div>
                         <div class="grid grid-cols-1">
                             <div class="mb-3">
@@ -411,7 +411,7 @@ export default {
             this.show_progress_report       =   true;
         },
         updateProgressReport() {
-            if(!this.form.date || !this.form.teacher_user_id || !this.form.report_data.length || !this.form.attendance_status){
+            if(!this.form.date || !this.form.teacher_user_id || !this.form.attendance_status || (this.form.attendance_status == 3 && !this.form.report_data.length)){
                 return
             }
             this.$inertia.post(route('progress_report.store'), this.form, {
