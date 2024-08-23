@@ -354,7 +354,7 @@ class ProductController extends Controller
                         
                         $product_variation_id     =   DB::table('product_variations')->insertGetId([
                             'product_id'    =>  $request->basic_info['product_id'],
-                            'image'         =>  $filename != '' ? '/products/'.$variation_file_name : '',
+                            'image'         =>  $variation_file_name != '' ? '/products/'.$variation_file_name : '',
                             'option_name'   =>  $variation['name'],
                             'price'         =>  !$request->detailed_info['has_sub_variation'] ? $variation['price'] : null,
                             'stock'         =>  !$request->detailed_info['has_sub_variation'] ? $variation['stock'] : null,
@@ -441,12 +441,11 @@ class ProductController extends Controller
         
             DB::commit();
                 
-            $log_data =   'Deleted sub variation ID '.$request->to_delete;
+            $log_data =   'Deleted sub variation ID '.json_encode($request->to_delete);
             event(new DatabaseTransactionEvent($log_data));
         
             return back()->with(['type'=>'success', 'message'=>'Sub variation has been deleted!']);
         } catch (Exception $e) {
-            // Something went wrong, rollback the transaction
             DB::rollBack();
         
             return back()->with(['type'=>'error', 'message'=>'Failed to delete. The sub variation is being used.']);

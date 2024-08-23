@@ -174,7 +174,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     >
                                     </Multiselect>
                                 </div>
-                                <small class="text-red-500 font-semibold" v-if="!form.teacher_user_id">This field is required.</small>
+                                <small class="text-red-500 font-semibold" v-if="form.attendance_status == 1 && !form.teacher_user_id">This field is required.</small>
                             </div>
                         </div>
                         <div class="grid grid-cols-1">
@@ -419,7 +419,7 @@ import BreezeButton from '@/Components/Button.vue';
                                     </details>
                                 </div>
                             </div>
-                            <small class="text-red-500 font-semibold" v-if="!form.report_data.length">At least one (1) objective is required.</small>
+                            <small class="text-red-500 font-semibold" v-if="!form.report_data.length && form.attendance_status == 1">At least one (1) objective is required.</small>
                         </div>
                         <div class="grid grid-cols-1">
                             <hr class="mb-8 mt-8 border border-dashed border-gray-400">
@@ -528,7 +528,7 @@ export default {
             this.show_progress_report       =   true;
         },
         updateProgressReport() {
-            if(!this.form.date || !this.form.teacher_user_id || !this.form.report_data.length || !this.form.attendance_status){
+            if(!this.form.date || this.form.attendance_status == 3 || (this.form.attendance_status == 1 && this.form.report_data.length < 1) || (this.form.attendance_status == 1 && !this.form.teacher_user_id)){
                 return
             }
             this.$inertia.post(route('progress_report.store'), this.form, {
@@ -653,6 +653,7 @@ export default {
             this.form.report_data.splice(index, 1);
         },
         clearSearch(){
+            this.form.teacher_user_id = ''
             this.search.term_book_id = ''
             this.search.lesson_id = ''
             this.search.activity_id = ''

@@ -93,7 +93,7 @@ const setStep = (step) => {
                         <template #content>
                             <div class="flex items-center justify-end space-x-2">
                                 <Button @click="$inertia.get(route('products'))" variant="outline">Cancel</Button>
-                                <Button @click="submit">Create</Button>
+                                <Button @click="submit">Save</Button>
                             </div>
                         </template>
                     </Card>

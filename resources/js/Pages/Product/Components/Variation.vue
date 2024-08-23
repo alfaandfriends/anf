@@ -1,7 +1,4 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue';
-import BreezeButton from '@/Components/Button.vue';
-import VariationOption from './VariationOption.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
 import { PlusCircle } from 'lucide-vue-next';
 </script>
@@ -46,6 +43,25 @@ export default {
         }
     },
     watch:{
+        'detailed_info.has_sub_variation': {
+            handler(){
+                const info = this.detailed_info
+                if(!info.has_sub_variation){
+                    this.sub_variations.options = [{
+                        name: ''
+                    }]
+                    info.sub_variation_name = ''
+                    info.variations.options.map((variation)=>{
+                        variation.sub_variations.options = [{
+                            id: '',
+                            name: '',
+                            price: 0,
+                            stock: 0,
+                        }]
+                    })
+                }
+            },
+        },
         sub_variations: {
             handler(){
                 if(this.detailed_info.has_sub_variation == 1){
@@ -71,9 +87,11 @@ export default {
     methods: {
         constructTable(){
             this.detailed_info.variations.options.forEach((variation, variation_index) => {
-                variation.sub_variations.options.forEach((sub_variation, sub_variation_index) => {
-                    sub_variation.name = this.sub_variations.options[sub_variation_index] ? this.sub_variations.options[sub_variation_index].name : ''
-                });
+                if(variation.sub_variations.options.length){
+                    variation.sub_variations.options.forEach((sub_variation, sub_variation_index) => {
+                        sub_variation.name = this.sub_variations.options[sub_variation_index] ? this.sub_variations.options[sub_variation_index].name : ''
+                    });
+                }
             });
         },
         addVariation(){
