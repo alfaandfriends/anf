@@ -276,6 +276,15 @@ import BreezeButton from '@/Components/Button.vue';
                                             <input class="px-4 h-7 w-full text-center text-xs rounded placeholder:text-gray-400" type="text" placeholder="score" :value="getAssessmentPost(index)" @change="setAssessmentPost(index, $event.target.value)">
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td class="px-3 py-0.5 whitespace-nowrap">Final Assessment</td>
+                                        <td class="px-3 py-0.5 text-center">
+                                            <input class="px-4 h-7 w-full text-center text-xs rounded placeholder:text-gray-400" type="text" placeholder="score" v-model="form.final_pre_score">
+                                        </td>
+                                        <td class="px-3 py-0.5 text-center">
+                                            <input class="px-4 h-7 w-full text-center text-xs rounded placeholder:text-gray-400" type="text" placeholder="score" v-model="form.final_post_score">
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -335,7 +344,9 @@ export default {
             form: {
                 student_id: '',
                 programme_level_fee_id: '',
-                assessments: []
+                assessments: [],
+                final_pre_score: '',
+                final_post_score: '',
             }
         }
     },
@@ -350,6 +361,8 @@ export default {
                 this.units = response.data
                 this.form.student_id = this.$page.props.assessments.data[index].student_id
                 this.form.programme_level_fee_id = this.$page.props.assessments.data[index].programme_level_fee_id
+                this.form.final_pre_score = this.$page.props.assessments.data[index].final_pre_score
+                this.form.final_post_score = this.$page.props.assessments.data[index].final_post_score
                 const assessments_data = JSON.parse(this.$page.props.assessments.data[index].assessments)
                 this.units.map(item=>{
                     this.form.assessments.push({    
@@ -383,7 +396,7 @@ export default {
             if (this.form.assessments[index]) {
                 this.form.assessments[index].post = value
             }
-        }
+        },
     }
 }
 </script>
