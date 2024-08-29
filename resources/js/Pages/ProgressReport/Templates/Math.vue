@@ -364,12 +364,12 @@ import BreezeButton from '@/Components/Button.vue';
                                                 </div>
                                                 <!-- <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500">Lesson {{ data.lesson_name }}</p> -->
                                             </div>
-                                            <span class="transition group-open:rotate-180" v-if="!form.revision">
+                                            <span class="transition group-open:rotate-180" v-if="form.revision == false">
                                                 <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path>
                                                 </svg>
                                             </span>
                                         </summary>
-                                        <ul class="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg divide-y" v-if="!form.revision">
+                                        <ul class="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg divide-y" v-if="form.revision == false">
                                             <li class="w-full" v-for="objective, objective_index in data.objectives">
                                                 <div class="flex items-center pl-3">
                                                     <input :id="objective.id" type="checkbox" :value="objective.id" v-model="form.report_data[index].objectives[objective_index].achieved" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-300 focus:ring-0">
@@ -464,7 +464,7 @@ export default {
             },
             form: {
                 teacher_user_id: '',
-                revision: false,
+                revision: true,
                 date: '',
                 report_data: [],
                 comments: '',
