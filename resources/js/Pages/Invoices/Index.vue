@@ -65,6 +65,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                     </div>
                 </div> -->
+                <MonthPicker mode="date"/>
                 <div class="relative w-full">
                     <Multiselect 
                         @select="search"
@@ -289,7 +290,7 @@ import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
 import moment from 'moment';
 import Multiselect from '@vueform/multiselect'
-import Datepicker from '@vuepic/vue-datepicker';
+// import Datepicker from '@vuepic/vue-datepicker';
 import MonthlyFee from '@/Pages/Invoices/MonthlyFee.vue'
 import { debounce } from 'vue-debounce'
 
@@ -307,7 +308,7 @@ const printOptions = {
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal, Multiselect, Datepicker, MonthlyFee
+        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal, Multiselect, MonthlyFee
     },
     data(){
         return{

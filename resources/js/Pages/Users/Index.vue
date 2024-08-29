@@ -56,8 +56,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                     </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
-                                        <DropdownMenuItem v-if="$page.props.can.edit_programmes" @click="manageUser(user.ID)">Edit</DropdownMenuItem>
-                                        <DropdownMenuItem v-if="$page.props.can.delete_programmes" @click="deleteUser(user.ID)">Delete</DropdownMenuItem>
+                                        <DropdownMenuItem v-if="$page.props.can.edit_users" @click="manageUser(user.ID)">Edit</DropdownMenuItem>
+                                        <DropdownMenuItem v-if="$page.props.can.delete_users" @click="deleteUser(user.ID)">Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>

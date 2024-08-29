@@ -49,6 +49,14 @@ class PromoController extends Controller
     }
     
     public function store(Request $request){
+
+        $request->validate([
+            'promo_name'    => 'required',
+            'country_id'    => 'required',
+            'duration_id'   => 'required',
+            'type_id'       => 'required',
+            'promo_value'   => 'required',
+        ]);
         
         DB::table('promotions')->insert([
             'name'          => $request->promo_name,
@@ -58,7 +66,7 @@ class PromoController extends Controller
             'value'         => $request->promo_value
         ]);
 
-        return redirect(route('fee.promos'))->with(['type' => 'success', 'message' => 'Promotion has been added.']);
+        return redirect(route('fee.promos'))->with(['type' => 'success', 'message' => 'Data has been added.']);
     }
 
     public function destroy($id){
@@ -72,10 +80,10 @@ class PromoController extends Controller
             $log_data =   'Deleted promotion ID '.$id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return back()->with(['type'=>'success', 'message'=>'Promotion deleted successfully! ']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
         } catch (Exception $e) {
             DB::rollback();
-            return back()->with(['type'=>'error', 'message'=>'An error has occurred, please try again!']);
+            return back()->with(['type'=>'error', 'message'=>'Cannot delete this promotion as it is currently being used.']);
         }
     }
 }
