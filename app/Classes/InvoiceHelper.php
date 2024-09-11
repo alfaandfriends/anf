@@ -43,7 +43,7 @@ class InvoiceHelper {
 
         /* Calculate total fee */
         $totalFee = $invoice_items->sum(function ($item) {
-            $programme_fee              =   $item['use_old_fee'] ? $item['old_programme_fee'] : $item['programme_fee'];
+            $programme_fee              =   isset($item['use_old_fee']) && isset($item['old_programme_fee']) ? $item['old_programme_fee'] : $item['programme_fee'];
             $registration_fee           =   isset($item['include_registration_fee']) && $item['include_material_fee'] == true ? $item['registration_fee'] : 0;
             $registration_fee_discount  =   isset($item['registration_fee_discount']) && $item['include_material_fee'] == true ? $item['registration_fee_discount'] : 0;
             $material_fee               =   isset($item['include_material_fee']) && $item['include_material_fee'] == true ? $item['material_fee'] : 0;
@@ -55,7 +55,7 @@ class InvoiceHelper {
         /* Calculate total promo */
         $totalPromo =   0;
         foreach($invoice_items as $fee_key => $fee){
-            $programme_fee  =   $fee['use_old_fee'] ? $fee['old_programme_fee'] : $fee['programme_fee'];
+            $programme_fee  =   isset($item['use_old_fee']) && isset($item['old_programme_fee']) ? $fee['old_programme_fee'] : $fee['programme_fee'];
             if (isset($fee['promos'])) { // Check if 'promos' key exists
                 foreach($fee['promos'] as $promo_key => $promo){
                     if($promo['type_id'] == 1){

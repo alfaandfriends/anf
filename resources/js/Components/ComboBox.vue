@@ -2,56 +2,56 @@
   <div>
     <Popover v-model:open="isOpen">
       <PopoverTrigger as-child @click="togglePopover">
-        <Button variant="outline" class="w-full justify-between px-3 hover:bg-white" :disabled="disabled">
+        <Button
+          variant="outline"
+          class="w-full justify-between px-3 hover:bg-white"
+          :disabled="disabled"
+        >
           <div class="flex items-center">
             <span :class="['truncate', selectedItem ? '' : 'text-gray-500 font-normal']">
               {{ multiple 
                 ? `${selectedItems.length} selected` 
-                : (selectedItem ? (isObjectItems ? selectedItem[labelProperty] : selectPlaceholder) : selectPlaceholder) 
+                : selectedItem ? displayLabel(selectedItem) : selectPlaceholder 
               }}
             </span>
-            <CrossCircledIcon class="ml-2 h-4 w-4 text-red-500 shrink-0 hover:text-red-600 font-semibold" v-if="canClear && modelValue" @click="[$emit('update:modelValue',''), this.$emit('select', '')]" />
+            <CrossCircledIcon
+              v-if="canClear && modelValue"
+              class="ml-2 h-4 w-4 text-red-500 shrink-0 hover:text-red-600 font-semibold"
+              @click="clearSelection"
+            />
           </div>
           <CaretSortIcon class="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
+
       <PopoverContent class="flex w-full p-0 min-w-[var(--radix-popover-trigger-width)]">
         <Command>
-          <CommandInput 
-            type="text" 
-            class="h-9" 
-            :placeholder="searchPlaceholder" 
-            v-model="searchQuery" 
+          <CommandInput
+            type="text"
+            class="h-9"
+            :placeholder="searchPlaceholder"
+            v-model="searchQuery"
             @input="handleInput"
           />
           <CommandEmpty class="py-4">
             {{ loading ? 'Searching...' : 'No results found.' }}
           </CommandEmpty>
+
           <CommandList>
             <CommandGroup>
-              <!-- Select All Option -->
-              <CommandItem @select="selectAll" v-if="multiple" value="null">
+              <CommandItem v-if="multiple" @select="selectAll">
                 <span class="font-bold">Select All</span>
               </CommandItem>
+
               <CommandItem
                 v-for="item in filteredItems"
-                :key="isObjectItems ? item[valueProperty] : item"
-                :value="isObjectItems ? item[labelProperty] : item"
+                :key="itemKey(item)"
+                :value="itemValue(item)"
                 @select="selectItem(item)"
               >
-                {{ isObjectItems ? item[labelProperty] : item }}
+                <slot name="label" :item="item">{{ displayLabel(item) }}</slot>
                 <CheckIcon
-                  :class="[
-                    'ml-auto h-4 w-4',
-                    {
-                      'opacity-100': multiple 
-                        ? selectedItems.includes(isObjectItems ? item[this.valueProperty] : item)
-                        : (isObjectItems ? selectedItem?.[valueProperty] === item[valueProperty] : selectedItem === item),
-                      'opacity-0': !multiple 
-                        ? !(isObjectItems ? selectedItem?.[valueProperty] === item[valueProperty] : selectedItem === item)
-                        : !selectedItems.includes(isObjectItems ? item[this.valueProperty] : item),
-                    },
-                  ]"
+                  :class="checkIconClass(item)"
                 />
               </CommandItem>
             </CommandGroup>
@@ -59,7 +59,8 @@
         </Command>
       </PopoverContent>
     </Popover>
-    <p class="mt-0.5 text-xs text-red-500 font-semibold" v-if="error">
+
+    <p v-if="error" class="mt-0.5 text-xs text-red-500 font-semibold">
       This field is required.
     </p>
   </div>
@@ -73,54 +74,21 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover
 export default {
   emits: ['search', 'select', 'update:modelValue'],
   components: { 
-    CaretSortIcon, CheckIcon, CrossCircledIcon, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Popover, PopoverContent, PopoverTrigger
+    CaretSortIcon, CheckIcon, CrossCircledIcon, Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Popover, PopoverContent, PopoverTrigger 
   },
   props: {
-    items: {
-      type: Array,
-      required: true,
-    },
-    modelValue: {
-      type: [String, Number, Object],
-      required: false,
-    },
-    labelProperty: {
-      type: [String, Number], // Accept numbers as well
-      default: 'name',
-    },
-    valueProperty: {
-      type: [String, Number],
-      default: 'id',
-    },
-    placeholder: {
-      type: String,
-      default: 'Select Country',
-    },
-    selectPlaceholder: {
-      type: String,
-      default: 'Select Option',
-    },
-    searchPlaceholder: {
-      type: String,
-      default: 'Search option...',
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    error: { type: [String, Boolean] },
-    multiple: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    canClear: {
-      type: Boolean,
-      default: false,
-    }
+    items: Array,
+    modelValue: [String, Number, Object],
+    labelProperty: { type: [String, Number], default: 'name' },
+    valueProperty: { type: [String, Number], default: 'id' },
+    placeholder: { type: String, default: 'Select Country' },
+    selectPlaceholder: { type: String, default: 'Select Option' },
+    searchPlaceholder: { type: String, default: 'Search option...' },
+    loading: { type: Boolean, default: false },
+    error: [String, Boolean],
+    multiple: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
+    canClear: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -141,32 +109,21 @@ export default {
     selectedItem() {
       if (this.multiple) {
         return this.items.filter(item =>
-          this.selectedItems.includes(this.isObjectItems ? item[this.valueProperty] : item) 
+          this.selectedItems.includes(this.itemValue(item))
         );
-      } else {
-        if (this.isObjectItems) {
-          return this.items.find(item => item[this.valueProperty] === this.modelValue);
-        }
-        return this.modelValue;
       }
+      return this.items.find(item => this.itemValue(item) === this.modelValue);
     },
     filteredItems() {
-      const searchQuery = this.searchQuery.trim().toLowerCase();
-
+      const query = this.searchQuery.trim().toLowerCase();
       return this.items.filter(item => {
-        const labelValue = this.isObjectItems ? item[this.labelProperty] : item;
-
-        if (typeof labelValue === 'number') {
-          return labelValue.toString().includes(searchQuery);
-        } else if (typeof labelValue === 'string') {
-          return labelValue.toLowerCase().includes(searchQuery);
-        }
-        return false;
+        const label = this.itemLabel(item);
+        return label.toString().toLowerCase().includes(query);
       });
     },
     allSelected() {
       return this.filteredItems.length > 0 && this.filteredItems.every(item =>
-        this.selectedItems.includes(this.isObjectItems ? item[this.valueProperty] : item)
+        this.selectedItems.includes(this.itemValue(item))
       );
     },
   },
@@ -174,8 +131,17 @@ export default {
     togglePopover() {
       this.isOpen = !this.isOpen;
     },
+    itemValue(item) {
+      return this.isObjectItems ? item[this.valueProperty] : item;
+    },
+    itemLabel(item) {
+      return this.isObjectItems ? item[this.labelProperty] : item;
+    },
+    itemKey(item) {
+      return this.itemValue(item);
+    },
     selectItem(item) {
-      const value = this.isObjectItems ? item[this.valueProperty] : item;
+      const value = this.itemValue(item);
       if (this.multiple) {
         const index = this.selectedItems.indexOf(value);
         if (index === -1) {
@@ -191,16 +157,28 @@ export default {
       this.$emit('select', item);
     },
     selectAll() {
-      this.selectedItems = this.allSelected ? [] : this.filteredItems.map(item =>
-        this.isObjectItems ? item[this.valueProperty] : item
-      );
+      this.selectedItems = this.allSelected ? [] : this.filteredItems.map(this.itemValue);
       this.$emit('update:modelValue', this.selectedItems);
     },
     handleInput(event) {
-      this.searchQuery = event.target.value; // Update the search query
-      this.$emit('search', event.target.value);
+      this.searchQuery = event.target.value;
+      this.$emit('search', this.searchQuery);
     },
-  },
+    clearSelection() {
+      this.$emit('update:modelValue', '');
+      this.$emit('select', '');
+    },
+    displayLabel(item) {
+      return this.isObjectItems ? item[this.labelProperty] : item;
+    },
+    checkIconClass(item) {
+      const selected = this.multiple
+        ? this.selectedItems.includes(this.itemValue(item))
+        : this.itemValue(item) === this.modelValue;
+
+      return `ml-auto h-4 w-4 ${selected ? 'opacity-100' : 'opacity-0'}`;
+    }
+  }
 };
 </script>
 

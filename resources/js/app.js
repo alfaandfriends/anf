@@ -24,9 +24,7 @@ import { Checkbox } from '@/Components/ui/checkbox'
 import { Switch } from '@/Components/ui/switch'
 import ComboBox from '@/Components/ComboBox.vue'
 import Datepicker from '@/Components/Datepicker.vue'
-import MonthPicker from '@/Components/MonthPicker.vue'
-
-/* Intercept axios request */
+/* Intercept axios reques@/Components/Datepicker.vue
 // axios.interceptors.response.use(
 //     response => response,
 //     error => {
@@ -59,7 +57,6 @@ createInertiaApp({
             .component('Switch', Switch)
             .component('ComboBox', ComboBox)
             .component('Datepicker', Datepicker)
-            .component('MonthPicker', MonthPicker)
             .mount(el);
     },
 });

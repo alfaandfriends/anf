@@ -47,46 +47,6 @@
             </tr>   
         </table>
     </div>
-    <table width="100%" style="margin-top: 20px; page-break-inside: auto; border-top: 2px solid; border-bottom: 2px solid; border-left: 2px solid; border-right: 2px solid;">
-        <thead>
-            <tr>
-                <th width="40%" style="background-color: #B5C0D0; border: 1px solid; padding: 12px; font-size: 12px" colspan="3">Assessments</th>
-            </tr>
-            <tr>
-                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px" rowspan="2">Units</th>
-                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px" colspan="2">Scores</th>
-            </tr>
-            <tr>
-                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px">Pre</th>
-                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px">Post</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                $assessments = json_decode($data['assessments']->assessments) ?? [];
-            @endphp
-            @foreach($data['units'] as $item)
-                @php
-                    $pre    =   '';
-                    $post   =   '';
-                    if(count($assessments)){
-                        foreach ($assessments as $assessment) {
-                            if ($assessment->unit_id == $item->id) {
-                                $pre = $assessment->pre;
-                                $post = $assessment->post;
-                            }
-                        }
-                    }
-                @endphp
-                <tr>
-                    <th width="40%" style="text-align: left; border: 1px solid; padding: 10px; padding-left: 10px; font-size: 12px">{{ $item->name }}</th>
-                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $pre }}</th>
-                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $post }}</th>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <div class="page-break"></div>
     @foreach($data['report_data'] as $key => $report)
         @php
             $report_item = json_decode($report->report_data, true);

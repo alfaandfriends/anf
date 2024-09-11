@@ -210,7 +210,7 @@ class GenerateInvoices extends Command
             
             $log_data =   'Generate invoice failed';
             event(new DatabaseTransactionEvent($log_data));
-            event(new DatabaseTransactionEvent($e));
+            event(new DatabaseTransactionEvent(json_encode($e)));
             return Command::FAILURE;
         }
 

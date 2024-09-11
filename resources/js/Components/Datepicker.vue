@@ -1,100 +1,105 @@
+<script setup>
+import { ref, watch } from 'vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
+const props = defineProps({
+  modelValue: {
+    type: [String, Date, Object],
+    default: new Date,
+  },
+  mode: {
+    type: String,
+    default: 'date'
+  },
+  format: {
+    type: String,
+    default: 'YYYY-MM-DD'
+  },
+});
+
+const emit = defineEmits(['update:modelValue', 'select']);
+
+const internalValue = ref(props.modelValue);
+
+watch(internalValue, (newValue) => {
+  emit('update:modelValue', newValue);
+  emit('select', newValue);
+});
+
+</script>
+
 <template>
-    <Popover v-model:open="isOpen">
-      <PopoverTrigger as-child @click="togglePopover">
-        <Button variant="outline" class="px-2 w-full justify-between">
-          <div class="flex space-x-2">
-            <CalendarIcon class="ml-2 h-5 w-5 shrink-0 opacity-50" />
-            <span class="truncate font-normal">{{ formattedLabel }}</span>
-          </div>
-          <!-- <Cross1Icon class="ml-2 h-3.5 w-3.5 shrink-0 opacity-50 hover:opacity-80" @click="clearDate" v-if="date" /> -->
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent class="p-0">
-        <Calendar class="" v-model="date" :mode="mode" @dayclick="formatDate"/>
-      </PopoverContent>
-    </Popover>
-  </template>
-  
-  <script>
-  import moment from 'moment-timezone';
-  import { Calendar } from '@/Components/ui/v-calendar'
-  import { CalendarIcon, Cross1Icon } from '@radix-icons/vue'
-  import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
-  
-  export default {
-    emits: ['change', 'update:modelValue'],
-    props: {
-      dateLabelFormat: {
-        type: String,
-        default: 'DD/MM/YYYY'
-      },
-      timeFormat: {
-        type: String,
-        default: ''
-      },
-      timeLabelFormat: {
-        type: String,
-        default: 'h:mm A'
-      },
-      modelValue: {
-        type: [String, Date],
-        default: ''
-      },
-      mode: {
-        type: String,
-        default: 'mode'
-      }
-    },
-    components: {
-      Calendar, CalendarIcon, Cross1Icon, Popover, PopoverContent, PopoverTrigger
-    },
-    data() {
-      return {
-        isOpen: false,
-        date: new Date(),
-      }
-    },
-    watch: {
-      date: {
-        handler(){
-          this.formatDate()
-        },
-        immediate: true
-      }
-    },
-    computed: {
-      formattedLabel() {
-        const date = this.date
-        if(!date){
-          return this.mode == 'date' ? 'Select Date' : 'Select Time'
-        }
-        return this.mode == 'date' ? moment(date).format(this.dateLabelFormat) : moment(date).format(this.timeLabelFormat)
-      }
-    },
-    methods: {
-      formatDate() {
-        this.$emit('update:modelValue', this.date); // Emit the formatted date with update:modelValue
-        this.isOpen = false
-      },
-      clearDate() {
-        this.date = ''
-        this.$emit('update:modelValue', this.date); // Emit the formatted date with update:modelValue
-      },
-      togglePopover() {
-        this.isOpen = !this.isOpen
-      }
-    },
-    created(){
-      if(this.modelValue){
-        this.date = new Date(this.modelValue)
-      }
-      else{
-          this.date = new Date()
-      }
+    <VueDatePicker
+      v-model="internalValue" 
+      :auto-apply="mode == 'time' ? false : true" 
+      :clearable="false" 
+      :enable-time-picker="mode == 'time' ? true : false" 
+      :format="format" 
+      :time-picker="mode == 'time' ? true : false"
+      :month-picker="mode == 'month' ? true : false"
+      :teleport="true"
+    />
+</template>
 
-      this.$emit('update:modelValue', this.date); // Emit the formatted date with update:modelValue
+<style>
+.dp__theme_light{
+  @apply rounded-lg
+}
+.dp__overlay{
+  @apply rounded-lg z-50
+}
+.dp__input_wrap{
+  @apply relative
+}
+.dp__input{
+  @apply rounded-md text-base border-gray-200 hover:border-gray-200 text-[14px] h-9 shadow-sm font-semibold;
+}
+.dp__active_date{
+  @apply bg-primary border-primary;
+}
+.dp__overlay_cell_active{
+  @apply bg-primary border-primary;
+}
+.dp__instance_calendar{
+  @apply py-3 px-4 w-full text-sm;
+}
+.dp__today {
+  @apply border-primary;
+}
+.dp__month_year_row{
+  @apply py-6 px-4
+}
+.dp__month_year_col_nav{
+  @apply border border-primary rounded-md px-1 py-0.5 hover:bg-gray-50
+}
+.dp__inner_nav{
+  @apply hover:bg-transparent  
+}
+.dp__icon{
+  @apply text-primary 
+}
+.dp__month_year_wrap{
+  @apply space-x-2 px-2
+}
 
-    }
-  }
-  </script>
-  
+.dp__selection_preview{
+  @apply hidden
+}
+.dp__action_row{
+  @apply justify-end
+}
+.dp__action_buttons{
+  @apply space-x-1
+}
+.dp__cancel{
+  @apply text-sm text-primary bg-secondary px-2 py-1.5
+}
+.dp__select{
+  @apply text-sm text-secondary bg-primary px-2 py-1.5
+}
+
+.dp__selection_grid_header{
+  @apply px-3 py-2
+}
+</style>

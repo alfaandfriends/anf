@@ -171,6 +171,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 </Collapsible>
             </template>
             <template #footer>
+                <Button variant="outline" @click="show.add_fee = false">Cancel</Button>
                 <Button @click="addFee">Add</Button>
             </template>
         </Dialog>
@@ -185,7 +186,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 </div>
             </template>
             <template #footer>
-                <Button @click="updateFee">Save</Button>
+                <Button variant="outline" @click="show.edit_fee = false">Cancel</Button>
+                <Button @click="addFee">Add</Button>
             </template>
         </Dialog>
         <DeleteConfirmation :open="confirmation.is_open" @close="confirmation.is_open = false" :routeName="confirmation.route_name" :id="confirmation.id">

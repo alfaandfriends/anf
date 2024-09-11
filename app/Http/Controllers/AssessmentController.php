@@ -42,7 +42,7 @@ class AssessmentController extends Controller
                             ->when(request('level'), function ($query, $search) {
                                 $query->where('programme_levels.level', request('level'));
                             })
-                            ->select('children.name as student_name', 'students.id as student_id', 'centres.label as centre_name', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 'programme_level_fees.id as programme_level_fee_id', 'assessments.assessments')
+                            ->select('children.name as student_name', 'students.id as student_id', 'centres.label as centre_name', 'programmes.name as programme_name', 'programme_levels.level as programme_level', 'programme_level_fees.id as programme_level_fee_id', 'assessments.assessments', 'assessments.final_pre_score', 'assessments.final_post_score')
                             ->orderBy('student_name')
                             ->orderBy('programme_level')
                             ->paginate(10);
@@ -73,7 +73,9 @@ class AssessmentController extends Controller
         ->where('student_id', $request->student_id)
         ->where('programme_level_fee_id', $request->programme_level_fee_id)
         ->update([
-            'assessments'   => $request->assessments
+            'assessments'       => $request->assessments,
+            'final_pre_score'   => $request->final_pre_score,
+            'final_post_score'  => $request->final_post_score
         ]);
 
         return back()->with(['type'=>'success', 'message'=>'Data has been saved']);

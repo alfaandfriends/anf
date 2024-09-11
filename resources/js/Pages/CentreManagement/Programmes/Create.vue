@@ -164,6 +164,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 </Collapsible>
             </template>
             <template #footer>
+                <Button variant="outline" @click="show.add_fee = false">Cancel</Button>
                 <Button @click="addFee">Add</Button>
             </template>
         </Dialog>
