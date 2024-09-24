@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -116,7 +115,7 @@ import BreezeButton from '@/Components/Button.vue';
                         </div>
                     </div>
                 </div>
-                <BreezeButton @click="download" v-if="finish_loading_report">Download</BreezeButton>
+                <Button @click="download" v-if="finish_loading_report">Download</Button>
             </div>
         </div>
     <!-- </div> -->

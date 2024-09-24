@@ -1,5 +1,4 @@
 <script setup>
-import BreezeButton from '@/Components/Button.vue';
 </script>
 <template>
     <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">

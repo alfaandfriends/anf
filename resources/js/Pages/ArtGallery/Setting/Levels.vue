@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -8,132 +7,104 @@ import BreezeButton from '@/Components/Button.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="py-4 px-4">
-            <div class="overflow-x-auto">
-                <div class="m-3">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="flex justify-end pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
-                            <div class="flex">
-                                <BreezeButton class="py-2 px-4" @click="create">New Level</BreezeButton>
-                            </div>
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+            <Card>
+                <template #title>
+                    <div class="flex justify-end">
+                        <Button @click="create">New Level</Button>
+                    </div>
+                </template>
+                <template #content>
+                    <Table>
+                        <TableHeader class="bg-gray-100">
+                            <TableRow>
+                            <TableHead>#</TableHead>
+                            <TableHead>Name</TableHead>
+                            <TableHead class="text-center">Action</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow v-if="!$page.props.levels.length">
+                                <TableCell class="text-center" colspan="10">
+                                    <div class="p-3">
+                                        No Record Found
+                                    </div>
+                                </TableCell>
+                            </TableRow> 
+                            <TableRow v-for="result, index in $page.props.levels">
+                                <TableCell>{{ index + 1 }}</TableCell>
+                                <TableCell>{{ result.name }}</TableCell>
+                                <TableCell class="text-center">
+                                    <div class="flex justify-center space-x-2">
+                                        <Button variant="outline" @click="edit(result.id, result.name)">Edit</Button>
+                                        <Button variant="destructive" @click="destroy(result.id)">Delete</Button>
+                                        <Button @click="viewThemes(result.id)">View Themes</Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </template>
+            </Card>
+            <Card v-if="show_create">
+                <template #title>Add Level</template>
+                <template #content>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <Label>Name<span class="text-red-500">*</span></Label>
+                            <Input type="text" :error="errors.level_name" v-model="form.level_name"></Input>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="align-middle inline-block min-w-full">
-                            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-300">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/14">#</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Name</th>
-                                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/14">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        <tr v-if="!$page.props.levels">
-                                            <td class="text-center" colspan="10">
-                                                <div class="p-3">
-                                                    No Record Found 
-                                                </div>
-                                            </td>
-                                        </tr> 
-                                        <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.levels" :key="result.id">
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-700">{{ ++index }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">{{ result.name }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                                <div class="flex justify-center space-x-2">
-                                                    <BreezeButton buttonType="warning" @click="edit(result.id, result.name)">Edit</BreezeButton>
-                                                    <BreezeButton buttonType="danger" @click="destroy(result.id)">Delete</BreezeButton>
-                                                    <BreezeButton buttonType="blue" @click="viewThemes(result.id)">View Themes</BreezeButton>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="space-y-2" v-if="show_create">
-                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                <div class="mb-5 border-b-indigo-500 border-b border-dashed">
-                                    <h2 class="font-display font-bold text-indigo-600">Add Level</h2>
-                                </div>
-                                <div class="grid grid-cols-1 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="level_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="level_name" id="level_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.level_name ? 'border-red-300' : 'border-gray-300'" v-model="form.level_name" autocomplete="off"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="px-6 py-4 bg-white border border-gray-200 rounded-lg shadow-md">
-                                <div class="flex justify-end">
-                                    <BreezeButton @click="store">Save</BreezeButton>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="space-y-2" v-if="show_edit">
-                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                <div class="mb-5 border-b-indigo-500 border-b border-dashed">
-                                    <h2 class="font-display font-bold text-indigo-600">Edit Level</h2>
-                                </div>
-                                <div class="grid grid-cols-1 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="level_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="level_name" id="level_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.level_name ? 'border-red-300' : 'border-gray-300'" v-model="form.level_name" autocomplete="off"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="px-6 py-4 bg-white border border-gray-200 rounded-lg shadow-md">
-                                <div class="flex justify-end">
-                                    <BreezeButton @click="update">Save</BreezeButton>
-                                </div>
-                            </div>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end">
+                        <Button @click="store">Save</Button>
+                    </div>
+                </template>
+            </Card>
+            <Card v-if="show_edit">
+                <template #title>Edit Level</template>
+                <template #content>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <Label>Name<span class="text-red-500">*</span></Label>
+                            <Input type="text" :error="errors.level_name" v-model="form.level_name"></Input>
                         </div>
                     </div>
-                </div>
-            </div>
-            <ConfirmationModal 
-                :show="isOpen" 
-                @close="isOpen = false"
-                confirmationAlert="danger"
-                confirmationTitle="Delete Level"
-                confirmationText="Are you sure want to delete this level?"
-                confirmationButton="Delete"
-                confirmationMethod="delete"
-                :confirmationRoute="confirmationRoute"
-                :confirmationData="confirmationData"
-            />
+                </template>
+                <template #footer>
+                    <div class="flex justify-end">
+                        <Button @click="update">Save</Button>
+                    </div>
+                </template>
+            </Card>
         </div>
+        <DeleteConfirmation :open="confirmation.is_open" @close="confirmation.is_open = false" :routeName="confirmation.route_name" :id="confirmation.id">
+            <template #title>Delete Level</template>
+            <template #description>Are you sure want to delete this level?</template>
+        </DeleteConfirmation>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
-import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue'
-import Pagination from '@/Components/Pagination.vue'
-import axios from 'axios'
-import { debounce } from 'vue-debounce'
+import Card from '@/Components/Card.vue'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
+import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Pagination
+        Head, Link
     },
     data(){
         return{
-            isOpen: false,
-            confirmationData: '',
-            confirmationRoute: '',
             show_create: false,
             show_edit: false,
+            confirmation: {
+                is_open: false,
+                route_name: '',
+                id: ''
+            },
             form:{
                 id: '',
                 level_name: ''
@@ -173,9 +144,9 @@ export default {
             this.$inertia.post(route('art_gallery.setting.levels.update'), this.form, {preserveState: false})
         },
         destroy(id){
-            this.confirmationRoute = 'art_gallery.setting.levels.delete'
-            this.confirmationData = id
-            this.isOpen = true
+            this.confirmation.route_name    = 'art_gallery.setting.levels.delete'
+            this.confirmation.id            = id
+            this.confirmation.is_open       = true
         }
     }
 }

@@ -15,7 +15,7 @@ const props = defineProps({
   disabled: { type: Boolean, required: false },
   required: { type: Boolean, required: false },
   name: { type: String, required: false },
-  value: { type: [Number, String], required: false },
+  value: { type: [Number, String, Boolean], required: false },
   id: { type: [Number, String], required: false },
   asChild: { type: Boolean, required: false },
   as: { type: null, required: false },

@@ -90,7 +90,7 @@ class ChildrenController extends Controller
                                       ->from('students')
                                       ->whereColumn('students.children_id', 'children.id');
                             })
-                            ->select(['children.id', 'children.name'])->get();
+                            ->select(['children.id', 'children.name'])->limit(10)->get();
 
         return $children;
     }

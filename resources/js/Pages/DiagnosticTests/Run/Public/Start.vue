@@ -54,64 +54,66 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                 </div>
                 <div class="p-6 text-center">
-                    <button class="py-2 px-4 rounded shadow-md bg-gray-800 text-white hover:bg-gray-700" @click="parentDetails">Next Step</button>
+                    <Button @click="parentDetails">Next Step</Button>
                 </div>
             </div>
-            <div class="w-full max-w-2xl mt-32 sm:mt-0" v-if="show_parent_details">
-                <div class="flex-1 flex-grow flex flex-col w-full border bg-white px-6 py-8 shadow-md rounded-[4px] min-w-[25%] space-y-4">
+            <Card class="w-full max-w-lg" v-if="show_parent_details">
+                <template #content>
                     <div class="flex flex-col">
                         <div class="font-semibold leading-5 text-xl">Final step</div>
                         <div class="mt-1 leading-5 text-slate-500 text-sm">Kindly fill out the parent's details to receive the generated result.</div>
                     </div>
                     <hr>
-                    <div class="flex flex-col text-sm rounded-md space-y-1">
-                        <label class="block text-sm text-gray-700 font-bold" for="">Parent's Name <span class="text-red-500">*</span></label>
-                        <input type="text" class="mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_name ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_name" autocomplete="off" required/>
-                    </div>
-                    <div class="flex flex-col text-sm rounded-md space-y-1">
-                        <label class="block text-sm text-gray-700 font-bold" for="">Parent's Contact Number <span class="text-red-500">*</span></label>
-                        <input type="text" class="w-full mb-5 rounded-[4px] border p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_contact ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_contact" autocomplete="off" @input="restrictToNumbers" required/>
-                    </div>
-                    <div class="flex flex-col text-sm rounded-md space-y-1">    
-                        <label class="block text-sm text-gray-700 font-bold" for="">Parent's Area/Location <span class="text-red-500">*</span></label>
-                        <input type="text" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_area_location ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_area_location" autocomplete="off" placeholder="e.g. Puchong, Selangor" required/>
-                    </div>
-                    <div class="flex flex-col text-sm rounded-md space-y-1">    
-                        <label class="block text-sm text-gray-700 font-bold" for="">Parent's Email <span class="text-red-500">*</span></label>
-                        <input type="email" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500" :class="error.parent_email ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_email" autocomplete="off" required/>
-                    </div>
-                    <hr>
-                    <div class="flex items-center">
-                        <input id="link-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-0 cursor-pointer" v-model="form.has_edu_teacher_email">
-                        <label for="link-checkbox" class="ms-2 text-sm font-medium text-gray-900 cursor-pointer">Keep a copy for myself</label>
-                    </div>
-                    <template v-if="form.has_edu_teacher_email">
-                        <div class="flex flex-col text-sm rounded-md space-y-1">    
-                            <input type="email" class="border rounded-[4px] p-3 hover:outline-none focus:outline-none focus:ring-0 focus:border-gray-500 border-gray-500" v-model="form.edu_teacher_email" autocomplete="off" placeholder="Your Email"/>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="flex flex-col text-sm rounded-md space-y-1">
+                            <label class="block text-sm text-gray-700 font-bold" for="">Parent's Name <span class="text-red-500">*</span></label>
+                            <input type="text" class="mb-5 rounded-[4px] border p-3" :class="error.parent_name ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_name" autocomplete="off" required/>
                         </div>
-                    </template>
-                    <button type="submit" class="mt-5 w-full border p-2 text-white rounded-[4px] hover:bg-gray-700" :class="!submitting ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-800'" @click="!submitting ? saveResult() : ''">{{ submitting ? 'Submitting...' : 'Submit' }}</button>
+                        <div class="flex flex-col text-sm rounded-md space-y-1">
+                            <label class="block text-sm text-gray-700 font-bold" for="">Parent's Contact Number <span class="text-red-500">*</span></label>
+                            <input type="text" class="w-full mb-5 rounded-[4px] border p-3" :class="error.parent_contact ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_contact" autocomplete="off" @input="restrictToNumbers" required/>
+                        </div>
+                        <div class="flex flex-col text-sm rounded-md space-y-1">    
+                            <label class="block text-sm text-gray-700 font-bold" for="">Parent's Area/Location <span class="text-red-500">*</span></label>
+                            <input type="text" class="border rounded-[4px] p-3" :class="error.parent_area_location ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_area_location" autocomplete="off" placeholder="e.g. Puchong, Selangor" required/>
+                        </div>
+                        <div class="flex flex-col text-sm rounded-md space-y-1">    
+                            <label class="block text-sm text-gray-700 font-bold" for="">Parent's Email <span class="text-red-500">*</span></label>
+                            <input type="email" class="border rounded-[4px] p-3" :class="error.parent_email ? 'border-red-500' : 'border-gray-500'" v-model="form.parent_email" autocomplete="off" required/>
+                        </div>
+                        <hr>
+                        <div class="flex items-center">
+                            <input id="link-checkbox" type="checkbox" value="" class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-0 cursor-pointer" v-model="form.has_edu_teacher_email">
+                            <label for="link-checkbox" class="ms-2 text-sm font-medium text-gray-900 cursor-pointer">Keep a copy for myself</label>
+                        </div>
+                        <template v-if="form.has_edu_teacher_email">
+                            <div class="flex flex-col text-sm rounded-md space-y-1">    
+                                <input type="email" class="border rounded-[4px] p-3 border-gray-500" v-model="form.edu_teacher_email" autocomplete="off" placeholder="Your Email"/>
+                            </div>
+                        </template>
+                        <Button type="submit" :class="!submitting ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-800'" @click="!submitting ? saveResult() : ''">{{ submitting ? 'Submitting...' : 'Submit' }}</Button>
+                    </div>
                     <div class="text-center">
                         <span class="italic text-center text-sm text-gray-700 font-semibold" v-if="submitting">Please do not close your browser or current tab</span>
                     </div>
-                </div>
-            </div>
-            <div class="w-full max-w-2xl" v-if="show_thank_you">
-                <div class="flex-col border bg-white px-6 py-8 shadow-md rounded-[4px] min-w-[25%] space-y-8">
-                    <div class="flex flex-col items-center space-y-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="text-green-600 w-28 h-28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                </template>
+            </Card>
+            <Card class="w-full max-w-lg" v-if="show_thank_you">
+                <template #content>
+                    <div class="flex flex-col mb-3 items-center space-y-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-green-600 w-20 h-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <h1 class="font-mono text-xl sm:text-3xl font-bold">Thank You!</h1>
-                        <h3 class="font-sans text-sm sm:text-xl">{{ $page.props.final_message }}</h3>
+                        <h1 class="font-mono text-2xl font-bold">Thank You!</h1>
+                        <h3 class="font-sans text-base text-justify">{{ $page.props.final_message }}</h3>
                     </div>
-                    <button type="submit" class="mt-5 w-full border p-2 bg-gray-800 text-white rounded-[4px] hover:bg-gray-700" @click="returnHome">Return Home</button>
-                </div>
-            </div>
-            <div class="w-full max-w-2xl mt-16 sm:mt-0" v-if="show_quiz">
-                <div class="flex flex-col bg-white rounded-lg shadow min-w-[70%]">
-                    <div class="flex flex-col min-w-full rounded text-center p-8 sm:p-16 space-y-6 sm:space-y-10">
-                        <span class="text-xl sm:text-3xl font-bold uppercase">{{ dt_details.name }}</span>
+                    <Button type="submit" @click="returnHome">Return Home</Button>
+                </template>
+            </Card>
+            <Card class="w-full max-w-3xl" v-if="show_quiz">
+                <template #content>
+                    <div class="flex flex-col min-w-full rounded text-center sm:p-16 space-y-6 sm:space-y-10">
+                        <span class="text-xl sm:text-2xl font-bold uppercase">{{ dt_details.name }}</span>
                         <nav class="flex flex-col items-center space-y-4 m-0">
                             <p class="text-sm sm:text-lg font-medium">Question {{ dt_index + 1 }} of {{ dt_list.length }}</p>
                             <ol role="list" class="flex items-center space-x-2 sm:space-x-4">
@@ -136,7 +138,7 @@ import BreezeButton from '@/Components/Button.vue';
                             </ol>
                         </nav>
                         <div v-if="current.question != '' && current.question_type != 4">
-                            <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex items-center justify-center md:p-5">
+                            <div class="border-2 border-gray-400 p-3 w-full rounded-lg shadow-md flex items-center justify-center md:p-5">
                                 <h1 class="text-center font-mono font-bold text-sm sm:text-xl whitespace-pre-wrap">{{ current.question }}</h1>
                             </div>
                         </div>
@@ -206,10 +208,10 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                         </div>
                         <div class="flex flex-col space-y-10" v-if="current.question_type == 4">
-                            <div class="border-4 border-gray-400 p-3 w-full rounded-lg shadow-xl flex flex-wrap items-center justify-center md:p-5">
+                            <div class="border-2 border-gray-400 p-3 w-full rounded-lg shadow-md flex flex-wrap items-center justify-center md:p-5">
                                 <h1 class="text-left font-mono font-bold text-sm sm:text-lg space-y-2 leading-loose whitespace-pre-line">
                                     <template v-for="(part, index) in sentence_parts" :key="index">
-                                        <input v-if="part.input" type="text" v-model="part.answer" :style="[part.answer.length < 2 ? 'width: 2.6rem': 'width: ' + (part.answer.length * 1 + 2) + 'rem']" class="text-center h-8 sm:h-10 focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-sm sm:text-lg border-gray-300 tracking-widest">
+                                        <input v-if="part.input" type="text" v-model="part.answer" :style="[part.answer.length < 2 ? 'width: 2.6rem': 'width: ' + (part.answer.length * 1 + 2) + 'rem']" class="text-center h-8 sm:h-10 focus:ring-0 focus:border-indigo-300 font-mono font-bold rounded-md text-sm sm:text-lg border border-gray-500 tracking-widest">
                                         <template v-else>
                                             {{ part.text }}
                                         </template>
@@ -221,8 +223,8 @@ import BreezeButton from '@/Components/Button.vue';
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </template>
+            </Card>
         </div>
     </div>
 </template>
@@ -234,6 +236,7 @@ import { Head, Link  } from '@inertiajs/inertia-vue3'
 import { VueDraggableNext  } from 'vue-draggable-next'
 import Chart from 'chart.js/auto'
 import axios from 'axios'
+import Card from '@/Components/Card.vue'
 
 export default {
     components: {

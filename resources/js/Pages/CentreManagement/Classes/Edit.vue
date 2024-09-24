@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -38,11 +37,11 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                     <div>
                         <Label>Start Time<span class="text-red-500">*</span></Label>
-                        <Datepicker mode="time" v-model="form.start_time"/>
+                        <Datepicker mode="time" format="hh:mm a" v-model="form.start_time"/>
                     </div>
                     <div>
                         <Label>End Time<span class="text-red-500">*</span></Label>
-                        <Datepicker mode="time" v-model="form.end_time"/>
+                        <Datepicker mode="time" format="hh:mm a" v-model="form.end_time"/>
                     </div>
                     <div>
                         <Label>Class Capacity<span class="text-red-500">*</span></Label>
@@ -74,6 +73,7 @@ import BreezeButton from '@/Components/Button.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Card from '@/Components/Card.vue'
 import Dialog from '@/Components/DialogModal.vue'
+import moment from 'moment';
 
 export default {
     components: {
@@ -91,8 +91,16 @@ export default {
                 programme_id: this.$page.props.class_info ? this.$page.props.class_info.programme_id : '',
                 programme_level_id: this.$page.props.class_info ? this.$page.props.class_info.programme_level_id : '',
                 class_day: this.$page.props.class_info ? this.$page.props.class_info.class_day_id : '',
-                start_time: this.$page.props.class_info ? this.$page.props.class_info.start_time : '',
-                end_time: this.$page.props.class_info ? this.$page.props.class_info.end_time : '',
+                start_time: {
+                    'hours': new Date(new moment(this.$page.props.class_info.start_time)).getHours(),
+                    'minutes' : new Date(new moment(this.$page.props.class_info.start_time)).getMinutes(),
+                    'seconds' : new Date(new moment(this.$page.props.class_info.start_time)).getSeconds(),
+                },
+                end_time: {
+                    'hours' : new Date(new moment(this.$page.props.class_info.end_time)).getHours(),
+                    'minutes' : new Date(new moment(this.$page.props.class_info.end_time)).getMinutes(),
+                    'seconds' : new Date(new moment(this.$page.props.class_info.end_time)).getSeconds(),
+                },
                 class_capacity: this.$page.props.class_info ? this.$page.props.class_info.capacity : '',
                 class_type: this.$page.props.class_info ? this.$page.props.class_info.class_type_id : '',
                 class_method: this.$page.props.class_info ? this.$page.props.class_info.class_method_id : '',

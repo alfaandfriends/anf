@@ -1,7 +1,5 @@
 <script setup>
-import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
-import { Link } from '@inertiajs/inertia-vue3'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs'
 </script>
 
 <template>
@@ -19,18 +17,5 @@ import { Link } from '@inertiajs/inertia-vue3'
             </TabsTrigger>
             </TabsList>
         </Tabs>
-        <Button @click="newAdmission" v-if="$page.props.can.create_students">New Admission</Button>
     </div>
 </template>
-
-<script>
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs'
-
-export default {
-    methods: {
-        newAdmission(){
-            this.$inertia.get(this.route('students.create'), {'centre_id': this.$page.props.centre_id});
-        },
-    }
-}
-</script>

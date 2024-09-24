@@ -50,8 +50,8 @@
         <Card>
             <template #title>Centre Photos</template>
             <template #content>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="mb-4" v-show="show_front_upload">
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                    <div v-show="show_front_upload">
                         <Label>Centre Front View  (1 Image)</Label>
                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                             @change="change_front"
@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-4" v-show="show_inside_upload">
+                    <div v-show="show_inside_upload">
                         <Label>Centre Inside View  (Max: 5 Images)</Label>
                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                             @change="change_inside"

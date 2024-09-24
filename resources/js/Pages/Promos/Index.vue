@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -48,17 +47,7 @@ import BreezeButton from '@/Components/Button.vue';
                             <TableCell>{{ promo_list.type_name }}</TableCell>
                             <TableCell class="text-center">{{ promo_list.promotion_value }}</TableCell>
                             <TableCell class="text-center">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger as-child>
-                                    <Button size="icon" variant="outline" class="h-8 w-8">
-                                        <MoreVertical class="h-3.5 w-3.5" />
-                                        <span class="sr-only">More</span>
-                                    </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem v-if="$page.props.can.delete_promos" @click="deletePromo(promo_list.promotion_id)">Delete</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <Button variant="destructive" v-if="$page.props.can.delete_promos" @click="deletePromo(promo_list.promotion_id)">Delete</Button>
                             </TableCell>
                         </TableRow>
                     </TableBody>

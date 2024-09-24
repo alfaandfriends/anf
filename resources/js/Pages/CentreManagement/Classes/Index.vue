@@ -51,30 +51,22 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             </TableCell>
                         </TableRow> 
                         <TableRow v-for="classes, index in $page.props.classes.data">
-                            <TableCell class="cursor-pointer" @click="editClass(classes.id)">{{ $page.props.classes.from + index }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editClass(classes.id)">{{ classes.programme_name }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editClass(classes.id)">{{ classes.level }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editClass(classes.id)">{{ classes.class_day }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editClass(classes.id)">
+                            <TableCell>{{ $page.props.classes.from + index }}</TableCell>
+                            <TableCell>{{ classes.programme_name }}</TableCell>
+                            <TableCell>{{ classes.level }}</TableCell>
+                            <TableCell>{{ classes.class_day }}</TableCell>
+                            <TableCell>
                                 {{ moment(classes.start_time).format('h:mm A') }} - {{ moment(classes.end_time).format('h:mm A') }}
                             </TableCell>
-                            <TableCell class="cursor-pointer" @click="editClass(classes.id)">{{ classes.type }}</TableCell>
-                            <TableCell class="text-center cursor-pointer" @click="editClass(classes.id)">
+                            <TableCell>{{ classes.type }}</TableCell>
+                            <TableCell class="text-center">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="classes.status == 1 ? ' bg-green-100 text-green-800' : ' bg-red-100 text-red-800'"> {{ classes.status == 1 ? 'Active' : 'Not Active' }} </span>
                             </TableCell>
                             <TableCell class="text-center">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger as-child>
-                                    <Button size="icon" variant="outline" class="h-8 w-8">
-                                        <MoreVertical class="h-3.5 w-3.5" />
-                                        <span class="sr-only">More</span>
-                                    </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem v-if="$page.props.can.edit_classes" @click="editClass(classes.id)">Edit</DropdownMenuItem>
-                                        <DropdownMenuItem v-if="$page.props.can.delete_classes" @click="deleteClass(classes.id)">Delete</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <div class="flex items center justify-center space-x-2">
+                                    <Button variant="outline" v-if="$page.props.can.edit_classes" @click="editClass(classes.id)">Edit</Button>
+                                    <Button variant="destructive" v-if="$page.props.can.delete_classes" @click="deleteClass(classes.id)">Delete</Button>
+                                </div>
                             </TableCell>
                         </TableRow>
                     </TableBody>

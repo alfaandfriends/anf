@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -40,22 +39,14 @@ import BreezeButton from '@/Components/Button.vue';
                             </TableCell>
                         </TableRow> 
                         <TableRow v-for="product, index in $page.props.products.data">
-                            <TableCell class="cursor-pointer" @click="editProduct(product.id)">{{ $page.props.products.from + index }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editProduct(product.id)">{{ product.name }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editProduct(product.id)">{{ product.description }}</TableCell>
+                            <TableCell>{{ $page.props.products.from + index }}</TableCell>
+                            <TableCell>{{ product.name }}</TableCell>
+                            <TableCell>{{ product.description }}</TableCell>
                             <TableCell class="text-center">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger as-child>
-                                    <Button size="icon" variant="outline" class="h-8 w-8">
-                                        <MoreVertical class="h-3.5 w-3.5" />
-                                        <span class="sr-only">More</span>
-                                    </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem v-if="$page.props.can.edit_products" @click="editProduct(product.id)">Edit</DropdownMenuItem>
-                                        <DropdownMenuItem v-if="$page.props.can.delete_products" @click="deleteProduct(product.id)">Delete</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <div class="flex items center justify-center space-x-2">
+                                    <Button variant="outline" v-if="$page.props.can.edit_products" @click="editProduct(product.id)">Edit</Button>
+                                    <Button variant="destructive" v-if="$page.props.can.delete_products" @click="deleteProduct(orproductder.id)">Delete</Button>
+                                </div>
                             </TableCell>
                         </TableRow>
                     </TableBody>

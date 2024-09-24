@@ -22,6 +22,7 @@ import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { Switch } from '@/Components/ui/switch'
+import { RadioGroup, RadioGroupItem  } from '@/Components/ui/radio-group'
 import ComboBox from '@/Components/ComboBox.vue'
 import Datepicker from '@/Components/Datepicker.vue'
 /* Intercept axios reques@/Components/Datepicker.vue
@@ -55,6 +56,8 @@ createInertiaApp({
             .component('Button', Button)
             .component('Checkbox', Checkbox)
             .component('Switch', Switch)
+            .component('RadioGroup', RadioGroup)
+            .component('RadioGroupItem', RadioGroupItem)
             .component('ComboBox', ComboBox)
             .component('Datepicker', Datepicker)
             .mount(el);

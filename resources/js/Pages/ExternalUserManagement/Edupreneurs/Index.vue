@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -32,21 +31,11 @@ import BreezeButton from '@/Components/Button.vue';
                             </TableCell>
                         </TableRow> 
                         <TableRow v-for="user, index in $page.props.edupreneurs.data">
-                            <TableCell class="cursor-pointer" @click="manageEdupreneur(user.id)">{{ $page.props.edupreneurs.from + index }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="manageEdupreneur(user.id)">{{ user.name }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="manageEdupreneur(user.id)">{{ user.email }}</TableCell>
+                            <TableCell>{{ $page.props.edupreneurs.from + index }}</TableCell>
+                            <TableCell>{{ user.name }}</TableCell>
+                            <TableCell>{{ user.email }}</TableCell>
                             <TableCell class="text-center">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger as-child>
-                                    <Button size="icon" variant="outline" class="h-8 w-8">
-                                        <MoreVertical class="h-3.5 w-3.5" />
-                                        <span class="sr-only">More</span>
-                                    </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem v-if="$page.props.can.manage_centre_manager" @click="manageEdupreneur(user.id)">Edit</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <Button variant="outline" v-if="$page.props.can.manage_edupreneurs" @click="manageEdupreneur(user.id)">Edit</Button>
                             </TableCell>
                         </TableRow>
                     </TableBody>

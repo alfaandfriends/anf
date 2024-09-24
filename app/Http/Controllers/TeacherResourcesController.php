@@ -101,7 +101,7 @@ class TeacherResourcesController extends Controller
         $log_data =   'Added teacher resources ID '.$teacher_resource_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Teacher resource added successfully !']);
+        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function edit(Request $request)
@@ -174,7 +174,7 @@ class TeacherResourcesController extends Controller
             event(new DatabaseTransactionEvent($log_data));
         }
 
-        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Teacher resource updated successfully !']);
+        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function destroy($id)
@@ -188,7 +188,7 @@ class TeacherResourcesController extends Controller
 
         DB::table('teacher_resources')->where('id', $id)->delete();
         
-        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Teacher resource deleted successfully !']);
+        return redirect(route('teacher_resources'))->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 
     public function getResource(Request $request)

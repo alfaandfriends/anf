@@ -57,7 +57,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                 </div>
                             </TableCell>
                             <TableCell>{{ moment(order.created_at).format('DD/MM/Y') }}</TableCell>
-                            <TableCell class="cursor-pointer space-x-1">
+                            <TableCell class="space-x-1">
                                 <Badge variant="outline" class="px-3 py-1 hover:bg-slate-900 hover:text-white" @click="viewInvoice(order.id, index)">
                                     <Download class="h-3 w-3 mr-2"/>{{ generating[index].invoice ? 'Generating...' : 'Invoice'}}
                                 </Badge>
@@ -69,22 +69,14 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                 <Badge variant="secondary" v-if="order.shipping_provider_name">{{ order.shipping_provider_name }} - {{ order.tracking_number }}</Badge>
                                 <Badge variant="secondary" v-else>No Tracking Available</Badge>
                             </TableCell>
-                            <TableCell class="text-center cursor-pointer">
+                            <TableCell class="text-center">
                                 <Badge>{{ order.status_name }}</Badge>
                             </TableCell>
                             <TableCell class="text-center">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger as-child>
-                                    <Button size="icon" variant="outline" class="h-8 w-8">
-                                        <MoreVertical class="h-3.5 w-3.5" />
-                                        <span class="sr-only">More</span>
-                                    </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem v-if="$page.props.can.edit_orders" @click="editOrder(order.id)">Edit</DropdownMenuItem>
-                                        <DropdownMenuItem v-if="$page.props.can.delete_orders" @click="deleteOrder(order.id)">Delete</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <div class="flex items center justify-center space-x-2">
+                                    <Button variant="outline" v-if="$page.props.can.edit_orders" @click="editOrder(order.id)">Edit</Button>
+                                    <Button variant="destructive" v-if="$page.props.can.delete_orders" @click="deleteOrder(order.id)">Delete</Button>
+                                </div>
                             </TableCell>
                         </TableRow>
                     </TableBody>

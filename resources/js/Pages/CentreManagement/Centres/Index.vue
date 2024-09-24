@@ -39,26 +39,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             </TableCell>
                         </TableRow> 
                         <TableRow v-for="centre, index in $page.props.centres.data">
-                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ $page.props.centres.from + index }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ centre.centre_name }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editCentre(centre.centre_id)">{{ centre.country_name ? centre.country_name : 'Not Set' }}</TableCell>
-                            <TableCell class="text-center cursor-pointer" @click="editCentre(centre.centre_id)">
+                            <TableCell>{{ $page.props.centres.from + index }}</TableCell>
+                            <TableCell>{{ centre.centre_name }}</TableCell>
+                            <TableCell>{{ centre.centre_address ? centre.centre_address : 'Not Available'}}</TableCell>
+                            <TableCell>{{ centre.country_name ? centre.country_name : 'Not Set' }}</TableCell>
+                            <TableCell class="text-center">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full whitespace-nowrap" :class="centre.centre_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"> {{ centre.centre_status == 1 ? 'Active' : 'Not Active' }} </span>
                             </TableCell>
                             <TableCell class="text-center">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger as-child>
-                                    <Button size="icon" variant="outline" class="h-8 w-8">
-                                        <MoreVertical class="h-3.5 w-3.5" />
-                                        <span class="sr-only">More</span>
-                                    </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem v-if="$page.props.can.edit_centres" @click="editCentre(centre.centre_id)">Edit</DropdownMenuItem>
-                                        <DropdownMenuItem v-if="$page.props.can.delete_centres" @click="deleteCentre(centre.centre_id)">Delete</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <div class="flex items center justify-center space-x-2">
+                                    <Button variant="outline" v-if="$page.props.can.edit_centres" @click="editCentre(centre.centre_id)">Edit</Button>
+                                    <Button variant="destructive" v-if="$page.props.can.delete_centres" @click="deleteCentre(centre.centre_id)">Delete</Button>
+                                </div>
                             </TableCell>
                         </TableRow>
                     </TableBody>

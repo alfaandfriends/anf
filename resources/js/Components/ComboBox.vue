@@ -4,11 +4,11 @@
       <PopoverTrigger as-child @click="togglePopover">
         <Button
           variant="outline"
-          class="w-full justify-between px-3 hover:bg-white"
+          :class="['w-full justify-between px-3 hover:bg-white', classProperty]"
           :disabled="disabled"
         >
-          <div class="flex items-center">
-            <span :class="['truncate', selectedItem ? '' : 'text-gray-500 font-normal']">
+          <div class="flex items-center truncate">
+            <span :class="['truncate block', selectedItem ? '' : 'text-gray-500 font-normal']">
               {{ multiple 
                 ? `${selectedItems.length} selected` 
                 : selectedItem ? displayLabel(selectedItem) : selectPlaceholder 
@@ -24,7 +24,7 @@
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent class="flex w-full p-0 min-w-[var(--radix-popover-trigger-width)]">
+      <PopoverContent class="flex p-0 min-w-[var(--radix-popover-trigger-width)]">
         <Command>
           <CommandInput
             type="text"
@@ -79,6 +79,7 @@ export default {
   props: {
     items: Array,
     modelValue: [String, Number, Object],
+    classProperty: { type: String, default: '' },
     labelProperty: { type: [String, Number], default: 'name' },
     valueProperty: { type: [String, Number], default: 'id' },
     placeholder: { type: String, default: 'Select Country' },
@@ -88,7 +89,7 @@ export default {
     error: [String, Boolean],
     multiple: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
-    canClear: { type: Boolean, default: false }
+    canClear: { type: [Boolean, String], default: false }
   },
   data() {
     return {
@@ -112,7 +113,7 @@ export default {
           this.selectedItems.includes(this.itemValue(item))
         );
       }
-      return this.items.find(item => this.itemValue(item) === this.modelValue);
+      return this.items.find(item => this.itemValue(item) == this.modelValue);
     },
     filteredItems() {
       const query = this.searchQuery.trim().toLowerCase();

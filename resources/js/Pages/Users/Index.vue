@@ -38,28 +38,20 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             </TableCell>
                         </TableRow> 
                         <TableRow v-for="user, index in $page.props.user_list.data">
-                            <TableCell class="cursor-pointer" @click="manageUser(user.ID)">{{ $page.props.user_list.from + index }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="manageUser(user.ID)">
+                            <TableCell>{{ $page.props.user_list.from + index }}</TableCell>
+                            <TableCell>
                                 <div class="flex flex-col">
                                     <div>{{ user.display_name }}</div>
                                     <small>{{ user.user_email }}</small> 
                                 </div>
                             </TableCell>
-                            <TableCell class="cursor-pointer" @click="manageUser(user.ID)">{{ user.user_login }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="manageUser(user.ID)">{{ moment(user.user_registered).format('DD/MM/YYYY') }}</TableCell>
+                            <TableCell>{{ user.user_login }}</TableCell>
+                            <TableCell>{{ moment(user.user_registered).format('DD/MM/YYYY') }}</TableCell>
                             <TableCell class="text-center">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger as-child>
-                                    <Button size="icon" variant="outline" class="h-8 w-8">
-                                        <MoreVertical class="h-3.5 w-3.5" />
-                                        <span class="sr-only">More</span>
-                                    </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem v-if="$page.props.can.edit_users" @click="manageUser(user.ID)">Edit</DropdownMenuItem>
-                                        <DropdownMenuItem v-if="$page.props.can.delete_users" @click="deleteUser(user.ID)">Delete</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <div class="flex items center justify-center space-x-2">
+                                    <Button variant="outline" v-if="$page.props.can.edit_users" @click="manageUser(user.ID)">Edit</Button>
+                                    <Button variant="destructive" v-if="$page.props.can.delete_users" @click="deleteUser(user.ID)">Delete</Button>
+                                </div>
                             </TableCell>
                         </TableRow>
                     </TableBody>
@@ -68,8 +60,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
         </Card>
         <Pagination :page_data="$page.props.user_list" :params="params"></Pagination>
         <DeleteConfirmation :open="confirmation.is_open" @close="confirmation.is_open = false" :routeName="confirmation.route_name" :id="confirmation.id">
-            <template #title>Delete Programme</template>
-            <template #description>Are you sure want to delete this programme?</template>
+            <template #title>Delete User</template>
+            <template #description>Are you sure want to delete this user?</template>
         </DeleteConfirmation>
     </BreezeAuthenticatedLayout>
 </template>

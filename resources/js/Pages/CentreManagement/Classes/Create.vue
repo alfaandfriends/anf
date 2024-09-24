@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -38,11 +37,11 @@ import BreezeButton from '@/Components/Button.vue';
                     </div>
                     <div>
                         <Label>Start Time<span class="text-red-500">*</span></Label>
-                        <Datepicker mode="time" v-model="form.start_time"/>
+                        <Datepicker mode="time" format="H:mm" v-model="form.start_time"/>
                     </div>
                     <div>
                         <Label>End Time<span class="text-red-500">*</span></Label>
-                        <Datepicker mode="time" v-model="form.end_time"/>
+                        <Datepicker mode="time" format="H:mm" v-model="form.end_time"/>
                     </div>
                     <div>
                         <Label>Class Capacity<span class="text-red-500">*</span></Label>

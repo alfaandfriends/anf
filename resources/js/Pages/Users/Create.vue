@@ -130,8 +130,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         <ComboBox :items="$page.props.gender_list" label-property="name" value-property="id" :error="$page.props.errors.gender" v-model="child_form.gender" select-placeholder="Select Gender" search-placeholder="Search gender..."></ComboBox>
                     </div>
                     <div>
-                        <Label>Date of Birth<span class="text-red-500">*</span></Label>
-                        <Datepicker mode="date" v-model="child_form.dob"/>
+                        <Label id="dob">Date of Birth<span class="text-red-500">*</span></Label>
+                        <Datepicker mode="date" format="dd/MM/Y" teleport="#dob" :teleportCenter="true" v-model="child_form.dob"/>
                     </div>
                 </div>
             </template>

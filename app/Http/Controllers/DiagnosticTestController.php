@@ -248,7 +248,7 @@ class DiagnosticTestController extends Controller
     public function deleteDtResult($id){
         DB::table('diagnostic_test_result')->where('id', $id)->delete();
 
-        return back()->with(['type' => 'success', 'message' => 'Record has been deleted successfully.']);
+        return back()->with(['type' => 'success', 'message' => 'Data has been deleted.']);
     }
     
 
@@ -303,7 +303,7 @@ class DiagnosticTestController extends Controller
         $log_data =   'Updated DT status ID '.$request->result_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type' => 'success', 'message' => 'Status has been updated !']);
+        return back()->with(['type' => 'success', 'message' => 'Data has been saved.']);
     }
 
     /* categories */
@@ -414,7 +414,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Added DT ID '.$dt_id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'New diagnostic test added successfully !']);
+            return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Data has been added.']);
         }
 
         public function dtEdit(Request $request){
@@ -461,7 +461,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Updated DT ID '.$request->dt_id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Diagnostic test updated successfully !']);
+            return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Data has been saved.']);
         }
 
         public function dtDestroy($dt_id){
@@ -514,7 +514,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Deleted DT ID '.$dt_id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Diagnostic deleted successfully !']);
+            return redirect(route('dt.settings'))->with(['type' => 'success', 'message' => 'Data has been deleted.']);
         }
 
     /* Diagnostic Test Detail List */
@@ -620,7 +620,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Added DT Question ID '.$question_id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'New Item added successfully !']);
+            return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Data has been added.']);
         }
 
         public function dtDetailsEdit(Request $request){
@@ -754,7 +754,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Updated DT Question ID '.$request->id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect()->route('dt.settings.details', ['dt_id' => $request->dt_id])->with(['type' => 'success', 'message' => 'Item updated successfully !']);
+            return redirect()->route('dt.settings.details', ['dt_id' => $request->dt_id])->with(['type' => 'success', 'message' => 'Data has been saved.']);
         }
 
         public function dtDetailsDestroy($id){
@@ -796,7 +796,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Deleted DT Question ID '.$id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect()->route('dt.settings.details', ['dt_id'=>$diagnostic_test_info->dt_id])->with(['type' => 'success', 'message' => 'Item deleted successfully !']);
+            return redirect()->route('dt.settings.details', ['dt_id'=>$diagnostic_test_info->dt_id])->with(['type' => 'success', 'message' => 'Data has been deleted.']);
         }
 
         public function dtDetailsSort(Request $request){
@@ -809,7 +809,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Sorted DT Question';
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect()->back()->with(['type' => 'success', 'message' => 'Item sorted successfully !']);
+            return redirect()->back()->with(['type' => 'success', 'message' => 'Item has been sorted.']);
         }
 
     /* Diagnostic Test Categories */
@@ -832,7 +832,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Added DT category ID '.$category_id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Categories added successfully !']);
+            return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Data has been added.']);
         }
 
         public function dtCategoriesEdit(Request $request){
@@ -856,7 +856,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Updated DT category ID '.$request->category_id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Category updated successfully !']);
+            return redirect()->route('dt.settings.details', ['dt_id'=>$request->dt_id])->with(['type' => 'success', 'message' => 'Data has been saved.']);
         }
 
         public function dtCategoriesDestroy($id){
@@ -872,7 +872,7 @@ class DiagnosticTestController extends Controller
             $log_data =   'Deleted DT category ID '.$id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect()->route('dt.settings.details', ['dt_id'=>$dtInfo->dt_id])->with(['type' => 'success', 'message' => 'Category deleted successfully !']);
+            return redirect()->route('dt.settings.details', ['dt_id'=>$dtInfo->dt_id])->with(['type' => 'success', 'message' => 'Data has been deleted.']);
         }
 
     /* Diagnostic Test Generate Report */
@@ -949,11 +949,11 @@ class DiagnosticTestController extends Controller
             }
 
             DB::commit();
-            return back()->with(['type'=>'success', 'message'=>'Added new language successfully!']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['type'=>'error', 'message'=>'An error has occurred!']);
+            return back()->with(['type'=>'error', 'message'=>'An error has occurred, please try again.']);
         }
     }
 
@@ -1002,11 +1002,11 @@ class DiagnosticTestController extends Controller
             }
 
             DB::commit();
-            return back()->with(['type'=>'success', 'message'=>'Updated language successfully!']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['type'=>'error', 'message'=>'An error has occurred!']);
+            return back()->with(['type'=>'error', 'message'=>'An error has occurred, please try again.']);
         }
     }
     /* delete language */
@@ -1015,16 +1015,15 @@ class DiagnosticTestController extends Controller
             DB::beginTransaction();
 
             DB::table('diagnostic_test_languages')
-                ->join('diagnostic_test_emails', 'diagnostic_test_emails.language_id', '=', 'diagnostic_test_languages.id')
                 ->where('diagnostic_test_languages.id', $id)
                 ->delete();
 
             DB::commit();
-            return back()->with(['type'=>'success', 'message'=>'Deleted language successfully!']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with(['type'=>'error', 'message'=>'Cannot proceed, this language is being used!']);
+            return back()->with(['type'=>'error', 'message'=>'Cannot delete his language as it is being used.']);
         }
     }
 }

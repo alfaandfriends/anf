@@ -78,85 +78,87 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         <Label for="payment_status"> Payment Status </Label>
                         <ComboBox id="payment_status" :items="$page.props.invoice_status" label-property="name" value-property="id" :error="$page.props.errors.status" v-model="form.payment.status" select-placeholder="Select Status" search-placeholder="Search status..."></ComboBox>
                     </div>
-                    <div class="text-right pr-5">
-                        <label class="block text-md font-bold text-gray-700"> Total Amount</label>
-                        <span class="text-2xl font-bold text-indigo-500">{{ $page.props.invoice_data.amount }}</span>
+                    <div class="flex flex-col justify-end items-end">
+                        <Label class="text-md font-medium"> Total Amount</Label>
+                        <Label class="text-xl font-bold">{{ $page.props.invoice_data.amount }}</Label>
                     </div>
                 </div>
             </template>
         </Card>
-        <Card>
-            <template #title>Online Payment (Billplz)</template>
-            <template #content>
-                <Table class="px-4">
-                    <TableHeader class="bg-gray-100">
-                        <TableRow>
-                            <TableHead class="px-4">Payment Date</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Receipt</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        <TableRow v-if="$page.props.bill_info.paid">
-                            <TableCell class="px-4">{{ moment($page.props.bill_info.paid_at).format('DD/MM/Y') }}</TableCell>
-                            <TableCell>{{ $page.props.bill_info.email }}</TableCell>
-                            <TableCell><Button @click="openPaymentLink()">View</Button></TableCell>
-                        </TableRow>
-                        <TableRow v-else>
-                            <TableCell class="text-center" colspan="3">No Records</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </template>
-        </Card>
-        <Card>
-            <template #title>
-                <div class="flex justify-between items-center">
-                    Proof of Payment
-                    <Button @click="showModal">
-                        <PlusCircle class="h-4 w-4" />
-                        <span class="ml-1 hidden sm:block">Add</span>
-                    </Button>
-                </div>
-            </template>
-            <template #content>
-                <Table class="px-4">
-                    <TableHeader class="bg-gray-100">
-                        <TableRow>
-                            <TableHead>#</TableHead>
-                            <TableHead>Date</TableHead>
-                            <TableHead>Transaction ID</TableHead>
-                            <TableHead>File Name</TableHead>
-                            <TableHead>Remark</TableHead>
-                            <TableHead class="text-center">Action</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        <TableRow v-if="form.payment.proofs.length" v-for="proof, proof_index in form.payment.proofs">
-                            <TableCell>{{ proof_index+1 }}</TableCell>
-                            <TableCell>{{ proof.date }}</TableCell>
-                            <TableCell>
-                                <kbd class="min-h-[18px] inline-flex justify-center items-center px-1 bg-gray-200 border border-transparent font-mono text-gray-800 rounded-md">
-                                    {{ proof.transaction_id }}
-                                </kbd>
-                            </TableCell>
-                            <TableCell>
-                                <a :href="proof.file ? proof.url : '/storage/proof_of_payment/' + proof.url" download class="min-h-[30px] inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-sm text-gray-800 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-neutral-900">
-                                    {{ proof.file ? proof.file.name : proof.url }}
-                                </a>
-                            </TableCell>
-                            <TableCell>{{ proof.remark }}</TableCell>
-                            <TableCell class="text-center">
-                                <Button variant="destructive" @click="deleteProof(proof_index, proof.id)">Delete</Button>
-                            </TableCell>
-                        </TableRow>
-                        <TableRow v-else>
-                            <TableCell class="text-center" colspan="10">No Records</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </template>
-        </Card>
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-2">
+            <Card>
+                <template #title>Online Payment (Billplz)</template>
+                <template #content>
+                    <Table class="px-4">
+                        <TableHeader class="bg-gray-100">
+                            <TableRow>
+                                <TableHead class="px-4">Payment Date</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Receipt</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow v-if="$page.props.bill_info.paid">
+                                <TableCell class="px-4">{{ moment($page.props.bill_info.paid_at).format('DD/MM/Y') }}</TableCell>
+                                <TableCell>{{ $page.props.bill_info.email }}</TableCell>
+                                <TableCell><Button @click="openPaymentLink()">View</Button></TableCell>
+                            </TableRow>
+                            <TableRow v-else>
+                                <TableCell class="text-center" colspan="3">No Records</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </template>
+            </Card>
+            <Card>
+                <template #title>
+                    <div class="flex justify-between items-center">
+                        Proof of Payment
+                        <Button @click="showModal">
+                            <PlusCircle class="h-4 w-4" />
+                            <span class="ml-1 hidden sm:block">Add</span>
+                        </Button>
+                    </div>
+                </template>
+                <template #content>
+                    <Table class="px-4">
+                        <TableHeader class="bg-gray-100">
+                            <TableRow>
+                                <TableHead>#</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Transaction ID</TableHead>
+                                <TableHead>File Name</TableHead>
+                                <TableHead>Remark</TableHead>
+                                <TableHead class="text-center">Action</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow v-if="form.payment.proofs.length" v-for="proof, proof_index in form.payment.proofs">
+                                <TableCell>{{ proof_index+1 }}</TableCell>
+                                <TableCell>{{ proof.date }}</TableCell>
+                                <TableCell>
+                                    <kbd class="min-h-[18px] inline-flex justify-center items-center px-1 bg-gray-200 border border-transparent font-mono text-gray-800 rounded-md">
+                                        {{ proof.transaction_id }}
+                                    </kbd>
+                                </TableCell>
+                                <TableCell>
+                                    <a :href="proof.file ? proof.url : '/storage/proof_of_payment/' + proof.url" download class="min-h-[30px] inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-sm text-gray-800 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-neutral-900">
+                                        {{ proof.file ? proof.file.name : proof.url }}
+                                    </a>
+                                </TableCell>
+                                <TableCell>{{ proof.remark }}</TableCell>
+                                <TableCell class="text-center">
+                                    <Button variant="destructive" @click="deleteProof(proof_index, proof.id)">Delete</Button>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow v-else>
+                                <TableCell class="text-center" colspan="10">No Records</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </template>
+            </Card>
+        </div>
         <Card>
             <template #content>
                 <div class="flex items-center justify-end">
@@ -171,9 +173,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             <template #title>Add Proof of Payment</template>
             <template #content>
                 <div class="p-1 grid grid-cols-1 gap-4">
-                    <div>
-                        <Label>Date</Label>
-                        <Datepicker mode="date" v-model="attachment.date" format="dd/mm/Y"></Datepicker>
+                    <div class="relative">
+                        <Label id="date">Date</Label>
+                        <Datepicker mode="date" v-model="attachment.date" format="dd/MM/Y" teleport="#date" :teleportCenter="true"></Datepicker>
                     </div>
                     <div>
                         <Label for="transaction_id">Transaction ID</Label>

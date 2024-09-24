@@ -119,24 +119,24 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 <Collapsible v-model="collapsible.fee">
                     <template #trigger>Fee Information</template>
                     <template #content>
-                        <div class="p-1 grid grid-cols-1">
-                            <div class="mb-4">
+                        <div class="p-1 grid grid-cols-1 gap-4">
+                            <div>
                                 <Label>Level<span class="text-red-500">*</span></Label>
                                 <ComboBox :items="levels" label-property="name" value-property="id" :error="validation.level.error" v-model="fee_form.level" select-placeholder="Select Level" search-placeholder="Search level..."></ComboBox>
                             </div>
-                            <div class="mb-4">
+                            <div>
                                 <Label>Registration Fee<span class="text-red-500">*</span></Label>
                                 <Input type="number" :error="validation.registration_fee.error" v-model="fee_form.registration_fee"></Input>
                             </div>
-                            <div class="mb-4">
+                            <div>
                                 <Label>Material Fee<span class="text-red-500">*</span></Label>
                                 <Input type="number" :error="validation.material_fee.error" v-model="fee_form.material_fee"></Input>
                             </div>
-                            <div class="mb-4">
+                            <div>
                                 <Label>Class Type<span class="text-red-500">*</span></Label>
                                 <ComboBox :items="Object.values($page.props.class_types)" label-property="name" value-property="id" :error="validation.class_type.error" v-model="fee_form.class_type" select-placeholder="Select Class Type" search-placeholder="Search class type..."></ComboBox>
                             </div>
-                            <div class="mb-4" v-for="class_types_detail, index in list.class_types_detail">
+                            <div v-for="class_types_detail, index in list.class_types_detail">
                                 <Label>{{ class_types_detail.label }}<span class="text-red-500">*</span></Label>
                                 <Input type="number" min="1" :error="$page.props.errors.class_type_detail" v-model="fee_form.fees[index].value"></Input>
                             </div>
@@ -146,16 +146,16 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 <Collapsible v-model="collapsible.material">
                     <template #trigger>Material Information</template>
                     <template #content>
-                        <div class="p-1 grid grid-cols-1">
-                            <div class="mb-4">
+                        <div class="p-1 grid grid-cols-1 gap-4">
+                            <div>
                                 <Label>Material</Label>
                                 <ComboBox :items="list.products" label-property="name" value-property="id" :error="validation.product.error" :loading="loading.products" @search="findProducts" @select="findProductVariations" v-model="search_product_form.product_id" select-placeholder="Select Material" search-placeholder="Search material..."></ComboBox>
                             </div>
-                            <div class="mb-4" v-if="show.product_variations">
+                            <div v-if="show.product_variations">
                                 <Label>Variation<span class="text-red-500">*</span></Label>
                                 <ComboBox :items="list.product_variations" label-property="option_name" value-property="id" :loading="loading.product_variations" :error="validation.product_variation.error" @select="findProductSubVariations" v-model="search_product_form.product_variation_id" select-placeholder="Select Variation" search-placeholder="Search variation..."></ComboBox>
                             </div>
-                            <div class="mb-4" v-if="show.product_sub_variations">
+                            <div v-if="show.product_sub_variations">
                                 <Label>Sub Variation<span class="text-red-500">*</span></Label>
                                 <ComboBox :items="list.product_sub_variations" label-property="option_name" value-property="id" :loading="loading.product_sub_variations" :error="validation.product_sub_variation.error" v-model="search_product_form.product_sub_variation_id" select-placeholder="Select Sub Variation" search-placeholder="Search sub variation..."></ComboBox>
                             </div>

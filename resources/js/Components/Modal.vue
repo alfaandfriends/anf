@@ -1,5 +1,4 @@
 <script setup>
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <style scoped>

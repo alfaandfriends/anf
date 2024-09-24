@@ -186,12 +186,11 @@ import { SearchIcon, TrashIcon, PencilIcon, ChevronRightIcon } from '@heroicons/
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import { faCaretSquareUp, faCaretSquareDown } from "@fortawesome/free-regular-svg-icons";
-import SvgIcon from "vue3-icon";
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon, ChevronRightIcon,
-        ConfirmationModal, Head, Link, SvgIcon, 
+        ConfirmationModal, Head, Link, 
         faCaretSquareUp, faCaretSquareDown
     },
     props: {

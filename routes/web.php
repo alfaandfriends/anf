@@ -4,7 +4,7 @@ use App\Http\Controllers\DiagnosticTestController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('diagnostic-test')->group(function () {
-    Route::middleware('auth')->middleware('device')->group(function () {
+    Route::middleware('auth')->group(function () {
         Route::get('/saved-result', [DiagnosticTestController::class, 'savedDtResult'])->name('diagnostic_test.saved_result');
         Route::post('/saved-result/save-status', [DiagnosticTestController::class, 'saveDtResultStatus'])->name('diagnostic_test.saved_result.save_status');
         Route::get('/saved-result/details', [DiagnosticTestController::class, 'savedDtResultDetails'])->name('diagnostic_test.saved_result.details');

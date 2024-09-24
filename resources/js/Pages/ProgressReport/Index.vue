@@ -3,37 +3,40 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 import BreezeButton from '@/Components/Button.vue';
 </script>
 
-<style>
-.multiselect-assistive-text{
-    display: none;
-}
-.progress-report-date-picker{
-    border: 2px solid #D1D5DB; /* Default border color and thickness */
-    border-radius: 0.35rem;
-}
-:hover.progress-report-date-picker  {
-    border: 2px solid #D1D5DB; /* Highlighted border color and thickness */
-}
-:focus.progress-report-date-picker  {
-    border: 2px solid #D1D5DB; /* Highlighted border color and thickness */
-}
-.date-picker{
-    border: 1px solid #D1D5DB; /* Default border color and thickness */
-    border-radius: 0.35rem;
-}
-:hover.date-picker  {
-    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
-}
-:focus.date-picker  {
-    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
-}
-</style>
-
 <template>
     <Head title="Progress Report" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
+        <div class="flex items-center justify-between">
+            <div class="flex justify-between space-x-2">
+                <div class="relative">
+                    <MagnifyingGlassIcon class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input type="text" placeholder="Search" class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" v-debounce:800ms="search" v-model="params.search"/>
+                </div>
+                <Button class="border border-slate-700 border-dashed bg-white text-slate-800 hover:bg-slate-50" @click="showFilters()"> 
+                    <Filter class="h-4 w-4" />
+                    <span class="ml-1 hidden sm:block">Filters</span>
+                </Button>
+                <Button @click="showFilters()"> 
+                    <Cog class="h-4 w-4" />
+                    <span class="ml-1 hidden sm:block">Setting</span>
+                </Button>
+            </div>
+            <Button @click="newAdmission" v-if="$page.props.can.create_students">
+                <PlusCircle class="h-4 w-4" />
+                <span class="ml-1 hidden sm:block">New Admission</span>
+            </Button>
+        </div>
+        <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-5 gap-2" v-if="show_filters">
+            <ComboBox :items="$page.props.allowed_centres" label-property="label" value-property="ID" @select="search" v-model="params.centre_id" select-placeholder="Centres" search-placeholder="Search centre..."></ComboBox>
+            <div>
+                <Datepicker v-model="params.date" mode="month" format="MMM Y" @select="search"></Datepicker>
+            </div>
+            <div class="">
+                <Button @click="$inertia.get(route('progress_reports'))">Clear Search</Button>
+            </div>
+        </div>
         <div class="py-4 px-4">
             <template v-if="$page.props.can.view_progress_report_settings">
                 <div class="flex justify-end">
@@ -313,27 +316,13 @@ import BreezeButton from '@/Components/Button.vue';
             :confirmationRoute="confirmationRoute"
             :confirmationData="confirmationData"
         />
-        <Modal :showModal="show_progress_report" :modalType="'lg'" @hideModal="show_progress_report = false">
-            <template v-slot:content>
-                <div class="p-6 overflow-y-auto scrollbar">
-                    <div class="flex justify-center">
-                        <component :is="component.file" v-if="component.file" :data="component.data"/>
-                    </div>
-                </div>
-            </template>
-            <template v-slot:footer>
-                <div class="flex justify-between space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="info" v-print="'#progress_report'">Print</BreezeButton>
-                    <BreezeButton buttonType="gray" @click="show_progress_report = false">Close</BreezeButton>
-                </div>
-            </template>
-        </Modal>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
-import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
+import { MagnifyingGlassIcon } from '@radix-icons/vue'
+import { Filter, PlusCircle, Cog } from 'lucide-vue-next';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
 import moment from 'moment';
@@ -341,13 +330,12 @@ import axios from 'axios';
 import Multiselect from '@vueform/multiselect'
 import Datepicker from '@vuepic/vue-datepicker';
 import Modal from '@/Components/Modal.vue'
-import print from 'vue3-print-nb'
 import { debounce } from 'vue-debounce'
 import Toggle from '@vueform/toggle';
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal, Multiselect, Datepicker, Modal, Toggle
+        Head, Link, ConfirmationModal, Multiselect, Datepicker, Modal, Toggle
     },
     data(){
         return{
@@ -434,22 +422,6 @@ export default {
                 console.error('Error fetching PDF:', error);
                 this.generate.running = false
             });
-            // if(this.generate.running){
-            //     return
-            // }
-            // this.generate.id = progress_report_id
-            // this.generate.running = true
-            // axios.get(route('progress_report.full_reports', {progress_report_id: progress_report_id, student_fee: student_fee}))
-            // .then(response => {
-            //     import(`./Reports/${response.data.report_template}.vue`)
-            //     .then(module => {
-            //         this.component.file = module.default;
-            //     })
-            //     this.component.data = response.data;
-            //     this.generate.id = ''
-            //     this.generate.running = false
-            //     this.show_progress_report = true
-            // });
         },
         search(){
             this.$inertia.get(this.route('progress_report'), this.params, { replace: true, preserveState: true})
@@ -484,8 +456,5 @@ export default {
             this.$inertia.post(route('progress_report.create'), this.form)
         }
     },
-    directives: {
-        print   
-    }
 }
 </script>

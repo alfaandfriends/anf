@@ -1,529 +1,244 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
-
-<style>
-.multiselect-assistive-text{
-    display: none;
-}
-.student-date-picker{
-    border: 1px solid #D1D5DB; /* Default border color and thickness */
-    border-radius: 0.5rem;
-}
-:hover.student-date-picker  {
-    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
-}
-:focus.student-date-picker  {
-    border: 1px solid #D1D5DB; /* Highlighted border color and thickness */
-}
-.simplebar-content{
-    display: flex;
-    gap: 5px; 
-}
-</style>
 
 <template>
     <Head title="Students" />
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="md:grid md:grid-cols-2">
-            <div class="md:mt-0 md:col-span-2">
-                <form @submit.prevent="submit">
-                    <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <h1 class="font-bold text-indigo-800">Search Information</h1>
-                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                    </div>
-                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 sm:gap-4">
-                                        <div class="mb-1">
-                                            <label for="class_name" class="block text-sm font-bold text-gray-700"> Children Name <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md.shadow-sm">
-                                                <Multiselect 
-                                                    v-debounce="findChildren"
-                                                    v-model="form.children_id"
-                                                    @close="clearStudents"
-                                                    valueProp="id"
-                                                    :loading="searching.student"
-                                                    placeholder="Please enter some keywords"
-                                                    :options="list.students"
-                                                    :searchable="true"
-                                                    noOptionsText="Nothing found"
-                                                    noResultsText="Nothing found"
-                                                    :clearOnSelect="true"
-                                                    :canClear="false"
-                                                    :canDeselect="false"
-                                                    :internal-search="false"
-                                                    trackBy="name"
-                                                    label="name"
-                                                    :classes="{
-                                                        container: 
-                                                            errors.child ? 
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
-                                                        containerDisabled: 'cursor-default bg-gray-100',
-                                                        containerOpen: 'rounded-b-none',
-                                                        containerOpenTop: 'rounded-t-none',
-                                                        containerActive: 'border border-indigo-300',
-                                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                                        multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5',
-                                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
-                                                        clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                                        clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                                        dropdownHidden: 'hidden',
-                                                        options: 'flex flex-col p-0 m-0 list-none w-full',
-                                                        optionsTop: 'flex-col-reverse',
-                                                        group: 'p-0 m-0',
-                                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                                        groupLabelPointable: 'cursor-pointer',
-                                                        groupLabelPointed: 'bg-gray-300 text-black-700',
-                                                        groupLabelSelected: 'bg-gray-100 text-black',
-                                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                                        groupOptions: 'p-0 m-0',
-                                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                                        optionPointed: 'text-gray-800 bg-gray-100',
-                                                        optionSelected: 'text-white bg-indigo-500',
-                                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                                        spacer: 'h-9 py-px box-content',
-                                                    }"
-                                                >
-                                                </Multiselect>
-                                            </div>
-                                        </div>
-                                        <div class="mb-1">
-                                            <label for="centre" class="block text-sm font-bold text-gray-700"> Centre <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md.shadow-sm">
-                                                <Multiselect 
-                                                    v-model="form.centre_id"
-                                                    valueProp="ID"
-                                                    :searchable="true"
-                                                    :options="$page.props.allowed_centres"
-                                                    :clearOnSelect="true"
-                                                    :canClear="false"
-                                                    :canDeselect="false"
-                                                    trackBy="label"
-                                                    label="label"
-                                                    :classes="{
-                                                        container: 
-                                                            errors.centre ? 
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
-                                                        containerDisabled: 'cursor-default bg-gray-100',
-                                                        containerOpen: 'rounded-b-none',
-                                                        containerOpenTop: 'rounded-t-none',
-                                                        containerActive: 'border border-indigo-300',
-                                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                                        multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-md pl-3.5',
-                                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500',
-                                                        clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                                        clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                                        dropdownHidden: 'hidden',
-                                                        options: 'flex flex-col p-0 m-0 list-none w-full',
-                                                        optionsTop: 'flex-col-reverse',
-                                                        group: 'p-0 m-0',
-                                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                                        groupLabelPointable: 'cursor-pointer',
-                                                        groupLabelPointed: 'bg-gray-300 text-black-700',
-                                                        groupLabelSelected: 'bg-gray-100 text-black',
-                                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                                        groupOptions: 'p-0 m-0',
-                                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                                        optionPointed: 'text-gray-800 bg-gray-100',
-                                                        optionSelected: 'text-white bg-indigo-500',
-                                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                                        spacer: 'h-9 py-px box-content',
-                                                    }"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div class="mb-1">
-                                            <label for="programme" class="block text-sm font-bold text-gray-700"> Start Date <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <Datepicker class="w-full rounded-lg shadow-sm" 
-                                                    disabled="disabled"
-                                                    :class="errors.admission_date ? '--dp-border-color: #ff6f60' : '--dp-border-color: #ff6f60'" 
-                                                    input-class-name="student-date-picker focus:ring-0"
-                                                    v-model="form.date_admission" 
-                                                    :enable-time-picker="false"
-                                                    :auto-apply="true" 
-                                                    :format="'dd/MM/yyyy'"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div class="mb-1">
-                                            <label for="programme" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="programme" id="programme" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.programme ? 'border-red-300' : 'border-gray-300'" v-model="search_form.programme_id" autocomplete="off">
-                                                    <option value="">-- Select Programme --</option>
-                                                    <option :value="programme.id" v-for="(programme, index) in $page.props.programme_list" :key="index">{{ programme.name }} ({{ programme.country_name }})</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mb-1">
-                                            <label for="class_type" class="block text-sm font-bold text-gray-700"> Class Type <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="class_type" id="class_type" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="[errors.class_type ? 'border-red-300' : 'border-gray-300', disable.class_type ? 'bg-gray-50' : '']" v-model="search_form.class_type" autocomplete="off" :disabled="disable.class_type">
-                                                    <option value="">-- Select Type --</option>
-                                                    <option :value="class_type.id" v-for="(class_type, index) in list.class_types" :key="index">{{ class_type.name }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mb-1">
-                                            <label for="class_level" class="block text-sm font-bold text-gray-700"> Class Level <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="class_level" id="class_level" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="[errors.level ? 'border-red-300' : 'border-gray-300', disable.class_levels ? 'bg-gray-50' : '']" v-model="search_form.class_level" autocomplete="off" :disabled="disable.class_levels">
-                                                    <option value="">-- Select Level --</option>
-                                                    <option :value="i.level" v-for="i, index in list.class_levels" :key="i">{{ i.level }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mb-1">
-                                            <label for="class_method" class="block text-sm font-bold text-gray-700"> Class Method <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select name="class_method" id="class_method" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.class_method ? 'border-red-300' : 'border-gray-300'" v-model="search_form.class_method" autocomplete="off">
-                                                    <option value="">-- Select Method --</option>
-                                                    <option :value="method.id" v-for="(method, index) in $page.props.method_list" :key="index">{{ method.name }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center justify-end">
-                                        <div class="flex space-x-2">
-                                            <BreezeButton @click="findClasses">Search Classes</BreezeButton>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="grid grid-cols-1 gap-2">
+            <Alert class="bg-sky-200 text-slate-900 mb-3">
+                <RocketIcon class="h-4 w-4" />
+                <AlertTitle class="font-semibold">Heads up!</AlertTitle>
+                <AlertDescription>
+                    Select a different programme and choose classes after adding a new programme if you want to include multiple programmes.
+                </AlertDescription>
+            </Alert>
+            <Collapsible class=" bg-white" v-model="open.student_info">
+                <template #trigger>Admission Information</template>
+                <template #content>
+                    <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-4 gap-4 p-3">
+                        <div>
+                            <Label>Child Name<span class="text-red-500">*</span></Label>
+                            <ComboBox :items="list.students" label-property="name" value-property="id" @search="findChildren" v-model="form.children_id" select-placeholder="Select Child" search-placeholder="Enter some characters to search name..." :loading="searching.student" :error="errors.child"></ComboBox>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="available_classes" v-if="enable_container.available_classes">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <h1 class="font-bold text-indigo-800">Classes Available</h1>
-                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
-                                        <div class="mb-4">
-                                            <div class="overflow-x-auto rounded-t-sm rounded-b-none">
-                                                <table class="min-w-full">
-                                                    <thead class="bg-indigo-200">
-                                                        <tr class="px-2">
-                                                            <th class="px-3 py-1 text-left">#</th>
-                                                            <th class="px-3 py-1 text-left">Day</th>
-                                                            <th class="px-3 py-1 text-left">Time</th>
-                                                            <th class="px-3 py-1 text-left">Capacity</th>
-                                                            <th class="px-3 py-1 text-center">Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr v-if="!list.available_classes.length">
-                                                            <td colspan="10" class="py-2 text-center">
-                                                                <div class="flex justify-center py-4 items-center space-x-2" v-if="searching.class">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat animate-spin" viewBox="0 0 16 16">
-                                                                        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                                                                        <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-                                                                    </svg>
-                                                                    <span>Searching classes...</span>
-                                                                </div>
-                                                                <span v-if="!searching.class && !list.available_classes.length">No classes available</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr v-else class="hover:bg-indigo-50" v-for="classes, index in list.available_classes">
-                                                            <td class="px-3 py-2 text-left">{{ index + 1 }}</td>
-                                                            <td class="px-3 py-2 text-left">{{ classes.class_day}}</td>
-                                                            <td class="px-3 py-2 text-left">
-                                                                <div class="text-sm font-medium text-gray-900 flex items-center">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                                    </svg>
-                                                                    <span class="pl-2 whitespace-nowrap">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
-                                                                </div>
-                                                            </td>
-                                                            <td class="px-3 py-2 text-left">{{ classes.capacity}}</td>
-                                                            <td class="px-3 py-2 text-center">
-                                                                <div class="flex justify-center">
-                                                                    <!-- <BreezeButton v-if="classes.class_type == 1" buttonType="blue" @click="getNormalFee(classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id)">Choose</BreezeButton> -->
-                                                                    <input class="h-5 w-5 border border-indigo-300 rounded-sm focus:ring-offset-0 focus:ring-0 checked:bg-gray focus:bg-white transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" 
-                                                                        type="checkbox" 
-                                                                        :checked="checkIfClassSelected(classes.class_id, classes.programme_id)"
-                                                                        :disabled="disable_check_box"
-                                                                        :class="disable_check_box ? 'bg-gray-100' : 'bg-white'"
-                                                                        @click="getPlusFee($event, classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id)">
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div>
+                            <Label>Centre<span class="text-red-500">*</span></Label>
+                            <ComboBox :items="$page.props.allowed_centres" label-property="label" value-property="ID" v-model="form.centre_id" select-placeholder="Select Centre" search-placeholder="Search centre..." :error="errors.centre"></ComboBox>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee" v-if="form.fee.length">
-                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                <div class="mb-5">
-                                    <h1 class="font-bold text-indigo-800">Fee Confirmation</h1>
-                                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                </div>
-                                <div class="space-y-2">
-                                    <template v-for="fee, fee_index in form.fee">
-                                        <div class="grid grid-cols-1 2xl:grid-cols-8 rounded-lg overflow-hidden border-2 bg-white border-indigo-500 border-dashed">
-                                            <div class="col-span-3 p-6">
-                                                <h3 class="flex 2xl:space-x-4 items-center text-lg text-left uppercase leading-8 font-extrabold text-gray-900 sm:leading-9">
-                                                    <img src="/images/school.png" class="w-16 h-16 hidden 2xl:block" alt="">
-                                                    <span class="flex flex-col">
-                                                        <span>{{ fee.fee_info.programme_name }}</span>
-                                                        <span class="font-semibold text-sm">Level {{ fee.fee_info.programme_level }}</span>
-                                                    </span>
-                                                </h3>
-                                                <div class="mt-3">
-                                                    <div class="grid grid-cols-1 lg:grid-cols-2">
-                                                        <ul class="grid grid-cols-1">
-                                                            <li class="flex items-start col-span-1 lg:col-span-1 mb-1">
-                                                                <p class="flex flex-col text-left">
-                                                                    <span class="text-sm font-bold">Centre : <span class="text-sm font-normal">{{ fee.fee_info.centre_name }}</span></span>
-                                                                </p>
-                                                            </li>
-                                                            <li class="flex items-start col-span-1 llg:col-span-1 mb-1">
-                                                                <p class="flex flex-col text-left">
-                                                                    <span class="text-sm font-bold">Fee : <span class="text-sm font-normal">{{ fee.fee_info.programme_type }}</span></span>
-                                                                </p>
-                                                            </li>
-                                                            <li class="flex items-start col-span-1 llg:col-span-1 mb-2">
-                                                                <p class="flex flex-col text-left">
-                                                                    <span class="text-sm font-bold">Class Method : <span class="text-sm font-normal">{{ fee.fee_info.class_method }}</span></span>
-                                                                </p>
-                                                            </li>
-                                                        </ul>
-                                                        <ul class="grid grid-cols-1">
-                                                            <li class="flex items-start lg:col-span-1 mb-1">
-                                                                <p class="flex flex-col text-left">
-                                                                    <span class="text-sm font-bold underline">Timetable</span>
-                                                                    <span class="text-sm font-normal" v-for="classes in fee.classes" :key="classes.id">{{ classes.class_day }} ({{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }})</span>
-                                                                </p>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-span-5 p-3 bg-indigo-50 space-y-4">
-                                                <div class="flex flex-col p-6 lg:py-8 lg:px-12 bg-indigo-50">
-                                                    <div class="flex flex-col bg-white px-4 py-1 rounded-lg border border-gray-500 mb-3">
-                                                        <div class="flex flex-wrap items-center space-x-4 mt-3 pb-3 pl-2">
-                                                            <h3 class="flex items-center font-semibold text-sm space-x-2 whitespace-nowrap">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="h-5 w-5">
-                                                                    <path d="M64 64C28.7 64 0 92.7 0 128v64c0 8.8 7.4 15.7 15.7 18.6C34.5 217.1 48 235 48 256s-13.5 38.9-32.3 45.4C7.4 304.3 0 311.2 0 320v64c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V320c0-8.8-7.4-15.7-15.7-18.6C541.5 294.9 528 277 528 256s13.5-38.9 32.3-45.4c8.3-2.9 15.7-9.8 15.7-18.6V128c0-35.3-28.7-64-64-64H64zm64 112l0 160c0 8.8 7.2 16 16 16H432c8.8 0 16-7.2 16-16V176c0-8.8-7.2-16-16-16H144c-8.8 0-16 7.2-16 16zM96 160c0-17.7 14.3-32 32-32H448c17.7 0 32 14.3 32 32V352c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V160z"/>
-                                                                </svg>
-                                                                <span>Applied Promos</span>
-                                                            </h3>
-                                                            <!-- <select class="text-xs rounded focus:ring-0 focus:border-indigo-300" v-model="selected_promo">
-                                                                <option v-for="promo in $page.props.promos" :value="promo.id" >{{ promo.name }}</option>
-                                                            </select> -->
-                                                            <div @click="showPromoModal(fee_index)" class="font-semibold text-xs text-indigo-500 cursor-pointer px-2 py-1 rounded border border-dashed border-indigo-500 bg-white hover:bg-indigo-50 whitespace-nowrap">
-                                                                Add Promo
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <simplebar v-if="fee.fee_info.promos.length" data-simplebar-auto-hide="true" class="mt-3 pb-3">
-                                                            <span class="flex space-x-2 items-center justify-center rounded-md bg-indigo-200 px-2.5 py-1 font-semibold text-indigo-800 transform hover:scale-105 duration-200" v-for="applied_promo, promo_index in fee.fee_info.promos">
-                                                                <p class="whitespace-nowrap text-xs">{{ applied_promo.promo_name }}</p>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" @click="deletePromo(fee_index, promo_index)" class="h-4 w-4 text-red-600 cursor-pointer">
-                                                                    <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
-                                                                </svg>
-                                                            </span>
-                                                        </simplebar>
-                                                        <div class="py-2" v-else>
-                                                            <span class="text-xs font-semibold text-blue-500">No Promo applied.</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="grid grid-cols-1 2xl:grid-cols-2 px-3 gap-y-4 text-xl leading-none font-extrabold text-gray-900">
-                                                        <div class="col-span-2 2xl:col-span-1" v-if="fee.fee_info.registration_fee != 0">
-                                                            <div class="grid grid-cols-12">
-                                                                <input type="checkbox" class="text-sm col-span-1 cursor-pointer border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee">
-                                                                <label class="col-span-11 text-sm ml-3 font-medium leading-5 text-gray-800 select-none">Registration Fee: <span class="font-bold">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</span></label>
-                                                                <div class="col-start-2 col-span-11 mt-3" v-if="fee.fee_info.include_registration_fee">
-                                                                    <label :for="'registration_fee_discount'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none cursor-pointer">Discount (if any): </label>
-                                                                    <input min="0" :id="'registration_fee_discount'+fee_index" type="number" class="text-sm rounded font-normal h-8" placeholder="Discount" v-if="fee.fee_info.include_registration_fee && (fee.fee_info.registration_fee && fee.fee_info.registration_fee != 0)" v-model="fee.fee_info.registration_fee_discount">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-span-2 2xl:col-span-1" v-if="fee.fee_info.material_fee != 0">
-                                                            <div class="grid grid-cols-12">
-                                                                <input type="checkbox" class="col-span-1 cursor-pointer bg-white border-indigo-700 focus:ring-0 focus:ring-gray-400 h-5 w-5 rounded" @click="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee">
-                                                                <label class="col-span-11 text-sm ml-3 font-medium leading-5 text-gray-800 select-none">Material Fee: <span class="font-bold">{{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</span></label>
-                                                                <div class="col-start-2 col-span-11 mt-3" v-if="fee.fee_info.include_material_fee">
-                                                                    <label :for="'material_fee_discount'+fee_index" class="text-sm ml-3 font-medium leading-5 text-gray-800 select-none">Discount (if any): </label>
-                                                                    <input min="0" :id="'material_fee_discount'+fee_index" type="number" class="text-sm rounded font-normal h-8" placeholder="Discount" v-if="fee.fee_info.include_material_fee && (fee.fee_info.material_fee && fee.fee_info.material_fee != 0)" v-model="fee.fee_info.material_fee_discount">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-span-2">
-                                                            <div class="flex items-center justify-end text-2xl mt-3">
-                                                                <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
-                                                                <span class="leading-7 font-medium text-gray-700">/month</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
+                        <div>
+                            <Label>Start Date<span class="text-red-500">*</span></Label>
+                            <Datepicker mode="date" :format="'dd/MM/yyyy'" disabled/>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee" v-else-if="enable_container.available_classes && !form.fee.length && !no_fee_found">
-                            <div class="p-2 bg-white border border-gray-200 rounded-lg shadow-md">
-                                <div id="alert-border-1" class="flex items-center p-4 text-blue-800 border-t-4 border-blue-300 bg-blue-50 dark:text-blue-400 dark:bg-gray-800 dark:border-blue-800" role="alert">
-                                    <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                                    </svg>
-                                    <div class="ms-3 text-sm font-medium">
-                                        No classes selected.
-                                    </div>
-                                </div>
-                            </div>
+                        <div>
+                            <Label>Programme<span class="text-red-500">*</span></Label>
+                            <ComboBox :items="$page.props.programme_list" label-property="name" value-property="id" v-model="search_form.programme_id" select-placeholder="Select Programme" search-placeholder="Search programme..." :error="errors.programme">
+                                <template #label="{ item }">
+                                    <span class="font-normal">{{ item.name + " (" + item.country_name + ")" }}</span>
+                                </template>
+                            </ComboBox>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" ref="class_fee" v-else-if="enable_container.available_classes && no_fee_found">
-                            <div class="p-2 bg-white border border-gray-200 rounded-lg shadow-md">
-                                <div id="alert-border-1" class="flex items-center p-4 text-red-800 border-t-4 border-red-300 bg-red-50 dark:text-red-400 dark:bg-gray-800 dark:border-red-800" role="alert">
-                                    <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                                    </svg>
-                                    <div class="ms-3 text-sm font-medium">
-                                        Fee is not available for the selected classes.
-                                    </div>
-                                </div>
-                            </div>
+                        <div>
+                            <Label>Class Type<span class="text-red-500">*</span></Label>
+                            <ComboBox :items="list.class_types" label-property="name" value-property="id" v-model="search_form.class_type" select-placeholder="Select Class Type" search-placeholder="Search class type..." :disabled="disable.class_type" :error="errors.class_type"></ComboBox>
                         </div>
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4" v-if="form.fee.length">
-                            <div class="sm:row-span-3" >
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="flex justify-end space-x-2">
-                                        <BreezeButton buttonType="gray">Cancel</BreezeButton>
-                                        <BreezeButton buttonType="info" @click="admitStudent">Admit</BreezeButton>
-                                    </div>
-                                </div>
-                            </div>
+                        <div>
+                            <Label>Class Level<span class="text-red-500">*</span></Label>
+                            <ComboBox :items="list.class_levels" label-property="level" value-property="level" v-model="search_form.class_level" select-placeholder="Select Class Level" search-placeholder="Search class leel..." :disabled="disable.class_levels" :error="errors.level"></ComboBox>
+                        </div>
+                        <div>
+                            <Label>Class Method<span class="text-red-500">*</span></Label>
+                            <ComboBox :items="$page.props.method_list" label-property="name" value-property="id" v-model="search_form.class_method" select-placeholder="Select Class Method" search-placeholder="Search class method..." :error="errors.class_method"></ComboBox>
+                        </div>
+                        <div class="self-end">
+                            <Button @click="findClasses">Search Classes</Button>
                         </div>
                     </div>
-                </form>
+                </template>
+            </Collapsible>
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                <div ref="available_classes">
+                    <Collapsible class="bg-white" v-model="open.student_classes">
+                        <template #trigger>Class Availability</template>
+                        <template #content>
+                            <template v-if="enable_container.available_classes">
+                                <div class="max-h-[26rem] overflow-y-auto">
+                                    <Table>
+                                        <TableHeader class="bg-gray-100">
+                                            <TableRow>
+                                                <TableHead class="px-4">#</TableHead>
+                                                <TableHead>Day</TableHead>
+                                                <TableHead class="text-center">Time</TableHead>
+                                                <TableHead class="text-center">Capacity</TableHead>
+                                                <TableHead class="text-center">Action</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            <TableRow v-if="!searching.class && !list.available_classes">
+                                                <TableCell class="text-center" colspan="10">
+                                                    <div class="p-3">
+                                                        No classes available
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow> 
+                                            <TableRow v-for="classes, index in list.available_classes">
+                                                <!-- <TableCell>{{ $page.props.students.from + index }}</TableCell> -->
+                                                <TableCell class="px-4">{{ index + 1 }}</TableCell>
+                                                <TableCell>{{ classes.class_day}}</TableCell>
+                                                <TableCell class="text-center">
+                                                    <span class="pl-2 whitespace-nowrap">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
+                                                </TableCell>
+                                                <TableCell class="text-center">{{ classes.capacity}}</TableCell>
+                                                <TableCell class="text-center">
+                                                    <Checkbox :id="classes.id" :value="classes.id" :checked="checkIfClassSelected(classes.class_id, classes.programme_id)" @click.native="getPlusFee(classes.class_id, classes.class_type, classes.programme_id, classes.programme_level_id)"/>
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </template>
+                            <div class="flex justify-center py-2 text-sm" v-if="!enable_container.available_classes && !searching.class && !list.available_classes.length">
+                                <span>Please search for classes.</span>
+                            </div>
+                        </template>
+                    </Collapsible>
+                </div>
+                <div ref="class_fee">
+                    <Collapsible class="bg-white" v-model="open.admission_confirmation">
+                        <template #trigger>Admission Confirmation</template>
+                        <template #content>
+                            <div class="grid px-3 divide-y select-none" v-if="form.fee.length">
+                                <div class="py-4" v-for="fee, fee_index in form.fee">
+                                    <div class="flex justify-between mb-3 font-semibold">
+                                        <span class="text-sm">{{ fee.fee_info.programme_name }}</span>
+                                        <span class="text-sm">Level {{ fee.fee_info.programme_level }}</span>
+                                    </div>
+                                    <ul class="grid gap-2 mb-4 text-xs font-semibold">
+                                        <li class="flex items-center justify-between">
+                                            <span >Centre</span>
+                                            <span class="text-slate-600">{{ fee.fee_info.centre_name }}</span>
+                                        </li>
+                                        <li class="flex items-center justify-between">
+                                            <span>Fee</span>
+                                            <span class="text-slate-600">{{ fee.fee_info.programme_type }}</span>
+                                        </li>
+                                        <li class="flex items-center justify-between">
+                                            <span>Class Method</span>
+                                            <span class="text-slate-600">{{ fee.fee_info.class_method }}</span>
+                                        </li>
+                                    </ul>
+                                    <ul class="grid gap-2 mb-3 text-xs font-semibold">
+                                        <li class="flex items-center">
+                                            <span class="underline">Timetable</span>
+                                        </li>
+                                        <li class="flex flex-wrap items-center gap-4">
+                                            <span class="text-slate-600 text-xs" v-for="classes in fee.classes" :key="classes.id">{{ classes.class_day }} ({{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }})</span>
+                                        </li>
+                                    </ul>
+                                    <ul class="grid gap-2 mb-3 text-xs font-semibold">
+                                        <li class="flex items-center space-x-2">
+                                            <span class="underline">Applied Promos</span>
+                                            <div @click="showPromoModal(fee_index)" class="font-medium text-indigo-500 cursor-pointer px-1.5 py-0.5 rounded border border-dashed border-indigo-500 bg-white hover:bg-indigo-50 whitespace-nowrap">
+                                                Add Promo
+                                            </div>
+                                        </li>
+                                        <li class="font-medium">
+                                            <div class="flex flex-wrap gap-2" v-if="fee.fee_info.promos.length">
+                                                <span class="flex space-x-2 items-center justify-center rounded-sm bg-indigo-200 px-2.5 py-1 text-indigo-800" v-for="applied_promo, promo_index in fee.fee_info.promos">
+                                                    <p class="whitespace-nowrap text-xs">{{ applied_promo.promo_name }}</p>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" @click="deletePromo(fee_index, promo_index)" class="h-3.5 w-3.5 text-red-600 cursor-pointer">
+                                                        <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                            <div class="" v-else>
+                                                <span class="text-xs font-semibold text-indigo-500">None</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="grid gap-2 mb-3 text-xs font-semibold" v-if="fee.fee_info.registration_fee != 0">
+                                        <li class="flex flex-col">
+                                            <div class="flex items-center space-x-2">
+                                                <Checkbox :id="'registration_fee_' + fee_index" :value="fee.fee_info.include_registration_fee" :checked="fee.fee_info.include_registration_fee" @click.native="fee.fee_info.include_registration_fee = !fee.fee_info.include_registration_fee"/>
+                                                <label :for="'registration_fee_' + fee_index" class="cursor-pointer">Registration Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.registration_fee }}</label>
+                                            </div>
+                                            <div class="flex items-center space-x-2 pl-6" v-if="fee.fee_info.include_registration_fee">
+                                                <span :for="'registration_fee_discount'+fee_index">Discount: </span>
+                                                <Input min="0" :id="'registration_fee_discount'+fee_index" type="number" class="text-xs h-6" placeholder="Discount" v-if="fee.fee_info.include_registration_fee && (fee.fee_info.registration_fee && fee.fee_info.registration_fee != 0)" v-model="fee.fee_info.registration_fee_discount"></Input>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="grid gap-2 mb-3 text-xs font-semibold" v-if="fee.fee_info.material_fee != 0">
+                                        <li class="flex flex-col">
+                                            <div class="flex items-center space-x-2">
+                                                <Checkbox :id="'material_fee_' + fee_index" :value="fee.fee_info.include_material_fee" :checked="fee.fee_info.include_material_fee" @click.native="fee.fee_info.include_material_fee = !fee.fee_info.include_material_fee"/>
+                                                <label :for="'material_fee_' + fee_index" class="cursor-pointer">Material Fee: {{ fee.fee_info.currency_symbol }}{{ fee.fee_info.material_fee }}</label>
+                                            </div>
+                                            <div class="flex items-center space-x-2 pl-6" v-if="fee.fee_info.include_material_fee">
+                                                <span :for="'material_fee_discount_'+fee_index">Discount: </span>
+                                                <Input min="0" :id="'material_fee_discount_'+fee_index" type="number" class="text-xs h-6" placeholder="Discount" v-if="fee.fee_info.include_material_fee && (fee.fee_info.material_fee && fee.fee_info.material_fee != 0)" v-model="fee.fee_info.material_fee_discount"></Input>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="grid gap-2 text-xs font-semibold">
+                                        <li class="flex flex-col">
+                                            <div class="col-span-2">
+                                                <div class="flex items-center justify-end text-lg space-x-1">
+                                                    <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
+                                                    <span class="font-medium text-sm text-gray-700">/month</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="flex justify-center py-2 text-sm" v-if="!searching.class">
+                                <span v-if="!enable_container.available_classes || (enable_container.available_classes && !form.fee.length && !no_fee_found)">No classes have been selected.</span>
+                                <span v-if="enable_container.available_classes && !form.fee.length && no_fee_found">Fees are not available for the selected classes.</span>
+                            </div>
+                        </template>
+                    </Collapsible>
+                </div>
             </div>
-        </div>
-        <Modal :showModal="open_promo_modal" @hideModal="open_promo_modal = false" :modalType="'xs'">
-            <template v-slot:header>
-                <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
-                    <h3 class="text-gray-900 font-semibold">                
-                        Add Promos
-                    </h3>        
-                    <button type="button" @click="open_promo_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                    </button>
-                </div>        
-            </template>
-            <template v-slot:content>
-                <div class="p-6">
-                    <div class="mb-4">
-                        <div class="mt-1 flex rounded-md.shadow-sm">
-                            <Multiselect 
-                                v-model="selected_promo.promo_id"
-                                valueProp="promo_id"
-                                :searchable="true"
-                                :options="$page.props.promos"
-                                :clearOnSelect="true"
-                                :canClear="false"
-                                :canDeselect="false"
-                                placeholder="Select a promo"
-                                trackBy="promo_name"
-                                label="promo_name"
-                                :classes="{
-                                    container: 
-                                        errors.centre ? 
-                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-base leading-snug outline-none':
-                                        'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-base leading-snug outline-none',
-                                        containerDisabled: 'cursor-default bg-gray-100',
-                                        containerOpen: 'rounded-b-none',
-                                        containerOpenTop: 'rounded-t-none',
-                                        containerActive: 'border border-indigo-300',
-                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border text-sm',
-                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                        multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-sm font-sans bg-white rounded-md pl-3.5',
-                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-gray-500 text-sm',
-                                        clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                        clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                        dropdown: 'max-h-24 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                        dropdownHidden: 'hidden',
-                                        options: 'flex flex-col p-0 m-0 list-none w-full',
-                                        optionsTop: 'flex-col-reverse',
-                                        group: 'p-0 m-0',
-                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                        groupLabelPointable: 'cursor-pointer',
-                                        groupLabelPointed: 'bg-gray-300 text-black-700',
-                                        groupLabelSelected: 'bg-gray-100 text-black',
-                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                        groupOptions: 'p-0 m-0',
-                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-sm leading-snug py-2 px-3',
-                                        optionPointed: 'text-gray-800 bg-gray-100',
-                                        optionSelected: 'text-white bg-indigo-500 text-sm',
-                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                        spacer: 'h-9 py-px box-content',
-                                }"
-                            />
-                        </div>
+            <Card v-if="form.fee.length">
+                <template #content>
+                    <div class="flex justify-end space-x-2">
+                        <Button variant="outline" @click="$inertia.get(route('students'))">Cancel</Button>
+                        <Button @click="admitStudent">Save</Button>
                     </div>
-                </div>
+                </template>
+            </Card>
+        </div>
+        <Dialog v-model:open="open_promo_modal">
+            <template #title>Add Status</template>
+            <template #content>
+                <ComboBox :items="$page.props.promos" label-property="promo_name" value-property="promo_id" v-model="selected_promo.promo_id" select-placeholder="Select Promo" search-placeholder="Search promo..."></ComboBox>
             </template>
-            <template v-slot:footer>
-                <div class="flex justify-end space-x-2 items-center p-4 border-t border-gray-200 rounded-b">
-                    <BreezeButton buttonType="info" @click="addPromo()">Apply</BreezeButton>
-                </div>
+            <template #footer>
+                <Button variant="outline" @click="open_promo_modal = false">Cancel</Button>
+                <Button @click="addPromo">Add</Button>
             </template>
-        </Modal>
+        </Dialog>
     </BreezeAuthenticatedLayout>
 </template>
 
-
-
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Datepicker from '@vuepic/vue-datepicker';
-import Multiselect from '@vueform/multiselect'
+import Collapsible from '@/Components/Collapsible.vue'
+import Card from '@/Components/Card.vue'
+import { RocketIcon } from '@radix-icons/vue'
+import { Alert, AlertDescription, AlertTitle } from '@/Components/ui/alert'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
+import Dialog from '@/Components/DialogModal.vue'
 import moment from 'moment';
 import { debounce } from 'vue-debounce'
-import Modal from '@/Components/Modal.vue'
-import simplebar from 'simplebar-vue';
-import 'simplebar-vue/dist/simplebar.min.css';
+import axios from 'axios';
 
 
 export default {
     components: {
-        Head, Link, Datepicker, Multiselect, Modal, simplebar, 
-    },
-    props: {
-        centre_id: String,
+        Head, Link, 
     },
     data(){
         return{
@@ -532,6 +247,11 @@ export default {
             fetching_fee: false,
             no_fee_found: false,
             total_amount: 0,
+            open: {
+                student_info: true,
+                student_classes: false,
+                admission_confirmation: false
+            },
             errors: {
                 child: false,
                 centre: false,
@@ -657,7 +377,7 @@ export default {
         submit() {
             this.$inertia.post(route('classes.store'), this.form, { preserveState: true})
         },
-        findChildren(query){
+        findChildren: debounce(function(query) {
             debounce(val => '400ms')(10)
             if(query){
                 this.searching.student = true
@@ -671,7 +391,7 @@ export default {
                     this.searching.student = false
                 });
             }
-        },
+        }, 1000),
         findClasses(){
             this.errors.child           =   !this.form.children_id ? true : false
             this.errors.centre          =   !this.form.centre_id ? true : false
@@ -703,14 +423,18 @@ export default {
                     }
                 })
                 .then((res) => {
-                    this.list.available_classes = res.data
+                    this.list.available_classes = res.data  
                     this.enable_container.available_classes = true,
                     this.searching.class = false
-                    this.scrollToElement('available_classes')
+                    this.open.student_info = false
+                    this.open.student_classes = true
+                    setTimeout(() => {
+                        this.scrollToElement('available_classes')
+                    }, 300);
                 });
             }
         },
-        getPlusFee(event, class_id, class_type, programme_id, programme_level_id){
+        getPlusFee(class_id, class_type, programme_id, programme_level_id){
             if(this.fetching_fee){
                 return
             }
@@ -720,7 +444,9 @@ export default {
 
             this.disable_check_box = true
 
-            if(event.target.checked){
+            const checked = this.checkIfClassSelected(class_id, programme_id)
+
+            if(!checked){
                 if(!this.selected_plus_class[programme_id]){
                     this.selected_plus_class[programme_id] = []
                 }
@@ -751,10 +477,13 @@ export default {
                     if(res.data.fee_info){
                         this.form.fee.push(res.data)
                     }
-                    this.scrollToElement('class_fee')
+                    setTimeout(() => {
+                        this.scrollToElement('class_fee')
+                    }, 300);
                     this.searching.fee = false
                     this.disable_check_box  = false
                     this.fetching_fee = false
+                    this.open.admission_confirmation = true
                 })
                 .catch((error) => {
                     this.searching.fee = false
@@ -773,7 +502,11 @@ export default {
         scrollToElement(element) {
             const el = this.$refs[element];
             if (el) {
-                el.scrollIntoView({behavior: 'smooth'});
+                el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: "center",      // Align to the top of the viewport
+                    inline: "nearest"    // Horizontal scroll (optional)
+                });
             }
         },
         deleteFee(programme_id, class_type){
@@ -830,7 +563,7 @@ export default {
                 currentValue.type_id === 2 ? accumulator + currentValue.value : accumulator
             , 0);
             return fee_amount - totalFixedValuePromo - (fee_amount * totalPercentValuePromo / 100)
-        }
+        },
     },
     mounted(){
         const now = new Date();
@@ -839,12 +572,3 @@ export default {
     }
 }
 </script>
-
-<style>
-.dp__input{
-    border-radius: 6px;
-}
-.dp__theme_light {
-    --dp-border-color: rgb(209 213 219 / var(--tw-border-opacity));
- }
-</style>

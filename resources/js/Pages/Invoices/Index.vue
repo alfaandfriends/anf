@@ -26,7 +26,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     <span class="font-normal">{{ item.name + " (" + item.country_name + ")" }}</span>
                 </template>
             </ComboBox>
-            <Datepicker v-model="params.date" mode="month" format="MMM Y" @select="search"></Datepicker>
+            <div>
+                <Datepicker v-model="params.date" mode="month" format="MMM Y" @select="search"></Datepicker>
+            </div>
             <div class="">
                 <Button @click="$inertia.get(route('fee.invoices'))">Clear Search</Button>
             </div>
@@ -55,19 +57,19 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             </TableCell>
                         </TableRow> 
                         <TableRow v-for="invoice, index in $page.props.invoices.data">
-                            <TableCell class="cursor-pointer" @click="editInvoice(invoice.id)">{{ $page.props.invoices.from + index }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editInvoice(invoice.id)">{{ invoice.student_name }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editInvoice(invoice.id)">
+                            <TableCell>{{ $page.props.invoices.from + index }}</TableCell>
+                            <TableCell>{{ invoice.student_name }}</TableCell>
+                            <TableCell>
                                 <Badge variant="">#{{ invoice.invoice_number }}</Badge>
                             </TableCell>
-                            <TableCell class="cursor-pointer" @click="editInvoice(invoice.id)">{{ moment(invoice.date_issued).format('DD MMM Y') }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editInvoice(invoice.id)">{{ moment(invoice.due_date).format('DD MMM Y') }}</TableCell>
-                            <TableCell class="cursor-pointer" @click="editInvoice(invoice.id)">{{ invoice.amount }}</TableCell>
-                            <TableCell class="text-center cursor-pointer" @click="editInvoice(invoice.id)">
+                            <TableCell>{{ moment(invoice.date_issued).format('DD MMM Y') }}</TableCell>
+                            <TableCell>{{ moment(invoice.due_date).format('DD MMM Y') }}</TableCell>
+                            <TableCell>{{ invoice.amount }}</TableCell>
+                            <TableCell class="text-center" @click="editInvoice(invoice.id)">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="[invoice.status_bg_color, invoice.status_text_color]"> {{ invoice.status }} </span>
                             </TableCell>
                             <TableCell class="text-center">
-                                <Button v-if="$page.props.can.edit_classes" @click="editInvoice(invoice.id)">Edit</Button>
+                                <Button variant="outline" v-if="$page.props.can.edit_fee_invoices" @click="editInvoice(invoice.id)">Edit</Button>
                             </TableCell>
                         </TableRow>
                     </TableBody>

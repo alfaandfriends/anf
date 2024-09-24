@@ -63,17 +63,6 @@ class ArtGalleryController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        $levels =   DB::table('art_levels')->get();
-        $themes =   DB::table('art_themes')->where('level_id', 1)->get();
-
-        return Inertia::render('ArtGallery/Create',[
-            'levels'  => $levels,
-            'themes'  => $themes
-        ]);
-    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -103,7 +92,7 @@ class ArtGalleryController extends Controller
         $log_data =   'Added artwork for student ID '.$request->student_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('art_gallery'))->with(['type'=>'success', 'message'=>'Artwork uploaded successfully !']);
+        return redirect(route('art_gallery'))->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function destroy($id)
@@ -113,12 +102,12 @@ class ArtGalleryController extends Controller
         $record_deleted =   DB::table('student_art_gallery')->where('id', $id)->delete();
 
         if($record_deleted){
-            return back()->with(['type'=>'success', 'message'=>'Artwork deleted successfully !']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
         }
         $log_data =   'Deleted artwork ID '.$id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'danger', 'message'=>'An error occured, please try again !']);
+        return back()->with(['type'=>'danger', 'message'=>'An error occured, please try again.']);
 
     }
 
@@ -202,7 +191,7 @@ class ArtGalleryController extends Controller
         $log_data =   'Added art level ID '.$level_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function themeStore(Request $request)
@@ -214,7 +203,7 @@ class ArtGalleryController extends Controller
         $log_data =   'Added art theme ID '.$theme_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'New theme has been added!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function lessonStore(Request $request)
@@ -226,7 +215,7 @@ class ArtGalleryController extends Controller
         $log_data =   'Added art lesson ID '.$lesson_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function activityStore(Request $request)
@@ -238,7 +227,7 @@ class ArtGalleryController extends Controller
         $log_data =   'Added art activity ID '.$activity_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'New activity has been added!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     /* Update Level, Theme, Lesson, Activity */
@@ -250,7 +239,7 @@ class ArtGalleryController extends Controller
         $log_data =   'Updated art level ID '.$request->id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function themeUpdate(Request $request)
@@ -261,7 +250,7 @@ class ArtGalleryController extends Controller
         $log_data =   'Updated art theme ID '.$request->id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'Theme has been updated!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function lessonUpdate(Request $request)
@@ -272,7 +261,7 @@ class ArtGalleryController extends Controller
         $log_data =   'Updated art lesson ID '.$request->id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function activityUpdate(Request $request)
@@ -283,7 +272,7 @@ class ArtGalleryController extends Controller
         $log_data =   'Updated art activity ID '.$request->id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'Activity has been updated!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     /* Delete Level, Theme, Lesson, Activity */
@@ -299,11 +288,11 @@ class ArtGalleryController extends Controller
             $log_data =   'Deleted art level ID '.$id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
         } 
         catch (Exception $e) {
             DB::rollBack();
-            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this level!']);
+            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this level.']);
         }
     }
 
@@ -319,11 +308,11 @@ class ArtGalleryController extends Controller
             $log_data =   'Deleted art theme ID '.$id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return back()->with(['type'=>'success', 'message'=>'Theme has been deleted!']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
         } 
         catch (Exception $e) {
             DB::rollBack();
-            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this theme!']);
+            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this theme.']);
         }
     }
 
@@ -340,11 +329,11 @@ class ArtGalleryController extends Controller
             event(new DatabaseTransactionEvent($log_data));
 
 
-            return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
         } 
         catch (Exception $e) {
             DB::rollBack();
-            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this lesson!']);
+            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this lesson.']);
         }
     }
 
@@ -361,11 +350,11 @@ class ArtGalleryController extends Controller
             event(new DatabaseTransactionEvent($log_data));
 
 
-            return back()->with(['type'=>'success', 'message'=>'Activity has been deleted!']);
+            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
         } 
         catch (Exception $e) {
             DB::rollBack();
-            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this activity!']);
+            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this activity.']);
         }
     }
 }

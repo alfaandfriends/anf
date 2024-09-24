@@ -138,16 +138,16 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
         <Dialog v-model:open="show.add_order">
             <template #title>Add Product</template>
             <template #content>
-                <div class="p-1 grid grid-cols-1">
-                    <div class="mb-4">
+                <div class="p-1 grid grid-cols-1 gap-4">
+                    <div>
                         <Label>Material</Label>
                         <ComboBox :items="list.products" label-property="name" value-property="id" :error="validation.product.error" :loading="loading.products" @search="findProducts" @select="findProductVariations" v-model="search_product_form.product_id" select-placeholder="Select Material" search-placeholder="Search material..."></ComboBox>
                     </div>
-                    <div class="mb-4" v-if="show.product_variations">
+                    <div v-if="show.product_variations">
                         <Label>Variation<span class="text-red-500">*</span></Label>
                         <ComboBox :items="list.product_variations" label-property="option_name" value-property="id" :loading="loading.product_variations" :error="validation.product_variation.error" @select="findProductSubVariations" v-model="search_product_form.product_variation_id" select-placeholder="Select Variation" search-placeholder="Search variation..."></ComboBox>
                     </div>
-                    <div class="mb-4" v-if="show.product_sub_variations">
+                    <div v-if="show.product_sub_variations">
                         <Label>Sub Variation<span class="text-red-500">*</span></Label>
                         <ComboBox :items="list.product_sub_variations" label-property="option_name" value-property="id" :loading="loading.product_sub_variations" :error="validation.product_sub_variation.error" v-model="search_product_form.product_sub_variation_id" select-placeholder="Select Sub Variation" search-placeholder="Search sub variation..."></ComboBox>
                     </div>

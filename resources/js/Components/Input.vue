@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick, defineProps, defineEmits, useAttrs } from 'vue';
-import { Input } from '@/Components/ui/input';
 
 // Define props and emits
 const props = defineProps({
@@ -33,7 +32,7 @@ onMounted(async () => {
   <Input
     v-bind="attrs"
     :value="modelValue"
-    @input="event => emit('update:modelValue', event.target.value)"
+    @input.native="event => emit('update:modelValue', event.target.value)"
     ref="input"
-  />
+  ></Input>
 </template>

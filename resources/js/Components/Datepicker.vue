@@ -16,6 +16,22 @@ const props = defineProps({
     type: String,
     default: 'YYYY-MM-DD'
   },
+  teleport: {
+    type: [Boolean, String],
+    default: 'body'
+  },
+  teleportCenter: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  error: {
+    type: [Boolean, String],
+    default: false
+  },
 });
 
 const emit = defineEmits(['update:modelValue', 'select']);
@@ -30,16 +46,22 @@ watch(internalValue, (newValue) => {
 </script>
 
 <template>
-    <VueDatePicker
-      v-model="internalValue" 
-      :auto-apply="mode == 'time' ? false : true" 
-      :clearable="false" 
-      :enable-time-picker="mode == 'time' ? true : false" 
-      :format="format" 
-      :time-picker="mode == 'time' ? true : false"
-      :month-picker="mode == 'month' ? true : false"
-      :teleport="true"
-    />
+  <VueDatePicker
+    v-model="internalValue" 
+    :auto-apply="mode == 'time' ? false : true" 
+    :clearable="false" 
+    :enable-time-picker="mode == 'time' ? true : false" 
+    :format="format" 
+    :time-picker="mode == 'time' ? true : false"
+    :month-picker="mode == 'month' ? true : false"
+    :teleport="teleport"
+    :teleport-center="teleportCenter"
+    :is24="false"
+    :disabled="disabled"
+  />
+  <p v-if="props.error" class="mt-0.5 text-xs text-red-500 font-semibold">
+    This field is required.
+  </p>
 </template>
 
 <style>
@@ -50,10 +72,10 @@ watch(internalValue, (newValue) => {
   @apply rounded-lg z-50
 }
 .dp__input_wrap{
-  @apply relative
+  @apply relative border border-gray-200 hover:border-gray-200 rounded-md h-[34px] shadow-sm
 }
 .dp__input{
-  @apply rounded-md text-base border-gray-200 hover:border-gray-200 text-[14px] h-9 shadow-sm font-semibold;
+  @apply text-base text-[14px] h-[34px] border border-transparent font-medium font-sans rounded-md disabled:bg-gray-50 disabled:cursor-not-allowed hover:border-transparent;
 }
 .dp__active_date{
   @apply bg-primary border-primary;

@@ -11,6 +11,10 @@ const props = defineProps({
   classProp: {
     type: String,
     default: ''
+  },
+  size: {
+    type: String,
+    default: 'sm'
   }
 });
 
@@ -19,7 +23,7 @@ const emit = defineEmits(['update:modelValue', 'close']);
 
 <template>
   <Dialog :open="modelValue">
-    <DialogContent :class="['sm:max-w-[425px] max-h-[90dvh] p-0 flex flex-col', classProp]">
+    <DialogContent :class="['max-h-[90dvh] p-0 flex flex-col', classProp]">
       <DialogHeader class="p-6 pb-0">
         <DialogTitle class="text-lg font-semibold" v-if="$slots.title">
           <slot name="title"></slot>
