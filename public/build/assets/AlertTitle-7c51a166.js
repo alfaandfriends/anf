@@ -1,1 +1,0 @@
-import{c as a}from"./app-f5e40355.js";import{t as r,y as n,E as l,q as o,u as c}from"./@vue-fa39c8c3.js";const u={__name:"AlertTitle",props:{class:{type:null,required:!1}},setup(e){const s=e;return(t,m)=>(r(),n("h5",{class:o(c(a)("mb-1 font-medium leading-none tracking-tight",s.class))},[l(t.$slots,"default")],2))}};export{u as _};
