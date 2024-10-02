@@ -8,12 +8,33 @@
           :disabled="disabled"
         >
           <div class="flex items-center truncate">
-            <span :class="['truncate block', selectedItem ? '' : 'text-gray-500 font-normal']">
+            <template v-if="$slots['label-content']">
+              <slot name="label-content" 
+                :selected-item="selectedItem" 
+                :selected-items="selectedItems" 
+                :multiple="multiple">
+                <span :class="['truncate block', selectedItem ? '' : 'text-gray-500 font-normal']">
+                  {{ multiple 
+                    ? `${selectedItems.length} selected` 
+                    : selectedItem ? displayLabel(selectedItem) : selectPlaceholder 
+                  }}
+                </span>
+              </slot>
+            </template>
+            <template v-else>
+              <span :class="['truncate block', selectedItem ? '' : 'text-gray-500 font-normal']">
+                {{ multiple 
+                  ? `${selectedItems.length} selected` 
+                  : selectedItem ? displayLabel(selectedItem) : selectPlaceholder 
+                }}
+              </span>
+            </template>
+            <!-- <span :class="['truncate block', selectedItem ? '' : 'text-gray-500 font-normal']">
               {{ multiple 
                 ? `${selectedItems.length} selected` 
                 : selectedItem ? displayLabel(selectedItem) : selectPlaceholder 
               }}
-            </span>
+            </span> -->
             <CrossCircledIcon
               v-if="canClear && modelValue"
               class="ml-2 h-4 w-4 text-red-500 shrink-0 hover:text-red-600 font-semibold"
@@ -49,10 +70,10 @@
                 :value="itemValue(item)"
                 @select="selectItem(item)"
               >
-                <slot name="label" :item="item">{{ displayLabel(item) }}</slot>
-                <CheckIcon
-                  :class="checkIconClass(item)"
-                />
+                <slot name="label" :item="item">{{ displayLabel(item) }}
+                  <CheckIcon
+                    :class="checkIconClass(item)"
+                  /></slot>
               </CommandItem>
             </CommandGroup>
           </CommandList>

@@ -1,24 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
-
-<style>
-/* Add extra margin-bottom to p elements following a <br> tag */
-.content p + br + p {
-  margin-top: 1em; /* Adjust the value to control the spacing */
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
 
 <template>
     <Head title="Diagnostic Test" />

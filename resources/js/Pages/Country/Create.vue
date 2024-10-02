@@ -2,12 +2,6 @@
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 </script>
 
-<style>
-.multiselect-assistive-text{
-    display: none;
-}
-</style>
-
 <template>
     <Head title="Countries" />
 

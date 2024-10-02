@@ -16,7 +16,7 @@ class ProgrammeHelper {
                                 $query->where('programmes.country_id', $country_id);
                             })
                             ->when($whereIn, function($query) use ($whereIn){
-                                $query->where('programmes.id', $whereIn);
+                                $query->whereIn('programmes.id', $whereIn);
                             })
                             ->get();
 

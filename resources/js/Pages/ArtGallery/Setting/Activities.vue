@@ -7,7 +7,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
             <Card>
                 <template #title>
                     <div class="flex justify-between">

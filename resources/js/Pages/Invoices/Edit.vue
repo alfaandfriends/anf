@@ -52,7 +52,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                 <TableRow>
                                     <TableCell>{{ item.programme_type }}</TableCell>
                                     <TableCell>{{ item.programme_fee_discount }}</TableCell>
-                                    <TableCell>{{ item.programme_fee }}</TableCell>
+                                    <TableCell>{{ item.use_old_fee ? item.old_programme_fee : item.programme_fee }}</TableCell>
                                 </TableRow>
                                 <TableRow v-if="item.include_registration_fee && item.registration_fee != 0">
                                     <TableCell>Registration Fee</TableCell>

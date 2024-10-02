@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -8,127 +7,105 @@ import BreezeButton from '@/Components/Button.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="py-4 px-4">
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div class="flex justify-between pb-4 relative text-gray-400 focus-within:text-gray-600 items-center">
-                    <BreezeButton buttonType="gray" :url="route('progress_report.settings.digital_art.lessons', {'level_id' : $page.props.level_id, 'theme_id' : $page.props.theme_id})">Back</BreezeButton>
-                    <BreezeButton @click="create">New Activity</BreezeButton>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-300">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">#</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">Activity</th>
-                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-if="!$page.props.activities.length">
-                                    <td class="text-center" colspan="10">
-                                        <div class="p-3">
-                                            No Record Found 
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-200" v-for="(result, index) in $page.props.activities">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-700">{{ ++index }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex flex-col space-y-1 text-sm text-gray-900">
-                                            <span class="font-semibold whitespace-normal">{{ result.name }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        <div class="flex justify-center space-x-2">
-                                            <BreezeButton buttonType="warning" @click="edit(result.id, result.name)">Edit</BreezeButton>
-                                            <BreezeButton buttonType="danger" @click="destroy(result.id)">Delete</BreezeButton>
-                                            <BreezeButton buttonType="blue" @click="viewOutcomes(result.id)">View Outcomes</BreezeButton>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
+            <Card>
+                <template #title>
+                    <div class="flex justify-between">
+                        <Button @click="$inertia.get(route('progress_report.settings.digital_art.lessons', {'level_id' : $page.props.level_id, 'theme_id' : $page.props.theme_id}))">Back</Button>
+                        <Button @click="create">New Activity</Button>
                     </div>
-                </div>
-                <div class="space-y-2" v-if="show_create">
-                    <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                        <div class="mb-5 border-b-indigo-500 border-b border-dashed">
-                            <h2 class="font-display font-bold text-indigo-600">New Activity</h2>
-                        </div>
-                        <div class="grid grid-cols-1 gap-0 sm:gap-4">
-                            <div class="mb-4">
-                                <label for="activity_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <input type="text" name="activity_name" id="activity_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.activity_name ? 'border-red-300' : 'border-gray-300'" v-model="form.activity_name" autocomplete="off"/>
-                                </div>
-                            </div>
+                </template>
+                <template #content>
+                    <Table>
+                        <TableHeader class="bg-gray-100">
+                            <TableRow>
+                            <TableHead>#</TableHead>
+                            <TableHead>Name</TableHead>
+                            <TableHead class="text-center">Action</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow v-if="!$page.props.activities.length">
+                                <TableCell class="text-center" colspan="10">
+                                    <div class="p-3">
+                                        No Record Found
+                                    </div>
+                                </TableCell>
+                            </TableRow> 
+                            <TableRow v-for="result, index in $page.props.activities">
+                                <TableCell>{{ index + 1 }}</TableCell>
+                                <TableCell>{{ result.name }}</TableCell>
+                                <TableCell class="text-center">
+                                    <div class="flex justify-center space-x-2">
+                                        <Button variant="outline" @click="edit(result.id, result.name)">Edit</Button>
+                                        <Button variant="destructive" @click="destroy(result.id)">Delete</Button>
+                                        <Button @click="viewOutcomes(result.id)">View Outcomes</Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </template>
+            </Card>
+            <Card v-if="show_create">
+                <template #title>Add Activity</template>
+                <template #content>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <Label>Name<span class="text-red-500">*</span></Label>
+                            <Input type="text" :error="errors.activity_name" v-model="form.activity_name"></Input>
                         </div>
                     </div>
-                    <div class="px-6 py-4 bg-white border border-gray-200 rounded-lg shadow-md">
-                        <div class="flex justify-end">
-                            <BreezeButton @click="store">Save</BreezeButton>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end">
+                        <Button @click="store">Save</Button>
+                    </div>
+                </template>
+            </Card>
+            <Card class="flex flex-col h-auto" v-if="show_edit">
+                <template #title>Edit Activity</template>
+                <template #content>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <Label>Name<span class="text-red-500">*</span></Label>
+                            <Input type="text" :error="errors.activity_name" v-model="form.activity_name"></Input>
                         </div>
                     </div>
-                </div>
-                <div class="space-y-2" v-if="show_edit">
-                    <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                        <div class="mb-5 border-b-indigo-500 border-b border-dashed">
-                            <h2 class="font-display font-bold text-indigo-600">Edit Activity</h2>
-                        </div>
-                        <div class="grid grid-cols-1 gap-0 sm:gap-4">
-                            <div class="mb-4">
-                                <label for="activity_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <input type="text" name="activity_name" id="activity_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="errors.activity_name ? 'border-red-300' : 'border-gray-300'" v-model="form.activity_name" autocomplete="off"/>
-                                </div>
-                            </div>
-                        </div>
+                </template>
+                <template #footer>
+                    <div class="flex justify-end">
+                        <Button @click="update">Save</Button>
                     </div>
-                    <div class="px-6 py-4 bg-white border border-gray-200 rounded-lg shadow-md">
-                        <div class="flex justify-end">
-                            <BreezeButton @click="update">Save</BreezeButton>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </template>
+            </Card>
         </div>
-        <ConfirmationModal 
-            :show="isOpen" 
-            @close="isOpen = false"
-            confirmationAlert="danger"
-            confirmationTitle="Delete Activity"
-            confirmationText="Are you sure want to delete this activity? Please be aware that deleting this will also result in the deletion of all associated data. This action cannot be undone."
-            confirmationButton="Delete"
-            confirmationMethod="delete"
-            :confirmationRoute="confirmationRoute"
-            :confirmationData="confirmationData"
-        />
+        <DeleteConfirmation :open="confirmation.is_open" @close="confirmation.is_open = false" :routeName="confirmation.route_name" :id="confirmation.id">
+            <template #title>Delete Activity</template>
+            <template #description>Are you sure want to delete this activity?</template>
+        </DeleteConfirmation>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
-import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue'
-import Pagination from '@/Components/Pagination.vue'
+import Card from '@/Components/Card.vue'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
+import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon, Head, Link, ConfirmationModal,
+        Head, Link
     },
     data(){
         return{
-            isOpen: false,
-            confirmationData: '',
-            confirmationRoute: '',
             show_create: false,
             show_edit: false,
+            confirmation: {
+                is_open: false,
+                route_name: '',
+                id: ''
+            },
             form:{
                 id: '',
                 lesson_id: this.$page.props.lesson_id,
@@ -166,9 +143,9 @@ export default {
             this.$inertia.post(route('progress_report.settings.digital_art.activities.update'), this.form, {preserveState: false})
         },
         destroy(id){
-            this.confirmationRoute = 'progress_report.settings.digital_art.activities.destroy'
-            this.confirmationData = id
-            this.isOpen = true
+            this.confirmation.route_name    = 'progress_report.settings.digital_art.activities.destroy'
+            this.confirmation.id            = id
+            this.confirmation.is_open       = true
         },
         viewOutcomes(activity_id){
             this.$inertia.get(route('progress_report.settings.digital_art.outcomes'), {'level_id': this.$page.props.level_id, 'theme_id': this.$page.props.theme_id, 'lesson_id': this.$page.props.lesson_id, 'activity_id' : activity_id})

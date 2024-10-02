@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <style>
@@ -8,24 +7,8 @@ import BreezeButton from '@/Components/Button.vue';
     object-fit: scale-down; 
     height: 5rem;
 }
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-
-.flip-list-move {
-  transition: transform 0.5s;
-}
-.no-move {
-  transition: transform 0s;
-}
 </style>
+
 <template>
     <Head title="Diagnostic Test" />
     <div class="flex flex-col h-screen">
@@ -168,7 +151,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                             <div class="flex flex-row justify-center">
-                                <BreezeButton @click="saveMultipleChoices()">Confirm Answers</BreezeButton>
+                                <Button @click="saveMultipleChoices()">Confirm Answers</Button>
                             </div>
                         </div>
                         <div class="flex flex-col space-y-2" v-if="current.question_type == 3">
@@ -204,7 +187,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div>
                             <div class="flex flex-row justify-center">
-                                <BreezeButton @click="saveMatrixSorting()">Confirm Answers</BreezeButton>
+                                <Button @click="saveMatrixSorting()">Confirm Answers</Button>
                             </div>
                         </div>
                         <div class="flex flex-col space-y-10" v-if="current.question_type == 4">
@@ -219,7 +202,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </h1>
                             </div>
                             <div class="flex flex-row justify-center">
-                                <BreezeButton @click="saveFillInBlankAnswers()">Confirm Answers</BreezeButton>
+                                <Button @click="saveFillInBlankAnswers()">Confirm Answers</Button>
                             </div>
                         </div>
                     </div>

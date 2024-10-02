@@ -112,7 +112,7 @@ export default {
                     <span class="font-bold">ALFA and Friends</span>
                 </Link>
             </div>
-            <ScrollArea class="h-full px-4 bg-white">
+            <ScrollArea class="h-full px-2 bg-white">
                 <div class="flex-1">
                     <nav class="grid items-start p-2 text-sm font-medium lg:px-3 lg:py-4 gap-y-1">
                         <template v-for="section, section_key in $page.props.menu">
@@ -128,7 +128,7 @@ export default {
                                         >
                                             <div class="flex items-center">
                                                 <span class="mr-3 h-6 w-6"><img :src="'/images/' + menu.menu_icon"></span>
-                                                <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
+                                                <span class="whitespace-pre select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
                                             </div>
                                         </Link>
                                     </template>
@@ -138,7 +138,7 @@ export default {
                                                 <AccordionTrigger class="flex items-center justify-between px-3 py-2 transition cursor-pointer group hover:bg-slate-900 hover:text-slate-200 rounded-lg" :class="menu_opened.menu_key == menu_key && menu_opened.section_key == section_key ? 'text-white tracking-wide bg-slate-900' : ''">
                                                     <div class="flex items-center">
                                                         <span class="mr-3 h-6 w-6"><img :src="'/images/' + menu.menu_icon"></span>
-                                                        <span class="select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
+                                                        <span class="whitespace-pre select-none font-semibold tracking-wide">{{ menu.menu_name }}</span>
                                                     </div>
                                                 </AccordionTrigger>
                                                 <AccordionContent>
@@ -150,7 +150,7 @@ export default {
                                                                 class="flex items-center justify-between mb-1 px-3 py-1.5 transition cursor-pointer group hover:bg-slate-300 hover:text-black rounded-lg"
                                                                 :class="route().current() && route().current().startsWith(sub_menu.sub_menu_route) ? 'text-black tracking-wide bg-slate-300' : ''"
                                                             >
-                                                                <span class="select-none tracking-wide">{{ sub_menu.sub_menu_name }}</span>
+                                                                <span class="whitespace-pre select-none tracking-wide">{{ sub_menu.sub_menu_name }}</span>
                                                             </Link>
                                                         </template>
                                                     </div>

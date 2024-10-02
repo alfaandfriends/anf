@@ -327,10 +327,9 @@ class ProgrammeController extends Controller
         else{
             $fee_info_query->where('classes.id', $request->classes)->where('programme_levels.class_type_id', $request->class_type)->where('class_types_detail.class_count', $request->class_count);
         }
-
         $data['fee_info']                               =   $fee_info_query->first();
-        $data['fee_info']->include_material_fee         =   true;
-        $data['fee_info']->include_registration_fee     =   true;
+        $data['fee_info']->include_material_fee         =   false;
+        $data['fee_info']->include_registration_fee     =   false;
         $data['fee_info']->use_old_fee                  =   false;
         $data['fee_info']->registration_fee_discount    =   0;
         $data['fee_info']->material_fee_discount        =   0;

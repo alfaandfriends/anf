@@ -26,6 +26,7 @@
         "laravel/reverb": "@beta",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.7",
+        "opcodesio/log-viewer": "^3.11",
         "php-http/message": "^1.16",
         "php-http/message-factory": "^1.1",
         "psr/http-factory": "^1.0",
@@ -36,6 +37,7 @@
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.1",
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^2.0",
         "laravel/sail": "^1.22",

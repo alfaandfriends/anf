@@ -4,8 +4,6 @@ use App\Classes\ClassHelper;
 use App\Classes\ProgrammeHelper;
 use App\Classes\StoryHelper;
 use App\Events\Notifications;
-use App\Events\Test;
-use App\Events\TestNotify;
 use App\Http\Controllers\ArtGalleryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CentreController;
@@ -36,14 +34,9 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherResourcesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-
+use Opcodes\LogViewer\Logs\Log;
 
 Route::middleware(['auth'])->group(function(){
-    Route::get('/send', function(){
-        event(new Test('asdasdasda'));
-    });
     Route::prefix('admin')->group(function () {
         /* User Impersonation */
         Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate');
@@ -120,12 +113,12 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/store', [StudentController::class, 'store'])->name('students.store')->middleware('permission:create_students');
             Route::get('/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:edit_students');
             Route::post('/update', [StudentController::class, 'update'])->name('students.update')->middleware('permission:edit_students');
-            Route::delete('/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:delete_students');
+            Route::post('/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:delete_students');
             Route::post('/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class')->middleware('permission:view_students|create_students|edit_students');
             Route::post('/set-fee-status', [StudentController::class, 'setFeeStatus'])->name('students.set_fee_status')->middleware('permission:view_students|create_students|edit_students');
             Route::post('/transfer', [StudentController::class, 'transferStudent'])->name('students.transfer')->middleware('permission:view_students|create_students|edit_students');
             Route::post('/add-promo', [StudentController::class, 'addPromo'])->name('students.add_promo')->middleware('permission:view_students|create_students|edit_students');
-            Route::delete('/delete-promo', [StudentController::class, 'deletePromo'])->name('students.delete_promo')->middleware('permission:view_students|create_students|edit_students');
+            Route::post('/delete-promo', [StudentController::class, 'deletePromo'])->name('students.delete_promo')->middleware('permission:view_students|create_students|edit_students');
 
             Route::get('/generate-monthly', [StudentController::class, 'generateMonthly'])->name('students.generate_monthly')->middleware('permission:view_students');
             

@@ -23,7 +23,7 @@ const delegatedProps = computed(() => {
       v-bind="delegatedProps"
       :class="
 cn(
-  'flex flex-1 items-center justify-between py-4 text-sm font-medium transition-all [&[data-state=open]>svg]:rotate-180 text-slate-900 hover:text-white mb-1',
+  'flex flex-1 items-center justify-between py-4 text-sm font-medium transition-all [&[data-state=open]>svg]:rotate-180 text-slate-900 hover:text-white mb-1 space-x-2',
   props.class
 )"
     >

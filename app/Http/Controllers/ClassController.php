@@ -299,6 +299,8 @@ class ClassController extends Controller
                             ->where('programme_levels.class_type_id', $request->class_type)
                             ->where('programme_levels.level', $request->class_level)
                             ->where('classes.class_method_id', $request->class_method)
+                            ->orderBy('class_days.id')
+                            ->orderBy('classes.start_time')
                             ->select(['classes.id as class_id', 'class_days.name as class_day', 'programme_levels.id as programme_level_id', 'programme_levels.class_type_id as class_type', 'classes.start_time', 'classes.end_time', 'classes.capacity', 'programmes.id as programme_id'])
                             ->get();
         return $classes;

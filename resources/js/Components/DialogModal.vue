@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { defineEmits, defineProps } from 'vue';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/Components/ui/dialog';
 import { CaretSortIcon, CheckIcon } from '@radix-icons/vue'
@@ -15,6 +15,15 @@ const props = defineProps({
   size: {
     type: String,
     default: 'sm'
+  },
+  interactOutside: {
+    type: Function,
+    required: false,
+    default: () => {}, 
+  },
+  hideClose: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -23,7 +32,7 @@ const emit = defineEmits(['update:modelValue', 'close']);
 
 <template>
   <Dialog :open="modelValue">
-    <DialogContent :class="['max-h-[90dvh] p-0 flex flex-col', classProp]">
+    <DialogContent :class="['max-h-[90dvh] p-0 flex flex-col', classProp]" @interactOutside="interactOutside" :hideClose="hideClose">
       <DialogHeader class="p-6 pb-0">
         <DialogTitle class="text-lg font-semibold" v-if="$slots.title">
           <slot name="title"></slot>

@@ -29,7 +29,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         </div>
                         <div>
                             <Label>Start Date<span class="text-red-500">*</span></Label>
-                            <Datepicker mode="date" :format="'dd/MM/yyyy'" disabled/>
+                            <Datepicker mode="date" :format="'dd/MM/yyyy'" v-model="form.date_admission" disabled/>
                         </div>
                         <div>
                             <Label>Programme<span class="text-red-500">*</span></Label>
@@ -75,7 +75,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
-                                            <TableRow v-if="!searching.class && !list.available_classes">
+                                            <TableRow v-if="!searching.class && !list.available_classes.length">
                                                 <TableCell class="text-center" colspan="10">
                                                     <div class="p-3">
                                                         No classes available
@@ -183,9 +183,13 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                     </ul>
                                     <ul class="grid gap-2 text-xs font-semibold">
                                         <li class="flex flex-col">
-                                            <div class="col-span-2">
+                                            <div class="col-span-2 mt-3">
+                                                <div class="flex items-center justify-end space-x-2">
+                                                    <Checkbox :id="'old_fee_' + fee_index" :value="fee.fee_info.use_old_fee" :checked="fee.fee_info.use_old_fee" @click.native="fee.fee_info.use_old_fee = !fee.fee_info.use_old_fee"/>
+                                                    <label :for="'old_fee_' + fee_index" class="cursor-pointer">Use old fee</label>
+                                                </div>
                                                 <div class="flex items-center justify-end text-lg space-x-1">
-                                                    <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.programme_fee) }}</span>
+                                                    <span class="font-brown">{{ fee.fee_info.currency_symbol }}{{ calculateTotal(fee_index, fee.fee_info.use_old_fee ? fee.fee_info.old_programme_fee : fee.fee_info.programme_fee) }}</span>
                                                     <span class="font-medium text-sm text-gray-700">/month</span>
                                                 </div>
                                             </div>
