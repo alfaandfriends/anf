@@ -90,7 +90,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             <TableCell class="text-center">
                                 <div class="flex justify-center space-x-2">
                                     <Button variant="outline" @click="viewProgressReport(result.progress_report_id)" v-if="$page.props.can.view_progress_report">Edit</Button>
-                                    <Button variant="destructive" @click="showProgressReport(result.progress_report_id)" v-if="$page.props.can.view_progress_report">{{ generate.id == result.progress_report_id && generate.running ? 'Generating...'  : 'Generate'}}</Button>
+                                    <Button variant="" @click="showProgressReport(result.progress_report_id)" v-if="$page.props.can.view_progress_report">{{ generate.id == result.progress_report_id && generate.running ? 'Generating...'  : 'Generate'}}</Button>
                                 </div>
                             </TableCell>
                         </TableRow>
