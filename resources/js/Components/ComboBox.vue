@@ -102,7 +102,7 @@ export default {
     modelValue: [String, Number, Object],
     classProperty: { type: String, default: '' },
     labelProperty: { type: [String, Number], default: 'name' },
-    valueProperty: { type: [String, Number], default: 'id' },
+    valueProperty: { type: Number, default: 'id' },
     placeholder: { type: String, default: 'Select Country' },
     selectPlaceholder: { type: String, default: 'Select Option' },
     searchPlaceholder: { type: String, default: 'Search option...' },
