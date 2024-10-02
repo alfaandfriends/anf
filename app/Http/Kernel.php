@@ -69,7 +69,7 @@ class Kernel extends HttpKernel
         'onboard' => \App\Http\Middleware\Onboard::class,
         'device' => \App\Http\Middleware\CheckDeviceType::class,
         'child' => \App\Http\Middleware\Child::class,
-        'logviewer.access' => \App\Http\Middleware\LogViewerAccess::class,
+        'logviewer' => \App\Http\Middleware\LogViewerAccess::class,
     ];
 
     protected $commands = [
