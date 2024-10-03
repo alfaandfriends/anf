@@ -50,8 +50,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             <template #content>
                 <div class="p-1 grid grid-cols-1 gap-4">
                     <div class="">
-                        <Label>Date<span class="text-red-500">*</span></Label>
-                        <Datepicker v-model="form.date" mode="date" format="dd/MM/Y" :error="!form.date"></Datepicker>
+                        <Label id="date">Date<span class="text-red-500">*</span></Label>
+                        <Datepicker v-model="form.date" mode="date" format="dd/MM/Y" :error="!form.date" teleport="#date" :teleportCenter="true"></Datepicker>
                     </div>
                     <div class="">
                         <Label>Teacher's Name<span class="text-red-500">*</span></Label>
