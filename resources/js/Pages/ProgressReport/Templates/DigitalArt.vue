@@ -130,7 +130,6 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import StudentInformation from '@/Pages/ProgressReport/Templates/StudentInformation.vue';
-import Datepicker from '@vuepic/vue-datepicker';
 import Modal from '@/Components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
@@ -145,7 +144,7 @@ import { Badge } from '@/Components/ui/badge'
 
 export default {
     components: {
-        Head, Link, Datepicker, Modal, Multiselect, 
+        Head, Link, Modal, Multiselect, 
     },
     data(){
         return{
