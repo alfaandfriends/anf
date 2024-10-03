@@ -4,7 +4,28 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
-  safelist: ["dark"],
+  safelist: [
+    'dark',
+    'dp__theme_light',
+    'dp__overlay',
+    'dp__input_wrap',
+    'dp__input',
+    'dp__active_date',
+    'dp__overlay_cell_active',
+    'dp__instance_calendar',
+    'dp__today',
+    'dp__month_year_row',
+    'dp__month_year_col_nav',
+    'dp__inner_nav',
+    'dp__icon',
+    'dp__month_year_wrap',
+    'dp__selection_preview',
+    'dp__action_row',
+    'dp__action_buttons',
+    'dp__cancel',
+    'dp__select',
+    'dp__selection_grid_header'
+  ],
   prefix: "",
   
   content: [
