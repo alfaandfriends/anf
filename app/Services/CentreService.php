@@ -40,20 +40,20 @@ class CentreService
     public function createCentre($request)
     {
         $request->validate([
-            'centre_name'               => 'required',
-            'centre_country'            => 'required',
-            'centre_contact_number'     => 'required',
-            'centre_email'              => 'required',
-            'centre_address'            => 'required',
+            'name'               => 'required',
+            'country'            => 'required',
+            'contact_number'     => 'required',
+            'email'              => 'required',
+            'address'            => 'required',
         ]);
         
         $centre_id  =   DB::table('centres')->insertGetId([
-            'country_id'                => $request->centre_country,
-            'label'                     => $request->centre_name,
-            'phone'                     => $request->centre_contact_number,
-            'email'                     => $request->centre_email,
-            'address'                   => $request->centre_address,
-            'is_active'                 => $request->centre_active,
+            'country_id'                => $request->country,
+            'label'                     => $request->name,
+            'phone'                     => $request->contact_number,
+            'email'                     => $request->email,
+            'address'                   => $request->address,
+            'is_active'                 => $request->active,
             'last_enrollment_count'     => 0,
             'last_invoice_count'        => 0,
             'last_payment_count'        => 0,
@@ -70,20 +70,20 @@ class CentreService
     public function updateCentre($request)
     {
         $request->validate([
-            'centre_name'               => 'required',
-            'centre_country'            => 'required',
-            'centre_contact_number'     => 'required',
-            'centre_email'              => 'required',
-            'centre_address'            => 'required',
+            'name'               => 'required',
+            'country'            => 'required',
+            'contact_number'     => 'required',
+            'email'              => 'required',
+            'address'            => 'required',
         ]);
 
-        DB::table('centres')->where('ID', $request->centre_id)->update([
-            'country_id' => $request->centre_country,
-            'label' => $request->centre_name,
-            'phone' => $request->centre_contact_number,
-            'email' => $request->centre_email,
-            'address' => $request->centre_address,
-            'is_active' => $request->centre_active,
+        DB::table('centres')->where('ID', $request->id)->update([
+            'country_id' => $request->country,
+            'label' => $request->name,
+            'phone' => $request->contact_number,
+            'email' => $request->email,
+            'address' => $request->address,
+            'is_active' => $request->active,
         ]);
 
         $log_data =   'Updated centre ' . $request->centre_name . ' : ' . json_encode($request->all()) ;

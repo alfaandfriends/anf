@@ -9,214 +9,114 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-
-        <div class="py-4 px-4">
-            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                <article class="rounded-lg border border-gray-300 bg-white p-6 shadow">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-2">
-                            <p class="font-semibold text-sm text-gray-500">Total Centres</p>
-                        </div>
-                        <Menu as="div" class="relative inline-block text-left">
-                            <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white text-sm font-semibold text-gray-900 hover:bg-gray-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
-                                    <path d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"/>
-                                </svg>
-                            </MenuButton>
-                            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                                <MenuItems class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <div class="py-1">
-                                    <a @click="updateDataCentres('')" class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900" :class="params.centre_status == null ? 'bg-indigo-100' : ''">All</a>
-                                    <a @click="updateDataCentres(1)" class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900" :class="params.centre_status == 1 ? 'bg-indigo-100' : ''">Active</a>
-                                    <a @click="updateDataCentres(0)" class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900" :class="params.centre_status == 0 ? 'bg-indigo-100' : ''">Inactive</a>
-                                </div>
-                                </MenuItems>
-                            </transition>
-                        </Menu>
-                    </div>
-                    <hr class="border border-dashed border-blue-300 my-2">
-                    <p class="text-2xl font-bold text-gray-700">{{ $page.props.total_centres }}</p>
-                </article>
-                <article class="rounded-lg border border-gray-300 bg-white p-6 z-0 shadow">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-2">
-                            <p class="font-semibold text-sm text-gray-500">Total Students</p>
-                        </div>
-                    </div>
-                    <hr class="border border-dashed border-blue-300 my-2">
-                    <div class="flex self-center rounded bg-indigo-100 p-1 text-indigo-600">
-                        <span class="text-xs font-medium"> Online </span>
-                    </div>
+        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+            <article class="rounded-lg border border-gray-300 bg-white p-6 shadow">
+                <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-2">
-                        <div class="flex self-center text-2xl font-semibold text-gray-900">
-                           {{ $page.props.online_students_this_month }}
-                        </div>
-                        <div class="mt-1 flex gap-1 text-green-600" v-if="$page.props.online_students_this_month > $page.props.online_students_last_month">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        <p class="font-semibold text-sm text-gray-500">Total Centres</p>
+                    </div>
+                    <Menu as="div" class="relative inline-block text-left">
+                        <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white text-sm font-semibold text-gray-900 hover:bg-gray-50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
+                                <path d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"/>
                             </svg>
-                            <p class="flex gap-2 text-xs">
-                                <span class="font-medium"> {{ $page.props.online_students_this_month - $page.props.online_students_last_month }} </span>
-                                <span class="text-gray-500"> Since last month </span>
-                            </p>
-                        </div>
-                        <div class="mt-1 flex gap-1 text-red-600" v-if="$page.props.online_students_this_month < $page.props.online_students_last_month">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
-                            </svg>
-                            <p class="flex gap-2 text-xs">
-                                <span class="font-medium"> {{ $page.props.online_students_last_month - $page.props.online_students_this_month }} Students</span>
-                                <span class="text-gray-500"> Since last month </span>
-                            </p>
-                        </div>
-                        <div class="mt-1 flex gap-1 text-indigo-600" v-if="$page.props.online_students_this_month == $page.props.online_students_last_month">
-                            <p class="flex gap-2 text-xs">
-                                <span class="font-medium"> Students Remain </span>
-                                <span class="text-gray-500"> Since last month </span>
-                            </p>
-                        </div>
-                    </div>
-                </article>
-                <article class="rounded-lg border border-gray-300 bg-white p-6 z-0 shadow">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-2">
-                            <p class="font-semibold text-sm text-gray-500">Total Students</p>
-                        </div>
-                    </div>
-                    <hr class="border border-dashed border-blue-300 my-2">
-                    <div class="flex self-center rounded bg-indigo-100 p-1 text-indigo-600">
-                        <span class="text-xs font-medium"> Physical </span>
-                    </div>
-                    
+                        </MenuButton>
+                        <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                            <MenuItems class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div class="py-1">
+                                <a @click="updateDataCentres('')" class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900" :class="params.centre_status == null ? 'bg-indigo-100' : ''">All</a>
+                                <a @click="updateDataCentres(1)" class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900" :class="params.centre_status == 1 ? 'bg-indigo-100' : ''">Active</a>
+                                <a @click="updateDataCentres(0)" class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900" :class="params.centre_status == 0 ? 'bg-indigo-100' : ''">Inactive</a>
+                            </div>
+                            </MenuItems>
+                        </transition>
+                    </Menu>
+                </div>
+                <hr class="border border-dashed border-blue-300 my-2">
+                <p class="text-2xl font-bold text-gray-700">{{ $page.props.total_centres }}</p>
+            </article>
+            <article class="rounded-lg border border-gray-300 bg-white p-6 z-0 shadow">
+                <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-2">
-                        <div class="flex self-center text-2xl font-semibold text-gray-900">
-                           {{ $page.props.physical_students_this_month }}
-                        </div>
-                        <div class="mt-1 flex gap-1 text-green-600" v-if="$page.props.physical_students_this_month > $page.props.physical_students_last_month">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                            </svg>
-                            <p class="flex gap-2 text-xs">
-                                <span class="font-medium"> {{ $page.props.physical_students_this_month - $page.props.physical_students_last_month }} </span>
-                                <span class="text-gray-500"> Since last month </span>
-                            </p>
-                        </div>
-                        <div class="mt-1 flex gap-1 text-red-600" v-if="$page.props.physical_students_this_month < $page.props.physical_students_last_month">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
-                            </svg>
-                            <p class="flex gap-2 text-xs">
-                                <span class="font-medium"> {{ $page.props.physical_students_last_month - $page.props.physical_students_this_month }} Students</span>
-                                <span class="text-gray-500"> Since last month </span>
-                            </p>
-                        </div>
-                        <div class="mt-1 flex gap-1 text-indigo-600" v-if="$page.props.physical_students_this_month == $page.props.physical_students_last_month">
-                            <p class="flex gap-2 text-xs">
-                                <span class="font-medium"> Students Remain </span>
-                                <span class="text-gray-500"> Since last month </span>
-                            </p>
-                        </div>
+                        <p class="font-semibold text-sm text-gray-500">Total Students</p>
                     </div>
-                </article>
-            </div>
-                <!-- <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8"> -->
-                    <!-- <div class="flex flex-wrap gap-4">
-                        <div class="flex grow items-center bg-white border rounded-sm overflow-hidden shadow">
-                            <div class="p-4 bg-green-400">
-                                <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-12 w-12 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                                />
-                                </svg>
-                            </div>
-                            <div class="px-4 text-gray-700">
-                                <h3 class="text-sm tracking-wider">Total Member</h3>
-                                <p class="text-3xl">{{ total_user }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex grow items-center bg-white border rounded-sm overflow-hidden shadow">
-                            <div class="p-4 bg-blue-400">
-                                <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-12 w-12 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
-                                />
-                                </svg>
-                            </div>
-                            <div class="px-4 text-gray-700">
-                                <h3 class="text-sm tracking-wider">Total Centre</h3>
-                                <p class="text-3xl">{{ total_school }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex grow items-center bg-white border rounded-sm overflow-hidden shadow">
-                            <div class="p-4 bg-indigo-400">
-                                <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-12 w-12 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-                                />
-                                </svg>
-                            </div>
-                            <div class="px-4 text-gray-700">
-                                <h3 class="text-sm tracking-wider">Total Comment</h3>
-                                <p class="text-3xl">142,334</p>
-                            </div>
-                        </div>
-
-                        <div class="flex grow items-center bg-white border rounded-sm overflow-hidden shadow">
-                            <div class="p-4 bg-red-400">
-                                <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-12 w-12 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
-                                />
-                                </svg>
-                            </div>
-                            <div class="px-4 text-gray-700">
-                                <h3 class="text-sm tracking-wider">Server Load</h3>
-                                <p class="text-3xl">34.12%</p>
-                            </div>
-                        </div>
-                    </div> -->
-                <!-- </div> -->
+                </div>
+                <hr class="border border-dashed border-blue-300 my-2">
+                <div class="flex self-center rounded bg-indigo-100 p-1 text-indigo-600">
+                    <span class="text-xs font-medium"> Online </span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="flex self-center text-2xl font-semibold text-gray-900">
+                        {{ $page.props.online_students_this_month }}
+                    </div>
+                    <div class="mt-1 flex gap-1 text-green-600" v-if="$page.props.online_students_this_month > $page.props.online_students_last_month">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                        <p class="flex gap-2 text-xs">
+                            <span class="font-medium"> {{ $page.props.online_students_this_month - $page.props.online_students_last_month }} </span>
+                            <span class="text-gray-500"> Since last month </span>
+                        </p>
+                    </div>
+                    <div class="mt-1 flex gap-1 text-red-600" v-if="$page.props.online_students_this_month < $page.props.online_students_last_month">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+                        </svg>
+                        <p class="flex gap-2 text-xs">
+                            <span class="font-medium"> {{ $page.props.online_students_last_month - $page.props.online_students_this_month }} Students</span>
+                            <span class="text-gray-500"> Since last month </span>
+                        </p>
+                    </div>
+                    <div class="mt-1 flex gap-1 text-indigo-600" v-if="$page.props.online_students_this_month == $page.props.online_students_last_month">
+                        <p class="flex gap-2 text-xs">
+                            <span class="font-medium"> Students Remain </span>
+                            <span class="text-gray-500"> Since last month </span>
+                        </p>
+                    </div>
+                </div>
+            </article>
+            <article class="rounded-lg border border-gray-300 bg-white p-6 z-0 shadow">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <p class="font-semibold text-sm text-gray-500">Total Students</p>
+                    </div>
+                </div>
+                <hr class="border border-dashed border-blue-300 my-2">
+                <div class="flex self-center rounded bg-indigo-100 p-1 text-indigo-600">
+                    <span class="text-xs font-medium"> Physical </span>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <div class="flex self-center text-2xl font-semibold text-gray-900">
+                        {{ $page.props.physical_students_this_month }}
+                    </div>
+                    <div class="mt-1 flex gap-1 text-green-600" v-if="$page.props.physical_students_this_month > $page.props.physical_students_last_month">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                        <p class="flex gap-2 text-xs">
+                            <span class="font-medium"> {{ $page.props.physical_students_this_month - $page.props.physical_students_last_month }} </span>
+                            <span class="text-gray-500"> Since last month </span>
+                        </p>
+                    </div>
+                    <div class="mt-1 flex gap-1 text-red-600" v-if="$page.props.physical_students_this_month < $page.props.physical_students_last_month">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+                        </svg>
+                        <p class="flex gap-2 text-xs">
+                            <span class="font-medium"> {{ $page.props.physical_students_last_month - $page.props.physical_students_this_month }} Students</span>
+                            <span class="text-gray-500"> Since last month </span>
+                        </p>
+                    </div>
+                    <div class="mt-1 flex gap-1 text-indigo-600" v-if="$page.props.physical_students_this_month == $page.props.physical_students_last_month">
+                        <p class="flex gap-2 text-xs">
+                            <span class="font-medium"> Students Remain </span>
+                            <span class="text-gray-500"> Since last month </span>
+                        </p>
+                    </div>
+                </div>
+            </article>
         </div>
-
-
     </BreezeAuthenticatedLayout>
 </template>
 

@@ -1,110 +1,100 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
     <Head title="Users" />
 
     <BreezeAuthenticatedLayout>
-        <template #header></template>
-        <div class="py-4 px-4">
-            <div class="flex justify-end mb-3" v-if="$page.props.can.create_users">
-                <BreezeButton :route="route('users.create')">User Registration</BreezeButton>
+        <!-- <template #header></template> -->
+        <div class="flex items-center justify-between">
+            <div class="relative">
+                <MagnifyingGlassIcon class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input type="text" placeholder="Search" class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" v-debounce:800ms="search" v-model="params.search"/>
             </div>
-            <hr class="my-3 border border-dashed border-gray-400">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 mb-3">
-                <div class="relative w-full">
-                    <svg class="absolute top-2.5 left-3 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none">
-                        <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                    <input type="text" class="h-10 border-2 border-gray-300 w-full appearance-none focus:ring-0 focus:border-gray-300 py-1 pl-10 pr-4 text-gray-700 bg-white rounded-md" v-debounce:800ms="search" v-model="params.search">
-                </div>
-            </div>
-            <div class="overflow-x-auto">
-                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-300">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Joined</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" v-if="$page.props.can.edit_users || $page.props.can.delete_users">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-if="!$page.props.user_list.data.length">
-                                <td class="text-center" colspan="10">
-                                    <div class="p-3">
-                                        No Record Found! 
-                                    </div>
-                                </td>
-                            </tr> 
-                            <tr class="hover:bg-gray-200" v-for="user in $page.props.user_list.data" :key="user.ID">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-full" :src="user.avatar" alt="">
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ user.display_name }}</div>
-                                            <div class="text-sm text-gray-500">{{ user.email }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500">{{ moment(user.user_registered).format('DD/MM/YYYY') }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> {{ user.user_status == 0 ? 'Active' : 'Not Active' }} </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium" v-if="$page.props.can.edit_users || $page.props.can.delete_users">
-                                    <div class="flex justify-center space-x-2">
-                                        <BreezeButton buttonType="blue" @click="manageUser(user.ID)" v-if="$page.props.can.edit_users">Manage User</BreezeButton>
-                                        <BreezeButton buttonType="danger" @click="deleteUser(user.ID)" v-if="$page.props.can.delete_users">Delete</BreezeButton>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <Pagination :page_data="$page.props.user_list" :params="params"></Pagination>
-                </div>
-            </div>
-            <ConfirmationModal 
-                :show="isOpen" 
-                @close="isOpen = false"
-                confirmationAlert="danger"
-                confirmationTitle="Delete User"
-                confirmationText="Are you sure want to delete this user?"
-                confirmationButton="Delete"
-                confirmationMethod="delete"
-                :confirmationRoute="confirmationRoute"
-                :confirmationData="confirmationData"
-            >
-            </ConfirmationModal>
+            <Button @click="$inertia.get(route('users.create'))" v-if="$page.props.can.create_users">
+                <PlusCircle class="h-4 w-4" />
+                <span class="ml-1 hidden sm:block">New User</span>
+            </Button>
         </div>
+        <Card>
+            <template #content>
+                <Table>
+                    <TableHeader class="bg-gray-100">
+                        <TableRow>
+                        <TableHead>#</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Username</TableHead>
+                        <TableHead>Date Joined</TableHead>
+                        <TableHead class="text-center" v-if="$page.props.can.edit_users || $page.props.can.delete_users">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow v-if="!$page.props.user_list.data.length">
+                            <TableCell class="text-center" colspan="10">
+                                <div class="p-3">
+                                    No Record Found
+                                </div>
+                            </TableCell>
+                        </TableRow> 
+                        <TableRow v-for="user, index in $page.props.user_list.data">
+                            <TableCell>{{ $page.props.user_list.from + index }}</TableCell>
+                            <TableCell>
+                                <div class="flex flex-col">
+                                    <div>{{ user.display_name }}</div>
+                                    <small>{{ user.user_email }}</small> 
+                                </div>
+                            </TableCell>
+                            <TableCell>{{ user.user_login }}</TableCell>
+                            <TableCell>{{ moment(user.user_registered).format('DD/MM/YYYY') }}</TableCell>
+                            <TableCell class="text-center">
+                                <div class="flex items center justify-center space-x-2">
+                                    <Button variant="outline" v-if="$page.props.can.edit_users" @click="manageUser(user.ID)">Edit</Button>
+                                    <Button variant="destructive" v-if="$page.props.can.delete_users" @click="deleteUser(user.ID)">Delete</Button>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </template>
+        </Card>
+        <Pagination :page_data="$page.props.user_list" :params="params"></Pagination>
+        <DeleteConfirmation :open="confirmation.is_open" @close="confirmation.is_open = false" :routeName="confirmation.route_name" :id="confirmation.id">
+            <template #title>Delete User</template>
+            <template #description>Are you sure want to delete this user?</template>
+        </DeleteConfirmation>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
-import { ref } from 'vue';
-import { SearchIcon, TrashIcon, PencilIcon } from '@heroicons/vue/solid'
-import { Head, Link } from '@inertiajs/inertia-vue3'
-import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import moment from 'moment';
+import { Head, Link } from '@inertiajs/inertia-vue3';
 import Pagination from '@/Components/Pagination.vue'
 import { debounce } from 'vue-debounce'
-import moment from 'moment'
+import { MagnifyingGlassIcon } from '@radix-icons/vue'
+import { MoreVertical, PlusCircle } from 'lucide-vue-next';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
+import DropdownMenu from '@/Components/ui/dropdown-menu/DropdownMenu.vue';
+import DropdownMenuTrigger from '@/Components/ui/dropdown-menu/DropdownMenuTrigger.vue';
+import DropdownMenuContent from '@/Components/ui/dropdown-menu/DropdownMenuContent.vue';
+import DropdownMenuItem from '@/Components/ui/dropdown-menu/DropdownMenuItem.vue';
+import Card from '@/Components/Card.vue'
+import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';
 
 export default {
     components: {
-        SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Pagination
+        Pagination, DeleteConfirmation, Head, Link, Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow,
     },
     props: {
         filter: Object,
     },
     data(){
         return{
+            confirmation: {
+                is_open: false,
+                route_name: '',
+                id: ''
+            },
             isOpen: false,
             userID: '',
             confirmationTitle: '',
@@ -120,13 +110,13 @@ export default {
         }
     },
     methods: {
-        manageUser(userID){
-            this.$inertia.get(this.route('users.edit'), {'user_id': userID});
+        manageUser(UserId){
+            this.$inertia.get(this.route('users.edit'), {'user_id': UserId});
         },
-        deleteUser(userID){
-            this.confirmationRoute = 'users.destroy'
-            this.confirmationData = userID
-            this.isOpen = true
+        deleteUser(UserId){
+            this.confirmation.route_name    = 'users.destroy'
+            this.confirmation.id            = UserId
+            this.confirmation.is_open       = true
         },
         search(){
             this.$inertia.get(this.route('users'), this.params, { replace: true, preserveState: true});

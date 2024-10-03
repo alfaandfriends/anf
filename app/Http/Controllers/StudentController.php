@@ -304,7 +304,7 @@ class StudentController extends Controller
             $log_data =   'Created student ID '.$student_id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect(route('students'))->with(['type'=>'success', 'message'=>'Admission success !']);
+            return redirect(route('students'))->with(['type'=>'success', 'message'=>'Data has been added']);
         } catch (\Exception $e) {
             event(new DatabaseTransactionEvent($e));
             DB::rollback();
@@ -546,7 +546,7 @@ class StudentController extends Controller
         //     NotificationHelper::sendApprovalNotifications($this->update_student_config, $data);
         // }
 
-        return redirect()->back()->with(['type'=>'success', 'message'=>'Student details updated !']);
+        return redirect()->back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function destroy(Request $request)
@@ -629,7 +629,7 @@ class StudentController extends Controller
             event(new DatabaseTransactionEvent($log_data));
         }
 
-        return redirect()->back()->with(['type'=>'success', 'message'=>'Student data deleted successfully!']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 
     public function findStudents(Request $request){
@@ -782,25 +782,24 @@ class StudentController extends Controller
 
             DB::commit();   
 
-            return redirect()->back()->with(['type'=>'success', 'message'=>'New class added!']);
+            return redirect()->back()->with(['type'=>'success', 'message'=>'Data has been added.']);
         } catch (\Exception $e) {
             event(new DatabaseTransactionEvent($e));
             DB::rollback();
             
-            return back()->with(['type'=>'error', 'message'=>'Something went wrong, please contact support !']);
+            return back()->with(['type'=>'error', 'message'=>'An error has occurred, please try again.']);
         }
     }
 
     public function setFeeStatus(Request $request)
     {
-        $status     =   $request['data']['student_fee_status'];
-        DB::table('student_fees')->where('id', $request['data']['student_fee_id'])->update([
-            'status'    => $status,
+        DB::table('student_fees')->where('id', $request->student_fee_id)->update([
+            'status'    => 1,
         ]);
-        $log_data =   "Updated fee status for student's fee ID ".$request['data']['student_fee_id'];
+        $log_data =   "Updated fee status for student's fee ID ".$request->student_fee_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message' => 'Status has been changed successfully!']);
+        return back()->with(['type'=>'success', 'message' => 'Data has been saved.']);
     }
 
     public function transferStudent(Request $request){
@@ -841,7 +840,7 @@ class StudentController extends Controller
         $log_data =   'Transferred student ID '.$request->student_fee_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message' => 'Student has been transferred successfully.']);
+        return back()->with(['type'=>'success', 'message' => 'Data has been saved.']);
     }
 
     public function addPromo(Request $request){
@@ -892,7 +891,7 @@ class StudentController extends Controller
         $log_data =   'Added Promo for '.$request->student_fee_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message' => 'Promo added successfully.']);
+        return back()->with(['type'=>'success', 'message' => 'Data has been saved.']);
     }
 
     public function deletePromo(Request $request){
@@ -902,9 +901,9 @@ class StudentController extends Controller
         $invoice_info   =   json_decode(DB::table('invoices')->where('id', $fee_info['invoice_id'])->pluck('invoice_items')->first(), true);
 
         $filtered_invoice_items = array_map(function ($fee) use ($request) {
-            if (isset($fee['promos']) && $fee['fee_id'] === (int)$request->fee_id) {
+            if (isset($fee['promos']) && $fee['fee_id'] == (int)$request->fee_id) {
                 $fee['promos'] = array_filter($fee['promos'], function ($promo) use ($request) {
-                    return $promo['promo_id'] !== (int)$request->promo_id;
+                    return $promo['promo_id'] != (int)$request->promo_id;
                 });
             }
             return $fee;
@@ -930,7 +929,7 @@ class StudentController extends Controller
         $log_data =   'Deleted Promo for '.$request->student_fee_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message' => 'Promo deleted successfully.']);
+        return back()->with(['type'=>'success', 'message' => 'Data has been deleted.']);
     }
 
     /* Usage: $this->getDatesForDayOfWeekFromCustomDate(1, '2023-05-02') */

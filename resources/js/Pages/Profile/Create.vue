@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <style>
@@ -22,281 +21,112 @@ import BreezeButton from '@/Components/Button.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="md:grid md:grid-cols-2">
-            <div class="md:mt-0 md:col-span-2">
-                <form @submit.prevent="submit">
-                    <div class="px-4 py-5 bg-indigo-100 space-y-6 sm:p-6 h-full">
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5 border-b-indigo-500 border-b border-dashed">
-                                        <h2 class="font-display font-bold text-indigo-600">Profile Picture</h2>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-0 gap-0">
-                                        <div class="mb-5 flex items-center" v-show="show_profile_photo">
-                                            <span class="inline-block h-20 w-20 rounded-full border overflow-hidden bg-gray-100">
-                                                <img class="h-full w-full" v-if="$page.props.auth.user.user_photo != '' || data.url" :src="user_image" alt="">
-                                                <svg v-else class="h-full w-full text-gray-300 border-2 border-gray-300 rounded-full" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                </svg>
-                                            </span>
-                                            <label for="profile_photo" class=" ml-5 bg-white py-2 px-3 border border-gray-300 rounded shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">Change Photo <span class="text-red-500">*</span></label>
-                                            <input type="file" id="profile_photo" ref="upload_photo" class="hidden" @change="selectImage">
-                                            <div class="p-3">
-                                                <span class="text-slate-600" v-if="image_file_name">{{ image_file_name }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="flex space-x-5">
-                                            <div v-show="show_image">
-                                                <label class="block text-sm text-gray-900 font-bold"> Crop Image</label>
-                                                <div class="w-96 h-60 my-3">
-                                                    <img class="image" ref="input" :src="selected_image">
-                                                </div>
-                                            </div>
-                                            <div v-show="show_image">
-                                                <div class="flex flex-row justify-end">
-                                                    <div class="flex-column text-center">
-                                                        <label class="block text-sm text-gray-900 font-bold"> Image Preview </label>
-                                                        <div class="preview h-52 w-96 mt-3 rounded-full"></div>
-                                                    </div>
-                                                    <div class="flex-column pl-1 pt-6">
-                                                        <div class="flex-row pb-1">
-                                                            <BreezeButton type="button" class="py-1 px-2" @click="select_cropped_image()" title="Select cropped image">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                                                </svg>
-                                                            </BreezeButton>
-                                                        </div>
-                                                        <div class="flex-row">
-                                                            <BreezeButton type="button" buttonType="gray" class="py-1 px-2" @click="reselect_image()" title="Reselect an image">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                                </svg>
-                                                            </BreezeButton>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="flex mb-4" v-if="$page.props.errors.profile_photo">
-                                            <span class="text-red-500 text-sm">Please upload an image</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
+        <Card>
+            <template #title>Profile Information</template>
+            <template #content>
+                <div class="grid grid-cols-1 gap-0">
+                    <div class="mb-5 flex items-center" v-show="show_profile_photo">
+                        <span class="inline-block h-20 w-20 rounded-full border overflow-hidden bg-gray-100">
+                            <img class="h-full w-full" v-if="$page.props.auth.user.user_photo != '' || data.url" :src="user_image" alt="">
+                            <svg v-else class="h-full w-full text-gray-300 border-2 border-gray-300 rounded-full" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </span>
+                        <label for="profile_photo" class=" ml-5 bg-white py-2 px-3 border border-gray-300 rounded shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">Change Photo <span class="text-red-500">*</span></label>
+                        <input type="file" id="profile_photo" ref="upload_photo" class="hidden" @change="selectImage">
+                        <div class="p-3">
+                            <span class="text-slate-600" v-if="image_file_name">{{ image_file_name }}</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-4 2xl:space-y-0 2xl:flex-row 2xl:space-x-5 mb-5" v-show="show_image">
+                        <div>
+                            <Label> Crop Image</Label>
+                            <div class="flex w-full max-w-96 justify-center">
+                                <img class="text-center image" ref="input" :src="selected_image">
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
-                            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                <div class="mb-5 border-b border-dashed border-b-indigo-500">
-                                    <h2 class="font-display font-bold text-indigo-600">Security</h2>
+                        <div>
+                            <div class="flex flex-row justify-center">
+                                <div class="flex-column text-center">
+                                    <Label> Image Preview </Label>
+                                    <div class="preview h-28 w-28 mt-3 rounded-full"></div>
                                 </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-4 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="current_password" class="block text-sm text-gray-700 font-bold"> Current Password <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="password" name="current_password" id="current_password" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.current_password ? 'border-red-300' : 'border-gray-300'" v-model="security_form.current_password" autocomplete="off"/>
-                                        </div>
+                                <div class="flex-column pl-1 pt-6">
+                                    <div class="flex-row pb-1">
+                                        <Button type="button" class="py-1 px-2" @click="select_cropped_image()" title="Select cropped image">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </Button>
                                     </div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-4 gap-0 sm:gap-4">
-                                    <div class="mb-4">
-                                        <label for="new_password" class="block text-sm text-gray-700 font-bold"> New password <span class="text-red-500">*</span> </label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="password" name="new_password" id="new_password" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.new_password ? 'border-red-300' : 'border-gray-300'" v-model="security_form.new_password" autocomplete="off"/>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="confirm_new_password" class="block text-sm text-gray-700 font-bold"> Confirm New password <span class="text-red-500">*</span> </label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="password" name="confirm_new_password" id="confirm_new_password" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.confirm_new_password ? 'border-red-300' : 'border-gray-300'" v-model="security_form.confirm_new_password" autocomplete="off"/>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4 self-end">
-                                        <BreezeButton @click="savePassword" class="py-2.5 px-4">Update Password</BreezeButton>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-1 gap-0 sm:gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5 border-b-indigo-500 border-b border-dashed">
-                                        <h2 class="font-display font-bold text-indigo-600">Profile Information</h2>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                            <div class="mb-4">
-                                                <label for="full_name" class="block text-sm text-gray-700 font-bold"> Full Name <span class="text-red-500">*</span></label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <input type="text" name="full_name" id="full_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.full_name ? 'border-red-300' : 'border-gray-300'" v-model="form.full_name" autocomplete="off"/>
-                                                </div>
-                                            </div>
-                                            <div class="mb-4">
-                                                <label for="country" class="block text-sm text-gray-700 font-bold"> Country <span class="text-red-500">*</span> </label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <Multiselect 
-                                                        autocomplete="off"
-                                                        @change="clearState"
-                                                        :placeholder="form.country_name"
-                                                        :canDeselect="false"
-                                                        v-model="form.country_id"
-                                                        :loading="loading.country"
-                                                        :min-chars="1"
-                                                        :delay="1"
-                                                        :searchable="true"
-                                                        :noOptionsText="'Please enter at least 1 character'"
-                                                        :options="$page.props.countries"
-                                                        trackBy="name"
-                                                        label="name"
-                                                        valueProp="id"
-                                                        :classes="{
-                                                            container: 
-                                                                $page.props.errors.country ? 
-                                                                'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]':
-                                                                'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]',
-                                                            containerDisabled: 'cursor-default bg-gray-100',
-                                                            containerOpen: 'rounded-b-none',
-                                                            containerOpenTop: 'rounded-t-none',
-                                                            containerActive: 'border border-indigo-300',
-                                                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                                            multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                            search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5 h-9',
-                                                            tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2',
-                                                            tag: 'bg-green-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap',
-                                                            tagDisabled: 'pr-2 opacity-50',
-                                                            tagRemove: 'flex items-center justify-center p-1 mx-0.5 rounded-sm hover:bg-black hover:bg-opacity-10 group',
-                                                            tagRemoveIcon: 'bg-multiselect-remove bg-center bg-no-repeat opacity-30 inline-block w-3 h-3 group-hover:opacity-60',
-                                                            tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full',
-                                                            tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
-                                                            tagsSearchCopy: 'invisible whitespace-pre-wrap inline-block h-px',
-                                                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-black',
-                                                            clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                                            clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                                            dropdownHidden: 'hidden',
-                                                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                                                            optionsTop: 'flex-col-reverse',
-                                                            group: 'p-0 m-0',
-                                                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                                            groupLabelPointable: 'cursor-pointer',
-                                                            groupLabelPointed: 'bg-gray-300 text-black-700',
-                                                            groupLabelSelected: 'bg-gray-100 text-black',
-                                                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                                            groupOptions: 'p-0 m-0',
-                                                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                                            optionPointed: 'text-gray-800 bg-gray-100',
-                                                            optionSelected: 'text-white bg-indigo-500',
-                                                            optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                                            spacer: 'h-9 py-px box-content',
-                                                        }"
-                                                    />
-                                                    <input type="hidden" v-model="form.country">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                            <div class="mb-4">
-                                                <label for="state" class="block text-sm text-gray-700 font-bold"> State <span class="text-red-500">*</span></label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <Multiselect
-                                                    autocomplete="off"
-                                                    :min-chars="1"
-                                                    :delay="1"
-                                                    :searchable="true"
-                                                    :loading="loading.state"
-                                                    v-model="form.country_state"
-                                                    :placeholder="form.country_state"
-                                                    :noOptionsText="'Please select a state'"
-                                                    :options="state_list"
-                                                    :canDeselect="false"
-                                                    :classes="{
-                                                        container: 
-                                                            $page.props.errors.country_state ? 
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-red-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]':
-                                                            'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-md bg-white text-sm leading-snug outline-none h-[2.35rem]',
-                                                        containerDisabled: 'cursor-default bg-gray-100',
-                                                        containerOpen: 'rounded-b-none',
-                                                        containerOpenTop: 'rounded-t-none',
-                                                        containerActive: 'border border-indigo-300',
-                                                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border',
-                                                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                                        multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5',
-                                                        search: 'w-full inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5 h-9',
-                                                        tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2',
-                                                        tag: 'bg-green-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap',
-                                                        tagDisabled: 'pr-2 opacity-50',
-                                                        tagRemove: 'flex items-center justify-center p-1 mx-0.5 rounded-sm hover:bg-black hover:bg-opacity-10 group',
-                                                        tagRemoveIcon: 'bg-multiselect-remove bg-center bg-no-repeat opacity-30 inline-block w-3 h-3 group-hover:opacity-60',
-                                                        tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full',
-                                                        tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
-                                                        tagsSearchCopy: 'invisible whitespace-pre-wrap inline-block h-px',
-                                                        placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 text-black',
-                                                        clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80',
-                                                        clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                                        dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                                        dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                                        dropdownHidden: 'hidden',
-                                                        options: 'flex flex-col p-0 m-0 list-none w-full',
-                                                        optionsTop: 'flex-col-reverse',
-                                                        group: 'p-0 m-0',
-                                                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                                        groupLabelPointable: 'cursor-pointer',
-                                                        groupLabelPointed: 'bg-gray-300 text-black-700',
-                                                        groupLabelSelected: 'bg-gray-100 text-black',
-                                                        groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                                        groupOptions: 'p-0 m-0',
-                                                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3',
-                                                        optionPointed: 'text-gray-800 bg-gray-100',
-                                                        optionSelected: 'text-white bg-indigo-500',
-                                                        optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                                        optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                                                        spacer: 'h-9 py-px box-content',
-                                                    }"
-                                                />
-                                                </div>
-                                            </div>
-                                            <div class="mb-4">
-                                                <label for="contact_number" class="block text-sm text-gray-700 font-bold"> Contact Number <span class="text-red-500">*</span> </label>
-                                                <div class="mt-1 flex rounded-md shadow-sm">
-                                                    <input class="text-center inline-flex items-center px-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-500 text-sm" v-model="form.calling_code" size="5" disabled>
-                                                    <input type="number" name="contact_number" id="contact_number" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm" :class="$page.props.errors.contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.contact_number" autocomplete="off"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                        <div class="mb-4">
-                                            <label for="address" class="block text-sm text-gray-700 font-bold"> Address <span class="text-red-500">*</span></label>
-                                            <div class="mt-1">
-                                                <textarea id="address" name="address" rows="3" class="capitalize shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.address ? 'border-red-300' : 'border-gray-300'" v-model="form.address" autocomplete="off"/>
-                                            </div>  
-                                        </div>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <BreezeButton @click="saveProfile">Save Profile</BreezeButton>
+                                    <div class="flex-row">
+                                        <Button type="button" buttonType="gray" class="py-1 px-2" @click="reselect_image()" title="Reselect an image">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                            </svg>
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
+                    <div class="flex mb-4" v-if="$page.props.errors.profile_photo">
+                        <span class="text-red-500 text-sm">Please upload an image</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 2xl:grid-cols-4 gap-4">
+                    <div class="">
+                        <Label>Full Name<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.full_name" v-model="form.full_name"></Input>
+                    </div>
+                    <div class="">
+                        <Label>Country<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.countries" label-property="name" value-property="id" v-model="form.country_id" select-placeholder="Select Country" search-placeholder="Search country..."></ComboBox>
+                    </div>
+                    <div class="">
+                        <Label>State<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="state_list" v-model="form.country_state" select-placeholder="Select State" search-placeholder="Search state..." :loading="loading.state"></ComboBox>
+                    </div>
+                    <div class="">
+                        <Label>Address<span class="text-red-500">*</span></Label>
+                        <Textarea type="text" :error="$page.props.errors.address" v-model="form.address" rows="1"></Textarea>
+                    </div>
+                </div>
+            </template>
+            <template #footer>
+                <Button @click="saveProfile" variant="">Save Profile</Button>
+            </template>
+        </Card>
+        <Card>
+            <template #title>Security</template>
+            <template #content>
+                <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4">
+                    <div>
+                        <Label>Current Password<span class="text-red-500">*</span></Label>
+                        <Input type="password" :error="$page.props.errors.current_password" v-model="security_form.current_password"></Input>
+                    </div>
+                    <div>
+                        <Label>New password<span class="text-red-500">*</span></Label>
+                        <Input type="password" :error="$page.props.errors.new_password" v-model="security_form.new_password"></Input>
+                    </div>
+                    <div>
+                        <Label>Confirm New password<span class="text-red-500">*</span></Label>
+                        <Input type="password" :error="$page.props.errors.confirm_new_password" v-model="security_form.confirm_new_password"></Input>
+                    </div>
+                </div>
+            </template>
+            <template #footer>
+                <Button @click="savePassword" variant="">Update Password</Button>
+            </template>
+        </Card>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Multiselect from '@vueform/multiselect'
 import Cropper from 'cropperjs';
+import ComboBox from '@/Components/ComboBox.vue'
+import Card from '@/Components/Card.vue'
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
@@ -305,7 +135,7 @@ let cropper = null
 
 export default {
     components: {
-        Head, Link, Multiselect
+        ComboBox
     },
     mounted(){
         const selected_image = this.$refs.input 
@@ -330,6 +160,9 @@ export default {
             loading:{
                 country: false,
                 state: false
+            },
+            is_open: {
+                countries: false
             },
             state_list: [],
             show_profile_photo: true,
@@ -370,7 +203,9 @@ export default {
                 if(this.form.country_id){
                     /* Set calling code and state list*/
                     this.setCountryData(this.form.country_id)
-
+                    if(this.form.country_id != this.$page.props.user_info.user_country_id){
+                        this.clearState()
+                    }
                 }
             },
             immediate: true
@@ -391,6 +226,7 @@ export default {
         },
         setCountryData(country_id){
             this.loading.state = true
+            this.state_list = []
             axios
                 .get(route('countries.find', country_id))
                 .then(response => {

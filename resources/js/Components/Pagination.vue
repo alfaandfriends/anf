@@ -1,55 +1,55 @@
-<template v-if="page_data.data.length">
-        <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 bg-gray-200">
-            <div class="flex-1 flex justify-between sm:hidden">
-                <a :href="page_data.prev_page_url" v-if="page_data.prev_page_url" @click="handleClick($event, page_data.prev_page_url)" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
-                <a :href="page_data.next_page_url"  v-if="page_data.next_page_url" @click="handleClick($event, page_data.prev_page_url)" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
-            </div>
-            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                <div>
-                    <p class="text-sm text-gray-700">
-                        Showing
-                        <span class="font-medium">{{ page_data.from }}</span>
-                        to
-                        <span class="font-medium">{{ page_data.to }}</span>
-                        of
-                        <span class="font-medium">{{ page_data.total }}</span>
-                        results
-                    </p>
-                </div>
-                <div>
-                    <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                        <a v-for="(link, key) in page_data.links"
-                            :key="key"
-                            :href="link.url !== null && link.url !== '' ? link.url + (this.url ? '&' + this.url : '') : null"
-                            :class="(link.active == false && link.url == null ? 'select-none bg-white border-gray-200 text-gray-300 relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-not-allowed'
-                                                : (link.active ? 'select-none z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' 
-                                                                                        : ('select-none bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium')))"  
-                            v-html="link.label"
-                        >
-                        </a>
-                    </nav>
-                </div>
-            </div>
-        </div>
+<template>
+    <Pagination v-slot="{ page }" :total="page_data.total" :itemsPerPage="10" :siblingCount="2" :default-page="page_data.current_page" v-if="page_data.data.length">
+        <PaginationList v-slot="{ items }" class="flex justify-center items-center gap-1">
+            <PaginationFirst @click="$inertia.get(generatePageUrl(page_data.first_page_url))" />
+            <!-- <PaginationPrev @click="$inertia.get(generatePageUrl(page_data.prev_page_url))" /> -->
+        
+            <template v-for="(item, index) in items" :key="index">
+                <PaginationListItem v-if="item.type === 'page'" :value="item.value" as-child @click="$inertia.get(generatePageUrl(page_data.path + '?page=' + item.value))">
+                    <Button class="w-10 h-10 p-0" :variant="item.value === page_data.current_page ? 'default' : 'outline'">
+                        {{ item.value }}
+                    </Button>
+                </PaginationListItem>
+                <PaginationEllipsis v-else :key="item.type" :index="index" />
+            </template>
+        
+            <!-- <PaginationNext @click="$inertia.get(generatePageUrl(page_data.next_page_url))" /> -->
+            <PaginationLast @click="$inertia.get(generatePageUrl(page_data.last_page_url))" />
+        </PaginationList>
+    </Pagination>
 </template>
 
 <script>
-    export default {
-        data(){
-            return{
-                url: ''
-            }
-        },  
-        props:{
-            page_data: Object,
-            params: Object
-        },
-        methods: {
-            objectToQueryString(obj, parentKey = '') {
-                const queryString = [];
+import { Pagination, PaginationEllipsis, PaginationFirst, PaginationLast, PaginationList, PaginationListItem, PaginationNext, PaginationPrev, } from '@/Components/ui/pagination'
+import { Button, } from '@/Components/ui/button'
 
-                for (const key in obj) {
-                    if (obj.hasOwnProperty(key)) {
+export default {
+    components: {
+        Pagination,
+        PaginationEllipsis,
+        PaginationFirst,
+        PaginationLast,
+        PaginationList,
+        PaginationListItem,
+        PaginationNext,
+        PaginationPrev, 
+        Button
+    },
+    data() {
+        return {
+            url: ''
+        }
+    },  
+    props: {
+        page_data: Object,
+        params: Object
+    },
+    methods: {
+        objectToQueryString(obj, parentKey = '') {
+            const queryString = [];
+
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
                     const value = obj[key];
                     const paramKey = parentKey ? `${parentKey}[${key}]` : key;
 
@@ -60,24 +60,26 @@
                         // Otherwise, encode the key and value and add to the query string
                         queryString.push(`${encodeURIComponent(paramKey)}=${encodeURIComponent(value)}`);
                     }
-                    }
                 }
-
-                return queryString.join('&');
-            },
-            generateQueryString() {
-                this.url    =   this.objectToQueryString(this.params);
             }
+
+            return queryString.join('&');
         },
-        mounted() {
-            // Call the function to generate the query string when the component is mounted
-            this.generateQueryString();
+        generateQueryString() {
+            return this.objectToQueryString(this.params);
         },
-        // created(){
-        //     this.url    =   Object.keys(this.params).map(key => key + '=' + this.params[key]).join('&')
-        // },
-        updated(){
-            this.generateQueryString();
-        },
+        generatePageUrl(baseUrl) {
+            const queryString = this.generateQueryString();
+            return queryString ? `${baseUrl}&${queryString}` : baseUrl;
+        }
+    },
+    mounted() {
+        // Generate the initial query string when the component is mounted
+        this.generateQueryString();
+    },
+    updated() {
+        // Regenerate the query string if parameters change
+        this.generateQueryString();
     }
+}
 </script>

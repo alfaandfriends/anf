@@ -1,35 +1,40 @@
 <script setup>
-import BreezeButton from '@/Components/Button.vue';
+import Card from '@/Components/Card.vue'
 </script>
 
 <template>
-    <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-        <div class="sm:row-span-3">
-            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                <div class="mb-5">
-                    <h1 class="font-bold text-indigo-800 self-end">Summary</h1>
-                    <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
+    <Card>
+        <template #title>Report Summary</template>
+        <template #content>
+            <div class="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+                <div>
+                    <Label>What's Next</Label>
+                    <Textarea rows="3" v-model.lazy="form.upcoming_feedback"></Textarea>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <div class="mb-4">
-                        <label for="upcoming_feedback" class="block text-sm font-bold text-gray-700 mb-1">What's Next</label>
-                        <textarea id="upcoming_feedback" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="3" cols="" v-model.lazy="form.upcoming_feedback"></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <label for="improvement_feedback" class="block text-sm font-bold text-gray-700 mb-1">Need Improvement On</label>
-                        <textarea id="improvement_feedback" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm border-gray-300" rows="3" cols="" v-model.lazy="form.improvement_feedback"></textarea>
-                    </div>
-                </div>
-                <div class="flex justify-end">
-                    <BreezeButton @click="saveFeedback()">Save</BreezeButton>
+                <div>
+                    <Label>Need Improvement On</Label>
+                    <Textarea rows="3" v-model.lazy="form.improvement_feedback"></Textarea>
                 </div>
             </div>
-        </div>
-    </div>
+        </template>
+    </Card>
+    <Card>
+        <template #content>
+            <div class="flex justify-end">
+                <div class="flex space-x-2">
+                    <Button variant="outline" @click="$inertia.get(route('progress_report'))">Cancel</Button>
+                    <Button @click="saveFeedback">Save</Button>
+                </div>
+            </div>
+        </template>
+    </Card>
 </template>
 
 <script>
 export default {
+    props: {
+        report_details: Object
+    },
     data(){
         return {
             form: {

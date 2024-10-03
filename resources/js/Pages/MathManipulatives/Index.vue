@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -8,54 +7,50 @@ import BreezeButton from '@/Components/Button.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="py-4 px-4">
-            <div class="overflow-x-auto">
-                <div class="mx-auto">
-                    <div class="align-middle inline-block min-w-full p-2 space-y-6">
-                        <div class="flex lg:grow sm:justify-end" v-if="$page.props.can.create_math_manipulatives">
-                            <BreezeButton buttonType="info" @click="$inertia.get(route('math_manipulatives.configuration'))">Configuration</BreezeButton>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5 gap-10" v-if="$page.props.math_manipulatives.length">
-                            <div class="group relative block cursor-pointer" v-for="item in $page.props.math_manipulatives" @click="openNewTab(item.folder_name)">
-                                <span class="absolute inset-0 border-2 border-dashed border-black rounded"></span>
-                                <div class="rounded px-6 py-4 flex flex-col justify-between h-full transform items-center border-2 border-black  bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2">
-                                    <!-- <div class="flex items-center h-20 w-20"> -->
-                                        <img :src="'/math_manipulatives/thumbnails/'+item.thumbnail">
-                                    <!-- </div> -->
-                                    <h3 class="mt-2 text-xl font-medium sm:text-xl">{{ item.name }}</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="bg-gray-50 rounded shadow p-6" v-if="$page.props.math_manipulatives.length">
-                            <div class="p-4">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-10">
-                                    <div class="flex flex-col divide-y items-center justify-center bg-white rounded-lg overflow-hidden shadow-lg transform transition hover:scale-[0.99] hover:cursor-pointer" v-for="item in $page.props.math_manipulatives" @click="openNewTab(item.folder_name)">
-                                        <div class="flex items-center h-60 w-60">
-                                            <img :src="'/math_manipulatives/thumbnails/'+item.thumbnail">
-                                        </div>
-                                        <div class="w-full p-4 text-center bg-indigo-200">
-                                            <h3 class="font-medium text-gray-900">{{ item.name }}</h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="bg-white shadow-md rounded border" v-else>
-                            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 lg:py-24">
-                              <div class="max-w-3xl mx-auto text-center">
-                                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-3xl">No math manipulatives have been added.</h2>
-                              </div>
-                            </div>
-                          </div>
-                    </div>
+        <Card>
+            <template #title>
+                <div class="flex justify-between items-center">
+                    Resource Information
+                    <Button @click="$inertia.get(route('math_manipulatives.configuration'))">
+                        <Cog class="h-4 w-4" />
+                        <span class="ml-1 hidden sm:block">Configuration</span>
+                    </Button>
                 </div>
-            </div>
-        </div>
+            </template>
+            <template #content>
+                <div class="grid grid-cols-1 px-11">
+                    <Carousel
+                    class="relative w-full"
+                    :opts="{
+                        align: 'start',
+                    }"
+                    >
+                    <CarouselContent>
+                        <CarouselItem v-for="item, index in $page.props.math_manipulatives" :key="index" class="sm:basis-1/2 lg:basis-1/3 xl:basis-1/4 2xl:basis-1/5">
+                            <Card>
+                                <template #content>
+                                    <div class="flex flex-col items-center select-none hover:scale-105 duration-150 cursor-pointer min-h-48" @click="openNewTab(item.folder_name)">
+                                        <img :src="'/math_manipulatives/thumbnails/'+item.thumbnail" class="w-36 h-36">
+                                        <div class="mt-2 font-medium text-center text-sm">{{ item.name }}</div>
+                                    </div>
+                                </template>
+                            </Card>
+                        </CarouselItem>
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                    </Carousel>
+                </div>
+            </template>
+        </Card>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, } from '@/Components/ui/carousel'
+import Card from '@/Components/Card.vue'
+import { Cog } from 'lucide-vue-next';
 
 export default {
     components: {

@@ -1,6 +1,5 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-import BreezeButton from '@/Components/Button.vue';
 </script>
 
 <template>
@@ -8,96 +7,64 @@ import BreezeButton from '@/Components/Button.vue';
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="md:grid md:grid-cols-2">
-            <div class="md:mt-0 md:col-span-2">
-                <form @submit.prevent="submit">
-                    <div class="px-4 py-5 bg-indigo-50 space-y-6 sm:p-6">
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-2 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <h1 class="font-bold text-indigo-800">Resource Information</h1>
-                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="title" class="block text-sm font-bold text-gray-700"> Title <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <input type="text" name="title" id="title" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.title ? 'border-red-300' : 'border-gray-300'" v-model="form.title" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="programme_id" class="block text-sm font-bold text-gray-700"> Programme <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="programme_id" id="programme_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.programme_id ? 'border-red-300' : 'border-gray-300'" v-model="form.programme_id" autocomplete="off" :disabled="disable_class_levels">
-                                                <option value="">Please Select</option>
-                                                <option :value="programme.id" v-for="programme, index in $page.props.programmes" :key="programme.id">{{ programme.name }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="level_id" class="block text-sm font-bold text-gray-700"> Level <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="level_id" id="level_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.level_id ? 'border-red-300' : 'border-gray-300'" v-model="form.level_id" autocomplete="off">
-                                                <option value="">Please Select</option>
-                                                <option :value="level.id" v-for="level, index in $page.props.levels" :key="level">{{ level.name }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="language_id" class="block text-sm font-bold text-gray-700"> Language <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="language_id" id="language_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.language_id ? 'border-red-300' : 'border-gray-300'" v-model="form.language_id" autocomplete="off">
-                                                <option value="">Please Select</option>
-                                                <option :value="language.id" v-for="language, index in $page.props.languages" :key="language.id">{{ language.name }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="media_type_id" class="block text-sm font-bold text-gray-700"> Media Type <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <select name="media_type_id" id="media_type_id" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.media_type_id ? 'border-red-300' : 'border-gray-300'" v-model="form.media_type_id" autocomplete="off">
-                                                <option value="">Please Select</option>
-                                                <option :value="media_type.id" v-for="media_type, index in $page.props.media_types" :key="media_type.id">{{ media_type.name }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4" v-if="form.media_type_id == 1">
-                                        <label for="embed_link" class="block text-sm font-bold text-gray-700"> Embed Link <span class="text-red-500">*</span></label>
-                                        <div class="mt-1 flex rounded-md shadow-sm">
-                                            <textarea type="text" name="embed_link" id="embed_link" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.embed_link ? 'border-red-300' : 'border-gray-300'" v-model="form.embed_link" autocomplete="off"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4" v-if="form.media_type_id == 2 || form.media_type_id == 3"> 
-                                        <label for="" class="block text-sm font-bold text-gray-700"> File <span class="text-red-500">*</span></label>
-                                        <label class="block focus:ring-0 focus:border-gray-300">
-                                            <span class="sr-only">Browse File</span>
-                                            <input type="file" ref="file_input" class="focus:ring-0 border rounded-md block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 focus:outline-none" :class="$page.props.errors.embed_file ? 'border-red-300' : 'border-gray-300'" @change="uploadFile"/>
-                                        </label>
-                                    </div>
-                                    <div class=" border-b border-dashed border-indigo-900 mt-4 mb-5"></div>
-                                    <div class="flex items-center justify-end">
-                                        <div class="flex space-x-2">
-                                            <BreezeButton buttonType="gray" :route="route('teacher_resources')">Cancel</BreezeButton>
-                                            <BreezeButton type="submit">Save</BreezeButton>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <Card>
+            <template #title>Resource Information</template>
+            <template #content>
+                <div class="grid grid-cols-1 gap-4 mb-3">
+                    <div>
+                        <Label>Title<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.title" v-model="form.title"></Input>
                     </div>
-                </form>
-            </div>
-        </div>
+                    <div>
+                        <Label>Programme<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.programmes" label-property="name" value-property="id" :error="$page.props.errors.programme_id" v-model="form.programme_id" select-placeholder="Select Programme" search-placeholder="Search programme..."></ComboBox>
+                    </div>
+                    <div>
+                        <Label>Level<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.levels" label-property="name" value-property="id" :error="$page.props.errors.level_id" v-model="form.level_id" select-placeholder="Select Level" search-placeholder="Search level..."></ComboBox>
+                    </div>
+                    <div>
+                        <Label>Language<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.languages" label-property="name" value-property="id" :error="$page.props.errors.language_id" v-model="form.language_id" select-placeholder="Select Language" search-placeholder="Search language..."></ComboBox>
+                    </div>
+                    <div>
+                        <Label>Media Type<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.media_types" label-property="name" value-property="id" :error="$page.props.errors.media_type_id" v-model="form.media_type_id" select-placeholder="Select Media Type" search-placeholder="Search media type..."></ComboBox>
+                    </div>
+                    <div v-if="form.media_type_id == 1">
+                        <Label>Embed Link<span class="text-red-500">*</span></Label>
+                        <Textarea rows="3" :error="$page.props.errors.embed_link" v-model="form.embed_link"></Textarea>
+                    </div>
+                    <div v-if="form.media_type_id == 2 || form.media_type_id == 3"> 
+                        <label for="" class="block text-sm font-bold text-gray-700"> File <span class="text-red-500">*</span></label>
+                        <label class="block focus:ring-0 focus:border-gray-300">
+                            <span class="sr-only">Browse File</span>
+                            <input type="file" ref="file_input" class="focus:ring-0 border rounded-md block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 focus:outline-none" :class="$page.props.errors.embed_file ? 'border-red-300' : 'border-gray-300'" @change="uploadFile"/>
+                        </label>
+                    </div>
+                </div>
+            </template>
+        </Card>
+        <Card>
+            <template #content>
+                <div class="flex justify-end">
+                    <div class="flex space-x-2">
+                        <Button variant="outline" @click="$inertia.get(route('teacher_resources'))">Cancel</Button>
+                        <Button @click="submit">Save</Button>
+                    </div>
+                </div>
+            </template>
+        </Card>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Multiselect from '@vueform/multiselect'
+import Card from '@/Components/Card.vue'
 
 export default {
     components: {
-        Head, Link, Multiselect
+        Head, Link
     },
     data(){
         return{
@@ -109,25 +76,13 @@ export default {
                 programme_id: '',
                 level_id: '',
                 language_id: '',
-                media_type_id: '',
+                media_type_id: 1,
                 embed_link: '',
                 embed_file: ''
             }
         }
     },
     watch: {
-        // 'form.programme_id': {
-        //     handler(){
-        //         if(this.form.programme_id != ''){
-        //             axios.get(route('get_programme_levels', this.form.programme_id))
-        //             .then((response) => {
-        //                 this.form.level_id  =   ''
-        //                 this.list.levels    =   response.data
-        //             })
-        //         }
-        //     },
-        //     deep: true
-        // },
         'form.media_type_id': {
             handler(){
                 this.form.embed_link = ''

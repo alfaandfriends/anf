@@ -277,6 +277,27 @@ Breadcrumbs::for('progress_report.settings', function (BreadcrumbTrail $trail) {
         $trail->push('Objectives', route('progress_report.settings.digital_art.objectives'));
     });
 
+    /* Little Bot */
+    Breadcrumbs::for('progress_report.settings.little_bot.levels', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Levels', route('progress_report.settings.little_bot.levels'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.little_bot.lessons', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Lessons', route('progress_report.settings.little_bot.lessons'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.little_bot.topics', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Topics', route('progress_report.settings.little_bot.topics'));
+    });
+
+    Breadcrumbs::for('progress_report.settings.little_bot.objectives', function (BreadcrumbTrail $trail) {
+        $trail->parent('progress_report.settings');
+        $trail->push('Objectives', route('progress_report.settings.little_bot.objectives'));
+    });
+
 /* Teacher Resources */
 Breadcrumbs::for('teacher_resources', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

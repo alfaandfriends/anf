@@ -98,14 +98,14 @@ class ClassController extends Controller
             'start_time'            => 'required',
             'end_time'              => 'required',
         ]);
-
+        
         $class_id   =   DB::table('classes')->insertGetId([
             'centre_id'             =>  $request->centre_id,
             'programme_level_id'    =>  $request->programme_level_id,
             'class_day_id'          =>  $request->class_day,
             'class_method_id'       =>  $request->class_method,
-            'start_time'            =>  Carbon::createFromTime($request->start_time['hours'], $request->start_time['minutes'], $request->start_time['seconds'])->format('H:i'),
-            'end_time'              =>  Carbon::createFromTime($request->end_time['hours'], $request->end_time['minutes'], $request->end_time['seconds'])->format('H:i'),
+            'start_time'            =>  Carbon::parse($request->start_time)->setTimezone('Asia/Kuala_Lumpur'),
+            'end_time'              =>  Carbon::parse($request->end_time)->setTimezone('Asia/Kuala_Lumpur'),
             'capacity'              =>  $request->class_capacity,
             'status'                =>  $request->class_status,
         ]);
@@ -113,7 +113,7 @@ class ClassController extends Controller
         $log_data =   'Create class ID '.$class_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class added successfully !']);
+        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function edit(Request $request)
@@ -219,8 +219,8 @@ class ClassController extends Controller
             'programme_level_id'    =>  $request->programme_level_id,
             'class_day_id'          =>  $request->class_day,
             'class_method_id'       =>  $request->class_method,
-            'start_time'            =>  Carbon::createFromTime($request->start_time['hours'], $request->start_time['minutes'], $request->start_time['seconds'])->format('H:i'),
-            'end_time'              =>  Carbon::createFromTime($request->end_time['hours'], $request->end_time['minutes'], $request->end_time['seconds'])->format('H:i'),
+            'start_time'            =>  Carbon::parse($request->start_time)->setTimezone('Asia/Kuala_Lumpur'),
+            'end_time'              =>  Carbon::parse($request->end_time)->setTimezone('Asia/Kuala_Lumpur'),
             'capacity'              =>  $request->class_capacity,
             'status'                =>  $request->class_status,
             'updated_at'            =>  Carbon::now(),
@@ -229,7 +229,7 @@ class ClassController extends Controller
         $log_data =   'Updated class ID '.$request->class_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class updated successfully !']);
+        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function destroy($id)
@@ -237,7 +237,7 @@ class ClassController extends Controller
         /* Check if programme can be deleted */
         $class_is_deletable   =   ClassHelper::checkClassIsDeletable($id);
         if(!$class_is_deletable){
-            return redirect(route('classes'))->with(['type' => 'error', 'message' => 'There are students in this class!']);
+            return redirect(route('classes'))->with(['type' => 'error', 'message' => 'Sorry, there are students in this class.']);
         }
 
         /* Check if user is admin */
@@ -261,7 +261,7 @@ class ClassController extends Controller
         $log_data =   'Deleted class ID '.$id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Class deleted successfully !']);
+        return redirect(route('classes'))->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 
     public function getClassTypes(Request $request){
@@ -299,6 +299,8 @@ class ClassController extends Controller
                             ->where('programme_levels.class_type_id', $request->class_type)
                             ->where('programme_levels.level', $request->class_level)
                             ->where('classes.class_method_id', $request->class_method)
+                            ->orderBy('class_days.id')
+                            ->orderBy('classes.start_time')
                             ->select(['classes.id as class_id', 'class_days.name as class_day', 'programme_levels.id as programme_level_id', 'programme_levels.class_type_id as class_type', 'classes.start_time', 'classes.end_time', 'classes.capacity', 'programmes.id as programme_id'])
                             ->get();
         return $classes;

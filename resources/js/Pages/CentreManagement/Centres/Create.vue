@@ -1,6 +1,5 @@
 <script setup>
     import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
-    import BreezeButton from '@/Components/Button.vue';
 </script>
 <style>
     .image {
@@ -21,187 +20,147 @@
 
     <BreezeAuthenticatedLayout>
         <template #header></template>
-        <div class="md:grid md:grid-cols-2">
-            <div class="md:mt-0 md:col-span-2">
-                <form @submit.prevent="submit">
-                    <div class="px-4 py-5 space-y-6 sm:p-6">
-                        <div class="grid grid-rows-1 grid-cols-1 sm:grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <h1 class="text-indigo-800 font-bold">Centre Information</h1>
-                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div class="mb-4">
-                                            <label for="centre_name" class="block text-sm text-gray-700 font-bold"> Centre Name <span class="text-red-500">*</span> </label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="centre_name" id="centre_name" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_name ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_name" autocomplete="none"/>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="centre_country" class="block text-sm text-gray-700 font-bold"> Centre Country <span class="text-red-500">*</span> </label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <select type="text" name="centre_country" id="centre_country" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_country ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_country" autocomplete="none">
-                                                    <option value="">Select a country</option>
-                                                    <option :value="country.id" v-for="country in $page.props.countries">{{ country.name }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                                        <div class="mb-4">
-                                            <label for="centre_contact" class="block text-sm text-gray-700 font-bold"> Centre Contact Number <span class="text-red-500">*</span></label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="text" name="centre_contact" id="centre_contact" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_contact_number ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_contact_number" autocomplete="none"/>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="centre_email" class="block text-sm text-gray-700 font-bold"> Centre Email </label>
-                                            <div class="mt-1 flex rounded-md shadow-sm">
-                                                <input type="email" name="centre_email" id="centre_email" class="focus:ring-0 focus:border-indigo-300 flex-1 block w-full rounded-md sm:text-sm" :class="$page.props.errors.centre_email ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_email" autocomplete="none"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 gap-4">
-                                        <div class="mb-4">
-                                            <label for="centre_address" class="block text-sm text-gray-700 font-bold"> Centre Address <span class="text-red-500">*</span></label>
-                                            <div class="mt-1">
-                                                <textarea id="centre_address" name="centre_address" rows="3" class="shadow-sm focus:ring-0 focus:border-indigo-300 mt-1 block w-full sm:text-sm border rounded-md" :class="$page.props.errors.centre_address ? 'border-red-300' : 'border-gray-300'" v-model="form.centre_address" autocomplete="none"/>
-                                            </div>  
-                                        </div>
-                                    </div>
+        <Card>
+            <template #title>Centre Information</template>
+            <template #content>
+                <div class="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+                    <div>
+                        <Label>Name<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.name" v-model="form.name"></Input>
+                    </div>
+                    <div>
+                        <Label>Country<span class="text-red-500">*</span></Label>
+                        <ComboBox :items="$page.props.countries" label-property="name" value-property="id" :error="$page.props.errors.country" v-model="form.country" select-placeholder="Select Country" search-placeholder="Search country..."></ComboBox>
+                    </div>
+                    <div>
+                        <Label>Contact Number<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.contact_number" v-model="form.contact_number"></Input>
+                    </div>
+                    <div>
+                        <Label>Email<span class="text-red-500">*</span></Label>
+                        <Input type="text" :error="$page.props.errors.email" v-model="form.email"></Input>
+                    </div>
+                    <div class="2xl:col-span-2">
+                        <Label>Address<span class="text-red-500">*</span></Label>
+                        <Textarea :error="$page.props.errors.address" v-model="form.address"></Textarea>
+                    </div>
+                </div>
+            </template>
+        </Card>
+        <Card>
+            <template #title>Centre Photos</template>
+            <template #content>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                    <div v-show="show_front_upload">
+                        <Label>Centre Front View  (1 Image)</Label>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+                            @change="change_front"
+                            @dragover="dragover_front"
+                            @drop="drop_front"
+                        >
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600">
+                                    <label class="browse text-indigo-400 hover:text-indigo-800 cursor-pointer font-bold">Click here
+                                        <input ref="front_image" id="file" class="sr-only" type="file" accept="image/*">
+                                    </label>
+                                    <p class="pl-1">or drag and drop an image</p>
                                 </div>
+                                <p class="text-xs text-gray-500">Image Format : PNG, JPG</p>
                             </div>
                         </div>
-                        <div class="grid grid-rows-2 grid-cols-1 grid-flow-col gap-4">
-                            <div class="sm:row-span-3">
-                                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="mb-5">
-                                        <h1 class="text-indigo-800 font-bold">Centre View</h1>
-                                        <div class=" border-b border-dashed border-indigo-900 mt-1"></div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div class="mb-4" v-show="show_front_upload">
-                                            <label class="block text-sm text-gray-700 font-bold"> Centre Front View  (1 Image)</label>
-                                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
-                                                @change="change_front"
-                                                @dragover="dragover_front"
-                                                @drop="drop_front"
-                                            >
-                                                <div class="space-y-1 text-center">
-                                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                    <div class="flex text-sm text-gray-600">
-                                                        <label class="browse text-indigo-400 hover:text-indigo-800 cursor-pointer font-bold">Click here
-                                                            <input ref="front_image" id="file" class="sr-only" type="file" accept="image/*">
-                                                        </label>
-                                                        <p class="pl-1">or drag and drop an image</p>
-                                                    </div>
-                                                    <p class="text-xs text-gray-500">Image Format : PNG, JPG</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4" v-show="show_inside_upload">
-                                            <label class="block text-sm text-gray-700 font-bold"> Centre Inside View  (Max: 5 Images)</label>
-                                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
-                                                @change="change_inside"
-                                                @dragover="dragover_inside"
-                                                @drop="drop_inside"
-                                            >
-                                                <div class="space-y-1 text-center">
-                                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                    <div class="flex text-sm text-gray-600">
-                                                        <label class="browse text-indigo-400 hover:text-indigo-800 cursor-pointer font-bold">Click here
-                                                            <input ref="inside_image" id="file" class="sr-only" type="file" accept="image/*">
-                                                        </label>
-                                                        <p class="pl-1">or drag and drop an image</p>
-                                                    </div>
-                                                    <p class="text-xs text-gray-500">Image Format : PNG, JPG</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-wrap space-y-4 sm:space-x-6">
-                                        <div class="overflow-x-auto" v-show="show_image">
-                                            <label class="block text-sm text-gray-900 font-bold"> Crop Image</label>
-                                            <div class="w-96 h-60 mt-1">
-                                                <img class="image" ref="input" :src="image">
-                                            </div>
-                                        </div>
-                                        <div class="" v-show="show_image">
-                                            <div class="flex flex-row justify-center">
-                                                <div class="flex-column text-center">
-                                                    <label class="block text-sm text-gray-900 font-bold"> Image Preview </label>
-                                                    <div class="preview h-52 w-96 mt-1"></div>
-                                                </div>
-                                                <div class="flex-column pl-1 pt-6">
-                                                    <div class="flex flex-col space-y-1">
-                                                        <BreezeButton class="py-1 px-2 rounded shadow" @click="select_cropped_image()" title="Select cropped image">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                                            </svg>
-                                                        </BreezeButton>
-                                                        <BreezeButton class="py-1 px-2 rounded shadow" @click="reselect_image()" title="Reselect an image">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                            </svg>
-                                                        </BreezeButton>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-wrap space-y-4 sm:space-x-6">
-                                        <div class="sm:col-span-2 self-center flex flex-wrap gap-4 py-3" v-show="form.image_list.length">
-                                            <div class="relative h-32 w-32 rounded mr-3 mt-3 text-center shadow-sm shadow-gray-400 border" v-for="(image_data, index) in form.image_list" :key="index">
-                                                <div class="absolute bg-red-500 p-2 shadow rounded-full text-white z-10 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </div>
-                                                <img :src="image_data.image_path" class="rounded-lg" alt="">
-                                                <label for="" class="text-sm capitalize text-slate-500">{{ image_data.image_type }}</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                    </div>
+                    <div v-show="show_inside_upload">
+                        <Label>Centre Inside View  (Max: 5 Images)</Label>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+                            @change="change_inside"
+                            @dragover="dragover_inside"
+                            @drop="drop_inside"
+                        >
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600">
+                                    <label class="browse text-indigo-400 hover:text-indigo-800 cursor-pointer font-bold">Click here
+                                        <input ref="inside_image" id="file" class="sr-only" type="file" accept="image/*">
+                                    </label>
+                                    <p class="pl-1">or drag and drop an image</p>
                                 </div>
+                                <p class="text-xs text-gray-500">Image Format : PNG, JPG</p>
                             </div>
                         </div>
-                        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-                            <div class="flex items-center justify-between">
-                                <div class="flex space-x-2">
-                                    <label for="" class="block text-sm text-gray-700">Active</label>
-                                    <Toggle v-model="form.centre_active" 
-                                        :classes="{
-                                            container: 'inline-block',
-                                            toggle: 'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
-                                            toggleOn: 'bg-green-500 border-green-500 justify-start text-white',
-                                            toggleOff: 'bg-gray-400 border-gray-400 justify-end text-gray-700',
-                                        }
-                                    "/>
-                                </div>
-                                <div class="flex space-x-2">
-                                    <BreezeButton buttonType="gray" :route="route('centres')">Cancel</BreezeButton>
-                                    <BreezeButton type="submit">Add Centre</BreezeButton>
+                    </div>
+                </div>
+                <div class="flex flex-col space-y-4 2xl:space-y-0 2xl:flex-row 2xl:space-x-5 mb-5" v-show="show_image">
+                    <div>
+                        <Label>Crop Image</Label>
+                        <div class="flex w-full max-w-96">
+                            <img class="text-center image" ref="input" :src="image">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex flex-row justify-center">
+                            <div class="flex-column">
+                                <Label> Image Preview </Label>
+                                <div class="preview h-44 w-44"></div>
+                            </div>
+                            <div class="flex-column pl-1 pt-6">
+                                <div class="flex flex-col space-y-1">
+                                    <Button class="py-1 px-2 rounded shadow" @click="select_cropped_image()" title="Select cropped image">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </Button>
+                                    <Button class="py-1 px-2 rounded shadow" @click="reselect_image()" title="Reselect an image">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        </svg>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
+                </div>
+                <div class="flex justify-center 2xl:justify-start flex-wrap space-y-4 2xl:space-y-0 2xl:space-x-6">
+                    <div class="sm:col-span-2 self-center flex flex-wrap gap-4 py-3" v-show="form.image_list.length">
+                        <div class="relative h-32 w-32 mr-3 mt-3 text-center shadow-sm" v-for="(image_data, index) in form.image_list" :key="index">
+                            <div class="absolute bg-red-500 p-2 shadow rounded-full text-white z-10 cursor-pointer hover:bg-red-700" style="top: -8px; right: -8px" @click="delete_cropped_image(index)">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </div>
+                            <img :src="image_data.image_path" class="rounded-lg" alt="">
+                            <Label>{{ image_data.image_type }}</Label>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </Card>
+        <Card>
+            <template #content>
+                <div class="flex items-center justify-between">
+                    <div class="flex space-x-2 items-center">
+                        <Label>Active</Label>
+                        <Switch v-model="form.active"></Switch>
+                    </div>
+                    <div class="flex space-x-2">
+                        <Button variant="outline" @click="$inertia.get(route('centres'))">Cancel</Button>
+                        <Button @click="submit">Save</Button>
+                    </div>
+                </div>
+            </template>
+        </Card>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Toggle from '@vueform/toggle';
 import Cropper from 'cropperjs';    
 import { debounce } from 'vue-debounce'
+import Card from '@/Components/Card.vue'
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
@@ -210,7 +169,7 @@ let cropper = null
 
 export default {
     components: {
-        Link, Toggle, Cropper
+        Link, Cropper
     },
     data() {
         return {
@@ -225,12 +184,12 @@ export default {
             image: '',
             email_exist: '',
             form: {
-                centre_name: '',
-                centre_country: '',
-                centre_contact_number: '',
-                centre_email: '',
-                centre_address: '',
-                centre_active: true,
+                name: '',
+                country: '',
+                contact_number: '',
+                email: '',
+                address: '',
+                active: true,
                 principal_user_id: '',
                 image_list: [],
             },

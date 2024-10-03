@@ -134,8 +134,7 @@ import 'simplebar-vue/dist/simplebar.min.css';
 import TimeAgo from '@/Components/TimeAgo.vue'
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
-import moment from 'moment';
-import 'moment-timezone';
+import { DateTime } from 'luxon';
 
 export default {
     components: {
@@ -148,7 +147,6 @@ export default {
                 stories: false
             },
             comments: [],
-            current_date: '',
         }
     },
     methods: {
@@ -183,7 +181,7 @@ export default {
                     this.$page.props.stories.data[story_index].comments.unshift({
                         'comment': this.comments[story_index],
                         'comment_user_name': this.$page.props.auth.user.display_name,
-                        'created_at': moment().tz('Asia/Kuala_Lumpur').format('YYYY-MM-DD HH:mm:ss')
+                        'created_at': DateTime.now().setZone('Asia/Kuala_Lumpur').toFormat('yyyy-MM-dd HH:mm:ss')
                     })
                     this.comments[story_index] = ''
                 }

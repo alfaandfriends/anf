@@ -1,65 +1,79 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
-@font-face {
-    font-family: 'Andika';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url(/fonts/Andika-Regular.ttf) format('ttf');
-  }
-  
-::selection {
-    color: white;
-    background-color: #818CF8; 
-}
-.scrollbar::-webkit-scrollbar {
-    width: 6px;
-    cursor: pointer;
-    height: 6px;
-    /*background-color: rgba(229, 231, 235, var(--bg-opacity));*/
-
-}
-.scrollbar::-webkit-scrollbar-track {
-    background-color: rgba(229, 231, 235, var(--bg-opacity));
-    cursor: pointer;
-    /*background: red;*/
-}
-.scrollbar::-webkit-scrollbar-thumb {
-    cursor: pointer;
-    background-color: #a0aec0;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+::-webkit-scrollbar {
+  @apply w-2.5 h-2.5;
 }
 
-.scrollbar::-webkit-scrollbar-thumb:horizontal {
-    border-radius: 6px 6px 6px 6px; /* Set border radius for left and right corners */
+::-webkit-scrollbar-track {
+  @apply bg-transparent
 }
 
-.scrollbar::-webkit-scrollbar-thumb:vertical {
-    border-radius: 6px 6px 6px 6px; /* Set border radius for left and right corners */
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-border border-[1px] border-transparent border-solid bg-clip-padding;
 }
 
-.andika-regular {
-    font-family: "Andika", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
   
-  .andika-bold {
-    font-family: "Andika", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-  }
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
   
-  .andika-regular-italic {
-    font-family: "Andika", sans-serif;
-    font-weight: 400;
-    font-style: italic;
-  }
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
   
-  .andika-bold-italic {
-    font-family: "Andika", sans-serif;
-    font-weight: 700;
-    font-style: italic;
-  }
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
   
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+  
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+  
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+  
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+  
+    --border:240 5.9% 90%;
+    --input:240 5.9% 90%;
+    --ring:240 5.9% 10%;
+    --radius: 0.5rem;
+  }
+   
+  .dark {
+    --background:240 10% 3.9%;
+    --foreground:0 0% 98%;
+  
+    --card:240 10% 3.9%;
+    --card-foreground:0 0% 98%;
+  
+    --popover:240 10% 3.9%;
+    --popover-foreground:0 0% 98%;
+  
+    --primary:0 0% 98%;
+    --primary-foreground:240 5.9% 10%;
+  
+    --secondary:240 3.7% 15.9%;
+    --secondary-foreground:0 0% 98%;
+  
+    --muted:240 3.7% 15.9%;
+    --muted-foreground:240 5% 64.9%;
+  
+    --accent:240 3.7% 15.9%;
+    --accent-foreground:0 0% 98%;
+  
+    --destructive:0 62.8% 30.6%;
+    --destructive-foreground:0 0% 98%;
+  
+    --border:240 3.7% 15.9%;
+    --input:240 3.7% 15.9%;
+    --ring:240 4.9% 83.9%;
+  }
+}
+

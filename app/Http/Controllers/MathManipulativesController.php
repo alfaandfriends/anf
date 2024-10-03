@@ -77,7 +77,7 @@ class MathManipulativesController extends Controller
         $log_data =   'Added math manipulative ID '.$math_manipulative_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'New item added successfully !']);
+        return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function configurationDelete($id)
@@ -92,7 +92,7 @@ class MathManipulativesController extends Controller
         $log_data =   'Deleted math manipulative ID '.$id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'Math manipulative deleted successfully !']);
+        return redirect(route('math_manipulatives.configuration'))->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 
     public function uploadFolder($array, $path = '') {

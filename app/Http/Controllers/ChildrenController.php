@@ -43,7 +43,7 @@ class ChildrenController extends Controller
             'date_of_birth' => Carbon::parse($request->dob)->format('Y-m-d'),
         ]);
         
-        return redirect()->back()->with(['type'=>'success', 'message'=>'Child added successfully !']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function edit(Request $request){
@@ -67,7 +67,7 @@ class ChildrenController extends Controller
             'updated_at'    => now(),
         ]);
 
-        return redirect()->back()->with(['type'=>'success', 'message'=>'Child updated successfully !']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function destroy($id)
@@ -78,7 +78,7 @@ class ChildrenController extends Controller
         }
         DB::table('children')->where('id', $id)->delete();
 
-        return back()->with(['type'=>'success', 'message'=>'Child deleted successfully !']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
     }
 
     public function findChildren(Request $request){
@@ -90,7 +90,7 @@ class ChildrenController extends Controller
                                       ->from('students')
                                       ->whereColumn('students.children_id', 'children.id');
                             })
-                            ->select(['children.id', 'children.name'])->get();
+                            ->select(['children.id', 'children.name'])->limit(10)->get();
 
         return $children;
     }

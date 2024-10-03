@@ -70,7 +70,7 @@ import BreezeButton from '@/Components/Button.vue';
                                 </div>
                             </div> -->
                             <div class="flex space-x-2 p-3">
-                                <BreezeButton buttonType="gray" :route="route('roles')">Cancel</BreezeButton>
+                                <BreezeButton buttonType="gray" :url="route('roles')">Cancel</BreezeButton>
                                 <BreezeButton type="submit">Save</BreezeButton>
                             </div>
                         </form>

@@ -34,13 +34,16 @@ class ProductController extends Controller
         $request->validate([
             'basic_info.product_name'           =>  'required',
             'basic_info.product_description'    =>  'required',
-            'basic_info.product_price'          =>  'required_unless:detailed_info.has_variation,1',
-            'basic_info.product_stock'          =>  'required_unless:detailed_info.has_variation,1',
         ]);
         
         if(!$request->file('basic_info.product_images.cover')){
-            return back()->with(['type'=>'error', 'message'=>'Cover Image is required.']);
+            return back()->with(['type'=>'error', 'message'=>'Cover image is required.']);
         }
+        
+        $request->validate([
+            'basic_info.product_price'          =>  'required_unless:detailed_info.has_variation,1',
+            'basic_info.product_stock'          =>  'required_unless:detailed_info.has_variation,1',
+        ]);
 
         if($request->detailed_info['has_variation']){
             if(empty($request->detailed_info['variations']['options'])){
@@ -59,7 +62,7 @@ class ProductController extends Controller
                 ->flatMap(function ($option) {
                     
                     if(empty($option['sub_variations']['options'])){
-                        return back()->with(['type'=>'error', 'message'=>'Please add at least 1 variation or disable variation.']);
+                        return back()->with(['type'=>'error', 'message'=>'Please add at least one (1) variation or please disable variation.']);
                     }
                     return collect($option['sub_variations']['options'])
                         ->pluck('name')
@@ -70,7 +73,7 @@ class ProductController extends Controller
                 ->isNotEmpty();
     
                 if(!$has_sub_variations){
-                    return back()->with(['type'=>'error', 'message'=>'Please add at least 1 sub variation or disable sub variation.']);
+                    return back()->with(['type'=>'error', 'message'=>'Please add at least one (1) sub variation or please disable sub variation.']);
                 }
             }
             
@@ -167,7 +170,7 @@ class ProductController extends Controller
                 }
             }
         }
-        return redirect(route('products'))->with(['type'=>'success', 'message'=>'New product added successfully!']);
+        return redirect(route('products'))->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
     public function edit(Request $request)
@@ -351,7 +354,7 @@ class ProductController extends Controller
                         
                         $product_variation_id     =   DB::table('product_variations')->insertGetId([
                             'product_id'    =>  $request->basic_info['product_id'],
-                            'image'         =>  $filename != '' ? '/products/'.$variation_file_name : '',
+                            'image'         =>  $variation_file_name != '' ? '/products/'.$variation_file_name : '',
                             'option_name'   =>  $variation['name'],
                             'price'         =>  !$request->detailed_info['has_sub_variation'] ? $variation['price'] : null,
                             'stock'         =>  !$request->detailed_info['has_sub_variation'] ? $variation['stock'] : null,
@@ -388,7 +391,7 @@ class ProductController extends Controller
         $log_data =   'Updated product ID '.$request->basic_info['product_id'];
         event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product updated successfully!']);
+        return redirect(route('products'))->with(['type'=>'success', 'message'=>'Data has been updated.']);
     } 
 
     public function destroy($id)
@@ -401,7 +404,7 @@ class ProductController extends Controller
             $log_data =   'Deleted product ID '.$id;
             event(new DatabaseTransactionEvent($log_data));
 
-            return redirect(route('products'))->with(['type'=>'success', 'message'=>'Product has been deleted!']); 
+            return redirect(route('products'))->with(['type'=>'success', 'message'=>'Data has been deleted.']); 
         } catch (Exception $e) {
             // Something went wrong, rollback the transaction
             DB::rollBack();
@@ -438,12 +441,11 @@ class ProductController extends Controller
         
             DB::commit();
                 
-            $log_data =   'Deleted sub variation ID '.$request->to_delete;
+            $log_data =   'Deleted sub variation ID '.json_encode($request->to_delete);
             event(new DatabaseTransactionEvent($log_data));
         
             return back()->with(['type'=>'success', 'message'=>'Sub variation has been deleted!']);
         } catch (Exception $e) {
-            // Something went wrong, rollback the transaction
             DB::rollBack();
         
             return back()->with(['type'=>'error', 'message'=>'Failed to delete. The sub variation is being used.']);

@@ -4,16 +4,15 @@ import { Link } from '@inertiajs/inertia-vue3';
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col justify-center items-center pt-6 sm:pt-0 bg-indigo-200">
-        <div class="flex flex-col justify-center items-center space-y-4">
-            <Link href="/">
-                <BreezeApplicationLogo class=" w-32 fill-current text-gray-500" />
-            </Link>
-            <h3 class="text-xl font-bold text-gray-700">Admin Login</h3>
-        </div>
+    <div class="min-h-screen flex flex-col justify-center items-center pt-6 sm:pt-0 bg-gray-50">
 
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-            <slot />
+        <div class="w-full items-center sm:max-w-md mt-6 px-6 py-4 overflow-hidden sm:rounded-lg">
+            <div class="flex flex-col justify-center items-center space-y-4">
+                <Link href="/">
+                    <BreezeApplicationLogo class=" w-32 fill-current text-gray-500" />
+                </Link>
+                <slot />
+            </div>
         </div>
     </div>
 </template>

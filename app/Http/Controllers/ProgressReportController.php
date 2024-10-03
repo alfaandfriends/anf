@@ -158,7 +158,7 @@ class ProgressReportController extends Controller
         $log_data =   'Updated progress report ID '.$request->report_id;
         event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'Progress report updated successfully !']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
     public function storeSummary(Request $request){
@@ -167,7 +167,7 @@ class ProgressReportController extends Controller
             'improvement_feedback' => $request->improvement_feedback,
         ]);
 
-        return back()->with(['type'=>'success', 'message'=>'Feedback has been saved']);
+        return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
     
     public function getFullProgressReports(Request $request){
@@ -335,7 +335,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report math level ID '.$level;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function mathLevelsUpdate(Request $request)
@@ -346,7 +346,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report math level ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function mathLevelsDestroy($id)
@@ -356,7 +356,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report math level ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
-                return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Math Levels */
         
@@ -378,7 +378,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report math term book ID '.$term_book;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New term book has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function mathTermsBooksUpdate(Request $request)
@@ -389,7 +389,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report math term book ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Term Book has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function mathTermsBooksDestroy($id)
@@ -399,7 +399,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report math term book ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
-                return back()->with(['type'=>'success', 'message'=>'Term Book has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Math Terms Books */
         
@@ -422,7 +422,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report math unit ID '.$unit;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New unit has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function mathUnitsUpdate(Request $request)
@@ -433,7 +433,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report math unit ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Unit has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function mathUnitsDestroy($id)
@@ -443,7 +443,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report math unit ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
-                return back()->with(['type'=>'success', 'message'=>'Unit has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Math Units */
         
@@ -467,7 +467,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report math lesson ID '.$lesson;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function mathLessonsUpdate(Request $request)
@@ -478,7 +478,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report math lesson ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function mathLessonsDestroy($id)
@@ -488,7 +488,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report math lesson ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
-                return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Math Lessons */
         
@@ -513,7 +513,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report math objective ID '.$objective;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New objective has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function mathObjectivesUpdate(Request $request)
@@ -524,7 +524,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report math objective ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Objective has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function mathObjectivesDestroy($id)
@@ -534,7 +534,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report math objective ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
     
-                return back()->with(['type'=>'success', 'message'=>'Objective has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Math Objectives */
 
@@ -556,7 +556,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report coding robotics level ID '.$level;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function codingRoboticsLevelsUpdate(Request $request)
@@ -567,7 +567,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report coding robotics level ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function codingRoboticsLevelsDestroy($id)
@@ -577,7 +577,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report coding robotics level ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Coding Robotics Levels */
         
@@ -599,7 +599,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report coding robotics lesson ID '.$lesson;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function codingRoboticsLessonsUpdate(Request $request)
@@ -610,7 +610,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report coding robotics lesson ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function codingRoboticsLessonsDestroy($id)
@@ -620,7 +620,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report coding robotics lesson ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Coding Robotics Lessons */
         
@@ -643,7 +643,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report coding robotics topic ID '.$topic;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New topic has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function codingRoboticsTopicsUpdate(Request $request)
@@ -654,7 +654,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report coding robotics topic ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Topic has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function codingRoboticsTopicsDestroy($id)
@@ -664,7 +664,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report coding robotics topic ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Topic has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Coding Robotics Topics */
         
@@ -688,7 +688,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report coding robotics objective ID '.$objective;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New objective has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function codingRoboticsObjectivesUpdate(Request $request)
@@ -699,7 +699,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report coding robotics objective ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Objective has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function codingRoboticsObjectivesDestroy($id)
@@ -709,7 +709,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report coding robotics objective ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Objective has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Coding Robotics Objectives */
         
@@ -734,7 +734,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report coding robotics activity procedure ID '.$activity_procedure;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New activity procedure has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function codingRoboticsActivitiesProceduresUpdate(Request $request)
@@ -745,7 +745,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report coding robotics activity procedure ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Activity procedure has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function codingRoboticsActivitiesProceduresDestroy($id)
@@ -755,7 +755,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report coding robotics activity procedure ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Activity procedure has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Coding Robotics Activities Procedures */
 
@@ -777,7 +777,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report digital art level ID '.$level;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function digitalArtLevelsUpdate(Request $request)
@@ -788,7 +788,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report digital art level ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function digitalArtLevelsDestroy($id)
@@ -798,7 +798,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report digital art level ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Digital Art Levels */
         
@@ -820,7 +820,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report digital art theme ID '.$theme;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New theme has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function digitalArtThemesUpdate(Request $request)
@@ -831,7 +831,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report digital art theme ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Theme has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function digitalArtThemesDestroy($id)
@@ -841,7 +841,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report digital art theme ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Theme has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Digital Art Themes */
         
@@ -864,7 +864,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report digital art lesson ID '.$lesson;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function digitalArtLessonsUpdate(Request $request)
@@ -875,7 +875,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report digital art lesson ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function digitalArtLessonsDestroy($id)
@@ -885,7 +885,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report digital art lesson ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Digital Art Lessons */
         
@@ -909,7 +909,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report digital art activity ID '.$activity;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New activity has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function digitalArtActivitiesUpdate(Request $request)
@@ -920,7 +920,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report digital art activity ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Activity has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function digitalArtActivitiesDestroy($id)
@@ -930,7 +930,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report digital art activity ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Activity has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Digital Art Activities */
         
@@ -955,7 +955,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report digital art outcome ID '.$outcome;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New outcome has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function digitalArtOutcomesUpdate(Request $request)
@@ -966,7 +966,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report digital art outcome ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Outcome has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function digitalArtOutcomesDestroy($id)
@@ -976,7 +976,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report digital art outcome ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Outcome has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Digital Art Outcomes */
         
@@ -1002,7 +1002,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report digital art objective ID '.$objective;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New objective has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function digitalArtObjectivesUpdate(Request $request)
@@ -1013,7 +1013,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report digital art objective ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Objective has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function digitalArtObjectivesDestroy($id)
@@ -1023,7 +1023,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report digital art objective ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Objective has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Digital Art Objectives */
         
@@ -1044,7 +1044,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report little bot level ID '.$level;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New level has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function littleBotLevelsUpdate(Request $request)
@@ -1055,7 +1055,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report little bot level ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Level has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function littleBotLevelsDestroy($id)
@@ -1065,7 +1065,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report little bot level ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Level has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Little Bot Levels */
         
@@ -1087,7 +1087,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report little bot lesson ID '.$lesson;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New lesson has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function littleBotLessonsUpdate(Request $request)
@@ -1098,7 +1098,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report little bot lesson ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Lesson has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function littleBotLessonsDestroy($id)
@@ -1108,7 +1108,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report little bot lesson ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Lesson has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Little Bot Lessons */
         
@@ -1131,7 +1131,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report little bot topic ID '.$topic;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New topic has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function littleBotTopicsUpdate(Request $request)
@@ -1142,7 +1142,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report little bot topic ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Topic has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function littleBotTopicsDestroy($id)
@@ -1152,7 +1152,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report little bot topic ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Topic has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Little Bot Topics */
         
@@ -1176,7 +1176,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Added progress report little bot objective ID '.$objective;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'New objective has been added!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
             }
 
             public function littleBotObjectivesUpdate(Request $request)
@@ -1187,7 +1187,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Updated progress report little bot objective ID '.$request->id;
                 event(new DatabaseTransactionEvent($log_data));
         
-                return back()->with(['type'=>'success', 'message'=>'Objective has been updated!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
             }
 
             public function littleBotObjectivesDestroy($id)
@@ -1197,7 +1197,7 @@ class ProgressReportController extends Controller
                 $log_data =   'Deleted progress report little bot objective ID '.$id;
                 event(new DatabaseTransactionEvent($log_data));
 
-                return back()->with(['type'=>'success', 'message'=>'Objective has been deleted!']);
+                return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
             }
         /* Little Bot Objectives */
     /* Settings */

@@ -87,7 +87,7 @@
                                             "/>
                                         </div>
                                         <div class="flex space-x-2">
-                                            <BreezeButton buttonType="gray" :route="route('menus')">Cancel</BreezeButton>
+                                            <BreezeButton buttonType="gray" :url="route('menus')">Cancel</BreezeButton>
                                             <BreezeButton type="submit" :disabled="form.processing">Save</BreezeButton>
                                         </div>
                                     </div>

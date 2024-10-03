@@ -1,13 +1,13 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue';
-import BreezeButton from '@/Components/Button.vue';
-import VariationOption from './VariationOption.vue';
 import UploadPreview from '@/Components/UploadPreview.vue';
+import { PlusCircle } from 'lucide-vue-next';
 </script>
 
 <script>
 import Compressor from 'compressorjs';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
+import Card from '@/Components/Card.vue'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 
 function blobToFile(blob, filename) {
   const file = new File([blob], filename, { type: blob.type });
@@ -15,6 +15,9 @@ function blobToFile(blob, filename) {
 }
 
 export default {
+    components: [
+        Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow
+    ],
     props: {
         detailed_info: Object,
         sub_variation_prop: Object
@@ -40,6 +43,25 @@ export default {
         }
     },
     watch:{
+        'detailed_info.has_sub_variation': {
+            handler(){
+                const info = this.detailed_info
+                if(!info.has_sub_variation){
+                    this.sub_variations.options = [{
+                        name: ''
+                    }]
+                    info.sub_variation_name = ''
+                    info.variations.options.map((variation)=>{
+                        variation.sub_variations.options = [{
+                            id: '',
+                            name: '',
+                            price: 0,
+                            stock: 0,
+                        }]
+                    })
+                }
+            },
+        },
         sub_variations: {
             handler(){
                 if(this.detailed_info.has_sub_variation == 1){
@@ -65,9 +87,11 @@ export default {
     methods: {
         constructTable(){
             this.detailed_info.variations.options.forEach((variation, variation_index) => {
-                variation.sub_variations.options.forEach((sub_variation, sub_variation_index) => {
-                    sub_variation.name = this.sub_variations.options[sub_variation_index] ? this.sub_variations.options[sub_variation_index].name : ''
-                });
+                if(variation.sub_variations.options.length){
+                    variation.sub_variations.options.forEach((sub_variation, sub_variation_index) => {
+                        sub_variation.name = this.sub_variations.options[sub_variation_index] ? this.sub_variations.options[sub_variation_index].name : ''
+                    });
+                }
             });
         },
         addVariation(){
@@ -225,119 +249,119 @@ export default {
 </script>
 
 <template>
-    <div class="w-full">
-        <div class="flex flex-col mb-10">
-            <div class="mb-3">
-                <label class="block text-sm text-gray-700 font-bold"> Main Variation </label>
-            </div>
-            <div class="w-full bg-white shadow-md shadow-gray-400 border border-gray-400 rounded-md overflow-hidden">
-                <div class="border-b border-gray-200 px-8 py-6">
-                    <div class="mb-4">
-                        <label for="variation_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
-                        <div class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text" placeholder="E.g. Level, " id="variation_name" v-model="detailed_info.main_variation_name" class="focus:ring-0 border-gray-300 focus:border-gray-400 flex-1 block w-full rounded-md sm:text-sm"/>
-                        </div>
+    <div class="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+        <Card>
+            <template #content>
+                <div class="mb-3">
+                    <Label class="text-base"> Variation </Label>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="">
+                        <Label>Name<span class="text-red-500">*</span></Label>
+                        <Input type="text" placeholder="Example: Level" v-model="detailed_info.main_variation_name"></Input>
                     </div>
-                    <div class="mb-4"><div>
-                        <div class="flex items-center justify-between py-2">
-                            <label class="block text-sm text-gray-700 font-bold"> Options <span class="text-red-500">*</span></label>
-                            <BreezeButton @click="addVariation" buttonType="info" class="text-sm py-2 px-3">Add more option</BreezeButton>
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="flex items-center space-x-4">
+                            <Label>Options<span class="text-red-500">*</span></Label>
+                            <Button @click="addVariation" class="text-xs px-2 h-0 py-4">
+                                <PlusCircle class="h-4 w-4" />
+                                <span class="ml-1 hidden sm:block">Add</span>
+                            </Button>
                         </div>
-                        <div v-for="(option, index) in detailed_info.variations.options" :key="index" class="flex items-center mt-1 space-x-2 rounded-md">
-                            <input type="text" placeholder="E.g. Level 1" class="focus:ring-0 border-gray-300 focus:border-gray-400 flex-1 block rounded sm:text-sm" v-model="option.name" autocomplete="off"/>
-                            <BreezeButton buttonType="danger" @click="removeVariation(index, option.id)">Remove</BreezeButton>
+                        <div v-for="(option, index) in detailed_info.variations.options" :key="index" class="flex space-x-2">
+                            <Input type="text" class="2xl:w-screen 2xl:max-w-96" placeholder="Example: Level 1" v-model="option.name"></Input>
+                            <Button variant="destructive" class="text-xs px-2 h-0 py-4" @click="detailed_info.variations.options.length > 1 ? removeVariation(index, option.id) : ''">Remove</Button>
                         </div>
-                    </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="flex flex-col mb-10" :class="{'hidden': detailed_info.has_sub_variation == 0}">
-            <div class="mb-3">
-                <label class="block text-sm text-gray-700 font-bold"> Sub Variation </label>
-            </div>
-            <div class="w-full bg-white shadow-md shadow-gray-500 border border-gray-400 rounded-md overflow-hidden">
-                <div class="border-b border-gray-200 px-8 py-6">
-                    <div class="mb-4">
-                        <label for="sub_variation_name" class="block text-sm text-gray-700 font-bold"> Name <span class="text-red-500">*</span></label>
-                        <div class="mt-1 flex rounded-md shadow-sm">
-                            <input type="text" id="sub_variation_name" v-model="detailed_info.sub_variation_name" class="focus:ring-0 border-gray-300 focus:border-gray-400 flex-1 block w-full rounded-md sm:text-sm"/>
-                        </div>
+            </template>
+        </Card>
+        <Card :class="{'hidden': detailed_info.has_sub_variation == 0}">
+            <template #content>
+                <div class="mb-3">
+                    <Label class="text-base"> Sub Variation </Label>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="">
+                        <Label>Name<span class="text-red-500">*</span></Label>
+                        <Input type="text" placeholder="Example: Level" v-model="detailed_info.sub_variation_name"></Input>
                     </div>
-                    <div class="mb-4"><div>
-                        <div class="flex items-center justify-between py-2">
-                            <label class="block text-sm text-gray-700 font-bold"> Options <span class="text-red-500">*</span></label>
-                            <BreezeButton @click="addSubVariation" buttonType="info" class="text-sm py-2 px-3">Add more option</BreezeButton>
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="flex items-center space-x-4">
+                            <Label>Options<span class="text-red-500">*</span></Label>
+                            <Button @click="addSubVariation" class="text-xs px-2 h-0 py-4">
+                                <PlusCircle class="h-4 w-4" />
+                                <span class="ml-1 hidden sm:block">Add</span>
+                            </Button>
                         </div>
-                        <div v-for="(option, index) in sub_variations.options" :key="index" class="flex items-center mt-1 space-x-2 rounded-md">
-                            <input type="text" placeholder="option" class="focus:ring-0 border-gray-300 focus:border-gray-400 flex-1 block rounded sm:text-sm" v-model="option.name" autocomplete="off"/>
-                            <BreezeButton buttonType="danger" @click="removeSubVariation(index)">Remove</BreezeButton>
+                        <div v-for="(option, index) in sub_variations.options" :key="index" class="flex space-x-2">
+                            <Input type="text" class="2xl:w-screen 2xl:max-w-96" placeholder="Example: Level 1" v-model="option.name"></Input>
+                            <Button variant="destructive" class="text-xs px-2 h-0 py-4" @click="sub_variations.options.length > 1 ? removeSubVariation(index) : ''">Remove</Button>
                         </div>
-                    </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="flex flex-col mb-3" v-if="detailed_info.main_variation_name">
-            <div class="overflow-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-300">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">{{ detailed_info.main_variation_name}}</th>
-                            <th v-if="detailed_info.has_sub_variation == 1 && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">{{ detailed_info.sub_variation_name}}</th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Price</th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Stock</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <template v-for="(variation, variation_index) in detailed_info.variations.options">
-                            <tr class="" v-if="variation.name.trim() !== ''">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex flex-col items-center p-2 m-2">
-                                        <UploadPreview :previewUrl="variation.images.value" @update:value="handleFileChange($event, variation_index)" />
-                                        <label :for="variation.name" class="text-sm text-gray-500 text-center"> {{ variation.name }} </label>
-                                    </div>
-                                </td>
-                                <td v-if="detailed_info.has_sub_variation == 1 && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')" class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex flex-col items-center space-y-2" v-for="(sub_variation, sub_variation_index) in variation.sub_variations.options">
-                                        <label v-if="sub_variation.name" :for="sub_variation.name" class="py-3 text-sm text-gray-500 text-center"> {{ sub_variation.name }} </label>
-                                    </div>
-                                </td>
-                                <template v-if="detailed_info.has_sub_variation == 1 && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex flex-col justify-center items-center space-y-2">
-                                            <template v-for="(sub_variation, sub_variation_index) in variation.sub_variations.options">
-                                                <input v-if="sub_variation.name" type="number" min="0" @input="numbersOnly($event)" class="focus:ring-0 border-gray-300 focus:border-gray-400 rounded-md flex-1 block sm:text-sm" v-model="sub_variation.price" autocomplete="off"/>
-                                            </template>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex flex-col justify-center items-center space-y-2">
-                                            <template v-for="(sub_variation, sub_variation_index) in variation.sub_variations.options">
-                                                <input v-if="sub_variation.name" type="number" min="0" @input="numbersOnly($event)" class="focus:ring-0 border-gray-300 focus:border-gray-400 rounded-md flex-1 block sm:text-sm"  v-model="sub_variation.stock" autocomplete="off"/>
-                                            </template>
-                                        </div>
-                                    </td>
-                                </template>
-                                <template v-else>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex flex-col justify-center items-center space-y-2">
-                                            <input type="number" min="0" @input="numbersOnly($event)" class="focus:ring-0 border-gray-300 focus:border-gray-400 rounded-md flex-1 block sm:text-sm" v-model="variation.price" autocomplete="off"/>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex flex-col justify-center items-center space-y-2">
-                                            <input type="number" min="0" @input="numbersOnly($event)" class="focus:ring-0 border-gray-300 focus:border-gray-400 rounded-md flex-1 block sm:text-sm" v-model="variation.stock" autocomplete="off"/>
-                                        </div>
-                                    </td>
-                                </template>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            </template>
+        </Card>
     </div>
+    <Card class="mt-4" v-if="detailed_info.main_variation_name">
+        <template #content>
+            <Table>
+                <TableHeader class="bg-gray-100">
+                    <TableRow>
+                        <TableHead class="text-center">{{ detailed_info.main_variation_name}}</TableHead>
+                        <TableHead class="text-center" v-if="detailed_info.has_sub_variation == 1 && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')">{{ detailed_info.sub_variation_name}}</TableHead>
+                        <TableHead class="text-center">Price</TableHead>
+                        <TableHead class="text-center">Stock</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <template v-for="(variation, variation_index) in detailed_info.variations.options">
+                        <TableRow v-if="variation.name.trim() !== ''">
+                            <TableCell>
+                                <div class="flex flex-col items-center p-2 m-2">
+                                    <UploadPreview :previewUrl="variation.images.value" @update:value="handleFileChange($event, variation_index)" />
+                                    <Label class="mt-1" :for="variation.name"> {{ variation.name }} </Label>
+                                </div>
+                            </TableCell>
+                            <TableCell v-if="detailed_info.has_sub_variation == 1 && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')">
+                                <div class="flex flex-col items-center space-y-2" v-for="(sub_variation, sub_variation_index) in variation.sub_variations.options">
+                                    <Label class="my-3" v-if="sub_variation.name" :for="sub_variation.name"> {{ sub_variation.name }} </Label>
+                                </div>
+                            </TableCell>
+                            <template v-if="detailed_info.has_sub_variation == 1 && detailed_info.sub_variation_name && sub_variations.options.some(option => option.name !== '')">
+                                <TableCell>
+                                    <div class="flex flex-col justify-center items-center space-y-2">
+                                        <template v-for="(sub_variation, sub_variation_index) in variation.sub_variations.options">
+                                            <Input v-if="sub_variation.name" type="number" min="0" @input="numbersOnly($event)" class="focus:ring-0 border-gray-300 focus:border-gray-400 rounded-md flex-1 block min-w-14" v-model="sub_variation.price"></Input>
+                                        </template>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <div class="flex flex-col justify-center items-center space-y-2">
+                                        <template v-for="(sub_variation, sub_variation_index) in variation.sub_variations.options">
+                                            <Input v-if="sub_variation.name" type="number" min="0" @input="numbersOnly($event)" class="focus:ring-0 border-gray-300 focus:border-gray-400 rounded-md flex-1 block min-w-14"  v-model="sub_variation.stock"></Input>
+                                        </template>
+                                    </div>
+                                </TableCell>
+                            </template>
+                            <template v-else>
+                                <TableCell>
+                                    <div class="flex flex-col justify-center items-center space-y-2">
+                                        <Input type="number" min="0" @input="numbersOnly($event)" class="focus:ring-0 border-gray-300 focus:border-gray-400 rounded-md flex-1 block min-w-14" v-model="variation.price"/>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <div class="flex flex-col justify-center items-center space-y-2">
+                                        <Input type="number" min="0" @input="numbersOnly($event)" class="focus:ring-0 border-gray-300 focus:border-gray-400 rounded-md flex-1 block min-w-14" v-model="variation.stock"/>
+                                    </div>
+                                </TableCell>
+                            </template>
+                        </TableRow>
+                    </template>
+                </TableBody>
+            </Table>
+        </template>
+    </Card>
     <ConfirmationModal 
         :show="confirmation_modal.is_open" 
         @close="confirmation_modal.is_open = false"

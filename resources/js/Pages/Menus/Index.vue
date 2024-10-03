@@ -13,7 +13,7 @@
                 <div class="m-3">
                     <div class="align-top inline-block w-full lg:w-1/2 px-2 mb-3">
                         <div class="flex pb-4 relative text-gray-400 focus-within:text-gray-600">
-                            <BreezeButton :route="route('menus.add_menu')" v-if="$page.props.can.create_menu_editor">
+                            <BreezeButton :url="route('menus.add_menu')" v-if="$page.props.can.create_menu_editor">
                                 Add Menu
                             </BreezeButton>
                         </div>
@@ -33,7 +33,7 @@
                                     <tr v-if="$page.props.menus.length == 0">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
-                                                No Record Found! 
+                                                No Record Found 
                                             </div>
                                         </td>
                                     </tr> 
@@ -110,7 +110,7 @@
                                     <tr v-if="$page.props.sub_menus.length == 0">
                                         <td class="text-center" colspan="10">
                                             <div class="p-3">
-                                                No Record Found! 
+                                                No Record Found 
                                             </div>
                                         </td>
                                     </tr> 
@@ -186,12 +186,11 @@ import { SearchIcon, TrashIcon, PencilIcon, ChevronRightIcon } from '@heroicons/
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import { faCaretSquareUp, faCaretSquareDown } from "@fortawesome/free-regular-svg-icons";
-import SvgIcon from "vue3-icon";
 
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon, ChevronRightIcon,
-        ConfirmationModal, Head, Link, SvgIcon, 
+        ConfirmationModal, Head, Link, 
         faCaretSquareUp, faCaretSquareDown
     },
     props: {

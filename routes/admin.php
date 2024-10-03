@@ -4,8 +4,6 @@ use App\Classes\ClassHelper;
 use App\Classes\ProgrammeHelper;
 use App\Classes\StoryHelper;
 use App\Events\Notifications;
-use App\Events\Test;
-use App\Events\TestNotify;
 use App\Http\Controllers\ArtGalleryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CentreController;
@@ -36,18 +34,13 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherResourcesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use Opcodes\LogViewer\Logs\Log;
 
-
-
-Route::middleware(['auth', 'device'])->group(function(){
-    Route::get('/send', function(){
-        event(new Test('asdasdasda'));
-    });
+Route::middleware(['auth'])->group(function(){
     Route::prefix('admin')->group(function () {
         /* User Impersonation */
-        Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate')->withoutMiddleware('device');
-        Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate')->withoutMiddleware('device');
+        Route::get('/impersonate/{user}', [AuthenticatedSessionController::class, 'impersonate'])->name('impersonate');
+        Route::get('/leave-impersonate', [AuthenticatedSessionController::class, 'leaveImpersonate'])->name('leave-impersonate');
 
         /* Dashboard */
         Route::get('/', function () {
@@ -99,7 +92,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:delete_programmes');
             Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:edit_programmes|delete_programmes');
             Route::patch('/programmes/fee/update', [ProgrammeController::class, 'updateFee'])->name('programmes.fee.update')->middleware('permission:edit_programmes');
-            Route::get('/programmes/get-students/{programme_id}/{centre_id}/{level_id?}', [ProgrammeHelper::class, 'getStudents'])->name('programmes.get_students')->withoutMiddleware('device');
+            Route::get('/programmes/get-students/{programme_id}/{centre_id}/{level_id?}', [ProgrammeHelper::class, 'getStudents'])->name('programmes.get_students');
 
             /* Classes */
             Route::get('/classes', [ClassController::class, 'index'])->name('classes')->middleware('permission:view_classes');
@@ -120,18 +113,17 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::post('/store', [StudentController::class, 'store'])->name('students.store')->middleware('permission:create_students');
             Route::get('/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:edit_students');
             Route::post('/update', [StudentController::class, 'update'])->name('students.update')->middleware('permission:edit_students');
-            Route::delete('/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:delete_students');
+            Route::post('/destroy', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:delete_students');
             Route::post('/add-student-class', [StudentController::class, 'addStudentClass'])->name('students.add_student_class')->middleware('permission:view_students|create_students|edit_students');
             Route::post('/set-fee-status', [StudentController::class, 'setFeeStatus'])->name('students.set_fee_status')->middleware('permission:view_students|create_students|edit_students');
             Route::post('/transfer', [StudentController::class, 'transferStudent'])->name('students.transfer')->middleware('permission:view_students|create_students|edit_students');
             Route::post('/add-promo', [StudentController::class, 'addPromo'])->name('students.add_promo')->middleware('permission:view_students|create_students|edit_students');
-            Route::delete('/delete-promo', [StudentController::class, 'deletePromo'])->name('students.delete_promo')->middleware('permission:view_students|create_students|edit_students');
+            Route::post('/delete-promo', [StudentController::class, 'deletePromo'])->name('students.delete_promo')->middleware('permission:view_students|create_students|edit_students');
 
             Route::get('/generate-monthly', [StudentController::class, 'generateMonthly'])->name('students.generate_monthly')->middleware('permission:view_students');
             
             /* Art Gallery */
             Route::get('/art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery')->middleware('permission:view_art_gallery');
-            Route::get('/art-gallery/create', [ArtGalleryController::class, 'create'])->name('art_gallery.create')->middleware('permission:create_art_gallery');
             Route::post('/art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store')->middleware('permission:create_art_gallery');
             Route::delete('/art-gallery/destroy/{id}', [ArtGalleryController::class, 'destroy'])->name('art_gallery.destroy')->middleware('permission:delete_art_gallery');
 
@@ -140,7 +132,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate')->middleware('permission:create_art_book');
 
             /* Stories */
-            Route::middleware('permission:story_access')->withoutMiddleware('device')->group(function () {
+            Route::middleware('permission:story_access')->group(function () {
                 Route::get('/stories', [StoryController::class, 'index'])->name('stories')->middleware('permission:view_stories');
                 Route::get('/stories/create', [StoryController::class, 'create'])->name('stories.create')->middleware('permission:create_stories');
                 Route::post('/stories/store', [StoryHelper::class, 'createPost'])->name('stories.store')->middleware('permission:create_stories');
@@ -150,7 +142,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             });
 
             /* Assessments */
-            Route::middleware('permission:assessment_access')->withoutMiddleware('device')->group(function () {
+            Route::middleware('permission:assessment_access')->group(function () {
                 Route::get('/assessments', [AssessmentController::class, 'index'])->name('assessments')->middleware('permission:view_assessments');
                 Route::get('/assessments/create/{id}', [AssessmentController::class, 'create'])->name('assessments.create')->middleware('permission:create_assessments');
                 Route::post('/assessments/store', [AssessmentController::class, 'store'])->name('assessments.store')->middleware('permission:create_assessments');
@@ -185,7 +177,7 @@ Route::middleware(['auth', 'device'])->group(function(){
             /* Progress Report */
             Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report')->middleware('permission:view_progress_report');
             Route::get('/progress-report/details', [ProgressReportController::class, 'details'])->name('progress_report.details')->middleware('permission:view_progress_report');
-            Route::get('/progress-report/full-reports', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports')->withoutMiddleware(['permission:student_access', 'device']);
+            Route::get('/progress-report/full-reports', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports')->withoutMiddleware(['permission:student_access']);
             Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store')->middleware('permission:view_progress_report');
             Route::post('/progress-report/summary/store', [ProgressReportController::class, 'storeSummary'])->name('progress_report.store_summary')->middleware('permission:view_progress_report');
                 /* Settings */
@@ -475,14 +467,14 @@ Route::middleware(['auth', 'device'])->group(function(){
 
         /* Profile */
         Route::get('/profile', [ProfileController::class, 'create'])->name('profile');
-        Route::post('/profile/store', [ProfileController::class, 'store'])->name('profile.store')->withoutMiddleware('device');
-        Route::post('/profile/security/store', [ProfileController::class, 'storeSecurity'])->name('profile.security.store')->withoutMiddleware('device');
+        Route::post('/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+        Route::post('/profile/security/store', [ProfileController::class, 'storeSecurity'])->name('profile.security.store');
 
         /* Children */
-        Route::post('/children/store', [ChildrenController::class, 'store'])->name('children.store')->withoutMiddleware('device');
-        Route::get('/children/edit', [ChildrenController::class, 'edit'])->name('children.edit')->withoutMiddleware('device');
-        Route::post('/children/update', [ChildrenController::class, 'update'])->name('children.update')->withoutMiddleware('device');
-        Route::delete('/children/delete/{id}', [ChildrenController::class, 'destroy'])->name('children.destroy')->withoutMiddleware('device');
+        Route::post('/children/store', [ChildrenController::class, 'store'])->name('children.store');
+        Route::get('/children/edit', [ChildrenController::class, 'edit'])->name('children.edit');
+        Route::post('/children/update', [ChildrenController::class, 'update'])->name('children.update');
+        Route::delete('/children/delete/{id}', [ChildrenController::class, 'destroy'])->name('children.destroy');
 
         /* Notifications */
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');

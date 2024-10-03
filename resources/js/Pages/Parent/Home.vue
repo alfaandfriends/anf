@@ -163,7 +163,7 @@ background: #555; /* Color of the handle when hovered */
         </template>
         <template v-slot:content>
             <div class="p-3">
-                <div class="flex flex-col justify-center items-start space-y-2" v-if="!show_add_tag">
+                <div class="flex flex-col justify-center items-start space-y-2">
                     <Multiselect 
                         v-model="add_story.form.programme_id"
                         valueProp="id"
@@ -479,7 +479,7 @@ background: #555; /* Color of the handle when hovered */
         </template>
         <template v-slot:content>
             <div class="p-3">
-                <div class="flex flex-col justify-center items-start space-y-4" v-if="!show_add_tag">
+                <div class="flex flex-col justify-center items-start space-y-4">
                     <Multiselect 
                         v-model="edit_story.form.programme_id"
                         valueProp="id"
@@ -812,8 +812,7 @@ import TimeAgo from '@/Components/TimeAgo.vue'
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import axios from 'axios'
-import moment from 'moment';
-import 'moment-timezone';
+import { DateTime } from 'luxon';
 import FsLightbox from "fslightbox-vue/v3";
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Compressor from 'compressorjs';
@@ -1068,7 +1067,7 @@ export default {
                 this.$page.props.stories.data[story_index].comments.unshift({
                     'comment': this.comments[story_index],
                     'comment_user_name': this.$page.props.auth.user.display_name,
-                    'created_at': moment().tz('Asia/Kuala_Lumpur').format('YYYY-MM-DD HH:mm:ss')
+                    'created_at': DateTime.now().setZone('Asia/Kuala_Lumpur').toFormat('yyyy-MM-dd HH:mm:ss')
                 })
                 this.comments[story_index] = ''
             }
