@@ -87,7 +87,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                                 <TableCell class="px-4">{{ index + 1 }}</TableCell>
                                                 <TableCell>{{ classes.class_day}}</TableCell>
                                                 <TableCell class="text-center">
-                                                    <span class="pl-2 whitespace-nowrap">{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
+                                                    <span class="pl-2 whitespace-nowrap">{{ moment(classes.start_time).format('h:mm A') }} - {{ moment(classes.end_time).format('h:mm A') }}</span>
                                                 </TableCell>
                                                 <TableCell class="text-center">{{ classes.capacity}}</TableCell>
                                                 <TableCell class="text-center">
@@ -133,7 +133,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                             <span class="underline">Timetable</span>
                                         </li>
                                         <li class="flex flex-wrap items-center gap-4">
-                                            <span class="text-slate-600 text-xs" v-for="classes in fee.classes" :key="classes.id">{{ classes.class_day }} ({{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }})</span>
+                                            <span class="text-slate-600 text-xs" v-for="classes in fee.classes" :key="classes.id">{{ classes.class_day }} ({{ moment(classes.start_time).format('h:mm A') }} - {{ moment(classes.end_time).format('h:mm A') }})</span>
                                         </li>
                                     </ul>
                                     <ul class="grid gap-2 mb-3 text-xs font-semibold">

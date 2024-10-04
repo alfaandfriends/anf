@@ -246,8 +246,8 @@ import BreezeButton from "@/Components/Button.vue";
                 >
                   <Badge variant="" v-for="classes in fee.classes" :key="classes.id">
                     <span class="whitespace-nowrap"
-                      >{{ moment(classes.start_time, "HH:mm:ss").format("h:mm A") }} -
-                      {{ moment(classes.end_time, "HH:mm:ss").format("h:mm A") }}</span
+                      >{{ moment(classes.start_time).format("h:mm A") }} -
+                      {{ moment(classes.end_time).format("h:mm A") }}</span
                     >
                   </Badge>
                 </div>
@@ -447,10 +447,10 @@ import BreezeButton from "@/Components/Button.vue";
                         <TableCell>{{ classes.class_day }}</TableCell>
                         <TableCell class="text-center">
                           <span class="pl-2 whitespace-nowrap"
-                            >{{ moment(classes.start_time, "HH:mm:ss").format("h:mm A") }}
+                            >{{ moment(classes.start_time).format("h:mm A") }}
                             -
                             {{
-                              moment(classes.end_time, "HH:mm:ss").format("h:mm A")
+                              moment(classes.end_time).format("h:mm A")
                             }}</span
                           >
                         </TableCell>
@@ -527,10 +527,10 @@ import BreezeButton from "@/Components/Button.vue";
                         v-for="classes in fee.classes"
                         :key="classes.id"
                         >{{ classes.class_day }} ({{
-                          moment(classes.start_time, "HH:mm:ss").format("h:mm A")
+                          moment(classes.start_time).format("h:mm A")
                         }}
                         -
-                        {{ moment(classes.end_time, "HH:mm:ss").format("h:mm A") }})</span
+                        {{ moment(classes.end_time).format("h:mm A") }})</span
                       >
                     </li>
                   </ul>
@@ -704,10 +704,10 @@ import BreezeButton from "@/Components/Button.vue";
                         <TableCell>{{ classes.class_day }}</TableCell>
                         <TableCell class="text-center">
                           <span class="pl-2 whitespace-nowrap"
-                            >{{ moment(classes.start_time, "HH:mm:ss").format("h:mm A") }}
+                            >{{ moment(classes.start_time).format("h:mm A") }}
                             -
                             {{
-                              moment(classes.end_time, "HH:mm:ss").format("h:mm A")
+                              moment(classes.end_time).format("h:mm A")
                             }}</span
                           >
                         </TableCell>
@@ -784,10 +784,10 @@ import BreezeButton from "@/Components/Button.vue";
                         v-for="classes in fee.classes"
                         :key="classes.id"
                         >{{ classes.class_day }} ({{
-                          moment(classes.start_time, "HH:mm:ss").format("h:mm A")
+                          moment(classes.start_time).format("h:mm A")
                         }}
                         -
-                        {{ moment(classes.end_time, "HH:mm:ss").format("h:mm A") }})</span
+                        {{ moment(classes.end_time).format("h:mm A") }})</span
                       >
                     </li>
                   </ul>
