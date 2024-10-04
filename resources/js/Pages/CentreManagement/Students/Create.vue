@@ -464,7 +464,7 @@ export default {
                 this.selected_plus_class[programme_id] = this.selected_plus_class[programme_id].filter(id => id !== class_id);
             }
 
-            // this.form.fee = []
+            this.form.fee = []
             this.form.fee = this.form.fee.filter(item => item.fee_info.programme_id !== programme_id);
             
             if(this.selected_plus_class[programme_id].length){
