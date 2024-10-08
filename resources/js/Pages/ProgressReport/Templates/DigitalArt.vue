@@ -36,8 +36,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             <TableCell class="text-center">
                                 <span class="inline-flex items-center justify-center px-2 py-1 text-xs rounded" :class="[{'bg-green-200 text-green-600': result.attendance_status == 1}, {'bg-red-200 text-red-600': result.attendance_status == 2}, {'bg-gray-200 text-gray-600': result.attendance_status == 3}]">{{ result.attendance_status_name }}</span>
                             </TableCell>
-                            <TableCell class="text-center">
+                            <TableCell class="text-center space-x-2">
                                 <Button variant="outline" @click="viewProgressReport(index)">Edit</Button>
+                                <Button variant="" @click="showGenerateQrModal(result.id)">Upload</Button>
                             </TableCell>
                         </TableRow>
                     </TableBody>
@@ -109,6 +110,17 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         <Label class="text-xs text-red-500 font-semibold" v-if="!form.report_data.length && form.attendance_status == 1">At least one (1) objective is required.</Label>
                     </div>
                     <div class="">
+                        <Label>Artworks</Label>
+                        <div class="px-4 py-2 bg-slate-100 rounded-lg" v-if="!list.artworks.length">
+                            <Label>No artworks uploaded.</Label>
+                        </div>
+                        <div class="flex flex-wrap gap-2" v-else>
+                            <Badge variant="outline" class="cursor-pointer" v-for="artwork in list.artworks" @click="openArtworkInNewTab(artwork)">
+                                <span>{{ artwork.filename }}</span>
+                            </Badge>
+                        </div>
+                    </div>
+                    <div class="">
                         <Label>Comments</Label>
                         <Textarea rows="3" v-model.lazy="form.comments"></Textarea>
                     </div>
@@ -121,6 +133,35 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             <template #footer>
                 <Button variant="outline" @click="show_progress_report = false">Cancel</Button>
                 <Button @click="updateProgressReport">Save</Button>
+            </template>
+        </Dialog>
+        <Dialog v-model:open="show_qr_modal" classProp="max-w-sm">
+            <template #title>Artwork Upload</template>
+            <template #content>
+                <div class="p-1 grid grid-cols-1 items-center gap-2">
+                    <template v-if="!qr_data.image">
+                        <div>
+                            <Label>Theme</Label>
+                            <ComboBox :items="$page.props.art_themes" label-property="name" value-property="id" :error="!qr_data.theme_id" v-model="qr_data.theme_id" select-placeholder="Select Theme" search-placeholder="Search theme..." @select="getLessons(qr_data.theme_id)"></ComboBox>
+                        </div>
+                        <div>
+                            <Label>Lesson</Label>
+                            <ComboBox :items="options.lessons" label-property="name" value-property="id" :error="!qr_data.lesson_id" v-model="qr_data.lesson_id" select-placeholder="Select Lesson" search-placeholder="Search lesson..." @select="getActivity(qr_data.lesson_id)" :loading="loading.lessons"></ComboBox>
+                        </div>
+                        <div>
+                            <Label>Activity</Label>
+                            <ComboBox :items="options.activities" label-property="name" value-property="id" :error="!qr_data.activity_id" v-model="qr_data.activity_id" select-placeholder="Select Activitiy" search-placeholder="Search activity..." :loading="loading.activities"></ComboBox>
+                        </div>
+                        <Button @click="generateQr" :class="qr_data.student_id && qr_data.theme_id && qr_data.lesson_id && qr_data.activity_id ? '' : 'cursor-not-allowed opacity-30'">Generate QR</Button>
+                    </template>
+                    <div class="flex flex-col items-center" v-else>
+                        <div class="h-40 w-40" v-html="qr_data.image"></div>
+                        <Button @click="qr_data.image = ''">Regenerate QR</Button>
+                    </div>
+                </div>
+            </template>
+            <template #footer>
+                <Button variant="outline" @click="show_qr_modal = false">Close</Button>
             </template>
         </Dialog>
     </BreezeAuthenticatedLayout>
@@ -148,10 +189,20 @@ export default {
     },
     data(){
         return{
+            show_select_student: false,
+            show_qr_modal: false,
             show_progress_report: false,
             open_objectives: false,
             searching: false,
             progress_report_list: {},
+            qr_data: {
+                report_detail_id: '',
+                student_id: '',
+                theme_id: '',
+                lesson_id: '',
+                activity_id: '',
+                image: ''
+            },
             disabled:{
                 themes: true,
                 lessons: true,
@@ -160,6 +211,8 @@ export default {
             },
             list: {
                 teachers: [],
+                students: [],
+                artworks: []
             },
             options: {
                 themes: [],
@@ -193,14 +246,22 @@ export default {
     methods: {
         viewProgressReport(index) {
             this.clearSearch()
-            this.form.report_id             =   this.$page.props.progress_reports[index].id
-            this.form.teacher_user_id       =   this.$page.props.progress_reports[index].teacher_user_id
-            this.form.teacher_name          =   this.$page.props.progress_reports[index].display_name
-            this.form.date                  =   this.$page.props.progress_reports[index].date
-            this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data) ? JSON.parse(this.$page.props.progress_reports[index].report_data) : []
-            this.form.attendance_status     =   this.$page.props.progress_reports[index].attendance_status
-            this.form.comments              =   this.$page.props.progress_reports[index].comments
-            this.show_progress_report       =   true;
+            axios.get(route('progress_report.artworks'), { 
+                params: { 
+                    'report_detail_id': this.$page.props.progress_reports[index].id 
+                } 
+            })
+            .then(response => {
+                this.list.artworks = response.data
+                this.form.report_id             =   this.$page.props.progress_reports[index].id
+                this.form.teacher_user_id       =   this.$page.props.progress_reports[index].teacher_user_id
+                this.form.teacher_name          =   this.$page.props.progress_reports[index].display_name
+                this.form.date                  =   this.$page.props.progress_reports[index].date
+                this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data) ? JSON.parse(this.$page.props.progress_reports[index].report_data) : []
+                this.form.attendance_status     =   this.$page.props.progress_reports[index].attendance_status
+                this.form.comments              =   this.$page.props.progress_reports[index].comments
+                this.show_progress_report       =   true;
+            });
         },
         updateProgressReport() {
             if(!this.form.date || this.form.attendance_status == 3 || (this.form.attendance_status == 1 && this.form.report_data.length < 1) || (this.form.attendance_status == 1 && !this.form.teacher_user_id)){
@@ -222,6 +283,20 @@ export default {
                 .then((res) => {
                     this.list.teachers = res.data
                     this.loading.teachers = false
+                });
+            }
+        }, 1000),
+        findStudents: debounce(function(query) {
+            if(query){
+                this.isLoading = true
+                axios.get(route('students.find_digital_art_students'), {
+                    params: {
+                        'keyword': query
+                    }
+                })
+                .then((res) => {
+                    this.list.students = res.data
+                    this.isLoading = false
                 });
             }
         }, 1000),
@@ -317,7 +392,6 @@ export default {
         clearSearch(){
             this.form.teacher_user_id = ''
             this.search.theme_id = ''
-            this.search.term_book_id = ''
             this.search.lesson_id = ''
             this.search.outcome_id = ''
             this.search.activity_id = ''
@@ -328,6 +402,34 @@ export default {
                 modalContent.scrollTop = 0;
             }
         },
+        showGenerateQrModal(report_detail_id){
+            this.clearQrModal()
+            this.qr_data.student_id = this.$page.props.student_info.id
+            this.qr_data.report_detail_id = report_detail_id
+            this.qr_data.level = this.$page.props.student_info.level
+            this.show_qr_modal = true
+        },
+        generateQr(){
+            if(this.qr_data.student_id && this.qr_data.theme_id && this.qr_data.lesson_id && this.qr_data.activity_id){
+                axios.post(route('progress_report.generate_qr'), this.qr_data)
+                .then(response => {
+                    this.qr_data.image = response.data;
+                });
+            }
+        },
+        clearQrModal(){
+            this.qr_data.report_detail_id = ''
+            this.qr_data.student_id = ''
+            this.qr_data.level = ''
+            this.qr_data.theme_id = ''
+            this.qr_data.lesson_id = ''
+            this.qr_data.activity_id = ''
+            this.qr_data.image = ''
+        },
+        openArtworkInNewTab(artwork) {
+            const url = '/storage/art_gallery/' + artwork.filename
+            window.open(url, '_blank');
+        }
     },
     updated(){
         this.scrollToTop()

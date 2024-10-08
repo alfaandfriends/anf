@@ -70,10 +70,10 @@
                 :value="itemValue(item)"
                 @select="selectItem(item)"
               >
-                <slot name="label" :item="item">{{ displayLabel(item) }}
-                  <CheckIcon
-                    :class="checkIconClass(item)"
-                  /></slot>
+              <slot name="label" :item="item">
+                {{ displayLabel(item) }}
+              </slot>
+              <CheckIcon :class="checkIconClass(item)" />
               </CommandItem>
             </CommandGroup>
           </CommandList>

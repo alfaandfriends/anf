@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DiagnosticTestController;
+use App\Http\Controllers\ProgressReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('diagnostic-test')->group(function () {
@@ -22,6 +23,9 @@ Route::prefix('diagnostic-test')->group(function () {
     Route::post('/save-result', [DiagnosticTestController::class, 'saveDtResult'])->name('diagnostic_test.save_result');
     Route::delete('/delete-result/{id}', [DiagnosticTestController::class, 'deleteDtResult'])->name('diagnostic_test.delete_result');
 });
+
+Route::get('upload-artwork/{encrypted_data}', [ProgressReportController::class, 'uploadArtwork'])->name('upload_artwork');
+Route::post('store-artwork', [ProgressReportController::class, 'storeArtwork'])->name('store_artwork');
 
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
