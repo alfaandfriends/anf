@@ -174,6 +174,8 @@ Route::middleware(['auth'])->group(function(){
                 Route::delete('/art-gallery/setting/activities/delete/{id}', [ArtGalleryController::class, 'activityDelete'])->name('art_gallery.setting.activities.delete')->middleware('permission:view_art_gallery');
 
 
+                Route::get('/progress-report/exchange', [ProgressReportController::class, 'exchange'])->name('progress_report.exchange')->middleware('permission:view_progress_report');
+                Route::post('/progress-report/exchange/store', [ProgressReportController::class, 'exchangeStore'])->name('progress_report.exchange.store')->middleware('permission:view_progress_report');
             /* Progress Report */
             Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report')->middleware('permission:view_progress_report');
             Route::get('/progress-report/details', [ProgressReportController::class, 'details'])->name('progress_report.details')->middleware('permission:view_progress_report');

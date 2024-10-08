@@ -1201,4 +1201,56 @@ class ProgressReportController extends Controller
             }
         /* Little Bot Objectives */
     /* Settings */
+
+    public function exchange(){
+        $info['student_art_gallery']    =   DB::table('student_art_gallery')
+                                                ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
+                                                ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
+                                                ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
+                                                ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
+                                                ->select(
+                                                    'art_levels.name as level_name', 
+                                                    'art_themes.name as theme_name', 
+                                                    'art_lessons.name as lesson_name', 
+                                                    'art_activities.name as activity_name',
+                                                    'student_art_gallery.activity_id'
+                                                )
+                                                ->distinct('student_art_gallery.activity_id')
+                                                ->orderBy('art_levels.id')
+                                                ->orderBy('art_themes.id')
+                                                ->orderBy('art_lessons.id')
+                                                ->orderBy('art_activities.id')
+                                                ->where('changed', false)
+                                                ->get();
+
+        $info['pr_art_activities']      =   DB::table('pr_art_activities')
+                                                ->join('pr_art_lessons', 'pr_art_activities.lesson_id', '=', 'pr_art_lessons.id')
+                                                ->join('pr_art_themes', 'pr_art_lessons.theme_id', '=', 'pr_art_themes.id')
+                                                ->join('pr_art_levels', 'pr_art_themes.level_id', '=', 'pr_art_levels.id')
+                                                ->select(
+                                                    'pr_art_levels.name as level_name', 
+                                                    'pr_art_themes.name as theme_name', 
+                                                    'pr_art_lessons.name as lesson_name', 
+                                                    'pr_art_activities.name as activity_name',
+                                                    'pr_art_activities.id as activity_id'
+                                                )
+                                                ->orderBy('pr_art_levels.id')
+                                                ->orderBy('pr_art_themes.id')
+                                                ->orderBy('pr_art_lessons.id')
+                                                ->orderBy('pr_art_activities.id')
+                                                ->get();
+        
+        return Inertia::render('ProgressReport/Exchange', $info);
+    }
+    public function exchangeStore(Request $request){
+        if(!count($request->from) || !$request->to){
+            return back()->with(['type' => 'error', 'message' => 'Please select both new and old activity to exchange.']);
+        }
+        DB::table('student_art_gallery')->whereIn('activity_id', $request->from)->update([
+            'new_activity_id' => $request->to,
+            'changed' => true
+        ]);
+
+        return back()->with(['type' => 'success', 'message' => 'Data has been saved.']);
+    }
 }
