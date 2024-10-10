@@ -38,7 +38,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             </TableCell>
                             <TableCell class="text-center space-x-2">
                                 <Button variant="outline" @click="viewProgressReport(index)">Edit</Button>
-                                <Button variant="" @click="showGenerateQrModal(result.id)">Upload</Button>
+                                <!-- <Button variant="" @click="showGenerateQrModal(result.id)">Upload Artwork</Button> -->
                             </TableCell>
                         </TableRow>
                     </TableBody>
@@ -74,7 +74,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         <Label>Learning Outcome</Label>
                         <ComboBox :items="options.outcomes" label-property="name" value-property="id" v-model="search.outcome_id" select-placeholder="Select Outcome" search-placeholder="Search outcome..." @select="addItem()" :loading="loading.outcomes"></ComboBox>
                     </div>
-                    <div class="mb-3">
+                    <div>
                         <Label>Objectives</Label>
                         <div class="px-4 py-2 bg-slate-100 rounded-lg" v-if="!form.report_data.length">
                             <Label>No objectives found.</Label>
@@ -104,21 +104,34 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                             </Label>
                                         </li>
                                     </ul>
+                                    <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-3">
+                                        <div class="flex flex-col space-y-2 items-center">
+                                            <div @click.passive="triggerInput(index)" class="border border-slate-300 rounded h-20 w-20 flex justify-center items-center hover:bg-gray-50 cursor-pointer">
+                                                <Plus class="text-slate-400"></Plus>
+                                                <input
+                                                    type="file"
+                                                    :ref="'artworkInput_' + index"
+                                                    class="hidden"
+                                                    accept="image/*"
+                                                    multiple
+                                                    @change="handleFileUpload($event, index)"
+                                                />
+                                            </div>
+                                            <Label class="cursor-pointer text-xs">Add Artwork</Label>
+                                        </div>
+                                        <div class="flex flex-col items-center relative" v-if="data.artworks" v-for="artwork, artwork_index in data.artworks">
+                                            <XCircle class="absolute -top-2 -right-2 h-5 w-5 cursor-pointer text-red-500" @click="deleteFile(index, artwork_index)"></XCircle>
+                                            <img class="border border-slate-300 h-20 w-20 rounded cursor-pointer" :src="artwork.filename ? '/storage/art_gallery/'+artwork.filename : artwork.blob_url" :alt="artwork.filename" @click="openArtworkInNewTab(artwork)">
+                                            <div class="flex items-center space-x-1 mt-2">
+                                                <Checkbox :id="index+'_'+artwork_index" :checked="!!form.report_data[index].artworks[artwork_index].for_artbook" @click.native="form.report_data[index].artworks[artwork_index].for_artbook = !form.report_data[index].artworks[artwork_index].for_artbook"></Checkbox>
+                                                <Label :for="index+'_'+artwork_index" class="cursor-pointer text-xs">Art Book</Label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </template>
                         </Collapsible>
                         <Label class="text-xs text-red-500 font-semibold" v-if="!form.report_data.length && form.attendance_status == 1">At least one (1) objective is required.</Label>
-                    </div>
-                    <div class="">
-                        <Label>Artworks</Label>
-                        <div class="px-4 py-2 bg-slate-100 rounded-lg" v-if="!list.artworks.length">
-                            <Label>No artworks uploaded.</Label>
-                        </div>
-                        <div class="flex flex-wrap gap-2" v-else>
-                            <Badge variant="outline" class="cursor-pointer" v-for="artwork in list.artworks" @click="openArtworkInNewTab(artwork)">
-                                <span>{{ artwork.filename }}</span>
-                            </Badge>
-                        </div>
                     </div>
                     <div class="">
                         <Label>Comments</Label>
@@ -136,7 +149,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             </template>
         </Dialog>
         <Dialog v-model:open="show_qr_modal" classProp="max-w-sm">
-            <template #title>Artwork Upload</template>
+            <template #title>Generate QR for upload</template>
             <template #content>
                 <div class="p-1 grid grid-cols-1 items-center gap-2">
                     <template v-if="!qr_data.image">
@@ -156,7 +169,6 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </template>
                     <div class="flex flex-col items-center" v-else>
                         <div class="h-40 w-40" v-html="qr_data.image"></div>
-                        <Button @click="qr_data.image = ''">Regenerate QR</Button>
                     </div>
                 </div>
             </template>
@@ -182,6 +194,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import Dialog from '@/Components/DialogModal.vue'
 import Collapsible from '@/Components/Collapsible.vue'
 import { Badge } from '@/Components/ui/badge'
+import { Plus, Trash, Trash2Icon, XCircle } from 'lucide-vue-next';
 
 export default {
     components: {
@@ -235,11 +248,14 @@ export default {
                 outcome_id: '',
             },
             form: {
+                student_id: '',
+                student_level: '',
                 teacher_user_id: '',
                 date: '',
                 report_data: [],
                 comments: '',
                 attendance_status: '',
+                file_to_delete: []
             }
         }
     },
@@ -253,6 +269,8 @@ export default {
             })
             .then(response => {
                 this.list.artworks = response.data
+                this.form.student_id            =   this.$page.props.student_info.id
+                this.form.student_level         =   this.$page.props.student_info.level
                 this.form.report_id             =   this.$page.props.progress_reports[index].id
                 this.form.teacher_user_id       =   this.$page.props.progress_reports[index].teacher_user_id
                 this.form.teacher_name          =   this.$page.props.progress_reports[index].display_name
@@ -260,6 +278,7 @@ export default {
                 this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data) ? JSON.parse(this.$page.props.progress_reports[index].report_data) : []
                 this.form.attendance_status     =   this.$page.props.progress_reports[index].attendance_status
                 this.form.comments              =   this.$page.props.progress_reports[index].comments
+                this.form.file_to_delete        =   []
                 this.show_progress_report       =   true;
             });
         },
@@ -367,7 +386,8 @@ export default {
                             activity_name: this.options.activities.find(item => item.id === this.search.activity_id)?.name,
                             outcome_id: this.search.outcome_id,
                             outcome_name: this.options.outcomes.find(item => item.id === this.search.outcome_id)?.name,
-                            objectives: []
+                            objectives: [],
+                            artworks: []
                         }
                         const initialLength     =   this.form.report_data.length
                         const test              =   this.form.report_data.push(new_item)
@@ -427,12 +447,45 @@ export default {
             this.qr_data.image = ''
         },
         openArtworkInNewTab(artwork) {
-            const url = '/storage/art_gallery/' + artwork.filename
+            const url = artwork.filename ? '/storage/art_gallery/' + artwork.filename : artwork.blob_url
             window.open(url, '_blank');
-        }
-    },
-    updated(){
-        this.scrollToTop()
+        },
+        triggerInput(index) {
+            this.$refs['artworkInput_' + index][0].click();
+        },
+        handleFileUpload(event, index) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                if (!files[i].type.startsWith('image/')) {
+                    alert(`${files[i].name} is not an image file.`);
+                    return;
+                }
+                if(!this.form.report_data[index].artworks){
+                    this.form.report_data[index].artworks = []
+                }
+                if(this.form.report_data[index].artworks.find(item => item.file && item.file.name == files[i].name)){
+                    alert(`${files[i].name} already_exists.`);
+                    return;
+                }
+                const blob = new Blob([files[i]], { type: files[i].type })
+                const blob_url = URL.createObjectURL(blob)
+
+                this.form.report_data[index].artworks.push({
+                    file: files[i],
+                    blob_url: blob_url,
+                    for_artbook: false
+                })
+            }
+
+        },
+        deleteFile(index, artwork_index){
+            if(this.form.report_data[index].artworks[artwork_index].filename){
+                this.form.file_to_delete.push(
+                    this.form.report_data[index].artworks[artwork_index].filename
+                )
+            }
+            this.form.report_data[index].artworks.splice(artwork_index, 1)
+        },
     },
 }
 </script>

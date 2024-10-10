@@ -54,6 +54,7 @@ export default {
     methods: {
         submit(){
             this.$inertia.post(route('progress_report.exchange.store'), this.form, {
+                preserveState: false,
                 onSuccess: () => {
                     if(this.$page.props.flash.type == 'success'){
                         this.response.success = true

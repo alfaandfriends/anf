@@ -144,16 +144,52 @@ class ProgressReportController extends Controller
     }
 
     public function store(Request $request){
+
         $validator = Validator::make($request->all(), [
             'date'  => 'required'
         ]);
+
         if ($validator->fails()) {
             return redirect()->back()->with(['type'=>'error', 'message'=>'Date is required!']);
         }
 
+        $report_data = collect($request->report_data)->map(function ($report) use ($request) {
+            if(isset($report['artworks'])){
+                $report['artworks'] = collect($report['artworks'])->map(function ($artwork) use ($request, $report) {
+                    if (isset($artwork['file'])) {
+                        
+                        $filename = uniqid() . '_' . str_replace(' ', '_', $artwork['file']->getClientOriginalName());
+            
+                        Storage::putFileAs('art_gallery', $artwork['file'], $filename);
+            
+                        DB::table('student_art_gallery')->insert([
+                            'report_detail_id' => $request->report_id,
+                            'student_id' => $request->student_id,
+                            'level_id' => $request->student_level,
+                            'theme_id' => $report['theme_id'],
+                            'lesson_id' => $report['lesson_id'],
+                            'activity_id' => $report['activity_id'],
+                            'filename' => $filename,
+                            'for_art_book' => $artwork['for_artbook'],
+                        ]);
+                        unset($artwork['file']);
+                        $artwork['filename'] = $filename ?? '';
+                    }
+                    return $artwork; 
+                })->toArray();
+            }
+            return $report;
+        })->toArray();
+
+        if(isset($request->file_to_delete) && count($request->file_to_delete)){
+            foreach($request->file_to_delete as $filename){
+                Storage::delete('art_gallery/'.$filename);
+            }
+        }
+
         DB::table('progress_report_details')->where('id', $request->report_id)->update([
             'date'                  => Carbon::parse($request->date)->format('Y-m-d'),
-            'report_data'           => json_encode($request->report_data, JSON_NUMERIC_CHECK),
+            'report_data'           => json_encode($report_data, JSON_NUMERIC_CHECK),
             'comments'              => $request->comments,
             'attendance_status'     => $request->attendance_status,
             'revision'              => $request->revision,
@@ -225,9 +261,9 @@ class ProgressReportController extends Controller
                                     ->join('children', 'students.children_id', '=', 'children.id')
                                     ->select('children.name')
                                     ->where('students.id', $decrypted_data->student_id)->pluck('children.name')->first();
-        $info['theme']      =   DB::table('art_themes')->where('id', $decrypted_data->theme_id)->select('name')->pluck('name')->first();
-        $info['lesson']     =   DB::table('art_lessons')->where('id', $decrypted_data->lesson_id)->select('name')->pluck('name')->first();
-        $info['activity']   =   DB::table('art_activities')->where('id', $decrypted_data->activity_id)->select('name')->pluck('name')->first();
+        $info['theme']      =   DB::table('pr_art_themes')->where('id', $decrypted_data->theme_id)->select('name')->pluck('name')->first();
+        $info['lesson']     =   DB::table('pr_art_lessons')->where('id', $decrypted_data->lesson_id)->select('name')->pluck('name')->first();
+        $info['activity']   =   DB::table('pr_art_activities')->where('id', $decrypted_data->activity_id)->select('name')->pluck('name')->first();
         $info['encrypted']  =   $data;
         
         return Inertia::render('ProgressReport/UploadArtwork', $info);
@@ -256,6 +292,7 @@ class ProgressReportController extends Controller
                     'lesson_id' => $decrypted_data->lesson_id,
                     'activity_id' => $decrypted_data->activity_id,
                     'filename' => $filename,
+                    'for_art_book' => $item['for_artbook'],
                 ]);
             }
         }
@@ -267,53 +304,6 @@ class ProgressReportController extends Controller
         $artworks = DB::table('student_art_gallery')->where('report_detail_id', $request->report_detail_id)->get();
 
         return $artworks;
-    }
-
-    public function exchange(){
-        $info['student_art_gallery']    =   DB::table('student_art_gallery')
-                                                ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
-                                                ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
-                                                ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
-                                                ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
-                                                ->select(
-                                                    'art_levels.name as level_name', 
-                                                    'art_themes.name as theme_name', 
-                                                    'art_lessons.name as lesson_name', 
-                                                    'art_activities.name as activity_name',
-                                                    'student_art_gallery.activity_id'
-                                                )
-                                                ->distinct('student_art_gallery.activity_id')
-                                                ->orderBy('art_levels.id')
-                                                ->orderBy('art_themes.id')
-                                                ->orderBy('art_lessons.id')
-                                                ->orderBy('art_activities.id')
-                                                ->where('changed', false)
-                                                ->get();
-
-        $info['pr_art_activities']      =   DB::table('pr_art_activities')
-                                                ->join('pr_art_lessons', 'pr_art_activities.lesson_id', '=', 'pr_art_lessons.id')
-                                                ->join('pr_art_themes', 'pr_art_lessons.theme_id', '=', 'pr_art_themes.id')
-                                                ->join('pr_art_levels', 'pr_art_themes.level_id', '=', 'pr_art_levels.id')
-                                                ->select(
-                                                    'pr_art_levels.name as level_name', 
-                                                    'pr_art_themes.name as theme_name', 
-                                                    'pr_art_lessons.name as lesson_name', 
-                                                    'pr_art_activities.name as activity_name',
-                                                    'pr_art_activities.id as activity_id'
-                                                )
-                                                ->orderBy('pr_art_levels.id')
-                                                ->orderBy('pr_art_themes.id')
-                                                ->orderBy('pr_art_lessons.id')
-                                                ->orderBy('pr_art_activities.id')
-                                                ->get();
-        
-        return Inertia::render('ProgressReport/Exchange', $info);
-    }
-    public function exchangeStore(Request $request){
-        DB::table('student_art_gallery')->whereIn('activity_id', $request->from)->update([
-            'new_activity_id' => $request->to,
-            'changed' => true
-        ]);
     }
 
     /* Math */
@@ -1303,4 +1293,56 @@ class ProgressReportController extends Controller
             }
         /* Little Bot Objectives */
     /* Settings */
+
+    public function exchange(){
+        $info['student_art_gallery']    =   DB::table('student_art_gallery')
+                                                ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
+                                                ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
+                                                ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
+                                                ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
+                                                ->select(
+                                                    'art_levels.name as level_name', 
+                                                    'art_themes.name as theme_name', 
+                                                    'art_lessons.name as lesson_name', 
+                                                    'art_activities.name as activity_name',
+                                                    'student_art_gallery.activity_id'
+                                                )
+                                                ->distinct('student_art_gallery.activity_id')
+                                                ->orderBy('art_levels.id')
+                                                ->orderBy('art_themes.id')
+                                                ->orderBy('art_lessons.id')
+                                                ->orderBy('art_activities.id')
+                                                ->where('changed', false)
+                                                ->get();
+
+        $info['pr_art_activities']      =   DB::table('pr_art_activities')
+                                                ->join('pr_art_lessons', 'pr_art_activities.lesson_id', '=', 'pr_art_lessons.id')
+                                                ->join('pr_art_themes', 'pr_art_lessons.theme_id', '=', 'pr_art_themes.id')
+                                                ->join('pr_art_levels', 'pr_art_themes.level_id', '=', 'pr_art_levels.id')
+                                                ->select(
+                                                    'pr_art_levels.name as level_name', 
+                                                    'pr_art_themes.name as theme_name', 
+                                                    'pr_art_lessons.name as lesson_name', 
+                                                    'pr_art_activities.name as activity_name',
+                                                    'pr_art_activities.id as activity_id'
+                                                )
+                                                ->orderBy('pr_art_levels.id')
+                                                ->orderBy('pr_art_themes.id')
+                                                ->orderBy('pr_art_lessons.id')
+                                                ->orderBy('pr_art_activities.id')
+                                                ->get();
+        
+        return Inertia::render('ProgressReport/Exchange', $info);
+    }
+    public function exchangeStore(Request $request){
+        if(!count($request->from) || !$request->to){
+            return back()->with(['type' => 'error', 'message' => 'Please select both new and old activity to exchange.']);
+        }
+        DB::table('student_art_gallery')->whereIn('activity_id', $request->from)->update([
+            'new_activity_id' => $request->to,
+            'changed' => true
+        ]);
+
+        return back()->with(['type' => 'success', 'message' => 'Data has been saved.']);
+    }
 }
