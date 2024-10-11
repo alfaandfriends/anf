@@ -35,7 +35,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             <Label>Programme<span class="text-red-500">*</span></Label>
                             <ComboBox :items="$page.props.programme_list" label-property="name" value-property="id" v-model="search_form.programme_id" select-placeholder="Select Programme" search-placeholder="Search programme..." :error="errors.programme">
                                 <template #label="{ item }">
-                                    <span class="font-normal">{{ item.name + " (" + item.country_name + ")" }}</span>
+                                    {{ item.name }} ({{ item.country_name }})
+                                </template>
+                                <template #label-content="{ selectedItem, selectedItems, multiple }">
+                                    <span v-if="selectedItem">{{ selectedItem.name }} ({{ selectedItem.country_name }})</span>
                                 </template>
                             </ComboBox>
                         </div>

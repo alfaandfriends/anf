@@ -23,7 +23,10 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             <ComboBox :items="$page.props.allowed_centres" label-property="label" value-property="ID" @select="search" v-model="params.centre_id" select-placeholder="Centres" search-placeholder="Search centre..."></ComboBox>
             <ComboBox :items="$page.props.programmes" label-property="name" value-property="id" @select="search" v-model="params.programme_id" :canClear="true" select-placeholder="Programmes" search-placeholder="Search programme..."> 
                 <template #label="{ item }">
-                    <span class="font-normal">{{ item.name + " (" + item.country_name + ")" }}</span>
+                    {{ item.name }} ({{ item.country_name }})
+                </template>
+                <template #label-content="{ selectedItem, selectedItems, multiple }">
+                    <span v-if="selectedItem">{{ selectedItem.name }} ({{ selectedItem.country_name }})</span>
                 </template>
             </ComboBox>
             <div>

@@ -184,6 +184,7 @@ class ProgressReportController extends Controller
         if(isset($request->file_to_delete) && count($request->file_to_delete)){
             foreach($request->file_to_delete as $filename){
                 Storage::delete('art_gallery/'.$filename);
+                DB::table('student_art_gallery')->where('filename', $filename)->delete();
             }
         }
 

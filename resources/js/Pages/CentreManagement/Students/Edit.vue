@@ -626,7 +626,14 @@ import BreezeButton from "@/Components/Button.vue";
                     v-model="search_form.programme_id"
                     select-placeholder="Select Programme"
                     search-placeholder="Search programme..."
-                  ></ComboBox>
+                  >
+                    <template #label="{ item }">
+                        {{ item.name }} ({{ item.country_name }})
+                    </template>
+                    <template #label-content="{ selectedItem, selectedItems, multiple }">
+                        <span v-if="selectedItem">{{ selectedItem.name }} ({{ selectedItem.country_name }})</span>
+                    </template>
+                  </ComboBox>
                 </div>
               </div>
               <div class="p-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 items-end gap-4">

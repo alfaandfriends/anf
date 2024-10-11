@@ -2,7 +2,7 @@ import './bootstrap';
 // import '../css/app.css';
 import '@vueform/toggle/themes/default.css'
 import '@vueform/multiselect/themes/default.css'
-import '@vuepic/vue-datepicker/dist/main.css'
+// import '@vuepic/vue-datepicker/dist/main.css'
 import 'cropperjs/dist/cropper.js'
 import 'cropperjs/dist/cropper.css'
 
@@ -66,5 +66,5 @@ createInertiaApp({
 
 /* Progress bar color */
 InertiaProgress.init({
-    color: '#8c4dff',
+    color: '#000000',
 });

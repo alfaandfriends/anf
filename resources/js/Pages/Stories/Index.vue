@@ -94,11 +94,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             <template #title>Add Story</template>
             <template #content>
                 <div class="grid grid-cols-1 gap-4">
-                    <ComboBox :items="$page.props.programmes" label-property="name" value-property="id" v-model="add_story.form.programme_id" select-placeholder="Select Programme" search-placeholder="Search programme..."></ComboBox>
+                    <ComboBox :items="$page.props.programmes" label-property="name" value-property="id" v-model="add_story.form.programme_id" select-placeholder="Select Programme" search-placeholder="Search programme...">
+                        <template #label="{ item }">
+                            {{ item.name }} ({{ item.country_name }})
+                        </template>
+                        <template #label-content="{ selectedItem, selectedItems, multiple }">
+                            <span v-if="selectedItem">{{ selectedItem.name }} ({{ selectedItem.country_name }})</span>
+                        </template>
+                    </ComboBox>
                     <ComboBox :items="$page.props.centres" label-property="label" value-property="ID" v-model="add_story.form.centre_id" select-placeholder="Select Centre" search-placeholder="Search centre..."></ComboBox>
                     <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
                         <ComboBox canClear :items="$page.props.class_types" label-property="name" value-property="id" v-model="add_story.find.class_types" select-placeholder="Select Class Type (optional)" search-placeholder="Search class type..."></ComboBox>
-                        <ComboBox canClear :items="add_story.list.levels" label-property="level" value-property="id" v-model="add_story.find.levels" select-placeholder="Select Class Type (optional)" search-placeholder="Search programme...">
+                        <ComboBox canClear :items="add_story.list.levels" label-property="level" value-property="id" v-model="add_story.find.levels" select-placeholder="Select Level" search-placeholder="Search level...">
                             <template #label="{ item }">
                                 Level {{ item.level }}
                             </template>
@@ -107,7 +114,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             </template>
                         </ComboBox>
                     </div>
-                    <ComboBox multiple :items="add_story.students[0].options" label-property="name" value-property="id" v-model="add_story.form.students" select-placeholder="Select Programme" search-placeholder="Search programme..."></ComboBox>
+                    <ComboBox multiple :items="add_story.students[0].options" label-property="name" value-property="id" v-model="add_story.form.students" select-placeholder="Select Students" search-placeholder="Search student..."></ComboBox>
                     <Textarea rows="3" placeholder="What's happening today?" v-model="add_story.form.caption"></Textarea>
                     <div class="w-full" v-if="add_story.form.photos.length">
                         <div class="overflow-x-auto scrollbar pb-3">
@@ -155,11 +162,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             <template #title>Edit Story</template>
             <template #content>
                 <div class="grid grid-cols-1 gap-4">
-                    <ComboBox :items="$page.props.programmes" label-property="name" value-property="id" v-model="edit_story.form.programme_id" select-placeholder="Select Programme" search-placeholder="Search programme..."></ComboBox>
+                    <ComboBox :items="$page.props.programmes" label-property="name" value-property="id" v-model="edit_story.form.programme_id" select-placeholder="Select Programme" search-placeholder="Search programme...">
+                        <template #label="{ item }">
+                            {{ item.name }} ({{ item.country_name }})
+                        </template>
+                        <template #label-content="{ selectedItem, selectedItems, multiple }">
+                            <span v-if="selectedItem">{{ selectedItem.name }} ({{ selectedItem.country_name }})</span>
+                        </template>
+                    </ComboBox>
                     <ComboBox :items="$page.props.centres" label-property="label" value-property="ID" v-model="edit_story.form.centre_id" select-placeholder="Select Centre" search-placeholder="Search centre..."></ComboBox>
                     <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
                         <ComboBox canClear :items="$page.props.class_types" label-property="name" value-property="id" v-model="edit_story.find.class_types" select-placeholder="Select Class Type (optional)" search-placeholder="Search class type..."></ComboBox>
-                        <ComboBox canClear :items="edit_story.list.levels" label-property="level" value-property="id" v-model="edit_story.find.levels" select-placeholder="Select Class Type (optional)" search-placeholder="Search programme...">
+                        <ComboBox canClear :items="edit_story.list.levels" label-property="level" value-property="id" v-model="edit_story.find.levels" select-placeholder="Select Level" search-placeholder="Search level...">
                             <template #label="{ item }">
                                 Level {{ item.level }}
                             </template>
@@ -168,7 +182,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             </template>
                         </ComboBox>
                     </div>
-                    <ComboBox multiple :items="edit_story.students[0].options" label-property="name" value-property="id" v-model="edit_story.form.students" select-placeholder="Select Programme" search-placeholder="Search programme..."></ComboBox>
+                    <ComboBox multiple :items="edit_story.students[0].options" label-property="name" value-property="id" v-model="edit_story.form.students" select-placeholder="Select Students" search-placeholder="Search student..."></ComboBox>
                     <Textarea rows="3" placeholder="What's happening today?" v-model="edit_story.form.caption"></Textarea>
                     <div class="w-full" v-if="edit_story.form.photos.length">
                         <div class="overflow-x-auto scrollbar pb-3">

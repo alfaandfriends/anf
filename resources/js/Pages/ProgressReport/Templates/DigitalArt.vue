@@ -68,7 +68,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </div>
                     <div class="">
                         <Label>Activity</Label>
-                        <ComboBox :items="options.activities" label-property="name" value-property="id" v-model="search.activity_id" select-placeholder="Select Activitiy" search-placeholder="Search activity..." @select="getOutcomes(search.activity_id)" :loading="loading.activities"></ComboBox>
+                        <ComboBox :items="options.activities" label-property="name" value-property="id" v-model="search.activity_id" select-placeholder="Select Activity" search-placeholder="Search activity..." @select="getOutcomes(search.activity_id)" :loading="loading.activities"></ComboBox>
                     </div>
                     <div class="">
                         <Label>Learning Outcome</Label>
@@ -79,7 +79,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         <div class="px-4 py-2 bg-slate-100 rounded-lg" v-if="!form.report_data.length">
                             <Label>No objectives found.</Label>
                         </div>
-                        <Collapsible class=" bg-white" v-model="open_objectives" v-else v-for="data, index in form.report_data">
+                        <Collapsible class=" bg-white" v-else v-for="data, index in form.report_data" v-model="open_objectives[index]">
                             <template #trigger>
                                 <div class="flex items-center space-x-2">
                                     <Label>{{ data.theme_name }} : {{ data.lesson_name }}</Label>
@@ -88,6 +88,53 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             </template>
                             <template #content>
                                 <div class="p-1">
+                                    <!-- <div class="flex flex-col space-y-1">
+                                        <template v-for="lesson, lesson_index in theme.lessons">
+                                            <span class="font-semibold underline text-[14px]">{{ lesson.lesson_name }}</span>
+                                            <template v-for="activity, activity_index in lesson.activities">
+                                                <Badge variant="ghost">
+                                                    <span>{{ activity.activity_name }}</span>
+                                                </Badge>
+                                                <template v-for="outcome, outcome_index in activity.outcomes">
+                                                    <Badge>
+                                                        <span>{{ outcome.outcome_name }}</span>
+                                                    </Badge>
+                                                    <ul class="divide-y">
+                                                        <li class="" v-for="objective, objective_index in outcome.objectives">
+                                                            <Label class="flex items-center space-x-2 py-2">
+                                                                <Checkbox :value="objective.id" :checked="objective.achieved" @click.native="objective.achieved = !objective.achieved"/>
+                                                                <span class="cursor-pointer">{{ objective.name }}</span> 
+                                                            </Label>
+                                                        </li>
+                                                    </ul>
+                                                </template>
+                                                <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-3">
+                                                    <div class="flex flex-col space-y-2 items-center">
+                                                        <div @click.passive="triggerInput(index)" class="border border-slate-300 rounded h-20 w-20 flex justify-center items-center hover:bg-gray-50 cursor-pointer">
+                                                            <Plus class="text-slate-400"></Plus>
+                                                            <input
+                                                                type="file"
+                                                                :ref="'artworkInput_' + index"
+                                                                class="hidden"
+                                                                accept="image/*"
+                                                                multiple
+                                                                @change="handleFileUpload($event, index)"
+                                                            />
+                                                        </div>
+                                                        <Label class="cursor-pointer text-xs">Add Artwork</Label>
+                                                    </div>
+                                                    <div class="flex flex-col items-center relative" v-if="data.artworks" v-for="artwork, artwork_index in data.artworks">
+                                                        <XCircle class="absolute -top-2 -right-2 h-5 w-5 cursor-pointer text-red-500" @click="deleteFile(index, artwork_index)"></XCircle>
+                                                        <img class="border border-slate-300 h-20 w-20 rounded cursor-pointer" :src="artwork.filename ? '/storage/art_gallery/'+artwork.filename : artwork.blob_url" :alt="artwork.filename" @click="openArtworkInNewTab(artwork)">
+                                                        <div class="flex items-center space-x-1 mt-2">
+                                                            <Checkbox :id="index+'_'+artwork_index" :checked="!!form.report_data[index].artworks[artwork_index].for_artbook" @click.native="form.report_data[index].artworks[artwork_index].for_artbook = !form.report_data[index].artworks[artwork_index].for_artbook"></Checkbox>
+                                                            <Label :for="index+'_'+artwork_index" class="cursor-pointer text-xs">Art Book</Label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </div> -->
                                     <div class="flex flex-col space-y-1">
                                         <Badge>
                                             <span>{{ data.activity_name }}</span>
@@ -135,7 +182,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </div>
                     <div class="">
                         <Label>Comments</Label>
-                        <Textarea rows="3" v-model.lazy="form.comments"></Textarea>
+                        <Textarea rows="10" v-model.lazy="form.comments"></Textarea>
                     </div>
                     <div class="">
                         <Label>Status</Label>
@@ -163,7 +210,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         </div>
                         <div>
                             <Label>Activity</Label>
-                            <ComboBox :items="options.activities" label-property="name" value-property="id" :error="!qr_data.activity_id" v-model="qr_data.activity_id" select-placeholder="Select Activitiy" search-placeholder="Search activity..." :loading="loading.activities"></ComboBox>
+                            <ComboBox :items="options.activities" label-property="name" value-property="id" :error="!qr_data.activity_id" v-model="qr_data.activity_id" select-placeholder="Select Activity" search-placeholder="Search activity..." :loading="loading.activities"></ComboBox>
                         </div>
                         <Button @click="generateQr" :class="qr_data.student_id && qr_data.theme_id && qr_data.lesson_id && qr_data.activity_id ? '' : 'cursor-not-allowed opacity-30'">Generate QR</Button>
                     </template>
@@ -200,12 +247,65 @@ export default {
     components: {
         Head, Link, Modal, Multiselect, 
     },
+    computed: {
+        groupedData(){
+            return this.form.report_data.reduce((acc, report) => {
+                // Group by theme
+                let theme = acc.find(t => t.theme_id === report.theme_id);
+                if (!theme) {
+                    theme = {
+                        theme_id: report.theme_id,
+                        theme_name: report.theme_name,
+                        lessons: []
+                    };
+                    acc.push(theme);
+                }
+
+                // Group by lesson
+                let lesson = theme.lessons.find(l => l.lesson_id === report.lesson_id);
+                if (!lesson) {
+                    lesson = {
+                        lesson_id: report.lesson_id,
+                        lesson_name: report.lesson_name,
+                        activities: []
+                    };
+                    theme.lessons.push(lesson);
+                }
+
+                // Group by activity
+                let activity = lesson.activities.find(a => a.activity_id === report.activity_id);
+                if (!activity) {
+                    activity = {
+                        activity_id: report.activity_id,
+                        activity_name: report.activity_name,
+                        outcomes: []
+                    };
+                    lesson.activities.push(activity);
+                }
+
+                // Group by activity
+                let outcome = activity.outcomes.find(a => a.outcome_id === report.outcome_id);
+                if (!outcome) {
+                    outcome = {
+                        outcome_id: report.outcome_id,
+                        outcome_name: report.outcome_name,
+                    };
+                    activity.outcomes.push(outcome);
+                }
+
+                // Add the report to the corresponding activity
+                outcome.objectives = report.objectives;
+
+                return acc;
+            }, []);
+        }
+    },
     data(){
         return{
             show_select_student: false,
             show_qr_modal: false,
             show_progress_report: false,
-            open_objectives: false,
+            open_objectives: [],
             searching: false,
             progress_report_list: {},
             qr_data: {
