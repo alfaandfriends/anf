@@ -260,12 +260,12 @@ export default {
                 <Breadcrumbs :breadcrumbs="$page.props.breadcrumbs"/>
                 <div class="px-6 py-2 bg-blue bg-red-500 space-y-4 lg:flex lg:space-y-0 justify-center text-center lg:justify-between items-center" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
                     <span class="text-white text-xs font-semibold whitespace-nowrap">Warning: Please use this feature with caution!</span>
-                    <form @submit.prevent="impersonate" class="flex flex-col lg:flex-row w-full space-x-2 items-center md:justify-end lg:justify-end">
-                        <label for="impersonate_username" class="text-white 2xl:text-sm sm:text-md font-bold">Username</label>
+                    <form @submit.prevent="impersonate" class="flex flex-col md:flex-row w-full space-x-2 items-center justify-center lg:justify-end">
+                        <Label for="impersonate_username" class="text-xs text-white">Username</Label>
                         <div class="flex space-x-2 items-center">
-                            <input type="text" id="impersonate_username" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username" autocomplete="none">
+                            <Input type="text" id="impersonate_username" class="bg-white focus:border-0" v-model="username" autocomplete="none"></Input>
                             <Button @click="impersonate" class="px-3 py-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 512 512">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" width="16" height="16" fill="currentColor" viewBox="0 0 512 512">
                                     <path d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96H320v32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32V64H160C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96H192V352c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V448H352c88.4 0 160-71.6 160-160z"/>
                                 </svg>
                             </Button>

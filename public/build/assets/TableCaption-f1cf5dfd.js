@@ -1,0 +1,1 @@
+import{c as a}from"./app-c86e7426.js";import{t as r,y as l,B as o,q as n,u as c}from"./@vue-2682a433.js";const i={__name:"TableCaption",props:{class:{type:null,required:!1}},setup(s){const e=s;return(t,p)=>(r(),l("caption",{class:n(c(a)("mt-4 text-sm text-slate-500 dark:text-slate-400",e.class))},[o(t.$slots,"default")],2))}};export{i as _};
