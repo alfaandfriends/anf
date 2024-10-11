@@ -80,7 +80,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         <div class="px-4 py-2 bg-slate-100 rounded-lg" v-if="!form.report_data.length">
                             <Label>No objectives found.</Label>
                         </div>
-                        <Collapsible class=" bg-white" v-model="open_objectives" v-else v-for="data, index in form.report_data">
+                        <Collapsible class=" bg-white" v-else v-for="data, index in form.report_data" v-model="open_objectives[index]">
                             <template #trigger>
                                 <div class="flex items-center space-x-2">
                                     <Label class="whitespace-pre-line">{{ data.lesson_name }} : {{ data.topic_name }}</Label>
@@ -97,7 +97,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </div>
                     <div class="">
                         <Label>Comments</Label>
-                        <Textarea rows="3" v-model.lazy="form.comments"></Textarea>
+                        <Textarea rows="10" v-model.lazy="form.comments"></Textarea>
                     </div>
                     <div class="">
                         <Label>Status</Label>
@@ -132,7 +132,7 @@ export default {
     data(){
         return{
             show_progress_report: false,
-            open_objectives: false,
+            open_objectives: [],
             searching: false,
             progress_report_list: {},
             list: {

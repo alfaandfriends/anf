@@ -18,20 +18,20 @@ class ArtGalleryController extends Controller
         $results    =   DB::table('students')
                             ->join('children', 'students.children_id', '=', 'children.id')
                             ->join('student_art_gallery', 'student_art_gallery.student_id', '=', 'students.id')
-                            ->join('art_levels', 'student_art_gallery.level_id', '=', 'art_levels.id')
-                            ->join('art_themes', 'student_art_gallery.theme_id', '=', 'art_themes.id')
-                            ->join('art_lessons', 'student_art_gallery.lesson_id', '=', 'art_lessons.id')
-                            ->join('art_activities', 'student_art_gallery.activity_id', '=', 'art_activities.id')
+                            ->join('pr_art_levels', 'student_art_gallery.level_id', '=', 'pr_art_levels.id')
+                            ->join('pr_art_themes', 'student_art_gallery.theme_id', '=', 'pr_art_themes.id')
+                            ->join('pr_art_lessons', 'student_art_gallery.lesson_id', '=', 'pr_art_lessons.id')
+                            ->join('pr_art_activities', 'student_art_gallery.activity_id', '=', 'pr_art_activities.id')
                             ->when(request('search'), function($query, $search) {
                                 $query->where(function ($q) use ($search) {
                                     $q->where('children.name', 'LIKE', "%$search%");
                                 });
                             })
                             ->when(request('level'), function($query) {
-                                $query->where('art_levels.id', request('level'));
+                                $query->where('pr_art_levels.id', request('level'));
                             })
                             ->when(request('theme'), function($query) {
-                                $query->where('art_themes.id', request('theme'));
+                                $query->where('pr_art_themes.id', request('theme'));
                             })
                             ->when(request('status') != null, function($query) {
                                 $query->where('students.status', request('status'));
@@ -42,16 +42,16 @@ class ArtGalleryController extends Controller
                                 'students.status as student_status',
                                 'children.name as student_name',
                                 'student_art_gallery.filename as art_file_location',
-                                'art_levels.name as level',
-                                'art_themes.name as theme',
-                                'art_lessons.name as lesson',
-                                'art_activities.name as activity',
+                                'pr_art_levels.name as level',
+                                'pr_art_themes.name as theme',
+                                'pr_art_lessons.name as lesson',
+                                'pr_art_activities.name as activity',
                             )
                             ->orderBy('student_art_gallery.id')
-                            ->orderBy('art_levels.id')
-                            ->orderBy('art_themes.id')
-                            ->orderBy('art_lessons.id')
-                            ->orderBy('art_activities.id')
+                            ->orderBy('pr_art_levels.id')
+                            ->orderBy('pr_art_themes.id')
+                            ->orderBy('pr_art_lessons.id')
+                            ->orderBy('pr_art_activities.id')
                             // ->toSql();
                             ->paginate(10);
                             

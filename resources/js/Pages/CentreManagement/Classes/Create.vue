@@ -17,7 +17,14 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </div>
                     <div>
                         <Label>Programme<span class="text-red-500">*</span></Label>
-                        <ComboBox :items="$page.props.programme_list" label-property="name" value-property="id" :error="!!$page.props.errors.programme_id" v-model="form.programme_id" select-placeholder="Select Programme" search-placeholder="Search programme..."></ComboBox>
+                        <ComboBox :items="$page.props.programme_list" label-property="name" value-property="id" :error="!!$page.props.errors.programme_id" v-model="form.programme_id" select-placeholder="Select Programme" search-placeholder="Search programme...">
+                            <template #label="{ item }">
+                                {{ item.name }} ({{ item.country_name }})
+                            </template>
+                            <template #label-content="{ selectedItem, selectedItems, multiple }">
+                                <span v-if="selectedItem">{{ selectedItem.name }} ({{ selectedItem.country_name }})</span>
+                            </template>
+                        </ComboBox>
                     </div>
                     <div>
                         <Label>Class Type<span class="text-red-500">*</span></Label>

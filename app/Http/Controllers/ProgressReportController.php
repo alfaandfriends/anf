@@ -10,9 +10,13 @@ use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+
+use function Laravel\Prompts\table;
 
 class ProgressReportController extends Controller
 {
@@ -99,7 +103,7 @@ class ProgressReportController extends Controller
                                 ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
                                 ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
                                 ->where('progress_reports.id', $request->progress_report_id)
-                                ->select('children.name as name', 'students.created_at as joined_date', 'programmes.name as programme', 'programme_levels.level as level')
+                                ->select('students.id', 'children.name as name', 'students.created_at as joined_date', 'programmes.name as programme', 'programme_levels.level as level')
                                 ->first();
                                 
         /* Math Init Selection */
@@ -140,16 +144,53 @@ class ProgressReportController extends Controller
     }
 
     public function store(Request $request){
+
         $validator = Validator::make($request->all(), [
             'date'  => 'required'
         ]);
+
         if ($validator->fails()) {
             return redirect()->back()->with(['type'=>'error', 'message'=>'Date is required!']);
         }
 
+        $report_data = collect($request->report_data)->map(function ($report) use ($request) {
+            if(isset($report['artworks'])){
+                $report['artworks'] = collect($report['artworks'])->map(function ($artwork) use ($request, $report) {
+                    if (isset($artwork['file'])) {
+                        
+                        $filename = uniqid() . '_' . str_replace(' ', '_', $artwork['file']->getClientOriginalName());
+            
+                        Storage::putFileAs('art_gallery', $artwork['file'], $filename);
+            
+                        DB::table('student_art_gallery')->insert([
+                            'report_detail_id' => $request->report_id,
+                            'student_id' => $request->student_id,
+                            'level_id' => $request->student_level,
+                            'theme_id' => $report['theme_id'],
+                            'lesson_id' => $report['lesson_id'],
+                            'activity_id' => $report['activity_id'],
+                            'filename' => $filename,
+                            'for_art_book' => $artwork['for_artbook'],
+                        ]);
+                        unset($artwork['file']);
+                        $artwork['filename'] = $filename ?? '';
+                    }
+                    return $artwork; 
+                })->toArray();
+            }
+            return $report;
+        })->toArray();
+
+        if(isset($request->file_to_delete) && count($request->file_to_delete)){
+            foreach($request->file_to_delete as $filename){
+                Storage::delete('art_gallery/'.$filename);
+                DB::table('student_art_gallery')->where('filename', $filename)->delete();
+            }
+        }
+
         DB::table('progress_report_details')->where('id', $request->report_id)->update([
             'date'                  => Carbon::parse($request->date)->format('Y-m-d'),
-            'report_data'           => json_encode($request->report_data, JSON_NUMERIC_CHECK),
+            'report_data'           => json_encode($report_data, JSON_NUMERIC_CHECK),
             'comments'              => $request->comments,
             'attendance_status'     => $request->attendance_status,
             'revision'              => $request->revision,
@@ -212,6 +253,58 @@ class ProgressReportController extends Controller
                                             
         $pdf = PDF::setPaper('a4', 'portrait')->loadView($data['report_template'], compact('data'));
         return $pdf->stream();
+    }
+
+    public function uploadArtwork($data){
+        $decrypted_data = json_decode(Crypt::decryptString($data));
+
+        $info['student']    =   DB::table('students')
+                                    ->join('children', 'students.children_id', '=', 'children.id')
+                                    ->select('children.name')
+                                    ->where('students.id', $decrypted_data->student_id)->pluck('children.name')->first();
+        $info['theme']      =   DB::table('pr_art_themes')->where('id', $decrypted_data->theme_id)->select('name')->pluck('name')->first();
+        $info['lesson']     =   DB::table('pr_art_lessons')->where('id', $decrypted_data->lesson_id)->select('name')->pluck('name')->first();
+        $info['activity']   =   DB::table('pr_art_activities')->where('id', $decrypted_data->activity_id)->select('name')->pluck('name')->first();
+        $info['encrypted']  =   $data;
+        
+        return Inertia::render('ProgressReport/UploadArtwork', $info);
+    }
+
+    public function storeArtwork(Request $request){
+        $decrypted_data = json_decode(Crypt::decryptString($request->encrypted_data));
+        
+        if(!$request->data){
+            return back()->with(['type' => 'error', 'message' => 'Please upload at least 1 (one) artwork.']);
+        }
+        foreach($request->data as $item){
+
+            if (isset($item['file'])) {
+                $file = $item['file'];
+                $name = $file->getClientOriginalName();
+                $filename = time() . '_' . str_replace(' ', '_', $name);
+
+                Storage::putFileAs('art_gallery',$file, $filename);
+
+                DB::table('student_art_gallery')->insert([
+                    'report_detail_id' => $decrypted_data->report_detail_id,
+                    'student_id' => $decrypted_data->student_id,
+                    'level_id' => $decrypted_data->level,
+                    'theme_id' => $decrypted_data->theme_id,
+                    'lesson_id' => $decrypted_data->lesson_id,
+                    'activity_id' => $decrypted_data->activity_id,
+                    'filename' => $filename,
+                    'for_art_book' => $item['for_artbook'],
+                ]);
+            }
+        }
+
+        return back()->with(['type' => 'success', 'message' => 'Data has been saved.']);
+    }
+
+    public function artworks(Request $request){
+        $artworks = DB::table('student_art_gallery')->where('report_detail_id', $request->report_detail_id)->get();
+
+        return $artworks;
     }
 
     /* Math */

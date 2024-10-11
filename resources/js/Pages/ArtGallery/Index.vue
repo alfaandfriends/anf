@@ -17,15 +17,15 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     <Filter class="h-4 w-4" />
                     <span class="ml-1 hidden sm:block">Filters</span>
                 </Button>
-                <Button @click="$inertia.get(route('art_gallery.setting.levels'))"> 
+                <!-- <Button @click="$inertia.get(route('art_gallery.setting.levels'))"> 
                     <Settings class="h-4 w-4" />
                     <span class="ml-1 hidden sm:block">Setting</span>
-                </Button>
+                </Button> -->
             </div>
-            <Button @click="show_add_artwork = true" v-if="$page.props.can.create_art_gallery">
+            <!-- <Button @click="show_add_artwork = true" v-if="$page.props.can.create_art_gallery">
                 <PlusCircle class="h-4 w-4" />
                 <span class="ml-1 hidden sm:block">New Artwork</span>
-            </Button>
+            </Button> -->
         </div>
         <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-5 gap-2" v-if="show_filters">
             <ComboBox canClear :items="$page.props.levels" label-property="name" value-property="id" @select="search" v-model="params.level" select-placeholder="Levels" search-placeholder="Search level..."></ComboBox>

@@ -36,8 +36,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             <TableCell class="text-center">
                                 <span class="inline-flex items-center justify-center px-2 py-1 text-xs rounded" :class="[{'bg-green-200 text-green-600': result.attendance_status == 1}, {'bg-red-200 text-red-600': result.attendance_status == 2}, {'bg-gray-200 text-gray-600': result.attendance_status == 3}]">{{ result.attendance_status_name }}</span>
                             </TableCell>
-                            <TableCell class="text-center">
+                            <TableCell class="text-center space-x-2">
                                 <Button variant="outline" @click="viewProgressReport(index)">Edit</Button>
+                                <!-- <Button variant="" @click="showGenerateQrModal(result.id)">Upload Artwork</Button> -->
                             </TableCell>
                         </TableRow>
                     </TableBody>
@@ -67,18 +68,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </div>
                     <div class="">
                         <Label>Activity</Label>
-                        <ComboBox :items="options.activities" label-property="name" value-property="id" v-model="search.activity_id" select-placeholder="Select Activitiy" search-placeholder="Search activity..." @select="getOutcomes(search.activity_id)" :loading="loading.activities"></ComboBox>
+                        <ComboBox :items="options.activities" label-property="name" value-property="id" v-model="search.activity_id" select-placeholder="Select Activity" search-placeholder="Search activity..." @select="getOutcomes(search.activity_id)" :loading="loading.activities"></ComboBox>
                     </div>
                     <div class="">
                         <Label>Learning Outcome</Label>
                         <ComboBox :items="options.outcomes" label-property="name" value-property="id" v-model="search.outcome_id" select-placeholder="Select Outcome" search-placeholder="Search outcome..." @select="addItem()" :loading="loading.outcomes"></ComboBox>
                     </div>
-                    <div class="mb-3">
+                    <div>
                         <Label>Objectives</Label>
                         <div class="px-4 py-2 bg-slate-100 rounded-lg" v-if="!form.report_data.length">
                             <Label>No objectives found.</Label>
                         </div>
-                        <Collapsible class=" bg-white" v-model="open_objectives" v-else v-for="data, index in form.report_data">
+                        <Collapsible class=" bg-white" v-else v-for="data, index in form.report_data" v-model="open_objectives[index]">
                             <template #trigger>
                                 <div class="flex items-center space-x-2">
                                     <Label>{{ data.theme_name }} : {{ data.lesson_name }}</Label>
@@ -87,6 +88,53 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                             </template>
                             <template #content>
                                 <div class="p-1">
+                                    <!-- <div class="flex flex-col space-y-1">
+                                        <template v-for="lesson, lesson_index in theme.lessons">
+                                            <span class="font-semibold underline text-[14px]">{{ lesson.lesson_name }}</span>
+                                            <template v-for="activity, activity_index in lesson.activities">
+                                                <Badge variant="ghost">
+                                                    <span>{{ activity.activity_name }}</span>
+                                                </Badge>
+                                                <template v-for="outcome, outcome_index in activity.outcomes">
+                                                    <Badge>
+                                                        <span>{{ outcome.outcome_name }}</span>
+                                                    </Badge>
+                                                    <ul class="divide-y">
+                                                        <li class="" v-for="objective, objective_index in outcome.objectives">
+                                                            <Label class="flex items-center space-x-2 py-2">
+                                                                <Checkbox :value="objective.id" :checked="objective.achieved" @click.native="objective.achieved = !objective.achieved"/>
+                                                                <span class="cursor-pointer">{{ objective.name }}</span> 
+                                                            </Label>
+                                                        </li>
+                                                    </ul>
+                                                </template>
+                                                <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-3">
+                                                    <div class="flex flex-col space-y-2 items-center">
+                                                        <div @click.passive="triggerInput(index)" class="border border-slate-300 rounded h-20 w-20 flex justify-center items-center hover:bg-gray-50 cursor-pointer">
+                                                            <Plus class="text-slate-400"></Plus>
+                                                            <input
+                                                                type="file"
+                                                                :ref="'artworkInput_' + index"
+                                                                class="hidden"
+                                                                accept="image/*"
+                                                                multiple
+                                                                @change="handleFileUpload($event, index)"
+                                                            />
+                                                        </div>
+                                                        <Label class="cursor-pointer text-xs">Add Artwork</Label>
+                                                    </div>
+                                                    <div class="flex flex-col items-center relative" v-if="data.artworks" v-for="artwork, artwork_index in data.artworks">
+                                                        <XCircle class="absolute -top-2 -right-2 h-5 w-5 cursor-pointer text-red-500" @click="deleteFile(index, artwork_index)"></XCircle>
+                                                        <img class="border border-slate-300 h-20 w-20 rounded cursor-pointer" :src="artwork.filename ? '/storage/art_gallery/'+artwork.filename : artwork.blob_url" :alt="artwork.filename" @click="openArtworkInNewTab(artwork)">
+                                                        <div class="flex items-center space-x-1 mt-2">
+                                                            <Checkbox :id="index+'_'+artwork_index" :checked="!!form.report_data[index].artworks[artwork_index].for_artbook" @click.native="form.report_data[index].artworks[artwork_index].for_artbook = !form.report_data[index].artworks[artwork_index].for_artbook"></Checkbox>
+                                                            <Label :for="index+'_'+artwork_index" class="cursor-pointer text-xs">Art Book</Label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </div> -->
                                     <div class="flex flex-col space-y-1">
                                         <Badge>
                                             <span>{{ data.activity_name }}</span>
@@ -103,6 +151,30 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                             </Label>
                                         </li>
                                     </ul>
+                                    <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-3">
+                                        <div class="flex flex-col space-y-2 items-center">
+                                            <div @click.passive="triggerInput(index)" class="border border-slate-300 rounded h-20 w-20 flex justify-center items-center hover:bg-gray-50 cursor-pointer">
+                                                <Plus class="text-slate-400"></Plus>
+                                                <input
+                                                    type="file"
+                                                    :ref="'artworkInput_' + index"
+                                                    class="hidden"
+                                                    accept="image/*"
+                                                    multiple
+                                                    @change="handleFileUpload($event, index)"
+                                                />
+                                            </div>
+                                            <Label class="cursor-pointer text-xs">Add Artwork</Label>
+                                        </div>
+                                        <div class="flex flex-col items-center relative" v-if="data.artworks" v-for="artwork, artwork_index in data.artworks">
+                                            <XCircle class="absolute -top-2 -right-2 h-5 w-5 cursor-pointer text-red-500" @click="deleteFile(index, artwork_index)"></XCircle>
+                                            <img class="border border-slate-300 h-20 w-20 rounded cursor-pointer" :src="artwork.filename ? '/storage/art_gallery/'+artwork.filename : artwork.blob_url" :alt="artwork.filename" @click="openArtworkInNewTab(artwork)">
+                                            <div class="flex items-center space-x-1 mt-2">
+                                                <Checkbox :id="index+'_'+artwork_index" :checked="!!form.report_data[index].artworks[artwork_index].for_artbook" @click.native="form.report_data[index].artworks[artwork_index].for_artbook = !form.report_data[index].artworks[artwork_index].for_artbook"></Checkbox>
+                                                <Label :for="index+'_'+artwork_index" class="cursor-pointer text-xs">Art Book</Label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </template>
                         </Collapsible>
@@ -110,7 +182,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     </div>
                     <div class="">
                         <Label>Comments</Label>
-                        <Textarea rows="3" v-model.lazy="form.comments"></Textarea>
+                        <Textarea rows="10" v-model.lazy="form.comments"></Textarea>
                     </div>
                     <div class="">
                         <Label>Status</Label>
@@ -121,6 +193,34 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             <template #footer>
                 <Button variant="outline" @click="show_progress_report = false">Cancel</Button>
                 <Button @click="updateProgressReport">Save</Button>
+            </template>
+        </Dialog>
+        <Dialog v-model:open="show_qr_modal" classProp="max-w-sm">
+            <template #title>Generate QR for upload</template>
+            <template #content>
+                <div class="p-1 grid grid-cols-1 items-center gap-2">
+                    <template v-if="!qr_data.image">
+                        <div>
+                            <Label>Theme</Label>
+                            <ComboBox :items="$page.props.art_themes" label-property="name" value-property="id" :error="!qr_data.theme_id" v-model="qr_data.theme_id" select-placeholder="Select Theme" search-placeholder="Search theme..." @select="getLessons(qr_data.theme_id)"></ComboBox>
+                        </div>
+                        <div>
+                            <Label>Lesson</Label>
+                            <ComboBox :items="options.lessons" label-property="name" value-property="id" :error="!qr_data.lesson_id" v-model="qr_data.lesson_id" select-placeholder="Select Lesson" search-placeholder="Search lesson..." @select="getActivity(qr_data.lesson_id)" :loading="loading.lessons"></ComboBox>
+                        </div>
+                        <div>
+                            <Label>Activity</Label>
+                            <ComboBox :items="options.activities" label-property="name" value-property="id" :error="!qr_data.activity_id" v-model="qr_data.activity_id" select-placeholder="Select Activity" search-placeholder="Search activity..." :loading="loading.activities"></ComboBox>
+                        </div>
+                        <Button @click="generateQr" :class="qr_data.student_id && qr_data.theme_id && qr_data.lesson_id && qr_data.activity_id ? '' : 'cursor-not-allowed opacity-30'">Generate QR</Button>
+                    </template>
+                    <div class="flex flex-col items-center" v-else>
+                        <div class="h-40 w-40" v-html="qr_data.image"></div>
+                    </div>
+                </div>
+            </template>
+            <template #footer>
+                <Button variant="outline" @click="show_qr_modal = false">Close</Button>
             </template>
         </Dialog>
     </BreezeAuthenticatedLayout>
@@ -141,17 +241,81 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import Dialog from '@/Components/DialogModal.vue'
 import Collapsible from '@/Components/Collapsible.vue'
 import { Badge } from '@/Components/ui/badge'
+import { Plus, Trash, Trash2Icon, XCircle } from 'lucide-vue-next';
 
 export default {
     components: {
         Head, Link, Modal, Multiselect, 
     },
+    computed: {
+        groupedData(){
+            return this.form.report_data.reduce((acc, report) => {
+                // Group by theme
+                let theme = acc.find(t => t.theme_id === report.theme_id);
+                if (!theme) {
+                    theme = {
+                        theme_id: report.theme_id,
+                        theme_name: report.theme_name,
+                        lessons: []
+                    };
+                    acc.push(theme);
+                }
+
+                // Group by lesson
+                let lesson = theme.lessons.find(l => l.lesson_id === report.lesson_id);
+                if (!lesson) {
+                    lesson = {
+                        lesson_id: report.lesson_id,
+                        lesson_name: report.lesson_name,
+                        activities: []
+                    };
+                    theme.lessons.push(lesson);
+                }
+
+                // Group by activity
+                let activity = lesson.activities.find(a => a.activity_id === report.activity_id);
+                if (!activity) {
+                    activity = {
+                        activity_id: report.activity_id,
+                        activity_name: report.activity_name,
+                        outcomes: []
+                    };
+                    lesson.activities.push(activity);
+                }
+
+                // Group by activity
+                let outcome = activity.outcomes.find(a => a.outcome_id === report.outcome_id);
+                if (!outcome) {
+                    outcome = {
+                        outcome_id: report.outcome_id,
+                        outcome_name: report.outcome_name,
+                    };
+                    activity.outcomes.push(outcome);
+                }
+
+                // Add the report to the corresponding activity
+                outcome.objectives = report.objectives;
+
+                return acc;
+            }, []);
+        }
+    },
     data(){
         return{
+            show_select_student: false,
+            show_qr_modal: false,
             show_progress_report: false,
-            open_objectives: false,
+            open_objectives: [],
             searching: false,
             progress_report_list: {},
+            qr_data: {
+                report_detail_id: '',
+                student_id: '',
+                theme_id: '',
+                lesson_id: '',
+                activity_id: '',
+                image: ''
+            },
             disabled:{
                 themes: true,
                 lessons: true,
@@ -160,6 +324,8 @@ export default {
             },
             list: {
                 teachers: [],
+                students: [],
+                artworks: []
             },
             options: {
                 themes: [],
@@ -182,25 +348,39 @@ export default {
                 outcome_id: '',
             },
             form: {
+                student_id: '',
+                student_level: '',
                 teacher_user_id: '',
                 date: '',
                 report_data: [],
                 comments: '',
                 attendance_status: '',
+                file_to_delete: []
             }
         }
     },
     methods: {
         viewProgressReport(index) {
             this.clearSearch()
-            this.form.report_id             =   this.$page.props.progress_reports[index].id
-            this.form.teacher_user_id       =   this.$page.props.progress_reports[index].teacher_user_id
-            this.form.teacher_name          =   this.$page.props.progress_reports[index].display_name
-            this.form.date                  =   this.$page.props.progress_reports[index].date
-            this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data) ? JSON.parse(this.$page.props.progress_reports[index].report_data) : []
-            this.form.attendance_status     =   this.$page.props.progress_reports[index].attendance_status
-            this.form.comments              =   this.$page.props.progress_reports[index].comments
-            this.show_progress_report       =   true;
+            axios.get(route('progress_report.artworks'), { 
+                params: { 
+                    'report_detail_id': this.$page.props.progress_reports[index].id 
+                } 
+            })
+            .then(response => {
+                this.list.artworks = response.data
+                this.form.student_id            =   this.$page.props.student_info.id
+                this.form.student_level         =   this.$page.props.student_info.level
+                this.form.report_id             =   this.$page.props.progress_reports[index].id
+                this.form.teacher_user_id       =   this.$page.props.progress_reports[index].teacher_user_id
+                this.form.teacher_name          =   this.$page.props.progress_reports[index].display_name
+                this.form.date                  =   this.$page.props.progress_reports[index].date
+                this.form.report_data           =   JSON.parse(this.$page.props.progress_reports[index].report_data) ? JSON.parse(this.$page.props.progress_reports[index].report_data) : []
+                this.form.attendance_status     =   this.$page.props.progress_reports[index].attendance_status
+                this.form.comments              =   this.$page.props.progress_reports[index].comments
+                this.form.file_to_delete        =   []
+                this.show_progress_report       =   true;
+            });
         },
         updateProgressReport() {
             if(!this.form.date || this.form.attendance_status == 3 || (this.form.attendance_status == 1 && this.form.report_data.length < 1) || (this.form.attendance_status == 1 && !this.form.teacher_user_id)){
@@ -222,6 +402,20 @@ export default {
                 .then((res) => {
                     this.list.teachers = res.data
                     this.loading.teachers = false
+                });
+            }
+        }, 1000),
+        findStudents: debounce(function(query) {
+            if(query){
+                this.isLoading = true
+                axios.get(route('students.find_digital_art_students'), {
+                    params: {
+                        'keyword': query
+                    }
+                })
+                .then((res) => {
+                    this.list.students = res.data
+                    this.isLoading = false
                 });
             }
         }, 1000),
@@ -292,7 +486,8 @@ export default {
                             activity_name: this.options.activities.find(item => item.id === this.search.activity_id)?.name,
                             outcome_id: this.search.outcome_id,
                             outcome_name: this.options.outcomes.find(item => item.id === this.search.outcome_id)?.name,
-                            objectives: []
+                            objectives: [],
+                            artworks: []
                         }
                         const initialLength     =   this.form.report_data.length
                         const test              =   this.form.report_data.push(new_item)
@@ -317,7 +512,6 @@ export default {
         clearSearch(){
             this.form.teacher_user_id = ''
             this.search.theme_id = ''
-            this.search.term_book_id = ''
             this.search.lesson_id = ''
             this.search.outcome_id = ''
             this.search.activity_id = ''
@@ -328,9 +522,70 @@ export default {
                 modalContent.scrollTop = 0;
             }
         },
-    },
-    updated(){
-        this.scrollToTop()
+        showGenerateQrModal(report_detail_id){
+            this.clearQrModal()
+            this.qr_data.student_id = this.$page.props.student_info.id
+            this.qr_data.report_detail_id = report_detail_id
+            this.qr_data.level = this.$page.props.student_info.level
+            this.show_qr_modal = true
+        },
+        generateQr(){
+            if(this.qr_data.student_id && this.qr_data.theme_id && this.qr_data.lesson_id && this.qr_data.activity_id){
+                axios.post(route('progress_report.generate_qr'), this.qr_data)
+                .then(response => {
+                    this.qr_data.image = response.data;
+                });
+            }
+        },
+        clearQrModal(){
+            this.qr_data.report_detail_id = ''
+            this.qr_data.student_id = ''
+            this.qr_data.level = ''
+            this.qr_data.theme_id = ''
+            this.qr_data.lesson_id = ''
+            this.qr_data.activity_id = ''
+            this.qr_data.image = ''
+        },
+        openArtworkInNewTab(artwork) {
+            const url = artwork.filename ? '/storage/art_gallery/' + artwork.filename : artwork.blob_url
+            window.open(url, '_blank');
+        },
+        triggerInput(index) {
+            this.$refs['artworkInput_' + index][0].click();
+        },
+        handleFileUpload(event, index) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                if (!files[i].type.startsWith('image/')) {
+                    alert(`${files[i].name} is not an image file.`);
+                    return;
+                }
+                if(!this.form.report_data[index].artworks){
+                    this.form.report_data[index].artworks = []
+                }
+                if(this.form.report_data[index].artworks.find(item => item.file && item.file.name == files[i].name)){
+                    alert(`${files[i].name} already_exists.`);
+                    return;
+                }
+                const blob = new Blob([files[i]], { type: files[i].type })
+                const blob_url = URL.createObjectURL(blob)
+
+                this.form.report_data[index].artworks.push({
+                    file: files[i],
+                    blob_url: blob_url,
+                    for_artbook: false
+                })
+            }
+
+        },
+        deleteFile(index, artwork_index){
+            if(this.form.report_data[index].artworks[artwork_index].filename){
+                this.form.file_to_delete.push(
+                    this.form.report_data[index].artworks[artwork_index].filename
+                )
+            }
+            this.form.report_data[index].artworks.splice(artwork_index, 1)
+        },
     },
 }
 </script>

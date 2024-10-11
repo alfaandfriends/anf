@@ -27,6 +27,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\ProgressReportController;
 use App\Http\Controllers\PromoController;
+use App\Http\Controllers\QRcodeGenerateController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StoryController;
@@ -179,9 +180,11 @@ Route::middleware(['auth'])->group(function(){
             /* Progress Report */
             Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report')->middleware('permission:view_progress_report');
             Route::get('/progress-report/details', [ProgressReportController::class, 'details'])->name('progress_report.details')->middleware('permission:view_progress_report');
+            Route::get('/progress-report/artworks', [ProgressReportController::class, 'artworks'])->name('progress_report.artworks')->middleware('permission:view_progress_report');
             Route::get('/progress-report/full-reports', [ProgressReportController::class, 'getFullProgressReports'])->name('progress_report.full_reports')->withoutMiddleware(['permission:student_access']);
             Route::post('/progress-report/store', [ProgressReportController::class, 'store'])->name('progress_report.store')->middleware('permission:view_progress_report');
             Route::post('/progress-report/summary/store', [ProgressReportController::class, 'storeSummary'])->name('progress_report.store_summary')->middleware('permission:view_progress_report');
+            Route::post('/progress-report/generate-qr', [QRcodeGenerateController::class, 'generateQr'])->name('progress_report.generate_qr')->middleware('permission:view_progress_report');
                 /* Settings */
                 Route::get('/progress-report/settings', [ProgressReportController::class, 'settings'])->name('progress_report.settings')->middleware('permission:view_progress_report_settings');
 
@@ -485,11 +488,11 @@ Route::middleware(['auth'])->group(function(){
         Route::delete('/notifications/delete', [NotificationController::class, 'deleteNotification'])->name('delete_notification');
 
         /* Temporary Disabled */
-        Route::get('/settings/class_types', [SettingController::class, 'classTypeList'])->name('settings.class_types');
-        Route::get('/settings/class_types/create', [SettingController::class, 'addClassType'])->name('settings.class_types.create');
-        Route::post('/settings/class_types/store', [SettingController::class, 'storeClassType'])->name('settings.class_types.store');
-        Route::get('/settings/class_types/edit', [SettingController::class, 'editClassType'])->name('settings.class_types.edit');
-        Route::post('/settings/class_types/update', [SettingController::class, 'updateClassType'])->name('settings.class_types.update');
-        Route::delete('/settings/class_types/destroy/{id}', [SettingController::class, 'destroyClassType'])->name('settings.class_types.destroy');
+        // Route::get('/settings/class_types', [SettingController::class, 'classTypeList'])->name('settings.class_types');
+        // Route::get('/settings/class_types/create', [SettingController::class, 'addClassType'])->name('settings.class_types.create');
+        // Route::post('/settings/class_types/store', [SettingController::class, 'storeClassType'])->name('settings.class_types.store');
+        // Route::get('/settings/class_types/edit', [SettingController::class, 'editClassType'])->name('settings.class_types.edit');
+        // Route::post('/settings/class_types/update', [SettingController::class, 'updateClassType'])->name('settings.class_types.update');
+        // Route::delete('/settings/class_types/destroy/{id}', [SettingController::class, 'destroyClassType'])->name('settings.class_types.destroy');
     });
 });
