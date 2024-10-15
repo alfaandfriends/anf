@@ -152,6 +152,7 @@ export default {
   methods: {
     togglePopover() {
       this.isOpen = !this.isOpen;
+      this.searchQuery = ''
     },
     itemValue(item) {
       return this.isObjectItems ? item[this.valueProperty] : item;

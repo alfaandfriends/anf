@@ -12,9 +12,6 @@ use Inertia\Inertia;
 class PasswordResetLinkController extends Controller
 {
     /*************************************** Admin *******************************************************/
-    // use Password, CorcelResetsPasswords {
-    //     CorcelResetsPasswords::resetPassword insteadof Password;
-    // }
     /**
      * Display the password reset link request view.
      *
@@ -62,9 +59,6 @@ class PasswordResetLinkController extends Controller
 
 
     /*************************************** Parent *******************************************************/
-    // use Password, CorcelResetsPasswords {
-    //     CorcelResetsPasswords::resetPassword insteadof Password;
-    // }
     /**
      * Display the password reset link request view.
      *
@@ -90,12 +84,8 @@ class PasswordResetLinkController extends Controller
         $request->validate([
             'user_email' => 'required|email',
         ]);
+        // dd($request->all());
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-
-        // $hashed_random_password = Hash::make(Str::random(12));
         $status = Password::sendResetLink(
             $request->only('user_email')
         );

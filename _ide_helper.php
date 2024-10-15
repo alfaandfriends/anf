@@ -1972,7 +1972,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Get the currently authenticated user.
          *
-         * @return \Corcel\Model\User|null 
+         * @return \App\Models\User|null 
          * @static 
          */        public static function user()
         {            //Method inherited from \Illuminate\Auth\SessionGuard         
@@ -2004,7 +2004,7 @@ namespace Illuminate\Support\Facades {
          * Log the given user ID into the application without sessions or cookies.
          *
          * @param mixed $id
-         * @return \Corcel\Model\User|false 
+         * @return \App\Models\User|false 
          * @static 
          */        public static function onceUsingId($id)
         {            //Method inherited from \Illuminate\Auth\SessionGuard         
@@ -2078,7 +2078,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param mixed $id
          * @param bool $remember
-         * @return \Corcel\Model\User|false 
+         * @return \App\Models\User|false 
          * @static 
          */        public static function loginUsingId($id, $remember = false)
         {            //Method inherited from \Illuminate\Auth\SessionGuard         
@@ -2125,7 +2125,7 @@ namespace Illuminate\Support\Facades {
          * The application must be using the AuthenticateSession middleware.
          *
          * @param string $password
-         * @return \Corcel\Model\User|null 
+         * @return \App\Models\User|null 
          * @throws \Illuminate\Auth\AuthenticationException
          * @static 
          */        public static function logoutOtherDevices($password)
@@ -2147,7 +2147,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Get the last user we attempted to authenticate.
          *
-         * @return \Corcel\Model\User 
+         * @return \App\Models\User 
          * @static 
          */        public static function getLastAttempted()
         {            //Method inherited from \Illuminate\Auth\SessionGuard         
@@ -2251,7 +2251,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Return the currently cached user.
          *
-         * @return \Corcel\Model\User|null 
+         * @return \App\Models\User|null 
          * @static 
          */        public static function getUser()
         {            //Method inherited from \Illuminate\Auth\SessionGuard         
@@ -2303,7 +2303,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Determine if the current user is authenticated. If not, throw an exception.
          *
-         * @return \Corcel\Model\User 
+         * @return \App\Models\User 
          * @throws \Illuminate\Auth\AuthenticationException
          * @static 
          */        public static function authenticate()
@@ -19364,6 +19364,47 @@ namespace Jenssegers\Agent\Facades {
             }
     }
 
+namespace MikeMcLin\WpPassword\Facades {
+            /**
+     * 
+     *
+     */        class WpPassword {
+                    /**
+         * Create a hash (encrypt) of a plain text password.
+         * 
+         * For integration with other applications, this function can be overwritten to
+         * instead use the other package password checking algorithm.
+         *
+         * @uses PasswordHash::HashPassword
+         * @param string $password Plain text user password to hash
+         * @return string The hash string of the password
+         * @static 
+         */        public static function make($password)
+        {
+                        /** @var \MikeMcLin\WpPassword\WpPassword $instance */
+                        return $instance->make($password);
+        }
+                    /**
+         * Checks the plaintext password against the encrypted Password.
+         * 
+         * Maintains compatibility between old version and the new cookie authentication
+         * protocol using PHPass library. The $hash parameter is the encrypted password
+         * and the function compares the plain text password when encrypted similarly
+         * against the already encrypted password to see if they match.
+         *
+         * @uses PasswordHash::CheckPassword
+         * @param string $password Plaintext user's password
+         * @param string $hash Hash of the user's password to check against.
+         * @return bool False, if the $password does not match the hashed password
+         * @static 
+         */        public static function check($password, $hash)
+        {
+                        /** @var \MikeMcLin\WpPassword\WpPassword $instance */
+                        return $instance->check($password, $hash);
+        }
+            }
+    }
+
 namespace Opcodes\LogViewer\Facades {
             /**
      * 
@@ -23774,6 +23815,7 @@ namespace  {
             class PDF extends \Barryvdh\DomPDF\Facade\Pdf {}
             class Breadcrumbs extends \Diglactic\Breadcrumbs\Breadcrumbs {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
+            class WpPassword extends \MikeMcLin\WpPassword\Facades\WpPassword {}
             class LogViewer extends \Opcodes\LogViewer\Facades\LogViewer {}
             class QrCode extends \SimpleSoftwareIO\QrCode\Facades\QrCode {}
             class Mailbook extends \Xammie\Mailbook\Facades\Mailbook {}
