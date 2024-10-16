@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Corcel\Model\User;
+use App\Models\User;
 use Corcel\Services\PasswordService;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;

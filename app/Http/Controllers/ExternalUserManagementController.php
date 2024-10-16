@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Events\DatabaseTransactionEvent;
-use Corcel\Model\User;
+use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -97,7 +98,7 @@ class ExternalUserManagementController extends Controller
                                             'wpvt_users.user_email as email', 
                                             'roles.display_name as role'])->where('user_has_roles.role_id', $this->centre_manager_role_id);
 
-        if(!auth()->user()->is_admin && !auth()->user()->can_view_all_centres){
+        if(!Auth::user()->is_admin && !Auth::user()->can_view_all_centres){
             $query->join('user_has_centres', 'wpvt_users.id', '=', 'user_has_centres.user_id')
                     ->whereIn('user_has_centres.centre_id', $allowed_centres);
         }
@@ -158,7 +159,7 @@ class ExternalUserManagementController extends Controller
                                             'wpvt_users.user_email as email', 
                                             'roles.display_name as role'])->where('user_has_roles.role_id', $this->edupreneur_role_id);
 
-        if(!auth()->user()->is_admin && !auth()->user()->can_view_all_centres){
+        if(!Auth::user()->is_admin && !Auth::user()->can_view_all_centres){
             $query->join('user_has_centres', 'wpvt_users.id', '=', 'user_has_centres.user_id')
                     ->whereIn('user_has_centres.centre_id', $allowed_centres);
         }
@@ -221,7 +222,7 @@ class ExternalUserManagementController extends Controller
                                             'wpvt_users.user_email as email', 
                                             'roles.display_name as role'])->where('user_has_roles.role_id', $this->teacher_role_id);
 
-        if(!auth()->user()->is_admin && !auth()->user()->can_view_all_centres){
+        if(!Auth::user()->is_admin && !Auth::user()->can_view_all_centres){
             $query->join('user_has_centres', 'wpvt_users.id', '=', 'user_has_centres.user_id')
                     ->whereIn('user_has_centres.centre_id', $allowed_centres);
         }

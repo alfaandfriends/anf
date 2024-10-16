@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
-use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -150,12 +150,12 @@ class AuthenticatedSessionController extends Controller
     public function impersonate($user_name){
         $user   =   User::where('user_login', $user_name)->first();
         if($user){
-            if(auth()->user()->ID == $user->ID && auth()->user()->getImpersonatorID() == '' || auth()->user()->getImpersonatorID() == $user->ID){
+            if(Auth::user()->ID == $user->ID && Auth::user()->getImpersonatorID() == '' || Auth::user()->getImpersonatorID() == $user->ID){
                 $this->leaveImpersonate();
             }
             else{
                 $this->leaveImpersonate();
-                auth()->user()->impersonate($user);
+                Auth::user()->impersonate($user);
             }
 
             return redirect()->back();
@@ -170,7 +170,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     public function leaveImpersonate(){
-        auth()->user()->leaveImpersonation();
+        Auth::user()->leaveImpersonation();
         return back();
     }
 }

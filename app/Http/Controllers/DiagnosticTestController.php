@@ -8,7 +8,8 @@ use App\Mail\DiagnosticTest\ResultToParent;
 use App\Mail\DiagnosticTest\ResultToPIC;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Corcel\Model\User;
+use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,7 @@ class DiagnosticTestController extends Controller
         $diagnostic_test_list   =   DB::table('diagnostic_test')->get();
         $languages              =   DB::table('diagnostic_test_languages')->get();
         $ages                   =   DB::table('diagnostic_test_ages')->get();
-        $children               =   auth()->check() ?  DB::table('children')->where('parent_id', auth()->user()->ID)->get() : [];
+        $children               =   Auth::check() ?  DB::table('children')->where('parent_id', Auth::user()->ID)->get() : [];
 
         return Inertia::render('DiagnosticTests/Run/'.$template, [
             'diagnostic_test_list'  => $diagnostic_test_list,

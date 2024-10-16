@@ -241,7 +241,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property-read \App\Models\Role|null $role
- * @property-read \Corcel\Model\User|null $user
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles query()
