@@ -93,8 +93,7 @@ return [
 
     'middleware' => [
         'web',
-        'auth',
-        'logviewer',
+        Authorize::class,
     ],
 
     /*
