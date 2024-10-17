@@ -79,14 +79,19 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                                     <TableCell>{{ info.registration_fee }}</TableCell>
                                     <TableCell>{{ info.material_fee }}</TableCell>
                                     <TableCell>
-                                        <p class="text-sm text-gray-700" v-for="fee in info.fees">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-bold">{{ fee.value }}</span></p>
+                                        <div class="flex space-x-4 items-center">
+                                            <div class="flex flex-col items-start">
+                                                <p class="text-sm text-gray-700" v-for="fee in info.fees">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-bold">{{ fee.value }}</span></p>
+                                            </div>
+                                            <Button variant="link" class="text-blue-500" @click="editOldFee(level, index, info.programme_level_id ? false : true)">Edit</Button>
+                                        </div>
                                     </TableCell>
                                     <TableCell>
                                         <div class="flex space-x-4 items-center">
                                             <div class="flex flex-col items-start">
                                                 <p class="text-sm text-gray-700" v-for="fee in info.fees">{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }} : <span class="font-bold">{{ fee.new_fee_amount }}</span></p>
                                             </div>
-                                            <Button variant="link" class="text-blue-500" @click="editFee(level, index, info.programme_level_id ? false : true)">Edit</Button>
+                                            <Button variant="link" class="text-blue-500" @click="editNewFee(level, index, info.programme_level_id ? false : true)">Edit</Button>
                                         </div>
                                     </TableCell>
                                     <TableCell>
@@ -175,10 +180,25 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 <Button @click="addFee">Add</Button>
             </template>
         </Dialog>
-        <Dialog v-model:open="show.edit_fee">
-            <template #title>Edit Fee</template>
+        <Dialog v-model:open="show.edit_old_fee">
+            <template #title>Edit Old Fee</template>
             <template #content>
-                <div class="grid grid-cols-1 gap-4">
+                <div class="grid grid-cols-1 gap-4 py-1">
+                    <div v-for="fee in fee_edit_form.data">
+                        <Label>{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }}<span class="text-red-500">*</span></Label>
+                        <Input type="number" min="0" :error="validation.material_fee.error" v-model="fee.value"></Input>
+                    </div>
+                </div>
+            </template>
+            <template #footer>
+                <Button variant="outline" @click="show.edit_old_fee = false">Cancel</Button>
+                <Button @click="updateOldFee">Save</Button>
+            </template>
+        </Dialog>
+        <Dialog v-model:open="show.edit_new_fee">
+            <template #title>Edit New Fee</template>
+            <template #content>
+                <div class="grid grid-cols-1 gap-4 py-1">
                     <div v-for="fee in fee_edit_form.data">
                         <Label>{{ $page.props.class_types_detail.find((item)=>item.id === fee.class_type_detail_id)?.label }}<span class="text-red-500">*</span></Label>
                         <Input type="number" min="0" :error="validation.material_fee.error" v-model="fee.new_fee_amount"></Input>
@@ -186,8 +206,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 </div>
             </template>
             <template #footer>
-                <Button variant="outline" @click="show.edit_fee = false">Cancel</Button>
-                <Button @click="addFee">Add</Button>
+                <Button variant="outline" @click="show.edit_new_fee = false">Cancel</Button>
+                <Button @click="updateNewFee">Save</Button>
             </template>
         </Dialog>
         <DeleteConfirmation :open="confirmation.is_open" @close="confirmation.is_open = false" :routeName="confirmation.route_name" :id="confirmation.id">
@@ -255,7 +275,8 @@ export default {
             },
             show:{
                 add_fee: false,
-                edit_fee: false,
+                edit_old_fee: false,
+                edit_new_fee: false,
                 product_variations: false,
                 product_sub_variations: false,
                 add_tracking_status: false
@@ -508,21 +529,38 @@ export default {
             }, 10);
 
         },
-        editFee(level, index, new_item){
+        editOldFee(level, index, new_item){
             this.fee_edit_form.new_item             = new_item
             this.fee_edit_form.programme_info_index = index
             this.fee_edit_form.data                 = []
             this.fee_edit_form.data                 = this.groupedItems[level][index].fees
-            this.show.edit_fee                      = true
+            this.show.edit_old_fee                  = true
         },
-        updateFee(){
+        updateOldFee(){
             if(!this.fee_edit_form.new_item){
-                this.$inertia.patch(route('programmes.fee.update'), {'fee_edit_form': this.fee_edit_form}, {preserveState: false});
+                this.$inertia.patch(route('programmes.old_fee.update'), {'fee_edit_form': this.fee_edit_form}, {preserveState: false});
             }
             else{
                 this.form.programme_info[this.fee_edit_form.programme_info_index].fees = []
                 this.form.programme_info[this.fee_edit_form.programme_info_index].fees = this.fee_edit_form.data
-                this.show.edit_fee  = false
+                this.show.edit_old_fee  = false
+            }
+        },
+        editNewFee(level, index, new_item){
+            this.fee_edit_form.new_item             = new_item
+            this.fee_edit_form.programme_info_index = index
+            this.fee_edit_form.data                 = []
+            this.fee_edit_form.data                 = this.groupedItems[level][index].fees
+            this.show.edit_new_fee                      = true
+        },
+        updateNewFee(){
+            if(!this.fee_edit_form.new_item){
+                this.$inertia.patch(route('programmes.new_fee.update'), {'fee_edit_form': this.fee_edit_form}, {preserveState: false});
+            }
+            else{
+                this.form.programme_info[this.fee_edit_form.programme_info_index].fees = []
+                this.form.programme_info[this.fee_edit_form.programme_info_index].fees = this.fee_edit_form.data
+                this.show.edit_new_fee  = false
             }
         }
     },

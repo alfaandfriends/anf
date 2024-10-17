@@ -92,7 +92,8 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/programmes/update', [ProgrammeController::class, 'updateProgramme'])->name('programmes.update')->middleware('permission:edit_programmes');
             Route::delete('/programmes/destroy/{id}', [ProgrammeController::class, 'destroyProgramme'])->name('programmes.destroy')->middleware('permission:delete_programmes');
             Route::delete('/programmes/fee/destroy/{id}', [ProgrammeController::class, 'destroyFee'])->name('programmes.fee.destroy')->middleware('permission:edit_programmes|delete_programmes');
-            Route::patch('/programmes/fee/update', [ProgrammeController::class, 'updateFee'])->name('programmes.fee.update')->middleware('permission:edit_programmes');
+            Route::patch('/programmes/fee/old/update', [ProgrammeController::class, 'updateOldFee'])->name('programmes.old_fee.update')->middleware('permission:edit_programmes');
+            Route::patch('/programmes/fee/new/update', [ProgrammeController::class, 'updateNewFee'])->name('programmes.new_fee.update')->middleware('permission:edit_programmes');
             Route::get('/programmes/get-students/{programme_id}/{centre_id}/{level_id?}', [ProgrammeHelper::class, 'getStudents'])->name('programmes.get_students');
 
             /* Classes */

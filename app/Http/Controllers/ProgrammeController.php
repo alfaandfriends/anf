@@ -382,7 +382,17 @@ class ProgrammeController extends Controller
         return json_encode($data, JSON_NUMERIC_CHECK);
     }
 
-    public function updateFee(Request $request){
+    public function updateOldFee(Request $request){
+        foreach($request->fee_edit_form['data'] as $key=>$data){
+            DB::table('programme_level_fees')->where('id', $data['fee_id'])->update([
+                'fee_amount' => $data['value']
+            ]);
+        }
+
+        return back()->with(['type'=>'success', 'message'=>'Data has been updated.']);
+    }
+
+    public function updateNewFee(Request $request){
         foreach($request->fee_edit_form['data'] as $key=>$data){
             DB::table('programme_level_fees')->where('id', $data['fee_id'])->update([
                 'new_fee_amount' => $data['new_fee_amount']
