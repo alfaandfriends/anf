@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use App\Models\Menu;
 use App\Models\Permission;
+use App\Models\User;
 use App\Models\UserHasRoles;
 use Carbon\Carbon;
 use Hashids\Hashids;
@@ -95,7 +95,7 @@ class HandleInertiaRequests extends Middleware
             }
         }
 
-        $permissions['is_impersonated'] = auth()->user()->isImpersonated();
+        $permissions['is_impersonated'] = Auth::user()->isImpersonated();
 
         return $permissions;
     }
@@ -116,7 +116,7 @@ class HandleInertiaRequests extends Middleware
 
     public function userAllowedCentres()
     {
-        if(auth()->user()->can_view_all_centres || auth()->user()->is_admin){
+        if(Auth::user()->can_view_all_centres || Auth::user()->is_admin){
             $allowed_centres    =   DB::table('centres')->where('is_active', 1)->orderBy('label')->get(['centres.ID', 'centres.label']);
         }
         else{
@@ -176,7 +176,7 @@ class HandleInertiaRequests extends Middleware
 
     public function userIsAdmin()
     {
-        $user_is_admin =   auth()->user()->is_admin;
+        $user_is_admin =   Auth::user()->is_admin;
 
         return $user_is_admin;
     }

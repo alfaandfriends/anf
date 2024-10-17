@@ -166,7 +166,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
             <template #title>Delete Child</template>
             <template #description>Are you sure want to delete this child?</template>
         </DeleteConfirmation>
-        <DeleteConfirmation :open="confirmation.reset_password.is_open" @close="confirmation.reset_password.is_open = false" :routeName="confirmation.reset_password.route_name" :id="confirmation.reset_password.id">
+        <DeleteConfirmation :open="confirmation.reset_password.is_open" @close="confirmation.reset_password.is_open = false" :routeName="confirmation.reset_password.route_name" method="post" :params="confirmation.reset_password.params">
             <template #title>Reset Password</template>
             <template #description>Are you sure want to reset this user's password?</template>
         </DeleteConfirmation>
@@ -209,7 +209,8 @@ export default {
                 reset_password: {
                     is_open: false,
                     route_name: '',
-                    id: ''
+                    id: '',
+                    params: {}
                 },
             },
             processing: false,
@@ -263,7 +264,7 @@ export default {
         },
         resetPassword(userID){
             this.confirmation.reset_password.route_name    = 'users.reset_user_password'
-            this.confirmation.reset_password.id            = userID
+            this.confirmation.reset_password.params         = {'data' : userID}
             this.confirmation.reset_password.is_open       = true
         },
         setCountryData(country_id){

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Corcel\Model\User;
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Centre;
 use Illuminate\Support\Carbon;

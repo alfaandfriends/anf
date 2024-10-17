@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\DatabaseTransactionEvent;
 use App\Models\Permission;
 use App\Models\RoleHasPermissions;
-use Corcel\Model\User;
+use App\Models\User;
 use App\Models\UserHasRoles;
 use Inertia\Inertia;
 use Illuminate\Http\Request;

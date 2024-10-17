@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
-use Corcel\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use MikeMcLin\WpPassword\Facades\WpPassword;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -34,19 +35,31 @@ class AuthenticatedSessionController extends Controller
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(LoginRequest $request)
+    public function store(Request $request)
     {
-        $request->authenticate();
+        $request->validate([
+            'username' => ['required'],
+            'password' => ['required'],
+        ]);
 
-        $request->session()->regenerate();
+        $user = User::where('user_email', $request->username)->orWhere('user_login', $request->username)->first();
 
-        // if(auth()->user()->is_admin){
-        return redirect('/home');
-        // return redirect()->intended(RouteServiceProvider::HOME);
-        // }
-        // else{
-        //     return redirect('diagnostic_test');
-        // }
+        if ($user) {
+            $current_password = $user->user_pass;
+
+            if (WpPassword::check($request->password, $current_password)) {
+
+                Auth::login($user);
+
+                $request->session()->regenerate();
+
+                return redirect()->intended('home');
+            }
+        }
+ 
+        return back()->withErrors([
+            'username' => 'The provided credentials do not match our records.',
+        ])->onlyInput('username');
     }
 
     /**
@@ -86,17 +99,29 @@ class AuthenticatedSessionController extends Controller
      */
     public function storeAdmin(LoginRequest $request)
     {
-        $request->authenticate();
+        $request->validate([
+            'username' => ['required'],
+            'password' => ['required'],
+        ]);
 
-        $request->session()->regenerate();
+        $user = User::where('user_email', $request->username)->orWhere('user_login', $request->username)->first();
 
-        // if(auth()->user()->is_admin){
-        return redirect('/admin/dashboard');
-        // return redirect()->intended(RouteServiceProvider::HOME);
-        // }
-        // else{
-        //     return redirect('diagnostic_test');
-        // }
+        if ($user) {
+            $current_password = $user->user_pass;
+
+            if (WpPassword::check($request->password, $current_password)) {
+
+                Auth::login($user);
+
+                $request->session()->regenerate();
+
+                return redirect()->intended('/admin/dashboard');
+            }
+        }
+ 
+        return back()->withErrors([
+            'username' => 'The provided credentials do not match our records.',
+        ])->onlyInput('username');
     }
 
     /**
@@ -125,12 +150,12 @@ class AuthenticatedSessionController extends Controller
     public function impersonate($user_name){
         $user   =   User::where('user_login', $user_name)->first();
         if($user){
-            if(auth()->user()->ID == $user->ID && auth()->user()->getImpersonatorID() == '' || auth()->user()->getImpersonatorID() == $user->ID){
+            if(Auth::user()->ID == $user->ID && Auth::user()->getImpersonatorID() == '' || Auth::user()->getImpersonatorID() == $user->ID){
                 $this->leaveImpersonate();
             }
             else{
                 $this->leaveImpersonate();
-                auth()->user()->impersonate($user);
+                Auth::user()->impersonate($user);
             }
 
             return redirect()->back();
@@ -145,7 +170,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     public function leaveImpersonate(){
-        auth()->user()->leaveImpersonation();
+        Auth::user()->leaveImpersonation();
         return back();
     }
 }

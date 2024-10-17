@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\NotificationHelper;
 use App\Events\DatabaseTransactionEvent;
+use App\Mail\ResetUserPassword;
+use App\Mail\UserRegistration;
 use App\Models\Role;
+use App\Models\User;
 use App\Models\UserHasRoles;
-use App\Notifications\ResetUserPassword;
 use App\Notifications\UserRegistrationCredentials;
 use Carbon\Carbon;
-use Corcel\Model\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -133,7 +134,7 @@ class UserController extends Controller
                 ]);
             }
 
-            Notification::sendNow($user, new UserRegistrationCredentials($credentials));
+            Mail::to($user->user_email)->send(new UserRegistration($credentials));
 
             DB::commit();
                 
@@ -262,8 +263,8 @@ class UserController extends Controller
         $credentials    =   [
             'new_password'  =>  $random_password,
         ];
-
-        Notification::sendNow($user, new ResetUserPassword($credentials));
+        
+        Mail::to($user->user_email)->send(new resetUserPassword($credentials));
                 
         $log_data =   'Resetted password for user ID '.$request->data;
         event(new DatabaseTransactionEvent($log_data));

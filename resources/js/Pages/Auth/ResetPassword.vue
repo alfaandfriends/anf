@@ -5,13 +5,13 @@ import Card from '@/Components/Card.vue';
 import { Alert, AlertDescription, AlertTitle } from '@/Components/ui/alert'
 
 const props = defineProps({
-    email: String,
+    user_email: String,
     token: String,
 });
 
 const form = useForm({
     token: props.token,
-    email: props.email,
+    user_email: props.user_email,
     password: '',
     password_confirmation: '',
 });
@@ -29,7 +29,7 @@ const submit = () => {
         <Card>
             <template #title>Reset Password</template>
             <template #description>
-                Please enter your email and set a new password.
+                Please set a new password.
             </template>
             <template #content>
                 <Alert variant="destructive" v-if="Object.keys($page.props.errors).length > 0">
@@ -43,8 +43,8 @@ const submit = () => {
                             {{ status }}
                         </div>
                         <div class="grid gap-2">
-                            <Label for="email">Email Address</Label>
-                            <Input id="email" type="email" v-model="form.email" required autofocus autocomplete="off"/>
+                            <Label for="user_email">Email Address</Label>
+                            <Input id="user_email" type="email" v-model="form.user_email" required autofocus autocomplete="off" disabled/>
                         </div>
                         <div class="grid gap-2">
                             <Label for="password">Password</Label>
