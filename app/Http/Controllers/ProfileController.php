@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use MikeMcLin\WpPassword\Facades\WpPassword;
 
 class ProfileController extends Controller
 {
@@ -78,8 +79,7 @@ class ProfileController extends Controller
             return redirect()->back()->withErrors($validator)->withInput()->with(['type'=>'error', 'message'=>'Please fill in all the required fields']);
         }
 
-        $password_service           =   new PasswordService();
-        $current_password_match     =   $password_service->check($request->current_password, auth()->user()->user_pass);
+        $current_password_match     =   WpPassword::check($request->current_password, auth()->user()->user_pass);
 
         if(!$current_password_match){
             return  redirect()->back()
@@ -95,7 +95,7 @@ class ProfileController extends Controller
         }
 
         $request->user()->fill([
-            'user_pass' => $password_service->makeHash($request->new_password)
+            'user_pass' => WpPassword::make($request->new_password)
         ])->save();
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Mail\ForgotPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,6 +11,9 @@ use Laravel\Sanctum\HasApiTokens;
 use Lab404\Impersonate\Models\Impersonate;
 use App\Models\UserHasRoles;
 use App\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\ResetPassword as NotificationsResetPassword;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class User extends Authenticatable
 {
@@ -17,6 +21,8 @@ class User extends Authenticatable
 
     protected $table = 'wpvt_users';
     protected $primaryKey = 'ID';
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -68,7 +74,7 @@ class User extends Authenticatable
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPassword($token));
+        Mail::to($this->user_email)->send(new ForgotPassword($token, $this->user_email));
     }
 
     public function user_has_role()

@@ -24,39 +24,6 @@ class PasswordResetLinkController extends Controller
         ]);
     }
 
-    /**
-     * Handle an incoming password reset link request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function storeAdmin(Request $request)
-    {   
-        $request->validate([
-            'user_email' => 'required|email',
-        ]);
-
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-
-        // $hashed_random_password = Hash::make(Str::random(12));
-        $status = Password::sendResetLink(
-            $request->only('user_email')
-        );
-
-        if ($status == Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
-        }
-
-        throw ValidationException::withMessages([
-            'user_email' => [trans($status)],
-        ]);
-    }
-
-
 
     /*************************************** Parent *******************************************************/
     /**
@@ -79,12 +46,14 @@ class PasswordResetLinkController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
+
+
+    /*************************************** Shared *******************************************************/
     public function store(Request $request)
     {   
         $request->validate([
             'user_email' => 'required|email',
         ]);
-        // dd($request->all());
 
         $status = Password::sendResetLink(
             $request->only('user_email')
