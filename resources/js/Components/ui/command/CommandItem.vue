@@ -4,7 +4,7 @@ import { ComboboxItem, useForwardPropsEmits } from "radix-vue";
 import { cn } from "@/lib/utils";
 
 const props = defineProps({
-  value: { type: null, required: true },
+  value: { type: null, required: false },
   disabled: { type: Boolean, required: false },
   asChild: { type: Boolean, required: false },
   as: { type: null, required: false },

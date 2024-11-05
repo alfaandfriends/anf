@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -32,21 +32,30 @@ const props = defineProps({
     type: [Boolean, String],
     default: false
   },
+  customPosition: {
+    type: Function,
+    default: null,
+    required: false,
+  },
 });
 
 const emit = defineEmits(['update:modelValue', 'select']);
 
 const internalValue = ref(props.modelValue);
+const isInitialized = ref(false);
 
 watch(internalValue, (newValue) => {
   emit('update:modelValue', newValue);
   emit('select', newValue);
 });
 
+nextTick(()=>{
+  isInitialized.value = true;
+})
 </script>
 
 <template>
-  <VueDatePicker
+  <VueDatePicker v-if="isInitialized"
     v-model="internalValue" 
     :auto-apply="mode == 'time' ? false : true" 
     :clearable="false" 
@@ -58,6 +67,7 @@ watch(internalValue, (newValue) => {
     :teleport-center="teleportCenter"
     :is24="false"
     :disabled="disabled"
+    :alt-position="customPosition"
   />
   <p v-if="props.error" class="mt-0.5 text-xs text-red-500 font-semibold">
     This field is required.

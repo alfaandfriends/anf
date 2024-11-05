@@ -55,13 +55,12 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import Multiselect from '@vueform/multiselect'
 import Card from '@/Components/Card.vue'
 import axios from 'axios';
 
 export default {
     components: {
-        Head, Link, Multiselect
+        Head, Link
     },
     data(){
         return{

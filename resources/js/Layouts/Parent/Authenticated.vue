@@ -12,10 +12,9 @@ import BreezeButton from '@/Components/Button.vue'
         <Header />
         <Navigation />
         <!-- <div class="fixed w-full bottom-16 md:bottom-14 z-20"> -->
-            <div class="px-6 py-3 bg-blue bg-red-500 space-y-4 md:flex md:space-y-0 justify-between items-center mt-16 md:mt-0" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
-                <span class="text-white text-sm font-semibold italic whitespace-nowrap">Warning: Please use this feature with caution!</span>
+            <!-- <div class="px-6 py-3 bg-blue bg-red-500 space-y-4 md:flex md:space-y-0 justify-between items-center mt-16 md:mt-0" v-if="$page.props.can.impersonate_access || $page.props.can.is_impersonated">
                 <form @submit.prevent="impersonate" class="flex flex-col lg:flex-row w-full space-x-2 items-center md:justify-end lg:justify-end">
-                    <label for="impersonate_username" class="text-white 2xl:text-sm sm:text-md font-bold">Username</label>
+                    <label for="impersonate_username" class="text-white text-sm">Username</label>
                     <div class="flex space-x-2 items-center">
                         <input type="text" id="impersonate_username" class="rounded py-1 px-2 border-orange-500 focus:ring-0 focus:border-orange-500" v-model="username" autocomplete="none">
                         <BreezeButton tooltip="Switch User" @click="impersonate" class="px-3 py-2">
@@ -25,9 +24,9 @@ import BreezeButton from '@/Components/Button.vue'
                         </BreezeButton>
                     </div>
                 </form>
-            </div>
+            </div> -->
         <!-- </div> -->
-        <main class="flex-grow flex-col bg-orange-50 relative justify-start mb-16 md:mb-0 md:mt-0 py-5 px-3">
+        <main class="flex-grow flex-col bg-orange-50 relative justify-start mb-16 md:mb-0 md:mt-0 py-5 px-3 mt-14">
             <slot/>
             <SimpleModal :open="$page.props.flash.type === null ? false : true" @close:modal="$page.props.flash.type = null" class="md:w-2/6">
                 <div class="text-center flex flex-col items-center justify-start space-y-2 p-6">
@@ -50,13 +49,8 @@ import BreezeButton from '@/Components/Button.vue'
 </template>
 
 <script>
-import simplebar from 'simplebar-vue';
-import 'simplebar-vue/dist/simplebar.min.css';
 
 export default {
-    components: {
-        simplebar,
-    },
     data(){
         return{
             username: '',

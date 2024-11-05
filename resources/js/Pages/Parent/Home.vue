@@ -74,7 +74,7 @@ background: #555; /* Color of the handle when hovered */
                     <span class="text-sm text-slate-800">{{ story.story_title }}</span>
                     <Carousel v-if="story.images.length" :mouseDrag="story.images.length > 1" :touchDrag="story.images.length > 1">
                         <Slide v-for="image, image_index in story.images" :key="image">
-                        <div class="carousel__item h-full cursor-pointer" @click="viewImage(image)">
+                        <div class="carousel__item h-full">
                             <img :src="'/storage/stories/' + image.image_filename" class="select-none h-full" @dblclick="toggleLike(story_index, story.story_id)">
                         </div>
                         </Slide>
@@ -117,9 +117,9 @@ background: #555; /* Color of the handle when hovered */
                                 </div>
                             </simplebar>
                         </div>
-                        <textarea class="bg-white border border-gray-300 p-2 px-3.5 rounded-lg w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="2" placeholder="Drop a comment..." :key="story_index" v-model="comments[story_index]"></textarea>
+                        <Textarea rows="2" placeholder="Drop a comment..." :key="story_index" v-model="comments[story_index]"></Textarea>
                         <div class="flex justify-end" @click="postComment(story_index, story.story_id)">
-                            <button class="px-4 py-2 text-xs bg-indigo-600 hover:bg-indigo-700 text-white rounded-md">Comment</button>
+                            <Button>Comment</Button>
                         </div>
                     </div>
                 </div>
@@ -150,664 +150,201 @@ background: #555; /* Color of the handle when hovered */
         :sources="lightbox.src"
         :exitFullscreenOnClose="true"
     />
-    <Modal :showModal="show_add_story_modal" modalType="sm" @hideModal="show_add_story_modal = false">
-        <template v-slot:header>
-            <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
-                <h3 class="text-gray-900 text font-semibold">                
-                    Add Story
-                </h3>       
-                <button type="button" @click="show_add_story_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                </button>
-            </div>                 
-        </template>
-        <template v-slot:content>
-            <div class="p-3">
-                <div class="flex flex-col justify-center items-start space-y-2">
-                    <Multiselect 
-                        v-model="add_story.form.programme_id"
-                        valueProp="id"
-                        :appendNewOption="false"
-                        :searchable="true"
-                        :options="$page.props.programmes"
-                        :clearOnSelect="true"
-                        :closeOnDeselect="true"
-                        :canClear="false"
-                        :canDeselect="false"
-                        trackBy="name"
-                        label="name"
-                        placeholder="Select programme"
-                            :classes="{
-                                container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
-                                containerDisabled: 'cursor-default bg-gray-100',
-                                containerOpen: 'rounded-b-none',
-                                containerActive: 'border-2 border-indigo-300',
-                                singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                                singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                                placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                                clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                                clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                dropdownHidden: 'hidden',
-                                options: 'flex flex-col p-0 m-0 list-none w-full',
-                                group: 'p-0 m-0',
-                                groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                groupLabelPointable: 'cursor-pointer',
-                                groupLabelPointed: 'bg-gray-300 text-black-700',
-                                groupLabelSelected: 'bg-gray-100 text-black',
-                                groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                groupOptions: 'p-0 m-0',
-                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                                optionPointed: 'text-gray-800 bg-gray-100',
-                                optionSelected: 'text-white bg-indigo-500',
-                                optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                            }"
-                    />
-                    <Multiselect 
-                        v-model="add_story.form.centre_id"
-                        valueProp="ID"
-                        :appendNewOption="false"
-                        :searchable="true"
-                        :options="$page.props.centres"
-                        :clearOnSelect="true"
-                        :closeOnDeselect="true"
-                        :canClear="false"
-                        :canDeselect="false"
-                        trackBy="label"
-                        label="label"
-                        placeholder="Select centre"
-                        :classes="{
-                            container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
-                            containerDisabled: 'cursor-default bg-gray-100',
-                            containerOpen: 'rounded-b-none',
-                            containerActive: 'border-2 border-indigo-300',
-                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                            search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                            clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                            clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                            dropdownHidden: 'hidden',
-                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                            group: 'p-0 m-0',
-                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                            groupLabelPointable: 'cursor-pointer',
-                            groupLabelPointed: 'bg-gray-300 text-black-700',
-                            groupLabelSelected: 'bg-gray-100 text-black',
-                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                            groupOptions: 'p-0 m-0',
-                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                            optionPointed: 'text-gray-800 bg-gray-100',
-                            optionSelected: 'text-white bg-indigo-500',
-                            optionDisabled: 'text-gray-300 cursor-not-allowed',
-                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                        }"
-                    />
-                    <div class="w-full grid grid-cols-1 2xl:grid-cols-2 gap-2">
-                        <Multiselect 
-                            v-model="add_story.find.class_types"
-                            valueProp="id"
-                            :appendNewOption="false"
-                            :searchable="true"
-                            :options="$page.props.class_types"
-                            :clearOnSelect="true"
-                            :closeOnDeselect="true"
-                            :canClear="false"
-                            :canDeselect="true"
-                            trackBy="name"
-                            label="name"
-                            placeholder="Select class type (optional)"
-                            :classes="{
-                                container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
-                                containerDisabled: 'cursor-default bg-gray-100',
-                                containerOpen: 'rounded-b-none',
-                                containerActive: 'border-2 border-indigo-300',
-                                singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                                singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                                placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                                clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                                clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                dropdownHidden: 'hidden',
-                                options: 'flex flex-col p-0 m-0 list-none w-full',
-                                group: 'p-0 m-0',
-                                groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                groupLabelPointable: 'cursor-pointer',
-                                groupLabelPointed: 'bg-gray-300 text-black-700',
-                                groupLabelSelected: 'bg-gray-100 text-black',
-                                groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                groupOptions: 'p-0 m-0',
-                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                                optionPointed: 'text-gray-800 bg-gray-100',
-                                optionSelected: 'text-white bg-indigo-500',
-                                optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                            }"
-                        />
-                        <Multiselect 
-                            v-model="add_story.find.levels"
-                            valueProp="id"
-                            :appendNewOption="false"
-                            :searchable="true"
-                            :options="add_story.list.levels"
-                            :clearOnSelect="true"
-                            :closeOnDeselect="true"
-                            :canClear="false"
-                            :canDeselect="true"
-                            trackBy="level"
-                            label="level"
-                            placeholder="Select level (optional)"
-                            :classes="{
-                                container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
-                                containerDisabled: 'cursor-default bg-gray-100',
-                                containerOpen: 'rounded-b-none',
-                                containerActive: 'border-2 border-indigo-300',
-                                singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                                singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                                placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                                clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                                clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                dropdownHidden: 'hidden',
-                                options: 'flex flex-col p-0 m-0 list-none w-full',
-                                group: 'p-0 m-0',
-                                groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                groupLabelPointable: 'cursor-pointer',
-                                groupLabelPointed: 'bg-gray-300 text-black-700',
-                                groupLabelSelected: 'bg-gray-100 text-black',
-                                groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                groupOptions: 'p-0 m-0',
-                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                                optionPointed: 'text-gray-800 bg-gray-100',
-                                optionSelected: 'text-white bg-indigo-500',
-                                optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                            }"
-                        >
-                            <template v-slot:singlelabel="{ value }">
-                                <div class="multiselect-single-label">
-                                    Level {{ value.level }}
-                                </div>
-                            </template>
-                            <template v-slot:option="{ option }">
-                                Level {{ option.level }}
-                            </template>
-                        </Multiselect>
-                    </div>
-                    <Multiselect
-                        id="students"
-                        mode="multiple"
-                        v-model="add_story.form.students"
-                        valueProp="id"
-                        :multiple="true"
-                        :searchable="true"
-                        :options="add_story.students[0].options.length ? add_story.students : []"
-                        :closeOnSelect="false"
-                        :clearOnSelect="true"
-                        :canClear="false"
-                        :hideSelected="false"
-                        :groups="add_story.students[0].options.length ? true : false"
-                        groupOptions="options"
-                        :groupLabel="add_story.students[0].options.length ? 'select_all' : null "
-                        :groupSelect="add_story.students[0].options.length ? true : false"
-                        placeholder="Select students"
-                        trackBy="name"
-                        label="name"
-                        :noOptionsText="'No students found'"
-                        :noResultsText="'No students found'"
-                        :classes="{
-                            container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm p-0',
-                            containerDisabled: 'cursor-default bg-gray-100',
-                            containerOpen: 'rounded-b-none',
-                            containerActive: 'border-2 border-indigo-300',
-                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                            multipleLabel: 'pl-3 flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug',
-                            search: 'pl-3 w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                            clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                            clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                            dropdownHidden: 'hidden',
-                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                            group: 'p-0 m-0',
-                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-medium cursor-default leading-normal text-slate-800',
-                            groupLabelPointable: 'cursor-pointer',
-                            groupLabelPointed: 'text-slate-800',
-                            groupLabelSelected: 'text-slate-800',
-                            groupLabelSelectedPointed: 'text-slate-80',
-                            groupOptions: 'p-0 m-0',
-                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                            optionPointed: 'text-slate-800 bg-indigo-50',
-                            optionSelected: 'text-slate-800 bg-indigo-200',
-                            optionSelectedPointed: 'text-slate-800 bg-indigo-200',
-                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                        }"
-                        >
-                        <template v-slot:multiplelabel="{ values }">
-                            <div class="multiselect-multiple-label">
-                              {{ values.length }} {{ values.length > 1 ? 'students'  :'student' }} selected
-                            </div>
-                          </template>
-                    </Multiselect>
-                    <textarea class="bg-white border border-gray-300 p-3 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="3" placeholder="What's happening today?" v-model="add_story.form.caption"></textarea>
-                    <div class="w-full" v-if="add_story.form.photos.length">
-                        <div class="overflow-x-auto scrollbar pb-3">
-                            <div class="flex space-x-4">
-                                <div class="relative" v-for="(photo, photo_index) in add_story.form.photos" :key="photo_index">
-                                    <div class="relative w-28 h-28">
-                                        <img :src="photo.url" class="w-full h-full rounded-lg" />
-                                        <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-lg">
-                                            <div class="flex flex-col space-y-2">
-                                                <button class="text-xs py-1 px-2 rounded text-indigo-500 font-semibold bg-white" @click="viewImage(photo)">
-                                                    View
-                                                </button>
-                                                <button class="text-xs py-1 px-2 rounded text-red-500 font-semibold bg-white" @click="removePhoto(photo_index)">
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+    <Dialog v-model:open="show_add_story_modal" classProp="max-w-xl">
+      <template #title>Add Story</template>
+      <template #content>
+        <div class="grid grid-cols-1 gap-4 mb-5">
+            <ComboBox
+                :items="$page.props.programmes"
+                label-property="name"
+                value-property="id"
+                v-model="add_story.form.programme_id"
+                select-placeholder="Select Programme"
+                search-placeholder="Search programme..."
+            ></ComboBox>
+            <ComboBox
+                :items="$page.props.centres"
+                label-property="label"
+                value-property="ID"
+                v-model="add_story.form.centre_id"
+                select-placeholder="Select Centre"
+                search-placeholder="Search centre..."
+            ></ComboBox>
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <ComboBox
+                    :items="$page.props.class_types"
+                    label-property="name"
+                    value-property="id"
+                    v-model="add_story.find.class_types"
+                    select-placeholder="Select Class Type (optional)"
+                    search-placeholder="Search class type..."
+                ></ComboBox>
+                <ComboBox
+                    :items="add_story.list.levels"
+                    label-property="level"
+                    value-property="id"
+                    v-model="add_story.find.levels"
+                    select-placeholder="Select Level (optional)"
+                    search-placeholder="Search level..."
+                >
+                    <template #label="{ item }">
+                        Level {{ item.level }}
+                    </template>
+                    <template #label-content="{ selectedItem, selectedItems, multiple }">
+                        <span v-if="selectedItem">Level {{ selectedItem.level }}</span>
+                    </template>
+                </ComboBox>
+            </div>
+            <ComboBox
+                :items="add_story.students[0].options"
+                label-property="name"
+                value-property="id"
+                v-model="add_story.form.students"
+                select-placeholder="Select Students"
+                search-placeholder="Search student..."
+                :multiple="true"
+            >
+            </ComboBox>
+            <Textarea rows="3" placeholder="What's happening today?" v-model="add_story.form.caption"></Textarea>
+            <div class="w-full" v-if="add_story.form.photos.length">
+                <div class="overflow-x-auto scrollbar pb-3">
+                    <div class="flex space-x-4 mt-1">
+                        <div class="relative" v-for="(photo, photo_index) in add_story.form.photos" :key="photo_index">
+                            <div class="relative w-28 h-28">
+                                <img :src="photo.url" class="w-full h-full rounded-lg border-2 border-slate-200"  @click="viewImage(photo)"/>
+                                <XCircle class="rounded-full absolute -top-1 -right-1 text-red-600 bg-white h-5 w-5 cursor-pointer" @click="removePhoto(photo_index)"></XCircle>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center w-full">
-                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhoto">
-                            <div class="flex flex-col items-center justify-center py-6">
-                                <svg class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                </svg>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 ">
-                                    <span class="font-semibold">Click to upload</span>
-                                </p>
-                                <span class="text-xs text-center text-slate-500">Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images to select multiple</span>
-                            </div>
-                            <input id="dropzone-file" type="file" class="hidden" multiple/>
-                        </label>
-                    </div> 
-                    <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(add_story.form.photos.length || add_story.form.caption) && add_story.form.students.length ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="post">Post</button>
-                    <button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_add_story_modal = false">Cancel</button>
                 </div>
             </div>
-        </template>
-    </Modal >
-    <Modal :showModal="show_edit_story_modal" modalType="sm" @hideModal="show_edit_story_modal = false">
-        <template v-slot:header>
-            <div class="flex items-center justify-between py-3 px-4 border-b rounded-t font-semibold">
-                <h3 class="text-gray-900 text font-semibold">                
-                    Edit Story
-                </h3>
-                <button type="button" @click="show_edit_story_modal = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="default-modal">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                </button>
-            </div>                 
-        </template>
-        <template v-slot:content>
-            <div class="p-3">
-                <div class="flex flex-col justify-center items-start space-y-4">
-                    <Multiselect 
-                        v-model="edit_story.form.programme_id"
-                        valueProp="id"
-                        :appendNewOption="false"
-                        :searchable="true"
-                        :options="$page.props.programmes"
-                        :clearOnSelect="true"
-                        :closeOnDeselect="true"
-                        :canClear="false"
-                        :canDeselect="false"
-                        trackBy="name"
-                        label="name"
-                        placeholder="Select programme"
-                            :classes="{
-                                container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
-                                containerDisabled: 'cursor-default bg-gray-100',
-                                containerOpen: 'rounded-b-none',
-                                containerActive: 'border-2 border-indigo-300',
-                                singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                                singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                                placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                                clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                                clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                dropdownHidden: 'hidden',
-                                options: 'flex flex-col p-0 m-0 list-none w-full',
-                                group: 'p-0 m-0',
-                                groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                groupLabelPointable: 'cursor-pointer',
-                                groupLabelPointed: 'bg-gray-300 text-black-700',
-                                groupLabelSelected: 'bg-gray-100 text-black',
-                                groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                groupOptions: 'p-0 m-0',
-                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                                optionPointed: 'text-gray-800 bg-gray-100',
-                                optionSelected: 'text-white bg-indigo-500',
-                                optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                            }"
-                    />
-                    <Multiselect 
-                        v-model="edit_story.form.centre_id"
-                        valueProp="ID"
-                        :appendNewOption="false"
-                        :searchable="true"
-                        :options="$page.props.centres"
-                        :clearOnSelect="true"
-                        :closeOnDeselect="true"
-                        :canClear="false"
-                        :canDeselect="false"
-                        trackBy="label"
-                        label="label"
-                        placeholder="Select centre"
-                        :classes="{
-                            container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
-                            containerDisabled: 'cursor-default bg-gray-100',
-                            containerOpen: 'rounded-b-none',
-                            containerActive: 'border-2 border-indigo-300',
-                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                            search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                            clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                            clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                            dropdownHidden: 'hidden',
-                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                            group: 'p-0 m-0',
-                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                            groupLabelPointable: 'cursor-pointer',
-                            groupLabelPointed: 'bg-gray-300 text-black-700',
-                            groupLabelSelected: 'bg-gray-100 text-black',
-                            groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                            groupOptions: 'p-0 m-0',
-                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                            optionPointed: 'text-gray-800 bg-gray-100',
-                            optionSelected: 'text-white bg-indigo-500',
-                            optionDisabled: 'text-gray-300 cursor-not-allowed',
-                            optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                        }"
-                    />
-                    <div class="w-full grid grid-cols-1 2xl:grid-cols-2 gap-2">
-                        <Multiselect 
-                            v-model="edit_story.find.class_types"
-                            valueProp="id"
-                            :appendNewOption="false"
-                            :searchable="true"
-                            :options="$page.props.class_types"
-                            :clearOnSelect="true"
-                            :closeOnDeselect="true"
-                            :canClear="false"
-                            :canDeselect="true"
-                            trackBy="name"
-                            label="name"
-                            placeholder="Select class type (optional)"
-                            :classes="{
-                                container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
-                                containerDisabled: 'cursor-default bg-gray-100',
-                                containerOpen: 'rounded-b-none',
-                                containerActive: 'border-2 border-indigo-300',
-                                singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                                singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                                placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                                clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                                clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                dropdownHidden: 'hidden',
-                                options: 'flex flex-col p-0 m-0 list-none w-full',
-                                group: 'p-0 m-0',
-                                groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                groupLabelPointable: 'cursor-pointer',
-                                groupLabelPointed: 'bg-gray-300 text-black-700',
-                                groupLabelSelected: 'bg-gray-100 text-black',
-                                groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                groupOptions: 'p-0 m-0',
-                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                                optionPointed: 'text-gray-800 bg-gray-100',
-                                optionSelected: 'text-white bg-indigo-500',
-                                optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                            }"
-                        />
-                        <Multiselect 
-                            v-model="edit_story.find.levels"
-                            valueProp="id"
-                            :appendNewOption="false"
-                            :searchable="true"
-                            :options="edit_story.list.levels"
-                            :clearOnSelect="true"
-                            :closeOnDeselect="true"
-                            :canClear="false"
-                            :canDeselect="true"
-                            trackBy="level"
-                            label="level"
-                            placeholder="Select level (optional)"
-                            :classes="{
-                                container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm',
-                                containerDisabled: 'cursor-default bg-gray-100',
-                                containerOpen: 'rounded-b-none',
-                                containerActive: 'border-2 border-indigo-300',
-                                singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                                singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                                search: 'w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                                placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                                clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                                clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                                spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                                dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                                dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                                dropdownHidden: 'hidden',
-                                options: 'flex flex-col p-0 m-0 list-none w-full',
-                                group: 'p-0 m-0',
-                                groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
-                                groupLabelPointable: 'cursor-pointer',
-                                groupLabelPointed: 'bg-gray-300 text-black-700',
-                                groupLabelSelected: 'bg-gray-100 text-black',
-                                groupLabelSelectedPointed: 'bg-gray-100 text-black opacity-90',
-                                groupOptions: 'p-0 m-0',
-                                option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                                optionPointed: 'text-gray-800 bg-gray-100',
-                                optionSelected: 'text-white bg-indigo-500',
-                                optionDisabled: 'text-gray-300 cursor-not-allowed',
-                                optionSelectedPointed: 'text-white bg-indigo-500 opacity-90',
-                                optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                                noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                                fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                            }"
-                        >
-                            <template v-slot:singlelabel="{ value }">
-                                <div class="multiselect-single-label">
-                                    Level {{ value.level }}
-                                </div>
-                            </template>
-                            <template v-slot:option="{ option }">
-                                Level {{ option.level }}
-                            </template>
-                        </Multiselect>
+            <div class="flex items-center justify-center w-full">
+                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhoto">
+                    <div class="flex flex-col items-center justify-center py-6">
+                        <svg class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 ">
+                            <span class="font-semibold">Click to upload</span>
+                        </p>
+                        <span class="text-xs text-center text-slate-500">Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images to select multiple</span>
                     </div>
-                    <Multiselect
-                        id="edit_students"
-                        mode="multiple"
-                        v-model="edit_story.form.students"
-                        valueProp="id"
-                        :multiple="true"
-                        :searchable="true"
-                        :options="edit_story.students[0].options.length ? edit_story.students : []"
-                        :closeOnSelect="false"
-                        :clearOnSelect="true"
-                        :canClear="false"
-                        :hideSelected="false"
-                        :groups="edit_story.students[0].options.length ? true : false"
-                        groupOptions="options"
-                        :groupLabel="edit_story.students[0].options.length ? 'select_all' : null "
-                        :groupSelect="edit_story.students[0].options.length ? true : false"
-                        placeholder="Select students"
-                        trackBy="name"
-                        label="name"
-                        :noOptionsText="'No students found'"
-                        :noResultsText="'No students found'"
-                        :classes="{
-                            container: 'relative w-full flex items-center justify-end cursor-pointer border border-gray-300 rounded bg-white text-base leading-snug outline-none h-10 text-sm p-0',
-                            containerDisabled: 'cursor-default bg-gray-100',
-                            containerOpen: 'rounded-b-none',
-                            containerActive: 'border-2 border-indigo-300',
-                            singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 pr-16 box-border',
-                            singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
-                            multipleLabel: 'pl-3 flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug',
-                            search: 'pl-3 w-full mt-1 h-8 absolute inset-0 focus:border-none outline-none focus:ring-0 appearance-none border-2 border-transparent focus:border-indigo-300 text-base font-sans bg-white rounded-lg text-sm',
-                            placeholder: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 text-gray-500',
-                            clear: 'pr-10 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 text-gray-800',
-                            clearIcon: 'fa fa-heart bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
-                            spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0',
-                            dropdown: 'max-h-60 absolute -left-px -right-px bottom-0 transform translate-y-full border border-gray-300 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                            dropdownTop: '-translate-y-full top-px bottom-auto flex-col-reverse rounded-b-none rounded-t',
-                            dropdownHidden: 'hidden',
-                            options: 'flex flex-col p-0 m-0 list-none w-full',
-                            group: 'p-0 m-0',
-                            groupLabel: 'flex text-sm box-border items-center justify-start text-left py-2 px-3 font-medium cursor-default leading-normal text-slate-800',
-                            groupLabelPointable: 'cursor-pointer',
-                            groupLabelPointed: 'text-slate-800',
-                            groupLabelSelected: 'text-slate-800',
-                            groupLabelSelectedPointed: 'text-slate-80',
-                            groupOptions: 'p-0 m-0',
-                            option: 'flex items-center justify-start box-border text-left cursor-pointer text-base leading-snug py-2 px-3.5 text-sm',
-                            optionPointed: 'text-slate-800 bg-indigo-50',
-                            optionSelected: 'text-slate-800 bg-indigo-200',
-                            optionSelectedPointed: 'text-slate-800 bg-indigo-200',
-                            optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
-                            noOptions: 'py-2 px-3 text-gray-600 bg-white text-left',
-                            noResults: 'py-2 px-3 text-gray-600 bg-white text-left',
-                            fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
-                        }"
-                        >
-                        <template v-slot:multiplelabel="{ values }">
-                            <div class="multiselect-multiple-label">
-                              {{ values.length }} {{ values.length > 1 ? 'students'  :'student' }} selected
-                            </div>
-                          </template>
-                    </Multiselect>
-                    <textarea class="bg-white border border-gray-300 p-3 rounded w-full resize-none focus:ring-0 focus:border-2 focus:border-indigo-300 text-sm" rows="3" placeholder="What's happening today?" v-model="edit_story.form.caption"></textarea>
-                    <div class="w-full" v-if="edit_story.form.photos.length">
-                        <div class="overflow-x-auto scrollbar pb-3">
-                            <div class="flex space-x-4">
-                                <div class="relative" v-for="(photo, photo_index) in edit_story.form.photos" :key="photo_index">
-                                    <div class="relative w-28 h-28">
-                                        <img :src="photo.url ? photo.url : '/storage/stories/' + photo.image_filename" class="w-full h-full rounded-lg object-cover" />
-                                        <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-lg">
-                                            <div class="flex flex-col space-y-2">
-                                                <button class="text-xs py-1 px-2 rounded text-indigo-500 font-semibold bg-white" @click="viewImage(photo)">
-                                                    View
-                                                </button>
-                                                <button class="text-xs py-1 px-2 rounded text-red-500 font-semibold bg-white" @click="removePhotoEditStory(photo_index)">
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <input id="dropzone-file" type="file" class="hidden" multiple/>
+                </label>
+            </div> 
+            <Button :disabled="(add_story.form.photos.length || add_story.form.caption) && !add_story.form.students.length" @click="post">Post</Button>
+            <Button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_add_story_modal = false">Cancel</Button>
+        </div>
+      </template>
+    </Dialog>
+    <Dialog v-model:open="show_edit_story_modal" classProp="max-w-xl">
+      <template #title>Edit Story</template>
+      <template #content>
+        <div class="grid grid-cols-1 gap-4 mb-5">
+            <ComboBox
+                :items="$page.props.programmes"
+                label-property="name"
+                value-property="id"
+                v-model="edit_story.form.programme_id"
+                select-placeholder="Select Programme"
+                search-placeholder="Search programme..."
+            ></ComboBox>
+            <ComboBox
+                :items="$page.props.centres"
+                label-property="label"
+                value-property="ID"
+                v-model="edit_story.form.centre_id"
+                select-placeholder="Select Centre"
+                search-placeholder="Search centre..."
+            ></ComboBox>
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <ComboBox
+                    :items="$page.props.class_types"
+                    label-property="name"
+                    value-property="id"
+                    v-model="edit_story.find.class_types"
+                    select-placeholder="Select Class Type (optional)"
+                    search-placeholder="Search class type..."
+                ></ComboBox>
+                <ComboBox
+                    :items="edit_story.list.levels"
+                    label-property="level"
+                    value-property="id"
+                    v-model="edit_story.find.levels"
+                    select-placeholder="Select Level (optional)"
+                    search-placeholder="Search level..."
+                >
+                    <template #label="{ item }">
+                        Level {{ item.level }}
+                    </template>
+                    <template #label-content="{ selectedItem, selectedItems, multiple }">
+                        <span v-if="selectedItem">Level {{ selectedItem.level }}</span>
+                    </template>
+                </ComboBox>
+            </div>
+            <ComboBox
+                :items="edit_story.students[0].options"
+                label-property="name"
+                value-property="id"
+                v-model="edit_story.form.students"
+                select-placeholder="Select Students"
+                search-placeholder="Search student..."
+                :multiple="true"
+            >
+            </ComboBox>
+            <Textarea rows="3" placeholder="What's happening today?" v-model="edit_story.form.caption"></Textarea>
+            <div class="w-full" v-if="edit_story.form.photos.length">
+                <div class="overflow-x-auto scrollbar pb-3">
+                    <div class="flex space-x-4 mt-1">
+                        <div class="relative" v-for="(photo, photo_index) in edit_story.form.photos" :key="photo_index">
+                            <div class="relative w-28 h-28">
+                                <img :src="photo.url && !photo.story_id ? photo.url : '/storage/stories/' + photo.image_filename" class="w-full h-full rounded-lg border-2 border-slate-200"  @click="viewImage(photo)"/>
+                                <XCircle class="rounded-full absolute -top-1 -right-1 text-red-600 bg-white h-5 w-5 cursor-pointer" @click="removePhotoEditStory(photo_index)"></XCircle>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center w-full">
-                        <label for="dropzone-file-2" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhotoEditStory">
-                            <div class="flex flex-col items-center justify-center py-6">
-                                <svg class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                </svg>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 ">
-                                    <span class="font-semibold">Click to upload</span>
-                                </p>
-                                <span class="text-xs text-center text-slate-500">Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images to select multiple</span>
-                            </div>
-                            <input id="dropzone-file-2" type="file" class="hidden" multiple/>
-                        </label>
-                    </div> 
-                    <button type="button" class="text-white font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" :class="(edit_story.form.photos.length || edit_story.form.caption) && edit_story.form.students.length ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-400 cursor-not-allowed'" @click="savePost">Save</button>
-                    <button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_edit_story_modal = false">Cancel</button>
                 </div>
             </div>
-        </template>
-    </Modal >
-    <ConfirmationModal 
-        :show="show_delete" 
-        @close="show_delete = false"
-        confirmationAlert="danger"
-        confirmationTitle="Delete Story"
-        confirmationText="Are you sure want to delete this story?"
-        confirmationButton="Delete"
-        confirmationMethod="delete"
-        :confirmationRoute="confirmationRoute"
-        :confirmationData="confirmationData"
-    />
+            <div class="flex items-center justify-center w-full">
+                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhotoEditStory">
+                    <div class="flex flex-col items-center justify-center py-6">
+                        <svg class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 ">
+                            <span class="font-semibold">Click to upload</span>
+                        </p>
+                        <span class="text-xs text-center text-slate-500">Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images to select multiple</span>
+                    </div>
+                    <input id="dropzone-file" type="file" class="hidden" multiple/>
+                </label>
+            </div> 
+            <div class="flex flex-col gap-1">
+                <Button @click="savePost">Save</Button>
+                <Button variant="outline" @click="show_edit_story_modal = false">Cancel</Button>
+            </div>
+        </div>
+      </template>
+    </Dialog>
+    <DeleteConfirmation :open="confirmation.is_open" @close="confirmation.is_open = false" :routeName="confirmation.route_name" :id="confirmation.id">
+        <template #title>Delete Story</template>
+        <template #description>Are you sure want to delete this story?</template>
+    </DeleteConfirmation>
 </template>
 
 <script setup>
 import Authenticated from '@/Layouts/Parent/Authenticated.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import SimpleModal from '@/Components/Parent/SimpleModal.vue';
 import { debounce } from 'vue-debounce'
+import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';   
 </script>
 
 <script>
 import simplebar from 'simplebar-vue';
 import 'simplebar-vue/dist/simplebar.min.css';
 import Multiselect from '@vueform/multiselect'
-import Modal from '@/Components/Modal.vue'
+import Dialog from "@/Components/DialogModal.vue";
 import TimeAgo from '@/Components/TimeAgo.vue'
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
@@ -816,13 +353,14 @@ import { DateTime } from 'luxon';
 import FsLightbox from "fslightbox-vue/v3";
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Compressor from 'compressorjs';
+import { XCircle } from 'lucide-vue-next';
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
 
 export default {
   components: {
-    simplebar, Multiselect, TimeAgo, 
+    Multiselect, TimeAgo, 
     Carousel,
     Slide,
     Pagination,
@@ -834,8 +372,11 @@ export default {
         show_edit_story_modal: false,
         show_comment: [],
         show_delete: false,
-        confirmationData: '',
-        confirmationRoute: '',
+        confirmation: {
+            is_open: false,
+            route_name: '',
+            id: ''
+        },
         loading:{
             students: false,
             stories: false
@@ -1077,17 +618,18 @@ export default {
         this.show_add_story_modal = true
     },
     openEditStoryModal(index){
-        this.edit_story.form.story_id     =   this.$page.props.stories.data[index].story_id
-        this.edit_story.form.programme_id =   this.$page.props.stories.data[index].story_programme_id
-        this.edit_story.form.centre_id    =   this.$page.props.stories.data[index].story_centre_id
-        this.edit_story.form.caption      =   this.$page.props.stories.data[index].story_title
-        this.edit_story.form.photos       =   this.$page.props.stories.data[index].images
+        const data = JSON.parse(JSON.stringify(this.$page.props.stories.data[index]))
+        this.edit_story.form.story_id     =   data.story_id
+        this.edit_story.form.programme_id =   data.story_programme_id
+        this.edit_story.form.centre_id    =   data.story_centre_id
+        this.edit_story.form.caption      =   data.story_title
+        this.edit_story.form.photos       =   data.images
 
         axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
         .then(response => {
             this.edit_story.students[0].options =   []
             this.edit_story.students[0].options =   response.data
-            this.edit_story.form.students       =   this.$page.props.stories.data[index].students.map(student => student.student_id);
+            this.edit_story.form.students       =   data.students.map(student => student.student_id);
         })
 
         this.show_edit_story_modal  =   true
@@ -1212,13 +754,12 @@ export default {
       }
     },
     viewImage(image){
-        this.lightbox.src   = image.url ? [image.url] : [window.location.origin+'/storage/stories/' + image.image_filename]
-        this.lightbox.open  = !this.lightbox.open
+        window.open(image.url ? [image.url] : [window.location.origin+'/storage/stories/' + image.image_filename], '_blank');
     },
     deleteStory(story_id){
-        this.confirmationRoute = 'stories.destroy'
-        this.confirmationData = story_id
-        this.show_delete = true
+        this.confirmation.route_name    = 'stories.destroy'
+        this.confirmation.id            = story_id
+        this.confirmation.is_open       = true
     },
     blobToFile(blob, filename) {
         const file = new File([blob], filename, { type: blob.type });

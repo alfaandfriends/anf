@@ -127,7 +127,6 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue'
 import Pagination from '@/Components/Pagination.vue'
 import moment from 'moment';
-import Multiselect from '@vueform/multiselect'
 import axios from 'axios'
 import Chart from 'chart.js/auto';
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -137,7 +136,7 @@ import domtoimage from 'dom-to-image';
 export default {
     components: {
         SearchIcon, TrashIcon, PencilIcon,
-        ConfirmationModal, Head, Link, Multiselect, Pagination
+        ConfirmationModal, Head, Link, Pagination
     },
     props: {
         filter: Object,

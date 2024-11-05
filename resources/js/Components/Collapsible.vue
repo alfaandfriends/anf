@@ -36,7 +36,7 @@ const toggleOpen = () => {
 <template>
   <Collapsible :open="isOpen" class="overflow-x-auto mb-1">
     <CollapsibleTrigger 
-      :class="['flex justify-between items-center w-full text-left font-semibold text-sm border border-b-0 rounded-lg px-3 py-2 bg-slate-200 hover:bg-slate-300 w-10', isOpen ? 'rounded-b-none' : '']" 
+      :class="['flex justify-between items-center w-full text-left font-semibold text-sm border border-b-0 rounded-lg px-3 py-2 bg-slate-200 hover:bg-slate-300', isOpen ? 'rounded-b-none' : '']" 
       @click="toggleOpen"
     >
       <!-- Slot for trigger content -->

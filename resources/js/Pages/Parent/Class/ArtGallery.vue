@@ -1,8 +1,6 @@
 <template>
     <Head title="Art Gallery" />
-    <div class="fixed w-full flex justify-center top-[4rem] md:top-[10rem] font-extrabold bg-white border border-gray-300 py-3 z-20">
-        <span>{{ $page.props.session_data.current_active_programme.name }}</span>
-    </div>
+    <Header>{{ $page.props.session_data.current_active_programme.name }}</Header>
     <Authenticated>
         <div class="max-w-xl mx-auto border shadow bg-white rounded-lg px-4 mt-14">
             <simplebar data-simplebar-auto-hide="true">
@@ -155,6 +153,7 @@ import Authenticated from '@/Layouts/Parent/Authenticated.vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import BreezeButton from '@/Components/Button.vue'
 import VueEasyLightbox from 'vue-easy-lightbox' // work
+import Header from './Header.vue'
 </script>
 
 <script>

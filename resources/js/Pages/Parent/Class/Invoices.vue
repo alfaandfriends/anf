@@ -1,8 +1,6 @@
 <template>
     <Head title="Invoices" />
-    <div class="fixed w-full flex justify-center top-[4rem] md:top-[10rem] font-extrabold bg-white border border-gray-300 py-3 z-20">
-        <span>{{ $page.props.session_data.current_active_programme.name }}</span>
-    </div>
+    <Header>{{ $page.props.session_data.current_active_programme.name }}</Header>
     <Authenticated>
         <div class="max-w-xl mx-auto border shadow bg-white rounded-lg px-4 mt-14">
             <simplebar data-simplebar-auto-hide="true">
@@ -75,6 +73,7 @@ import simplebar from 'simplebar-vue';
 import 'simplebar-vue/dist/simplebar.min.css';
 import axios from 'axios'
 import moment from 'moment';
+import Header from './Header.vue'
 </script>
 
 <script>

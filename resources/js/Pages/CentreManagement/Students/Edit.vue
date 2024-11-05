@@ -902,13 +902,7 @@ import BreezeButton from "@/Components/Button.vue";
 <script>
 import { Head, Link } from "@inertiajs/inertia-vue3";
 import Toggle from "@vueform/toggle";
-import Multiselect from "@vueform/multiselect";
 import moment from "moment";
-import ConfirmationModal from "@/Components/ConfirmationModal.vue";
-import { $vfm, VueFinalModal, ModalsContainer } from "vue-final-modal";
-import simplebar from "simplebar-vue";
-import "simplebar-vue/dist/simplebar.min.css";
-import Modal from "@/Components/Modal.vue";
 import Card from "@/Components/Card.vue";
 import { PlusCircle, RefreshCcw, Trash2, XCircle } from "lucide-vue-next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
@@ -928,12 +922,7 @@ import {
 } from "@/Components/ui/table";
 
 export default {
-  components: { Head, Link, Toggle, Multiselect,
-    ConfirmationModal,
-    VueFinalModal,
-    simplebar,
-    Modal,
-  },
+  components: { Head, Link, Toggle },
   data() {
     return {
       transfer: {

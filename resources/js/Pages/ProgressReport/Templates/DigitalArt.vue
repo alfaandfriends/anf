@@ -230,10 +230,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import StudentInformation from '@/Pages/ProgressReport/Templates/StudentInformation.vue';
-import Modal from '@/Components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
-import Multiselect from '@vueform/multiselect'
 import FeedbackSummary from './FeedbackSummary.vue'
 import { debounce } from 'vue-debounce'
 import Card from '@/Components/Card.vue'
@@ -245,7 +243,7 @@ import { Plus, Trash, Trash2Icon, XCircle } from 'lucide-vue-next';
 
 export default {
     components: {
-        Head, Link, Modal, Multiselect, 
+        Head, Link
     },
     computed: {
         groupedData(){

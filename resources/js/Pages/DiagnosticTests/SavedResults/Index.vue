@@ -90,12 +90,11 @@ import Pagination from '@/Components/Pagination.vue'
 import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';   
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 import moment from 'moment';
-import Modal from '@/Components/Modal.vue'
 import Dialog from '@/Components/DialogModal.vue'
 
 export default {
     components: {
-        Head, Link, Modal, Pagination
+        Head, Link, Pagination
     },
     props: {
         filter: Object,

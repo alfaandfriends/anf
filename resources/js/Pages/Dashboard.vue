@@ -122,11 +122,10 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 
 <script>
 import { Head } from '@inertiajs/inertia-vue3';
-  import Multiselect from '@vueform/multiselect'
 
 export default {
     components: {
-        BreezeAuthenticatedLayout, Multiselect, Head,
+        BreezeAuthenticatedLayout, Head,
     },
     props: {
         filters: Object

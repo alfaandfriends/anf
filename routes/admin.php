@@ -139,7 +139,7 @@ Route::middleware(['auth'])->group(function(){
                 Route::get('/stories/create', [StoryController::class, 'create'])->name('stories.create')->middleware('permission:create_stories');
                 Route::post('/stories/store', [StoryHelper::class, 'createPost'])->name('stories.store')->middleware('permission:create_stories');
                 Route::post('/stories/update', [StoryHelper::class, 'editPost'])->name('stories.update')->middleware('permission:edit_stories');
-                Route::delete('/stories/destroy{id}', [StoryHelper::class, 'deletePost'])->name('stories.destroy')->middleware('permission:delete_stories');
+                Route::delete('/stories/destroy/{id}', [StoryHelper::class, 'deletePost'])->name('stories.destroy')->middleware('permission:delete_stories');
                 Route::get('/stories/get-class-levels/{programme_id}/{class_type_id}', [ClassHelper::class, 'getClassLevels'])->name('stories.get_class_levels');
             });
 
