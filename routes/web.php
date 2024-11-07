@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\DiagnosticTestController;
+use App\Http\Controllers\GroqApiController;
 use App\Http\Controllers\ProgressReportController;
 use Illuminate\Support\Facades\Route;
+
+
+Route::get('/groq-api', [GroqApiController::class, 'test'])->name('groq.test');
 
 Route::prefix('diagnostic-test')->group(function () {
     Route::middleware('auth')->group(function () {
