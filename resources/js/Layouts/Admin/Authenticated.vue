@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/Components/ui/sheet'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/Components/ui/accordion'
 import { ScrollArea } from '@/Components/ui/scroll-area'
 import Breadcrumbs from '@/Components/Breadcrumbs.vue'
+import Chatbox from '@/Components/Chatbox.vue'
 
 const { toast } = useToast()
 
@@ -17,7 +18,7 @@ export default {
         CircleUser, Menu,
         BreezeApplicationLogo, Link, Breadcrumbs, useToast, Toaster, DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
         DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, Sheet, SheetContent, SheetTrigger, Accordion, AccordionContent, AccordionItem, 
-        AccordionTrigger, ScrollArea
+        AccordionTrigger, ScrollArea, Chatbox
     },
     data() {
         return {
@@ -275,6 +276,7 @@ export default {
                 <slot/>
                 <Toaster v-if="$page.props.flash.type"/>
             </main>
+            <Chatbox></Chatbox>
             <div class="flex justify-center border-t items-center py-5 px-6 bg-white text-slate-900 font-bold">
                 <span class="text-sm">{{ new Date().getFullYear() }} &copy; ALFA and Friends</span>
             </div>
