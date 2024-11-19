@@ -246,8 +246,8 @@ import BreezeButton from "@/Components/Button.vue";
                 >
                   <Badge variant="" v-for="classes in fee.classes" :key="classes.id">
                     <span class="whitespace-nowrap"
-                      >{{ moment(classes.start_time).format("h:mm A") }} -
-                      {{ moment(classes.end_time).format("h:mm A") }}</span
+                      >{{ classes.class_day }} ({{ moment(classes.start_time).format("h:mm A") }} -
+                      {{ moment(classes.end_time).format("h:mm A") }})</span
                     >
                   </Badge>
                 </div>
@@ -295,47 +295,133 @@ import BreezeButton from "@/Components/Button.vue";
             <span class="text-sm text-slate-500">No class has been added.</span>
           </div>
         </div>
-        <div class="p-3 border rounded-lg" v-else>
-          <span class="text-sm text-slate-500">Coming Soon...</span>
-          <!-- <article class="rounded border border-dashed border-gray-500 bg-white p-6" v-if="Object.keys(previous_fee).length" v-for="fee, fee_index in previous_fee">
-                        <div class="flex items-start">
-                            <div>
-                                <strong class="rounded border border-blue-500 bg-blue-400 px-3 py-1.5 text-[12px] font-medium text-white">{{ moment(fee.fee_month).format('MMMM Y') }}</strong>
-                                <h3 class="mt-4 text-lg font-medium sm:text-sm space-x-2">
-                                    <span> {{ fee.programme_name }} (Level {{ fee.programme_level }}) </span>
-                                </h3>
-                                <div class="mt-3 flex space-x-4">
-                                    <div class="flex space-x-4 text-xs border border-indigo-600 px-2 py-1 rounded text-indigo-600 font-semibold" v-for="classes in fee.classes" :key="classes.id">
-                                        <div class="flex items-center space-x-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 448 512">
-                                                <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/>
-                                            </svg>
-                                            <span>{{ classes.class_day }}</span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 512 512">
-                                                <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
-                                            </svg>
-                                            <span>{{ moment(classes.start_time, "HH:mm:ss").format('h:mm A') }} - {{ moment(classes.end_time, "HH:mm:ss").format('h:mm A') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-3 sm:flex sm:items-center sm:gap-2">
-                                    <div class="flex items-center gap-1 text-gray-500">
-                                        <p class="text-sm font-medium">{{ fee.centre_name }}</p>
-                                    </div>
-                                    <span class="hidden sm:block" aria-hidden="true">&middot;</span>
-                                    <div class="flex items-center gap-1 text-gray-500">
-                                        <p class="text-sm font-medium">{{ fee.programme_type }}</p>
-                                    </div>
-                                    <span class="hidden sm:block" aria-hidden="true">&middot;</span>
-                                    <div class="flex items-center gap-1 text-gray-500">
-                                        <p class="text-sm font-medium">{{ fee.class_method }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </article> -->
+        <div class="flex flex-col" v-else>
+          <!-- <div class="flex px-0.5 mb-5">
+            <div class="">
+              <Label>Year Filter : </Label>
+              <Datepicker mode="year" :format="'yyyy'" v-model="form.date_admission"/>
+            </div>
+          </div> -->
+          <Collapsible v-if="previous_fee.length"  v-for="(fee, fee_index) in previous_fee">
+            <template #trigger>
+              <div class="flex space-x-2 items-center">
+                <Badge variant="" class="cursor-default">
+                  <span class="whitespace-nowrap">{{ moment(fee.fee_info.fee_month).format('MMMM') }}</span>
+                </Badge>
+                <Label class="whitespace-pre-line"
+                  >{{ fee.fee_info.programme_name }} (Level
+                  {{ fee.fee_info.programme_level }})</Label
+                >
+              </div>
+            </template>
+            <template #content>
+              <div class="grid grid-cols-1 gap-1 overflow-auto">
+                <Tabs
+                  :defaultValue="
+                    current_programme_info_tab[fee_index]
+                      ? current_programme_info_tab[fee_index]
+                      : (current_programme_info_tab[fee_index] = 1)
+                  "
+                  class="mb-1"
+                >
+                  <TabsList>
+                    <TabsTrigger
+                      :value="1"
+                      @click="current_programme_info_tab[fee_index] = 1"
+                    >
+                      Fee Info
+                    </TabsTrigger>
+                    <TabsTrigger
+                      :value="2"
+                      @click="current_programme_info_tab[fee_index] = 2"
+                    >
+                      Timetable
+                    </TabsTrigger>
+                    <TabsTrigger
+                      :value="3"
+                      @click="current_programme_info_tab[fee_index] = 3"
+                    >
+                      Promotions
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+                <div
+                  class="grid grid-cols-1"
+                  v-if="current_programme_info_tab[fee_index] == 1"
+                >
+                  <div class="flex flex-wrap gap-1 p-1">
+                    <Badge variant="" class="space-x-2">
+                      <span class="whitespace-nowrap">{{ fee.fee_info.centre_name }}</span>
+                    </Badge>
+                    <Badge variant="">
+                      <span class="whitespace-nowrap">{{ fee.fee_info.class_method }}</span>
+                    </Badge>
+                    <Badge variant="">
+                      <span class="whitespace-nowrap">{{
+                        fee.fee_info.programme_type
+                      }}</span>
+                    </Badge>
+                  </div>
+                  <hr class="mt-4 mb-1" />
+                  <div class="p-1">
+                    <Label> Status </Label>
+                    <RadioGroup v-model="fee.fee_info.student_fee_status">
+                      <div class="flex items-center space-x-2">
+                        <RadioGroupItem
+                          id="default"
+                          value=""
+                          :disabled="true"
+                        />
+                        <Label
+                          for="default"
+                          >Ongoing</Label
+                        >
+                        <template v-for="status in $page.props.fee_status">
+                          <RadioGroupItem
+                            :id="'radio_' + fee.fee_info.student_fee_id + '_' + status.id"
+                            :value="status.id"
+                            v-if="status.id != 2"
+                            :disabled="true"
+                          />
+                          <Label
+                            :for="'radio_' + fee.fee_info.student_fee_id + '_' + status.id"
+                            v-if="status.id != 2"
+                            >{{ status.name }}</Label
+                          >
+                        </template>
+                      </div>
+                    </RadioGroup>
+                    <div class="mt-3"></div>
+                  </div>
+                </div>
+                <div
+                  class="flex flex-wrap gap-1 p-1"
+                  v-if="current_programme_info_tab[fee_index] == 2"
+                >
+                  <Badge variant="" v-for="classes in fee.classes" :key="classes.id">
+                    <span class="whitespace-nowrap"
+                      >{{ classes.class_day }} ({{ moment(classes.start_time).format("h:mm A") }} -
+                      {{ moment(classes.end_time).format("h:mm A") }})</span
+                    >
+                  </Badge>
+                </div>
+                <div
+                  class="flex flex-wrap gap-1 p-1"
+                  v-if="current_programme_info_tab[fee_index] == 3"
+                >
+                  <Badge
+                    variant="outline"
+                    class="space-x-1"
+                    v-if="fee.fee_info.promos.length"
+                    v-for="(applied_promo, promo_index) in fee.fee_info.promos"
+                  >
+                    <span class="whitespace-nowrap">{{ applied_promo.promo_name }}</span>
+                  </Badge>
+                  <Label v-else>No promotions applied</Label>
+                </div>
+              </div>
+            </template>
+          </Collapsible>
         </div>
       </template>
     </Card>
@@ -639,7 +725,7 @@ import BreezeButton from "@/Components/Button.vue";
               <div class="p-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 items-end gap-4">
                 <div>
                     <Label>Start Date<span class="text-red-500">*</span></Label>
-                    <Datepicker mode="date" :format="'dd/MM/yyyy'" v-model="form.date_admission" :error="errors.admission_date" disabled/>
+                    <Datepicker mode="date" :format="'dd/MM/yyyy'" v-model="form.date_admission" :error="errors.admission_date"/>
                 </div>
                 <div>
                   <Label>Class Method<span class="text-red-500">*</span></Label>

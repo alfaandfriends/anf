@@ -396,99 +396,165 @@ class StudentController extends Controller
                                         ->whereIn('student_fee_promotions.student_fee_id', $student_fee_ids)
                                         ->get();
                                         
-        $student_academics['current'] =  collect($results)->filter(function ($result) {
-            return Carbon::parse($result->fee_month)->isCurrentMonth();
-        })->groupBy('fee_id')->map(function ($group) use ($student_promotions) {
-            $fee_info = [
-                "centre_id" => (int)$group->first()->centre_id,
-                "centre_name" => $group->first()->centre_name,
-                "class_method" => $group->first()->class_method,
-                "class_type_id" => (int)$group->first()->class_type_id,
-                "fee_id" => (int)$group->first()->fee_id,
-                "material_fee" => (int)$group->first()->material_fee,
-                "programme_fee" => (int)$group->first()->programme_fee,
-                "programme_id" => (int)$group->first()->programme_id,
-                "programme_level" => (int)$group->first()->programme_level,
-                "programme_name" => $group->first()->programme_name,
-                "programme_type" => $group->first()->programme_type,
-                "invoice_id" => (int)$group->first()->invoice_id,
-                "admission_date" => $group->first()->admission_date,
-                "student_fee_id" => (int)$group->first()->student_fee_id,
-                "fee_month" => $group->first()->fee_month,
-                "student_fee_status" => $group->first()->student_fee_status ? $group->first()->student_fee_status : '',
-            ];
+        // $student_academics['current'] =  collect($results)->filter(function ($result) {
+        //     return Carbon::parse($result->fee_month)->isCurrentMonth();
+        // })->groupBy('fee_id')->map(function ($group) use ($student_promotions) {
+        //     $fee_info = [
+        //         "centre_id" => (int)$group->first()->centre_id,
+        //         "centre_name" => $group->first()->centre_name,
+        //         "class_method" => $group->first()->class_method,
+        //         "class_type_id" => (int)$group->first()->class_type_id,
+        //         "fee_id" => (int)$group->first()->fee_id,
+        //         "material_fee" => (int)$group->first()->material_fee,
+        //         "programme_fee" => (int)$group->first()->programme_fee,
+        //         "programme_id" => (int)$group->first()->programme_id,
+        //         "programme_level" => (int)$group->first()->programme_level,
+        //         "programme_name" => $group->first()->programme_name,
+        //         "programme_type" => $group->first()->programme_type,
+        //         "invoice_id" => (int)$group->first()->invoice_id,
+        //         "admission_date" => $group->first()->admission_date,
+        //         "student_fee_id" => (int)$group->first()->student_fee_id,
+        //         "fee_month" => $group->first()->fee_month,
+        //         "student_fee_status" => $group->first()->student_fee_status ? $group->first()->student_fee_status : '',
+        //     ];
         
-            $classes = $group->map(function ($item) {
-                return [
+        //     $classes = $group->map(function ($item) {
+        //         return [
+        //             "class_id" => $item->class_id,
+        //             "class_day" => $item->class_day,
+        //             "start_time" => $item->start_time,
+        //             "end_time" => $item->end_time,
+        //         ];
+        //     })->values()->all();
+
+        //     if(count($student_promotions)){
+        //         $promos =  $student_promotions->filter(function ($item) use ($fee_info){
+        //             return $item->student_fee_id == $fee_info['student_fee_id'];
+        //         })->map(function ($item) {
+        //             return [
+        //                 "student_fee_promo_id" => (int)$item->student_fee_promo_id,
+        //                 "promo_id" => (int)$item->promo_id,
+        //                 "promo_name" => $item->promo_name,
+        //                 "promo_value" => (int)$item->promo_value,
+        //                 "promo_type_id" => (int)$item->promo_type_id,
+        //                 "promo_type_name" => $item->promo_type_name,
+        //             ];
+        //         })->values()->all();
+        //     }
+        //     else{
+        //         $promos =  [];
+        //     }
+
+        //     return [
+        //         "classes" => $classes,
+        //         // "fee_info" => $fee_info,
+        //         "fee_info" => array_merge($fee_info, ["promos" => $promos]),
+        //     ];
+        // })->values()->all(); 
+
+        $processResults = function ($filteredResults) use ($student_promotions) {
+            return $filteredResults->mapToGroups(function ($item) {
+                // Group by both 'fee_id' and 'fee_month' to ensure uniqueness
+                return ["{$item->fee_id}_{$item->fee_month}" => $item];
+            })->map(function ($group) use ($student_promotions) {
+                $firstItem = $group->first();
+        
+                $fee_info = [
+                    "centre_id" => (int)$firstItem->centre_id,
+                    "centre_name" => $firstItem->centre_name,
+                    "class_method" => $firstItem->class_method,
+                    "class_type_id" => (int)$firstItem->class_type_id,
+                    "fee_id" => (int)$firstItem->fee_id,
+                    "material_fee" => (int)$firstItem->material_fee,
+                    "programme_fee" => (int)$firstItem->programme_fee,
+                    "programme_id" => (int)$firstItem->programme_id,
+                    "programme_level" => (int)$firstItem->programme_level,
+                    "programme_name" => $firstItem->programme_name,
+                    "programme_type" => $firstItem->programme_type,
+                    "invoice_id" => (int)$firstItem->invoice_id,
+                    "admission_date" => $firstItem->admission_date,
+                    "student_fee_id" => (int)$firstItem->student_fee_id,
+                    "fee_month" => $firstItem->fee_month,
+                    "student_fee_status" => $firstItem->student_fee_status ?: '',
+                ];
+        
+                // Collect and deduplicate classes
+                $classes = $group->map(fn($item) => [
                     "class_id" => $item->class_id,
                     "class_day" => $item->class_day,
                     "start_time" => $item->start_time,
                     "end_time" => $item->end_time,
+                ])->unique('class_id')->values()->all();
+        
+                // Collect applicable promotions
+                $promos = $student_promotions->filter(fn($promo) => $promo->student_fee_id == $fee_info['student_fee_id'])
+                    ->map(fn($promo) => [
+                        "student_fee_promo_id" => (int)$promo->student_fee_promo_id,
+                        "promo_id" => (int)$promo->promo_id,
+                        "promo_name" => $promo->promo_name,
+                        "promo_value" => (int)$promo->promo_value,
+                        "promo_type_id" => (int)$promo->promo_type_id,
+                        "promo_type_name" => $promo->promo_type_name,
+                    ])->values()->all();
+        
+                return [
+                    "classes" => $classes,
+                    "fee_info" => array_merge($fee_info, ["promos" => $promos]),
                 ];
             })->values()->all();
+        };
+        
+        // Filter and process data for the current month
+        $student_academics['current'] = $processResults(
+            collect($results)->filter(fn($result) => Carbon::parse($result->fee_month)->isCurrentMonth())
+        );
+        
+        // Filter and process data for past months (history)
+        $student_academics['history'] = $processResults(
+            collect($results)->filter(function ($result) {
+                $fee_month = Carbon::parse($result->fee_month . '-01'); // Ensure proper date format
+                $current_month = Carbon::now()->startOfMonth();
+                return $fee_month->lessThan($current_month);
+            })
+        );
 
-            if(count($student_promotions)){
-                $promos =  $student_promotions->filter(function ($item) use ($fee_info){
-                    return $item->student_fee_id == $fee_info['student_fee_id'];
-                })->map(function ($item) {
-                    return [
-                        "student_fee_promo_id" => (int)$item->student_fee_promo_id,
-                        "promo_id" => (int)$item->promo_id,
-                        "promo_name" => $item->promo_name,
-                        "promo_value" => (int)$item->promo_value,
-                        "promo_type_id" => (int)$item->promo_type_id,
-                        "promo_type_name" => $item->promo_type_name,
-                    ];
-                })->values()->all();
-            }
-            else{
-                $promos =  [];
-            }
+        // dd($student_academics);
+        // $academics = [];
+        // $fees_by_month  =   collect($results)->groupBy('fee_month');
+        // foreach ($fees_by_month as $fees) {
+        //     foreach($fees as $fee){
+        //         $info['class_id']       =   $fee->class_id;
+        //         $info['class_day']      =   $fee->class_day;
+        //         $info['start_time']     =   $fee->start_time;
+        //         $info['end_time']       =   $fee->end_time;
+        //         $classes[$fee->student_fee_id][]   =   $info;
+        //     }
+        // }
+        // foreach ($fees_by_month as $fees) {
+        //     foreach($fees as $fee){
+        //         $info['programme_id']           =   $fee->programme_id;
+        //         $info['programme_name']         =   $fee->programme_name;
+        //         $info['programme_level']        =   $fee->programme_level;
+        //         $info['programme_type']         =   $fee->programme_type;
+        //         $info['programme_fee']          =   $fee->programme_fee;
+        //         $info['material_fee']           =   $fee->material_fee;
+        //         $info['fee_id']                 =   $fee->fee_id;
+        //         $info['centre_id']              =   $fee->centre_id;
+        //         $info['centre_name']            =   $fee->centre_name;
+        //         $info['class_type_id']          =   $fee->class_type_id;
+        //         $info['class_method']           =   $fee->class_method;
+        //         $info['invoice_id']             =   $fee->invoice_id;
+        //         $info['student_fee_status']     =   $fee->student_fee_status;
+        //         $info['student_fee_id']         =   $fee->student_fee_id;
+        //         $info['fee_month']              =   $fee->fee_month;
+        //         $info['classes']                =   $classes[$fee->student_fee_id];
+        //         $academics[$fee->student_fee_id] =   $info;
+        //     }
+        // }
 
-            return [
-                "classes" => $classes,
-                // "fee_info" => $fee_info,
-                "fee_info" => array_merge($fee_info, ["promos" => $promos]),
-            ];
-        })->values()->all(); 
-
-
-        $academics = [];
-        $fees_by_month  =   collect($results)->groupBy('fee_month');
-        foreach ($fees_by_month as $fees) {
-            foreach($fees as $fee){
-                $info['class_id']       =   $fee->class_id;
-                $info['class_day']      =   $fee->class_day;
-                $info['start_time']     =   $fee->start_time;
-                $info['end_time']       =   $fee->end_time;
-                $classes[$fee->student_fee_id][]   =   $info;
-            }
-        }
-        foreach ($fees_by_month as $fees) {
-            foreach($fees as $fee){
-                $info['programme_id']           =   $fee->programme_id;
-                $info['programme_name']         =   $fee->programme_name;
-                $info['programme_level']        =   $fee->programme_level;
-                $info['programme_type']         =   $fee->programme_type;
-                $info['programme_fee']          =   $fee->programme_fee;
-                $info['material_fee']           =   $fee->material_fee;
-                $info['fee_id']                 =   $fee->fee_id;
-                $info['centre_id']              =   $fee->centre_id;
-                $info['centre_name']            =   $fee->centre_name;
-                $info['class_type_id']          =   $fee->class_type_id;
-                $info['class_method']           =   $fee->class_method;
-                $info['invoice_id']             =   $fee->invoice_id;
-                $info['student_fee_status']     =   $fee->student_fee_status;
-                $info['student_fee_id']         =   $fee->student_fee_id;
-                $info['fee_month']              =   $fee->fee_month;
-                $info['classes']                =   $classes[$fee->student_fee_id];
-                $academics[$fee->student_fee_id] =   $info;
-            }
-        }
-
-        $student_academics['history']   =   !empty($academics) ? collect($academics)->filter(function ($fee) {
-            return $fee['fee_month'] < Carbon::now()->format('Y-m');
-        }) : [];
+        // $student_academics['history']   =   !empty($academics) ? collect($academics)->filter(function ($fee) {
+        //     return $fee['fee_month'] < Carbon::now()->format('Y-m');
+        // }) : [];
 
         $gender_list        =   DB::table('genders')->get();
         $programme_list     =   ProgrammeHelper::programmes();

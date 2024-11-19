@@ -63,6 +63,7 @@ nextTick(()=>{
     :format="format" 
     :time-picker="mode == 'time' ? true : false"
     :month-picker="mode == 'month' ? true : false"
+    :year-picker="mode == 'year' ? true : false"
     :teleport="teleport"
     :teleport-center="teleportCenter"
     :is24="false"

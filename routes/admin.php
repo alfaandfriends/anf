@@ -380,6 +380,7 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/fee-invoices/edit', [InvoiceController::class, 'feeInvoiceEdit'])->name('fee.invoices.edit')->middleware('permission:edit_fee_invoices');
             Route::post('/fee-invoices/update', [InvoiceController::class, 'feeInvoiceUpdate'])->name('fee.invoices.update')->middleware('permission:edit_fee_invoices');
             Route::delete('/fee-invoices/destroy/{id}', [InvoiceController::class, 'feeInvoiceDestroy'])->name('fee.invoices.destroy')->middleware('permission:delete_fee_invoices');
+            Route::post('/fee-invoices/generate-missing', [InvoiceController::class, 'generateMissingInvoice'])->name('fee.invoices.generate_missing')->middleware('permission:create_fee_invoices');
 
             
             Route::get('/promos', [PromoController::class, 'index'])->name('fee.promos')->middleware('permission:view_promos');
