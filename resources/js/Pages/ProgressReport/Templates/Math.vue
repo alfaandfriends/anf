@@ -144,6 +144,7 @@ import Dialog from '@/Components/DialogModal.vue'
 import Collapsible from '@/Components/Collapsible.vue'
 import { Badge } from '@/Components/ui/badge'
 import { Wand2 } from 'lucide-vue-next';
+import OpenAI from 'openai';
 
 export default {
     components: {
@@ -299,6 +300,18 @@ export default {
             this.search.unit_id = []
             this.search.lesson_id = ''
         },
+        generateComment(){
+            const client = new OpenAI({
+                apiKey: import.meta.env.VITE_OPEN_API_KEY,
+            });
+
+            const chatCompletion = client.chat.completions.create({
+                messages: [{ role: 'user', content: 'Say this is a test' }],
+                model: 'gpt-3.5-turbo',
+            });
+
+            console.log(chatCompletion)
+        }
     },
 }
 </script>
