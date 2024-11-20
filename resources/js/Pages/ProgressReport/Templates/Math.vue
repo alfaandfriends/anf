@@ -144,7 +144,6 @@ import Dialog from '@/Components/DialogModal.vue'
 import Collapsible from '@/Components/Collapsible.vue'
 import { Badge } from '@/Components/ui/badge'
 import { Wand2 } from 'lucide-vue-next';
-import OpenAI from 'openai';
 
 export default {
     components: {
