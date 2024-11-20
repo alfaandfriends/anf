@@ -300,18 +300,18 @@ export default {
             this.search.unit_id = []
             this.search.lesson_id = ''
         },
-        generateComment(){
-            const client = new OpenAI({
-                apiKey: import.meta.env.VITE_OPEN_API_KEY,
-            });
+        // generateComment(){
+        //     const client = new OpenAI({
+        //         apiKey: import.meta.env.VITE_OPEN_API_KEY,
+        //     });
 
-            const chatCompletion = client.chat.completions.create({
-                messages: [{ role: 'user', content: 'Say this is a test' }],
-                model: 'gpt-3.5-turbo',
-            });
+        //     const chatCompletion = client.chat.completions.create({
+        //         messages: [{ role: 'user', content: 'Say this is a test' }],
+        //         model: 'gpt-3.5-turbo',
+        //     });
 
-            console.log(chatCompletion)
-        }
+        //     console.log(chatCompletion)
+        // }
     },
 }
 </script>
