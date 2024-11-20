@@ -295,10 +295,6 @@ class InvoiceController extends Controller
         return redirect(route('fee.invoices', $request->params))->with(['type'=>'success', 'message'=>'Invoice updated successfully !']);
     }
 
-    public function generateMissingInvoice(Request $request){
-        dd($request->all());
-    }
-
     public function getCurrentYearInvoiceNumber($quota, $current_count){
 
         $invoice_number =   str_pad($current_count + 1, strlen((string)$quota), '0', STR_PAD_LEFT);

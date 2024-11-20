@@ -222,6 +222,9 @@ export default {
     },
     data(){
         return{
+            processing: {
+                update_invoice: false,
+            },
             collapsible_is_open: true,
             date_issued: moment(this.$page.props.invoice_data.date_issued).format('DD MMM Y'),
             due_date: moment(this.$page.props.invoice_data.due_date).format('DD MMM Y'),
@@ -270,6 +273,10 @@ export default {
     },
     methods: {
         submit() {
+            if(this.processing.update_invoice){
+                return
+            }
+            this.processing.update_invoice = true
             this.form.invoice_amount = this.totalFee(this.form.invoice_items)
             this.$inertia.post(route('fee.invoices.update'), this.form, { preserveState: true})
         },

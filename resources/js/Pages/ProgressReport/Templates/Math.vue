@@ -113,6 +113,9 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     <div class="">
                         <Label>Comments</Label>
                         <Textarea rows="10" v-model.lazy="form.comments"></Textarea>
+                        <!-- <div class="mt-2">
+                            <Button size="xs" @click="generateComment"><Wand2 class="w-4 h-4 mr-1"/>AI Generate</Button>
+                        </div> -->
                     </div>
                     <div class="">
                         <Label>Status</Label>
@@ -140,6 +143,8 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import Dialog from '@/Components/DialogModal.vue'
 import Collapsible from '@/Components/Collapsible.vue'
 import { Badge } from '@/Components/ui/badge'
+import { Wand2 } from 'lucide-vue-next';
+import OpenAI from 'openai';
 
 export default {
     components: {
@@ -294,6 +299,18 @@ export default {
             this.search.term_book_id = ''
             this.search.unit_id = []
             this.search.lesson_id = ''
+        },
+        generateComment(){
+            const client = new OpenAI({
+                apiKey: import.meta.env.VITE_OPEN_API_KEY,
+            });
+
+            const chatCompletion = client.chat.completions.create({
+                messages: [{ role: 'user', content: 'Say this is a test' }],
+                model: 'gpt-3.5-turbo',
+            });
+
+            console.log(chatCompletion)
         }
     },
 }

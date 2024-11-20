@@ -249,6 +249,9 @@ export default {
     },
     data(){
         return{
+            processing: {
+                add_student: false,
+            },
             open_promo_modal: false,
             disable_check_box: false,
             fetching_fee: false,
@@ -382,6 +385,10 @@ export default {
     },
     methods: {
         submit() {
+            if(this.processing.add_student){
+                return
+            }
+            this.processing.add_student = true
             this.$inertia.post(route('classes.store'), this.form, { preserveState: true})
         },
         findChildren: debounce(function(query) {

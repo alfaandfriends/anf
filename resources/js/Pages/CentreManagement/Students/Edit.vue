@@ -1011,6 +1011,10 @@ export default {
   components: { Head, Link, Toggle },
   data() {
     return {
+      processing: {
+        add_class: false,
+        add_existing_class_promo: false,
+      },
       transfer: {
         show: {
           centre_info: true,
@@ -1403,6 +1407,10 @@ export default {
       }
     },
     addClass() {
+      if(this.processing.add_class){
+        return
+      }
+      this.processing.add_class = true
       this.$inertia.post(route("students.add_student_class"), this.form, {
         preserveState: false,
         preserveScroll: true,
@@ -1539,6 +1547,10 @@ export default {
       this.add_new_promo.show = true;
     },
     addExistingClassPromo() {
+      if(this.processing.add_existing_class_promo){
+        return
+      }
+      this.processing.add_existing_class_promo = true
       const selectedPromo = this.$page.props.promos.find(
         (promo) => promo.promo_id === this.selected_promo.promo_id
       );
