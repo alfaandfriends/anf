@@ -113,9 +113,17 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                     <div class="">
                         <Label>Comments</Label>
                         <Textarea rows="10" v-model.lazy="form.comments"></Textarea>
-                        <!-- <div class="mt-2">
-                            <Button size="xs" @click="generateComment"><Wand2 class="w-4 h-4 mr-1"/>AI Generate</Button>
-                        </div> -->
+                        <!-- <Popover v-if="form.report_data.length" v-model:open="open_prompt">
+                            <PopoverTrigger>
+                                <Button size="xs" variant="outline"><Wand2 class="w-4 h-4 mr-1" :class="{'animate-pulse': generating.comments}"/><span class="text-xs" v-if="!generating.comments">AI Comment Helper</span><span class="text-xs" :class="{'animate-pulse': generating.comments}" v-else>Generating...</span></Button>
+                            </PopoverTrigger>
+                            <PopoverContent :align="'start'" side="top" class="w-96 bg-slate-500 bg-opacity-80">
+                                <div class="flex flex-col gap-2">
+                                    <Textarea class="bg-white" rows="3" type="text" :placeholder="`What would you like to add? \ne.g., teaching methods, today's activities, etc...`" v-model="additional_inputs"></Textarea>
+                                    <Button size="xs" variant="" @click="additional_inputs ? generateComment() : ''">Create</Button>
+                                </div>
+                            </PopoverContent>
+                        </Popover> -->
                     </div>
                     <div class="">
                         <Label>Status</Label>
@@ -145,6 +153,11 @@ import Collapsible from '@/Components/Collapsible.vue'
 import { Badge } from '@/Components/ui/badge'
 import { Wand2 } from 'lucide-vue-next';
 import OpenAI from 'openai';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/Components/ui/popover'
 
 export default {
     components: {
@@ -152,6 +165,11 @@ export default {
     },
     data(){
         return{
+            open_prompt: false,
+            additional_inputs: '',
+            generating: {
+                comments: false
+            },
             value: [],
             show_progress_report: false,
             open_objectives: [],
@@ -300,17 +318,53 @@ export default {
             this.search.unit_id = []
             this.search.lesson_id = ''
         },
-        generateComment(){
+        async generateComment(){
+            if(this.generating.comments){
+                return
+            }
+            this.generating.comments = true
+            this.open_prompt = false
             const client = new OpenAI({
                 apiKey: import.meta.env.VITE_OPEN_API_KEY,
+                dangerouslyAllowBrowser: true
             });
 
-            const chatCompletion = client.chat.completions.create({
-                messages: [{ role: 'user', content: 'Say this is a test' }],
-                model: 'gpt-3.5-turbo',
+            
+            const stream = await client.chat.completions.create({
+                model: 'gpt-4o-mini',
+                stream: true,
+                max_tokens: 200,
+                temperature: 0.1, // Makes the response simple and focused
+                top_p: 0.3, // Makes the response simple and focused
+                messages: [
+                    { 
+                        role: 'system', 
+                        content: `
+                            Generate a comment that represents evaluation of the student based on the given array and additional inputs effectively. 
+                            The comment is for reporting purposes. 
+                            Avoid personal pronouns. 
+                            Avoid recommendations. 
+                            You may add what will you do for the improvement. 
+                            Explain in understandable manners. 
+
+                            #additional inputs
+                            ${this.additional_inputs}
+                        ` 
+                    },
+                    {
+                        role: "user",
+                        content: JSON.stringify(this.form.report_data)
+                    }
+                ],
             });
 
-            console.log(chatCompletion)
+            this.form.comments = '' 
+            this.additional_inputs = '' 
+            for await (const chunk of stream) {
+                this.form.comments += chunk.choices[0]?.delta?.content || ''
+            }
+            
+            this.generating.comments = false
         }
     },
 }

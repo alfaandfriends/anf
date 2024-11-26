@@ -338,7 +338,6 @@ export default {
                 this.search_product_form.product_id = ''
                 this.search_product_form.product_variation_id = ''
                 this.search_product_form.product_sub_variation_id = ''
-                this.form.student_id = ''
                 this.loading.products = true
                 axios.get(route('products.find_products'), {
                     params: {
