@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CreateChat;
+use App\Jobs\GenerateQuiz;
+use App\Jobs\InitiateChat;
+use App\Jobs\SendPrompt;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use OpenAI;
+use Str;
 
 class AiController extends Controller
 {
@@ -14,7 +21,11 @@ class AiController extends Controller
      */
     public function index()
     {
-        return Inertia::render('AiChat/Index');
+        $threads = DB::table('ai_chats')->select('id', 'name', 'thread_id', 'run_id')->get();
+
+        return Inertia::render('AiChat/Index', [
+            'threads'   => $threads,
+        ]);
     }
 
     /**
@@ -30,96 +41,26 @@ class AiController extends Controller
      */
     public function store(Request $request)
     {
-        $api_key = env('OPENAI_API_KEY');
-        $client = OpenAI::client($api_key);
+        $chatId = $request->form['chat_id'];
+        $threadId = $request->form['thread_id'];
+        $messages = $request->form['messages'];
         
-        // $thread = $client->threads()->createAndRun(
-        //     [
-        //         'assistant_id' => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
-        //         'thread' => [
-        //             'messages' =>
-        //                 [
-        //                     [
-        //                         'role' => 'user',
-        //                         'content' => '
-        //                             You are an intelligent teaching assistant. You generate quiz questions based on provided study materials or relevant context retrieved from a vector store. Your goal is to create engaging, level-appropriate questions that help the student reinforce their understanding of the material.
+        if(Auth::check() && !$threadId){
+            $ulid = Str::ulid();
+            $user_id = Auth::id();
 
-        //                             Based on the following content retrieved from the vector store, create a set of quiz questions. Include a mix of multiple-choice, true/false, and short-answer questions. The questions should align with a BEGINNER level of understanding.
+            DB::table('ai_chats')->insert([
+                'id' => (string)$ulid,
+                'user_id' => $user_id,
+                'name' => $messages
+            ]);
 
-        //                             Content: {vector stores}
+            InitiateChat::dispatch($ulid, $messages);
 
-        //                             Guidelines:
-        //                             - Generate 5-10 questions.
-        //                             - Use clear, concise language.
-        //                             - If the material includes key terms or concepts, create questions to test their definitions or applications.
-        //                             - Include options for multiple-choice questions.
-
-        //                             Start generating the questions now.',
-        //                     ],
-        //                 ],
-        //         ],
-        //     ],
-        // );
-        
-        // while(in_array($thread->status, ['queued', 'in_progress'])) {
-        //     $threadRun = $client->threads()->runs()->retrieve(
-        //         threadId: $thread->threadId,
-        //         runId: $thread->id,
-        //     );
-        // }
-
-        // if ($threadRun->status !== 'completed') {
-        //     dump('Request failed, please try again');
-        // }
-
-        // $messageList = $client->threads()->messages()->list(
-        //     threadId: $threadRun->threadId,
-        // );
-
-        // dd($messageList->data[0]->content[0]->text->value);
-
-        $thread = $client->threads()->createAndRun(
-            [
-                'assistant_id' => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
-                'thread' => [
-                    'messages' =>
-                        [
-                            [
-                                'role' => 'user',
-                                'content' => '
-                                    You are an intelligent teaching assistant. You generate quiz questions based on provided study materials or relevant context retrieved from a vector store. Your goal is to create engaging, level-appropriate questions that help the student reinforce their understanding of the material.
-                
-                                    Based on the following content retrieved from the vector store, create a set of quiz questions. Include a mix of multiple-choice, true/false, and short-answer questions. The questions should align with a BEGINNER level of understanding.
-                
-                                    Content: {vector stores}
-                
-                                    Guidelines:
-                                    - Generate 5-10 questions.
-                                    - Use clear, concise language.
-                                    - If the material includes key terms or concepts, create questions to test their definitions or applications.
-                                    - Include options for multiple-choice questions.
-                
-                                    Start generating the questions now.',
-                            ],
-                        ],
-                ],
-            ],
-        );
-        $threadId = $thread->threadId;
-        $runId = $thread->id;
-        
-        while(true){
-            $response = $client->threads()->runs()->retrieve(
-                threadId: $threadId,
-                runId: $runId,
-            );
-            if($response->status !== 'in_progress'){
-                $output = $client->threads()->messages()->list($threadId, [
-                    'limit' => 10,
-                ]);
-                dd($output);
-            }
+            return response()->json($ulid);
         }
+
+        SendPrompt::dispatch($chatId, $threadId, $messages);
     }
 
     /**
@@ -135,7 +76,17 @@ class AiController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $threads = DB::table('ai_chats')->select('id', 'name', 'thread_id', 'run_id')->get();
+        $chat_data = DB::table('ai_chats')->where('user_id', Auth::id())->where('id', $id)->first();
+        
+        if($chat_data){
+            return Inertia::render('AiChat/Index', [
+                'threads'   => $threads,
+                'chat_data' => $chat_data,
+            ]);
+        }
+
+        return redirect(route('ai.index'));
     }
 
     /**
@@ -151,6 +102,31 @@ class AiController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('ai_chats')->where('id', $id)->delete();
+
+        return back();
+    }
+
+    /**
+     * Create an instant quiz.
+     */
+    public function generateQuiz()
+    {
+        if(Auth::check()){
+            $ulid = Str::ulid();
+            $user_id = Auth::id();
+
+            DB::table('ai_chats')->insert([
+                'id' => (string)$ulid,
+                'user_id' => $user_id,
+                'name' => 'Generate random quiz'
+            ]);
+
+            GenerateQuiz::dispatch($ulid);
+
+            return response()->json($ulid);
+        }
+
+        return redirect()->route('login');
     }
 }
