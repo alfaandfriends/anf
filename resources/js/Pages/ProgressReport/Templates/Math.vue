@@ -318,54 +318,6 @@ export default {
             this.search.unit_id = []
             this.search.lesson_id = ''
         },
-        async generateComment(){
-            if(this.generating.comments){
-                return
-            }
-            this.generating.comments = true
-            this.open_prompt = false
-            const client = new OpenAI({
-                apiKey: import.meta.env.VITE_OPEN_API_KEY,
-                dangerouslyAllowBrowser: true
-            });
-
-            
-            const stream = await client.chat.completions.create({
-                model: 'gpt-4o-mini',
-                stream: true,
-                max_tokens: 200,
-                temperature: 0.1, // Makes the response simple and focused
-                top_p: 0.3, // Makes the response simple and focused
-                messages: [
-                    { 
-                        role: 'system', 
-                        content: `
-                            Generate a comment that represents evaluation of the student based on the given array and additional inputs effectively. 
-                            The comment is for reporting purposes. 
-                            Avoid personal pronouns. 
-                            Avoid recommendations. 
-                            You may add what will you do for the improvement. 
-                            Explain in understandable manners. 
-
-                            #additional inputs
-                            ${this.additional_inputs}
-                        ` 
-                    },
-                    {
-                        role: "user",
-                        content: JSON.stringify(this.form.report_data)
-                    }
-                ],
-            });
-
-            this.form.comments = '' 
-            this.additional_inputs = '' 
-            for await (const chunk of stream) {
-                this.form.comments += chunk.choices[0]?.delta?.content || ''
-            }
-            
-            this.generating.comments = false
-        }
     },
 }
 </script>
