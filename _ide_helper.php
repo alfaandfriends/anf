@@ -4230,7 +4230,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function lock($name, $seconds = 0, $owner = null)
         {
-                        /** @var \Illuminate\Cache\FileStore $instance */
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
                         return $instance->lock($name, $seconds, $owner);
         }
                     /**
@@ -4242,8 +4242,19 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function restoreLock($name, $owner)
         {
-                        /** @var \Illuminate\Cache\FileStore $instance */
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
                         return $instance->restoreLock($name, $owner);
+        }
+                    /**
+         * Remove an item from the cache if it is expired.
+         *
+         * @param string $key
+         * @return bool 
+         * @static 
+         */        public static function forgetIfExpired($key)
+        {
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        return $instance->forgetIfExpired($key);
         }
                     /**
          * Remove all items from the cache.
@@ -4252,61 +4263,29 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function flush()
         {
-                        /** @var \Illuminate\Cache\FileStore $instance */
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
                         return $instance->flush();
         }
                     /**
-         * Get the full path for the given cache key.
+         * Get the underlying database connection.
          *
-         * @param string $key
-         * @return string 
+         * @return \Illuminate\Database\MySqlConnection 
          * @static 
-         */        public static function path($key)
+         */        public static function getConnection()
         {
-                        /** @var \Illuminate\Cache\FileStore $instance */
-                        return $instance->path($key);
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        return $instance->getConnection();
         }
                     /**
-         * Get the Filesystem instance.
+         * Specify the name of the connection that should be used to manage locks.
          *
-         * @return \Illuminate\Filesystem\Filesystem 
+         * @param \Illuminate\Database\ConnectionInterface $connection
+         * @return \Illuminate\Cache\DatabaseStore 
          * @static 
-         */        public static function getFilesystem()
+         */        public static function setLockConnection($connection)
         {
-                        /** @var \Illuminate\Cache\FileStore $instance */
-                        return $instance->getFilesystem();
-        }
-                    /**
-         * Get the working directory of the cache.
-         *
-         * @return string 
-         * @static 
-         */        public static function getDirectory()
-        {
-                        /** @var \Illuminate\Cache\FileStore $instance */
-                        return $instance->getDirectory();
-        }
-                    /**
-         * Set the working directory of the cache.
-         *
-         * @param string $directory
-         * @return \Illuminate\Cache\FileStore 
-         * @static 
-         */        public static function setDirectory($directory)
-        {
-                        /** @var \Illuminate\Cache\FileStore $instance */
-                        return $instance->setDirectory($directory);
-        }
-                    /**
-         * Set the cache directory where locks should be stored.
-         *
-         * @param string|null $lockDirectory
-         * @return \Illuminate\Cache\FileStore 
-         * @static 
-         */        public static function setLockDirectory($lockDirectory)
-        {
-                        /** @var \Illuminate\Cache\FileStore $instance */
-                        return $instance->setLockDirectory($lockDirectory);
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        return $instance->setLockConnection($connection);
         }
                     /**
          * Get the cache key prefix.
@@ -4315,8 +4294,19 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getPrefix()
         {
-                        /** @var \Illuminate\Cache\FileStore $instance */
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
                         return $instance->getPrefix();
+        }
+                    /**
+         * Set the cache key prefix.
+         *
+         * @param string $prefix
+         * @return void 
+         * @static 
+         */        public static function setPrefix($prefix)
+        {
+                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        $instance->setPrefix($prefix);
         }
             }
             /**

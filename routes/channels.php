@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,13 +14,8 @@ use Illuminate\Support\Facades\Broadcast;
 | used to check if an authenticated user can listen to the channel.
 |
 */
-
-Broadcast::channel('test.{user_id}', function ($user_id) {
-    return (int) auth()->id() === (int) $user_id;
+Broadcast::channel('ai_response_stream.{userId}', function ($user, $userId) {
+    return (int) $user->ID === (int) $userId;
 });
-
-// Broadcast::channel('test', function () {
-//     return true;
-// });
 
 

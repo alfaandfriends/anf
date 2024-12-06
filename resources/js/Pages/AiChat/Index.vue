@@ -14,12 +14,17 @@ import { onMounted } from 'vue'
 import { VMarkdownView } from 'vue3-markdown'
 import 'vue3-markdown/dist/style.css'
 
+
 const sending_reply = ref(false)
 const prompt_input = ref(null)
 const chatbox = ref(null)
 
 const props = usePage().props.value
 const messages = props.chat_data ? JSON.parse(props.chat_data.messages) : ''
+
+window.Echo.channel("ai_response_stream."+props.auth.user.ID).listen("AiResponseStream", (event) => {
+    console.log(event);
+});
 
 const form = useForm({
     chat_id: props.chat_data?.id || '',
@@ -31,27 +36,28 @@ const form = useForm({
 const updateChat = ((event) => {
     form.messages = event.target.innerText;
 })
+const submit = async () => {
+    if(sending_reply.value || !form.messages){
+        return
+    }
+
+    sending_reply.value = true
+
+    const response = await axios.post(route('ai.store'), {form});
+    form.messages = ''
+    prompt_input.value.innerText = ''
+    sending_reply.value = false
+}
 
 const onKeydown = async (event) => {
     try {
         if (event.ctrlKey && event.key === 'Enter') {
-            if(sending_reply.value || !form.messages){
-                return
-            }
-
-            sending_reply.value = true
-
-            const response = await axios.post(route('ai.store'), {form});
-            form.messages = ''
-            prompt_input.value.innerText = ''
-            sending_reply.value = false
-            console.log('Success:', response.data);
+            submit()
         }
     } catch (error) {
         console.error('Error:', error);
     }
 }
-
 
 const confirmation = useForm({
     id: '',
@@ -78,7 +84,7 @@ const generateQuiz = async () => {
 
 onMounted(()=>{
     if (chatbox.value) {
-    chatbox.value.scrollTop = chatbox.value.scrollHeight;
+        chatbox.value.scrollTop = chatbox.value.scrollHeight;
     }
 })
 </script>
@@ -226,7 +232,7 @@ onMounted(()=>{
                     <div class="absolute bottom-0 w-full px-5 py-3 pt-">
                         <div class="flex items-center justify-between">
                             <Paperclip class="h-9 w-9 rounded-full cursor-pointer hover:bg-zinc-700 p-2"/>
-                            <SendHorizonal class="h-10 w-10 rounded-full cursor-pointer hover:bg-zinc-700 p-2" @click.once="sending_reply == false ? form.post(route('ai.store')) : ''"/>
+                            <SendHorizonal class="h-10 w-10 rounded-full cursor-pointer hover:bg-zinc-700 p-2" @click.once="sending_reply == false ? submit() : ''"/>
                         </div>
                     </div>
                 </form>

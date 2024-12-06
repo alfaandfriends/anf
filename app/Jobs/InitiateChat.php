@@ -55,23 +55,6 @@ class InitiateChat implements ShouldQueue
         $threadId = $thread->threadId;
         $runId = $thread->id;
 
-        while(true){
-            $response = $client->threads()->runs()->retrieve(
-                threadId: $threadId,
-                runId: $runId,
-            );
-            if($response->status !== 'in_progress'){
-                $messages = $client->threads()->messages()->list($threadId);
-
-                // Save thread ID and run ID
-                DB::table('ai_chats')->where('id', $this->ulid)->update([
-                    'thread_id' => $threadId,
-                    'run_id' => $runId,
-                    'messages' => json_encode($messages),
-                ]);
-                break;
-            }
-        }
-
+        SaveMessage::dispatch($this->ulid, $threadId, $runId);
     }
 }

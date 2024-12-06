@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\AiResponseStream;
 use App\Events\DatabaseTransactionEvent;
+use App\Jobs\SendPrompt;
 use App\Listeners\DatabaseTransactionListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;

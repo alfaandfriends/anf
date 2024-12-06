@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AiResponseStream;
 use App\Jobs\CreateChat;
 use App\Jobs\GenerateQuiz;
 use App\Jobs\InitiateChat;
@@ -43,6 +44,7 @@ class AiController extends Controller
     {
         $chatId = $request->form['chat_id'];
         $threadId = $request->form['thread_id'];
+        $runId = $request->form['run_id'];
         $messages = $request->form['messages'];
         
         if(Auth::check() && !$threadId){
@@ -60,7 +62,7 @@ class AiController extends Controller
             return response()->json($ulid);
         }
 
-        SendPrompt::dispatch($chatId, $threadId, $messages);
+        SendPrompt::dispatch($chatId, $threadId, $runId, $messages);
     }
 
     /**
