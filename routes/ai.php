@@ -12,8 +12,8 @@ Route::middleware(['auth'])->group(function(){
         Route::post('ai-helper/generate-quiz', [AiController::class, 'generateQuiz'])->name('ai.generate_quiz');
         Route::get('test-stream', function(){
             Log::error('Start');  // Before the event dispatch
-            AiResponseStream::dispatch('This is a test message');  // Event dispatch
-            // SendPrompt::dispatch('avs', 'avs', 'avs', 'avs');
+            // AiResponseStream::dispatch('This is a test message');  // Event dispatch
+            SendPrompt::dispatch('avs', 'avs', 'avs', 'avs');
             Log::error('Event dispatched');  // After event dispatch
             Log::error('End');
         });
