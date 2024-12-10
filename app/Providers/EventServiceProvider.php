@@ -6,6 +6,7 @@ use App\Events\AiResponseStream;
 use App\Events\DatabaseTransactionEvent;
 use App\Jobs\SendPrompt;
 use App\Listeners\DatabaseTransactionListener;
+use App\Listeners\PromptSent;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -24,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         DatabaseTransactionEvent::class => [
             DatabaseTransactionListener::class,
+        ],
+        SendPrompt::class => [
+            PromptSent::class,
         ],
     ];
 

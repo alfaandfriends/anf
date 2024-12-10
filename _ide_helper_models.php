@@ -35,29 +35,29 @@ namespace App\Models{
  * @property string|null $enrollment_prefix
  * @property int|null $enrollment_base
  * @property int|null $enrollment_padding
- * @method static \Illuminate\Database\Eloquent\Builder|Centre newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Centre newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Centre query()
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereAdmissionBase($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereAdmissionPadding($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereAdmissionPrefix($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereCountryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereEnrollmentBase($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereEnrollmentPadding($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereEnrollmentPrefix($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereID($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereLabel($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereLastAdmissionCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereLastCertificateCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereLastEnrollmentCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereLastInvoiceCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereLastPaymentCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Centre whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereAdmissionBase($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereAdmissionPadding($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereAdmissionPrefix($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereEnrollmentBase($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereEnrollmentPadding($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereEnrollmentPrefix($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereID($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereLastAdmissionCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereLastCertificateCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereLastEnrollmentCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereLastInvoiceCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereLastPaymentCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Centre whereUpdatedAt($value)
  */
 	class Centre extends \Eloquent {}
 }
@@ -76,19 +76,19 @@ namespace App\Models{
  * @property string $permission_name
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|Menu newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Menu newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Menu query()
- * @method static \Illuminate\Database\Eloquent\Builder|Menu whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Menu whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Menu whereMenuIcon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Menu whereMenuLabel($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Menu whereMenuRank($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Menu whereMenuRoute($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Menu whereMenuStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Menu wherePermissionName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Menu whereSectionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Menu whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereMenuIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereMenuLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereMenuRank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereMenuRoute($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereMenuStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu wherePermissionName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereSectionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereUpdatedAt($value)
  */
 	class Menu extends \Eloquent {}
 }
@@ -106,16 +106,16 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RoleHasPermissions> $role_has_permissions
  * @property-read int|null $role_has_permissions_count
- * @method static \Illuminate\Database\Eloquent\Builder|Permission newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Permission newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Permission query()
- * @method static \Illuminate\Database\Eloquent\Builder|Permission whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Permission whereGuardName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Permission whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Permission whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Permission whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Permission whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Permission whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission whereGuardName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission whereUpdatedAt($value)
  */
 	class Permission extends \Eloquent {}
 }
@@ -133,16 +133,16 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserHasRoles> $user_has_role
  * @property-read int|null $user_has_role_count
- * @method static \Illuminate\Database\Eloquent\Builder|Role newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Role newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Role query()
- * @method static \Illuminate\Database\Eloquent\Builder|Role whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Role whereDisplayName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Role whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Role wherePermission($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Role whereRoleGroupId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Role whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Role whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereDisplayName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role wherePermission($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereRoleGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereUpdatedAt($value)
  */
 	class Role extends \Eloquent {}
 }
@@ -157,14 +157,14 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property-read \App\Models\Permission $permission
- * @method static \Illuminate\Database\Eloquent\Builder|RoleHasPermissions newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|RoleHasPermissions newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|RoleHasPermissions query()
- * @method static \Illuminate\Database\Eloquent\Builder|RoleHasPermissions whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RoleHasPermissions whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RoleHasPermissions wherePermissionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RoleHasPermissions whereRoleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RoleHasPermissions whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RoleHasPermissions newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RoleHasPermissions newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RoleHasPermissions query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RoleHasPermissions whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RoleHasPermissions whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RoleHasPermissions wherePermissionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RoleHasPermissions whereRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RoleHasPermissions whereUpdatedAt($value)
  */
 	class RoleHasPermissions extends \Eloquent {}
 }
@@ -202,31 +202,31 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserHasRoles> $user_has_role
  * @property-read int|null $user_has_role_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCanViewAllCentres($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereDeleted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereDisplayName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereFirstTimeLogin($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereID($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAdmin($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereProfileUpdated($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereSpam($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserActivationKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserContact($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCountryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserLogin($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserNicename($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserPass($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserPhoto($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserRegistered($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserState($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCanViewAllCentres($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereDeleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereDisplayName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereFirstTimeLogin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereID($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereProfileUpdated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereSpam($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserActivationKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserContact($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserLogin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserNicename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserPass($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserPhoto($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserRegistered($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserUrl($value)
  */
 	class User extends \Eloquent {}
 }
@@ -242,14 +242,14 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon $updated_at
  * @property-read \App\Models\Role|null $role
  * @property-read \App\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles query()
- * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles whereRoleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserHasRoles whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserHasRoles newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserHasRoles newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserHasRoles query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserHasRoles whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserHasRoles whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserHasRoles whereRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserHasRoles whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserHasRoles whereUserId($value)
  */
 	class UserHasRoles extends \Eloquent {}
 }

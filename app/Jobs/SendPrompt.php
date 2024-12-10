@@ -34,14 +34,15 @@ class SendPrompt implements ShouldQueue
      */
     public function handle(): void
     {
-        broadcast(new AiResponseStream('test'));
-        // \Log::info('Job started');
-        // $this->appendToChain(new AiResponseStream('test'));
-        // broadcast(new AiResponseStream($this->ulid));
+        Log::error('process job');
         // AiResponseStream::dispatch('This is a test message');
+        // Once job is finished, dispatch the broadcast event
+        // broadcast(new AiResponseStream($this->messages));
+        // \Log::error('Job finished');
         // Log::error(broadcast(new AiResponseStream($this->ulid)));
         // broadcast(new AiResponseStream('test'));
         // AiResponseStream::dispatch('This is a test message');
+
         // $api_key = env('OPENAI_API_KEY');
         // $client = OpenAI::client($api_key);
 
@@ -72,5 +73,11 @@ class SendPrompt implements ShouldQueue
         //         SaveMessage::dispatch($this->ulid, $this->threadId, $this->runId);
         //     }
         // }
+    }
+
+    public function then($callback)
+    {
+        Log::error("Job finished, dispatching AiResponseStream event.");
+        AiResponseStream::dispatch("Broadcast message");
     }
 }

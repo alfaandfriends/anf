@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 11.29.0.
+ * Generated for Laravel 11.34.2.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -878,6 +878,17 @@ namespace Illuminate\Support\Facades {
                         $instance->setDeferredServices($services);
         }
                     /**
+         * Determine if the given service is a deferred service.
+         *
+         * @param string $service
+         * @return bool 
+         * @static 
+         */        public static function isDeferredService($service)
+        {
+                        /** @var \Illuminate\Foundation\Application $instance */
+                        return $instance->isDeferredService($service);
+        }
+                    /**
          * Add an array of services to the application's deferred services.
          *
          * @param array $services
@@ -889,15 +900,15 @@ namespace Illuminate\Support\Facades {
                         $instance->addDeferredServices($services);
         }
                     /**
-         * Determine if the given service is a deferred service.
+         * Remove an array of services from the application's deferred services.
          *
-         * @param string $service
-         * @return bool 
+         * @param array $services
+         * @return void 
          * @static 
-         */        public static function isDeferredService($service)
+         */        public static function removeDeferredServices($services)
         {
                         /** @var \Illuminate\Foundation\Application $instance */
-                        return $instance->isDeferredService($service);
+                        $instance->removeDeferredServices($services);
         }
                     /**
          * Configure the real-time facade namespace.
@@ -2728,17 +2739,31 @@ namespace Illuminate\Support\Facades {
                         $instance->aliasInclude($path, $alias);
         }
                     /**
-         * Register a handler for custom directives.
+         * Register a handler for custom directives, binding the handler to the compiler.
          *
          * @param string $name
          * @param callable $handler
          * @return void 
          * @throws \InvalidArgumentException
          * @static 
-         */        public static function directive($name, $handler)
+         */        public static function bindDirective($name, $handler)
         {
                         /** @var \Illuminate\View\Compilers\BladeCompiler $instance */
-                        $instance->directive($name, $handler);
+                        $instance->bindDirective($name, $handler);
+        }
+                    /**
+         * Register a handler for custom directives.
+         *
+         * @param string $name
+         * @param callable $handler
+         * @param bool $bind
+         * @return void 
+         * @throws \InvalidArgumentException
+         * @static 
+         */        public static function directive($name, $handler, $bind = false)
+        {
+                        /** @var \Illuminate\View\Compilers\BladeCompiler $instance */
+                        $instance->directive($name, $handler, $bind);
         }
                     /**
          * Get the list of custom directives.
@@ -3437,6 +3462,16 @@ namespace Illuminate\Support\Facades {
                         $instance->assertChained($expectedChain);
         }
                     /**
+         * Assert no chained jobs was dispatched.
+         *
+         * @return void 
+         * @static 
+         */        public static function assertNothingChained()
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\BusFake $instance */
+                        $instance->assertNothingChained();
+        }
+                    /**
          * Assert if a job was dispatched with an empty chain based on a truth-test callback.
          *
          * @param string|\Closure $command
@@ -3490,6 +3525,16 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Support\Testing\Fakes\BusFake $instance */
                         $instance->assertNothingBatched();
+        }
+                    /**
+         * Assert that no jobs were dispatched, chained, or batched.
+         *
+         * @return void 
+         * @static 
+         */        public static function assertNothingPlaced()
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\BusFake $instance */
+                        $instance->assertNothingPlaced();
         }
                     /**
          * Get all of the jobs matching a truth-test callback.
@@ -3654,6 +3699,17 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Cache\CacheManager $instance */
                         return $instance->resolve($name);
+        }
+                    /**
+         * Build a cache repository with the given configuration.
+         *
+         * @param array $config
+         * @return \Illuminate\Cache\Repository 
+         * @static 
+         */        public static function build($config)
+        {
+                        /** @var \Illuminate\Cache\CacheManager $instance */
+                        return $instance->build($config);
         }
                     /**
          * Create a new cache repository with the given implementation.
@@ -4230,7 +4286,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function lock($name, $seconds = 0, $owner = null)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->lock($name, $seconds, $owner);
         }
                     /**
@@ -4242,19 +4298,8 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function restoreLock($name, $owner)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->restoreLock($name, $owner);
-        }
-                    /**
-         * Remove an item from the cache if it is expired.
-         *
-         * @param string $key
-         * @return bool 
-         * @static 
-         */        public static function forgetIfExpired($key)
-        {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
-                        return $instance->forgetIfExpired($key);
         }
                     /**
          * Remove all items from the cache.
@@ -4263,29 +4308,70 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function flush()
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->flush();
         }
                     /**
-         * Get the underlying database connection.
+         * Remove all expired tag set entries.
          *
-         * @return \Illuminate\Database\MySqlConnection 
+         * @return void 
          * @static 
-         */        public static function getConnection()
+         */        public static function flushStaleTags()
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
-                        return $instance->getConnection();
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        $instance->flushStaleTags();
+        }
+                    /**
+         * Get the Redis connection instance.
+         *
+         * @return \Illuminate\Redis\Connections\Connection 
+         * @static 
+         */        public static function connection()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->connection();
+        }
+                    /**
+         * Get the Redis connection instance that should be used to manage locks.
+         *
+         * @return \Illuminate\Redis\Connections\Connection 
+         * @static 
+         */        public static function lockConnection()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->lockConnection();
+        }
+                    /**
+         * Specify the name of the connection that should be used to store data.
+         *
+         * @param string $connection
+         * @return void 
+         * @static 
+         */        public static function setConnection($connection)
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        $instance->setConnection($connection);
         }
                     /**
          * Specify the name of the connection that should be used to manage locks.
          *
-         * @param \Illuminate\Database\ConnectionInterface $connection
-         * @return \Illuminate\Cache\DatabaseStore 
+         * @param string $connection
+         * @return \Illuminate\Cache\RedisStore 
          * @static 
          */        public static function setLockConnection($connection)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->setLockConnection($connection);
+        }
+                    /**
+         * Get the Redis database instance.
+         *
+         * @return \Illuminate\Contracts\Redis\Factory 
+         * @static 
+         */        public static function getRedis()
+        {
+                        /** @var \Illuminate\Cache\RedisStore $instance */
+                        return $instance->getRedis();
         }
                     /**
          * Get the cache key prefix.
@@ -4294,7 +4380,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getPrefix()
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         return $instance->getPrefix();
         }
                     /**
@@ -4305,7 +4391,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function setPrefix($prefix)
         {
-                        /** @var \Illuminate\Cache\DatabaseStore $instance */
+                        /** @var \Illuminate\Cache\RedisStore $instance */
                         $instance->setPrefix($prefix);
         }
             }
@@ -4340,8 +4426,8 @@ namespace Illuminate\Support\Facades {
                     /**
          * Get many configuration values.
          *
-         * @param array $keys
-         * @return array 
+         * @param array<string|int,mixed> $keys
+         * @return array<string,mixed> 
          * @static 
          */        public static function getMany($keys)
         {
@@ -4744,6 +4830,18 @@ namespace Illuminate\Support\Facades {
                         return $instance->push($key, ...$values);
         }
                     /**
+         * Pop the latest value from the key's stack.
+         *
+         * @param string $key
+         * @return mixed 
+         * @throws \RuntimeException
+         * @static 
+         */        public static function pop($key)
+        {
+                        /** @var \Illuminate\Log\Context\Repository $instance */
+                        return $instance->pop($key);
+        }
+                    /**
          * Push the given hidden values onto the key's stack.
          *
          * @param string $key
@@ -4755,6 +4853,18 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Log\Context\Repository $instance */
                         return $instance->pushHidden($key, ...$values);
+        }
+                    /**
+         * Pop the latest hidden value from the key's stack.
+         *
+         * @param string $key
+         * @return mixed 
+         * @throws \RuntimeException
+         * @static 
+         */        public static function popHidden($key)
+        {
+                        /** @var \Illuminate\Log\Context\Repository $instance */
+                        return $instance->popHidden($key);
         }
                     /**
          * Determine if the given value is in the given stack.
@@ -5404,6 +5514,17 @@ namespace Illuminate\Support\Facades {
                         return $instance->connection($name);
         }
                     /**
+         * Build a database connection instance from the given configuration.
+         *
+         * @param array $config
+         * @return \Illuminate\Database\MySqlConnection 
+         * @static 
+         */        public static function build($config)
+        {
+                        /** @var \Illuminate\Database\DatabaseManager $instance */
+                        return $instance->build($config);
+        }
+                    /**
          * Get a database connection instance from the given configuration.
          *
          * @param string $name
@@ -5811,7 +5932,7 @@ namespace Illuminate\Support\Facades {
          * @param string $query
          * @param array $bindings
          * @param bool $useReadPdo
-         * @return \Generator 
+         * @return \Generator<int, \stdClass> 
          * @static 
          */        public static function cursor($query, $bindings = [], $useReadPdo = true)
         {            //Method inherited from \Illuminate\Database\Connection         
@@ -6481,11 +6602,14 @@ namespace Illuminate\Support\Facades {
                         return \Illuminate\Database\MySqlConnection::getResolver($driver);
         }
                     /**
-         * Execute a Closure within a transaction.
+         * 
          *
-         * @param \Closure $callback
+         * @template TReturn of mixed
+         * 
+         * Execute a Closure within a transaction.
+         * @param (\Closure(static): TReturn) $callback
          * @param int $attempts
-         * @return mixed 
+         * @return \Illuminate\Database\TReturn 
          * @throws \Throwable
          * @static 
          */        public static function transaction($callback, $attempts = 1)
@@ -6559,8 +6683,8 @@ namespace Illuminate\Support\Facades {
                     /**
          * Register an event listener with the dispatcher.
          *
-         * @param \Illuminate\Events\Queued\Closure|\Closure|string|array $events
-         * @param \Illuminate\Events\Queued\Closure|\Closure|string|array|null $listener
+         * @param \Illuminate\Events\Queued\Closure|callable|array|\Illuminate\Events\class-string|string $events
+         * @param \Illuminate\Events\Queued\Closure|callable|array|\Illuminate\Events\class-string|null $listener
          * @return void 
          * @static 
          */        public static function listen($events, $listener = null)
@@ -8134,6 +8258,16 @@ namespace Illuminate\Support\Facades {
                         return \Illuminate\Http\Client\Factory::response($body, $status, $headers);
         }
                     /**
+         * Create a new connection exception for use during stubbing.
+         *
+         * @param string|null $message
+         * @return \GuzzleHttp\Promise\PromiseInterface 
+         * @static 
+         */        public static function failedConnection($message = null)
+        {
+                        return \Illuminate\Http\Client\Factory::failedConnection($message);
+        }
+                    /**
          * Get an invokable object that returns a sequence of responses in order for use during stubbing.
          *
          * @param array $responses
@@ -8170,7 +8304,7 @@ namespace Illuminate\Support\Facades {
          * Stub the given URL using the given callback.
          *
          * @param string $url
-         * @param \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface|callable $callback
+         * @param \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface|callable|int|string|array $callback
          * @return \Illuminate\Http\Client\Factory 
          * @static 
          */        public static function stubUrl($url, $callback)
@@ -8213,7 +8347,7 @@ namespace Illuminate\Support\Facades {
          * Record a request response pair.
          *
          * @param \Illuminate\Http\Client\Request $request
-         * @param \Illuminate\Http\Client\Response $response
+         * @param \Illuminate\Http\Client\Response|null $response
          * @return void 
          * @static 
          */        public static function recordRequestResponsePair($request, $response)
@@ -8991,7 +9125,7 @@ namespace Illuminate\Support\Facades {
      * @method static \Illuminate\Mail\SentMessage|null html(string $html, mixed $callback)
      * @method static \Illuminate\Mail\SentMessage|null plain(string $view, array $data, mixed $callback)
      * @method static string render(string|array $view, array $data = [])
-     * @method static mixed onQueue(string $queue, \Illuminate\Contracts\Mail\Mailable $view)
+     * @method static mixed onQueue(\BackedEnum|string|null $queue, \Illuminate\Contracts\Mail\Mailable $view)
      * @method static mixed queueOn(string $queue, \Illuminate\Contracts\Mail\Mailable $view)
      * @method static mixed laterOn(string $queue, \DateTimeInterface|\DateInterval|int $delay, \Illuminate\Contracts\Mail\Mailable $view)
      * @method static \Symfony\Component\Mailer\Transport\TransportInterface getSymfonyTransport()
@@ -9026,6 +9160,17 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Mail\MailManager $instance */
                         return $instance->driver($driver);
+        }
+                    /**
+         * Build a new mailer instance.
+         *
+         * @param array $config
+         * @return \Illuminate\Mail\Mailer 
+         * @static 
+         */        public static function build($config)
+        {
+                        /** @var \Illuminate\Mail\MailManager $instance */
+                        return $instance->build($config);
         }
                     /**
          * Create a new transport instance.
@@ -10520,42 +10665,40 @@ namespace Illuminate\Support\Facades {
                         return $instance->setConnectionName($name);
         }
                     /**
-         * Release a reserved job back onto the queue after (n) seconds.
+         * Migrate the delayed jobs that are ready to the regular queue.
          *
-         * @param string $queue
-         * @param \Illuminate\Queue\Jobs\DatabaseJobRecord $job
-         * @param int $delay
-         * @return mixed 
+         * @param string $from
+         * @param string $to
+         * @return array 
          * @static 
-         */        public static function release($queue, $job, $delay)
+         */        public static function migrateExpiredJobs($from, $to)
         {
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
-                        return $instance->release($queue, $job, $delay);
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
+                        return $instance->migrateExpiredJobs($from, $to);
         }
                     /**
          * Delete a reserved job from the queue.
          *
          * @param string $queue
-         * @param string $id
+         * @param \Illuminate\Queue\Jobs\RedisJob $job
          * @return void 
-         * @throws \Throwable
          * @static 
-         */        public static function deleteReserved($queue, $id)
+         */        public static function deleteReserved($queue, $job)
         {
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
-                        $instance->deleteReserved($queue, $id);
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
+                        $instance->deleteReserved($queue, $job);
         }
                     /**
          * Delete a reserved job from the reserved queue and release it.
          *
          * @param string $queue
-         * @param \Illuminate\Queue\Jobs\DatabaseJob $job
+         * @param \Illuminate\Queue\Jobs\RedisJob $job
          * @param int $delay
          * @return void 
          * @static 
          */        public static function deleteAndRelease($queue, $job, $delay)
         {
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
                         $instance->deleteAndRelease($queue, $job, $delay);
         }
                     /**
@@ -10566,7 +10709,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function clear($queue)
         {
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
                         return $instance->clear($queue);
         }
                     /**
@@ -10577,18 +10720,28 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getQueue($queue)
         {
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
                         return $instance->getQueue($queue);
         }
                     /**
-         * Get the underlying database instance.
+         * Get the connection for the queue.
          *
-         * @return \Illuminate\Database\Connection 
+         * @return \Illuminate\Redis\Connections\Connection 
          * @static 
-         */        public static function getDatabase()
+         */        public static function getConnection()
         {
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
-                        return $instance->getDatabase();
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
+                        return $instance->getConnection();
+        }
+                    /**
+         * Get the underlying Redis instance.
+         *
+         * @return \Illuminate\Contracts\Redis\Factory 
+         * @static 
+         */        public static function getRedis()
+        {
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
+                        return $instance->getRedis();
         }
                     /**
          * Get the maximum number of attempts for an object-based queue handler.
@@ -10598,7 +10751,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getJobTries($job)
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
                         return $instance->getJobTries($job);
         }
                     /**
@@ -10609,7 +10762,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getJobBackoff($job)
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
                         return $instance->getJobBackoff($job);
         }
                     /**
@@ -10620,7 +10773,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getJobExpiration($job)
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
                         return $instance->getJobExpiration($job);
         }
                     /**
@@ -10631,7 +10784,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function createPayloadUsing($callback)
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        \Illuminate\Queue\DatabaseQueue::createPayloadUsing($callback);
+                        \Illuminate\Queue\RedisQueue::createPayloadUsing($callback);
         }
                     /**
          * Get the container instance being used by the connection.
@@ -10640,7 +10793,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function getContainer()
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
                         return $instance->getContainer();
         }
                     /**
@@ -10651,7 +10804,7 @@ namespace Illuminate\Support\Facades {
          * @static 
          */        public static function setContainer($container)
         {            //Method inherited from \Illuminate\Queue\Queue         
-                        /** @var \Illuminate\Queue\DatabaseQueue $instance */
+                        /** @var \Illuminate\Queue\RedisQueue $instance */
                         $instance->setContainer($container);
         }
             }
@@ -11675,6 +11828,7 @@ namespace Illuminate\Support\Facades {
          * @param array $files The request files ($_FILES)
          * @param array $server The server parameters ($_SERVER)
          * @param string|resource|null $content The raw body data
+         * @throws BadRequestException When the URI is invalid
          * @static 
          */        public static function create($uri, $method = 'GET', $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
         {            //Method inherited from \Symfony\Component\HttpFoundation\Request         
@@ -11709,8 +11863,8 @@ namespace Illuminate\Support\Facades {
          * 
          * You should only list the reverse proxies that you manage directly.
          *
-         * @param array $proxies A list of trusted proxies, the string 'REMOTE_ADDR' will be replaced with $_SERVER['REMOTE_ADDR']
-         * @param int $trustedHeaderSet A bit field of Request::HEADER_*, to set which headers to trust from your proxies
+         * @param array $proxies A list of trusted proxies, the string 'REMOTE_ADDR' will be replaced with $_SERVER['REMOTE_ADDR'] and 'PRIVATE_SUBNETS' by IpUtils::PRIVATE_SUBNETS
+         * @param \Symfony\Component\HttpFoundation\int-mask-of<Request::HEADER_*> $trustedHeaderSet A bit field to set which headers to trust from your proxies
          * @static 
          */        public static function setTrustedProxies($proxies, $trustedHeaderSet)
         {            //Method inherited from \Symfony\Component\HttpFoundation\Request         
@@ -12656,122 +12810,6 @@ namespace Illuminate\Support\Facades {
                         return $instance->bearerToken();
         }
                     /**
-         * Determine if the request contains a given input item key.
-         *
-         * @param string|array $key
-         * @return bool 
-         * @static 
-         */        public static function exists($key)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->exists($key);
-        }
-                    /**
-         * Determine if the request contains a given input item key.
-         *
-         * @param string|array $key
-         * @return bool 
-         * @static 
-         */        public static function has($key)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->has($key);
-        }
-                    /**
-         * Determine if the request contains any of the given inputs.
-         *
-         * @param string|array $keys
-         * @return bool 
-         * @static 
-         */        public static function hasAny($keys)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->hasAny($keys);
-        }
-                    /**
-         * Apply the callback if the request contains the given input item key.
-         *
-         * @param string $key
-         * @param callable $callback
-         * @param callable|null $default
-         * @return $this|mixed 
-         * @static 
-         */        public static function whenHas($key, $callback, $default = null)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->whenHas($key, $callback, $default);
-        }
-                    /**
-         * Determine if the request contains a non-empty value for an input item.
-         *
-         * @param string|array $key
-         * @return bool 
-         * @static 
-         */        public static function filled($key)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->filled($key);
-        }
-                    /**
-         * Determine if the request contains an empty value for an input item.
-         *
-         * @param string|array $key
-         * @return bool 
-         * @static 
-         */        public static function isNotFilled($key)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->isNotFilled($key);
-        }
-                    /**
-         * Determine if the request contains a non-empty value for any of the given inputs.
-         *
-         * @param string|array $keys
-         * @return bool 
-         * @static 
-         */        public static function anyFilled($keys)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->anyFilled($keys);
-        }
-                    /**
-         * Apply the callback if the request contains a non-empty value for the given input item key.
-         *
-         * @param string $key
-         * @param callable $callback
-         * @param callable|null $default
-         * @return $this|mixed 
-         * @static 
-         */        public static function whenFilled($key, $callback, $default = null)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->whenFilled($key, $callback, $default);
-        }
-                    /**
-         * Determine if the request is missing a given input item key.
-         *
-         * @param string|array $key
-         * @return bool 
-         * @static 
-         */        public static function missing($key)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->missing($key);
-        }
-                    /**
-         * Apply the callback if the request is missing the given input item key.
-         *
-         * @param string $key
-         * @param callable $callback
-         * @param callable|null $default
-         * @return $this|mixed 
-         * @static 
-         */        public static function whenMissing($key, $callback, $default = null)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->whenMissing($key, $callback, $default);
-        }
-                    /**
          * Get the keys for all of the input and files.
          *
          * @return array 
@@ -12805,126 +12843,15 @@ namespace Illuminate\Support\Facades {
                         return $instance->input($key, $default);
         }
                     /**
-         * Retrieve input from the request as a Stringable instance.
-         *
-         * @param string $key
-         * @param mixed $default
-         * @return \Illuminate\Support\Stringable 
-         * @static 
-         */        public static function str($key, $default = null)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->str($key, $default);
-        }
-                    /**
-         * Retrieve input from the request as a Stringable instance.
-         *
-         * @param string $key
-         * @param mixed $default
-         * @return \Illuminate\Support\Stringable 
-         * @static 
-         */        public static function string($key, $default = null)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->string($key, $default);
-        }
-                    /**
-         * Retrieve input as a boolean value.
-         * 
-         * Returns true when value is "1", "true", "on", and "yes". Otherwise, returns false.
-         *
-         * @param string|null $key
-         * @param bool $default
-         * @return bool 
-         * @static 
-         */        public static function boolean($key = null, $default = false)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->boolean($key, $default);
-        }
-                    /**
-         * Retrieve input as an integer value.
-         *
-         * @param string $key
-         * @param int $default
-         * @return int 
-         * @static 
-         */        public static function integer($key, $default = 0)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->integer($key, $default);
-        }
-                    /**
-         * Retrieve input as a float value.
-         *
-         * @param string $key
-         * @param float $default
-         * @return float 
-         * @static 
-         */        public static function float($key, $default = 0.0)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->float($key, $default);
-        }
-                    /**
-         * Retrieve input from the request as a Carbon instance.
-         *
-         * @param string $key
-         * @param string|null $format
-         * @param string|null $tz
-         * @return \Illuminate\Support\Carbon|null 
-         * @throws \Carbon\Exceptions\InvalidFormatException
-         * @static 
-         */        public static function date($key, $format = null, $tz = null)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->date($key, $format, $tz);
-        }
-                    /**
-         * Retrieve input from the request as an enum.
-         *
-         * @template TEnum
-         * @param string $key
-         * @param \Illuminate\Http\class-string<TEnum> $enumClass
-         * @return \Illuminate\Http\TEnum|null 
-         * @static 
-         */        public static function enum($key, $enumClass)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->enum($key, $enumClass);
-        }
-                    /**
-         * Retrieve input from the request as a collection.
+         * Retrieve input from the request as a Fluent object instance.
          *
          * @param array|string|null $key
-         * @return \Illuminate\Support\Collection 
+         * @return \Illuminate\Support\Fluent 
          * @static 
-         */        public static function collect($key = null)
+         */        public static function fluent($key = null)
         {
                         /** @var \Illuminate\Http\Request $instance */
-                        return $instance->collect($key);
-        }
-                    /**
-         * Get a subset containing the provided keys with values from the input data.
-         *
-         * @param array|mixed $keys
-         * @return array 
-         * @static 
-         */        public static function only($keys)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->only($keys);
-        }
-                    /**
-         * Get all of the input except for a specified array of items.
-         *
-         * @param array|mixed $keys
-         * @return array 
-         * @static 
-         */        public static function except($keys)
-        {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->except($keys);
+                        return $instance->fluent($key);
         }
                     /**
          * Retrieve a query string item from the request.
@@ -13027,6 +12954,257 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Http\Request $instance */
                         return $instance->dd(...$args);
+        }
+                    /**
+         * Determine if the data contains a given key.
+         *
+         * @param string|array $key
+         * @return bool 
+         * @static 
+         */        public static function exists($key)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->exists($key);
+        }
+                    /**
+         * Determine if the data contains a given key.
+         *
+         * @param string|array $key
+         * @return bool 
+         * @static 
+         */        public static function has($key)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->has($key);
+        }
+                    /**
+         * Determine if the instance contains any of the given keys.
+         *
+         * @param string|array $keys
+         * @return bool 
+         * @static 
+         */        public static function hasAny($keys)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->hasAny($keys);
+        }
+                    /**
+         * Apply the callback if the instance contains the given key.
+         *
+         * @param string $key
+         * @param callable $callback
+         * @param callable|null $default
+         * @return $this|mixed 
+         * @static 
+         */        public static function whenHas($key, $callback, $default = null)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->whenHas($key, $callback, $default);
+        }
+                    /**
+         * Determine if the instance contains a non-empty value for the given key.
+         *
+         * @param string|array $key
+         * @return bool 
+         * @static 
+         */        public static function filled($key)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->filled($key);
+        }
+                    /**
+         * Determine if the instance contains an empty value for the given key.
+         *
+         * @param string|array $key
+         * @return bool 
+         * @static 
+         */        public static function isNotFilled($key)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->isNotFilled($key);
+        }
+                    /**
+         * Determine if the instance contains a non-empty value for any of the given keys.
+         *
+         * @param string|array $keys
+         * @return bool 
+         * @static 
+         */        public static function anyFilled($keys)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->anyFilled($keys);
+        }
+                    /**
+         * Apply the callback if the instance contains a non-empty value for the given key.
+         *
+         * @param string $key
+         * @param callable $callback
+         * @param callable|null $default
+         * @return $this|mixed 
+         * @static 
+         */        public static function whenFilled($key, $callback, $default = null)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->whenFilled($key, $callback, $default);
+        }
+                    /**
+         * Determine if the instance is missing a given key.
+         *
+         * @param string|array $key
+         * @return bool 
+         * @static 
+         */        public static function missing($key)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->missing($key);
+        }
+                    /**
+         * Apply the callback if the instance is missing the given key.
+         *
+         * @param string $key
+         * @param callable $callback
+         * @param callable|null $default
+         * @return $this|mixed 
+         * @static 
+         */        public static function whenMissing($key, $callback, $default = null)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->whenMissing($key, $callback, $default);
+        }
+                    /**
+         * Retrieve data from the instnce as a Stringable instance.
+         *
+         * @param string $key
+         * @param mixed $default
+         * @return \Illuminate\Support\Stringable 
+         * @static 
+         */        public static function str($key, $default = null)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->str($key, $default);
+        }
+                    /**
+         * Retrieve data from the instance as a Stringable instance.
+         *
+         * @param string $key
+         * @param mixed $default
+         * @return \Illuminate\Support\Stringable 
+         * @static 
+         */        public static function string($key, $default = null)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->string($key, $default);
+        }
+                    /**
+         * Retrieve data as a boolean value.
+         * 
+         * Returns true when value is "1", "true", "on", and "yes". Otherwise, returns false.
+         *
+         * @param string|null $key
+         * @param bool $default
+         * @return bool 
+         * @static 
+         */        public static function boolean($key = null, $default = false)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->boolean($key, $default);
+        }
+                    /**
+         * Retrieve data as an integer value.
+         *
+         * @param string $key
+         * @param int $default
+         * @return int 
+         * @static 
+         */        public static function integer($key, $default = 0)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->integer($key, $default);
+        }
+                    /**
+         * Retrieve data as a float value.
+         *
+         * @param string $key
+         * @param float $default
+         * @return float 
+         * @static 
+         */        public static function float($key, $default = 0.0)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->float($key, $default);
+        }
+                    /**
+         * Retrieve data from the instance as a Carbon instance.
+         *
+         * @param string $key
+         * @param string|null $format
+         * @param string|null $tz
+         * @return \Illuminate\Support\Carbon|null 
+         * @throws \Carbon\Exceptions\InvalidFormatException
+         * @static 
+         */        public static function date($key, $format = null, $tz = null)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->date($key, $format, $tz);
+        }
+                    /**
+         * Retrieve data from the instance as an enum.
+         *
+         * @template TEnum of \BackedEnum
+         * @param string $key
+         * @param \Illuminate\Http\class-string<TEnum> $enumClass
+         * @return \Illuminate\Http\TEnum|null 
+         * @static 
+         */        public static function enum($key, $enumClass)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->enum($key, $enumClass);
+        }
+                    /**
+         * Retrieve data from the instance as an array of enums.
+         *
+         * @template TEnum of \BackedEnum
+         * @param string $key
+         * @param \Illuminate\Http\class-string<TEnum> $enumClass
+         * @return \Illuminate\Http\TEnum[] 
+         * @static 
+         */        public static function enums($key, $enumClass)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->enums($key, $enumClass);
+        }
+                    /**
+         * Retrieve data from the instance as a collection.
+         *
+         * @param array|string|null $key
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */        public static function collect($key = null)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->collect($key);
+        }
+                    /**
+         * Get a subset containing the provided keys with values from the instance data.
+         *
+         * @param array|mixed $keys
+         * @return array 
+         * @static 
+         */        public static function only($keys)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->only($keys);
+        }
+                    /**
+         * Get all of the data except for a specified array of items.
+         *
+         * @param array|mixed $keys
+         * @return array 
+         * @static 
+         */        public static function except($keys)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->except($keys);
         }
                     /**
          * Register a custom macro.
@@ -13302,7 +13480,7 @@ namespace Illuminate\Support\Facades {
                     /**
          * Create a new redirect response to a named route.
          *
-         * @param string $route
+         * @param \BackedEnum|string $route
          * @param mixed $parameters
          * @param int $status
          * @param array $headers
@@ -14347,6 +14525,68 @@ namespace Illuminate\Support\Facades {
             /**
      * 
      *
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes withoutOverlapping(int $expiresAt = 1440)
+     * @method static void mergeAttributes(\Illuminate\Console\Scheduling\Event $event)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes user(string $user)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes environments(array|mixed $environments)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes evenInMaintenanceMode()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes onOneServer()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes runInBackground()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes when(\Closure|bool $callback)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes skip(\Closure|bool $callback)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes name(string $description)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes description(string $description)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes cron(string $expression)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes between(string $startTime, string $endTime)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes unlessBetween(string $startTime, string $endTime)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everySecond()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyTwoSeconds()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyFiveSeconds()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyTenSeconds()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyFifteenSeconds()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyTwentySeconds()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyThirtySeconds()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyMinute()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyTwoMinutes()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyThreeMinutes()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyFourMinutes()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyFiveMinutes()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyTenMinutes()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyFifteenMinutes()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyThirtyMinutes()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes hourly()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes hourlyAt(array|string|int $offset)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyOddHour(array|string|int $offset = 0)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyTwoHours(array|string|int $offset = 0)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyThreeHours(array|string|int $offset = 0)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everyFourHours(array|string|int $offset = 0)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes everySixHours(array|string|int $offset = 0)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes daily()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes at(string $time)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes dailyAt(string $time)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes twiceDaily(int $first = 1, int $second = 13)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes twiceDailyAt(int $first = 1, int $second = 13, int $offset = 0)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes weekdays()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes weekends()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes mondays()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes tuesdays()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes wednesdays()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes thursdays()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes fridays()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes saturdays()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes sundays()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes weekly()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes weeklyOn(array|mixed $dayOfWeek, string $time = '0:0')
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes monthly()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes monthlyOn(int $dayOfMonth = 1, string $time = '0:0')
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes twiceMonthly(int $first = 1, int $second = 16, string $time = '0:0')
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes lastDayOfMonth(string $time = '0:0')
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes quarterly()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes quarterlyOn(int $dayOfQuarter = 1, string $time = '0:0')
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes yearly()
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes yearlyOn(int $month = 1, int|string $dayOfMonth = 1, string $time = '0:0')
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes days(array|mixed $days)
+     * @method static \Illuminate\Console\Scheduling\PendingEventAttributes timezone(\DateTimeZone|string $timezone)
      * @see \Illuminate\Console\Scheduling\Schedule
      */        class Schedule {
                     /**
@@ -14397,6 +14637,18 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Console\Scheduling\Schedule $instance */
                         return $instance->exec($command, $parameters);
+        }
+                    /**
+         * Create new schedule group.
+         *
+         * @param \Illuminate\Console\Scheduling\Event $event
+         * @return void 
+         * @throws \RuntimeException
+         * @static 
+         */        public static function group($events)
+        {
+                        /** @var \Illuminate\Console\Scheduling\Schedule $instance */
+                        $instance->group($events);
         }
                     /**
          * Compile array input for a command.
@@ -14496,6 +14748,19 @@ namespace Illuminate\Support\Facades {
          */        public static function flushMacros()
         {
                         \Illuminate\Console\Scheduling\Schedule::flushMacros();
+        }
+                    /**
+         * Dynamically handle calls to the class.
+         *
+         * @param string $method
+         * @param array $parameters
+         * @return mixed 
+         * @throws \BadMethodCallException
+         * @static 
+         */        public static function macroCall($method, $parameters)
+        {
+                        /** @var \Illuminate\Console\Scheduling\Schedule $instance */
+                        return $instance->macroCall($method, $parameters);
         }
             }
             /**
@@ -15918,6 +16183,19 @@ namespace Illuminate\Support\Facades {
                         return $instance->assertExists($path, $content);
         }
                     /**
+         * Assert that the number of files in path equals the expected count.
+         *
+         * @param string $path
+         * @param int $count
+         * @param bool $recursive
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter 
+         * @static 
+         */        public static function assertCount($path, $count, $recursive = false)
+        {            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter         
+                        /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
+                        return $instance->assertCount($path, $count, $recursive);
+        }
+                    /**
          * Assert that the given file or directory does not exist.
          *
          * @param string|array $path
@@ -16838,6 +17116,17 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Routing\UrlGenerator $instance */
                         $instance->forceScheme($scheme);
+        }
+                    /**
+         * Force the use of the HTTPS scheme for all generated URLs.
+         *
+         * @param bool $force
+         * @return void 
+         * @static 
+         */        public static function forceHttps($force = true)
+        {
+                        /** @var \Illuminate\Routing\UrlGenerator $instance */
+                        $instance->forceHttps($force);
         }
                     /**
          * Set the forced root URL.
@@ -21018,6 +21307,17 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->create($attributes);
+            }
+                            /**
+             * Save a new model and return the instance without raising model events.
+             *
+             * @param array $attributes
+             * @return \Illuminate\Database\Eloquent\TModel 
+             * @static 
+             */            public static function createQuietly($attributes = [])
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->createQuietly($attributes);
             }
                             /**
              * Save a new model and return the instance. Allow mass-assignment.

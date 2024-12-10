@@ -22,9 +22,25 @@ const chatbox = ref(null)
 const props = usePage().props.value
 const messages = props.chat_data ? JSON.parse(props.chat_data.messages) : ''
 
-window.Echo.private("ai_response_stream."+props.auth.user.ID).listen("AiResponseStream", (event) => {
-    console.log(event);
+// window.Echo.private("ai_response_stream."+props.auth.user.ID).listen("AiResponseStream", (event) => {
+//     console.log(event);
+// });
+onMounted(() => {
+    console.info("loggedin userid: "+props.auth.user.ID)
+    console.log("Vue component mounted, starting Echo listener...");
+    window.Echo.private("ai_response_stream." + props.auth.user.ID)
+    .listen("AiResponseStream", (event) => {
+        console.log("Received event: ", event);
+    })
+    .error((error) => {
+        console.error("Error while listening to the channel: ", error);
+    });
+    // window.Echo.private("ai_response_stream."+props.auth.user.ID)
+    //     .listen("AiResponseStream", (event) => {
+    //         console.log("Event received:", event);
+    //     });
 });
+
 
 const form = useForm({
     chat_id: props.chat_data?.id || '',

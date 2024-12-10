@@ -33,7 +33,6 @@
         "php-http/message-factory": "^1.1",
         "predis/predis": "^2.3",
         "psr/http-factory": "^1.0",
-        "pusher/pusher-php-server": "^7.2",
         "ramsey/uuid": "^4.7",
         "robertboes/inertia-breadcrumbs": "^0.5.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
@@ -55,10 +54,7 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "App\\Classes\\": "app/Classes"
-        },
-        "files": [
-            "app/PusherHelpers.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

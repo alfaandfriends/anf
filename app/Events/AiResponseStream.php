@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -14,7 +15,7 @@ use Log;
 
 class AiResponseStream implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels, InteractsWithBroadcasting;
     
     public $chunk;
 
@@ -23,6 +24,7 @@ class AiResponseStream implements ShouldBroadcastNow
      */
     public function __construct($chunk) {
         $this->chunk = $chunk;
+        $this->broadcastVia('reverb');
     }
 
     /**
@@ -39,6 +41,7 @@ class AiResponseStream implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
+        Log::error("Broadcasting with chunk: " . $this->chunk);
         return ['chunk' => $this->chunk];
     }
 }

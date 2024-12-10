@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-use App\PusherHelpers;
+// use App\PusherHelpers;   
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -107,12 +107,12 @@ class NotificationHelper {
         $notification_data['created_at']            = now();
         
         if($send_to_user){
-            $pusher = new PusherHelpers();
-            $pusher->trigger('notifications.'.$user_to_notify, 'Notifications', $notification_data);
+            // $pusher = new PusherHelpers();
+            // $pusher->trigger('notifications.'.$user_to_notify, 'Notifications', $notification_data);
         }
         else{
-            $pusher =   new PusherHelpers();
-            $pusher->trigger('approval.'.$role_to_notify, 'Approval', $notification_data);
+            // $pusher =   new PusherHelpers();
+            // $pusher->trigger('approval.'.$role_to_notify, 'Approval', $notification_data);
         }
     }
     
