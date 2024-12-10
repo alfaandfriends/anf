@@ -22,7 +22,7 @@ const chatbox = ref(null)
 const props = usePage().props.value
 const messages = props.chat_data ? JSON.parse(props.chat_data.messages) : ''
 
-window.Echo.channel("ai_response_stream."+props.auth.user.ID).listen("AiResponseStream", (event) => {
+window.Echo.private("ai_response_stream."+props.auth.user.ID).listen("AiResponseStream", (event) => {
     console.log(event);
 });
 

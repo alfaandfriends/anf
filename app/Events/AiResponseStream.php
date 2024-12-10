@@ -33,7 +33,7 @@ class AiResponseStream implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [ 
-            new Channel('ai_response_stream.' . auth()->id()),
+            new PrivateChannel('ai_response_stream.' . auth()->id()),
         ];
     }
 

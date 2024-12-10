@@ -34,10 +34,11 @@ class SendPrompt implements ShouldQueue
      */
     public function handle(): void
     {
+        broadcast(new AiResponseStream('test'));
         // \Log::info('Job started');
         // $this->appendToChain(new AiResponseStream('test'));
-        broadcast(new AiResponseStream($this->ulid));
-        // Log::error($this->ulid);
+        // broadcast(new AiResponseStream($this->ulid));
+        // AiResponseStream::dispatch('This is a test message');
         // Log::error(broadcast(new AiResponseStream($this->ulid)));
         // broadcast(new AiResponseStream('test'));
         // AiResponseStream::dispatch('This is a test message');
