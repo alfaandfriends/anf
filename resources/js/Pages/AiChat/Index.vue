@@ -22,23 +22,23 @@ const chatbox = ref(null)
 const props = usePage().props.value
 const messages = props.chat_data ? JSON.parse(props.chat_data.messages) : ''
 
-// window.Echo.private("ai_response_stream."+props.auth.user.ID).listen("AiResponseStream", (event) => {
-//     console.log(event);
-// });
-onMounted(() => {
-    console.info("loggedin userid: "+props.auth.user.ID)
-    console.log("Vue component mounted, starting Echo listener...");
-    window.Echo.private("ai_response_stream." + props.auth.user.ID)
-    .listen("AiResponseStream", (event) => {
-        console.log("Received event: ", event);
-    })
-    .error((error) => {
-        console.error("Error while listening to the channel: ", error);
-    });
-    // window.Echo.private("ai_response_stream."+props.auth.user.ID)
-    //     .listen("AiResponseStream", (event) => {
-    //         console.log("Event received:", event);
-    //     });
+window.Echo.private("ai_response_stream."+props.auth.user.ID)
+.listen("AiResponseStream", (event) => {
+  if(event[0] == 'done'){
+    location.href = location.href;
+  }
+  // if(event[0] == 'running_response' && event[0] == 'finished_response'){
+  //   messages.data.push({
+  //     role: 'user',
+  //     content: [{
+  //       text: {
+  //         value: ''
+  //       }
+  //     }]
+  //   })
+  // }
+  // const lastIndex = messages.data.length - 1; // Index of the last element
+  // messages.data[lastIndex].content[0].text.value += event[0];
 });
 
 

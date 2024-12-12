@@ -15,10 +15,7 @@ use Illuminate\Support\Facades\Log;
 |
 */
 Broadcast::channel('ai_response_stream.{userId}', function ($user, $userId) {
-    Log::error("User ID: " . $user->ID);  // Log the user ID coming from the server
-    Log::error("User trying to access: " . $userId); 
     return (int) $user->ID === (int) $userId;
-    // return true;
 });
 
 

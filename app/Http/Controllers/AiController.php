@@ -62,7 +62,7 @@ class AiController extends Controller
             return response()->json($ulid);
         }
 
-        SendPrompt::dispatch($chatId, $threadId, $runId, $messages);
+        SendPrompt::dispatch(auth()->id(), $chatId, $threadId, $runId, $messages);
     }
 
     /**

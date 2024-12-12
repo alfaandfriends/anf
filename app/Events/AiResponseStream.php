@@ -7,24 +7,26 @@ use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Log;
 
-class AiResponseStream implements ShouldBroadcastNow
+class AiResponseStream implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels, InteractsWithBroadcasting;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
     
-    public $chunk;
+    public $user_id;
+    public $message;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($chunk) {
-        $this->chunk = $chunk;
-        $this->broadcastVia('reverb');
+    public function __construct($user_id, $message) {
+        $this->user_id = $user_id;
+        $this->message = $message;
     }
 
     /**
@@ -35,13 +37,12 @@ class AiResponseStream implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [ 
-            new PrivateChannel('ai_response_stream.' . auth()->id()),
+            new PrivateChannel('ai_response_stream.' . $this->user_id),
         ];
     }
 
     public function broadcastWith()
     {
-        Log::error("Broadcasting with chunk: " . $this->chunk);
-        return ['chunk' => $this->chunk];
+        return [$this->message];
     }
 }

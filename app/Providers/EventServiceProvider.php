@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\AiResponseStream;
 use App\Events\DatabaseTransactionEvent;
 use App\Jobs\SendPrompt;
+use App\Listeners\AiResponseStreamListener;
 use App\Listeners\DatabaseTransactionListener;
 use App\Listeners\PromptSent;
 use Illuminate\Auth\Events\Registered;
@@ -25,9 +26,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         DatabaseTransactionEvent::class => [
             DatabaseTransactionListener::class,
-        ],
-        SendPrompt::class => [
-            PromptSent::class,
         ],
     ];
 

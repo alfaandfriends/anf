@@ -4,12 +4,13 @@ namespace App\Jobs;
 
 use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use OpenAI;
 
 class SaveMessage implements ShouldQueue
 {
-    use Queueable;
+    use Dispatchable, Queueable;
 
     protected $ulid;
     protected $threadId;
