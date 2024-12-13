@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Events\AiResponseStream;
 use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -13,7 +12,6 @@ class SaveMessage implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
-    protected $user_id;
     protected $ulid;
     protected $threadId;
     protected $runId;
@@ -21,9 +19,8 @@ class SaveMessage implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($user_id, $ulid, $threadId, $runId)
+    public function __construct($ulid, $threadId, $runId)
     {
-        $this->user_id = $user_id;
         $this->ulid = $ulid;
         $this->threadId = $threadId;
         $this->runId = $runId;
@@ -51,7 +48,6 @@ class SaveMessage implements ShouldQueue
                     'run_id' => $this->runId,
                     'messages' => json_encode($messages),
                 ]);
-                AiResponseStream::dispatch($this->user_id, 'done')->delay(now()->second(3));
                 break;
             }
         }
