@@ -65,7 +65,6 @@ class SendPrompt implements ShouldQueue
             if($response->event == 'thread.message.completed'){
                 // AiResponseStream::dispatch($this->user_id, 'finished_response');
                 SaveMessage::dispatch($this->ulid, $this->threadId, $this->runId);
-                AiResponseStream::dispatch($this->user_id, 'done')->delay(now()->second(3));
             }
         }
     }
