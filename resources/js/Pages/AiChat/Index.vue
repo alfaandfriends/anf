@@ -1,108 +1,110 @@
 <script setup>
 import { Badge } from '@/Components/ui/badge'
-
 import { Button } from '@/Components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 import { Input } from '@/Components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/Components/ui/sheet'
 import { Inertia } from '@inertiajs/inertia'
-import { useForm, usePage, Link } from '@inertiajs/inertia-vue3'
-import { Bot, BotIcon, CircleUser, Home, LightbulbIcon, LineChart, Menu, Package, Package2, Paperclip, PlusCircle, Search, SendHorizonal, ShoppingCart, Trash, Trash2, Users } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { Bot, BotIcon, CircleUser, Home, LightbulbIcon, LineChart, Menu, Package, Package2, Paperclip, PlusCircle, SendHorizonal, ShoppingCart, Trash2, Users } from 'lucide-vue-next'
 import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';   
-import { onMounted } from 'vue'
 import { VMarkdownView } from 'vue3-markdown'
 import 'vue3-markdown/dist/style.css'
+import { usePage } from '@inertiajs/inertia-vue3'
+</script>
 
+<script>
+export default {
+  data(){
+    return {
+      confirmation: {
+        id: '',
+        route_name: '',
+        is_open: false
+      },
+      processing: false,
+      form: {
+        chat_id: this.$page.props?.chat_id || '',
+        thread_id: this.$page.props?.thread_id || '',
+        messages: ''
+      },
+    }
+  },
+  methods: {
+    updateChat(event){
+      this.form.messages = event.target.innerText;
+    },
+    submit(){
+      if(!this.form.messages || (this.$page.props.chat_data && this.$page.props.chat_data[this.$page.props.chat_data.length - 1]?.status != 'finished')){
+          return
+      }
 
-const sending_reply = ref(false)
-const prompt_input = ref(null)
-const chatbox = ref(null)
+      this.$refs.prompt_input.innerText = ''
 
-const props = usePage().props.value
-const messages = props.chat_data ? JSON.parse(props.chat_data.messages) : ''
+      if(!this.form.chat_id){
+        axios.post(route('ai.store'), this.form)
+        .then((response) => {
+          if(response.data.chat_id){
+            this.$inertia.get(route('chat.edit', response.data.chat_id))
+          }
+        })
+      }
+      else{
+		this.$page.props.chat_data.push({
+			prompt: this.form.messages,
+			status: 'processing'
+		})
+        axios.patch(route('ai.update', this.form.chat_id), this.form)
+		.then((response) => {
+			this.form.messages = ''
+		})
+      }
+	  this.scrollToBottom()
 
-window.Echo.private("ai_response_stream."+props.auth.user.ID)
-.listen("AiResponseStream", (event) => {
-  if(event[0] == 'done'){
-    location.href = location.href;
+    },
+    onKeydown(event){
+      if (event.ctrlKey && event.key === 'Enter') {
+          this.submit()
+      }
+    },
+    deleteChat(chat_id){
+      this.confirmation.route_name    = 'ai.destroy'
+      this.confirmation.id            = chat_id
+      this.confirmation.is_open       = true
+    },
+    generateQuiz(){
+      	this.form.messages = 'Generate a random quiz'
+        axios.post(route('ai.store'), this.form)
+        .then((response) => {
+          if(response.data.chat_id){
+            this.$inertia.get(route('chat.edit', response.data.chat_id))
+          }
+        })
+    },
+	scrollToBottom(){
+		this.$nextTick(() => {
+			if(this.$refs.chatbox){
+				this.$refs.chatbox.scrollTop = this.$refs.chatbox.scrollHeight;
+			}
+		});
+	}
+  },
+  mounted(){
+	this.scrollToBottom()
+
+    window.Echo.private("ai_response_stream."+this.$page.props.auth.user.ID)
+    .stopListening("AiResponseStream")
+    .listen("AiResponseStream", (event) => {
+		if(event){
+			if(event[0].thread_id){
+				this.form.thread_id = event[0].thread_id
+			}
+			this.$page.props.chat_data[this.$page.props.chat_data.length - 1].response = event[0].text
+			this.$page.props.chat_data[this.$page.props.chat_data.length - 1].status = 'finished'
+	  		this.scrollToBottom()
+		}
+    });
   }
-  // if(event[0] == 'running_response' && event[0] == 'finished_response'){
-  //   messages.data.push({
-  //     role: 'user',
-  //     content: [{
-  //       text: {
-  //         value: ''
-  //       }
-  //     }]
-  //   })
-  // }
-  // const lastIndex = messages.data.length - 1; // Index of the last element
-  // messages.data[lastIndex].content[0].text.value += event[0];
-});
-
-
-const form = useForm({
-    chat_id: props.chat_data?.id || '',
-    thread_id: props.chat_data?.thread_id || '',
-    run_id: props.chat_data?.run_id || '',
-    messages: ''
-})
-
-const updateChat = ((event) => {
-    form.messages = event.target.innerText;
-})
-const submit = async () => {
-    if(sending_reply.value || !form.messages){
-        return
-    }
-
-    sending_reply.value = true
-
-    const response = await axios.post(route('ai.store'), {form});
-    form.messages = ''
-    prompt_input.value.innerText = ''
-    sending_reply.value = false
 }
-
-const onKeydown = async (event) => {
-    try {
-        if (event.ctrlKey && event.key === 'Enter') {
-            submit()
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-const confirmation = useForm({
-    id: '',
-    route_name: '',
-    is_open: false
-})
-const deleteThread = async (thread_id) => {
-    confirmation.route_name    = 'ai.destroy'
-    confirmation.id            = thread_id
-    confirmation.is_open       = true
-}
-
-const generateQuiz = async () => {
-    form.messages = {role: 'user', content: 'Generate a random quiz.'}
-    try {
-        
-        const response = await axios.post(route('ai.generate_quiz'), {form});
-        Inertia.get(route('chat.edit', response.data))
-        
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-onMounted(()=>{
-    if (chatbox.value) {
-        chatbox.value.scrollTop = chatbox.value.scrollHeight;
-    }
-})
 </script>
 
 <template>
@@ -125,14 +127,14 @@ onMounted(()=>{
               <span class="font-medium">New Chat</span>
             </Button>
             <span class="pl-1 mt-5 mb-2">Sessions</span>
-            <div class="space-y-1" v-for="thread in props.threads">
+            <div class="space-y-1" v-for="chat in $page.props.chats">
                 <a
-                    @click.once="thread.id != form.chat_id ? $inertia.get(route('chat.edit', thread.id)) : ''"
+                    @click.once="chat.id != form.chat_id ? $inertia.get(route('chat.edit', chat.id)) : ''"
                     class="flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:bg-zinc-800 hover:text-white cursor-pointer"
-                    :class="{'bg-zinc-800 text-white': thread.id == form.chat_id}"
+                    :class="{'bg-zinc-800 text-white': chat.id == form.chat_id}"
                 >
-                    <span class="truncate w-52">{{ thread.name }}</span>
-                    <Trash2 class="w-4 text-red-500" @click="deleteThread(thread.id)"/>
+                    <span class="truncate w-52">{{ chat.name }}</span>
+                    <Trash2 class="w-4 text-red-500" @click.stop="deleteChat(chat.id)"/>
                 </a>
             </div>
           </nav>
@@ -219,24 +221,30 @@ onMounted(()=>{
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      <main class="flex flex-1 flex-col items-center justify-between gap-4 p-4 lg:gap-6 lg:p-6 max-h-svh overflow-hidden -mt-16 bg-white">
+      <main class="flex flex-1 flex-col items-center justify-between gap-4 p-4 lg:gap-6 lg:p-6 h-svh overflow-hidden -mt-16 bg-white">
             <div class="flex flex-col w-full max-w-3xl px-3 gap-10 overflow-auto scroll max-h-[36rem] mt-16 py-2" ref="chatbox">
-                <template v-if="messages" v-for="message in messages.data.reverse()">
-                    <span class="flex items-start space-x-2 " v-if="message.role == 'assistant'">
+                <template v-if="$page.props.chat_data" v-for="message in $page.props.chat_data">
+                    <span class="flex items-center justify-end space-x-2 ml-20" v-if="message.prompt">
+                        <span class="rounded-xl border bg-zinc-800 px-4 py-1.5">{{ message.prompt }}</span>
+                    </span>
+                    <span class="flex items-start space-x-2 " v-if="message.response && message.status != 'processing'">
                         <BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
                         <VMarkdownView class="px-3"
                             mode="light"
-                            :content="message.content[0]?.text?.value"
+                            :content="message.response"
                         ></VMarkdownView>
                     </span>
-                    <span class="flex items-center justify-end space-x-2 ml-20" v-if="message.role == 'user'">
-                        <span class="rounded-xl border bg-zinc-800 px-4 py-1.5">{{ message.content[0].text.value }}</span>
+                    <span class="flex items-start space-x-2 " v-else>
+                        <BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
+						<div class="px-2">
+							<Label class="text-slate-800 text-base animate-pulse">Typing...</Label>
+						</div>
                     </span>
                 </template>
             </div>
             <div class="relative bottom-0 w-full max-w-3xl">
                 <form @keydown="onKeydown">
-                    <div class="flex justify-center px-3 pb-3 gap-2" v-if="!props.chat_data">
+                    <div class="flex justify-center px-3 pb-3 gap-2" v-if="!$page.props.chat_data">
                         <div class="flex gap-1 items-center cursor-pointer bg-zinc-800 hover:bg-zinc-700 text-sm text-zinc-200 border rounded-xl px-4 py-2" @click.once="generateQuiz">
                             <LightbulbIcon class="h-4 w-4"/>
                             <span>Generate a Quiz</span>
@@ -248,7 +256,7 @@ onMounted(()=>{
                     <div class="absolute bottom-0 w-full px-5 py-3 pt-">
                         <div class="flex items-center justify-between">
                             <Paperclip class="h-9 w-9 rounded-full cursor-pointer hover:bg-zinc-700 p-2"/>
-                            <SendHorizonal class="h-10 w-10 rounded-full cursor-pointer hover:bg-zinc-700 p-2" @click.once="sending_reply == false ? submit() : ''"/>
+                            <SendHorizonal class="h-10 w-10 rounded-full cursor-pointer hover:bg-zinc-700 p-2" @click="submit"/>
                         </div>
                     </div>
                 </form>

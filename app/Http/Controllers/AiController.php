@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AiChatMessageStatus;
 use App\Events\AiResponseStream;
 use App\Jobs\CreateChat;
 use App\Jobs\GenerateQuiz;
@@ -22,10 +23,10 @@ class AiController extends Controller
      */
     public function index()
     {
-        $threads = DB::table('ai_chats')->select('id', 'name', 'thread_id', 'run_id')->get();
+        $chats = DB::table('ai_chats')->select('id', 'name')->get();
 
         return Inertia::render('AiChat/Index', [
-            'threads'   => $threads,
+            'chats'   => $chats,
         ]);
     }
 
@@ -42,27 +43,29 @@ class AiController extends Controller
      */
     public function store(Request $request)
     {
-        $chatId = $request->form['chat_id'];
-        $threadId = $request->form['thread_id'];
-        $runId = $request->form['run_id'];
-        $messages = $request->form['messages'];
-        
-        if(Auth::check() && !$threadId){
-            $ulid = Str::ulid();
+        if(Auth::check() && !$request->chat_id){
+            $chat_id = Str::ulid();
             $user_id = Auth::id();
 
             DB::table('ai_chats')->insert([
-                'id' => (string)$ulid,
+                'id' => (string)$chat_id,
                 'user_id' => $user_id,
-                'name' => $messages
+                'name' => $request->messages
             ]);
 
-            InitiateChat::dispatch($ulid, $messages);
+            DB::table('ai_chat_messages')->insert([
+                'id' => Str::ulid(),
+                'chat_id' => (string)$chat_id,
+                'prompt' => $request->messages,
+                'status' => AiChatMessageStatus::NOT_STARTED,
+            ]);
 
-            return response()->json($ulid);
+            return response()->json([
+                'chat_id' => $chat_id,
+            ]);
         }
 
-        SendPrompt::dispatch(auth()->id(), $chatId, $threadId, $runId, $messages);
+        return redirect(route('ai.index'));
     }
 
     /**
@@ -78,12 +81,27 @@ class AiController extends Controller
      */
     public function edit(string $id)
     {
-        $threads = DB::table('ai_chats')->select('id', 'name', 'thread_id', 'run_id')->get();
-        $chat_data = DB::table('ai_chats')->where('user_id', Auth::id())->where('id', $id)->first();
-        
-        if($chat_data){
+        $chats      = DB::table('ai_chats')->select('id', 'name')->get();
+        $chat_data  = DB::table('ai_chats')
+                        ->join('ai_chat_messages', 'ai_chat_messages.chat_id', '=', 'ai_chats.id')
+                        ->where('ai_chats.user_id', Auth::id())
+                        ->where('ai_chats.id', $id)
+                        ->select('ai_chats.thread_id', 'ai_chat_messages.*')
+                        ->get();
+
+        if($chat_data->isNotEmpty()){
+            $latest_record = $chat_data->first();
+            if(count($chat_data) == 1 && $latest_record->status == AiChatMessageStatus::NOT_STARTED){
+                DB::table('ai_chat_messages')->where('id', $latest_record->id)->update([
+                    'status' => AiChatMessageStatus::PROCESSING
+                ]);
+                InitiateChat::dispatch($id, auth()->id(), $latest_record->prompt);
+            }
+
             return Inertia::render('AiChat/Index', [
-                'threads'   => $threads,
+                'chats'   => $chats,
+                'chat_id' => $id,
+                'thread_id' => $latest_record->thread_id,
                 'chat_data' => $chat_data,
             ]);
         }
@@ -96,7 +114,7 @@ class AiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        SendPrompt::dispatch($id, auth()->id(), $request->thread_id, $request->messages);
     }
 
     /**

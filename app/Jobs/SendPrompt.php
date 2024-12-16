@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\AiChatMessageStatus;
 use App\Events\AiResponseStream;
 use DB;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
@@ -11,26 +12,25 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Log;
 use OpenAI;
+use Str;
 
 class SendPrompt implements ShouldQueue
 {
     use Dispatchable, Queueable, SerializesModels, InteractsWithBroadcasting;
 
-    protected $user_id;
-    protected $ulid;
+    protected $chatId;
+    protected $userId;
     protected $threadId;
-    protected $runId;
     protected $messages;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($user_id, $ulid, $threadId, $runId, $messages)
+    public function __construct($chatId, $userId, $threadId, $messages)
     {
-        $this->user_id = $user_id;
-        $this->ulid = $ulid;
+        $this->chatId = $chatId;
+        $this->userId = $userId;
         $this->threadId = $threadId;
-        $this->runId = $runId;
         $this->messages = $messages;
     }
 
@@ -47,7 +47,7 @@ class SendPrompt implements ShouldQueue
             'content' => $this->messages,
         ]);
 
-        $run = $client->threads()->runs()->createStreamed(
+        $run = $client->threads()->runs()->create(
             threadId: $this->threadId, 
             parameters: [
                 'assistant_id' => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
@@ -56,17 +56,14 @@ class SendPrompt implements ShouldQueue
                 ],
             ],
         );
-        
-        foreach($run as $response){
-            if($response->event == 'thread.message.delta'){
-                // AiResponseStream::dispatch($this->user_id, 'running_response');
-                // AiResponseStream::dispatch($this->user_id, $response->response->delta['content'][0]['text']['value']);
-            }
-            if($response->event == 'thread.message.completed'){
-                // AiResponseStream::dispatch($this->user_id, 'finished_response');
-                SaveMessage::dispatch($this->ulid, $this->threadId, $this->runId);
-                AiResponseStream::dispatch($this->user_id, 'done')->delay(now()->second(3));
-            }
-        }
+
+        DB::table('ai_chat_messages')->insert([
+            'id' => Str::ulid(),
+            'chat_id' => (string)$this->chatId,
+            'prompt' => $this->messages,
+            'status' => AiChatMessageStatus::PROCESSING,
+        ]);
+
+        SaveMessage::dispatch($this->chatId, $this->userId, $this->threadId, $run->id);
     }
 }
