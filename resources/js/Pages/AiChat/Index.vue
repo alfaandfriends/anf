@@ -138,7 +138,7 @@ export default {
 </script>
 
 <template>
-  <div class="grid min-h-screen h-full w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+  <div class="grid min-h-screen h-full w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] font-nunito">
     <div class="hidden border-r border-zinc-700 bg-muted/40 md:block">
       <div class="flex flex-col gap-2">
         <!-- <div class="flex-1"> -->
@@ -157,16 +157,16 @@ export default {
 				<span class="font-medium">New Chat</span>
 			</Button>
 			<span class="pl-1 mt-5 mb-2">Sessions</span>
-				<div class="space-y-1" v-for="chat in $page.props.chats">
-					<a
-						@click.once="chat.id != form.chat_id ? $inertia.get(route('chat.edit', chat.id)) : ''"
-						class="flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:bg-zinc-800 hover:text-white cursor-pointer"
-						:class="{'bg-zinc-800 text-white': chat.id == form.chat_id}"
-					>
-						<span class="truncate md:max-w-36 lg:max-w-48 xl:max-w-52">{{ chat.name }}</span>
-						<Trash2 class="w-4 text-red-500" @click.stop="deleteChat(chat.id)"/>
-					</a>
-				</div>
+			<div class="space-y-1" v-for="chat in $page.props.chats">
+				<a
+					@click.once="chat.id != form.chat_id ? $inertia.get(route('chat.edit', chat.id)) : ''"
+					class="flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:bg-zinc-800 hover:text-white cursor-pointer"
+					:class="{'bg-zinc-800 text-white': chat.id == form.chat_id}"
+				>
+					<span class="truncate md:max-w-36 lg:max-w-48 xl:max-w-52">{{ chat.name }}</span>
+					<Trash2 class="w-4 text-red-500" @click.stop="deleteChat(chat.id)"/>
+				</a>
+			</div>
 			<!-- <div class="flex w-full flex-col">
 			</div> -->
           </nav>
@@ -187,52 +187,25 @@ export default {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" class="flex flex-col">
+			<Button
+				@click.once.prevent="$inertia.get(route('ai.index'))"
+				class="mt-8"
+				>
+				<PlusCircle class="h-5 w-5 mr-1" />
+				<span class="font-medium">New Chat</span>
+			</Button>
             <nav class="grid gap-2 text-lg font-medium">
-              <a
-                href="#"
-                class="flex items-center gap-2 text-lg font-semibold"
-              >
-                <Package2 class="h-6 w-6" />
-                <span class="sr-only">Acme Inc</span>
-              </a>
-              <a
-                href="#"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              >
-                <Home class="h-5 w-5" />
-                Dashboard
-              </a>
-              <a
-                href="#"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-              >
-                <ShoppingCart class="h-5 w-5" />
-                Orders
-                <Badge class="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                  6
-                </Badge>
-              </a>
-              <a
-                href="#"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              >
-                <Package class="h-5 w-5" />
-                Products
-              </a>
-              <a
-                href="#"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              >
-                <Users class="h-5 w-5" />
-                Customers
-              </a>
-              <a
-                href="#"
-                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              >
-                <LineChart class="h-5 w-5" />
-                Analytics
-              </a>
+				<span class="pl-1 mt-2 text-sm">Sessions</span>
+				<div class="space-y-1" v-for="chat in $page.props.chats">
+					<a
+						@click.once="chat.id != form.chat_id ? $inertia.get(route('chat.edit', chat.id)) : ''"
+						class="flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:bg-zinc-800 hover:text-white cursor-pointer"
+						:class="{'bg-zinc-800 text-white': chat.id == form.chat_id}"
+					>
+						<span class="truncate md:max-w-36 max-w-36 lg:max-w-48 xl:max-w-52 text-sm">{{ chat.name }}</span>
+						<Trash2 class="w-4 text-red-500" @click.stop="deleteChat(chat.id)"/>
+					</a>
+				</div>
             </nav>
           </SheetContent>
         </Sheet>
@@ -255,7 +228,7 @@ export default {
       </header>
       <main class="flex flex-1 flex-col items-center gap-4 p-4 lg:gap-6 lg:p-6 h-svh overflow-hidden -mt-16 bg-white" :class="{'justify-between': $page.props.chat_data, 'justify-center': !$page.props.chat_data}">
 			<span v-if="form.program"
-				class="animate-typing text-slate-600 text-2xl font-semibold oveflow-auto xl:overflow-hidden font-nunito xl:whitespace-nowrap inline-block text-center" style="width: 100%">
+				class="md:animate-typing text-slate-600 text-2xl font-semibold oveflow-auto xl:overflow-hidden font-nunito xl:whitespace-nowrap inline-block text-center" style="width: 100%">
 				Hello, what would you like to do today?
 			</span>
 			<div class="flex flex-col px-3 gap-10 py-2 max-w-3xl max-h-[36rem] w-full mt-16 overflow-auto" ref="chatbox" v-if="$page.props.chat_data">
@@ -283,21 +256,42 @@ export default {
 			</div>
 			<div class="flex flex-col items-center mt-16" v-if="!form.program && !$page.props.chat_data">
 				<span
-					class="animate-typing text-slate-600 text-2xl font-semibold oveflow-auto xl:overflow-hidden font-nunito xl:whitespace-nowrap inline-block text-center" style="width: 100%">
+					class="md:animate-typing text-slate-600 text-2xl font-semibold oveflow-auto xl:overflow-hidden font-nunito xl:whitespace-nowrap inline-block text-center" style="width: 100%">
 					Which program would you like me to assist you on?
 				</span>
 				<div class="flex flex-col md:flex-row justify-center px-3 pb-3 gap-2 mt-8">
-					<div class="flex gap-2 items-center select-none font-medium cursor-pointer shadow-md shadow-slate-500 bg-gradient-to-r from-indigo-500 to-blue-500 hover:scale-95 will-change-transform duration-150 text-base text-zinc-100 rounded-full px-5 py-2" @click.once="selectProgram('maths')">
-						<CalculatorIcon class="h-5 w-5"/>
-						<span>Maths</span>
+					<div class="flex flex-col" @click.once="selectProgram('maths')">
+						<a class="px-5 py-2 w-full relative rounded-lg group overflow-hidden text-lg font-medium border-2 cursor-pointer border-black text-black inline-block">
+							<span class="absolute top-0 left-0 flex w-full h-0 mb-0 transition-all duration-200 ease-out transform translate-y-0 bg-black group-hover:h-full opacity-90"/>
+							<span class="relative group-hover:text-white">
+								<div class="flex gap-2 items-center ">
+									<CalculatorIcon class="h-5 w-5"/>
+									<span>Maths</span>
+								</div>
+							</span>
+						</a>
 					</div>
-					<div class="flex gap-2 items-center select-none font-medium cursor-pointer shadow-md shadow-slate-500 bg-gradient-to-r from-violet-600 to-indigo-600 hover:scale-95 will-change-transform duration-150 text-base text-zinc-100 rounded-full px-5 py-2" @click.once="selectProgram('coding_robotics')">
-						<LayoutTemplateIcon class="h-5 w-5"/>
-						<span>Coding & Robotics</span>
+					<div class="flex flex-col" @click.once="selectProgram('maths')">
+						<a class="px-5 py-2 w-full relative rounded-lg group overflow-hidden text-lg font-medium border-2 cursor-pointer border-black text-black inline-block">
+							<span class="absolute top-0 left-0 flex w-full h-0 mb-0 transition-all duration-200 ease-out transform translate-y-0 bg-black group-hover:h-full opacity-90"/>
+							<span class="relative group-hover:text-white">
+								<div class="flex gap-2 items-center ">
+									<LayoutTemplateIcon class="h-5 w-5"/>
+									<span>Coding & Robotics</span>
+								</div>
+							</span>
+						</a>
 					</div>
-					<div class="flex gap-2 items-center select-none font-medium cursor-pointer shadow-md shadow-slate-500 bg-gradient-to-r from-cyan-500 to-blue-500 hover:scale-95 will-change-transform duration-150 text-base text-zinc-100 rounded-full px-5 py-2" @click.once="selectProgram('digital_arts')">
-						<BrushIcon class="h-5 w-5"/>
-						<span>Digital Arts</span>
+					<div class="flex flex-col" @click.once="selectProgram('maths')">
+						<a class="px-5 py-2 w-full relative rounded-lg group overflow-hidden text-lg font-medium border-2 cursor-pointer border-black text-black inline-block">
+							<span class="absolute top-0 left-0 flex w-full h-0 mb-0 transition-all duration-200 ease-out transform translate-y-0 bg-black group-hover:h-full opacity-90"/>
+							<span class="relative group-hover:text-white">
+								<div class="flex gap-2 items-center ">
+									<BrushIcon class="h-5 w-5"/>
+									<span>Digital Arts</span>
+								</div>
+							</span>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -305,17 +299,32 @@ export default {
 				<div class="" v-if="!$page.props.chat_data">
 					<ScrollArea class="max-w-3xl max-h-[36rem] w-full mt-16 px-4" asDiv ref="chatbox">
 						<div class="flex flex-col xl:flex-row justify-center px-3 pb-3 gap-2">
-							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-violet-200 to-pink-200 hover:scale-95 will-change-transform duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="doExercises">
-								<NotebookPen class="h-4 w-4"/>
-								<span>Do Exercises</span>
+							<div class="flex flex-col" @click.once="doExercises">
+								<a class="rounded w-full relative inline-flex group items-center justify-left hover:justify-center px-4 py-2 cursor-pointer border-2 border-black text-lg font-medium transition-all ease-out overflow-hidden text-black hover:text-white">
+									<span class="absolute w-0 h-0 transition-all duration-300 ease-out bg-black rounded-full group-hover:w-96 group-hover:h-32"/>
+									<div class="relative flex gap-1 items-center">
+										<NotebookPen class="h-4 w-4"/>
+										<span>Do Exercises</span>
+									</div>
+								</a>
 							</div>
-							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-blue-200 to-cyan-200 hover:scale-95 will-change-transform duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="generateQuiz">
-								<LightbulbIcon class="h-4 w-4"/>
-								<span>Generate a Quiz</span>
+							<div class="flex flex-col" @click.once="generateQuiz">
+								<a class="rounded w-full relative inline-flex group items-center justify-left hover:justify-center px-4 py-2 cursor-pointer border-2 border-black text-lg font-medium transition-all ease-out overflow-hidden text-black hover:text-white">
+									<span class="absolute w-0 h-0 transition-all duration-300 ease-out bg-black rounded-full group-hover:w-96 group-hover:h-32"/>
+									<div class="relative flex gap-1 items-center">
+										<LightbulbIcon class="h-4 w-4"/>
+										<span>Generate a Quiz</span>
+									</div>
+								</a>
 							</div>
-							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-teal-200 to-teal-500 hover:scale-95 will-change-transform duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="performEvaluation">
-								<ListCheck class="h-4 w-4"/>
-								<span>Perform an Assessment</span>
+							<div class="flex flex-col" @click.once="performEvaluation">
+								<a class="rounded w-full relative inline-flex group items-center justify-left hover:justify-center px-4 py-2 cursor-pointer border-2 border-black text-lg font-medium transition-all ease-out overflow-hidden text-black hover:text-white">
+									<span class="absolute w-0 h-0 transition-all duration-300 ease-out bg-black rounded-full group-hover:w-96 group-hover:h-32"/>
+									<div class="relative flex gap-1 items-center">
+										<ListCheck class="h-4 w-4"/>
+										<span>Perform an Assessment</span>
+									</div>
+								</a>
 							</div>
 						</div>
 					</ScrollArea>
