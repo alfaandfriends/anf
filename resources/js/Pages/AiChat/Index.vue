@@ -266,7 +266,7 @@ export default {
 							<span class="relative group-hover:text-white">
 								<div class="flex gap-2 items-center ">
 									<CalculatorIcon class="h-5 w-5"/>
-									<span>Maths</span>
+									<span class="select-none">Maths</span>
 								</div>
 							</span>
 						</a>
@@ -277,7 +277,7 @@ export default {
 							<span class="relative group-hover:text-white">
 								<div class="flex gap-2 items-center ">
 									<LayoutTemplateIcon class="h-5 w-5"/>
-									<span>Coding & Robotics</span>
+									<span class="select-none">Coding & Robotics</span>
 								</div>
 							</span>
 						</a>
@@ -288,7 +288,7 @@ export default {
 							<span class="relative group-hover:text-white">
 								<div class="flex gap-2 items-center ">
 									<BrushIcon class="h-5 w-5"/>
-									<span>Digital Arts</span>
+									<span class="select-none">Digital Arts</span>
 								</div>
 							</span>
 						</a>
@@ -304,7 +304,7 @@ export default {
 									<span class="absolute w-0 h-0 transition-all duration-300 ease-out bg-black rounded-full group-hover:w-96 group-hover:h-32"/>
 									<div class="relative flex gap-1 items-center">
 										<NotebookPen class="h-4 w-4"/>
-										<span>Do Exercises</span>
+										<span class="text-sm select-none">Do Exercises</span>
 									</div>
 								</a>
 							</div>
@@ -313,7 +313,7 @@ export default {
 									<span class="absolute w-0 h-0 transition-all duration-300 ease-out bg-black rounded-full group-hover:w-96 group-hover:h-32"/>
 									<div class="relative flex gap-1 items-center">
 										<LightbulbIcon class="h-4 w-4"/>
-										<span>Generate a Quiz</span>
+										<span class="text-sm select-none">Generate a Quiz</span>
 									</div>
 								</a>
 							</div>
@@ -322,7 +322,7 @@ export default {
 									<span class="absolute w-0 h-0 transition-all duration-300 ease-out bg-black rounded-full group-hover:w-96 group-hover:h-32"/>
 									<div class="relative flex gap-1 items-center">
 										<ListCheck class="h-4 w-4"/>
-										<span>Perform an Assessment</span>
+										<span class="text-sm select-none">Perform an Assessment</span>
 									</div>
 								</a>
 							</div>
