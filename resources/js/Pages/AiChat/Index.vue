@@ -336,7 +336,10 @@ export default {
                     <div class="absolute bottom-0 w-full px-5 py-3 pt-">
                         <div class="flex items-center justify-between">
                             <Paperclip class="h-9 w-9 rounded-full cursor-pointer hover:bg-zinc-700 p-2"/>
-                            <SendHorizonal class="h-10 w-10 rounded-full cursor-pointer hover:bg-zinc-700 p-2" @click="submit"/>
+							<div class="flex items-center gap-2">
+								<span class="text-xs text-zinc-400">Ctrl + Enter</span>
+								<SendHorizonal class="h-9 w-9 rounded-full cursor-pointer hover:bg-zinc-700 p-1.5" @click="submit"/>
+							</div>
                         </div>
                     </div>
                 </form>
