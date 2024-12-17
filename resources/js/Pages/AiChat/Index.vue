@@ -9,7 +9,8 @@ import { Bot, BotIcon, CircleUser, Home, LightbulbIcon, LineChart, Menu, Package
 import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';   
 import { VMarkdownView } from 'vue3-markdown'
 import 'vue3-markdown/dist/style.css'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { LightBulbIcon } from '@heroicons/vue/solid'
+import { ScrollArea } from '@/Components/ui/scroll-area'
 </script>
 
 <script>
@@ -59,6 +60,7 @@ export default {
 		})
       }
 	  this.scrollToBottom()
+	  this.$refs.prompt_input.focus();
 
     },
     onKeydown(event){
@@ -80,6 +82,15 @@ export default {
           }
         })
     },
+    performEvaluation(){
+      	this.form.messages = 'Perform an evaluation'
+        axios.post(route('ai.store'), this.form)
+        .then((response) => {
+          if(response.data.chat_id){
+            this.$inertia.get(route('chat.edit', response.data.chat_id))
+          }
+        })
+    },
 	scrollToBottom(){
 		this.$nextTick(() => {
 			if(this.$refs.chatbox){
@@ -90,6 +101,7 @@ export default {
   },
   mounted(){
 	this.scrollToBottom()
+    this.$refs.prompt_input.focus();
 
     window.Echo.private("ai_response_stream."+this.$page.props.auth.user.ID)
     .stopListening("AiResponseStream")
@@ -222,34 +234,51 @@ export default {
         </DropdownMenu>
       </header>
       <main class="flex flex-1 flex-col items-center justify-between gap-4 p-4 lg:gap-6 lg:p-6 h-svh overflow-hidden -mt-16 bg-white">
-            <div class="flex flex-col w-full max-w-3xl px-3 gap-10 overflow-auto scroll max-h-[36rem] mt-16 py-2" ref="chatbox">
-                <template v-if="$page.props.chat_data" v-for="message in $page.props.chat_data">
-                    <span class="flex items-center justify-end space-x-2 ml-20" v-if="message.prompt">
-                        <span class="rounded-xl border bg-zinc-800 px-4 py-1.5">{{ message.prompt }}</span>
-                    </span>
-                    <span class="flex items-start space-x-2 " v-if="message.response && message.status != 'processing'">
-                        <BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
-                        <VMarkdownView class="px-3"
-                            mode="light"
-                            :content="message.response"
-                        ></VMarkdownView>
-                    </span>
-                    <span class="flex items-start space-x-2 " v-else>
-                        <BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
-						<div class="px-2">
-							<Label class="text-slate-800 text-base animate-pulse">Typing...</Label>
-						</div>
-                    </span>
-                </template>
-            </div>
+			<ScrollArea class="max-w-3xl max-h-[36rem] w-full mt-16 px-4" asDiv ref="chatbox">
+				<div class="flex flex-col px-3 gap-10 py-2">
+					<template v-if="$page.props.chat_data" v-for="message in $page.props.chat_data">
+						<span class="flex items-center justify-end space-x-2 ml-20" v-if="message.prompt">
+							<span class="rounded-xl border bg-zinc-800 px-4 py-1.5">{{ message.prompt }}</span>
+						</span>
+						<span class="flex items-start space-x-2 " v-if="message.response && message.status != 'processing'">
+							<BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
+							<VMarkdownView class="px-3"
+								mode="light"
+								:content="message.response"
+							></VMarkdownView>
+						</span>
+						<span class="flex items-start space-x-2 " v-else>
+							<BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
+							<div class="px-2">
+								<Label class="flex items-center space-x-0.5 text-slate-800 text-base animate-pulse">
+									<LightBulbIcon class="text-slate-500 w-5 h-5"/>
+									<span>Thinking...</span>
+								</Label>
+							</div>
+						</span>
+					</template>
+				</div>
+			</ScrollArea>
+			<div class="flex justify-center" v-if="!$page.props.chat_data">
+				<span
+					class="animate-typing text-slate-600 text-2xl font-semibold overflow-hidden font-nunito whitespace-nowrap inline-block text-center" style="width: 100%">
+					Hello there, what can I do for you?
+				</span>
+			</div>
             <div class="relative bottom-0 w-full max-w-3xl">
-                <form @keydown="onKeydown">
-                    <div class="flex justify-center px-3 pb-3 gap-2" v-if="!$page.props.chat_data">
-                        <div class="flex gap-1 items-center cursor-pointer bg-zinc-800 hover:bg-zinc-700 text-sm text-zinc-200 border rounded-xl px-4 py-2" @click.once="generateQuiz">
-                            <LightbulbIcon class="h-4 w-4"/>
-                            <span>Generate a Quiz</span>
-                        </div>
-                    </div>
+				<ScrollArea class="max-w-3xl max-h-[36rem] w-full mt-16 px-4" asDiv ref="chatbox">
+					<div class="flex justify-center px-3 pb-3 gap-2" v-if="!$page.props.chat_data">
+						<div class="flex gap-1 items-center select-none cursor-pointer bg-gradient-to-r from-teal-600 to-blue-500 scale-100 hover:scale-95 transition-all duration-300 text-sm text-zinc-200 border rounded-xl px-4 py-2" @click.once="generateQuiz">
+							<LightbulbIcon class="h-4 w-4"/>
+							<span>Generate a Quiz</span>
+						</div>
+						<div class="flex gap-1 items-center select-none cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:bg-ember-700 text-sm text-zinc-200 border rounded-xl px-4 py-2" @click.once="performEvaluation">
+							<LightbulbIcon class="h-4 w-4"/>
+							<span>Perform an Assessment</span>
+						</div>
+					</div>
+				</ScrollArea>
+				<form @keydown="onKeydown">
                     <div class="relative rounded-2xl bg-zinc-800 p-5 max-h-52">
                         <div class="max-h-28 overflow-auto border-none focus:outline-none focus:ring-none mb-12 px-2" contenteditable="true" @input="updateChat" ref="prompt_input"></div>
                     </div>
