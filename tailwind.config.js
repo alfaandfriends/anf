@@ -86,16 +86,11 @@ module.exports = {
           from: { height: 'var(--radix-collapsible-content-height)' },
           to: { height: 0 },
         },
-        typing: {
-          "0%": {
-            width: "0%",
-            visibility: "hidden"
-          },
-          "100%": {
-            width: "100%"
-          }
+        "typing": {
+          from: { width: 0 },
+          to: {width: "100%" },
         },
-        blink: {
+        "blink": {
           "50%": {
             borderColor: "transparent"
           },
@@ -106,7 +101,7 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "collapsible-down": "collapsible-down 0.2s ease-in-out",
         "collapsible-up": "collapsible-up 0.2s ease-in-out",
-        "typing": "typing 1s steps(50)"
+        "typing": "typing 1s steps(50, end) forwards"
       },
     },
   },

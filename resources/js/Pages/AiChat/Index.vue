@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Input } from '@/Components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/Components/ui/sheet'
 import { Inertia } from '@inertiajs/inertia'
-import { Bot, BotIcon, CircleUser, Home, LightbulbIcon, LineChart, ListCheck, Menu, NotebookPen, Package, Package2, Paperclip, PlusCircle, SendHorizonal, ShoppingCart, Trash2, Users } from 'lucide-vue-next'
+import { Bot, BotIcon, BrushIcon, Calculator, CalculatorIcon, CircleUser, Code2, Home, LayoutTemplateIcon, LightbulbIcon, LineChart, ListCheck, Menu, NotebookPen, Package, Package2, PaletteIcon, Paperclip, PlusCircle, SendHorizonal, ShoppingCart, Trash2, Users } from 'lucide-vue-next'
 import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';   
 import { VMarkdownView } from 'vue3-markdown'
 import 'vue3-markdown/dist/style.css'
@@ -24,6 +24,7 @@ export default {
       },
       processing: false,
       form: {
+        program: '',
         chat_id: this.$page.props?.chat_id || '',
         thread_id: this.$page.props?.thread_id || '',
         messages: ''
@@ -60,7 +61,7 @@ export default {
 		})
       }
 	  this.scrollToBottom()
-	  this.$refs.prompt_input.focus();
+	  this.focusInput()
 
     },
     onKeydown(event){
@@ -72,6 +73,18 @@ export default {
       this.confirmation.route_name    = 'ai.destroy'
       this.confirmation.id            = chat_id
       this.confirmation.is_open       = true
+    },
+	selectProgram(program){
+		this.form.program = program
+	},
+    doExercises(){
+      	this.form.messages = "Let's do some Exercises"
+        axios.post(route('ai.store'), this.form)
+        .then((response) => {
+          if(response.data.chat_id){
+            this.$inertia.get(route('chat.edit', response.data.chat_id))
+          }
+        })
     },
     generateQuiz(){
       	this.form.messages = 'Generate a random quiz'
@@ -97,11 +110,16 @@ export default {
 				this.$refs.chatbox.scrollTop = this.$refs.chatbox.scrollHeight;
 			}
 		});
+	},
+	focusInput(){
+		if(this.$refs.prompt_input){
+			this.$refs.prompt_input.focus();
+		}
 	}
   },
   mounted(){
 	this.scrollToBottom()
-    this.$refs.prompt_input.focus();
+	this.focusInput()
 
     window.Echo.private("ai_response_stream."+this.$page.props.auth.user.ID)
     .stopListening("AiResponseStream")
@@ -124,31 +142,33 @@ export default {
     <div class="hidden border-r border-zinc-700 bg-muted/40 md:block">
       <div class="flex flex-col gap-2">
         <!-- <div class="flex-1"> -->
-          <nav class="grid items-start px-2 text-sm font-medium lg:pl-2.5 text-zinc-950 fixed">
+          <nav class="grid items-start px-2 text-sm font-medium lg:pl-2.5 text-zinc-950">
             <div class="flex w-full h-14 items-center justify-center border-b border-zinc-700 px-4 lg:h-[60px] lg:px-6">
                 <a href="/" class="flex items-center gap-2 font-semibold">
                     <Bot class="h-6 w-6" />
-                    <span class="">ALFA and Friends Assistant</span>
+                    <span class="mt-0.5">ALFA and Friends AI</span>
                 </a>
             </div>
-            <Button
-              @click.once.prevent="$inertia.get(route('ai.index'))"
-              class="mt-3"
-            >
-              <PlusCircle class="h-5 w-5 mr-1" />
-              <span class="font-medium">New Chat</span>
-            </Button>
-            <span class="pl-1 mt-5 mb-2">Sessions</span>
-            <div class="space-y-1" v-for="chat in $page.props.chats">
-                <a
-                    @click.once="chat.id != form.chat_id ? $inertia.get(route('chat.edit', chat.id)) : ''"
-                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:bg-zinc-800 hover:text-white cursor-pointer"
-                    :class="{'bg-zinc-800 text-white': chat.id == form.chat_id}"
-                >
-                    <span class="truncate w-52">{{ chat.name }}</span>
-                    <Trash2 class="w-4 text-red-500" @click.stop="deleteChat(chat.id)"/>
-                </a>
-            </div>
+			<Button
+				@click.once.prevent="$inertia.get(route('ai.index'))"
+				class="mt-3 w-full"
+				>
+				<PlusCircle class="h-5 w-5 mr-1" />
+				<span class="font-medium">New Chat</span>
+			</Button>
+			<span class="pl-1 mt-5 mb-2">Sessions</span>
+				<div class="space-y-1" v-for="chat in $page.props.chats">
+					<a
+						@click.once="chat.id != form.chat_id ? $inertia.get(route('chat.edit', chat.id)) : ''"
+						class="flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:bg-zinc-800 hover:text-white cursor-pointer"
+						:class="{'bg-zinc-800 text-white': chat.id == form.chat_id}"
+					>
+						<span class="truncate md:max-w-36 lg:max-w-48 xl:max-w-52">{{ chat.name }}</span>
+						<Trash2 class="w-4 text-red-500" @click.stop="deleteChat(chat.id)"/>
+					</a>
+				</div>
+			<!-- <div class="flex w-full flex-col">
+			</div> -->
           </nav>
         <!-- </div> -->
       </div>
@@ -233,57 +253,73 @@ export default {
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      <main class="flex flex-1 flex-col items-center justify-between gap-4 p-4 lg:gap-6 lg:p-6 h-svh overflow-hidden -mt-16 bg-white">
-			<ScrollArea class="max-w-3xl max-h-[36rem] w-full mt-16 px-4" asDiv ref="chatbox">
-				<div class="flex flex-col px-3 gap-10 py-2">
-					<template v-if="$page.props.chat_data" v-for="message in $page.props.chat_data">
-						<span class="flex items-center justify-end space-x-2 ml-20" v-if="message.prompt">
-							<span class="rounded-xl border bg-zinc-800 px-4 py-1.5">{{ message.prompt }}</span>
-						</span>
-						<span class="flex items-start space-x-2 " v-if="message.response && message.status != 'processing'">
-							<BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
-							<VMarkdownView class="px-3"
-								mode="light"
-								:content="message.response"
-							></VMarkdownView>
-						</span>
-						<span class="flex items-start space-x-2 " v-else>
-							<BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
-							<div class="px-2">
-								<Label class="flex items-center space-x-0.5 text-slate-800 text-base animate-pulse">
-									<LightBulbIcon class="text-slate-500 w-5 h-5"/>
-									<span>Thinking...</span>
-								</Label>
-							</div>
-						</span>
-					</template>
-				</div>
-			</ScrollArea>
-			<div class="flex flex-col justify-center" v-if="!$page.props.chat_data">
+      <main class="flex flex-1 flex-col items-center gap-4 p-4 lg:gap-6 lg:p-6 h-svh overflow-hidden -mt-16 bg-white" :class="{'justify-between': $page.props.chat_data, 'justify-center': !$page.props.chat_data}">
+			<span v-if="form.program"
+				class="animate-typing text-slate-600 text-2xl font-semibold oveflow-auto xl:overflow-hidden font-nunito xl:whitespace-nowrap inline-block text-center" style="width: 100%">
+				Hello, what would you like to do today?
+			</span>
+			<div class="flex flex-col px-3 gap-10 py-2 max-w-3xl max-h-[36rem] w-full mt-16 overflow-auto" ref="chatbox" v-if="$page.props.chat_data">
+				<template v-if="$page.props.chat_data" v-for="message in $page.props.chat_data">
+					<span class="flex items-center justify-end space-x-2 ml-20" v-if="message.prompt">
+						<span class="rounded-xl border bg-zinc-800 px-4 py-1.5">{{ message.prompt }}</span>
+					</span>
+					<span class="flex items-start space-x-2 " v-if="message.response && message.status != 'processing'">
+						<BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
+						<VMarkdownView class="px-3"
+							mode="light"
+							:content="message.response"
+						></VMarkdownView>
+					</span>
+					<span class="flex items-start space-x-2 " v-else>
+						<BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
+						<div class="px-2">
+							<Label class="flex items-center space-x-0.5 text-slate-800 text-base animate-pulse">
+								<LightBulbIcon class="text-slate-500 w-5 h-5"/>
+								<span>Just a moment...</span>
+							</Label>
+						</div>
+					</span>
+				</template>
+			</div>
+			<div class="flex flex-col items-center mt-16" v-if="!form.program && !$page.props.chat_data">
 				<span
-					class="animate-typing text-slate-600 text-2xl font-semibold overflow-hidden font-nunito whitespace-nowrap inline-block text-center" style="width: 100%">
-					Hello there, what can I do for you?
+					class="animate-typing text-slate-600 text-2xl font-semibold oveflow-auto xl:overflow-hidden font-nunito xl:whitespace-nowrap inline-block text-center" style="width: 100%">
+					Which program would you like me to assist you on?
 				</span>
-				<div class="">
+				<div class="flex flex-col md:flex-row justify-center px-3 pb-3 gap-2 mt-8">
+					<div class="flex gap-2 items-center select-none font-medium cursor-pointer shadow-md shadow-slate-500 bg-gradient-to-r from-indigo-500 to-blue-500 hover:scale-95 will-change-transform duration-150 text-base text-zinc-100 rounded-full px-5 py-2" @click.once="selectProgram('maths')">
+						<CalculatorIcon class="h-5 w-5"/>
+						<span>Maths</span>
+					</div>
+					<div class="flex gap-2 items-center select-none font-medium cursor-pointer shadow-md shadow-slate-500 bg-gradient-to-r from-violet-600 to-indigo-600 hover:scale-95 will-change-transform duration-150 text-base text-zinc-100 rounded-full px-5 py-2" @click.once="selectProgram('coding_robotics')">
+						<LayoutTemplateIcon class="h-5 w-5"/>
+						<span>Coding & Robotics</span>
+					</div>
+					<div class="flex gap-2 items-center select-none font-medium cursor-pointer shadow-md shadow-slate-500 bg-gradient-to-r from-cyan-500 to-blue-500 hover:scale-95 will-change-transform duration-150 text-base text-zinc-100 rounded-full px-5 py-2" @click.once="selectProgram('digital_arts')">
+						<BrushIcon class="h-5 w-5"/>
+						<span>Digital Arts</span>
+					</div>
+				</div>
+			</div>
+            <div class="relative bottom-0 w-full max-w-3xl" v-if="form.program == 'maths' || $page.props.chat_data">
+				<div class="" v-if="!$page.props.chat_data">
 					<ScrollArea class="max-w-3xl max-h-[36rem] w-full mt-16 px-4" asDiv ref="chatbox">
-						<div class="flex justify-center px-3 pb-3 gap-1" v-if="!$page.props.chat_data">
-							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-violet-200 to-pink-200 hover:scale-95 transition-all duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="generateQuiz">
+						<div class="flex flex-col xl:flex-row justify-center px-3 pb-3 gap-2">
+							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-violet-200 to-pink-200 hover:scale-95 will-change-transform duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="doExercises">
 								<NotebookPen class="h-4 w-4"/>
 								<span>Do Exercises</span>
 							</div>
-							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-blue-200 to-cyan-200 hover:scale-95 transition-all duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="generateQuiz">
+							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-blue-200 to-cyan-200 hover:scale-95 will-change-transform duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="generateQuiz">
 								<LightbulbIcon class="h-4 w-4"/>
 								<span>Generate a Quiz</span>
 							</div>
-							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-teal-200 to-teal-500 hover:scale-95 transition-all duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="performEvaluation">
+							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-teal-200 to-teal-500 hover:scale-95 will-change-transform duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="performEvaluation">
 								<ListCheck class="h-4 w-4"/>
 								<span>Perform an Assessment</span>
 							</div>
 						</div>
 					</ScrollArea>
 				</div>
-			</div>
-            <div class="relative bottom-0 w-full max-w-3xl">
 				<form @keydown="onKeydown">
                     <div class="relative rounded-2xl bg-zinc-800 p-5 max-h-52">
                         <div class="max-h-28 overflow-auto border-none focus:outline-none focus:ring-none mb-12 px-2" contenteditable="true" @input="updateChat" ref="prompt_input"></div>
