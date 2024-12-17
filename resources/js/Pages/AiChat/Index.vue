@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Input } from '@/Components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/Components/ui/sheet'
 import { Inertia } from '@inertiajs/inertia'
-import { Bot, BotIcon, CircleUser, Home, LightbulbIcon, LineChart, Menu, Package, Package2, Paperclip, PlusCircle, SendHorizonal, ShoppingCart, Trash2, Users } from 'lucide-vue-next'
+import { Bot, BotIcon, CircleUser, Home, LightbulbIcon, LineChart, ListCheck, Menu, NotebookPen, Package, Package2, Paperclip, PlusCircle, SendHorizonal, ShoppingCart, Trash2, Users } from 'lucide-vue-next'
 import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';   
 import { VMarkdownView } from 'vue3-markdown'
 import 'vue3-markdown/dist/style.css'
@@ -259,25 +259,31 @@ export default {
 					</template>
 				</div>
 			</ScrollArea>
-			<div class="flex justify-center" v-if="!$page.props.chat_data">
+			<div class="flex flex-col justify-center" v-if="!$page.props.chat_data">
 				<span
 					class="animate-typing text-slate-600 text-2xl font-semibold overflow-hidden font-nunito whitespace-nowrap inline-block text-center" style="width: 100%">
 					Hello there, what can I do for you?
 				</span>
+				<div class="">
+					<ScrollArea class="max-w-3xl max-h-[36rem] w-full mt-16 px-4" asDiv ref="chatbox">
+						<div class="flex justify-center px-3 pb-3 gap-1" v-if="!$page.props.chat_data">
+							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-violet-200 to-pink-200 hover:scale-95 transition-all duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="generateQuiz">
+								<NotebookPen class="h-4 w-4"/>
+								<span>Do Exercises</span>
+							</div>
+							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-blue-200 to-cyan-200 hover:scale-95 transition-all duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="generateQuiz">
+								<LightbulbIcon class="h-4 w-4"/>
+								<span>Generate a Quiz</span>
+							</div>
+							<div class="flex gap-1 items-center select-none font-medium cursor-pointer shadow shadow-slate-400 bg-gradient-to-r from-teal-200 to-teal-500 hover:scale-95 transition-all duration-150 text-sm text-zinc-700 rounded-lg px-4 py-2" @click.once="performEvaluation">
+								<ListCheck class="h-4 w-4"/>
+								<span>Perform an Assessment</span>
+							</div>
+						</div>
+					</ScrollArea>
+				</div>
 			</div>
             <div class="relative bottom-0 w-full max-w-3xl">
-				<ScrollArea class="max-w-3xl max-h-[36rem] w-full mt-16 px-4" asDiv ref="chatbox">
-					<div class="flex justify-center px-3 pb-3 gap-2" v-if="!$page.props.chat_data">
-						<div class="flex gap-1 items-center select-none cursor-pointer bg-gradient-to-r from-teal-600 to-blue-500 scale-100 hover:scale-95 transition-all duration-300 text-sm text-zinc-200 border rounded-xl px-4 py-2" @click.once="generateQuiz">
-							<LightbulbIcon class="h-4 w-4"/>
-							<span>Generate a Quiz</span>
-						</div>
-						<div class="flex gap-1 items-center select-none cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:bg-ember-700 text-sm text-zinc-200 border rounded-xl px-4 py-2" @click.once="performEvaluation">
-							<LightbulbIcon class="h-4 w-4"/>
-							<span>Perform an Assessment</span>
-						</div>
-					</div>
-				</ScrollArea>
 				<form @keydown="onKeydown">
                     <div class="relative rounded-2xl bg-zinc-800 p-5 max-h-52">
                         <div class="max-h-28 overflow-auto border-none focus:outline-none focus:ring-none mb-12 px-2" contenteditable="true" @input="updateChat" ref="prompt_input"></div>
