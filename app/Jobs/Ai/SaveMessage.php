@@ -4,11 +4,10 @@ namespace App\Jobs\Ai;
 
 use App\Enums\AiChatMessageStatus;
 use App\Events\AiResponseStream;
-use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
-use Log;
+use Illuminate\Support\Facades\DB;
 use OpenAI;
 
 class SaveMessage implements ShouldQueue

@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Enums\AiChatMessageStatus;
 use App\Jobs\Ai\CreateChat;
 use App\Jobs\Ai\SendPrompt;
-use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use Str;
+use Illuminate\Support\Str;
 
 class AiController extends Controller
 {
@@ -110,7 +110,7 @@ class AiController extends Controller
                 DB::table('ai_chat_messages')->where('id', $latest_record->id)->update([
                     'status' => AiChatMessageStatus::PROCESSING
                 ]);
-                CreateChat::dispatch($id, auth()->id(), $latest_record->prompt);
+                CreateChat::dispatch($id, Auth::id(), $latest_record->prompt);
             }
 
             return Inertia::render('AiChat/Index', [
@@ -129,7 +129,7 @@ class AiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        SendPrompt::dispatch($id, auth()->id(), $request->thread_id, $request->messages);
+        SendPrompt::dispatch($id, Auth::id(), $request->thread_id, $request->messages);
     }
 
     /**

@@ -4,15 +4,14 @@ namespace App\Jobs\Ai;
 
 use App\Enums\AiChatMessageStatus;
 use App\Events\AiResponseStream;
-use DB;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\SerializesModels;
-use Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use OpenAI;
-use Str;
 
 class SendPrompt implements ShouldQueue
 {
