@@ -56,13 +56,6 @@ class SendPrompt implements ShouldQueue
             ]
         );
 
-        DB::table('ai_chat_messages')->insert([
-            'id' => Str::ulid(),
-            'chat_id' => (string)$this->chatId,
-            'prompt' => $this->messages,
-            'status' => AiChatMessageStatus::PROCESSING,
-        ]);
-
         foreach($run as $response){
             // Log::error(json_encode($response));
             // $response->event // 'thread.run.created' | 'thread.run.in_progress' | 'thread.run.in_progress'
@@ -84,5 +77,12 @@ class SendPrompt implements ShouldQueue
             }
             AiResponseStream::dispatch($this->userId, $data);
         }
+
+        DB::table('ai_chat_messages')->insert([
+            'id' => Str::ulid(),
+            'chat_id' => (string)$this->chatId,
+            'prompt' => $this->messages,
+            'status' => AiChatMessageStatus::PROCESSING,
+        ]);
     }
 }
