@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Ai;
 
 use App\Enums\AiChatMessageStatus;
 use App\Events\AiResponseStream;
@@ -47,6 +47,10 @@ class SaveMessage implements ShouldQueue
             
             if($response->status == 'completed'){
                 $response = $client->threads()->messages()->list($this->threadId);
+        
+                DB::table('ai_chats')->where('id', $this->chatId)->update([
+                    'thread_id' => $this->threadId
+                ]);
 
                 DB::table('ai_chat_messages')->where('chat_id', $this->chatId)
                     ->orderBy('id','desc')
@@ -55,6 +59,10 @@ class SaveMessage implements ShouldQueue
                         'response' => $response->data[0]['content'][0]['text']['value'],
                         'status' => AiChatMessageStatus::COMPLETED,
                     ]);
+
+                $data['text'] = $response->data[0]['content'][0]['text']['value'];
+                $data['status'] = 'completed';
+                AiResponseStream::dispatch($this->userId, $data);
                 break;
             }
             

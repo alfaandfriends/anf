@@ -128,9 +128,9 @@ export default {
 	this.scrollToBottom()
 	this.focusInput()
 
-    window.Echo.private("ai_response_stream."+this.$page.props.auth.user.ID)
-    .stopListening("AiResponseStream")
-    .listen("AiResponseStream", (event) => {
+	window.Echo.private("ai_response_stream."+this.$page.props.auth.user.ID)
+	.stopListening("AiResponseStream")
+	.listen("AiResponseStream", (event) => {
 		if(event){
 			if(event[0].thread_id){
 				this.form.thread_id = event[0].thread_id
@@ -146,15 +146,15 @@ export default {
 			if(event[0].status == 'completed'){
 				this.$page.props.chat_data[this.$page.props.chat_data.length - 1].status = event[0].status
 			}
-	  		this.scrollToBottom()
+			this.scrollToBottom()
 		}
-    });
+	});
   }
 }
 </script>
 
 <template>
-  <div class="grid min-h-screen h-full w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] font-nunito bg-gradient-to-r from-rose-100 to-teal-100">
+  <div class="grid min-h-screen h-full w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] font-nunito bg-gradient-to-r from-rose-50 to-teal-50">
     <div class="hidden border-r border-zinc-500 md:block">
       <div class="flex flex-col gap-2">
         <!-- <div class="flex-1"> -->
@@ -189,7 +189,7 @@ export default {
         <!-- </div> -->
       </div>
     </div>
-    <div class="flex flex-col bg-zinc-900 text-white">
+    <div class="flex flex-col text-white">
       <header class="flex justify-between md:justify-end h-14 items-center gap-4 px-4 lg:h-[60px] lg:px-6 sticky top-0 ">
         <Sheet>
           <SheetTrigger as-child>
@@ -242,7 +242,7 @@ export default {
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      <main class="flex flex-1 flex-col items-center gap-4 p-4 lg:gap-6 lg:p-6 h-svh md:h-[calc(100%-56px)] overflow-hidden -mt-16 bg-gradient-to-r from-rose-100 to-teal-100" :class="{'justify-between': $page.props.chat_data, 'justify-center': !$page.props.chat_data}">
+      <main class="flex flex-1 flex-col items-center gap-4 p-4 lg:gap-6 lg:p-6 h-svh md:h-[calc(100%-56px)] overflow-hidden -mt-16" :class="{'justify-between': $page.props.chat_data, 'justify-center': !$page.props.chat_data}">
 		<div class="name_section" v-if="!form.student_id && !form.program && !$page.props.chat_data">
 			<div class="flex flex-col items-center mt-16 text-slate-900">
 				<span

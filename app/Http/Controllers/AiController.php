@@ -3,18 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AiChatMessageStatus;
-use App\Events\AiResponseStream;
-use App\Jobs\CreateChat;
-use App\Jobs\GenerateQuiz;
-use App\Jobs\InitiateChat;
-use App\Jobs\SendPrompt;
+use App\Jobs\Ai\CreateChat;
+use App\Jobs\Ai\SendPrompt;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
-use OpenAI;
 use Str;
 
 class AiController extends Controller
@@ -115,7 +110,7 @@ class AiController extends Controller
                 DB::table('ai_chat_messages')->where('id', $latest_record->id)->update([
                     'status' => AiChatMessageStatus::PROCESSING
                 ]);
-                InitiateChat::dispatch($id, auth()->id(), $latest_record->prompt);
+                CreateChat::dispatch($id, auth()->id(), $latest_record->prompt);
             }
 
             return Inertia::render('AiChat/Index', [
@@ -145,28 +140,5 @@ class AiController extends Controller
         DB::table('ai_chats')->where('id', $id)->delete();
 
         return back();
-    }
-
-    /**
-     * Create an instant quiz.
-     */
-    public function generateQuiz()
-    {
-        if(Auth::check()){
-            $ulid = Str::ulid();
-            $user_id = Auth::id();
-
-            DB::table('ai_chats')->insert([
-                'id' => (string)$ulid,
-                'user_id' => $user_id,
-                'name' => 'Generate random quiz'
-            ]);
-
-            GenerateQuiz::dispatch($ulid);
-
-            return response()->json($ulid);
-        }
-
-        return redirect()->route('login');
     }
 }
