@@ -208,7 +208,7 @@ class HandleInertiaRequests extends Middleware
                                     $item->programme_id = $hashids->encode($item->programme_id);
                                     return $item;
                                 }));
-        //  dd($children_classes);                       
+                                             
         return $children_classes;
     }
 }

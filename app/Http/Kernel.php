@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'device' => \App\Http\Middleware\CheckDeviceType::class,
         'child' => \App\Http\Middleware\Child::class,
         'logviewer' => \App\Http\Middleware\LogViewerAccess::class,
+        'ai_access' => \App\Http\Middleware\VerifyAIAccess::class,
     ];
 
     protected $commands = [

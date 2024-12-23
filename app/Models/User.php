@@ -11,6 +11,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Lab404\Impersonate\Models\Impersonate;
 use App\Models\UserHasRoles;
 use App\Notifications\ResetPassword;
+use Carbon\Carbon;
+use DB;
 use Illuminate\Auth\Notifications\ResetPassword as NotificationsResetPassword;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
@@ -80,5 +82,18 @@ class User extends Authenticatable
     public function user_has_role()
     {
         return $this->hasMany(UserHasRoles::class, 'user_id');
+    }
+
+    public function hasAiAccess(){
+        $has_enrolled_child =   DB::table('student_fees')
+                                    ->join('students', 'student_fees.student_id', '=', 'students.id')
+                                    ->join('children', 'students.children_id', '=', 'children.id')
+                                    ->join('wpvt_users', 'children.parent_id', '=', 'wpvt_users.ID')
+                                    ->where('wpvt_users.ID', auth()->id())
+                                    ->whereMonth('student_fees.created_at', '=', now()->format('m'))
+                                    ->whereYear('student_fees.created_at', '=', now()->format('Y'))
+                                    ->count();
+                                    
+        return $has_enrolled_child > 0;
     }
 }

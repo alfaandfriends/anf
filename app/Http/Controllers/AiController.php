@@ -9,6 +9,7 @@ use App\Jobs\GenerateQuiz;
 use App\Jobs\InitiateChat;
 use App\Jobs\SendPrompt;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -24,9 +25,28 @@ class AiController extends Controller
     public function index()
     {
         $chats = DB::table('ai_chats')->select('id', 'name')->get();
+        $user_has_children   =   collect(DB::table('children')
+                                ->leftJoin('students', 'students.children_id', '=', 'children.id')
+                                ->leftJoin('genders', 'children.gender_id', '=', 'genders.id')
+                                ->where('parent_id', Auth::id())
+                                ->select('students.id as student_id', 'children.id as child_id', 'children.name as child_name', 'genders.name as child_gender', 'children.date_of_birth as child_dob')
+                                ->get());
+                                           
+        $children_classes   =   collect(DB::table('student_fees')
+                                ->leftJoin('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                                ->leftJoin('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                                ->leftJoin('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
+                                ->whereIn('student_fees.student_id', $user_has_children->pluck('student_id'))
+                                ->whereYear('student_fees.created_at', Carbon::now()->format('Y'))
+                                ->whereMonth('student_fees.created_at', Carbon::now()->format('m'))
+                                ->whereNull('student_fees.status')
+                                ->select('student_fees.student_id as student_id', 'programmes.id as programme_id', 'programmes.name as programme_name')
+                                ->get());
 
         return Inertia::render('AiChat/Index', [
-            'chats'   => $chats,
+            'chats'             => $chats,
+            'user_has_children' => $user_has_children,
+            'children_classes'  => $children_classes,
         ]);
     }
 

@@ -5,6 +5,7 @@ import Navigation from '@/Components/Parent/Navigation.vue'
 import SimpleModal from '@/Components/Parent/SimpleModal.vue';
 import Announcement from '@/Components/Parent/Announcement.vue';
 import BreezeButton from '@/Components/Button.vue'
+import { Link } from '@inertiajs/inertia-vue3'
 </script>
 
 <template>
@@ -28,7 +29,7 @@ import BreezeButton from '@/Components/Button.vue'
         <!-- </div> -->
         <main class="flex-grow flex-col bg-orange-50 relative justify-start mb-16 md:mb-0 md:mt-0 py-5 px-3 mt-14">
             <slot/>
-            <SimpleModal :open="$page.props.flash.type === null ? false : true" @close:modal="$page.props.flash.type = null" class="md:w-2/6">
+            <SimpleModal :isOpen="$page.props.flash.type === null ? false : true" @close:modal="$page.props.flash.type = null" class="md:w-2/6">
                 <div class="text-center flex flex-col items-center justify-start space-y-2 p-6">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-2/12 w-2/12 text-green-500" viewBox="0 0 512 512" fill="currentColor" v-if="$page.props.flash.type == 'success'">
                         <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>

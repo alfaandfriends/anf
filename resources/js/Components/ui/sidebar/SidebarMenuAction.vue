@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils'
 import { Primitive, type PrimitiveProps } from 'radix-vue'
 
 const props = withDefaults(defineProps<PrimitiveProps & {
@@ -28,5 +28,7 @@ const props = withDefaults(defineProps<PrimitiveProps & {
     )"
     :as="as"
     :as-child="asChild"
-  />
+  >
+    <slot />
+  </Primitive>
 </template>

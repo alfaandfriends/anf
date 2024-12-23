@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { cn } from "@/lib/utils";
+import { Skeleton } from '@/lib/registry/new-york/ui/skeleton'
+import { cn } from '@/lib/utils'
 import { computed, type HTMLAttributes } from 'vue'
 
 const props = defineProps<{
@@ -19,7 +20,7 @@ const width = computed(() => {
   >
     <Skeleton
       v-if="showIcon"
-      class="rounded-md size-4"
+      class="size-4 rounded-md"
       data-sidebar="menu-skeleton-icon"
     />
 

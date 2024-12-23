@@ -47,14 +47,14 @@ class SendPrompt implements ShouldQueue
             'content' => $this->messages,
         ]);
 
-        $run = $client->threads()->runs()->create(
-            threadId: $this->threadId, 
+        $run = $client->threads()->runs()->createStreamed(
+            threadId: $this->threadId,
             parameters: [
-                'assistant_id' => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
+                "assistant_id" => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
                 'tool_choice' => [
                     'type' => 'file_search'
-                ],
-            ],
+                ]
+            ]
         );
 
         DB::table('ai_chat_messages')->insert([
@@ -64,6 +64,26 @@ class SendPrompt implements ShouldQueue
             'status' => AiChatMessageStatus::PROCESSING,
         ]);
 
-        SaveMessage::dispatch($this->chatId, $this->userId, $this->threadId, $run->id);
+        foreach($run as $response){
+            // Log::error(json_encode($response));
+            // $response->event // 'thread.run.created' | 'thread.run.in_progress' | 'thread.run.in_progress'
+            // $response->response // ThreadResponse | ThreadRunResponse | ThreadRunStepResponse | ThreadRunStepDeltaResponse | ThreadMessageResponse | ThreadMessageDeltaResponse
+            $data = [];
+            if($response->event === 'thread.run.created'){
+                SaveMessage::dispatch($this->chatId, $this->userId, $this->threadId, $response->response->id);
+            }
+            if($response->event === 'thread.message.created'){
+                $data['thread_id'] = $thread->id;
+                $data['status'] = 'created';
+            }
+            if($response->event === 'thread.message.delta'){
+                $data['text'] = $response->response->delta['content'][0]['text']['value'];
+                $data['status'] = 'processing';
+            }
+            if($response->event === 'thread.message.completed'){
+                $data['status'] = 'completed';
+            }
+            AiResponseStream::dispatch($this->userId, $data);
+        }
     }
 }

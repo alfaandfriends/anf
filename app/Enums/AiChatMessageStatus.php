@@ -6,5 +6,5 @@ enum AiChatMessageStatus: string
 {
     const NOT_STARTED = 'not_started';
     const PROCESSING = 'processing';
-    const FINISHED = 'finished';
+    const COMPLETED = 'completed';
 }

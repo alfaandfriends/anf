@@ -1,22 +1,15 @@
 <script setup lang="ts">
-import { computed, HTMLAttributes } from 'vue'
-import { TooltipContent, TooltipTrigger } from 'radix-vue'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/lib/registry/new-york/ui/tooltip'
+import { type Component, computed } from 'vue'
+import SidebarMenuButtonChild, { type SidebarMenuButtonProps } from './SidebarMenuButtonChild.vue'
 import { useSidebar } from './utils'
-import { Tooltip } from '@/Components/ui/tooltip'
-import SidebarMenuButtonChild from './SidebarMenuButtonChild.vue'
 
-// SidebarMenuButtonProps with `as` restricted to string
-interface SidebarMenuButtonProps {
-  isActive?: boolean
-  class?: HTMLAttributes['class']
-  asChild?: boolean
-  as?: string // Narrow `as` to `string` only to match `SidebarMenuButtonChild` requirements
-  variant?: 'default' | 'outline'
-  size?: 'default' | 'sm' | 'lg'
-}
+defineOptions({
+  inheritAttrs: false,
+})
 
 const props = withDefaults(defineProps<SidebarMenuButtonProps & {
-  tooltip?: string
+  tooltip?: string | Component
 }>(), {
   as: 'button',
   variant: 'default',
@@ -25,10 +18,9 @@ const props = withDefaults(defineProps<SidebarMenuButtonProps & {
 
 const { isMobile, state } = useSidebar()
 
-// Type the computed property to Partial<SidebarMenuButtonProps>
 const delegatedProps = computed(() => {
   const { tooltip, ...delegated } = props
-  return delegated as Partial<SidebarMenuButtonProps>
+  return delegated
 })
 </script>
 
