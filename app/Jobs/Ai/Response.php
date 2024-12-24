@@ -4,11 +4,12 @@ namespace App\Jobs\Ai;
 
 use App\Events\AiResponseStream;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 
 class Response implements ShouldQueue
 {
-    use Queueable;
+    use Dispatchable, Queueable;
 
     protected $response;
     protected $chatId;
@@ -31,7 +32,7 @@ class Response implements ShouldQueue
      * Execute the job.
      */
     public function handle(): void
-    {$data = [];
+    {   $data = [];
         $event = $this->response->event;
     
         if ($event === 'thread.run.created') {

@@ -45,4 +45,9 @@ class AiResponseStream implements ShouldBroadcastNow
     {
         return [$this->message];
     }
+
+    public function broadcastQueue(): string
+    {
+        return 'ai_stream_response';
+    }
 }

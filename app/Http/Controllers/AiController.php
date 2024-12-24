@@ -109,10 +109,10 @@ class AiController extends Controller
         if($chat_data->isNotEmpty()){
             $latest_record = $chat_data->first();
             if(count($chat_data) == 1 && $latest_record->status == AiChatMessageStatus::NOT_STARTED){
+                CreateChat::dispatch($id, Auth::id(), $latest_record->prompt);
                 DB::table('ai_chat_messages')->where('id', $latest_record->id)->update([
                     'status' => AiChatMessageStatus::PROCESSING
                 ]);
-                CreateChat::dispatch($id, Auth::id(), $latest_record->prompt);
             }
 
             return Inertia::render('AiChat/Index', [
