@@ -51,9 +51,9 @@ class CreateChat implements ShouldQueue
             threadId: $thread->id,
             parameters: [
                 "assistant_id" => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
-                'tool_choice' => [
-                    'type' => 'file_search'
-                ],
+                // 'tool_choice' => [
+                //     'type' => 'file_search'
+                // ],
             ]
         );
         foreach($run as $response){

@@ -31,22 +31,28 @@ class Response implements ShouldQueue
      * Execute the job.
      */
     public function handle(): void
-    {
-        $data = [];
-        if($this->response->event === 'thread.run.created'){
+    {$data = [];
+        $event = $this->response->event;
+    
+        if ($event === 'thread.run.created') {
             SaveMessage::dispatch($this->chatId, $this->userId, $this->threadId, $this->response->response->id);
+            return;
         }
-        if($this->response->event === 'thread.message.created'){
-            $data['thread_id'] = $this->threadId;   
-            $data['status'] = 'created';
+    
+        if (in_array($event, ['thread.message.created', 'thread.message.delta', 'thread.message.completed'])) {
+            $data['status'] = match ($event) {
+                'thread.message.created' => 'created',
+                'thread.message.delta' => 'processing',
+                'thread.message.completed' => 'completed',
+            };
+    
+            if ($event === 'thread.message.delta') {
+                $data['text'] = $this->response->response->delta['content'][0]['text']['value'];
+            } else {
+                $data['thread_id'] = $this->threadId;
+            }
+    
+            AiResponseStream::dispatch($this->userId, $data);
         }
-        if($this->response->event === 'thread.message.delta'){
-            $data['text'] = $this->response->response->delta['content'][0]['text']['value'];
-            $data['status'] = 'processing';
-        }
-        if($this->response->event === 'thread.message.completed'){
-            $data['status'] = 'completed';
-        }
-        AiResponseStream::dispatch($this->userId, $data);
     }
 }
