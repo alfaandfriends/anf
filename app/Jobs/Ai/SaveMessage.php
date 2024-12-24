@@ -28,6 +28,7 @@ class SaveMessage implements ShouldQueue
         $this->userId = $userId;
         $this->threadId = $threadId;
         $this->runId = $runId;
+        $this->onQueue('ai_save_message');
     }
 
     /**

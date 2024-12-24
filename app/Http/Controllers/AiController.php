@@ -20,6 +20,7 @@ class AiController extends Controller
     public function index()
     {
         $chats = DB::table('ai_chats')->select('id', 'name')->get();
+        $programmes = DB::table('ai_programmes')->get();
         $user_has_children   =   collect(DB::table('children')
                                 ->leftJoin('students', 'students.children_id', '=', 'children.id')
                                 ->leftJoin('genders', 'children.gender_id', '=', 'genders.id')
@@ -40,6 +41,7 @@ class AiController extends Controller
 
         return Inertia::render('AiChat/Index', [
             'chats'             => $chats,
+            'programmes'        => $programmes,
             'user_has_children' => $user_has_children,
             'children_classes'  => $children_classes,
         ]);

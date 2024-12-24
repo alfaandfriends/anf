@@ -31,6 +31,7 @@ class SendPrompt implements ShouldQueue
         $this->userId = $userId;
         $this->threadId = $threadId;
         $this->messages = $messages;
+        $this->onQueue('ai_send_prompt');
     }
 
     /**
