@@ -51,16 +51,14 @@ class CreateChat implements ShouldQueue
             threadId: $thread->id,
             parameters: [
                 "assistant_id" => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
-                // 'tool_choice' => [
-                //     'type' => 'file_search'
-                // ],
+                'tool_choice' => [
+                    'type' => 'file_search'
+                ],
             ]
         );
+        
         foreach($run as $response){
             $data = [];
-            if($response->event === 'thread.run.created'){
-                SaveMessage::dispatch($this->chatId, $this->userId, $thread->id, $response->response->id);
-            }
             if($response->event === 'thread.message.created'){
                 $data['thread_id'] = $thread->id;
                 $data['status'] = 'created';
@@ -71,8 +69,11 @@ class CreateChat implements ShouldQueue
             }
             if($response->event === 'thread.message.completed'){
                 $data['status'] = 'completed';
+                SaveMessage::dispatch($this->chatId, $this->userId, $thread->id, $response->response->runId);
             }
-            AiResponseStream::dispatch($this->userId, $data);
+            if(!empty($data)){
+                AiResponseStream::dispatch($this->userId, $data);
+            }
         }
     }
 }

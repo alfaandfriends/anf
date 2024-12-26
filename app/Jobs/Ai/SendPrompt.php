@@ -56,17 +56,11 @@ class SendPrompt implements ShouldQueue
                 ]
             ]
         );
-
+        
         foreach($run as $response){
-            // Log::error(json_encode($response));
-            // $response->event // 'thread.run.created' | 'thread.run.in_progress' | 'thread.run.in_progress'
-            // $response->response // ThreadResponse | ThreadRunResponse | ThreadRunStepResponse | ThreadRunStepDeltaResponse | ThreadMessageResponse | ThreadMessageDeltaResponse
             $data = [];
-            if($response->event === 'thread.run.created'){
-                SaveMessage::dispatch($this->chatId, $this->userId, $this->threadId, $response->response->id);
-            }
             if($response->event === 'thread.message.created'){
-                $data['thread_id'] = $this->threadId;
+                $data['thread_id'] = $thread->id;
                 $data['status'] = 'created';
             }
             if($response->event === 'thread.message.delta'){
@@ -75,8 +69,11 @@ class SendPrompt implements ShouldQueue
             }
             if($response->event === 'thread.message.completed'){
                 $data['status'] = 'completed';
+                SaveMessage::dispatch($this->chatId, $this->userId, $thread->id, $response->response->runId);
             }
-            AiResponseStream::dispatch($this->userId, $data);
+            if(!empty($data)){
+                AiResponseStream::dispatch($this->userId, $data);
+            }
         }
 
         DB::table('ai_chat_messages')->insert([
