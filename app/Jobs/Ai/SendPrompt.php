@@ -60,7 +60,7 @@ class SendPrompt implements ShouldQueue
         foreach($run as $response){
             $data = [];
             if($response->event === 'thread.message.created'){
-                $data['thread_id'] = $thread->id;
+                $data['thread_id'] = $this->threadId;
                 $data['status'] = 'created';
             }
             if($response->event === 'thread.message.delta'){
@@ -69,7 +69,7 @@ class SendPrompt implements ShouldQueue
             }
             if($response->event === 'thread.message.completed'){
                 $data['status'] = 'completed';
-                SaveMessage::dispatch($this->chatId, $this->userId, $thread->id, $response->response->runId);
+                SaveMessage::dispatch($this->chatId, $this->userId, $this->threadId, $response->response->runId);
             }
             if(!empty($data)){
                 AiResponseStream::dispatch($this->userId, $data);
