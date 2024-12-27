@@ -2,6 +2,7 @@
 
 use App\Events\AiResponseStream;
 use App\Http\Controllers\AiController;
+use App\Jobs\Ai\Test;
 use App\Jobs\SendPrompt;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;

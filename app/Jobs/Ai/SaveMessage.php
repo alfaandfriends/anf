@@ -44,15 +44,17 @@ class SaveMessage implements ShouldQueue
                 threadId: $this->threadId,
                 runId: $this->runId,
             );
-
-            if($response->status == 'created'){
-                DB::table('ai_chats')->where('id', $this->chatId)->update([
-                    'thread_id' => $this->threadId
-                ]);
-            }
             
             if($response->status == 'completed'){
                 $response = $client->threads()->messages()->list($this->threadId);
+
+                $data['text'] = $response->data[0]['content'][0]['text']['value'];
+                $data['status'] = 'completed';
+                AiResponseStream::dispatch($this->userId, $data);
+
+                DB::table('ai_chats')->where('id', $this->chatId)->update([
+                    'thread_id' => $this->threadId
+                ]);
 
                 DB::table('ai_chat_messages')->where('chat_id', $this->chatId)
                     ->orderBy('id','desc')
@@ -62,9 +64,6 @@ class SaveMessage implements ShouldQueue
                         'status' => AiChatMessageStatus::COMPLETED,
                     ]);
 
-                $data['text'] = $response->data[0]['content'][0]['text']['value'];
-                $data['status'] = 'completed';
-                AiResponseStream::dispatch($this->userId, $data);
                 break;
             }
             

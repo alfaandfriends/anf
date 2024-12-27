@@ -141,6 +141,7 @@ export default {
 			}
 			if(event[0].status == 'completed'){
 				this.$page.props.chat_data[this.$page.props.chat_data.length - 1].status = event[0].status
+				this.$page.props.chat_data[this.$page.props.chat_data.length - 1].response = event[0].text
 			}
 			this.scrollToBottom()
 		}
