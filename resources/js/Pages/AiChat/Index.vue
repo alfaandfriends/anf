@@ -151,7 +151,7 @@ export default {
 </script>
 
 <template>
-  <div class="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] font-nunito bg-gradient-to-r from-rose-50 to-teal-50">
+  <div class="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] font-nunito bg-gradient-to-r from-rose-100 to-teal-100">
     <div class="hidden border-r border-zinc-500 md:block">
       <div class="flex flex-col gap-2">
         <!-- <div class="flex-1"> -->
@@ -187,7 +187,7 @@ export default {
       </div>
     </div>
     <div class="flex flex-col text-white">
-      <header class="flex justify-between md:justify-end h-14 items-center gap-4 px-4 lg:h-[60px] lg:px-6 sticky top-0 bg-gradient-to-r from-rose-50 to-teal-50">
+      <header class="flex justify-between md:justify-end h-14 items-center gap-4 px-4 lg:h-[60px] lg:px-6 sticky top-0 bg-gradient-to-r from-rose-100 to-teal-100">
         <Sheet>
           <SheetTrigger as-child>
             <Button
