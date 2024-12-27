@@ -313,7 +313,7 @@ export default {
 				<span class="flex items-center justify-end space-x-2 ml-20 text-white" v-if="message.prompt">
 					<span class="rounded-xl border bg-zinc-800 px-4 py-1.5">{{ message.prompt }}</span>
 				</span>
-				<span class="flex items-start space-x-2 " v-if="message.response && (message.status == 'created' || message.status == 'completed')">
+				<span class="flex items-start space-x-2 " v-if="message.response || message.status == 'created' || message.status == 'completed'">
 					<BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
 					<VMarkdownView class="px-3" style="background-color: transparent !important;"
 						:content="message.response"

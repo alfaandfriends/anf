@@ -58,21 +58,18 @@ class CreateChat implements ShouldQueue
         );
         
         foreach($run as $response){
-            $data = [];
             if($response->event === 'thread.message.created'){
                 $data['thread_id'] = $thread->id;
                 $data['status'] = 'created';
+                AiResponseStream::dispatch($this->userId, $data);
             }
             if($response->event === 'thread.message.delta'){
                 $data['text'] = $response->response->delta['content'][0]['text']['value'];
                 $data['status'] = 'processing';
+                AiResponseStream::dispatch($this->userId, $data);
             }
             if($response->event === 'thread.message.completed'){
-                $data['status'] = 'completed';
                 SaveMessage::dispatch($this->chatId, $this->userId, $thread->id, $response->response->runId);
-            }
-            if(!empty($data)){
-                AiResponseStream::dispatch($this->userId, $data);
             }
         }
     }
