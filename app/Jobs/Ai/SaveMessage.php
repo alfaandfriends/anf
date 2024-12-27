@@ -67,7 +67,7 @@ class SaveMessage implements ShouldQueue
                 break;
             }
             
-            sleep(1); // Wait for 2 seconds before checking again
+            sleep(1); // Wait for 1 seconds before checking again
         }
     }
 }

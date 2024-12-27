@@ -132,11 +132,10 @@ export default {
 				this.form.thread_id = event[0].thread_id
 			}
 			if(event[0].status == 'created'){
-				this.$page.props.chat_data[this.$page.props.chat_data.length - 1].status = event[0].status
+				this.$page.props.chat_data[this.$page.props.chat_data.length - 1].status = 'created'
 				this.$page.props.chat_data[this.$page.props.chat_data.length - 1].response = ''
 			}
-			if(event[0].status == 'processing'){
-				this.$page.props.chat_data[this.$page.props.chat_data.length - 1].status = event[0].status
+			if(event[0].status == 'processing' && this.$page.props.chat_data[this.$page.props.chat_data.length - 1].status == 'created'){
 				this.$page.props.chat_data[this.$page.props.chat_data.length - 1].response += event[0].text
 			}
 			if(event[0].status == 'completed'){
@@ -146,6 +145,7 @@ export default {
 			this.scrollToBottom()
 		}
 	});
+	
   }
 }
 </script>
@@ -313,7 +313,7 @@ export default {
 				<span class="flex items-center justify-end space-x-2 ml-20 text-white" v-if="message.prompt">
 					<span class="rounded-xl border bg-zinc-800 px-4 py-1.5">{{ message.prompt }}</span>
 				</span>
-				<span class="flex items-start space-x-2 " v-if="message.response && message.status != 'created'">
+				<span class="flex items-start space-x-2 " v-if="message.response && (message.status == 'created' || message.status == 'completed')">
 					<BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
 					<VMarkdownView class="px-3" style="background-color: transparent !important;"
 						:content="message.response"
