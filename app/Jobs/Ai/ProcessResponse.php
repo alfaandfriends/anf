@@ -44,8 +44,8 @@ class ProcessResponse implements ShouldQueue
             $data['status'] = 'processing';
             AiResponseStream::dispatch($this->userId, $data);
         }
-        // if($this->response->event === 'thread.message.completed'){
-        //     SaveMessage::dispatch($this->chatId, $this->userId, $this->threadId, $this->response->response->runId);
-        // }
+        if($this->response->event === 'thread.message.completed'){
+            SaveMessage::dispatch($this->chatId, $this->userId, $this->threadId, $this->response->response->runId);
+        }
     }
 }
