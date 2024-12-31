@@ -45,7 +45,6 @@ class ProcessResponse implements ShouldQueue
             AiResponseStream::dispatch($this->userId, $data);
         }
         if($this->response->event === 'thread.message.completed'){
-            Log::error('Dispatch Delta');
             SaveMessage::dispatch($this->chatId, $this->userId, $this->threadId, $this->response->response->runId);
         }
     }
