@@ -322,7 +322,7 @@ export default {
 				<span class="flex items-start space-x-2 " v-else>
 					<BotIcon class="min-h-6 min-w-6 text-zinc-900"/>
 					<div class="px-2">
-						<Label class="flex items-center space-x-0.5 text-slate-800 text-base animate-pulse">
+						<Label class="flex items-center space-x-0.5 text-slate-800 text-base animate-pulse duration-1000">
 							<LightBulbIcon class="text-slate-500 w-5 h-5"/>
 							<span>Just a moment...</span>
 						</Label>
