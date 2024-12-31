@@ -13,6 +13,7 @@ class CreateChat implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
+    protected $assistantId;
     protected $chatId;
     protected $userId;
     protected $messages;
@@ -20,12 +21,14 @@ class CreateChat implements ShouldQueue
     /**
      * Create a new job instance.
      * 
+     * @param string $assistantId
      * @param string $chatId
      * @param string $userId
      * @param string $messages
      */
-    public function __construct($chatId, $userId, $messages)
+    public function __construct($assistantId, $chatId, $userId, $messages)
     {
+        $this->assistantId = $assistantId;
         $this->chatId = $chatId;
         $this->userId = $userId;
         $this->messages = $messages;
@@ -50,7 +53,7 @@ class CreateChat implements ShouldQueue
         $run = $client->threads()->runs()->createStreamed(
             threadId: $thread->id,
             parameters: [
-                "assistant_id" => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
+                "assistant_id" => $this->assistantId,
                 'tool_choice' => [
                     'type' => 'file_search'
                 ],

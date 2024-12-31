@@ -77,8 +77,8 @@ export default {
 		this.form.student_id = id
 		this.form.student_name = name
 	},
-	selectProgram(program){
-		this.form.program = program
+	selectProgram(program_identifier){
+		this.form.program = program_identifier
 	},
     doExercise(){
       	this.form.messages = "Do an exercise"
@@ -119,6 +119,17 @@ export default {
 			this.$refs.prompt_input.focus();
 		}
 	}
+  },
+  computed: {
+    filteredProgrammes() {
+      return this.$page.props.programmes.filter((programme) =>
+        this.$page.props.children_classes.some(
+          (item) =>
+            item.student_id === this.form.student_id &&
+            item.programme_name === 'ANFC ' + programme.name
+        )
+      );
+    },
   },
   mounted(){
 	this.scrollToBottom()
@@ -270,33 +281,14 @@ export default {
 					Which program would you like me to assist you on?
 				</span>
 				<div class="flex flex-col md:flex-row justify-center md:items-center px-3 pb-3 gap-2 mt-8">
-					<a class="flex px-5 py-2 w-full relative rounded-lg group text-lg font-medium border-2 cursor-pointer border-black text-black bg-white" v-for="programme in $page.props.programmes" v-if="$page.props.children_classes.find((programme) => programme.student_id === form.student_id && programme.programme_name === 'ANFC Maths')" @click.once="selectProgram('maths')">
+					<a class="flex px-5 py-2 w-full relative rounded-lg group text-lg font-medium border-2 cursor-pointer border-black text-black bg-white" v-for="programme in filteredProgrammes" :key="programme.id" @click.once="selectProgram(programme.identifier)">
 						<span class="absolute top-0 left-0 flex w-full h-0 mb-0 transition-all duration-200 ease-out transform translate-y-0 bg-black group-hover:h-full opacity-90"/>
 						<span class="relative group-hover:text-white">
 							<div class="flex gap-2 items-center ">
-								<CalculatorIcon class="h-5 w-5"/>
 								<span class="select-none whitespace-nowrap">{{ programme.name }}</span>
 							</div>
 						</span>
 					</a>
-					<!-- <a class="flex px-5 py-2 w-full relative rounded-lg group text-lg font-medium border-2 cursor-pointer border-black text-black bg-white" v-if="$page.props.children_classes.find((programme) => programme.student_id === form.student_id && programme.programme_name === 'ANFC Coding & Robotics')" @click.once="selectProgram('coding_robotics')">
-						<span class="absolute top-0 left-0 flex w-full h-0 mb-0 transition-all duration-200 ease-out transform translate-y-0 bg-black group-hover:h-full opacity-90"/>
-						<span class="relative group-hover:text-white">
-							<div class="flex gap-2 items-center ">
-								<LayoutTemplateIcon class="h-5 w-5"/>
-								<span class="select-none whitespace-nowrap">Coding & Robotics</span>
-							</div>
-						</span>
-					</a>
-					<a class="px-5 py-2 w-full relative rounded-lg group text-lg font-medium border-2 cursor-pointer border-black text-black bg-white" v-if="$page.props.children_classes.find((programme) => programme.student_id === form.student_id && programme.programme_name === 'ANFC Digital Art')" @click.once="selectProgram('digital_art')">
-						<span class="absolute top-0 left-0 flex w-full h-0 mb-0 transition-all duration-200 ease-out transform translate-y-0 bg-black group-hover:h-full opacity-90"/>
-						<span class="relative group-hover:text-white">
-							<div class="flex gap-2 items-center ">
-								<BrushIcon class="h-5 w-5"/>
-								<span class="select-none whitespace-nowrap">Digital Art</span>
-							</div>
-						</span>
-					</a> -->
 				</div>
 				<div class="flex items-center mt-5 gap-1 hover:underline cursor-pointer" @click="form.student_id = ''">
 					<Undo class="w-4 h-4"/>

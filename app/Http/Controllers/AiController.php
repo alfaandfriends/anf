@@ -64,10 +64,13 @@ class AiController extends Controller
             $chat_id = Str::ulid();
             $user_id = Auth::id();
 
+            $assistant_id = DB::table('ai_programmes')->where('identifier', $request->program)->first()->assistant_id;
+
             DB::table('ai_chats')->insert([
                 'id' => (string)$chat_id,
                 'user_id' => $user_id,
-                'name' => $request->messages
+                'name' => $request->messages,
+                'assistant_id' => $assistant_id
             ]);
 
             DB::table('ai_chat_messages')->insert([
@@ -98,18 +101,18 @@ class AiController extends Controller
      */
     public function edit(string $id)
     {
-        $chats      = DB::table('ai_chats')->select('id', 'name')->get();
+        $chats      = DB::table('ai_chats')->select('id', 'name', 'assistant_id')->get();
         $chat_data  = DB::table('ai_chats')
                         ->join('ai_chat_messages', 'ai_chat_messages.chat_id', '=', 'ai_chats.id')
                         ->where('ai_chats.user_id', Auth::id())
                         ->where('ai_chats.id', $id)
-                        ->select('ai_chats.thread_id', 'ai_chat_messages.*')
+                        ->select('ai_chats.assistant_id', 'ai_chats.thread_id', 'ai_chat_messages.*')
                         ->get();
 
         if($chat_data->isNotEmpty()){
             $latest_record = $chat_data->first();
             if(count($chat_data) == 1 && $latest_record->status == AiChatMessageStatus::NOT_STARTED){
-                CreateChat::dispatch($id, Auth::id(), $latest_record->prompt);
+                CreateChat::dispatch($latest_record->assistant_id, $id, Auth::id(), $latest_record->prompt);
                 DB::table('ai_chat_messages')->where('id', $latest_record->id)->update([
                     'status' => AiChatMessageStatus::PROCESSING
                 ]);
@@ -129,9 +132,10 @@ class AiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $chat_id)
     {
-        SendPrompt::dispatch($id, Auth::id(), $request->thread_id, $request->messages);
+        $assistant_id    = DB::table('ai_chats')->where('id', $chat_id)->pluck('assistant_id')->first();
+        SendPrompt::dispatch($assistant_id, $chat_id, Auth::id(), $request->thread_id, $request->messages);
     }
 
     /**

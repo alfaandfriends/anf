@@ -17,6 +17,7 @@ class SendPrompt implements ShouldQueue
 {
     use Dispatchable, Queueable, SerializesModels, InteractsWithBroadcasting;
 
+    protected $assistantId;
     protected $chatId;
     protected $userId;
     protected $threadId;
@@ -25,8 +26,9 @@ class SendPrompt implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($chatId, $userId, $threadId, $messages)
+    public function __construct($assistantId, $chatId, $userId, $threadId, $messages)
     {
+        $this->assistantId = $assistantId;
         $this->chatId = $chatId;
         $this->userId = $userId;
         $this->threadId = $threadId;
@@ -50,7 +52,7 @@ class SendPrompt implements ShouldQueue
         $run = $client->threads()->runs()->createStreamed(
             threadId: $this->threadId,
             parameters: [
-                "assistant_id" => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
+                "assistant_id" => $this->assistantId,
                 'tool_choice' => [
                     'type' => 'file_search'
                 ]
