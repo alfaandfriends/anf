@@ -57,8 +57,6 @@ class CreateChat implements ShouldQueue
             ]
         );
 
-        foreach($run as $response){
-            ProcessResponse::dispatchSync($response, $this->chatId, $this->userId, $thread->id);
-        }
+        ProcessResponse::dispatchSync($run, $this->chatId, $this->userId, $thread->id);
     }
 }

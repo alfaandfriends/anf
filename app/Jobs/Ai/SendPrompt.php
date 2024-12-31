@@ -57,9 +57,7 @@ class SendPrompt implements ShouldQueue
             ]
         );
 
-        foreach($run as $response){
-            ProcessResponse::dispatchSync($response, $this->chatId, $this->userId, $thread->id);
-        }
+        ProcessResponse::dispatchSync($run, $this->chatId, $this->userId, $thread->id);
 
         DB::table('ai_chat_messages')->insert([
             'id' => Str::ulid(),
