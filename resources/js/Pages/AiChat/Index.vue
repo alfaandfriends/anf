@@ -35,7 +35,10 @@ export default {
       this.form.messages = event.target.innerText;
     },
     submit(){
-      if(!this.form.messages || (this.$page.props.chat_data && this.$page.props.chat_data[this.$page.props.chat_data.length - 1]?.status != 'completed')){
+		const not_started = this.$page.props.chat_data && this.$page.props.chat_data[this.$page.props.chat_data.length - 1]?.status  == 'not_started'
+		const created = this.$page.props.chat_data && this.$page.props.chat_data[this.$page.props.chat_data.length - 1]?.status  == 'created'
+		const processing = this.$page.props.chat_data && this.$page.props.chat_data[this.$page.props.chat_data.length - 1]?.status  == 'processing'
+      if(!this.form.messages || not_started || created || processing){
           return
       }
 
