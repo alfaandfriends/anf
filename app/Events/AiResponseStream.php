@@ -14,7 +14,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Log;
 
-class AiResponseStream implements ShouldBroadcastNow
+class AiResponseStream implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     
