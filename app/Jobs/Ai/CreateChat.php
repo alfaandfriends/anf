@@ -47,6 +47,7 @@ class CreateChat implements ShouldQueue
             'content' => $this->messages,
         ]);
 
+        Log::error('Start Run');
         $run = $client->threads()->runs()->createStreamed(
             threadId: $thread->id,
             parameters: [
@@ -56,6 +57,8 @@ class CreateChat implements ShouldQueue
                 ],
             ]
         );
+        Log::error('Finished Run');
+        
         Log::error('Running stream');
         foreach($run as $response){
             if($response->event === 'thread.message.created'){
