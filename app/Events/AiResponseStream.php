@@ -43,6 +43,7 @@ class AiResponseStream implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
+        Log::error($this->message);
         return [$this->message];
     }
 
