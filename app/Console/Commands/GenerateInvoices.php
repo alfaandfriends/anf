@@ -64,8 +64,6 @@ class GenerateInvoices extends Command
                                             'promotions.value as value')
                                         ->get());
 
-                                
-
             $added_material_collection  =   $raw_collection->map(function ($item) use ($students_promos) {
                 $promos = $students_promos->filter(function ($promo) use ($item) {
                     return $promo->duration_remaining >= 0 && $promo->student_fee_id === $item->student_fee_id;
@@ -85,7 +83,7 @@ class GenerateInvoices extends Command
                     "promos" => $promosArray,
                 ]);
             });
-
+ 
             DB::table('student_fee_promotions')->delete();
 
             $finalized = $added_material_collection->groupBy('student_id')->map(function ($raw_data) {
@@ -207,10 +205,10 @@ class GenerateInvoices extends Command
             return Command::SUCCESS;
         } catch (\Exception $e) {
             DB::rollback();
-            
-            $log_data =   'Generate invoice failed';
-            event(new DatabaseTransactionEvent($log_data));
-            event(new DatabaseTransactionEvent(json_encode($e)));
+            Log::error($e);
+            // $log_data =   'Generate invoice failed';
+            // event(new DatabaseTransactionEvent($log_data));
+            // event(new DatabaseTransactionEvent(json_encode($e)));
             return Command::FAILURE;
         }
 

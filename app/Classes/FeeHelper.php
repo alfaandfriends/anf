@@ -18,6 +18,7 @@ class FeeHelper {
                             ->join('class_methods', 'classes.class_method_id', '=', 'class_methods.id')
                             ->whereNull('student_fees.status')
                             ->where('students.status', 1)
+                            ->whereYear('student_fees.created_at', '=', now()->subMonth()->format('Y'))
                             ->whereMonth('student_fees.created_at', '=', now()->subMonth()->format('m'))
                             ->orderByDesc('student_fees.id')
                             ->select(
