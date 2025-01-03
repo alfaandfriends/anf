@@ -26,9 +26,9 @@ class InvoiceController extends Controller
     }
 
     public function paymentStatus($bill_id){
-        $bill_info = Billplz::transaction()->get($bill_id)->getContent();
+        $bill_info = Billplz::bill()->get($bill_id)->getContent();
         
-        if(!empty($bill_info['transactions']) && $bill_info['transactions'][0]['status'] == 'completed'){
+        if($bill_info['paid']){
             $response = [
                 'payment_type' => 'billplz',
                 'url_redirect' => env('VITE_BILLPLZ_ENDPOINT').$bill_id
