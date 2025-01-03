@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Parent;
 
 use App\Classes\InvoiceHelper;
 use App\Http\Controllers\Controller;
+use Billplz;
+use DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -20,5 +22,27 @@ class InvoiceController extends Controller
         return Inertia::render('Parent/Class/Invoices', [
             'invoices'          =>  $invoices,
         ]);
+    }
+
+    public function paymentStatus($bill_id){
+        $bill_info = Billplz::transaction()->get($bill_id)->getContent();
+        
+        if(!empty($bill_info['transactions']) && $bill_info['transactions'][0]['status'] == 'completed'){
+            $response = [
+                'payment_type' => 'billplz',
+                'url_redirect' => env('VITE_BILLPLZ_ENDPOINT').$bill_id
+            ];
+        }
+        else{
+            $invoice_id = DB::table('invoices')->where('bill_id', $bill_id)->pluck('id')->first();
+            $file_name = DB::table('invoice_attachments')->where('invoice_id', $invoice_id)->pluck('attachment')->first();
+            $attachment = '/storage/proof_of_payment/'.$file_name;
+            $response = [
+                'payment_type' => 'manual',
+                'url_redirect' => $attachment
+            ];
+        }
+
+        return $response;
     }
 }

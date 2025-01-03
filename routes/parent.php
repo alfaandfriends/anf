@@ -48,6 +48,7 @@ Route::middleware(['auth', 'child'])->group(function(){
 
         /* Invoices */
         Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
+        Route::post('invoices/check-payment-status/{bill_id}', [InvoiceController::class, 'paymentStatus'])->name('invoices.payment_status');
 
         /* Art Gallery */
         Route::get('art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery');

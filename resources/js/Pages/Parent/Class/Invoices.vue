@@ -48,7 +48,7 @@
                                 <div class="shrink-0">
                                     <a target="_blank" v-if="invoice.status_id == 1" :href="invoice.payment_url" class="text-sm cursor-pointer font-medium px-3 py-1 text-indigo-600 rounded bg-indigo-100 hover:bg-indigo-200 hover:rounded whitespace-nowrap">Pay Now</a>
                                     <div class="flex flex-col gap-1" v-if="invoice.status_id == 2">
-                                        <a target="_blank" :href="invoice.payment_url" class="flex items-center gap-1 text-sm cursor-pointer font-medium px-3 py-1 text-indigo-600 rounded bg-indigo-100 hover:bg-indigo-200 hover:rounded whitespace-nowrap"><ReceiptTextIcon class="w-3 h-3"/><span>Receipt</span></a>
+                                        <a @click="checkPaymentStatus(invoice.bill_id)" class="flex items-center gap-1 text-sm cursor-pointer font-medium px-3 py-1 text-indigo-600 rounded bg-indigo-100 hover:bg-indigo-200 hover:rounded whitespace-nowrap"><ReceiptTextIcon class="w-3 h-3"/><span>Receipt</span></a>
                                         <a class="flex items-center gap-1 text-sm cursor-pointer font-medium px-3 py-1 text-blue-600 bg-blue-100 hover:bg-blue-200 rounded whitespace-nowrap" @click="generating[invoice_index] ? '' : viewInvoice(invoice.id, invoice_index)"><EyeIcon class="w-3 h-3"/><span>{{ generating[invoice_index] ? 'Generating...' : 'Invoice' }}</span></a>
                                     </div>
                                 </div>
@@ -130,6 +130,12 @@ export default {
                 console.error('Error fetching PDF:', error);
                 this.generating[index] = false
             });
+        },
+        checkPaymentStatus(bill_id){
+            axios.post(route('parent.invoices.payment_status', bill_id))
+            .then(response => {
+                window.open(response.data.url_redirect, '_blank');
+            })
         },
         totalFee(invoice_items) {
             let total = 0;
