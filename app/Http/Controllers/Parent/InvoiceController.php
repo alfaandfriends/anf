@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Parent;
 
 use App\Classes\InvoiceHelper;
 use App\Http\Controllers\Controller;
-use Billplz;
+use Billplz\Laravel\Billplz;
 use DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
