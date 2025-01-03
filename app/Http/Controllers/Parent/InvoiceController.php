@@ -8,6 +8,7 @@ use Billplz;
 use DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Log;
 
 class InvoiceController extends Controller
 {
@@ -42,6 +43,8 @@ class InvoiceController extends Controller
                 'url_redirect' => $attachment
             ];
         }
+        Log::error("bill_info: ", json_encode($bill_info));
+        Log::error("bill_info: ", json_encode($response));
 
         return $response;
     }
