@@ -43,8 +43,8 @@ class InvoiceController extends Controller
                 'url_redirect' => $attachment
             ];
         }
-        Log::error("bill_info: ", json_encode($bill_info));
-        Log::error("bill_info: ", json_encode($response));
+        Log::error(json_encode($bill_info));
+        Log::error(json_encode($response));
 
         return $response;
     }
