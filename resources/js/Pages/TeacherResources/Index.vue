@@ -244,7 +244,7 @@ export default {
             this.show_filters = !this.show_filters
         },
         copyText(file_name){
-            navigator.clipboard.writeText(this.baseUrl() + '/storage/' + file_name).then(() => {
+            navigator.clipboard.writeText(this.baseUrl() + '/storage/teacher_resources/' + file_name).then(() => {
                 this.show_copied = true
                 setTimeout(() => {
                     this.show_copied = false
