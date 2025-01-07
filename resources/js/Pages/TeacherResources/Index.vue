@@ -1,5 +1,11 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/Components/ui/tooltip'
 </script>
 
 <template>
@@ -134,6 +140,18 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                 </div>
             </template>
             <template #footer>
+                <TooltipProvider>
+                    <Tooltip :delayDuration="0" :open="show_copied">
+                        <TooltipTrigger as-child @click="copyText(resource_data.content)">
+                            <Button variant="outline">
+                                <Clipboard class="w-4 h-4 mr-2"/>Copy Link
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Copied to clipboard!</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
                 <Button @click="downloadFile(resource_data.content)" v-if="resource_data.media_type_id == 2 || resource_data.media_type_id == 3">Download</Button>
                 <Button variant="outline" @click="show_resource = false">Close</Button>
             </template>
@@ -144,7 +162,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
 <script>
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import { MagnifyingGlassIcon } from '@radix-icons/vue'
-import { Filter, PlusCircle, Languages } from 'lucide-vue-next';
+import { Filter, PlusCircle, Languages, Clipboard, ClipboardCopy } from 'lucide-vue-next';
 import moment from 'moment';
 import Card from '@/Components/Card.vue'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
@@ -158,6 +176,7 @@ export default {
     },
     data(){
         return{
+            show_copied: false,
             show_filters: false,
             loading_resource: false,
             show_resource: false,
@@ -224,6 +243,14 @@ export default {
         showFilters(){
             this.show_filters = !this.show_filters
         },
+        copyText(file_name){
+            navigator.clipboard.writeText(this.baseUrl() + '/storage/' + file_name).then(() => {
+                this.show_copied = true
+                setTimeout(() => {
+                    this.show_copied = false
+                }, 1000);
+            });
+        }
     },
 }
 </script>
