@@ -96,12 +96,17 @@ import {
                         </template>
                         <template v-if="resource_data.media_type_id == 2">
                             <div class="flex justify-center">
-                                <iframe :src="baseUrl() + '/storage/teacher_resources/'+resource_data.content" width="100%" height="600px"></iframe>
+                                <iframe class="w-full h-[300px]" frameborder="0" :src="baseUrl() + '/storage/teacher_resources/'+resource_data.content"></iframe>
                             </div>
                         </template>
                         <template v-if="resource_data.media_type_id == 3">
                             <div class="flex justify-center">
-                                <iframe class="flex-1" :src="'https://view.officeapps.live.com/op/view.aspx?src=' + baseUrl() + '/storage/teacher_resources/' + resource_data.content + '&embedded=true'" style="width:600px; height:500px;" frameborder="0"></iframe>
+                                <iframe class="flex-1" frameborder="0" :src="'https://view.officeapps.live.com/op/view.aspx?src=' + baseUrl() + '/storage/teacher_resources/' + resource_data.content + '&embedded=true'" style="width:600px; height:500px;"></iframe>
+                            </div>
+                        </template>
+                        <template v-if="resource_data.media_type_id == 4">
+                            <div class="flex justify-center">
+                                <img class="w-[50%] h-[50%]" frameborder="0" :src="'/storage/teacher_resources/'+resource_data.content" alt="">
                             </div>
                         </template>
                         <div class="flex justify-center">
@@ -152,7 +157,7 @@ import {
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
-                <Button @click="downloadFile(resource_data.content)" v-if="resource_data.media_type_id == 2 || resource_data.media_type_id == 3">Download</Button>
+                <Button @click="downloadFile(resource_data.content)" v-if="resource_data.media_type_id !== 1">Download</Button>
                 <Button variant="outline" @click="show_resource = false">Close</Button>
             </template>
         </Dialog>

@@ -75,7 +75,7 @@ class TeacherResourcesController extends Controller
             'language_id'       =>  'required',
             'media_type_id'     =>  'required',
             'embed_link'        =>  'required_if:media_type_id, 1',
-            'embed_file'        =>  'required_if:media_type_id, 2, 3',
+            'embed_file'        =>  'required_if:media_type_id, 2, 3, 4',
         ]);
 
         if($request->file('embed_file')){
@@ -131,6 +131,7 @@ class TeacherResourcesController extends Controller
             'language_id'       =>  'required',
             'media_type_id'     =>  'required',
             'embed_link'        =>  'required_if:media_type_id, 1',
+            'embed_file'        =>  'required_if:media_type_id, 2, 3, 4',
         ]);
 
         if((($request->media_type_id === 2 || $request->media_type_id === 3) && (!$request->embed_link && !$request->embed_file))){

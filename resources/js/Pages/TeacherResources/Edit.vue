@@ -35,7 +35,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         <Label>Embed Link<span class="text-red-500">*</span></Label>
                         <Textarea rows="3" :error="$page.props.errors.embed_link" v-model="form.embed_link"></Textarea>
                     </div>
-                    <div v-if="form.media_type_id == 2 || form.media_type_id == 3"> 
+                    <div v-else> 
                         <label for="" class="block text-sm font-bold text-gray-700"> File <span class="text-red-500">*</span></label>
                         <label class="mt-1 block focus:ring-0 focus:border-gray-300" v-if="show_upload_file">
                             <span class="sr-only">Browse File</span>
@@ -128,6 +128,15 @@ export default {
                     alert('Only PowerPoint Sildeshow File allowed!')
                     this.$refs.file_input.value = ''
                     this.form.embed_file = ''
+                }
+            }
+            if(this.form.media_type_id  ==  4){
+                if (file.type.startsWith('image/') || file.name.toLowerCase().endsWith('.jpg') || file.name.toLowerCase().endsWith('.jpeg') || file.name.toLowerCase().endsWith('.png')) {
+                    this.form.embed_file = file;
+                } else {
+                    alert('Only image files (JPG, JPEG, PNG) are allowed!');
+                    this.$refs.file_input.value = '';
+                    this.form.embed_file = '';
                 }
             }
         },
