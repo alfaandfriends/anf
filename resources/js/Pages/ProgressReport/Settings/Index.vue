@@ -70,6 +70,18 @@ export default {
                 {
                     name: 'Little Bot',
                     url: 'progress_report.settings.little_bot.levels',
+                },
+                {
+                    name: 'Little Artist',
+                    url: 'progress_report.settings.little_artist.levels',
+                },
+                {
+                    name: 'Art (Traditional)',
+                    url: 'progress_report.settings.art_traditional.levels',
+                },
+                {
+                    name: 'Art (Digital)',
+                    url: 'progress_report.settings.art_digital.levels',
                 }
             ]
         }

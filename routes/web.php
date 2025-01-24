@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\DiagnosticTestController;
-use App\Http\Controllers\ProgressReportController;
+use App\Http\Controllers\ProgressReport\ProgressReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('diagnostic-test')->group(function () {

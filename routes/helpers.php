@@ -9,7 +9,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\ArtGalleryController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\ProgressReportController;
+use App\Http\Controllers\ProgressReport\ProgressReportController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -74,5 +74,20 @@ Route::middleware(['auth'])->group(function(){
     /* Little Bot Select Options */
     Route::get('/progress-report/little-bot/get-topics/{lesson_id}', [ProgressReportController::class, 'getLittleBotTopics'])->name('progress_report.get_little_bot_topics');
     Route::get('/progress-report/little-bot/get-objectives/{topic_id}', [ProgressReportController::class, 'getLittleBotObjectives'])->name('progress_report.get_little_bot_objectives');
+    
+    /* Little Artist Select Options */
+    Route::get('/progress-report/little-artist/get-outcomes/{lesson_id}', [ProgressReportController::class, 'getLittleArtistOutcomes'])->name('progress_report.get_little_artist_outcomes');
+    Route::get('/progress-report/little-artist/get-objectives/{outcome_id}', [ProgressReportController::class, 'getLittleArtistObjectives'])->name('progress_report.get_little_artist_objectives');
 
+    /* Art Digital Select Options */
+    Route::get('/progress-report/art-digital/get-lessons/{theme_id}', [ProgressReportController::class, 'getArtDigitalLessons'])->name('progress_report.get_art_digital_lessons');
+    Route::get('/progress-report/art-digital/get-activities/{lesson_id}', [ProgressReportController::class, 'getArtDigitalActivities'])->name('progress_report.get_art_digital_activities');
+    Route::get('/progress-report/art-digital/get-learning-outcomes/{activity_id}', [ProgressReportController::class, 'getArtDigitalLearningOutcomes'])->name('progress_report.get_art_digital_learning_outcomes');
+    Route::get('/progress-report/art-digital/get-objectives/{outcome_id}', [ProgressReportController::class, 'getArtDigitalObjectives'])->name('progress_report.get_art_digital_objectives');
+
+    /* Art Traditional Select Options */
+    Route::get('/progress-report/art-traditional/get-lessons/{theme_id}', [ProgressReportController::class, 'getArtTraditionalLessons'])->name('progress_report.get_art_traditional_lessons');
+    Route::get('/progress-report/art-traditional/get-activities/{lesson_id}', [ProgressReportController::class, 'getArtTraditionalActivities'])->name('progress_report.get_art_traditional_activities');
+    Route::get('/progress-report/art-traditional/get-learning-outcomes/{activity_id}', [ProgressReportController::class, 'getArtTraditionalLearningOutcomes'])->name('progress_report.get_art_traditional_learning_outcomes');
+    Route::get('/progress-report/art-traditional/get-objectives/{outcome_id}', [ProgressReportController::class, 'getArtTraditionalObjectives'])->name('progress_report.get_art_traditional_objectives');
 });

@@ -14,18 +14,26 @@
     }
     table{
         font-size: x-small;
-        border-collapse: collapse; 
-        width: 100%;
-        table-layout: fixed;
+        border-collapse: collapse;
+    }
+    tfoot tr td{
+        font-weight: bold;
+        font-size: x-small;
+    }
+    .gray {
+        background-color: lightgray
+    }
+    table th .border{
+        border-left: 0.01em solid #ccc;
+        border-right: 0;
+        border-top: 0.01em solid #ccc;
+        border-bottom: 0;
+        border-collapse: collapse;
     }
 </style>
+
 </head>
 <body>
-    <table width="100%">
-        <tr>
-            <td><img src="{{ public_path('/images/progress_report/math.png') }}" style="width: 100%; height: 200px"/></td>
-        </tr>
-    </table>
     <table width="100%" style="padding-top: 20px; padding-bottom: 20px">
         <tr>
             <td style="text-align: center;"><strong style="font-size: 20px">Monthly Progress Report</strong></td>
@@ -44,60 +52,22 @@
             <tr>
                 <td style="font-size: 13px; padding: 10px">Class Type / level: </td>
                 <td style="font-size: 13px; padding: 10px">{{ $data['student_data']->programme_name }} / Level {{ $data['student_data']->programme_level }}</td>
-            </tr>   
+            </tr>
         </table>
     </div>
-    <table width="100%" style="margin-top: 20px; page-break-inside: auto; border-top: 2px solid; border-bottom: 2px solid; border-left: 2px solid; border-right: 2px solid;">
-        <thead>
-            <tr>
-                <th width="40%" style="background-color: #B5C0D0; border: 1px solid; padding: 12px; font-size: 12px" colspan="3">Assessments</th>
-            </tr>
-            <tr>
-                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px" rowspan="2">Units</th>
-                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px" colspan="2">Scores</th>
-            </tr>
-            <tr>
-                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px">Pre</th>
-                <th width="40%" style="background-color: #DDE6ED; border: 1px solid; padding: 10px; font-size: 12px">Post</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                $assessments = json_decode($data['assessments']->assessments) ?? [];
-            @endphp
-            @foreach($data['units'] as $item)
-                @php
-                    $pre    =   '';
-                    $post   =   '';
-                    if(count($assessments)){
-                        foreach ($assessments as $assessment) {
-                            if ($assessment->unit_id == $item->id) {
-                                $pre = $assessment->pre;
-                                $post = $assessment->post;
-                            }
-                        }
-                    }
-                @endphp
-                <tr>
-                    <th width="40%" style="text-align: left; border: 1px solid; padding: 10px; padding-left: 10px; font-size: 12px">{{ $item->name }}</th>
-                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $pre }}</th>
-                    <th width="40%" style="border: 1px solid; padding: 10px; font-size: 12px">{{ $post }}</th>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <div class="page-break"></div>
     @foreach($data['report_data'] as $key => $report)
         @php
             $report_item = json_decode($report->report_data, true);
-            $groupedData = collect($report_item)->groupBy(['term_book_name', 'unit_name', 'lesson_name']);
+            $groupedData = collect($report_item)->groupBy(['theme_name', 'lesson_name', 'activity_name', 'outcome_name']);
 
-            $filteredData = $groupedData->map(function($terms_books) {
-                return $terms_books->map(function ($units) {
-                    return $units->map(function ($lessons) {
-                        return [
-                            'objectives' => $lessons[0]['objectives'] ?? [],
-                        ];
+            $filteredData = $groupedData->map(function($themes) {
+                return $themes->map(function($lessons) {
+                    return $lessons->map(function($activities) {
+                        return $activities->map(function($outcome) {
+                            return [
+                                'objectives' => $outcome[0]['objectives'] ?? [],
+                            ];
+                        });
                     });
                 });
             });
@@ -115,34 +85,27 @@
                         </div>
                     </th>
                 </tr>
-                @if($report->revision)
+                @foreach($filteredData as $theme_name => $lessons)
                     <tr>
-                        <th style="text-align: center; background-color: #F5F7F8; border: 1px solid; padding: 10px; font-size: 12px; font-weight: bold" colspan="3">
-                            <div>REVISION</div>
-                        </th>
-                    </tr>
-                @endif
-                @foreach($filteredData as $term_book_name => $term_book)
-                    <tr>
-                        <th style="background-color: #C4D7B2; border: 1px solid; padding: 10px; font-size: 12px">Term / Book</th>
+                        <th style="background-color: #C4D7B2; border: 1px solid; padding: 10px; font-size: 12px">Theme</th>
                         <th style="background-color: #C4D7B2; border: 1px solid; padding: 10px; font-size: 12px" colspan="2">
                             <div>
-                                {{ $term_book_name }}
+                                {{ $theme_name }}
                             </div>
                         </th>
                     </tr>
-                    @foreach($term_book as $unit_name => $unit)
-                        <tr>
-                            <th style="background-color: #E1ECC8; border: 1px solid; padding: 10px; font-size: 12px; text-decoration: underline;" colspan="3">Unit {{ $unit_name }}</th>
-                        </tr>
-                        @foreach($unit as $lesson_name => $lesson)
+                    @foreach($lessons as $lesson_name => $activities)
+                        @foreach($activities as $activity_name => $outcomes)
                             <tr>
-                                <td style=" border: 1px solid; padding: 10px;" colspan="{{ !$report->revision ? 0 : 3 }}">
-                                    <div style="font-weight: bold;"><b>Lesson {{ $lesson_name }}</b></div>
-                                </td>
-                                @if(!$report->revision)
+                                <th style="text-align: left; background-color: #E1ECC8; border: 1px solid; padding: 10px; font-size: 12px; text-decoration: underline;" colspan="3">{{ $lesson_name }} : {{ $activity_name }}</th>
+                            </tr>
+                            @foreach($outcomes as $outcome_name => $objectives)
+                                <tr>
+                                    <td style="border: 1px solid; padding: 10px;">
+                                        <div style="font-weight: bold"><b>{{ $outcome_name }}</b></div>
+                                    </td>
                                     <td valign="top" style="text-align: justify; border: 1px solid; padding: 10px;" colspan="2">
-                                        @foreach($lesson['objectives'] as $key => $objective)
+                                        @foreach($objectives['objectives'] as $key => $objective)
                                             <div style="display: block;">
                                                 <div style="display: inline-block; vertical-align: middle; line-height: 20px; ">
                                                     @if($objective['achieved'])
@@ -155,8 +118,8 @@
                                             </div>
                                         @endforeach
                                     </td>
-                                @endif
-                            </tr>
+                                </tr>
+                            @endforeach
                         @endforeach
                     @endforeach
                 @endforeach
@@ -176,22 +139,22 @@
         </table>
     @endforeach
     <div style="margin-top: 30px;">
-        <table> 
+        <table style="width: 100%"> 
             <tr>
-                <th width="15%" style="text-align: left; background-color: #A0C49D; border: 2px solid; padding: 10px; font-size: 12px" colspan="3">WHAT'S NEXT</th>
+                <th style="text-align: left; background-color: #A0C49D; border: 2px solid; padding: 10px; font-size: 12px">WHAT'S NEXT</th>
             </tr>
             <tr>
-                <td width="15%" style="border: 2px solid; padding: 10px; font-size: 12px" colspan="3">
+                <td width="100%" style="border: 2px solid; padding: 10px; font-size: 12px">
                     <div>
                         {{ $data['student_data']->upcoming_feedback }}
                     </div>
                 </td>
             </tr>
             <tr>
-                <th width="15%" style="text-align: left; background-color: #A0C49D; border: 2px solid; padding: 10px; font-size: 12px" colspan="3">NEED IMPROVEMENT ON</th>
+                <th width="100%" style="text-align: left; background-color: #A0C49D; border: 2px solid; padding: 10px; font-size: 12px">NEED IMPROVEMENT ON</th>
             </tr>
             <tr>
-                <td width="15%" style="border: 2px solid; padding: 10px; font-size: 12px" colspan="3">
+                <td width="100%" style="border: 2px solid; padding: 10px; font-size: 12px">
                     <div>
                         {{ $data['student_data']->improvement_feedback }}
                     </div>
