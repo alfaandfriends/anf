@@ -84,6 +84,7 @@ export default {
     },
     created(){
         this.initMenu()
+        console.log('init')
     },
     mounted(){
         const { flash } = this.$page.props;
