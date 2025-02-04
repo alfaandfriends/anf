@@ -724,8 +724,8 @@ import BreezeButton from "@/Components/Button.vue";
               </div>
               <div class="p-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 items-end gap-4">
                 <div>
-                    <Label>Start Date<span class="text-red-500">*</span></Label>
-                    <Datepicker mode="date" :format="'dd/MM/yyyy'" v-model="form.date_admission" :error="errors.admission_date"/>
+                    <Label id="date">Start Date<span class="text-red-500">*</span></Label>
+                    <Datepicker mode="date" :format="'dd/MM/yyyy'" v-model="form.date_admission" :error="errors.admission_date" teleport="#date" :teleportCenter="true"/>
                 </div>
                 <div>
                   <Label>Class Method<span class="text-red-500">*</span></Label>

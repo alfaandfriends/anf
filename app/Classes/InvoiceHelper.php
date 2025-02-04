@@ -70,7 +70,6 @@ class InvoiceHelper {
         }
         $totalFee = $totalFee - $totalPromo;
         
-        $due_date           =   Carbon::parse($invoice_data['date_admission']);  
         $student_id         =   $invoice_data['student_id'];
         $student_country    =   UserHelper::getChildCountryId($invoice_data['children_id']);
         $invoice_number     =   Carbon::now()->year.'-'.$invoice_number;
@@ -86,7 +85,7 @@ class InvoiceHelper {
             $bill_callback          =   route('fee.invoices.callback.my');
             $bill_description       =   'Invoice Number: '.$invoice_number;
             $bill_response          =   Billplz::bill()->create($bill_collection_id, $bill_email, $bill_mobile, $bill_name, $bill_amount, $bill_callback, $bill_description, [
-                                            'due_at'    =>  $due_date->addMonths(1)->toDateString(),
+                                            'due_at'    =>  Carbon::parse($date_admission)->addMonths(1)->toDateString(),
                                             'redirect_url' => route('fee.invoices.check_status')
                                         ]); 
                         
@@ -96,11 +95,12 @@ class InvoiceHelper {
                                     'invoice_number'    => $invoice_number,
                                     'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
                                     'date_issued'       => $date_admission,
-                                    'due_date'          => $due_date->addWeeks(2)->toDateString(),
+                                    'due_date'          => Carbon::parse($date_admission)->addWeeks(2)->toDateString(),
                                     'amount'            => $totalFee,
                                     'currency'          => $currency,
                                     'bill_id'           => $bill_response->toArray()['id'],
                                     'payment_url'       => env('VITE_BILLPLZ_ENDPOINT').$bill_response->toArray()['id'],
+                                    'created_at'        => Carbon::parse($date_admission)->format('Y-m-d H:i:s')
                                 ]);
         
                 return $invoice_id;
@@ -152,11 +152,12 @@ class InvoiceHelper {
                         'invoice_number'    => $invoice_number,
                         'invoice_items'     => json_encode($invoice_items->toArray(), JSON_NUMERIC_CHECK),
                         'date_issued'       => $date_admission,
-                        'due_date'          => $due_date->addWeeks(2)->toDateString(),
+                        'due_date'          => Carbon::parse($date_admission)->addWeeks(2)->toDateString(),
                         'amount'            => $totalFee,
                         'currency'          => $currency,
                         'bill_id'           => $response_data->response->payment->token_id,
                         'payment_url'       => $response_data->response->payment->url,
+                        'created_at'        => Carbon::parse($date_admission)->format('Y-m-d H:i:s')
                     ]);
                     return $invoice_id;
                 }

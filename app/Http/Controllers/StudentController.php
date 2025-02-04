@@ -198,7 +198,7 @@ class StudentController extends Controller
 
             /* Create student */
             $student_id         =   DB::table('students')->insertGetId([
-                'date_joined'    =>  Carbon::now()->format('Y-m-d'),
+                'date_joined'    =>  Carbon::parse($request->date_admission)->format('Y-m-d H:i:s'),
                 'children_id'    =>  $request->children_id,
             ]);
                                             
@@ -219,7 +219,8 @@ class StudentController extends Controller
                     'fee_id'            =>  $fee['fee_info']['fee_id'],
                     'invoice_id'        =>  $new_invoice_id,
                     'use_old_fee'       =>  0,
-                    'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
+                    'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d'),
+                    'created_at'        =>  Carbon::parse($request->date_admission)->format('Y-m-d H:i:s')
                 ]);
 
                 /* Create Assessments */
@@ -234,6 +235,7 @@ class StudentController extends Controller
                         'student_fee_id'        =>  $student_fee_id,
                         'promotion_id'          =>  $promo['promo_id'],
                         'duration_remaining'    =>  $promo['duration_count'] - 1,
+                        'created_at'            =>  Carbon::parse($request->date_admission)->format('Y-m-d H:i:s')
                     ]);
                 }
 
@@ -661,7 +663,8 @@ class StudentController extends Controller
                     'fee_id'            =>  $fee['fee_info']['fee_id'],
                     'invoice_id'        =>  $new_invoice_id,
                     'use_old_fee'       =>  $fee['fee_info']['use_old_fee'],
-                    'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d')
+                    'admission_date'    =>  Carbon::parse($request->date_admission)->format('Y-m-d'),
+                    'created_at'        =>  Carbon::parse($request->date_admission)->format('Y-m-d H:i:s')
                 ]);
 
                 /* Create assessment */
@@ -686,6 +689,7 @@ class StudentController extends Controller
                         'student_fee_id'        =>  $student_fee_id,
                         'promotion_id'          =>  $promo['promo_id'],
                         'duration_remaining'    =>  $promo['duration_count'] - 1,
+                        'created_at'            =>  Carbon::parse($request->date_admission)->format('Y-m-d H:i:s'),
                     ]);
                 }
 
