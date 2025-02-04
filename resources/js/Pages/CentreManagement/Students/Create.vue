@@ -29,7 +29,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Admin/Authenticated.vue';
                         </div>
                         <div>
                             <Label>Start Date<span class="text-red-500">*</span></Label>
-                            <Datepicker mode="date" :format="'dd/MM/yyyy'" v-model="form.date_admission" disabled/>
+                            <Datepicker mode="date" :format="'dd/MM/yyyy'" v-model="form.date_admission"/>
                         </div>
                         <div>
                             <Label>Programme<span class="text-red-500">*</span></Label>
