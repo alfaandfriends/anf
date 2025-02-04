@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # <- This line is required
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,7 +21,6 @@ jobs:
           username: ${{ secrets.PRODUCTION_SSH_USERNAME }}
           key: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
           script: |
-            echo "Deploying..."
             cd app.alfaandfriends.com
             git pull origin main
             composer install
