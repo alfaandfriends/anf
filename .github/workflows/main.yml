@@ -12,15 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
 
       - name: Run SSH Command
-        run: ssh -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ secrets.PRODUCTION_SSH_HOST }} "cd app.alfaandfriends.com"
+        run: |
+          sshpass -p "${{ secrets.PRODUCTION_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ secrets.PRODUCTION_SSH_HOST }} "cd app.alfaandfriends.com"
 
       # - name: Deploy to Production
       #   # if: github.ref == 'refs/heads/main'
