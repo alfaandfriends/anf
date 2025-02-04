@@ -17,7 +17,14 @@ jobs:
 
       - name: Run SSH Command
         run: |
-          sshpass -p "${{ secrets.PRODUCTION_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ secrets.PRODUCTION_SSH_HOST }} "cd app.alfaandfriends.com"
+          sshpass -p "${{ secrets.PRODUCTION_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ secrets.PRODUCTION_SSH_HOST }} "
+            cd app.alfaandfriends.com
+            git pull origin main
+            composer install
+            npm install install
+            npm run build
+            php artisan optimize:clear
+          "
 
       # - name: Deploy to Production
       #   # if: github.ref == 'refs/heads/main'
