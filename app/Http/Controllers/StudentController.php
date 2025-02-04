@@ -639,6 +639,27 @@ class StudentController extends Controller
 
     public function addStudentClass(Request $request)
     {
+        $currentYear = Carbon::parse($request->date_admission)->year; 
+        $currentMonth = Carbon::parse($request->date_admission)->month;
+
+        foreach ($request->fee as $fee_array) {
+            $exists =   DB::table('student_fees')
+                            ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
+                            ->join('programme_levels', 'programme_level_fees.programme_level_id', '=', 'programme_levels.id')
+                            ->where('student_fees.student_id', $request->student_id)
+                            ->where('programme_levels.programme_id', $fee_array['fee_info']['programme_id'])
+                            ->where('programme_levels.level', $fee_array['fee_info']['programme_level'])
+                            ->whereYear('student_fees.admission_date', $currentYear)
+                            ->whereMonth('student_fees.admission_date', $currentMonth)
+                            ->whereYear('student_fees.created_at', $currentYear)
+                            ->whereMonth('student_fees.created_at', $currentMonth)
+                            ->exists();
+                            
+            if ($exists) {
+                return back()->with(['type' => 'error', 'message' => 'Programme '.$fee_array['fee_info']['programme_name']. ' already exist.']);
+            }
+        }
+        
         try {
             // Begin the transaction
             DB::beginTransaction();

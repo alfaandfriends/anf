@@ -1412,8 +1412,14 @@ export default {
       }
       this.processing.add_class = true
       this.$inertia.post(route("students.add_student_class"), this.form, {
-        preserveState: false,
         preserveScroll: true,
+        onSuccess: () => {
+          if(this.$page.props.flash.type != 'error'){
+            this.show_add_class = false
+            this.$inertia.reload()
+          }
+          this.processing.add_class = false
+        },
       });
     },
     deleteClass(student_fee_id, invoice_id, admission_date, centre_id, programme_id) {
