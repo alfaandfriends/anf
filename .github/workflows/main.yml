@@ -20,7 +20,7 @@ jobs:
           ssh-keyscan -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Run SSH Command
-        run: ssh -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ PRODUCTION_SSH_HOST.SSH_HOST }} "cd app.alfaandfriends.com"
+        run: ssh -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ secrets.PRODUCTION_SSH_HOST }} "cd app.alfaandfriends.com"
 
       # - name: Deploy to Production
       #   # if: github.ref == 'refs/heads/main'
