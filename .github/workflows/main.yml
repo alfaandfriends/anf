@@ -26,3 +26,9 @@ jobs:
             composer install
             npm run build
             php artisan optimize:clear
+
+      - name: Debug Secrets
+        run: |
+          echo "SSH_HOST=${{ secrets.PRODUCTION_SSH_HOST }}"
+          echo "SSH_PORT=${{ secrets.PRODUCTION_SSH_PORT }}"
+          echo "SSH_USERNAME=${{ secrets.PRODUCTION_SSH_USERNAME }}"
