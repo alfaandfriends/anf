@@ -19,7 +19,7 @@ jobs:
           echo "SSH_USERNAME=${{ secrets.PRODUCTION_SSH_USERNAME }}"
           
       - name: Deploy to Production
-        # if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.PRODUCTION_SSH_HOST }}
