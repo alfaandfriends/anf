@@ -17,10 +17,10 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p 55000 your_host_address >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Run SSH Command
-        run: ssh -p 55000 your_user@your_host_address "cd app.alfaandfriends.com"
+        run: ssh -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ PRODUCTION_SSH_HOST.SSH_HOST }} "cd app.alfaandfriends.com"
 
       # - name: Deploy to Production
       #   # if: github.ref == 'refs/heads/main'
