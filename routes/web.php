@@ -34,4 +34,3 @@ require __DIR__.'/docs.php';
 require __DIR__.'/approvals.php';
 require __DIR__.'/helpers.php';
 require __DIR__.'/crm.php';
-require __DIR__.'/ai.php';

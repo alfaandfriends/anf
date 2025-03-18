@@ -3,154 +3,99 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use OpenAI;
 
 class AiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return Inertia::render('AiChat/Index');
-    }
+    public function commentGenerator(Request $request)
+    {   
+        $client = OpenAI::client(env('OPENAI_API_KEY'));
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $prompt = "Persona: Professional & Formal Teacher
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $api_key = env('OPENAI_API_KEY');
-        $client = OpenAI::client($api_key);
-        
-        // $thread = $client->threads()->createAndRun(
-        //     [
-        //         'assistant_id' => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
-        //         'thread' => [
-        //             'messages' =>
-        //                 [
-        //                     [
-        //                         'role' => 'user',
-        //                         'content' => '
-        //                             You are an intelligent teaching assistant. You generate quiz questions based on provided study materials or relevant context retrieved from a vector store. Your goal is to create engaging, level-appropriate questions that help the student reinforce their understanding of the material.
+            You will generate comment that explain to parents about the student's progress in the lesson. The comment should be at max 100 words. The comment should include the following information:
 
-        //                             Based on the following content retrieved from the vector store, create a set of quiz questions. Include a mix of multiple-choice, true/false, and short-answer questions. The questions should align with a BEGINNER level of understanding.
+            IMPORTANT: Please ensure that the comment is appropriate and does not contain any sensitive information.
+            IMPORTANT: Make sure that comment is understandable by parents.
+            IMPORTANT: Make sure that comment is relevant to the student's progress.
+            IMPORTANT: New paragraph for each point with simple explanation.
+            IMPORTANT: Avoid negative tone.
+            IMPORTANT: Avoid suggestive comment and parent involvement.
 
-        //                             Content: {vector stores}
+            EXAMPLE: This student has demonstrated proficiency in using fact families to determine unknown numbers in mathematical equations. They have effectively applied this strategy to identify the correct answer, showcasing a strong understanding of the concept.
+            EXAMPLE: This student has successfully learned to arrange numbers in both ascending and descending order. They can accurately differentiate between the two and identify smaller and larger numbers. Additionally, their workbook demonstrates a strong grasp of the concept, with all answers correct. They show confidence and proficiency in comparing and ordering numbers.
 
-        //                             Guidelines:
-        //                             - Generate 5-10 questions.
-        //                             - Use clear, concise language.
-        //                             - If the material includes key terms or concepts, create questions to test their definitions or applications.
-        //                             - Include options for multiple-choice questions.
+            $request->user_prompt
+        ";
 
-        //                             Start generating the questions now.',
-        //                     ],
-        //                 ],
-        //         ],
-        //     ],
-        // );
-        
-        // while(in_array($thread->status, ['queued', 'in_progress'])) {
-        //     $threadRun = $client->threads()->runs()->retrieve(
-        //         threadId: $thread->threadId,
-        //         runId: $thread->id,
-        //     );
-        // }
-
-        // if ($threadRun->status !== 'completed') {
-        //     dump('Request failed, please try again');
-        // }
-
-        // $messageList = $client->threads()->messages()->list(
-        //     threadId: $threadRun->threadId,
-        // );
-
-        // dd($messageList->data[0]->content[0]->text->value);
-
-        $thread = $client->threads()->createAndRun(
-            [
-                'assistant_id' => 'asst_wRbO55kZ9S8XmxSkqu5ndCB4',
-                'thread' => [
-                    'messages' =>
-                        [
-                            [
-                                'role' => 'user',
-                                'content' => '
-                                    You are an intelligent teaching assistant. You generate quiz questions based on provided study materials or relevant context retrieved from a vector store. Your goal is to create engaging, level-appropriate questions that help the student reinforce their understanding of the material.
-                
-                                    Based on the following content retrieved from the vector store, create a set of quiz questions. Include a mix of multiple-choice, true/false, and short-answer questions. The questions should align with a BEGINNER level of understanding.
-                
-                                    Content: {vector stores}
-                
-                                    Guidelines:
-                                    - Generate 5-10 questions.
-                                    - Use clear, concise language.
-                                    - If the material includes key terms or concepts, create questions to test their definitions or applications.
-                                    - Include options for multiple-choice questions.
-                
-                                    Start generating the questions now.',
-                            ],
-                        ],
+        return response()->stream(function () use ($client, $prompt) {
+            $stream = $client->chat()->createStreamed([
+                'model' => 'gpt-4o-mini',
+                'messages' => [
+                    ['role' => 'user', 'content' => $prompt],
                 ],
-            ],
-        );
-        $threadId = $thread->threadId;
-        $runId = $thread->id;
-        
-        while(true){
-            $response = $client->threads()->runs()->retrieve(
-                threadId: $threadId,
-                runId: $runId,
-            );
-            if($response->status !== 'in_progress'){
-                $output = $client->threads()->messages()->list($threadId, [
-                    'limit' => 10,
-                ]);
-                dd($output);
+            ]);
+
+            foreach ($stream as $response) {
+                if ($response->choices[0]->delta->content ?? false) {
+                    echo $response->choices[0]->delta->content;
+                    ob_flush(); // Ensure data is sent immediately
+                    flush();
+                }
             }
-        }
+        }, 200, [
+            "Content-Type" => "text/event-stream",
+            "Cache-Control" => "no-cache",
+            "Connection" => "keep-alive"
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    public function commentImprove(Request $request)
+    {   
+        $client = OpenAI::client(env('OPENAI_API_KEY'));
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $prompt = "Persona: Professional & Formal Teacher
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+            Improvise the selected text ONLY with provided context
+            $request->user_prompt
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            IMPORTANT: Please ensure that the comment is appropriate and does not contain any sensitive information.
+            IMPORTANT: Make sure that comment is understandable by parents.
+            IMPORTANT: Make sure that comment is relevant to the student's progress.
+            IMPORTANT: New paragraph for each point with simple explanation.
+            IMPORTANT: Avoid negative tone.
+            IMPORTANT: Avoid suggestive comment and parent involvement.
+
+            <example>
+                Actual comment: While they are still working on counting in groups of 2s, 5s, and 10s, their participation shows enthusiasm for the lessons. 
+                Selected phrase: shows enthusiasm for the lessons
+                Response: Improved phrase for `shows enthusiasm for the lessons`
+            </example>
+
+
+            SUPER IMPORTANT: ONLY reply the improvised phrase that will replace the selected phrase.
+        ";
+
+        return response()->stream(function () use ($client, $prompt) {
+            $stream = $client->chat()->createStreamed([
+                'model' => 'gpt-4o-mini',
+                'messages' => [
+                    ['role' => 'user', 'content' => $prompt],
+                ],
+            ]);
+
+            foreach ($stream as $response) {
+                if ($response->choices[0]->delta->content ?? false) {
+                    echo $response->choices[0]->delta->content;
+                    ob_flush(); // Ensure data is sent immediately
+                    flush();
+                }
+            }
+        }, 200, [
+            "Content-Type" => "text/event-stream",
+            "Cache-Control" => "no-cache",
+            "Connection" => "keep-alive"
+        ]);
     }
 }

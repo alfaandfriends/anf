@@ -4,6 +4,7 @@ use App\Classes\InvoiceHelper;
 use App\Classes\ProductHelper;
 use App\Classes\ProgressReportHelper;
 use App\Classes\StoryHelper;
+use App\Http\Controllers\AiController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProgrammeController;
@@ -43,3 +44,6 @@ Route::get('/programmes/get-fee', [ProgrammeController::class, 'getFee'])->name(
 Route::get('classes/get-class-types', [ClassController::class, 'getClassTypes'])->name('classes.get_class_types');
 Route::get('classes/get-class-levels', [ClassController::class, 'getClassLevels'])->name('classes.get_class_levels');
 Route::get('classes/find', [ClassController::class, 'findClasses'])->name('classes.find');
+
+Route::post('ai/comment-generator', [AiController::class, 'commentGenerator'])->name('ai.comment_generator');
+Route::post('ai/comment-improve', [AiController::class, 'commentImprove'])->name('ai.comment_improve');
