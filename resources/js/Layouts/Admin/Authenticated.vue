@@ -446,7 +446,7 @@ export default {
         </div>
         <slot />
         <Toaster v-if="$page.props.flash.type" />
-        <NotificationPanel v-if="!$page.props.auth.user.is_admin" />
+        <NotificationPanel />
       </main>
       <div
         class="flex justify-center border-t items-center py-5 px-6 bg-white text-slate-900 font-bold"

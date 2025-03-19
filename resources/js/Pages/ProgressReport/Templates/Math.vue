@@ -52,6 +52,7 @@ import BreezeAuthenticatedLayout from "@/Layouts/Admin/Authenticated.vue";
                     { 'bg-green-200 text-green-600': result.attendance_status == 1 },
                     { 'bg-red-200 text-red-600': result.attendance_status == 2 },
                     { 'bg-gray-200 text-gray-600': result.attendance_status == 3 },
+                    { 'bg-blue-200 text-blue-600': result.attendance_status == 4 },
                   ]"
                   >{{ result.attendance_status_name }}</span
                 >

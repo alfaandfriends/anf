@@ -122,26 +122,30 @@ export default {
   >
     <Accordion type="single" collapsible v-model="isOpen">
       <AccordionItem value="notification" class="border-0">
-        <AccordionTrigger
-          class="text-white px-5 mb-0 min-w-72 border-b border-dashed border-b-slate-400"
-        >
-          <div class="flex items-center gap-1 text-xs text-red-400">
+        <AccordionTrigger class="text-white px-5 mb-0 min-w-72">
+          <div
+            class="flex items-center gap-1 text-xs text-red-400"
+            v-if="$page.props.pending_task"
+          >
             <OctagonAlert class="w-5 h-5" />
             <span class="whitespace-pre select-none font-medium tracking-wide">
               You have pending tasks
             </span>
           </div>
-          <!-- <div class="flex items-center gap-1 text-xs text-green-400">
+          <div class="flex items-center gap-1 text-xs text-green-400" v-else>
             <CheckCircle2 class="w-5 h-5" />
             <span class="whitespace-pre select-none font-medium tracking-wide">
-              All tasks have been completed
+              No pending tasks
             </span>
-          </div> -->
+          </div>
         </AccordionTrigger>
         <AccordionContent class="cursor-default">
-          <div class="mt-4 px-6 py-0.5 text-xs">
+          <div class="border-t border-dashed border-t-slate-400 pt-4 px-6 py-0.5 text-xs">
             <ul class="list-disc list-inside">
-              <li>The progress report has not been completed yet.</li>
+              <li v-if="$page.props.pending_task">
+                The progress report has not been completed yet.
+              </li>
+              <li v-else>All tasks has been completed.</li>
             </ul>
           </div>
         </AccordionContent>

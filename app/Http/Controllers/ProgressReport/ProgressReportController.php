@@ -55,8 +55,13 @@ class ProgressReportController extends Controller
                                     DB::raw('count(progress_reports.id) as total_class'),
                                     DB::raw('count(CASE WHEN progress_report_details.attendance_status = 1 THEN 1 END) as total_present'), 
                                     DB::raw('count(CASE WHEN progress_report_details.attendance_status = 2 THEN 1 END) as total_absent'), 
+                                    DB::raw("
+                                        CASE 
+                                            WHEN progress_report_details.date < CURDATE() AND (progress_report_details.attendance_status != 3 AND progress_report_details.attendance_status != 4) THEN true 
+                                            ELSE false 
+                                        END as status_complete
+                                    ")
                         )
-                        // ->whereNull('student_fees.status')
                         ->where('programmes.progress_report_required', 1)
                         ->orderBy('children.name');
                         

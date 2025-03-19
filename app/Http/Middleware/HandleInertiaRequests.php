@@ -13,6 +13,7 @@ use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use PDO;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -43,16 +44,17 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         if($request->user()){
-            $permissions            =   $this->userPermissions();
-            $menus                  =   $this->userMenus();
-            $profile_picture        =   $this->userProfilePicture();
-            $allowed_centres        =   $this->userAllowedCentres();
-            $user_is_admin          =   $this->userIsAdmin();
-            $user_has_notification  =   $this->userHasNotifications();
-            $user_notifications     =   $this->userNotifications();
-            $user_has_roles         =   $this->userHasRoles();
-            $user_has_children      =   $this->userHasChildren();
-            $children_classes      =    $this->childrenClasses();
+            $permissions                =   $this->userPermissions();
+            $menus                      =   $this->userMenus();
+            $profile_picture            =   $this->userProfilePicture();
+            $allowed_centres            =   $this->userAllowedCentres();
+            $user_is_admin              =   $this->userIsAdmin();
+            $user_has_notification      =   $this->userHasNotifications();
+            $user_notifications         =   $this->userNotifications();
+            $user_has_roles             =   $this->userHasRoles();
+            $user_has_children          =   $this->userHasChildren();
+            $children_classes           =   $this->childrenClasses();
+            $pending_task               =   $this->getPendingTask();
         }
         
         return array_merge(parent::share($request), [
@@ -78,6 +80,7 @@ class HandleInertiaRequests extends Middleware
             'user_has_children' => $user_has_children ?? [],
             'children_classes' => $children_classes ?? [],
             'session_data' => session()->all() ?? [],
+            'pending_task' => $pending_task ?? false,
         ]);
     }
 
@@ -207,8 +210,29 @@ class HandleInertiaRequests extends Middleware
                                     $hashids = new Hashids('', 10);
                                     $item->programme_id = $hashids->encode($item->programme_id);
                                     return $item;
-                                }));
-        //  dd($children_classes);                       
+                                }));           
         return $children_classes;
+    }
+
+    public function getPendingTask(){
+        $admin = auth()->user()->is_admin || auth()->user()->can_view_all_centres;
+
+        if(!$admin){
+            $centres = DB::table('user_has_centres')
+                                    ->where('user_id', auth()->id())
+                                    ->get()->pluck('centre_id');
+
+            return DB::table('progress_reports')
+                    ->join('progress_report_details', 'progress_report_details.progress_report_id', '=', 'progress_reports.id')
+                    ->join('student_fees', 'progress_reports.student_fee_id', '=', 'student_fees.id')
+                    ->whereIn('student_fees.centre_id', $centres)
+                    ->whereYear('progress_report_details.date', Carbon::now()->format('Y'))
+                    ->whereBetween('progress_report_details.date', [
+                        Carbon::now()->subMonth()->startOfMonth()->toDateString(),
+                        Carbon::today()->toDateString()
+                    ])
+                    ->where('progress_report_details.attendance_status', 3)
+                    ->exists();
+        }
     }
 }
