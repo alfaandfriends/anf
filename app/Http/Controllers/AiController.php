@@ -30,6 +30,7 @@ class AiController extends Controller
         ";
 
         return response()->stream(function () use ($client, $prompt) {
+            ob_start();
             $stream = $client->chat()->createStreamed([
                 'model' => 'gpt-4o-mini',
                 'messages' => [
@@ -44,6 +45,7 @@ class AiController extends Controller
                     flush();
                 }
             }
+            ob_end_flush();
         }, 200, [
             "Content-Type" => "text/event-stream",
             "Cache-Control" => "no-cache",
@@ -78,6 +80,7 @@ class AiController extends Controller
         ";
 
         return response()->stream(function () use ($client, $prompt) {
+            ob_start();
             $stream = $client->chat()->createStreamed([
                 'model' => 'gpt-4o-mini',
                 'messages' => [
@@ -92,6 +95,7 @@ class AiController extends Controller
                     flush();
                 }
             }
+            ob_end_flush();
         }, 200, [
             "Content-Type" => "text/event-stream",
             "Cache-Control" => "no-cache",
