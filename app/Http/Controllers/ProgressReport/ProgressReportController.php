@@ -57,36 +57,36 @@ class ProgressReportController extends Controller
                                     DB::raw('count(CASE WHEN progress_report_details.attendance_status = 2 THEN 1 END) as total_absent'), 
                                     DB::raw("
                                         CASE 
-                                            WHEN progress_report_details.date < CURDATE() AND (progress_report_details.attendance_status != 3 AND progress_report_details.attendance_status != 4) THEN true 
-                                            ELSE false 
+                                            WHEN progress_report_details.date <= CURDATE() 
+                                                AND (progress_report_details.attendance_status != 3)
+                                                AND (count(progress_reports.id) = count(CASE WHEN progress_report_details.attendance_status = 1 THEN 1 END) + count(CASE WHEN progress_report_details.attendance_status = 2 THEN 1 END))
+                                            THEN 1 
+                                            ELSE 0 
                                         END as status_complete
                                     ")
                         )
                         ->where('programmes.progress_report_required', 1)
                         ->orderBy('children.name');
                         
-        if($request->search){
-            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
-        }
+        $query->when($request->search, function($query) use ($request) {
+            return $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+        });
         
-
-
         $request->merge([
             'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
         ]);
+        $query->when($request->programme_id, function($query) use ($request) {
+            return $query->where('progress_report_configs.programme_id', $request->programme_id);
+        });
 
-        if($request->programme_id){
-            $query->where('progress_report_configs.programme_id', 'LIKE', '%'.$request->programme_id.'%');
-        }
+        $query->when($request->date, function($query) use ($request) {
+            return $query->whereMonth('progress_reports.month', $request->date['month']+1)
+                        ->whereYear('progress_reports.month', $request->date['year']);
+        });
 
-        if($request->date){
-            $query->whereMonth('progress_reports.month', $request->date['month']+1);
-            $query->whereYear('progress_reports.month', $request->date['year']);
-        }
-
-        if($request->programme_level){
-            $query->where('programme_levels.level', $request->programme_level);
-        }
+        $query->when($request->programme_level, function($query) use ($request) {
+            return $query->where('programme_levels.level', $request->programme_level);
+        });
         
         $query->where('student_fees.centre_id', '=', $request->centre_id);
         // $query->where('students.status', '=', 1);
