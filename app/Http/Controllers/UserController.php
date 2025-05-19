@@ -86,7 +86,8 @@ class UserController extends Controller
         }
         
         $random_password        =   Str::random(20);
-        $hashed_random_password =   '$wp$' . password_hash(base64_encode(hash_hmac('sha384', $random_password, 'wp-sha384', true)), PASSWORD_DEFAULT);
+        $password_to_hash = base64_encode(hash_hmac('sha384', $random_password, 'wp-sha384', true));
+        $hashed_random_password =   '$wp' . password_hash($password_to_hash, PASSWORD_DEFAULT);
 
         try{
             DB::beginTransaction();
@@ -256,7 +257,8 @@ class UserController extends Controller
     public function resetUserPassword(Request $request){
 
         $random_password        =   Str::random(20);
-        $hashed_random_password =   '$wp$' . password_hash(base64_encode(hash_hmac('sha384', $random_password, 'wp-sha384', true)), PASSWORD_DEFAULT);
+        $password_to_hash = base64_encode(hash_hmac('sha384', $random_password, 'wp-sha384', true));
+        $hashed_random_password =   '$wp' . password_hash($password_to_hash, PASSWORD_DEFAULT);
         
         DB::table('wpvt_users')->where('ID', $request->data)->update(['user_pass' => $hashed_random_password]);   
 

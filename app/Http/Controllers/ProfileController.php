@@ -79,7 +79,15 @@ class ProfileController extends Controller
             return redirect()->back()->withErrors($validator)->withInput()->with(['type'=>'error', 'message'=>'Please fill in all the required fields']);
         }
 
-        $current_password_match     =   WpPassword::check($request->current_password, auth()->user()->user_pass);
+        $current_password = auth()->user()->user_pass;
+        $current_password_match = false;
+        
+        if (str_starts_with($current_password, '$wp')) {
+            $password_to_verify = base64_encode(hash_hmac('sha384', $request->current_password, 'wp-sha384', true));
+            $current_password_match = password_verify($password_to_verify, substr($current_password, 3));
+        } else {
+            $current_password_match = WpPassword::check($request->current_password, $current_password);
+        }
 
         if(!$current_password_match){
             return  redirect()->back()
@@ -95,7 +103,7 @@ class ProfileController extends Controller
         }
 
         $request->user()->fill([
-            'user_pass' => WpPassword::make($request->new_password)
+            'user_pass' => '$wp$' . password_hash(base64_encode(hash_hmac('sha384', $request->new_password, 'wp-sha384', true)), PASSWORD_DEFAULT)
         ])->save();
 
 
