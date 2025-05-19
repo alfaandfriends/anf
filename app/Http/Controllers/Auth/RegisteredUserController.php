@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
             'user_login' => $request->username,
             'user_nicename' => $request->username,
             'user_email' => $request->email,
-            'user_pass' => Hash::make($request->password),
+            'user_pass' => '$wp$' . password_hash(base64_encode(hash_hmac('sha384', $request->password, 'wp-sha384', true)), PASSWORD_DEFAULT),
         ]);
 
         event(new Registered($user));

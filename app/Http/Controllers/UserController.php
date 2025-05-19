@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use MikeMcLin\WpPassword\Facades\WpPassword;
 
 class UserController extends Controller
 {
@@ -85,7 +86,7 @@ class UserController extends Controller
         }
         
         $random_password        =   Str::random(20);
-        $hashed_random_password =   Hash::make($random_password);
+        $hashed_random_password =   '$wp$' . password_hash(base64_encode(hash_hmac('sha384', $random_password, 'wp-sha384', true)), PASSWORD_DEFAULT);
 
         try{
             DB::beginTransaction();
@@ -255,7 +256,7 @@ class UserController extends Controller
     public function resetUserPassword(Request $request){
 
         $random_password        =   Str::random(20);
-        $hashed_random_password =   Hash::make($random_password);
+        $hashed_random_password =   '$wp$' . password_hash(base64_encode(hash_hmac('sha384', $random_password, 'wp-sha384', true)), PASSWORD_DEFAULT);
         
         DB::table('wpvt_users')->where('ID', $request->data)->update(['user_pass' => $hashed_random_password]);   
 
