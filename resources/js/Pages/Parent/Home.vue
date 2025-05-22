@@ -1,366 +1,575 @@
- <style>
+<style>
 /* Define a custom scrollbar */
 textarea::-webkit-scrollbar {
-width: 5px; /* Width of the scrollbar */
-border-radius: 8px; /* Rounded corners */
+  width: 5px; /* Width of the scrollbar */
+  border-radius: 8px; /* Rounded corners */
 }
 
 /* Track */
 textarea::-webkit-scrollbar-track {
-background:  transparent; /* Color of the track */
-border-radius: 8px; /* Rounded corners */
+  background: transparent; /* Color of the track */
+  border-radius: 8px; /* Rounded corners */
 }
 
 /* Handle */
 textarea::-webkit-scrollbar-thumb {
-background: #888; /* Color of the handle */
-border-radius: 8px; /* Rounded corners */
+  background: #888; /* Color of the handle */
+  border-radius: 8px; /* Rounded corners */
 }
 
 /* Handle on hover */
 textarea::-webkit-scrollbar-thumb:hover {
-background: #555; /* Color of the handle when hovered */
+  background: #555; /* Color of the handle when hovered */
 }
 </style>
 
 <template>
-    <Head title="Home" />
-    <Authenticated @scroll="handleScroll">
-        <div class="flex justify-center">
-            <div class="flex-1 max-w-xl">
-                <div class="flex mb-3" v-if="$page.props.can.create_stories">
-                    <div class="flex items-center space-x-2 bg-indigo-100 rounded px-3 py-2 font-semibold w-full cursor-pointer transform scale-100 hover:scale-105 duration-200 select-none" @click="showCreatePost">
-                        <img width="44" height="44" src="https://img.icons8.com/dusk/64/create-new.png" alt="create-new"/>
-                        <div class="flex flex-col">
-                            <span>Create New Story</span>
-                            <span class="text-xs text-gray-700">Share student activities, notices, announcements or reminder with parents.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center space-y-3" v-if="$page.props.stories.data.length">
-                    <h2 class="text-lg md:text-xl mx-1 font-extrabold">Stories</h2>
-                </div>
-                <div class="flex justify-center mx-1 mt-20" v-if="!$page.props.stories.data.length">
-                    <span class="text-slate-500">No Stories Found</span>
-                </div>
-                <div class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl text-sm" v-if="$page.props.stories.data.length" v-for="story, story_index in $page.props.stories.data">
-                    <div class="flex flex-row text-sm items-center">
-                        <div class="flex justify-between items-center flex-1 font-bold leading-tight select-none">
-                            <div class="flex flex-col">
-                                <span class="text-slate-900 md:text-md font-bold">{{ story.story_author_name }}</span>
-                                <span class="text-xs font-medium text-slate-500">{{ story.story_programme_name }}</span>
-                            </div>
-                            <div class="flex items-center">
-                                <TimeAgo class="text-gray-500 font-medium text-xs" :datetime="story.story_date"></TimeAgo>
-                                <Menu as="div" class="relative inline-block text-left" v-if="$page.props.can.view_student_stories">
-                                    <MenuButton class="pl-3 py-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 128 512">
-                                            <path d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"/>
-                                        </svg>
-                                    </MenuButton>
-                                    <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                                        <MenuItems class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <div class="py-1 text-sm">
-                                            <a class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900" @click="openEditStoryModal(story_index)">Edit</a>
-                                            <a class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900" @click="deleteStory(story.story_id)">Delete</a>
-                                        </div>
-                                        </MenuItems>
-                                    </transition>
-                                </Menu>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <span class="text-sm text-slate-800">{{ story.story_title }}</span>
-                    <Carousel v-if="story.images.length" :mouseDrag="story.images.length > 1" :touchDrag="story.images.length > 1">
-                        <Slide v-for="image, image_index in story.images" :key="image">
-                        <div class="carousel__item h-full">
-                            <img :src="'/storage/stories/' + image.image_filename" class="select-none h-full" @dblclick="toggleLike(story_index, story.story_id)">
-                        </div>
-                        </Slide>
-                        <template #addons>
-                        <Navigation v-if="story.images.length > 1"/>
-                        </template>
-                    </Carousel>
-                    <div class="flex items-center space-x-4">
-                        <div class="">
-                            <svg v-if="isLikedByParent(story_index)" @click="toggleLike(story_index, story.story_id)" xmlns="http://www.w3.org/2000/svg" class="inline-block h-6 w-6 text-red-500 cursor-pointer" fill="currentColor" viewBox="0 0 512 512">
-                                <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
-                            </svg>
-                            <svg v-else @click="toggleLike(story_index, story.story_id)" xmlns="http://www.w3.org/2000/svg" class="inline-block h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer" fill="currentColor" viewBox="0 0 512 512">
-                                <path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/>
-                            </svg>
-                        </div>
-                        <!-- <span class="text-xs font-semibold select-none" v-if="isLikedByParent(story_index) && !$page.props.can.create_stories">You liked this</span> -->
-                        <div class="" @click="toggleComment(story_index)">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer" fill="currentColor" viewBox="0 0 512 512">
-                                <path d="M123.6 391.3c12.9-9.4 29.6-11.8 44.6-6.4c26.5 9.6 56.2 15.1 87.8 15.1c124.7 0 208-80.5 208-160s-83.3-160-208-160S48 160.5 48 240c0 32 12.4 62.8 35.7 89.2c8.6 9.7 12.8 22.5 11.8 35.5c-1.4 18.1-5.7 34.7-11.3 49.4c17-7.9 31.1-16.7 39.4-22.7zM21.2 431.9c1.8-2.7 3.5-5.4 5.1-8.1c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208s-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6c-15.1 6.6-32.3 12.6-50.1 16.1c-.8 .2-1.6 .3-2.4 .5c-4.4 .8-8.7 1.5-13.2 1.9c-.2 0-.5 .1-.7 .1c-5.1 .5-10.2 .8-15.3 .8c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c4.1-4.2 7.8-8.7 11.3-13.5c1.7-2.3 3.3-4.6 4.8-6.9c.1-.2 .2-.3 .3-.5z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="space-y-2" v-if="show_comment[story_index]">
-                        <div class="flex-col w-full mx-auto bg-white shadow border border-gray-300 px-4 py-3 rounded-lg" v-if="story.comments.length">
-                            <simplebar data-simplebar-auto-hide="true" class="max-h-96">
-                                <div class="divide-y space-y-2">
-                                    <div class="flex flex-row pt-1 md-10" v-for="comment in story.comments">
-                                        <div class="flex-col mt-1">
-                                            <div class="flex items-center flex-1 font-bold leading-tight">{{ comment.comment_user_name }}
-                                                <span class="text-xs font-normal text-gray-500 ml-2">
-                                                    <TimeAgo class="text-gray-500 font-medium text-xs" :datetime="comment.created_at" :key="comment.created_at"></TimeAgo>
-                                                </span>
-                                            </div>
-                                            <div class="flex-1 text-sm font-medium leading-loose text-gray-600">
-                                                {{ comment.comment }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </simplebar>
-                        </div>
-                        <Textarea rows="2" placeholder="Drop a comment..." :key="story_index" v-model="comments[story_index]"></Textarea>
-                        <div class="flex justify-end" @click="postComment(story_index, story.story_id)">
-                            <Button>Comment</Button>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-3 max-w-xl py-3 px-4 border border-gray-200 rounded-xl shadow animate-pulse bg-white" v-if="loading.stories">
-                    <div class="flex items-center">
-                        <div>
-                            <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32 mb-2"></div>
-                            <div class="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-4"></div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4 mt-3"></div>
-                    <div class="flex items-center justify-center h-48 mb-4 bg-gray-300 rounded dark:bg-gray-700">
-                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z"/>
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                        </svg>
-                    </div>
-                    <span class="sr-only">Loading...</span>
-                </div>
+  <Head title="Home" />
+  <Authenticated @scroll="handleScroll">
+    <div class="flex justify-center">
+      <div class="flex-1 max-w-xl">
+        <div class="flex mb-3" v-if="$page.props.can.create_stories">
+          <div
+            class="flex items-center space-x-2 bg-indigo-100 rounded px-3 py-2 font-semibold w-full cursor-pointer transform scale-100 hover:scale-105 duration-200 select-none"
+            @click="showCreatePost"
+          >
+            <img
+              width="44"
+              height="44"
+              src="https://img.icons8.com/dusk/64/create-new.png"
+              alt="create-new"
+            />
+            <div class="flex flex-col">
+              <span>Create New Story</span>
+              <span class="text-xs text-gray-700"
+                >Share student activities, notices, announcements or reminder with
+                parents.</span
+              >
             </div>
+          </div>
         </div>
-    </Authenticated>
-    
-    <FsLightbox
-        class="z-50"
-        :toggler="lightbox.open"
-        :sources="lightbox.src"
-        :exitFullscreenOnClose="true"
-    />
-    <Dialog v-model:open="show_add_story_modal" classProp="max-w-xl">
-      <template #title>Add Story</template>
-      <template #content>
-        <div class="grid grid-cols-1 gap-4 mb-5">
-            <ComboBox
-                :items="$page.props.programmes"
-                label-property="name"
-                value-property="id"
-                v-model="add_story.form.programme_id"
-                select-placeholder="Select Programme"
-                search-placeholder="Search programme..."
-            ></ComboBox>
-            <ComboBox
-                :items="$page.props.centres"
-                label-property="label"
-                value-property="ID"
-                v-model="add_story.form.centre_id"
-                select-placeholder="Select Centre"
-                search-placeholder="Search centre..."
-            ></ComboBox>
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                <ComboBox
-                    :items="$page.props.class_types"
-                    label-property="name"
-                    value-property="id"
-                    v-model="add_story.find.class_types"
-                    select-placeholder="Select Class Type (optional)"
-                    search-placeholder="Search class type..."
-                ></ComboBox>
-                <ComboBox
-                    :items="add_story.list.levels"
-                    label-property="level"
-                    value-property="id"
-                    v-model="add_story.find.levels"
-                    select-placeholder="Select Level (optional)"
-                    search-placeholder="Search level..."
-                >
-                    <template #label="{ item }">
-                        Level {{ item.level }}
-                    </template>
-                    <template #label-content="{ selectedItem, selectedItems, multiple }">
-                        <span v-if="selectedItem">Level {{ selectedItem.level }}</span>
-                    </template>
-                </ComboBox>
-            </div>
-            <ComboBox
-                :items="add_story.students[0].options"
-                label-property="name"
-                value-property="id"
-                v-model="add_story.form.students"
-                select-placeholder="Select Students"
-                search-placeholder="Search student..."
-                :multiple="true"
+        <div class="flex items-center space-y-3" v-if="$page.props.stories.data.length">
+          <h2 class="text-lg md:text-xl mx-1 font-extrabold">Stories</h2>
+        </div>
+        <div
+          class="flex justify-center mx-1 mt-20"
+          v-if="!$page.props.stories.data.length"
+        >
+          <span class="text-slate-500">No Stories Found</span>
+        </div>
+        <div
+          class="mt-3 flex flex-col space-y-3 bg-white py-3 px-4 shadow-md rounded-xl text-sm"
+          v-if="$page.props.stories.data.length"
+          v-for="(story, story_index) in $page.props.stories.data"
+        >
+          <div class="flex flex-row text-sm items-center">
+            <div
+              class="flex justify-between items-center flex-1 font-bold leading-tight select-none"
             >
-            </ComboBox>
-            <Textarea rows="3" placeholder="What's happening today?" v-model="add_story.form.caption"></Textarea>
-            <div class="w-full" v-if="add_story.form.photos.length">
-                <div class="overflow-x-auto scrollbar pb-3">
-                    <div class="flex space-x-4 mt-1">
-                        <div class="relative" v-for="(photo, photo_index) in add_story.form.photos" :key="photo_index">
-                            <div class="relative w-28 h-28">
-                                <img :src="photo.url" class="w-full h-full rounded-lg border-2 border-slate-200"  @click="viewImage(photo)"/>
-                                <XCircle class="rounded-full absolute -top-1 -right-1 text-red-600 bg-white h-5 w-5 cursor-pointer" @click="removePhoto(photo_index)"></XCircle>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="flex items-center justify-center w-full">
-                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhoto">
-                    <div class="flex flex-col items-center justify-center py-6">
-                        <svg class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                        </svg>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 ">
-                            <span class="font-semibold">Click to upload</span>
-                        </p>
-                        <span class="text-xs text-center text-slate-500">Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images to select multiple</span>
-                    </div>
-                    <input id="dropzone-file" type="file" class="hidden" multiple/>
-                </label>
-            </div> 
-            <Button :disabled="(add_story.form.photos.length || add_story.form.caption) && !add_story.form.students.length" @click="post">Post</Button>
-            <Button type="button" class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" @click="show_add_story_modal = false">Cancel</Button>
-        </div>
-      </template>
-    </Dialog>
-    <Dialog v-model:open="show_edit_story_modal" classProp="max-w-xl">
-      <template #title>Edit Story</template>
-      <template #content>
-        <div class="grid grid-cols-1 gap-4 mb-5">
-            <ComboBox
-                :items="$page.props.programmes"
-                label-property="name"
-                value-property="id"
-                v-model="edit_story.form.programme_id"
-                select-placeholder="Select Programme"
-                search-placeholder="Search programme..."
-            ></ComboBox>
-            <ComboBox
-                :items="$page.props.centres"
-                label-property="label"
-                value-property="ID"
-                v-model="edit_story.form.centre_id"
-                select-placeholder="Select Centre"
-                search-placeholder="Search centre..."
-            ></ComboBox>
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                <ComboBox
-                    :items="$page.props.class_types"
-                    label-property="name"
-                    value-property="id"
-                    v-model="edit_story.find.class_types"
-                    select-placeholder="Select Class Type (optional)"
-                    search-placeholder="Search class type..."
-                ></ComboBox>
-                <ComboBox
-                    :items="edit_story.list.levels"
-                    label-property="level"
-                    value-property="id"
-                    v-model="edit_story.find.levels"
-                    select-placeholder="Select Level (optional)"
-                    search-placeholder="Search level..."
+              <div class="flex flex-col">
+                <span class="text-slate-900 md:text-md font-bold">{{
+                  story.story_author_name
+                }}</span>
+                <span class="text-xs font-medium text-slate-500">{{
+                  story.story_programme_name
+                }}</span>
+              </div>
+              <div class="flex items-center">
+                <TimeAgo
+                  class="text-gray-500 font-medium text-xs"
+                  :datetime="story.story_date"
+                ></TimeAgo>
+                <Menu
+                  as="div"
+                  class="relative inline-block text-left"
+                  v-if="$page.props.can.view_student_stories"
                 >
-                    <template #label="{ item }">
-                        Level {{ item.level }}
-                    </template>
-                    <template #label-content="{ selectedItem, selectedItems, multiple }">
-                        <span v-if="selectedItem">Level {{ selectedItem.level }}</span>
-                    </template>
-                </ComboBox>
+                  <MenuButton class="pl-3 py-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      fill="currentColor"
+                      viewBox="0 0 128 512"
+                    >
+                      <path
+                        d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
+                      />
+                    </svg>
+                  </MenuButton>
+                  <transition
+                    enter-active-class="transition ease-out duration-100"
+                    enter-from-class="transform opacity-0 scale-95"
+                    enter-to-class="transform opacity-100 scale-100"
+                    leave-active-class="transition ease-in duration-75"
+                    leave-from-class="transform opacity-100 scale-100"
+                    leave-to-class="transform opacity-0 scale-95"
+                  >
+                    <MenuItems
+                      class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    >
+                      <div class="py-1 text-sm">
+                        <a
+                          class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900"
+                          @click="openEditStoryModal(story_index)"
+                          >Edit</a
+                        >
+                        <a
+                          class="cursor-pointer block px-4 py-2 text-sm hover:bg-indigo-100 text-gray-900"
+                          @click="deleteStory(story.story_id)"
+                          >Delete</a
+                        >
+                      </div>
+                    </MenuItems>
+                  </transition>
+                </Menu>
+              </div>
             </div>
-            <ComboBox
-                :items="edit_story.students[0].options"
-                label-property="name"
-                value-property="id"
-                v-model="edit_story.form.students"
-                select-placeholder="Select Students"
-                search-placeholder="Search student..."
-                :multiple="true"
+          </div>
+          <hr />
+          <span class="text-sm text-slate-800">{{ story.story_title }}</span>
+          <Carousel
+            v-if="story.images.length"
+            :mouseDrag="story.images.length > 1"
+            :touchDrag="story.images.length > 1"
+          >
+            <Slide v-for="(image, image_index) in story.images" :key="image">
+              <div class="carousel__item h-full">
+                <img
+                  :src="'/storage/stories/' + image.image_filename"
+                  class="select-none h-full"
+                  @dblclick="toggleLike(story_index, story.story_id)"
+                />
+              </div>
+            </Slide>
+            <template #addons>
+              <Navigation v-if="story.images.length > 1" />
+            </template>
+          </Carousel>
+          <div class="flex items-center space-x-4">
+            <div class="">
+              <svg
+                v-if="isLikedByParent(story_index)"
+                @click="toggleLike(story_index, story.story_id)"
+                xmlns="http://www.w3.org/2000/svg"
+                class="inline-block h-6 w-6 text-red-500 cursor-pointer"
+                fill="currentColor"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"
+                />
+              </svg>
+              <svg
+                v-else
+                @click="toggleLike(story_index, story.story_id)"
+                xmlns="http://www.w3.org/2000/svg"
+                class="inline-block h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer"
+                fill="currentColor"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"
+                />
+              </svg>
+            </div>
+            <!-- <span class="text-xs font-semibold select-none" v-if="isLikedByParent(story_index) && !$page.props.can.create_stories">You liked this</span> -->
+            <div class="" @click="toggleComment(story_index)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="inline-block h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer"
+                fill="currentColor"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  d="M123.6 391.3c12.9-9.4 29.6-11.8 44.6-6.4c26.5 9.6 56.2 15.1 87.8 15.1c124.7 0 208-80.5 208-160s-83.3-160-208-160S48 160.5 48 240c0 32 12.4 62.8 35.7 89.2c8.6 9.7 12.8 22.5 11.8 35.5c-1.4 18.1-5.7 34.7-11.3 49.4c17-7.9 31.1-16.7 39.4-22.7zM21.2 431.9c1.8-2.7 3.5-5.4 5.1-8.1c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208s-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6c-15.1 6.6-32.3 12.6-50.1 16.1c-.8 .2-1.6 .3-2.4 .5c-4.4 .8-8.7 1.5-13.2 1.9c-.2 0-.5 .1-.7 .1c-5.1 .5-10.2 .8-15.3 .8c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c4.1-4.2 7.8-8.7 11.3-13.5c1.7-2.3 3.3-4.6 4.8-6.9c.1-.2 .2-.3 .3-.5z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="space-y-2" v-if="show_comment[story_index]">
+            <div
+              class="flex-col w-full mx-auto bg-white shadow border border-gray-300 px-4 py-3 rounded-lg"
+              v-if="story.comments.length"
             >
-            </ComboBox>
-            <Textarea rows="3" placeholder="What's happening today?" v-model="edit_story.form.caption"></Textarea>
-            <div class="w-full" v-if="edit_story.form.photos.length">
-                <div class="overflow-x-auto scrollbar pb-3">
-                    <div class="flex space-x-4 mt-1">
-                        <div class="relative" v-for="(photo, photo_index) in edit_story.form.photos" :key="photo_index">
-                            <div class="relative w-28 h-28">
-                                <img :src="photo.url && !photo.story_id ? photo.url : '/storage/stories/' + photo.image_filename" class="w-full h-full rounded-lg border-2 border-slate-200"  @click="viewImage(photo)"/>
-                                <XCircle class="rounded-full absolute -top-1 -right-1 text-red-600 bg-white h-5 w-5 cursor-pointer" @click="removePhotoEditStory(photo_index)"></XCircle>
-                            </div>
-                        </div>
+              <simplebar data-simplebar-auto-hide="true" class="max-h-96">
+                <div class="divide-y space-y-2">
+                  <div class="flex flex-row pt-1 md-10" v-for="comment in story.comments">
+                    <div class="flex-col mt-1">
+                      <div class="flex items-center flex-1 font-bold leading-tight">
+                        {{ comment.comment_user_name }}
+                        <span class="text-xs font-normal text-gray-500 ml-2">
+                          <TimeAgo
+                            class="text-gray-500 font-medium text-xs"
+                            :datetime="comment.created_at"
+                            :key="comment.created_at"
+                          ></TimeAgo>
+                        </span>
+                      </div>
+                      <div class="flex-1 text-sm font-medium leading-loose text-gray-600">
+                        {{ comment.comment }}
+                      </div>
                     </div>
+                  </div>
                 </div>
+              </simplebar>
             </div>
-            <div class="flex items-center justify-center w-full">
-                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" @change="changePhotoEditStory">
-                    <div class="flex flex-col items-center justify-center py-6">
-                        <svg class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                        </svg>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 ">
-                            <span class="font-semibold">Click to upload</span>
-                        </p>
-                        <span class="text-xs text-center text-slate-500">Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images to select multiple</span>
-                    </div>
-                    <input id="dropzone-file" type="file" class="hidden" multiple/>
-                </label>
-            </div> 
-            <div class="flex flex-col gap-1">
-                <Button @click="savePost">Save</Button>
-                <Button variant="outline" @click="show_edit_story_modal = false">Cancel</Button>
+            <Textarea
+              rows="2"
+              placeholder="Drop a comment..."
+              :key="story_index"
+              v-model="comments[story_index]"
+            ></Textarea>
+            <div
+              class="flex justify-end"
+              @click="postComment(story_index, story.story_id)"
+            >
+              <Button>Comment</Button>
             </div>
+          </div>
         </div>
-      </template>
-    </Dialog>
-    <DeleteConfirmation :open="confirmation.is_open" @close="confirmation.is_open = false" :routeName="confirmation.route_name" :id="confirmation.id">
-        <template #title>Delete Story</template>
-        <template #description>Are you sure want to delete this story?</template>
-    </DeleteConfirmation>
+        <div
+          class="mt-3 max-w-xl py-3 px-4 border border-gray-200 rounded-xl shadow animate-pulse bg-white"
+          v-if="loading.stories"
+        >
+          <div class="flex items-center">
+            <div>
+              <div
+                class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32 mb-2"
+              ></div>
+              <div class="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-4"></div>
+            </div>
+          </div>
+          <hr />
+          <div
+            class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4 mt-3"
+          ></div>
+          <div
+            class="flex items-center justify-center h-48 mb-4 bg-gray-300 rounded dark:bg-gray-700"
+          >
+            <svg
+              class="w-10 h-10 text-gray-200 dark:text-gray-600"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 16 20"
+            >
+              <path
+                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z"
+              />
+              <path
+                d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"
+              />
+            </svg>
+          </div>
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </Authenticated>
+
+  <FsLightbox
+    class="z-50"
+    :toggler="lightbox.open"
+    :sources="lightbox.src"
+    :exitFullscreenOnClose="true"
+  />
+  <Dialog v-model:open="show_add_story_modal" classProp="max-w-xl">
+    <template #title>Add Story</template>
+    <template #content>
+      <div class="grid grid-cols-1 gap-4 mb-5">
+        <ComboBox
+          :items="$page.props.programmes"
+          label-property="name"
+          value-property="id"
+          v-model="add_story.form.programme_id"
+          select-placeholder="Select Programme"
+          search-placeholder="Search programme..."
+        ></ComboBox>
+        <ComboBox
+          :items="$page.props.centres"
+          label-property="label"
+          value-property="ID"
+          v-model="add_story.form.centre_id"
+          select-placeholder="Select Centre"
+          search-placeholder="Search centre..."
+        ></ComboBox>
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <ComboBox
+            :items="$page.props.class_types"
+            label-property="name"
+            value-property="id"
+            v-model="add_story.find.class_types"
+            select-placeholder="Select Class Type (optional)"
+            search-placeholder="Search class type..."
+          ></ComboBox>
+          <ComboBox
+            :items="add_story.list.levels"
+            label-property="level"
+            value-property="id"
+            v-model="add_story.find.levels"
+            select-placeholder="Select Level (optional)"
+            search-placeholder="Search level..."
+          >
+            <template #label="{ item }"> Level {{ item.level }} </template>
+            <template #label-content="{ selectedItem, selectedItems, multiple }">
+              <span v-if="selectedItem">Level {{ selectedItem.level }}</span>
+            </template>
+          </ComboBox>
+        </div>
+        <ComboBox
+          :items="add_story.students[0].options"
+          label-property="name"
+          value-property="id"
+          v-model="add_story.form.students"
+          select-placeholder="Select Students"
+          search-placeholder="Search student..."
+          :multiple="true"
+        >
+        </ComboBox>
+        <Textarea
+          rows="3"
+          placeholder="What's happening today?"
+          v-model="add_story.form.caption"
+        ></Textarea>
+        <div class="w-full" v-if="add_story.form.photos.length">
+          <div class="overflow-x-auto scrollbar pb-3">
+            <div class="flex space-x-4 mt-1">
+              <div
+                class="relative"
+                v-for="(photo, photo_index) in add_story.form.photos"
+                :key="photo_index"
+              >
+                <div class="relative w-28 h-28">
+                  <img
+                    :src="photo.url"
+                    class="w-full h-full rounded-lg border-2 border-slate-200"
+                    @click="viewImage(photo)"
+                  />
+                  <XCircle
+                    class="rounded-full absolute -top-1 -right-1 text-red-600 bg-white h-5 w-5 cursor-pointer"
+                    @click="removePhoto(photo_index)"
+                  ></XCircle>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-center w-full">
+          <label
+            for="dropzone-file"
+            class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+            @change="changePhoto"
+          >
+            <div class="flex flex-col items-center justify-center py-6">
+              <svg
+                class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 16"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                />
+              </svg>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                <span class="font-semibold">Click to upload</span>
+              </p>
+              <span class="text-xs text-center text-slate-500"
+                >Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images
+                to select multiple</span
+              >
+            </div>
+            <input id="dropzone-file" type="file" class="hidden" multiple />
+          </label>
+        </div>
+        <Button
+          :disabled="
+            (add_story.form.photos.length || add_story.form.caption) &&
+            !add_story.form.students.length
+          "
+          @click="post"
+          >Post</Button
+        >
+        <Button
+          type="button"
+          class="text-white bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center"
+          @click="show_add_story_modal = false"
+          >Cancel</Button
+        >
+      </div>
+    </template>
+  </Dialog>
+  <Dialog v-model:open="show_edit_story_modal" classProp="max-w-xl">
+    <template #title>Edit Story</template>
+    <template #content>
+      <div class="grid grid-cols-1 gap-4 mb-5">
+        <ComboBox
+          :items="$page.props.programmes"
+          label-property="name"
+          value-property="id"
+          v-model="edit_story.form.programme_id"
+          select-placeholder="Select Programme"
+          search-placeholder="Search programme..."
+        ></ComboBox>
+        <ComboBox
+          :items="$page.props.centres"
+          label-property="label"
+          value-property="ID"
+          v-model="edit_story.form.centre_id"
+          select-placeholder="Select Centre"
+          search-placeholder="Search centre..."
+        ></ComboBox>
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <ComboBox
+            :items="$page.props.class_types"
+            label-property="name"
+            value-property="id"
+            v-model="edit_story.find.class_types"
+            select-placeholder="Select Class Type (optional)"
+            search-placeholder="Search class type..."
+          ></ComboBox>
+          <ComboBox
+            :items="edit_story.list.levels"
+            label-property="level"
+            value-property="id"
+            v-model="edit_story.find.levels"
+            select-placeholder="Select Level (optional)"
+            search-placeholder="Search level..."
+          >
+            <template #label="{ item }"> Level {{ item.level }} </template>
+            <template #label-content="{ selectedItem, selectedItems, multiple }">
+              <span v-if="selectedItem">Level {{ selectedItem.level }}</span>
+            </template>
+          </ComboBox>
+        </div>
+        <ComboBox
+          :items="edit_story.students[0].options"
+          label-property="name"
+          value-property="id"
+          v-model="edit_story.form.students"
+          select-placeholder="Select Students"
+          search-placeholder="Search student..."
+          :multiple="true"
+        >
+        </ComboBox>
+        <Textarea
+          rows="3"
+          placeholder="What's happening today?"
+          v-model="edit_story.form.caption"
+        ></Textarea>
+        <div class="w-full" v-if="edit_story.form.photos.length">
+          <div class="overflow-x-auto scrollbar pb-3">
+            <div class="flex space-x-4 mt-1">
+              <div
+                class="relative"
+                v-for="(photo, photo_index) in edit_story.form.photos"
+                :key="photo_index"
+              >
+                <div class="relative w-28 h-28">
+                  <img
+                    :src="
+                      photo.url && !photo.story_id
+                        ? photo.url
+                        : '/storage/stories/' + photo.image_filename
+                    "
+                    class="w-full h-full rounded-lg border-2 border-slate-200"
+                    @click="viewImage(photo)"
+                  />
+                  <XCircle
+                    class="rounded-full absolute -top-1 -right-1 text-red-600 bg-white h-5 w-5 cursor-pointer"
+                    @click="removePhotoEditStory(photo_index)"
+                  ></XCircle>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-center w-full">
+          <label
+            for="dropzone-file"
+            class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+            @change="changePhotoEditStory"
+          >
+            <div class="flex flex-col items-center justify-center py-6">
+              <svg
+                class="w-8 h-8 mb-1 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 16"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                />
+              </svg>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                <span class="font-semibold">Click to upload</span>
+              </p>
+              <span class="text-xs text-center text-slate-500"
+                >Hold <strong>Shift</strong> or <strong>CTRL</strong> and click on images
+                to select multiple</span
+              >
+            </div>
+            <input id="dropzone-file" type="file" class="hidden" multiple />
+          </label>
+        </div>
+        <div class="flex flex-col gap-1">
+          <Button @click="savePost">Save</Button>
+          <Button variant="outline" @click="show_edit_story_modal = false">Cancel</Button>
+        </div>
+      </div>
+    </template>
+  </Dialog>
+  <DeleteConfirmation
+    :open="confirmation.is_open"
+    @close="confirmation.is_open = false"
+    :routeName="confirmation.route_name"
+    :id="confirmation.id"
+  >
+    <template #title>Delete Story</template>
+    <template #description>Are you sure want to delete this story?</template>
+  </DeleteConfirmation>
 </template>
 
 <script setup>
-import Authenticated from '@/Layouts/Parent/Authenticated.vue';
-import { Head, Link } from '@inertiajs/inertia-vue3';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { debounce } from 'vue-debounce'
-import DeleteConfirmation from '@/Components/DeleteConfirmation.vue';   
+import Authenticated from "@/Layouts/Parent/Authenticated.vue";
+import { Head, Link } from "@inertiajs/inertia-vue3";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
+import { debounce } from "vue-debounce";
+import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 </script>
 
 <script>
-import simplebar from 'simplebar-vue';
-import 'simplebar-vue/dist/simplebar.min.css';
-import Multiselect from '@vueform/multiselect'
+import simplebar from "simplebar-vue";
+import "simplebar-vue/dist/simplebar.min.css";
+import Multiselect from "@vueform/multiselect";
 import Dialog from "@/Components/DialogModal.vue";
-import TimeAgo from '@/Components/TimeAgo.vue'
-import 'vue3-carousel/dist/carousel.css'
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
-import axios from 'axios'
-import { DateTime } from 'luxon';
-import FsLightbox from "fslightbox-vue/v3";
-import ConfirmationModal from '@/Components/ConfirmationModal.vue'
-import Compressor from 'compressorjs';
-import { XCircle } from 'lucide-vue-next';
+import TimeAgo from "@/Components/TimeAgo.vue";
+import "vue3-carousel/dist/carousel.css";
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import axios from "axios";
+import { DateTime } from "luxon";
+import FsLightbox from "fslightbox-vue";
+import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import Compressor from "compressorjs";
+import { XCircle } from "lucide-vue-next";
 
 const URL = window.URL || window.webkitURL;
 const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;
 
 export default {
   components: {
-    Multiselect, TimeAgo, 
+    Multiselect,
+    TimeAgo,
     Carousel,
     Slide,
     Pagination,
@@ -368,404 +577,532 @@ export default {
   },
   data() {
     return {
-        show_add_story_modal: false,
-        show_edit_story_modal: false,
-        show_comment: [],
-        show_delete: false,
-        confirmation: {
-            is_open: false,
-            route_name: '',
-            id: ''
+      show_add_story_modal: false,
+      show_edit_story_modal: false,
+      show_comment: [],
+      show_delete: false,
+      confirmation: {
+        is_open: false,
+        route_name: "",
+        id: "",
+      },
+      loading: {
+        students: false,
+        stories: false,
+      },
+      student_list: [],
+      form: {
+        caption: "",
+        photos: [],
+        tagged_students: [],
+      },
+      comments: [],
+      add_story: {
+        find: {
+          class_types: "",
+          levels: "",
         },
-        loading:{
-            students: false,
-            stories: false
+        list: {
+          class_types: [],
+          levels: [],
         },
-        student_list: [],
-        form:{
-            caption: '',
-            photos: [],
-            tagged_students: []
+        students: [
+          {
+            select_all: "Select all",
+            options: [],
+          },
+        ],
+        form: {
+          programme_id: "",
+          centre_id: "",
+          caption: "",
+          photos: [],
+          students: [],
         },
-        comments: [],
-        add_story: {
-            find: {
-                class_types: '',
-                levels: '',
-            },
-            list: {
-                class_types: [],
-                levels: [],
-            },
-            students: [{
-                select_all: 'Select all',
-                options: []
-            }],
-            form:{
-                programme_id: '',
-                centre_id: '',
-                caption: '',
-                photos: [],
-                students: [],
-            },
+      },
+      edit_story: {
+        find: {
+          class_types: "",
+          levels: "",
         },
-        edit_story: {
-            find: {
-                class_types: '',
-                levels: '',
-            },
-            list: {
-                class_types: [],
-                levels: [],
-            },
-            students: [{
-                select_all: 'Select all',
-                options: []
-            }],
-            form:{
-                story_id: '',
-                programme_id: '',
-                centre_id: '',
-                caption: '',
-                photos: [],
-                students: [],
-                photos_to_delete: [],
-            },
+        list: {
+          class_types: [],
+          levels: [],
         },
-        lightbox: {
-            open: false,
-            src: [],
+        students: [
+          {
+            select_all: "Select all",
+            options: [],
+          },
+        ],
+        form: {
+          story_id: "",
+          programme_id: "",
+          centre_id: "",
+          caption: "",
+          photos: [],
+          students: [],
+          photos_to_delete: [],
         },
-    }
+      },
+      lightbox: {
+        open: false,
+        src: [],
+      },
+    };
   },
   watch: {
-    'add_story.form.programme_id': {
-        handler(){
-            if(this.add_story.form.programme_id && this.add_story.form.centre_id){
-                this.add_story.find.class_types = ''
-                this.add_story.find.levels = ''
-                this.add_story.students[0].options = []
-                this.add_story.form.students = []
+    "add_story.form.programme_id": {
+      handler() {
+        if (this.add_story.form.programme_id && this.add_story.form.centre_id) {
+          this.add_story.find.class_types = "";
+          this.add_story.find.levels = "";
+          this.add_story.students[0].options = [];
+          this.add_story.form.students = [];
 
-                axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id]))
-                .then(response => {
-                    this.add_story.students[0].options = response.data
-                })
-            }
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.add_story.form.programme_id,
+                this.add_story.form.centre_id,
+              ])
+            )
+            .then((response) => {
+              this.add_story.students[0].options = response.data;
+            });
         }
+      },
     },
-    'add_story.form.centre_id': {
-        handler(){
-            if(this.add_story.form.programme_id && this.add_story.form.centre_id){
-                this.add_story.find.class_types = ''
-                this.add_story.find.levels = ''
-                this.add_story.students[0].options = []
-                this.add_story.form.students = []
+    "add_story.form.centre_id": {
+      handler() {
+        if (this.add_story.form.programme_id && this.add_story.form.centre_id) {
+          this.add_story.find.class_types = "";
+          this.add_story.find.levels = "";
+          this.add_story.students[0].options = [];
+          this.add_story.form.students = [];
 
-                axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id]))
-                .then(response => {
-                    this.add_story.students[0].options = response.data
-                })
-            }
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.add_story.form.programme_id,
+                this.add_story.form.centre_id,
+              ])
+            )
+            .then((response) => {
+              this.add_story.students[0].options = response.data;
+            });
         }
+      },
     },
-    'add_story.find.class_types': {
-        handler(){
-            this.add_story.find.levels = ''
-            this.add_story.list.levels = []
-            if(this.add_story.form.programme_id && this.add_story.form.centre_id && this.add_story.find.class_types){
-                axios.get(route('stories.get_class_levels', [this.add_story.form.programme_id, this.add_story.find.class_types]))
-                .then(response => {
-                    this.add_story.list.levels = response.data
-                })
-            }
-            else{
-                axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id]))
-                .then(response => {
-                    this.add_story.students[0].options = response.data
-                })
-            }
+    "add_story.find.class_types": {
+      handler() {
+        this.add_story.find.levels = "";
+        this.add_story.list.levels = [];
+        if (
+          this.add_story.form.programme_id &&
+          this.add_story.form.centre_id &&
+          this.add_story.find.class_types
+        ) {
+          axios
+            .get(
+              route("stories.get_class_levels", [
+                this.add_story.form.programme_id,
+                this.add_story.find.class_types,
+              ])
+            )
+            .then((response) => {
+              this.add_story.list.levels = response.data;
+            });
+        } else {
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.add_story.form.programme_id,
+                this.add_story.form.centre_id,
+              ])
+            )
+            .then((response) => {
+              this.add_story.students[0].options = response.data;
+            });
         }
+      },
     },
-    'add_story.find.levels': {
-        handler(){
-            this.add_story.students[0].options = []
-            this.add_story.form.students = []
+    "add_story.find.levels": {
+      handler() {
+        this.add_story.students[0].options = [];
+        this.add_story.form.students = [];
 
-            if(this.add_story.form.programme_id && this.add_story.form.centre_id && this.add_story.find.levels){
-                axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id, this.add_story.find.levels]))
-                .then(response => {
-                    this.add_story.students[0].options = response.data
-                })
-            }
-            else{
-                axios.get(route('programmes.get_students', [this.add_story.form.programme_id, this.add_story.form.centre_id]))
-                .then(response => {
-                    this.add_story.students[0].options = response.data
-                })
-            }
+        if (
+          this.add_story.form.programme_id &&
+          this.add_story.form.centre_id &&
+          this.add_story.find.levels
+        ) {
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.add_story.form.programme_id,
+                this.add_story.form.centre_id,
+                this.add_story.find.levels,
+              ])
+            )
+            .then((response) => {
+              this.add_story.students[0].options = response.data;
+            });
+        } else {
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.add_story.form.programme_id,
+                this.add_story.form.centre_id,
+              ])
+            )
+            .then((response) => {
+              this.add_story.students[0].options = response.data;
+            });
         }
+      },
     },
-    'edit_story.form.programme_id': {
-        handler(){
-            if(this.edit_story.form.programme_id && this.edit_story.form.centre_id){
-                this.edit_story.find.class_types = ''
-                this.edit_story.find.levels = ''
-                this.edit_story.students[0].options = []
-                this.edit_story.form.students = []
+    "edit_story.form.programme_id": {
+      handler() {
+        if (this.edit_story.form.programme_id && this.edit_story.form.centre_id) {
+          this.edit_story.find.class_types = "";
+          this.edit_story.find.levels = "";
+          this.edit_story.students[0].options = [];
+          this.edit_story.form.students = [];
 
-                axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
-                .then(response => {
-                    this.edit_story.students[0].options = response.data
-                })
-            }
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.edit_story.form.programme_id,
+                this.edit_story.form.centre_id,
+              ])
+            )
+            .then((response) => {
+              this.edit_story.students[0].options = response.data;
+            });
         }
+      },
     },
-    'edit_story.form.centre_id': {
-        handler(){
-            if(this.edit_story.form.programme_id && this.edit_story.form.centre_id){
-                this.edit_story.find.class_types = ''
-                this.edit_story.find.levels = ''
-                this.edit_story.students[0].options = []
-                this.edit_story.form.students = []
+    "edit_story.form.centre_id": {
+      handler() {
+        if (this.edit_story.form.programme_id && this.edit_story.form.centre_id) {
+          this.edit_story.find.class_types = "";
+          this.edit_story.find.levels = "";
+          this.edit_story.students[0].options = [];
+          this.edit_story.form.students = [];
 
-                axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
-                .then(response => {
-                    this.edit_story.students[0].options = response.data
-                })
-            }
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.edit_story.form.programme_id,
+                this.edit_story.form.centre_id,
+              ])
+            )
+            .then((response) => {
+              this.edit_story.students[0].options = response.data;
+            });
         }
+      },
     },
-    'edit_story.find.class_types': {
-        handler(){
-            this.edit_story.find.levels = ''
-            this.edit_story.list.levels = []
-            if(this.edit_story.form.programme_id && this.edit_story.form.centre_id && this.edit_story.find.class_types){
-                this.edit_story.students[0].options = []
-                this.edit_story.form.students = []
+    "edit_story.find.class_types": {
+      handler() {
+        this.edit_story.find.levels = "";
+        this.edit_story.list.levels = [];
+        if (
+          this.edit_story.form.programme_id &&
+          this.edit_story.form.centre_id &&
+          this.edit_story.find.class_types
+        ) {
+          this.edit_story.students[0].options = [];
+          this.edit_story.form.students = [];
 
-                axios.get(route('stories.get_class_levels', [this.edit_story.form.programme_id, this.edit_story.find.class_types]))
-                .then(response => {
-                    this.edit_story.list.levels = response.data
-                })
-            }
-            else{
-                axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
-                .then(response => {
-                    this.edit_story.students[0].options = response.data
-                })
-            }
+          axios
+            .get(
+              route("stories.get_class_levels", [
+                this.edit_story.form.programme_id,
+                this.edit_story.find.class_types,
+              ])
+            )
+            .then((response) => {
+              this.edit_story.list.levels = response.data;
+            });
+        } else {
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.edit_story.form.programme_id,
+                this.edit_story.form.centre_id,
+              ])
+            )
+            .then((response) => {
+              this.edit_story.students[0].options = response.data;
+            });
         }
+      },
     },
-    'edit_story.find.levels': {
-        handler(){
-            this.edit_story.students[0].options = []
-            this.edit_story.form.students = []
-            if(this.edit_story.form.programme_id && this.edit_story.form.centre_id && this.edit_story.find.levels){
-                axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id, this.edit_story.find.levels]))
-                .then(response => {
-                    this.edit_story.students[0].options = response.data
-                })
-            }
-            else{
-                axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
-                .then(response => {
-                    this.edit_story.students[0].options = response.data
-                })
-            }
+    "edit_story.find.levels": {
+      handler() {
+        this.edit_story.students[0].options = [];
+        this.edit_story.form.students = [];
+        if (
+          this.edit_story.form.programme_id &&
+          this.edit_story.form.centre_id &&
+          this.edit_story.find.levels
+        ) {
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.edit_story.form.programme_id,
+                this.edit_story.form.centre_id,
+                this.edit_story.find.levels,
+              ])
+            )
+            .then((response) => {
+              this.edit_story.students[0].options = response.data;
+            });
+        } else {
+          axios
+            .get(
+              route("programmes.get_students", [
+                this.edit_story.form.programme_id,
+                this.edit_story.form.centre_id,
+              ])
+            )
+            .then((response) => {
+              this.edit_story.students[0].options = response.data;
+            });
         }
-    }
+      },
+    },
   },
   methods: {
-    isLikedByParent(story_index){
-        if(this.$page.props.stories.data[story_index].likes.length){
-            return this.$page.props.stories.data[story_index].likes.some(like => like.like_author_id === this.$page.props.auth.user.ID);
-        }
-        return false
+    isLikedByParent(story_index) {
+      if (this.$page.props.stories.data[story_index].likes.length) {
+        return this.$page.props.stories.data[story_index].likes.some(
+          (like) => like.like_author_id === this.$page.props.auth.user.ID
+        );
+      }
+      return false;
     },
-    toggleLike(story_index, story_id){
-        if(this.isLikedByParent(story_index)){
-            const like_index    =   this.$page.props.stories.data[story_index].likes.findIndex(like => like.like_author_id === this.$page.props.auth.user.ID);
-            this.$page.props.stories.data[story_index].likes.splice(like_index, 1)
-        }
-        else{
-            this.$page.props.stories.data[story_index].likes.push({
-                'like_author_id' : this.$page.props.auth.user.ID
-            })
-        }
-        
-        axios.post(route('parent.like_story'), {'story_id': story_id, 'to_delete' : !this.isLikedByParent(story_index)})
-        .then(response => {
+    toggleLike(story_index, story_id) {
+      if (this.isLikedByParent(story_index)) {
+        const like_index = this.$page.props.stories.data[story_index].likes.findIndex(
+          (like) => like.like_author_id === this.$page.props.auth.user.ID
+        );
+        this.$page.props.stories.data[story_index].likes.splice(like_index, 1);
+      } else {
+        this.$page.props.stories.data[story_index].likes.push({
+          like_author_id: this.$page.props.auth.user.ID,
         });
-    },
-    toggleComment(index){
-        this.show_comment[index] = !this.show_comment[index]
-    },
-    postComment(story_index, story_id){
-        axios.post(route('parent.stories.comments.store'), {'story_id': story_id, 'comment' : this.comments[story_index]})
-        .then(response => {
-            if(response.data){
-                this.$page.props.stories.data[story_index].comments.unshift({
-                    'comment': this.comments[story_index],
-                    'comment_user_name': this.$page.props.auth.user.display_name,
-                    'created_at': DateTime.now().setZone('Asia/Kuala_Lumpur').toFormat('yyyy-MM-dd HH:mm:ss')
-                })
-                this.comments[story_index] = ''
-            }
-        });
-    },
-    showCreatePost(){
-        this.show_add_story_modal = true
-    },
-    openEditStoryModal(index){
-        const data = JSON.parse(JSON.stringify(this.$page.props.stories.data[index]))
-        this.edit_story.form.story_id     =   data.story_id
-        this.edit_story.form.programme_id =   data.story_programme_id
-        this.edit_story.form.centre_id    =   data.story_centre_id
-        this.edit_story.form.caption      =   data.story_title
-        this.edit_story.form.photos       =   data.images
+      }
 
-        axios.get(route('programmes.get_students', [this.edit_story.form.programme_id, this.edit_story.form.centre_id]))
-        .then(response => {
-            this.edit_story.students[0].options =   []
-            this.edit_story.students[0].options =   response.data
-            this.edit_story.form.students       =   data.students.map(student => student.student_id);
+      axios
+        .post(route("parent.like_story"), {
+          story_id: story_id,
+          to_delete: !this.isLikedByParent(story_index),
         })
+        .then((response) => {});
+    },
+    toggleComment(index) {
+      this.show_comment[index] = !this.show_comment[index];
+    },
+    postComment(story_index, story_id) {
+      axios
+        .post(route("parent.stories.comments.store"), {
+          story_id: story_id,
+          comment: this.comments[story_index],
+        })
+        .then((response) => {
+          if (response.data) {
+            this.$page.props.stories.data[story_index].comments.unshift({
+              comment: this.comments[story_index],
+              comment_user_name: this.$page.props.auth.user.display_name,
+              created_at: DateTime.now()
+                .setZone("Asia/Kuala_Lumpur")
+                .toFormat("yyyy-MM-dd HH:mm:ss"),
+            });
+            this.comments[story_index] = "";
+          }
+        });
+    },
+    showCreatePost() {
+      this.show_add_story_modal = true;
+    },
+    openEditStoryModal(index) {
+      const data = JSON.parse(JSON.stringify(this.$page.props.stories.data[index]));
+      this.edit_story.form.story_id = data.story_id;
+      this.edit_story.form.programme_id = data.story_programme_id;
+      this.edit_story.form.centre_id = data.story_centre_id;
+      this.edit_story.form.caption = data.story_title;
+      this.edit_story.form.photos = data.images;
 
-        this.show_edit_story_modal  =   true
+      axios
+        .get(
+          route("programmes.get_students", [
+            this.edit_story.form.programme_id,
+            this.edit_story.form.centre_id,
+          ])
+        )
+        .then((response) => {
+          this.edit_story.students[0].options = [];
+          this.edit_story.students[0].options = response.data;
+          this.edit_story.form.students = data.students.map(
+            (student) => student.student_id
+          );
+        });
+
+      this.show_edit_story_modal = true;
     },
     read(file, event) {
-        return new Promise((resolve, reject) => {
-            if (!file) {
-                resolve();
-                return;
-            }
-            if (REGEXP_MIME_TYPE_IMAGES.test(file.type)) {
-                if (URL) {
-                    resolve({
-                        loaded: true,
-                        name: file.name,
-                        type: file.type,
-                        url: URL.createObjectURL(file),
-                    });
-                } else {
-                    alert('Your browser is not supported.');
-                }
-            } else {
-                alert(`Please select a valid image file.`);
-            }
-        });
+      return new Promise((resolve, reject) => {
+        if (!file) {
+          resolve();
+          return;
+        }
+        if (REGEXP_MIME_TYPE_IMAGES.test(file.type)) {
+          if (URL) {
+            resolve({
+              loaded: true,
+              name: file.name,
+              type: file.type,
+              url: URL.createObjectURL(file),
+            });
+          } else {
+            alert("Your browser is not supported.");
+          }
+        } else {
+          alert(`Please select a valid image file.`);
+        }
+      });
     },
     changePhoto({ target }) {
-        const { files } = target;
-        if (files && files.length > 0) {
-            const filesArray = Array.from(files);
-            filesArray.forEach((file)=>{
-                this.read(file, target)
-                .then((data) => {
-                    new Compressor(file, {
-                        quality: 0.8,
-                        height: 1000,
-                        width: 1000,
-                        success: (result) => {
-                            const blobUrl   = URL.createObjectURL(result);
-                            const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
-                            this.add_story.form.photos.push({
-                                'name'  :Date.now() + Math.floor(Math.random() * 1000),
-                                'url'   :blobUrl,
-                                'file'  :new_file
-                            })
-                        },
-                    });
-                })
-                .catch(this.alert);
+      const { files } = target;
+      if (files && files.length > 0) {
+        const filesArray = Array.from(files);
+        filesArray.forEach((file) => {
+          this.read(file, target)
+            .then((data) => {
+              new Compressor(file, {
+                quality: 0.8,
+                height: 1000,
+                width: 1000,
+                success: (result) => {
+                  const blobUrl = URL.createObjectURL(result);
+                  const new_file = this.blobToFile(result, Date.now() + ".jpg");
+                  this.add_story.form.photos.push({
+                    name: Date.now() + Math.floor(Math.random() * 1000),
+                    url: blobUrl,
+                    file: new_file,
+                  });
+                },
+              });
             })
-        }
+            .catch(this.alert);
+        });
+      }
     },
     changePhotoEditStory({ target }) {
-        const { files } = target;
-        if (files && files.length > 0) {
-            const filesArray = Array.from(files);
-            filesArray.forEach((file)=>{
-                this.read(file, target)
-                .then((data) => {
-                    new Compressor(file, {
-                        quality: 0.8,
-                        height: 1000,
-                        width: 1000,
-                        success: (result) => {
-                            const blobUrl   = URL.createObjectURL(result);
-                            const new_file  =   this.blobToFile(result, Date.now()+'.jpg')
-                            this.edit_story.form.photos.push({
-                                'name'  :Date.now() + Math.floor(Math.random() * 1000),
-                                'url'   :blobUrl,
-                                'file'  :new_file
-                            })
-                        },
-                    });
-                })
-                .catch(this.alert);
+      const { files } = target;
+      if (files && files.length > 0) {
+        const filesArray = Array.from(files);
+        filesArray.forEach((file) => {
+          this.read(file, target)
+            .then((data) => {
+              new Compressor(file, {
+                quality: 0.8,
+                height: 1000,
+                width: 1000,
+                success: (result) => {
+                  const blobUrl = URL.createObjectURL(result);
+                  const new_file = this.blobToFile(result, Date.now() + ".jpg");
+                  this.edit_story.form.photos.push({
+                    name: Date.now() + Math.floor(Math.random() * 1000),
+                    url: blobUrl,
+                    file: new_file,
+                  });
+                },
+              });
             })
-        }
+            .catch(this.alert);
+        });
+      }
     },
-    removePhoto(photo_index){
-        this.add_story.form.photos.splice(photo_index, 1)
+    removePhoto(photo_index) {
+      this.add_story.form.photos.splice(photo_index, 1);
     },
-    removePhotoEditStory(photo_index){
-        if(this.edit_story.form.photos[photo_index].id){
-            this.edit_story.form.photos_to_delete.push(this.edit_story.form.photos[photo_index].id)
-        }
-        this.edit_story.form.photos.splice(photo_index, 1)
+    removePhotoEditStory(photo_index) {
+      if (this.edit_story.form.photos[photo_index].id) {
+        this.edit_story.form.photos_to_delete.push(
+          this.edit_story.form.photos[photo_index].id
+        );
+      }
+      this.edit_story.form.photos.splice(photo_index, 1);
     },
-    post(){
-        if((this.add_story.form.caption || this.add_story.form.photos.length) && this.add_story.form.students.length > 0){
-            this.$inertia.post(route('stories.store'), this.add_story.form, {preserveState: false})
-        }
+    post() {
+      if (
+        (this.add_story.form.caption || this.add_story.form.photos.length) &&
+        this.add_story.form.students.length > 0
+      ) {
+        this.$inertia.post(route("stories.store"), this.add_story.form, {
+          preserveState: false,
+        });
+      }
     },
-    savePost(){
-        if((this.edit_story.form.caption || this.edit_story.form.photos.length) && this.edit_story.form.students.length > 0){
-            this.$inertia.post(route('stories.update'), this.edit_story.form, {preserveState: false})
-        }
+    savePost() {
+      if (
+        (this.edit_story.form.caption || this.edit_story.form.photos.length) &&
+        this.edit_story.form.students.length > 0
+      ) {
+        this.$inertia.post(route("stories.update"), this.edit_story.form, {
+          preserveState: false,
+        });
+      }
     },
     handleScroll() {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      const scrollHeight =
+        document.documentElement.scrollHeight || document.body.scrollHeight;
       const clientHeight = document.documentElement.clientHeight || window.innerHeight;
-      
+
       if (scrollTop + clientHeight >= scrollHeight - 100) {
-        if(this.$page.props.stories.next_page_url){
-            if(!this.loading.stories){
-                this.loading.stories = true
-                axios.get(route('parent.student_stories'), {
-                    params: {
-                        page: this.$page.props.stories.current_page + 1
-                    }
-                })
-                .then((res) => {
-                    res.data.data.forEach((item)=>{
-                        this.$page.props.stories.data.push(item)
-                    })
-                    this.$page.props.stories.current_page   =    res.data.current_page
-                    this.$page.props.stories.next_page_url  =    res.data.next_page_url
-                    this.loading.stories = false
+        if (this.$page.props.stories.next_page_url) {
+          if (!this.loading.stories) {
+            this.loading.stories = true;
+            axios
+              .get(route("parent.student_stories"), {
+                params: {
+                  page: this.$page.props.stories.current_page + 1,
+                },
+              })
+              .then((res) => {
+                res.data.data.forEach((item) => {
+                  this.$page.props.stories.data.push(item);
                 });
-            }
+                this.$page.props.stories.current_page = res.data.current_page;
+                this.$page.props.stories.next_page_url = res.data.next_page_url;
+                this.loading.stories = false;
+              });
+          }
         }
       }
     },
-    viewImage(image){
-        window.open(image.url ? [image.url] : [window.location.origin+'/storage/stories/' + image.image_filename], '_blank');
+    viewImage(image) {
+      window.open(
+        image.url
+          ? [image.url]
+          : [window.location.origin + "/storage/stories/" + image.image_filename],
+        "_blank"
+      );
     },
-    deleteStory(story_id){
-        this.confirmation.route_name    = 'stories.destroy'
-        this.confirmation.id            = story_id
-        this.confirmation.is_open       = true
+    deleteStory(story_id) {
+      this.confirmation.route_name = "stories.destroy";
+      this.confirmation.id = story_id;
+      this.confirmation.is_open = true;
     },
     blobToFile(blob, filename) {
-        const file = new File([blob], filename, { type: blob.type });
-        return file;
-    }
-  }
-}
+      const file = new File([blob], filename, { type: blob.type });
+      return file;
+    },
+  },
+};
 </script>
-

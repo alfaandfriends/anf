@@ -287,7 +287,7 @@ import { MagnifyingGlassIcon } from '@radix-icons/vue'
 import { Filter, PlusCircle } from 'lucide-vue-next';
 import axios from 'axios'
 import { debounce } from 'vue-debounce'
-import FsLightbox from "fslightbox-vue/v3";
+import FsLightbox from "fslightbox-vue";
 import moment from "moment";
 import TimeAgo from '@/Components/TimeAgo.vue'
 import Compressor from 'compressorjs';
