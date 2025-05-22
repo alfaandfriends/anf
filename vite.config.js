@@ -29,7 +29,6 @@ export default defineConfig({
     },
     build: {
         rollupOptions: {
-            external: ['fslightbox-vue'],
             output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
