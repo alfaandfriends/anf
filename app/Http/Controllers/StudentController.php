@@ -628,9 +628,9 @@ class StudentController extends Controller
                             ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
                             ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
                             ->whereIn('programmes.id', $digital_art_programme_id)
-                            ->whereNull('student_fees.status')
-                            ->whereYear('student_fees.created_at', '=', now()->year)
-                            ->whereMonth('student_fees.created_at', '=', now()->month)
+                            // ->whereNull('student_fees.status')
+                            // ->whereYear('student_fees.created_at', '=', now()->year)
+                            // ->whereMonth('student_fees.created_at', '=', now()->month)
                             ->select('students.id', 'children.name')
                             ->get();
 
