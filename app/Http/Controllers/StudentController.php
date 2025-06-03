@@ -631,7 +631,12 @@ class StudentController extends Controller
                             ->whereNull('student_fees.status')
                             // ->whereYear('student_fees.created_at', '=', now()->year)
                             // ->whereMonth('student_fees.created_at', '=', now()->month)
-                            ->distinct('students.id', 'children.name')
+                            ->whereIn('student_fees.id', function($query) {
+                                $query->select(DB::raw('MAX(id)'))
+                                ->from('student_fees')
+                                ->groupBy('student_id');
+                            })
+                            ->select('students.id', 'children.name')
                             ->get();
 
         return $students;
