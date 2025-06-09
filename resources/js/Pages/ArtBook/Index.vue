@@ -23,7 +23,11 @@ import { Inertia } from "@inertiajs/inertia";
             class="relative w-full mx-1"
             :opts="{
               align: 'start',
+              loop: true,
+              skipSnaps: false,
+              containScroll: 'trimSnaps',
             }"
+            @scroll="handleScroll"
           >
             <CarouselContent>
               <CarouselItem
@@ -36,6 +40,7 @@ import { Inertia } from "@inertiajs/inertia";
                   <img
                     :src="'/images/' + artbook.art_book_assets + 'thumbnail.jpg'"
                     class="w-full rounded-lg hover:scale-105 duration-200"
+                    loading="lazy"
                   />
                 </div>
               </CarouselItem>
@@ -83,9 +88,33 @@ import { Inertia } from "@inertiajs/inertia";
               placeholder="Max : 10 Characters"
             ></Input>
           </div>
-          <!-- <div>
+          <div v-if="form.student_id">
             <Label>Select Images<span class="text-red-500">*</span></Label>
-            <div class="grid grid-cols-1 gap-6 mt-2">
+
+            <!-- Initial Loading State -->
+            <div v-if="loadingStates.artwork" class="mt-4 text-center">
+              <div
+                class="inline-block w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"
+              ></div>
+              <p class="mt-2 text-sm text-gray-600">Loading images...</p>
+            </div>
+
+            <!-- Error State -->
+            <div
+              v-else-if="errorStates.artwork"
+              class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg"
+            >
+              <p class="text-sm text-red-600">{{ errorStates.artwork }}</p>
+              <button
+                @click="fetchArtworkForStudent"
+                class="mt-2 text-sm text-red-600 hover:text-red-700 underline"
+              >
+                Try Again
+              </button>
+            </div>
+
+            <!-- Image Selection Grid -->
+            <div v-else class="grid grid-cols-1 gap-6 mt-2">
               <div
                 v-for="sectionIndex in required_sections"
                 :key="'section-' + sectionIndex"
@@ -94,37 +123,160 @@ import { Inertia } from "@inertiajs/inertia";
                   Image {{ sectionIndex }} <span class="text-red-500">*</span>
                   <span class="text-xs text-gray-500">(Select 1)</span>
                 </h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+
+                <!-- Section Loading State -->
+                <div v-if="loadingStates.sections[sectionIndex]" class="text-center py-4">
                   <div
-                    v-for="(image, index) in available_images"
-                    :key="'section' + sectionIndex + '-' + index"
-                    @click="selectImageForSection(sectionIndex - 1, image)"
-                    class="relative cursor-pointer border rounded-lg overflow-hidden"
-                    :class="{
-                      'ring-2 ring-indigo-600': isImageSelectedForSection(
-                        sectionIndex - 1,
-                        image
-                      ),
-                    }"
+                    class="inline-block w-6 h-6 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"
+                  ></div>
+                  <p class="mt-1 text-xs text-gray-500">Loading section...</p>
+                </div>
+
+                <!-- Section Error State -->
+                <div
+                  v-else-if="errorStates.sections[sectionIndex]"
+                  class="p-3 bg-red-50 border border-red-200 rounded-lg"
+                >
+                  <p class="text-xs text-red-600">
+                    {{ errorStates.sections[sectionIndex] }}
+                  </p>
+                  <button
+                    @click="() => fetchArtworkForStudent()"
+                    class="mt-1 text-xs text-red-600 hover:text-red-700 underline"
                   >
-                    <img
-                      :src="'/images/' + theme_assets + image"
-                      class="w-full h-24 object-cover"
-                    />
+                    Retry
+                  </button>
+                </div>
+
+                <!-- Section Content -->
+                <div v-else-if="sectionReady[sectionIndex]" class="relative">
+                  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                    <!-- Existing Images -->
                     <div
-                      v-if="isImageSelectedForSection(sectionIndex - 1, image)"
-                      class="absolute top-2 right-2 bg-indigo-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                      v-for="image in available_images[sectionIndex]"
+                      :key="'section' + sectionIndex + '-' + image.id"
+                      class="relative cursor-pointer border rounded-lg overflow-hidden group"
                     >
-                      ✓
+                      <div
+                        @click="selectImageForSection(sectionIndex - 1, image)"
+                        class="relative w-full h-24 bg-gray-100"
+                      >
+                        <!-- Loading Placeholder -->
+                        <div
+                          v-if="
+                            imageLoadingStates[`${sectionIndex}-${image.id}`] !== false
+                          "
+                          class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75"
+                        >
+                          <div
+                            class="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"
+                          ></div>
+                        </div>
+
+                        <!-- Error State -->
+                        <div
+                          v-if="imageErrorStates[`${sectionIndex}-${image.id}`]"
+                          class="absolute inset-0 flex items-center justify-center bg-gray-50"
+                        >
+                          <span class="text-xs text-gray-500">Failed to load image</span>
+                        </div>
+
+                        <!-- Image -->
+                        <img
+                          :src="'/storage/art_gallery/' + image.filename"
+                          class="w-full h-24 object-cover transition-transform duration-200 group-hover:scale-105"
+                          loading="lazy"
+                          decoding="async"
+                          fetchpriority="low"
+                          @load="handleImageLoad(sectionIndex, image.id)"
+                          @error="handleImageError(sectionIndex, image.id)"
+                          :alt="'Artwork for section ' + sectionIndex"
+                        />
+                      </div>
+                      <div
+                        v-if="isImageSelectedForSection(sectionIndex - 1, image)"
+                        class="absolute top-2 right-2 bg-indigo-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                      >
+                        ✓
+                      </div>
+                      <!-- Delete Button -->
+                      <button
+                        @click.stop="deleteArtwork(image.id, sectionIndex)"
+                        class="absolute top-2 left-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                      >
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <!-- Upload Option -->
+                    <div
+                      class="relative cursor-pointer border-2 border-dashed border-gray-300 rounded-lg overflow-hidden group hover:border-indigo-400 transition-colors duration-200"
+                    >
+                      <div
+                        v-if="loadingStates.upload[sectionIndex]"
+                        class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center"
+                      >
+                        <div class="space-y-2 text-center">
+                          <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              class="h-2 rounded-full transition-all duration-300"
+                              :style="'width: ' + uploadProgress[sectionIndex] + '%'"
+                            ></div>
+                          </div>
+                          <p class="text-sm text-gray-500">
+                            Uploading... {{ uploadProgress[sectionIndex] }}%
+                          </p>
+                        </div>
+                      </div>
+                      <div v-else class="h-24 flex items-center justify-center">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          class="hidden"
+                          :id="'upload-' + sectionIndex"
+                          @change="(e) => handleFileUpload(e, sectionIndex)"
+                        />
+                        <label
+                          :for="'upload-' + sectionIndex"
+                          class="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-xs font-medium rounded-md text-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                        >
+                          <svg
+                            class="w-5 h-5 mr-0.5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 4v16m8-8H4"
+                            ></path>
+                          </svg>
+                          Upload
+                        </label>
+                      </div>
+                      <p
+                        v-if="errorStates.upload[sectionIndex]"
+                        class="absolute bottom-0 left-0 right-0 text-xs text-red-600 bg-white bg-opacity-75 p-1"
+                      >
+                        {{ errorStates.upload[sectionIndex] }}
+                      </p>
                     </div>
                   </div>
                 </div>
-                <p
-                  v-if="error_sections[sectionIndex - 1]"
-                  class="text-xs text-red-500 mt-1"
-                >
-                  Please select an image for Image {{ sectionIndex }} (Required)
-                </p>
               </div>
             </div>
             <div
@@ -144,7 +296,7 @@ import { Inertia } from "@inertiajs/inertia";
                 </li>
               </ul>
             </div>
-          </div> -->
+          </div>
         </div>
       </template>
       <template #content v-else>
@@ -206,6 +358,44 @@ import { Inertia } from "@inertiajs/inertia";
         <Button @click="open_ad_detected = false">Okay</Button>
       </template>
     </Dialog>
+    <Dialog
+      v-model:open="deleteDialog.open"
+      classProp="max-w-md"
+      :interactOutside="
+        (e) => {
+          e.preventDefault();
+        }
+      "
+      :hideClose="true"
+    >
+      <template #title>Delete Artwork</template>
+      <template #content>
+        <div class="space-y-4">
+          <p class="text-sm text-gray-600">
+            Are you sure you want to delete this artwork? This action cannot be undone.
+          </p>
+          <p v-if="deleteDialog.error" class="text-sm text-red-600">
+            {{ deleteDialog.error }}
+          </p>
+        </div>
+      </template>
+      <template #footer>
+        <Button
+          variant="outline"
+          @click="deleteDialog.open = false"
+          :disabled="deleteDialog.loading"
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="destructive"
+          @click="confirmDelete"
+          :loading="deleteDialog.loading"
+        >
+          Delete
+        </Button>
+      </template>
+    </Dialog>
   </BreezeAuthenticatedLayout>
 </template>
 
@@ -244,6 +434,8 @@ export default {
       },
       loading: {
         students: false,
+        conditions: false,
+        artwork: false,
       },
       list: {
         students: [],
@@ -256,76 +448,132 @@ export default {
       error_image_selection: false,
       error_sections: [],
       theme_assets: "",
-      theme_images: {
-        1: ["image1.jpg", "image2.jpg", "image3.jpg", "image4.jpg"],
-        2: ["image1.jpg", "image2.jpg", "image3.jpg", "image4.jpg"],
-        3: [
-          "image1.jpg",
-          "image2.jpg",
-          "image3.jpg",
-          "image4.jpg",
-          "image5.jpg",
-          "image6.jpg",
-        ],
-        4: ["image1.jpg", "image2.jpg", "image3.jpg", "image4.jpg"],
-        5: [
-          "image1.jpg",
-          "image2.jpg",
-          "image3.jpg",
-          "image4.jpg",
-          "image5.jpg",
-          "image6.jpg",
-          "image7.jpg",
-        ],
-        6: ["image1.jpg", "image2.jpg", "image3.jpg", "image4.jpg", "image5.jpg"],
+      available_images: {},
+      theme_sections: {},
+      required_sections: 0,
+      currentPage: 1,
+      itemsPerPage: 12,
+      isLoadingMore: false,
+      imageLoadingStates: {},
+      imageErrorStates: {},
+      uploadingImage: {},
+      uploadProgress: {},
+      uploadError: {},
+      imagesLoaded: {},
+      allImagesLoaded: false,
+      loadingStates: {
+        artwork: false,
+        upload: {},
+        sections: {},
       },
-      available_images: [],
-      // Define number of required sections per theme
-      theme_sections: {
-        1: 4,
-        2: 4,
-        3: 6,
-        4: 4,
-        5: 7,
-        6: 5,
+      errorStates: {
+        artwork: null,
+        upload: {},
+        sections: {},
       },
-      required_sections: 4,
+      sectionReady: {},
+      deleteDialog: {
+        open: false,
+        imageId: null,
+        sectionIndex: null,
+        loading: false,
+        error: null,
+      },
     };
   },
   methods: {
     navigateToSetup() {
       Inertia.visit(route("art_book.setup"));
     },
-    openDownloadModal(theme_id, assets_path) {
+    async openDownloadModal(theme_id, assets_path) {
       this.open_generate_modal = true;
       this.form.student_id = "";
       this.form.student_nickname = "";
       this.form.theme_id = theme_id;
-
-      // Set the number of required sections based on theme ID
-      this.required_sections = this.theme_sections[theme_id] || 4;
-
-      // Initialize selected images array with nulls based on required sections
-      this.form.selected_images = Array(this.required_sections).fill(null);
-
-      // Initialize error sections array
-      this.error_sections = Array(this.required_sections).fill(false);
-
       this.theme_assets = assets_path;
       this.error_image_selection = false;
 
-      if (this.theme_images[theme_id]) {
-        this.available_images = this.theme_images[theme_id];
-      } else {
-        this.available_images = [];
-        console.error("No images found for theme ID:", theme_id);
-      }
+      // Fetch conditions for the selected theme
+      this.loading.conditions = true;
+      try {
+        const response = await axios.get(route("art_book.get_conditions", theme_id));
+        const conditions = response.data;
 
-      // In a real implementation, you would fetch available images for this theme
-      // axios.get(route('art_book.get_theme_images', theme_id))
-      //     .then(response => {
-      //         this.available_images = response.data.images
-      //     })
+        // Set the number of required sections based on conditions
+        this.required_sections = conditions.length;
+
+        // Initialize selected images array with nulls based on required sections
+        this.form.selected_images = Array(this.required_sections).fill(null);
+
+        // Initialize error sections array
+        this.error_sections = Array(this.required_sections).fill(false);
+
+        // Store conditions
+        this.theme_sections = {};
+        this.available_images = {};
+
+        for (const condition of conditions) {
+          this.theme_sections[condition.artwork_number] = {
+            lesson_id: condition.lesson_id,
+            activity_id: condition.activity_id,
+          };
+        }
+      } catch (error) {
+        console.error("Error fetching conditions:", error);
+      } finally {
+        this.loading.conditions = false;
+      }
+    },
+    async fetchArtworkForStudent() {
+      if (!this.form.student_id) return;
+
+      this.loadingStates.artwork = true;
+      this.errorStates.artwork = null;
+      this.allImagesLoaded = false;
+      this.imagesLoaded = {};
+      this.sectionReady = {};
+
+      try {
+        // Fetch artwork for each condition
+        const fetchPromises = Object.entries(this.theme_sections).map(
+          async ([sectionNumber, section]) => {
+            this.loadingStates.sections[sectionNumber] = true;
+            try {
+              const artworkResponse = await axios.get(
+                route("art_book.get_artwork", {
+                  lessonId: section.lesson_id,
+                  activityId: section.activity_id,
+                  studentId: this.form.student_id,
+                })
+              );
+              this.available_images[sectionNumber] = artworkResponse.data;
+              this.imagesLoaded[sectionNumber] = false;
+              this.errorStates.sections[sectionNumber] = null;
+              // Mark section as ready to display
+              this.sectionReady[sectionNumber] = true;
+            } catch (error) {
+              console.error(
+                `Error fetching artwork for section ${sectionNumber}:`,
+                error
+              );
+              this.available_images[sectionNumber] = [];
+              this.imagesLoaded[sectionNumber] = true;
+              this.errorStates.sections[sectionNumber] =
+                "Failed to load images for this section";
+              this.sectionReady[sectionNumber] = true;
+            } finally {
+              this.loadingStates.sections[sectionNumber] = false;
+            }
+          }
+        );
+
+        await Promise.all(fetchPromises);
+      } catch (error) {
+        console.error("Error fetching artwork:", error);
+        this.errorStates.artwork = "Failed to load artwork. Please try again.";
+      } finally {
+        this.loadingStates.artwork = false;
+      }
     },
     selectImageForSection(sectionIndex, image) {
       // Create a new array to maintain reactivity
@@ -341,7 +589,7 @@ export default {
       this.error_image_selection = false;
     },
     isImageSelectedForSection(sectionIndex, image) {
-      return this.form.selected_images[sectionIndex] === image;
+      return this.form.selected_images[sectionIndex]?.id === image.id;
     },
     findStudents: debounce(function (query) {
       if (query) {
@@ -367,17 +615,17 @@ export default {
 
       // Check if all sections have an image selected
       let hasError = false;
-      // const newErrorSections = Array(this.required_sections).fill(false);
+      const newErrorSections = Array(this.required_sections).fill(false);
 
-      // for (let i = 0; i < this.required_sections; i++) {
-      //   if (this.form.selected_images[i] === null) {
-      //     newErrorSections[i] = true;
-      //     hasError = true;
-      //   }
-      // }
+      for (let i = 0; i < this.required_sections; i++) {
+        if (this.form.selected_images[i] === null) {
+          newErrorSections[i] = true;
+          hasError = true;
+        }
+      }
 
-      // this.error_sections = newErrorSections;
-      // this.error_image_selection = hasError;
+      this.error_sections = newErrorSections;
+      this.error_image_selection = hasError;
 
       if (this.form.student_nickname === "" || this.form.student_nickname.length > 10) {
         return;
@@ -405,17 +653,25 @@ export default {
         this.current_progress += increment;
       }, 1000);
 
-      const options = {
-        params: {
-          student_id: this.form.student_id,
-          theme_id: this.form.theme_id,
-          student_nickname: this.form.student_nickname,
-          selected_images: this.form.selected_images,
-        },
-        responseType: "blob", // Set the response type to 'blob' to handle binary data
+      // Format the selected images data
+      const selectedImages = this.form.selected_images.map((image, index) => ({
+        id: image.id,
+        filename: image.filename,
+        lesson_id: this.theme_sections[index + 1].lesson_id,
+        activity_id: this.theme_sections[index + 1].activity_id,
+      }));
+
+      const formData = {
+        student_id: this.form.student_id,
+        theme_id: this.form.theme_id,
+        student_nickname: this.form.student_nickname,
+        selected_images: selectedImages,
       };
+
       axios
-        .get(route("art_book.generate"), options)
+        .post(route("art_book.generate"), formData, {
+          responseType: "blob",
+        })
         .then((response) => {
           // Create a Blob object from the response data
           const blob = new Blob([response.data], { type: "application/pdf" });
@@ -430,12 +686,160 @@ export default {
           clearInterval(this.interval_id);
         })
         .catch((error) => {
-          console.error("Error fetching PDF:", error);
+          console.error("Error generating PDF:", error);
           this.generating = false;
+          clearInterval(this.interval_id);
+          // Show error message to user
+          alert("Failed to generate art book. Please try again.");
         });
     },
     clearStudents() {
       this.list.students = [];
+    },
+    handleScroll(event) {
+      const { scrollLeft, scrollWidth, clientWidth } = event.target;
+      const scrollPosition = scrollLeft + clientWidth;
+      const scrollThreshold = scrollWidth - clientWidth * 0.8;
+
+      if (scrollPosition >= scrollThreshold && !this.isLoadingMore) {
+        this.loadMoreImages();
+      }
+    },
+    loadMoreImages() {
+      if (this.isLoadingMore) return;
+
+      this.isLoadingMore = true;
+      this.currentPage++;
+
+      // Simulate loading more images (replace with actual API call)
+      setTimeout(() => {
+        const newImages = Array.from(
+          { length: this.itemsPerPage },
+          (_, i) => `image${this.currentPage * this.itemsPerPage + i + 1}.jpg`
+        );
+
+        this.available_images = {
+          ...this.available_images,
+          ...newImages.map((image) => ({
+            id: image,
+            url: `/storage/art_gallery/${this.theme_assets}${image}`,
+          })),
+        };
+        this.isLoadingMore = false;
+      }, 500);
+    },
+    handleImageLoad(sectionIndex, imageId) {
+      this.imageLoadingStates[`${sectionIndex}-${imageId}`] = false;
+
+      // Check if all images in this section are loaded
+      const sectionImages = this.available_images[sectionIndex] || [];
+      const allLoaded = sectionImages.every((image) => {
+        return !this.imageLoadingStates[`${sectionIndex}-${image.id}`];
+      });
+
+      if (allLoaded) {
+        this.imagesLoaded[sectionIndex] = true;
+      }
+    },
+    handleImageError(sectionIndex, imageId) {
+      this.imageErrorStates[`${sectionIndex}-${imageId}`] = true;
+      this.imageLoadingStates[`${sectionIndex}-${imageId}`] = false;
+
+      // Mark section as loaded even if there's an error
+      this.imagesLoaded[sectionIndex] = true;
+    },
+    async handleFileUpload(event, sectionIndex) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        this.errorStates.upload[sectionIndex] = "Please upload an image file";
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.errorStates.upload[sectionIndex] = "File size should be less than 5MB";
+        return;
+      }
+
+      this.loadingStates.upload[sectionIndex] = true;
+      this.uploadProgress[sectionIndex] = 0;
+      this.errorStates.upload[sectionIndex] = null;
+
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("student_id", this.form.student_id);
+      formData.append("theme_id", this.form.theme_id);
+      formData.append("lesson_id", this.theme_sections[sectionIndex].lesson_id);
+      formData.append("activity_id", this.theme_sections[sectionIndex].activity_id);
+
+      try {
+        const response = await axios.post(route("art_book.upload_artwork"), formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            this.uploadProgress[sectionIndex] = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+          },
+        });
+
+        // Add the new image to available images
+        if (!this.available_images[sectionIndex]) {
+          this.available_images[sectionIndex] = [];
+        }
+        this.available_images[sectionIndex].push(response.data);
+
+        // Clear the file input
+        event.target.value = "";
+      } catch (error) {
+        console.error("Upload error:", error);
+        this.errorStates.upload[sectionIndex] =
+          error.response?.data?.message || "Failed to upload image";
+      } finally {
+        this.loadingStates.upload[sectionIndex] = false;
+        this.uploadProgress[sectionIndex] = 0;
+      }
+    },
+    async deleteArtwork(imageId, sectionIndex) {
+      this.deleteDialog.imageId = imageId;
+      this.deleteDialog.sectionIndex = sectionIndex;
+      this.deleteDialog.open = true;
+      this.deleteDialog.error = null;
+    },
+    async confirmDelete() {
+      if (!this.deleteDialog.imageId || !this.deleteDialog.sectionIndex) return;
+
+      this.deleteDialog.loading = true;
+      this.deleteDialog.error = null;
+
+      try {
+        await axios.delete(route("art_book.delete_artwork", this.deleteDialog.imageId));
+
+        // Remove the image from the available images
+        this.available_images[this.deleteDialog.sectionIndex] = this.available_images[
+          this.deleteDialog.sectionIndex
+        ].filter((img) => img.id !== this.deleteDialog.imageId);
+
+        // If this was the selected image, clear the selection
+        const sectionIndex = this.deleteDialog.sectionIndex - 1;
+        if (this.form.selected_images[sectionIndex]?.id === this.deleteDialog.imageId) {
+          const newSelectedImages = [...this.form.selected_images];
+          newSelectedImages[sectionIndex] = null;
+          this.form.selected_images = newSelectedImages;
+        }
+
+        this.deleteDialog.open = false;
+      } catch (error) {
+        console.error("Error deleting artwork:", error);
+        this.deleteDialog.error =
+          error.response?.data?.message || "Failed to delete artwork";
+      } finally {
+        this.deleteDialog.loading = false;
+      }
     },
   },
   created() {
@@ -444,6 +848,19 @@ export default {
         this.open_ad_detected = true;
       }
     });
+  },
+  watch: {
+    "form.student_id": {
+      handler(newVal) {
+        if (newVal) {
+          this.fetchArtworkForStudent();
+        } else {
+          // Clear artwork when student is deselected
+          this.available_images = {};
+          this.form.selected_images = Array(this.required_sections).fill(null);
+        }
+      },
+    },
   },
 };
 </script>

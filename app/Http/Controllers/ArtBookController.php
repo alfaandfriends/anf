@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class ArtBookController extends Controller
 {
@@ -31,72 +32,56 @@ class ArtBookController extends Controller
     }
 
     public function generate(Request $request){
-        $image_condition    =   DB::table('art_book_conditions')->where('theme_id', $request->theme_id)->get();
+        $image_condition = DB::table('art_book_conditions')->where('theme_id', $request->theme_id)->get();
 
-        $data['image_1']    =   DB::table('student_art_gallery')
-                                    ->where('theme_id', $request->theme_id)
-                                    ->where('lesson_id', $image_condition->where('artwork_number', 1)->pluck('lesson_id')->first())
-                                    ->where('activity_id', $image_condition->where('artwork_number', 1)->pluck('activity_id')->first())
-                                    ->where('student_id', $request->student_id)
-                                    ->pluck('filename')
-                                    ->first();
-                            
-        $data['image_2']    =   DB::table('student_art_gallery')
-                                    ->where('theme_id', $request->theme_id)
-                                    ->where('lesson_id', $image_condition->where('artwork_number', 2)->pluck('lesson_id')->first())
-                                    ->where('activity_id', $image_condition->where('artwork_number', 2)->pluck('activity_id')->first())
-                                    ->where('student_id', $request->student_id)
-                                    ->pluck('filename')
-                                    ->first();
+        // Get the selected images from the request
+        $selected_images = collect($request->selected_images);
 
-        
-        $data['image_3']    =   DB::table('student_art_gallery')
-                                    ->where('theme_id', $request->theme_id)
-                                    ->where('lesson_id', $image_condition->where('artwork_number', 3)->pluck('lesson_id')->first())
-                                    ->where('activity_id', $image_condition->where('artwork_number', 3)->pluck('activity_id')->first())
-                                    ->where('student_id', $request->student_id)
-                                    ->pluck('filename')
-                                    ->first();
-                            
-        $data['image_4']    =   DB::table('student_art_gallery')
-                                    ->where('theme_id', $request->theme_id)
-                                    ->where('lesson_id', $image_condition->where('artwork_number', 4)->pluck('lesson_id')->first())
-                                    ->where('activity_id', $image_condition->where('artwork_number', 4)->pluck('activity_id')->first())
-                                    ->where('student_id', $request->student_id)
-                                    ->pluck('filename')
-                                    ->first();
+        // Map selected images to the required data structure
+        $data['image_1'] = $selected_images->where('lesson_id', $image_condition->where('artwork_number', 1)->pluck('lesson_id')->first())
+                                         ->where('activity_id', $image_condition->where('artwork_number', 1)->pluck('activity_id')->first())
+                                         ->pluck('filename')
+                                         ->first();
 
-        $data['image_5']    =   DB::table('student_art_gallery')
-                                    ->where('theme_id', $request->theme_id)
-                                    ->where('lesson_id', $image_condition->where('artwork_number', 5)->pluck('lesson_id')->first())
-                                    ->where('activity_id', $image_condition->where('artwork_number', 5)->pluck('activity_id')->first())
-                                    ->where('student_id', $request->student_id)
-                                    ->pluck('filename')
-                                    ->first();
+        $data['image_2'] = $selected_images->where('lesson_id', $image_condition->where('artwork_number', 2)->pluck('lesson_id')->first())
+                                         ->where('activity_id', $image_condition->where('artwork_number', 2)->pluck('activity_id')->first())
+                                         ->pluck('filename')
+                                         ->first();
 
-        $data['image_6']    =   DB::table('student_art_gallery')
-                                    ->where('theme_id', $request->theme_id)
-                                    ->where('lesson_id', $image_condition->where('artwork_number', 6)->pluck('lesson_id')->first())
-                                    ->where('activity_id', $image_condition->where('artwork_number', 6)->pluck('activity_id')->first())
-                                    ->where('student_id', $request->student_id)
-                                    ->pluck('filename')
-                                    ->first();
+        $data['image_3'] = $selected_images->where('lesson_id', $image_condition->where('artwork_number', 3)->pluck('lesson_id')->first())
+                                         ->where('activity_id', $image_condition->where('artwork_number', 3)->pluck('activity_id')->first())
+                                         ->pluck('filename')
+                                         ->first();
 
-        $data['image_7']    =   DB::table('student_art_gallery')
-                                    ->where('theme_id', $request->theme_id)
-                                    ->where('lesson_id', $image_condition->where('artwork_number', 7)->pluck('lesson_id')->first())
-                                    ->where('activity_id', $image_condition->where('artwork_number', 7)->pluck('activity_id')->first())
-                                    ->where('student_id', $request->student_id)
-                                    ->pluck('filename')
-                                    ->first();
+        $data['image_4'] = $selected_images->where('lesson_id', $image_condition->where('artwork_number', 4)->pluck('lesson_id')->first())
+                                         ->where('activity_id', $image_condition->where('artwork_number', 4)->pluck('activity_id')->first())
+                                         ->pluck('filename')
+                                         ->first();
 
-        $data['name']       =   Str::headline($request->student_nickname);
-        $data['gender']     =   collect(DB::table('students')
-                                    ->join('children', 'students.children_id', '=', 'children.id')
-                                    ->join('genders', 'children.gender_id', '=', 'genders.id')
-                                    ->where('students.id', $request->student_id)->select('genders.subject_pronoun', 'genders.object_pronoun', 'genders.possessive_adjective', 'genders.possessive_pronoun', 'genders.reflexive_pronoun')->first())->toArray();
+        $data['image_5'] = $selected_images->where('lesson_id', $image_condition->where('artwork_number', 5)->pluck('lesson_id')->first())
+                                         ->where('activity_id', $image_condition->where('artwork_number', 5)->pluck('activity_id')->first())
+                                         ->pluck('filename')
+                                         ->first();
 
-        $folder             =   DB::table('art_themes')->where('id', $request->theme_id)->pluck('art_book_assets')->first();
+        $data['image_6'] = $selected_images->where('lesson_id', $image_condition->where('artwork_number', 6)->pluck('lesson_id')->first())
+                                         ->where('activity_id', $image_condition->where('artwork_number', 6)->pluck('activity_id')->first())
+                                         ->pluck('filename')
+                                         ->first();
+
+        $data['image_7'] = $selected_images->where('lesson_id', $image_condition->where('artwork_number', 7)->pluck('lesson_id')->first())
+                                         ->where('activity_id', $image_condition->where('artwork_number', 7)->pluck('activity_id')->first())
+                                         ->pluck('filename')
+                                         ->first();
+
+        $data['name'] = Str::headline($request->student_nickname);
+        $data['gender'] = collect(DB::table('students')
+                                ->join('children', 'students.children_id', '=', 'children.id')
+                                ->join('genders', 'children.gender_id', '=', 'genders.id')
+                                ->where('students.id', $request->student_id)
+                                ->select('genders.subject_pronoun', 'genders.object_pronoun', 'genders.possessive_adjective', 'genders.possessive_pronoun', 'genders.reflexive_pronoun')
+                                ->first())->toArray();
+
+        $folder = DB::table('pr_art_themes')->where('id', $request->theme_id)->pluck('art_book_assets')->first();
         
         $pdf = PDF::setPaper(array(0,0,648,576))
                     ->setOption('fontDir', public_path('/fonts'))
@@ -121,7 +106,7 @@ class ArtBookController extends Controller
                         ->orderBy('art_book_conditions.theme_id')
                         ->orderBy('art_book_conditions.artwork_number')
                         ->paginate(10); // 10 items per page
-        
+                        
         // Get themes for dropdown
         $themes = DB::table('pr_art_themes')
                     ->select('id', 'name')
@@ -154,6 +139,109 @@ class ArtBookController extends Controller
                         ->get();
         
         return response()->json($activities);
+    }
+
+    // Get conditions for a theme
+    public function getConditions($themeId)
+    {
+        $conditions = DB::table('art_book_conditions')
+                        ->where('theme_id', $themeId)
+                        ->orderBy('artwork_number')
+                        ->get();
+        
+        return response()->json($conditions);
+    }
+
+    // Get artwork for a specific lesson and activity
+    public function getArtwork($lessonId, $activityId, $studentId)
+    {
+        $artwork = DB::table('student_art_gallery')
+                    ->where('lesson_id', $lessonId)
+                    ->where('activity_id', $activityId)
+                    ->where('student_id', $studentId)
+                    ->select('id', 'filename', 'student_id')
+                    ->get();
+        
+        return response()->json($artwork);
+    }
+
+    public function uploadArtwork(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
+            'student_id' => 'required|exists:students,id',
+            'lesson_id' => 'required|exists:pr_art_lessons,id',
+            'activity_id' => 'required|exists:pr_art_activities,id',
+            'theme_id' => 'required|exists:pr_art_themes,id'
+        ]);
+
+        try {
+            // Get the condition to get the level
+            $condition = DB::table('art_book_conditions')
+                ->where('theme_id', $request->theme_id)
+                ->where('lesson_id', $request->lesson_id)
+                ->where('activity_id', $request->activity_id)
+                ->first();
+
+            if (!$condition) {
+                return response()->json(['message' => 'Invalid theme, lesson, or activity combination'], 422);
+            }
+
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Store the file
+            $file->storeAs('art_gallery', $filename);
+
+            // Save to database
+            $artwork = DB::table('student_art_gallery')->insertGetId([
+                'student_id' => $request->student_id,
+                'lesson_id' => $request->lesson_id,
+                'activity_id' => $request->activity_id,
+                'theme_id' => $request->theme_id,
+                'level_id' => 1,
+                'filename' => $filename,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return response()->json([
+                'id' => $artwork,
+                'filename' => $filename,
+                'student_id' => $request->student_id,
+                'theme_id' => $request->theme_id,
+                'level_id' => 1
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            return response()->json(['message' => 'Failed to upload image'], 500);
+        }
+    }
+
+    public function deleteArtwork($id)
+    {
+        try {
+            // Get artwork info
+            $artwork = DB::table('student_art_gallery')->where('id', $id)->first();
+            
+            if (!$artwork) {
+                return response()->json(['message' => 'Artwork not found'], 404);
+            }
+
+            // Delete the file from storage
+            $fileDeleted = Storage::delete('art_gallery/' . $artwork->filename);
+            
+            // Delete the database record
+            $recordDeleted = DB::table('student_art_gallery')->where('id', $id)->delete();
+
+            if ($recordDeleted) {
+                return response()->json(['message' => 'Artwork deleted successfully']);
+            }
+
+            return response()->json(['message' => 'Failed to delete artwork'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred while deleting the artwork'], 500);
+        }
     }
 
     // Store a new condition

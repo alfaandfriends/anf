@@ -139,10 +139,14 @@ Route::middleware(['auth'])->group(function(){
 
             /* Art Book */
             Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book')->middleware('permission:view_art_book');
-            Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate')->middleware('permission:create_art_book');
+            Route::post('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate')->middleware('permission:create_art_book');
             Route::get('/art-book/setup', [ArtBookController::class, 'setup'])->name('art_book.setup')->middleware('permission:create_art_book');
             Route::get('/art-book/get-lessons/{themeId}', [ArtBookController::class, 'getLessons'])->name('art_book.get_lessons')->middleware('permission:view_art_book');
             Route::get('/art-book/get-activities/{lessonId}', [ArtBookController::class, 'getActivities'])->name('art_book.get_activities')->middleware('permission:view_art_book');
+            Route::get('/art-book/get-conditions/{themeId}', [ArtBookController::class, 'getConditions'])->name('art_book.get_conditions')->middleware('permission:view_art_book');
+            Route::get('/art-book/get-artwork/{lessonId}/{activityId}/{studentId}', [ArtBookController::class, 'getArtwork'])->name('art_book.get_artwork')->middleware('permission:view_art_book');
+            Route::post('/art-book/upload-artwork', [ArtBookController::class, 'uploadArtwork'])->name('art_book.upload_artwork')->middleware('permission:create_art_book');
+            Route::delete('/art-book/delete-artwork/{id}', [ArtBookController::class, 'deleteArtwork'])->name('art_book.delete_artwork')->middleware('permission:create_art_book');
             Route::post('/art-book/store-condition', [ArtBookController::class, 'storeCondition'])->name('art_book.store_condition')->middleware('permission:create_art_book');
             Route::post('/art-book/update-condition', [ArtBookController::class, 'updateCondition'])->name('art_book.update_condition')->middleware('permission:create_art_book');
             Route::delete('/art-book/delete-condition/{id}', [ArtBookController::class, 'deleteCondition'])->name('art_book.delete_condition')->middleware('permission:create_art_book');

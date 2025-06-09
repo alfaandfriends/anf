@@ -285,7 +285,7 @@ import BreezeAuthenticatedLayout from "@/Layouts/Admin/Authenticated.vue";
                         :alt="artwork.filename"
                         @click="openArtworkInNewTab(artwork)"
                       />
-                      <div class="flex items-center space-x-1 mt-2">
+                      <!-- <div class="flex items-center space-x-1 mt-2">
                         <Checkbox
                           :id="index + '_' + artwork_index"
                           :checked="
@@ -304,7 +304,7 @@ import BreezeAuthenticatedLayout from "@/Layouts/Admin/Authenticated.vue";
                           class="cursor-pointer text-xs"
                           >Art Book</Label
                         >
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
