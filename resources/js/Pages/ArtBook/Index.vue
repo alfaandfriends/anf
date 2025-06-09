@@ -83,10 +83,9 @@ import { Inertia } from "@inertiajs/inertia";
               placeholder="Max : 10 Characters"
             ></Input>
           </div>
-          <div>
+          <!-- <div>
             <Label>Select Images<span class="text-red-500">*</span></Label>
             <div class="grid grid-cols-1 gap-6 mt-2">
-              <!-- Dynamically generate image sections based on required_sections -->
               <div
                 v-for="sectionIndex in required_sections"
                 :key="'section-' + sectionIndex"
@@ -145,7 +144,7 @@ import { Inertia } from "@inertiajs/inertia";
                 </li>
               </ul>
             </div>
-          </div>
+          </div> -->
         </div>
       </template>
       <template #content v-else>
@@ -368,17 +367,17 @@ export default {
 
       // Check if all sections have an image selected
       let hasError = false;
-      const newErrorSections = Array(this.required_sections).fill(false);
+      // const newErrorSections = Array(this.required_sections).fill(false);
 
-      for (let i = 0; i < this.required_sections; i++) {
-        if (this.form.selected_images[i] === null) {
-          newErrorSections[i] = true;
-          hasError = true;
-        }
-      }
+      // for (let i = 0; i < this.required_sections; i++) {
+      //   if (this.form.selected_images[i] === null) {
+      //     newErrorSections[i] = true;
+      //     hasError = true;
+      //   }
+      // }
 
-      this.error_sections = newErrorSections;
-      this.error_image_selection = hasError;
+      // this.error_sections = newErrorSections;
+      // this.error_image_selection = hasError;
 
       if (this.form.student_nickname === "" || this.form.student_nickname.length > 10) {
         return;
