@@ -315,13 +315,13 @@ const handlePageChange = (page) => {
                   >
                     <PencilIcon class="w-4 h-4 mr-1" /> Edit
                   </Button>
-                  <Button
+                  <!-- <Button
                     variant="destructive"
                     size="sm"
                     @click="deleteCondition(condition.id)"
                   >
                     <TrashIcon class="w-4 h-4 mr-1" /> Delete
-                  </Button>
+                  </Button> -->
                 </div>
               </TableCell>
             </TableRow>
@@ -352,6 +352,7 @@ const handlePageChange = (page) => {
               select-placeholder="Select a theme"
               search-placeholder="Search theme..."
               :error="errors.condition?.theme_id"
+              :disabled="true"
             />
             <p v-if="errors.condition?.theme_id" class="text-xs text-red-500">
               {{ errors.condition.theme_id[0] }}
@@ -369,6 +370,7 @@ const handlePageChange = (page) => {
               min="1"
               max="7"
               :class="{ 'border-red-500': errors.condition?.artwork_number }"
+              disabled
             />
             <p v-if="errors.condition?.artwork_number" class="text-xs text-red-500">
               {{ errors.condition.artwork_number[0] }}
