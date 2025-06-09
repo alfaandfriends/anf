@@ -101,7 +101,7 @@ import BreezeAuthenticatedLayout from "@/Layouts/Admin/Authenticated.vue";
           <div class="">
             <Label>Theme</Label>
             <ComboBox
-              :items="$page.props.art_themes"
+              :items="$page.props.art_digital_themes"
               label-property="name"
               value-property="id"
               v-model="search.theme_id"

@@ -134,12 +134,18 @@ Route::middleware(['auth'])->group(function(){
             
             /* Art Gallery */
             Route::get('/art-gallery', [ArtGalleryController::class, 'index'])->name('art_gallery')->middleware('permission:view_art_gallery');
-            Route::post('/art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store')->middleware('permission:create_art_gallery');
-            Route::delete('/art-gallery/destroy/{id}', [ArtGalleryController::class, 'destroy'])->name('art_gallery.destroy')->middleware('permission:delete_art_gallery');
+            // Route::post('/art-gallery/store', [ArtGalleryController::class, 'store'])->name('art_gallery.store')->middleware('permission:create_art_gallery');
+            // Route::delete('/art-gallery/destroy/{id}', [ArtGalleryController::class, 'destroy'])->name('art_gallery.destroy')->middleware('permission:delete_art_gallery');
 
             /* Art Book */
             Route::get('/art-book', [ArtBookController::class, 'index'])->name('art_book')->middleware('permission:view_art_book');
             Route::get('/art-book/generate', [ArtBookController::class, 'generate'])->name('art_book.generate')->middleware('permission:create_art_book');
+            Route::get('/art-book/setup', [ArtBookController::class, 'setup'])->name('art_book.setup')->middleware('permission:create_art_book');
+            Route::get('/art-book/get-lessons/{themeId}', [ArtBookController::class, 'getLessons'])->name('art_book.get_lessons')->middleware('permission:view_art_book');
+            Route::get('/art-book/get-activities/{lessonId}', [ArtBookController::class, 'getActivities'])->name('art_book.get_activities')->middleware('permission:view_art_book');
+            Route::post('/art-book/store-condition', [ArtBookController::class, 'storeCondition'])->name('art_book.store_condition')->middleware('permission:create_art_book');
+            Route::post('/art-book/update-condition', [ArtBookController::class, 'updateCondition'])->name('art_book.update_condition')->middleware('permission:create_art_book');
+            Route::delete('/art-book/delete-condition/{id}', [ArtBookController::class, 'deleteCondition'])->name('art_book.delete_condition')->middleware('permission:create_art_book');
 
             /* Stories */
             Route::middleware('permission:story_access')->group(function () {
@@ -160,28 +166,28 @@ Route::middleware(['auth'])->group(function(){
 
             /* Setting */
             /* Level, Theme, Lesson, Activity List */
-            Route::get('/art-gallery/setting/levels', [ArtGalleryController::class, 'levels'])->name('art_gallery.setting.levels')->middleware('permission:view_art_gallery');
-            Route::get('/art-gallery/setting/themes', [ArtGalleryController::class, 'themes'])->name('art_gallery.setting.themes')->middleware('permission:view_art_gallery');
-            Route::get('/art-gallery/setting/lessons', [ArtGalleryController::class, 'lessons'])->name('art_gallery.setting.lessons')->middleware('permission:view_art_gallery');
-            Route::get('/art-gallery/setting/activities', [ArtGalleryController::class, 'activities'])->name('art_gallery.setting.activities')->middleware('permission:view_art_gallery');
+            // Route::get('/art-gallery/setting/levels', [ArtGalleryController::class, 'levels'])->name('art_gallery.setting.levels')->middleware('permission:view_art_gallery');
+            // Route::get('/art-gallery/setting/themes', [ArtGalleryController::class, 'themes'])->name('art_gallery.setting.themes')->middleware('permission:view_art_gallery');
+            // Route::get('/art-gallery/setting/lessons', [ArtGalleryController::class, 'lessons'])->name('art_gallery.setting.lessons')->middleware('permission:view_art_gallery');
+            // Route::get('/art-gallery/setting/activities', [ArtGalleryController::class, 'activities'])->name('art_gallery.setting.activities')->middleware('permission:view_art_gallery');
             
             /* Level, Theme, Lesson, Activity Store */
-            Route::post('/art-gallery/setting/levels/store', [ArtGalleryController::class, 'levelStore'])->name('art_gallery.setting.levels.store')->middleware('permission:view_art_gallery');
-            Route::post('/art-gallery/setting/themes/store', [ArtGalleryController::class, 'themeStore'])->name('art_gallery.setting.themes.store')->middleware('permission:view_art_gallery');
-            Route::post('/art-gallery/setting/lessons/store', [ArtGalleryController::class, 'lessonStore'])->name('art_gallery.setting.lessons.store')->middleware('permission:view_art_gallery');
-            Route::post('/art-gallery/setting/activities/store', [ArtGalleryController::class, 'activityStore'])->name('art_gallery.setting.activities.store')->middleware('permission:view_art_gallery');
+            // Route::post('/art-gallery/setting/levels/store', [ArtGalleryController::class, 'levelStore'])->name('art_gallery.setting.levels.store')->middleware('permission:view_art_gallery');
+            // Route::post('/art-gallery/setting/themes/store', [ArtGalleryController::class, 'themeStore'])->name('art_gallery.setting.themes.store')->middleware('permission:view_art_gallery');
+            // Route::post('/art-gallery/setting/lessons/store', [ArtGalleryController::class, 'lessonStore'])->name('art_gallery.setting.lessons.store')->middleware('permission:view_art_gallery');
+            // Route::post('/art-gallery/setting/activities/store', [ArtGalleryController::class, 'activityStore'])->name('art_gallery.setting.activities.store')->middleware('permission:view_art_gallery');
 
             /* Level, Theme, Lesson, Activity Update */
-            Route::post('/art-gallery/setting/levels/update', [ArtGalleryController::class, 'levelUpdate'])->name('art_gallery.setting.levels.update')->middleware('permission:view_art_gallery');
-            Route::post('/art-gallery/setting/themes/update', [ArtGalleryController::class, 'themeUpdate'])->name('art_gallery.setting.themes.update')->middleware('permission:view_art_gallery');
-            Route::post('/art-gallery/setting/lessons/update', [ArtGalleryController::class, 'lessonUpdate'])->name('art_gallery.setting.lessons.update')->middleware('permission:view_art_gallery');
-            Route::post('/art-gallery/setting/activities/update', [ArtGalleryController::class, 'activityUpdate'])->name('art_gallery.setting.activities.update')->middleware('permission:view_art_gallery');
+            // Route::post('/art-gallery/setting/levels/update', [ArtGalleryController::class, 'levelUpdate'])->name('art_gallery.setting.levels.update')->middleware('permission:view_art_gallery');
+            // Route::post('/art-gallery/setting/themes/update', [ArtGalleryController::class, 'themeUpdate'])->name('art_gallery.setting.themes.update')->middleware('permission:view_art_gallery');
+            // Route::post('/art-gallery/setting/lessons/update', [ArtGalleryController::class, 'lessonUpdate'])->name('art_gallery.setting.lessons.update')->middleware('permission:view_art_gallery');
+            // Route::post('/art-gallery/setting/activities/update', [ArtGalleryController::class, 'activityUpdate'])->name('art_gallery.setting.activities.update')->middleware('permission:view_art_gallery');
 
             /* Level, Theme, Lesson, Activity Delete */
-            Route::delete('/art-gallery/setting/levels/delete/{id}', [ArtGalleryController::class, 'levelDelete'])->name('art_gallery.setting.levels.delete')->middleware('permission:view_art_gallery');
-            Route::delete('/art-gallery/setting/themes/delete/{id}', [ArtGalleryController::class, 'themeDelete'])->name('art_gallery.setting.themes.delete')->middleware('permission:view_art_gallery');
-            Route::delete('/art-gallery/setting/lessons/delete/{id}', [ArtGalleryController::class, 'lessonDelete'])->name('art_gallery.setting.lessons.delete')->middleware('permission:view_art_gallery');
-            Route::delete('/art-gallery/setting/activities/delete/{id}', [ArtGalleryController::class, 'activityDelete'])->name('art_gallery.setting.activities.delete')->middleware('permission:view_art_gallery');
+            // Route::delete('/art-gallery/setting/levels/delete/{id}', [ArtGalleryController::class, 'levelDelete'])->name('art_gallery.setting.levels.delete')->middleware('permission:view_art_gallery');
+            // Route::delete('/art-gallery/setting/themes/delete/{id}', [ArtGalleryController::class, 'themeDelete'])->name('art_gallery.setting.themes.delete')->middleware('permission:view_art_gallery');
+            // Route::delete('/art-gallery/setting/lessons/delete/{id}', [ArtGalleryController::class, 'lessonDelete'])->name('art_gallery.setting.lessons.delete')->middleware('permission:view_art_gallery');
+            // Route::delete('/art-gallery/setting/activities/delete/{id}', [ArtGalleryController::class, 'activityDelete'])->name('art_gallery.setting.activities.delete')->middleware('permission:view_art_gallery');
 
             /* Progress Report */
             Route::get('/progress-report', [ProgressReportController::class, 'index'])->name('progress_report')->middleware('permission:view_progress_report');
@@ -331,7 +337,7 @@ Route::middleware(['auth'])->group(function(){
                     Route::delete('learning-objectives/destroy/{id}', [LittleArtistSettingController::class, 'littleArtistObjectivesDestroy'])->name('progress_report.settings.little_artist.objectives.destroy')->middleware('permission:view_progress_report_settings');
                 });
                 
-                /* Digital Art */
+                /* Art Digital */
                 Route::prefix('art-digital')->group(function () {
                     Route::get('levels', [ArtDigitalSettingController::class, 'artDigitalLevels'])->name('progress_report.settings.art_digital.levels')->middleware('permission:view_progress_report_settings');
                     Route::post('levels/store', [ArtDigitalSettingController::class, 'artDigitalLevelsStore'])->name('progress_report.settings.art_digital.levels.store')->middleware('permission:view_progress_report_settings');
@@ -364,7 +370,7 @@ Route::middleware(['auth'])->group(function(){
                     Route::delete('objectives/destroy/{id}', [ArtDigitalSettingController::class, 'artDigitalObjectivesDestroy'])->name('progress_report.settings.art_digital.objectives.destroy')->middleware('permission:view_progress_report_settings');
                 });
                 
-                /* Digital Art */
+                /* Art Traditional */
                 Route::prefix('art-traditional')->group(function () {
                     Route::get('levels', [ArtTraditionalSettingController::class, 'artTraditionalLevels'])->name('progress_report.settings.art_traditional.levels')->middleware('permission:view_progress_report_settings');
                     Route::post('levels/store', [ArtTraditionalSettingController::class, 'artTraditionalLevelsStore'])->name('progress_report.settings.art_traditional.levels.store')->middleware('permission:view_progress_report_settings');

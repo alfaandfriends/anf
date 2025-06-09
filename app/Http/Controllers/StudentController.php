@@ -621,6 +621,7 @@ class StudentController extends Controller
     public function findDigitalArtStudents(Request $request){
         $digital_art_programme_id   =   [3, 5];
         $students   =   DB::table('students')
+                            ->distinct()
                             ->join('children', 'students.children_id', '=', 'children.id')
                             ->join('student_fees', 'student_fees.student_id', '=', 'students.id')
                             ->join('programme_level_fees', 'student_fees.fee_id', '=', 'programme_level_fees.id')
@@ -628,15 +629,11 @@ class StudentController extends Controller
                             ->join('programmes', 'programme_levels.programme_id', '=', 'programmes.id')
                             ->where('children.name', 'LIKE', '%'.$request->keyword.'%')
                             ->whereIn('programmes.id', $digital_art_programme_id)
-                            ->whereNull('student_fees.status')
+                            // ->whereNull('student_fees.status')
                             // ->whereYear('student_fees.created_at', '=', now()->year)
                             // ->whereMonth('student_fees.created_at', '=', now()->month)
-                            ->whereIn('student_fees.id', function($query) {
-                                $query->select(DB::raw('MAX(id)'))
-                                ->from('student_fees')
-                                ->groupBy('student_id');
-                            })
                             ->select('students.id', 'children.name')
+                            ->groupBy('students.id', 'children.name')
                             ->get();
 
         return $students;

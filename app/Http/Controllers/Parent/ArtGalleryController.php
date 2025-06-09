@@ -69,7 +69,7 @@ class ArtGalleryController extends Controller
 
     public function getLevels()
     {
-        $levels =   DB::table('art_levels')->get();
+        $levels =   DB::table('pr_art_levels')->get();
 
         return $levels;
     }

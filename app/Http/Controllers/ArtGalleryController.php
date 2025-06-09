@@ -63,53 +63,53 @@ class ArtGalleryController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'student_id'    => 'required',
-            'level_id'      => 'required',
-            'theme_id'      => 'required',
-            'lesson_id'     => 'required',
-            'activity_id'   => 'required',
-            'artwork.file'  => 'required|file',
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'student_id'    => 'required',
+    //         'level_id'      => 'required',
+    //         'theme_id'      => 'required',
+    //         'lesson_id'     => 'required',
+    //         'activity_id'   => 'required',
+    //         'artwork.file'  => 'required|file',
+    //     ]);
 
-        $file = $request->file('artwork.file');
-        $extension = $file->getClientOriginalExtension();
-        $filename = time() . '.' . $extension;
+    //     $file = $request->file('artwork.file');
+    //     $extension = $file->getClientOriginalExtension();
+    //     $filename = time() . '.' . $extension;
 
-        DB::table('student_art_gallery')->insert([
-            'student_id'    => $request->student_id,
-            'level_id'      => $request->level_id,
-            'theme_id'      => $request->theme_id,
-            'lesson_id'     => $request->lesson_id,
-            'activity_id'   => $request->activity_id,
-            'filename'      => $filename,
-        ]);
+    //     DB::table('student_art_gallery')->insert([
+    //         'student_id'    => $request->student_id,
+    //         'level_id'      => $request->level_id,
+    //         'theme_id'      => $request->theme_id,
+    //         'lesson_id'     => $request->lesson_id,
+    //         'activity_id'   => $request->activity_id,
+    //         'filename'      => $filename,
+    //     ]);
 
-        Storage::putFileAs('art_gallery',$file, $filename);
+    //     Storage::putFileAs('art_gallery',$file, $filename);
 
-        $log_data =   'Added artwork for student ID '.$request->student_id;
-        event(new DatabaseTransactionEvent($log_data));
+    //     $log_data =   'Added artwork for student ID '.$request->student_id;
+    //     event(new DatabaseTransactionEvent($log_data));
 
-        return redirect(route('art_gallery'))->with(['type'=>'success', 'message'=>'Data has been added.']);
-    }
+    //     return redirect(route('art_gallery'))->with(['type'=>'success', 'message'=>'Data has been added.']);
+    // }
 
-    public function destroy($id)
-    {
-        $artwork_info   =   DB::table('student_art_gallery')->where('id', $id)->first();
-        $file_deleted   =   Storage::delete('art_gallery/'.$artwork_info->filename);
-        $record_deleted =   DB::table('student_art_gallery')->where('id', $id)->delete();
+    // public function destroy($id)
+    // {
+    //     $artwork_info   =   DB::table('student_art_gallery')->where('id', $id)->first();
+    //     $file_deleted   =   Storage::delete('art_gallery/'.$artwork_info->filename);
+    //     $record_deleted =   DB::table('student_art_gallery')->where('id', $id)->delete();
 
-        if($record_deleted){
-            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
-        }
-        $log_data =   'Deleted artwork ID '.$id;
-        event(new DatabaseTransactionEvent($log_data));
+    //     if($record_deleted){
+    //         return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
+    //     }
+    //     $log_data =   'Deleted artwork ID '.$id;
+    //     event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'danger', 'message'=>'An error occured, please try again.']);
+    //     return back()->with(['type'=>'danger', 'message'=>'An error occured, please try again.']);
 
-    }
+    // }
 
     public function levels(){
         $levels = $this->getLevels();
@@ -152,14 +152,14 @@ class ArtGalleryController extends Controller
     /* Get Level, Theme, Lesson, Activity List */
     public function getLevels()
     {
-        $levels =   DB::table('art_levels')->get();
+        $levels =   DB::table('pr_art_levels')->get();
 
         return $levels;
     }
 
     public function getThemes($level_id = '')
     {
-        $themes =   DB::table('art_themes')
+        $themes =   DB::table('pr_art_themes')
                     ->when($level_id, function($query) use ($level_id){
                         $query->where('level_id', $level_id);
                     })
@@ -194,17 +194,17 @@ class ArtGalleryController extends Controller
         return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
     }
 
-    public function themeStore(Request $request)
-    {
-        $theme_id   =   DB::table('art_themes')->insertGetId([
-            'level_id'  => $request->level_id,
-            'name'      => $request->theme_name
-        ]);
-        $log_data =   'Added art theme ID '.$theme_id;
-        event(new DatabaseTransactionEvent($log_data));
+    // public function themeStore(Request $request)
+    // {
+    //     $theme_id   =   DB::table('art_themes')->insertGetId([
+    //         'level_id'  => $request->level_id,
+    //         'name'      => $request->theme_name
+    //     ]);
+    //     $log_data =   'Added art theme ID '.$theme_id;
+    //     event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
-    }
+    //     return back()->with(['type'=>'success', 'message'=>'Data has been added.']);
+    // }
 
     public function lessonStore(Request $request)
     {
@@ -242,16 +242,16 @@ class ArtGalleryController extends Controller
         return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
     }
 
-    public function themeUpdate(Request $request)
-    {
-        DB::table('art_themes')->where('id', $request->id)->update([
-            'name'      => $request->theme_name
-        ]);
-        $log_data =   'Updated art theme ID '.$request->id;
-        event(new DatabaseTransactionEvent($log_data));
+    // public function themeUpdate(Request $request)
+    // {
+    //     DB::table('art_themes')->where('id', $request->id)->update([
+    //         'name'      => $request->theme_name
+    //     ]);
+    //     $log_data =   'Updated art theme ID '.$request->id;
+    //     event(new DatabaseTransactionEvent($log_data));
 
-        return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
-    }
+    //     return back()->with(['type'=>'success', 'message'=>'Data has been saved.']);
+    // }
 
     public function lessonUpdate(Request $request)
     {
@@ -296,25 +296,25 @@ class ArtGalleryController extends Controller
         }
     }
 
-    public function themeDelete($id)
-    {
-        try {
-            DB::beginTransaction();
+    // public function themeDelete($id)
+    // {
+    //     try {
+    //         DB::beginTransaction();
 
-            DB::table('art_themes')->where('id', $id)->delete();
+    //         DB::table('art_themes')->where('id', $id)->delete();
 
-            DB::commit();
+    //         DB::commit();
 
-            $log_data =   'Deleted art theme ID '.$id;
-            event(new DatabaseTransactionEvent($log_data));
+    //         $log_data =   'Deleted art theme ID '.$id;
+    //         event(new DatabaseTransactionEvent($log_data));
 
-            return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
-        } 
-        catch (Exception $e) {
-            DB::rollBack();
-            return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this theme.']);
-        }
-    }
+    //         return back()->with(['type'=>'success', 'message'=>'Data has been deleted.']);
+    //     } 
+    //     catch (Exception $e) {
+    //         DB::rollBack();
+    //         return back()->with(['type'=>'error', 'message'=>'Cannot perform this action because there are items in this theme.']);
+    //     }
+    // }
 
     public function lessonDelete($id)
     {

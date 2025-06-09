@@ -131,7 +131,7 @@ class ProgressReportController extends Controller
         $art_digital_themes     =   $this->getArtDigitalThemes($student_info->level);
 
         /* Art Traditional Init Selection */
-        // $art_traditional_themes     =   $this->getArtTraditionalThemes($student_info->level);
+        $art_traditional_themes     =   $this->getArtTraditionalThemes($student_info->level);
 
 
         $attendance_status  =   DB::table('progress_report_status')->get();
@@ -156,7 +156,7 @@ class ProgressReportController extends Controller
             'little_bot_lessons'        =>  $little_bot_lessons,
             'little_artist_lessons'     =>  $little_artist_lessons,
             'art_digital_themes'        =>  $art_digital_themes,
-            // 'art_traditional_themes'    =>  $art_traditional_themes,
+            'art_traditional_themes'    =>  $art_traditional_themes,
             'progress_reports'          =>  $progress_reports,
             'attendance_status'         =>  $attendance_status,
         ]);

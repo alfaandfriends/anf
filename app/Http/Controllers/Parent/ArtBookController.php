@@ -66,7 +66,7 @@ class ArtBookController extends Controller
                                     ->first();
                                     
         $data['name']   =   Str::headline($request->student_nickname);
-        $folder         =   DB::table('art_themes')->where('id', $request->theme_id)->pluck('art_book_assets')->first();
+        $folder         =   DB::table('pr_art_themes')->where('id', $request->theme_id)->pluck('art_book_assets')->first();
         
         $pdf = PDF::setPaper(array(0,0,648,576))
                     ->setOption('fontDir', public_path('/fonts'))
