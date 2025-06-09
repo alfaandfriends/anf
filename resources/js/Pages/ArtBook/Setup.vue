@@ -100,6 +100,18 @@ const search = debounce(function () {
   }
 }, 300);
 
+// Watch for lesson_id changes to fetch activities
+watch(
+  () => conditionForm.value.lesson_id,
+  (newLessonId) => {
+    if (newLessonId) {
+      fetchActivities(newLessonId);
+    } else {
+      activities.value = [];
+    }
+  }
+);
+
 // Fetch lessons when theme changes
 const fetchLessons = (themeId) => {
   if (!themeId) return;
