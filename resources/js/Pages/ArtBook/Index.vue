@@ -203,6 +203,7 @@ import { Inertia } from "@inertiajs/inertia";
                       <button
                         @click.stop="deleteArtwork(image.id, sectionIndex)"
                         class="absolute top-2 left-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                        v-if="$page.props.can?.delete_art_book_artwork"
                       >
                         <svg
                           class="w-4 h-4"
@@ -223,6 +224,7 @@ import { Inertia } from "@inertiajs/inertia";
                     <!-- Upload Option -->
                     <div
                       class="relative cursor-pointer border-2 border-dashed border-gray-300 rounded-lg overflow-hidden group hover:border-indigo-400 transition-colors duration-200"
+                      v-if="$page.props.can?.upload_art_book_artwork"
                     >
                       <div
                         v-if="loadingStates.upload[sectionIndex]"

@@ -56,6 +56,7 @@ class ArtGalleryController extends Controller
     }
     public function destroy($id)
     {
+        dd($id);
         $artwork_info   =   DB::table('student_art_gallery')->where('id', $id)->first();
         $file_deleted   =   Storage::delete('art_gallery/'.$artwork_info->filename);
         $record_deleted =   DB::table('student_art_gallery')->where('id', $id)->delete();

@@ -234,6 +234,26 @@ class ArtBookController extends Controller
             // Delete the database record
             $recordDeleted = DB::table('student_art_gallery')->where('id', $id)->delete();
 
+            // Remove artwork from report_data in progress_report_details
+            $reportDetails = DB::table('progress_report_details')
+                ->where('report_data', 'like', '%' . $artwork->filename . '%')
+                ->get();
+
+            foreach ($reportDetails as $report) {
+                $reportData = json_decode($report->report_data, true);
+                foreach ($reportData as &$data) {
+                    if (isset($data['artworks'])) {
+                        $data['artworks'] = array_filter($data['artworks'], function($artworkItem) use ($artwork) {
+                            return $artworkItem['filename'] !== $artwork->filename;
+                        });
+                        $data['artworks'] = array_values($data['artworks']); // Reindex array
+                    }
+                }
+                DB::table('progress_report_details')
+                    ->where('id', $report->id)
+                    ->update(['report_data' => json_encode($reportData)]);
+            }
+
             if ($recordDeleted) {
                 return response()->json(['message' => 'Artwork deleted successfully']);
             }

@@ -111,12 +111,12 @@ import BreezeAuthenticatedLayout from "@/Layouts/Admin/Authenticated.vue";
                     v-if="$page.props.can.edit_art_gallery"
                     >View</Button
                   >
-                  <Button
+                  <!-- <Button
                     variant="destructive"
                     @click="deleteArtwork(result.artwork_id)"
                     v-if="$page.props.can.delete_art_gallery"
                     >Delete</Button
-                  >
+                  > -->
                 </div>
               </TableCell>
             </TableRow>
