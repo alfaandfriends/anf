@@ -89,7 +89,7 @@ import { Inertia } from "@inertiajs/inertia";
             ></Input>
           </div>
           <div v-if="form.student_id">
-            <Label>Select Images<span class="text-red-500">*</span></Label>
+            <!-- <Label>Select Images<span class="text-red-500">*</span></Label> -->
 
             <!-- Initial Loading State -->
             <div v-if="loadingStates.artwork" class="mt-4 text-center">
@@ -119,8 +119,12 @@ import { Inertia } from "@inertiajs/inertia";
                 v-for="sectionIndex in required_sections"
                 :key="'section-' + sectionIndex"
               >
-                <h4 class="text-sm font-medium mb-2">
-                  Image {{ sectionIndex }} <span class="text-red-500">*</span>
+                <h4 class="text-sm font-medium mb-2 capitalize">
+                  {{ theme_sections[sectionIndex]?.lesson_name || "Unknown" }}:
+                  {{
+                    theme_sections[sectionIndex]?.activity_name || `Image ${sectionIndex}`
+                  }}
+                  <span class="text-red-500">*</span>
                   <span class="text-xs text-gray-500">(Select 1)</span>
                 </h4>
 
@@ -518,6 +522,8 @@ export default {
           this.theme_sections[condition.artwork_number] = {
             lesson_id: condition.lesson_id,
             activity_id: condition.activity_id,
+            activity_name: condition.activity_name,
+            lesson_name: condition.lesson_name,
           };
         }
       } catch (error) {

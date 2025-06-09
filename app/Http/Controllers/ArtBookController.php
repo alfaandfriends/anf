@@ -145,7 +145,10 @@ class ArtBookController extends Controller
     public function getConditions($themeId)
     {
         $conditions = DB::table('art_book_conditions')
-                        ->where('theme_id', $themeId)
+                        ->join('pr_art_activities', 'art_book_conditions.activity_id', '=', 'pr_art_activities.id')
+                        ->join('pr_art_lessons', 'art_book_conditions.lesson_id', '=', 'pr_art_lessons.id')
+                        ->where('art_book_conditions.theme_id', $themeId)
+                        ->select('art_book_conditions.*', 'pr_art_activities.name as activity_name', 'pr_art_lessons.name as lesson_name')
                         ->orderBy('artwork_number')
                         ->get();
         
