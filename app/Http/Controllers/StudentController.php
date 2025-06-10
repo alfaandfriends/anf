@@ -33,12 +33,13 @@ class StudentController extends Controller
 
     public function index(Request $request)
     {
-        $allowed_centres    =   Inertia::getShared('allowed_centres');
+        $allowed_centres    =   collect(Inertia::getShared('allowed_centres'))->pluck('ID');
+        
         if($allowed_centres->isEmpty()){
             return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
         }
         $can_access_centre = $allowed_centres->search(function ($value) {
-            return $value->ID == request('centre_id');
+            return $value == request('centre_id');
         });
 
         $query          =   DB::table('students')
@@ -50,10 +51,11 @@ class StudentController extends Controller
                                             'wpvt_users.display_name as parent_name', 
                                             'students.status'])
                                 ->where('students.status', 1)
+                                ->whereNull('student_fees.status')
                                 ->when($request->centre_id, function($query) use ($request){
                                     $query->where('student_fees.centre_id', '=', $request->centre_id);
                                 })
-                                ->whereNull('student_fees.status')
+                                ->whereIn('student_fees.centre_id', $allowed_centres)
                                 ->groupBy('student_fees.student_id')
                                 ->orderBy('children.name');
 
