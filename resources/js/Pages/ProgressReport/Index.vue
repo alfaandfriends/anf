@@ -46,6 +46,7 @@ import BreezeAuthenticatedLayout from "@/Layouts/Admin/Authenticated.vue";
         v-model="params.centre_id"
         select-placeholder="Centres"
         search-placeholder="Search centre..."
+        canClear
       ></ComboBox>
       <ComboBox
         canClear
