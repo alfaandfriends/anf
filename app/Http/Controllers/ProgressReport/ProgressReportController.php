@@ -23,12 +23,13 @@ class ProgressReportController extends Controller
 {
     public function index(Request $request)
     {
-        $allowed_centres    =   Inertia::getShared('allowed_centres');
+        $allowed_centres    =   collect(Inertia::getShared('allowed_centres'))->pluck('ID');
+
         if($allowed_centres->isEmpty()){
             return back()->with(['type'=>'error', 'message'=>"Sorry, you don't have access to centres. Please contact support to gain access for centres."]);
         }
         $can_access_centre = $allowed_centres->search(function ($value) {
-            return $value->ID == request('centre_id');
+            return $value == request('centre_id');
         });
 
         $programmes =   ProgrammeHelper::programmes();
@@ -66,30 +67,29 @@ class ProgressReportController extends Controller
                                     ")
                         )
                         ->where('programmes.progress_report_required', 1)
+                        ->whereIn('student_fees.centre_id', $allowed_centres)
+                        ->when($request->search, function($query) use ($request){
+                            $query->where('children.name', 'LIKE', '%'.$request->search.'%');
+                        })
+                        ->when($request->centre_id, function($query) use ($request){
+                            $query->where('student_fees.centre_id', $request->centre_id);
+                        })
+                        ->when($request->programme_id, function($query) use ($request){
+                            $query->where('programmes.id', $request->programme_id);
+                        })
+                        ->when($request->programme_level, function($query) use ($request){
+                            $query->where('programme_levels.level', $request->programme_level);
+                        })
                         ->orderBy('children.name');
-                        
-        $query->when($request->search, function($query) use ($request) {
-            return $query->where('children.name', 'LIKE', '%'.$request->search.'%');
-        });
-        
-        $request->merge([
-            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
-        ]);
-        $query->when($request->programme_id, function($query) use ($request) {
-            return $query->where('progress_report_configs.programme_id', $request->programme_id);
-        });
 
-        $query->when($request->date, function($query) use ($request) {
-            return $query->whereMonth('progress_reports.month', $request->date['month']+1)
+        if($request->date){
+            $query->whereMonth('progress_reports.month', $request->date['month']+1)
                         ->whereYear('progress_reports.month', $request->date['year']);
-        });
-
-        $query->when($request->programme_level, function($query) use ($request) {
-            return $query->where('programme_levels.level', $request->programme_level);
-        });
-        
-        $query->where('student_fees.centre_id', '=', $request->centre_id);
-        // $query->where('students.status', '=', 1);
+        }
+        else{
+            $query->whereYear('progress_reports.month', '=', Carbon::now()->format('Y'))
+                ->whereMonth('progress_reports.month', '=', Carbon::now()->format('m'));
+        }
         
         return Inertia::render('ProgressReport/Index', [
             'filter'            =>  request()->all('search', 'centre_id', 'programme_id', 'date', 'programme_level'),
