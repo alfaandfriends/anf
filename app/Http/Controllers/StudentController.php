@@ -50,6 +50,9 @@ class StudentController extends Controller
                                             'wpvt_users.display_name as parent_name', 
                                             'students.status'])
                                 ->where('students.status', 1)
+                                ->when($request->centre_id, function($query) use ($request){
+                                    $query->where('student_fees.centre_id', '=', $request->centre_id);
+                                })
                                 ->whereNull('student_fees.status')
                                 ->groupBy('student_fees.student_id')
                                 ->orderBy('children.name');
@@ -57,8 +60,6 @@ class StudentController extends Controller
         if($request->search){
             $query->where('children.name', 'LIKE', '%'.$request->search.'%');
         }
-                    
-        $request->centre_id ?   $query->where('student_fees.centre_id', '=', $request->centre_id) : $query->where('student_fees.centre_id', '=', $allowed_centres[0]->ID);
 
         if($request->date){
             $date = new DateTime($request->date['year']."-".($request->date['month'] + 1)."-01");
@@ -72,9 +73,9 @@ class StudentController extends Controller
                 ->whereMonth('student_fees.created_at', '=', Carbon::now()->format('m'));
         }
 
-        $request->merge([
-            'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
-        ]);
+        // $request->merge([
+        //     'centre_id' => $request->centre_id && $can_access_centre ? $request->centre_id : $allowed_centres[0]->ID
+        // ]);
 
         return Inertia::render('CentreManagement/Students/Index', [
             'filter'        => request()->all('search', 'centre_id'),
